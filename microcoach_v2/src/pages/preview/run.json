@@ -1,0 +1,1922 @@
+[
+  {
+    "id": "nextstep-ai-1",
+    "sourceMisconceptionId": "504aa4eb-df31-49c7-a5ab-460f6ab05e77",
+    "title": "Variables Switched With Wrong Signs",
+    "frequency": "some",
+    "studentCount": 13,
+    "studentPercent": 0.464,
+    "wrongAnswers": [
+      {
+        "questionNumber": 3,
+        "letter": "A"
+      },
+      {
+        "questionNumber": 3,
+        "letter": "B"
+      },
+      {
+        "questionNumber": 3,
+        "letter": "C"
+      }
+    ],
+    "linkStatus": "linked",
+    "isCore": true,
+    "occurrence": "first",
+    "example": {
+      "incorrect": "$(-1,\\;2)$",
+      "correct": "$(2,\\;-1)$"
+    },
+    "misconceptionSummary": "Variables get swapped and signs change when solving systems, producing wrong ordered pairs. This appears on PPQ Q3 where 13 students chose answers labeled as swapped variables or wrong signs.",
+    "aiReasoning": "PPQ Q3 shows 13 of 28 students selected options A/B/C tied to swapping or sign errors and Q3 highConfWrongPct = 0.25, indicating confident but incorrect reasoning about variable roles.",
+    "successIndicators": [
+      "Solve systems and list correct ordered pairs",
+      "Explain substitution with correct variable alignment",
+      "Show algebraic steps preserving variable roles"
+    ],
+    "ccssStandards": {
+      "targetObjective": {
+        "standard": "8.EE.C.8",
+        "description": "Analyze and solve pairs of simultaneous linear equations.",
+        "learningComponents": [
+          "Analyze and solve pairs of simultaneous linear equations"
+        ]
+      },
+      "impactedObjectives": [
+        {
+          "standard": "HSA-REI.D.12",
+          "description": "Graph the solutions to a linear inequality in two variables as a half-plane (excluding the boundary in the case of a strict inequality), and graph the solution set to a system of linear inequalities in two variables as the intersection of the corresponding half-planes."
+        },
+        {
+          "standard": "HSA-REI.C.6",
+          "description": "Solve systems of linear equations exactly and approximately (e.g., with graphs), focusing on pairs of linear equations in two variables."
+        },
+        {
+          "standard": "HSA-CED.A.3",
+          "description": "Represent constraints by equations or inequalities, and by systems of equations and/or inequalities, and interpret solutions as viable or nonviable options in a modeling context. *For example, represent inequalities describing nutritional and cost constraints on combinations of different foods.*"
+        }
+      ],
+      "prerequisiteGaps": [
+        {
+          "standard": "7.EE.B.4",
+          "description": "Use variables to represent quantities in a real-world or mathematical problem, and construct simple equations and inequalities to solve problems by reasoning about the quantities."
+        }
+      ]
+    },
+    "evidence": {
+      "source": "PPQ Q3",
+      "mostCommonError": "Selected answers indicating swapped variables or wrong signs on Q3",
+      "sampleStudentWork": [
+        "Reported solution as $(-1,\\;2)$ instead of $(2,\\;-1)$",
+        "Swapped x and y during substitution leading to sign flip"
+      ],
+      "aiThinkingPattern": "Confuses which variable to isolate and substitutes reversed pairs; misreads coefficient placement and sign rules."
+    },
+    "questionErrorRates": [
+      {
+        "label": "Q1",
+        "errorRate": 25
+      },
+      {
+        "label": "Q2",
+        "errorRate": 29
+      },
+      {
+        "label": "Q3",
+        "errorRate": 46
+      },
+      {
+        "label": "Q4",
+        "errorRate": 50
+      },
+      {
+        "label": "Q5",
+        "errorRate": 43
+      },
+      {
+        "label": "Q6",
+        "errorRate": 46
+      }
+    ],
+    "ppqQuestions": [
+      {
+        "questionNumber": 1,
+        "correctAnswer": "A",
+        "classPercentCorrect": 0.75
+      },
+      {
+        "questionNumber": 2,
+        "correctAnswer": "A",
+        "classPercentCorrect": 0.7142857142857143
+      },
+      {
+        "questionNumber": 3,
+        "correctAnswer": "D",
+        "classPercentCorrect": 0.5357142857142857
+      },
+      {
+        "questionNumber": 4,
+        "correctAnswer": "B",
+        "classPercentCorrect": 0.5
+      },
+      {
+        "questionNumber": 5,
+        "correctAnswer": "B",
+        "classPercentCorrect": 0.5714285714285714
+      },
+      {
+        "questionNumber": 6,
+        "correctAnswer": "A",
+        "classPercentCorrect": 0.5357142857142857
+      }
+    ],
+    "studentGroups": {
+      "buildingUnderstanding": [
+        "S0048",
+        "S0114",
+        "S0140",
+        "S0239",
+        "S0340",
+        "S0414",
+        "S0522",
+        "S0590",
+        "S0707",
+        "S0719",
+        "S0773",
+        "S0931",
+        "S0970",
+        "S1039",
+        "S1283"
+      ],
+      "understoodConcept": [
+        "S0155",
+        "S0351",
+        "S0498",
+        "S0572",
+        "S0828",
+        "S0901",
+        "S0959",
+        "S1029",
+        "S1094",
+        "S1163",
+        "S1308",
+        "S1403",
+        "S1443"
+      ]
+    },
+    "wrongAnswerExplanations": [
+      {
+        "answer": "X and y switched, wrong sign",
+        "explanation": "Students may have misinterpreted the equations, leading them to incorrectly swap the variables and change the signs, possibly due to confusion about which variable corresponds to which equation."
+      },
+      {
+        "answer": "Wrong sign",
+        "explanation": "This student might have correctly identified that a sign was incorrect but failed to recognize the full context of the solution, possibly overlooking the need to check both variables."
+      },
+      {
+        "answer": "X and y switched",
+        "explanation": "These students likely confused the roles of the variables in the equations, leading them to believe that the solution involved simply switching the variables without considering the signs or the relationships defined by the equations."
+      }
+    ],
+    "correctAnswerSolution": [
+      "Step 1: Write down the system of equations you need to solve.",
+      "Step 2: Use substitution or elimination to find the values of the variables.",
+      "Step 3: Substitute the values back into the original equations to verify the solution."
+    ],
+    "moveOptions": [
+      {
+        "id": "nextstep-move-ai-1-1",
+        "title": "Swap-and-Sign Error Analysis",
+        "time": "20 min",
+        "format": "Whole class",
+        "activityStructure": "Incorrect Worked Example Analysis",
+        "summary": "Students analyze three incorrect substitution solutions that swap variables or change signs, then pinpoint and fix the single error in each. This targets the specific habit of reversing variable roles or altering signs when solving systems.",
+        "targets": "Preserving variable roles and correct signs during substitution so the final ordered pair is written as $(x,y)$ correctly",
+        "instructionalMove": "Guide students through three incorrect worked examples using the \"Incorrect Worked Example Analysis\" structure. Pause after each worked example and ask the class to locate the single step where a variable was swapped or a sign changed. Ask students to state the fix and justify why that step breaks the solution.",
+        "strategyTag": "Guided Error Analysis",
+        "aiReasoning": "Students are incorrectly swapping variable roles or changing signs during substitution. An error-first, whole-class worked-example analysis makes the misconception visible. Showing three distinct single-error examples lets students generalize the exact step pattern (swap or sign-change) and practice correcting it. Guided error analysis aligns with LVN recommendations (Worked Examples, Error Analysis, Multiple Representations) and builds algebraic thinking needed for later standards.",
+        "tabs": {
+          "overview": {
+            "whatStudentsDo": [
+              {
+                "label": "Observe",
+                "detail": "Read a full incorrect solution on the board. Focus on the one step that swaps variables or changes a sign."
+              },
+              {
+                "label": "Annotate",
+                "detail": "Mark the exact line with the error and write a one-sentence reason for why it is wrong."
+              },
+              {
+                "label": "Fix",
+                "detail": "Propose the corrected step and compute the corrected final ordered pair."
+              }
+            ],
+            "whatYouDo": [
+              {
+                "label": "Display",
+                "detail": "Write the system and one incorrect worked example on the board. Keep the incorrect line boxed or highlighted."
+              },
+              {
+                "label": "Prompt",
+                "detail": "Ask a short question that directs students to name the error and state the minimal fix."
+              },
+              {
+                "label": "Reveal",
+                "detail": "After responses, show the correct solution path and emphasize the preserved variable roles and signs."
+              }
+            ],
+            "importance": "The activity forces students to confront the exact step where they swap variables or flip signs. Analyzing single-error examples builds the habit of checking which variable was substituted and verifying sign changes before writing the final ordered pair."
+          },
+          "activitySteps": {
+            "setup": [
+              "Write this system on the board in large print:",
+              "Prepare three slides or board sections, each with one incorrect worked example below the system.",
+              "Have class whiteboards or paper ready for quick annotations."
+            ],
+            "problem": "$$\\begin{cases}2x+y=7\\\\ x-2y=-1\\end{cases}$$",
+            "incorrectWorkedExample1": {
+              "problem": "$$\\begin{cases}2x+y=7\\\\ x-2y=-1\\end{cases}$$",
+              "incorrectWork": "1. From $2x+y=7$, solve for $x$: \\quad $x=\\frac{7-y}{2}$. \n2. Substitute into $x-2y=-1$ but swap variables: \\quad $x-2\\left(\\frac{7-y}{2}\\right)=-1$  \\quad(used expression for $x$ in place of $y$). \n3. Simplify: \\quad $x-(7-y)=-1$. \n4. Rearrange: \\quad $x-7+y=-1$. \n5. Combine: \\quad $x+y=6$. \n6. Replace $x$ with $\\frac{7-y}{2}$ to solve: \\quad $\\frac{7-y}{2}+y=6$. \n7. Multiply by 2: \\quad $7-y+2y=12$. \n8. Solve: \\quad $7+y=12\\Rightarrow y=5$. \n9. Find $x$: \\quad $x=\\frac{7-5}{2}=1$. \n10. Final answer written: \\quad $(1,5)$."
+            },
+            "incorrectWorkedExample2": {
+              "problem": "$$\\begin{cases}2x+y=7\\\\ x-2y=-1\\end{cases}$$",
+              "incorrectWork": "1. From $2x+y=7$, solve for $x$: \\quad $x=\\frac{7-y}{2}$. \n2. Substitute into $x-2y=-1$ but change sign incorrectly inside numerator: \\quad $\\frac{7+ y}{2}-2y=-1$. \n3. Multiply by 2: \\quad $7+y-4y=-2$. \n4. Simplify: \\quad $7-3y=-2$. \n5. Solve: \\quad $-3y=-9\\Rightarrow y=3$. \n6. Find $x$: \\quad $x=\\frac{7-3}{2}=2$. \n7. Final answer written: \\quad $(2,3)$."
+            },
+            "incorrectWorkedExample3": {
+              "problem": "$$\\begin{cases}2x+y=7\\\\ x-2y=-1\\end{cases}$$",
+              "incorrectWork": "1. From $2x+y=7$, get $y=7-2x$. \n2. Substitute into $x-2y=-1$: \\quad $x-2(7-2x)=-1$. \n3. Simplify: \\quad $x-14+4x=-1$. \n4. Combine like terms: \\quad $5x-14=-1$. \n5. Solve: \\quad $5x=13\\Rightarrow x=\\frac{13}{5}$. \n6. Find $y$: \\quad $y=7-2\\left(\\frac{13}{5}\\right)=7-\\frac{26}{5}=\\frac{9}{5}$. \n7. Correct numeric values: $x=\\frac{13}{5},\\ y=\\frac{9}{5}$. \n8. Student swaps the final ordered pair when writing the answer: \\quad $(\\frac{9}{5},\\frac{13}{5})$."
+            },
+            "coreActivity": [
+              "Display the system and the first incorrect worked example. Ask: 'Which line is wrong? Circle it.'",
+              "Call on 2 volunteers to explain the error in one sentence. Keep explanations brief and factual.",
+              "Ask students to write the corrected line and compute the corrected remaining steps on whiteboards.",
+              "Repeat for the second and third incorrect examples.",
+              "After the third, show the fully correct solution and highlight the preserved variable roles and sign decisions.",
+              "Quick exit ticket: ask students to write the correct ordered pair for the system and underline what they checked to avoid swapping variables or signs."
+            ],
+            "discussionQuestions": [
+              "Which step in this example changed a variable's role or a sign, and why does that break the substitution?",
+              "If you isolate $x$ instead of $y$, what exact substitution will keep the variable roles consistent?",
+              "What quick check will you do before writing the final ordered pair to avoid swapping $(x,y)$?"
+            ],
+            "incorrectWorkedExamples": [
+              {
+                "problem": "$$\\begin{cases}3x-y=8\\\\ 2x+y=10\\end{cases}$$",
+                "incorrectWork": "1. From $2x+y=10$, solve for $y$: \\quad $y=10-2x$. \n2. Substitute into $3x-y=8$, but mistakenly change the subtraction to addition: \\quad $3x+\\left(10-2x\\right)=8$ \\quad (error: the sign of the substituted expression is wrong). \n3. Simplify: \\quad $3x+10-2x=8$, which gives $x+10=8$. \n4. Solve: \\quad $x=8-10=-2$. \n5. Substitute $x=-2$ into $y=10-2x$: \\quad $y=10-2(-2)=10+4=14$. \n6. Final answer written: \\quad $(-2,14)$."
+              },
+              {
+                "problem": "$$\\begin{cases}2x+y=7\\\\ x-2y=-1\\end{cases}$$",
+                "incorrectWork": "1. From $2x+y=7$, solve for $x$: \\quad $x=\\frac{7-y}{2}$. \n2. Substitute into $x-2y=-1$ but change sign incorrectly inside numerator: \\quad $\\frac{7+ y}{2}-2y=-1$. \n3. Multiply by 2: \\quad $7+y-4y=-2$. \n4. Simplify: \\quad $7-3y=-2$. \n5. Solve: \\quad $-3y=-9\\Rightarrow y=3$. \n6. Find $x$: \\quad $x=\\frac{7-3}{2}=2$. \n7. Final answer written: \\quad $(2,3)$."
+              },
+              {
+                "problem": "$$\\begin{cases}2x+y=7\\\\ x-2y=-1\\end{cases}$$",
+                "incorrectWork": "1. From $2x+y=7$, get $y=7-2x$. \n2. Substitute into $x-2y=-1$: \\quad $x-2(7-2x)=-1$. \n3. Simplify: \\quad $x-14+4x=-1$. \n4. Combine like terms: \\quad $5x-14=-1$. \n5. Solve: \\quad $5x=13\\Rightarrow x=\\frac{13}{5}$. \n6. Find $y$: \\quad $y=7-2\\left(\\frac{13}{5}\\right)=7-\\frac{26}{5}=\\frac{9}{5}$. \n7. Student swaps the final ordered pair when writing the answer: \\quad $(\\frac{9}{5},\\frac{13}{5})$."
+              }
+            ]
+          },
+          "materials": {
+            "required": [
+              "Board or projector",
+              "Prepared slide or board sections with the three incorrect worked examples",
+              "Student whiteboards or paper and pens"
+            ],
+            "optional": [
+              "Colored markers to box the incorrect line",
+              "A one-line printed reminder: 'When you substitute, replace the correct variable: substitute the expression for the variable you solved for.'"
+            ]
+          },
+          "studentGroupings": {
+            "groups": [
+              {
+                "name": "Group A: Checks the substitution",
+                "description": "Students who made swap/sign errors. Focus on annotating which variable was replaced and why that is incorrect.",
+                "students": [
+                  "S0048",
+                  "S0114",
+                  "S0140",
+                  "S0239",
+                  "S0414",
+                  "S0522",
+                  "S0590",
+                  "S0707",
+                  "S0931",
+                  "S0970"
+                ]
+              },
+              {
+                "name": "Group B: Verifies algebra and signs",
+                "description": "Students who mostly compute correctly but miss sign changes. Focus on tracing sign rules during distribution and isolation.",
+                "students": [
+                  "S1039",
+                  "S1283",
+                  "S1403",
+                  "S0155",
+                  "S0340",
+                  "S0351",
+                  "S0498",
+                  "S0572",
+                  "S0719"
+                ]
+              },
+              {
+                "name": "Group C: Ready to extend",
+                "description": "Students who solved correctly. Focus on explaining error patterns and giving a quick prevention checklist.",
+                "students": [
+                  "S0773",
+                  "S0828",
+                  "S0901",
+                  "S0959",
+                  "S1029",
+                  "S1094",
+                  "S1163",
+                  "S1308",
+                  "S1443"
+                ]
+              }
+            ],
+            "aiRecommendation": "Form groups quickly by exit-ticket errors or recent quiz responses. Keep groups short and use them for targeted prompts or turn-and-talk only; most work stays whole-class."
+          }
+        }
+      },
+      {
+        "id": "nextstep-move-ai-1-2",
+        "title": "Fix the Swapped Pair",
+        "time": "25 min",
+        "format": "Split class",
+        "activityStructure": "Math Hospital / Diagnose & Repair",
+        "summary": "Students act as clinicians in a Math Hospital to diagnose and repair solutions that swap variables or change signs when solving systems. The activity has two groups analyze different incorrect patient solutions, then reconvene to compare repairs and reconstruct the correct solution path.",
+        "targets": "Preserving variable roles during substitution and keeping signs correct so the final ordered pair is $(x,y)$",
+        "instructionalMove": "Guide students through the Math Hospital / Diagnose & Repair routine. Give each group one incorrect 'patient' solution that exhibits either a variable swap or a sign change. Model marking the exact line that shows the swap or sign error and show how to reconstruct the correct substitution from that point.",
+        "strategyTag": "Make Structure Visible",
+        "aiReasoning": "The Math Hospital structure forces students to locate the single conceptual break in a full solution and then rebuild the correct pathway, which targets the habit of swapping variables or changing signs. Splitting the class lets each half focus intensely on one common error pattern and then compare repairs, making the variable-role mapping visually explicit. Using visual marking on the erroneous step and reconstructing the substitution connects to prerequisite substitution skills and supports later work on systems and algebraic manipulation.",
+        "tabs": {
+          "overview": {
+            "whatStudentsDo": [
+              {
+                "label": "Diagnose —",
+                "detail": "Read an incorrect 'patient' solution and mark the single line where a variable was swapped or a sign changed. Explain in one sentence why that line breaks the substitution alignment."
+              },
+              {
+                "label": "Repair —",
+                "detail": "Propose a corrected line and complete the solution from that corrected step to find the ordered pair. Write the final answer as $(x,y)$ and justify why roles did not change."
+              },
+              {
+                "label": "Compare —",
+                "detail": "Listen to the other group's repair and note one structural difference in how each error affected the rest of the work. Be ready to state which repair prevents the original error from happening again."
+              }
+            ],
+            "whatYouDo": [
+              {
+                "label": "Assign —",
+                "detail": "Give each half of the class a different incorrect worked example to diagnose and repair. Tell them they are clinicians fixing 'variable-swapped' patients."
+              },
+              {
+                "label": "Model —",
+                "detail": "Show one quick marking on the board that points to an error line and verbalize the variable-role problem. Keep the model to one brief example before groups work."
+              },
+              {
+                "label": "Compare —",
+                "detail": "Bring the class back together and have a representative from each group present the marked error, the repair, and the corrected final ordered pair."
+              }
+            ],
+            "importance": "Focusing on the exact line where a variable role changes or a sign flips makes the abstract rule about 'which symbol stands for which unknown' visible. Repairing from the mistaken line forces students to see how one small role error changes the whole solution and prevents repeating the swap at the final answer."
+          },
+          "activitySteps": {
+            "setup": [
+              "Write the central problem on the board: the system and the label 'Math Hospital patients'.",
+              "Project or print two different incorrect worked examples (one per group).",
+              "Prepare to display the third incorrect example for a whole-class quick repair at the end."
+            ],
+            "problem": "Solve the system and give the solution as an ordered pair $(x,y)$:\n\n$$y = 2x + 3$$\n\n$$x + 2y = 11$$",
+            "incorrectWorkedExample1": {
+              "problem": "Solve:\n\n$$y=2x+3$$\n$$x+2y=11$$",
+              "incorrectWork": "1. Start with the two equations.\n\n$$y=2x+3$$\n$$x+2y=11$$\n\n2. Student substitutes but swaps variables and replaces $x$ with $2y+3$ instead of replacing $y$.\n\n$$(2y+3)+2y=11\\quad\\leftarrow\\text{swap: replaced }x\\text{ with }2y+3\\right.$$\n\n3. Combine like terms.\n\n$$4y+3=11$$\n\n4. Solve for $y$.\n\n$$4y=8$$\n$$y=2$$\n\n5. Back-substitute to find $x$ using the original equation $y=2x+3$.\n\n$$2=2x+3$$\n$$2x=-1$$\n$$x=-\\tfrac{1}{2}$$\n\n6. Final answer reported:\n\n$$(-\\tfrac{1}{2},\\ 2)$$\n\n(Incorrect because the substitution step swapped variables.)"
+            },
+            "incorrectWorkedExample2": {
+              "problem": "Solve:\n\n$$2x-y=4$$\n$$x=3$$",
+              "incorrectWork": "1. Start with the two equations.\n\n$$2x-y=4$$\n$$x=3$$\n\n2. Substitute $x=3$ into the first equation.\n\n$$2(3)-y=4$$\n\n3. Compute.\n\n$$6-y=4$$\n$$-y=-2$$\n$$y=2$$\n\n4. Student writes the final ordered pair but swaps the order and reports $(2,3)$ instead of $(3,2)$.\n\n$$\\text{Final answer reported: }(2,3)\\quad\\leftarrow\\text{swapped }(x,y)\\text{ at the end}\\right.$$"
+            },
+            "incorrectWorkedExample3": {
+              "problem": "Solve:\n\n$$y=-2x+4$$\n$$x+y=2$$",
+              "incorrectWork": "1. Start with the two equations.\n\n$$y=-2x+4$$\n$$x+y=2$$\n\n2. Substitute $y=-2x+4$ into $x+y=2$ but drop the negative sign on $-2x$ when substituting.\n\n$$x+(2x+4)=2\\quad\\leftarrow\\text{sign error: replaced }-2x\\text{ with }+2x\\right.$$\n\n3. Combine like terms.\n\n$$3x+4=2$$\n\n4. Solve for $x$.\n\n$$3x=-2$$\n$$x=-\\tfrac{2}{3}$$\n\n5. Back-substitute to find $y$.\n\n$$y=-2(-\\tfrac{2}{3})+4$$\n$$y=\\tfrac{4}{3}+4$$\n$$y=\\tfrac{16}{3}$$\n\n6. Final answer reported:\n\n$$\\left(-\\tfrac{2}{3},\\ \\tfrac{16}{3}\\right)$$\n\n(Incorrect because the negative sign on $-2x$ was lost during substitution.)"
+            },
+            "coreActivity": [
+              "Tell students they are clinicians fixing incorrect patient work and assign Group 1 and Group 2 each one patient sheet. ",
+              "Give 8 minutes for each group to mark the exact line with the swap/sign error, write a one-sentence diagnosis naming the error, and produce a corrected line. ",
+              "Have each group finish the full corrected solution from the corrected line and write the correct ordered pair $(x,y)$. ",
+              "Bring the class together. Ask one representative from each group to present their marked error, the correction, and the corrected final pair in 90 seconds each.",
+              "Project the third incorrect patient for whole-class rapid repair. Ask students to signal if they see the same error type and then do a 2-minute whole-class correction.",
+              "End with a 2-minute teacher recap that highlights how to keep track of 'which letter stands for which unknown' and a quick visual on the board showing 'Replace only the variable named, not the other one.'"
+            ],
+            "discussionQuestions": [
+              "Exactly which symbol was replaced incorrectly in your patient's work and how did that change the remaining algebra?",
+              "When you reconstruct the correct step, what one question can you ask yourself to avoid swapping variables next time?",
+              "How does keeping the variable-role mapping visible help when you finally write the ordered pair $(x,y)$?"
+            ],
+            "incorrectWorkedExamples": [
+              {
+                "problem": "Solve:\n\n$$y=2x+3$$\n$$x+2y=11$$",
+                "incorrectWork": "1. Start with the two equations.\n\n$$y=2x+3$$\n$$x+2y=11$$\n\n2. Student substitutes but swaps variables and replaces $x$ with $2y+3$ instead of replacing $y$.\n\n$$(2y+3)+2y=11 \\quad \\leftarrow \\text{swap: replaced } x \\text{ with } 2y+3\\right.$$ \n\n3. Combine like terms.\n\n$$4y+3=11$$\n\n4. Solve for $y$.\n\n$$4y=8$$\n$$y=2$$\n\n5. Back-substitute to find $x$ using the original equation $y=2x+3$.\n\n$$2=2x+3$$\n$$2x=-1$$\n$$x=-\\tfrac{1}{2}$$\n\n6. Final answer reported:\n\n$$\\left(-\\tfrac{1}{2},\\ 2\\right)$$\n\n(Incorrect because the substitution step swapped variables.)"
+              },
+              {
+                "problem": "Solve:\n\n$$2x-y=4$$\n$$x=3$$",
+                "incorrectWork": "1. Start with the two equations.\n\n$$2x-y=4$$\n$$x=3$$\n\n2. Substitute $x=3$ into the first equation.\n\n$$2(3)-y=4$$\n\n3. Compute.\n\n$$6-y=4$$\n$$-y=-2$$\n$$y=2$$\n\n4. Student writes the final ordered pair but swaps the order and reports $(2,3)$ instead of $(3,2)$.\n\n$$\\text{Final answer reported: }(2,3) \\quad \\leftarrow \\text{swapped }(x,y) \\text{ at the end}\\right.$$"
+              },
+              {
+                "problem": "Solve:\n\n$$y=-2x+4$$\n$$x+y=2$$",
+                "incorrectWork": "1. Start with the two equations.\n\n$$y=-2x+4$$\n$$x+y=2$$\n\n2. Substitute $y=-2x+4$ into $x+y=2$ but drop the negative sign on $-2x$ when substituting.\n\n$$x+(2x+4)=2 \\quad \\leftarrow \\text{sign error: replaced } -2x \\text{ with } +2x\\right.$$ \n\n3. Combine like terms.\n\n$$3x+4=2$$\n\n4. Solve for $x$.\n\n$$3x=-2$$\n$$x=-\\tfrac{2}{3}$$\n\n5. Back-substitute to find $y$.\n\n$$y=-2\\left(-\\tfrac{2}{3}\\right)+4$$\n$$y=\\tfrac{4}{3}+4$$\n$$y=\\tfrac{16}{3}$$\n\n6. Final answer reported:\n\n$$\\left(-\\tfrac{2}{3},\\ \\tfrac{16}{3}\\right)$$\n\n(Incorrect because the negative sign on $-2x$ was lost during substitution.)"
+              }
+            ]
+          },
+          "materials": {
+            "required": [
+              "Board or projector to display the central problem and the third incorrect example",
+              "Two printed or projected patient solutions (one per group) matching incorrectWorkedExample1 and incorrectWorkedExample2",
+              "Pens and a scrap sheet for each group to mark the patient work"
+            ],
+            "optional": [
+              "Highlighters for marking the error line",
+              "Sticky notes for writing the one-line diagnosis"
+            ]
+          },
+          "studentGroupings": {
+            "groups": [
+              {
+                "name": "Group A: Substitution Swap Clinicians",
+                "description": "Students who selected answers showing swapped variables during substitution. They diagnose and repair the 'swap during substitution' patient (incorrectWorkedExample1).",
+                "students": [
+                  "S0048",
+                  "S0114",
+                  "S0140",
+                  "S0239",
+                  "S0414",
+                  "S0522",
+                  "S0590",
+                  "S0707",
+                  "S0931",
+                  "S0970",
+                  "S1039",
+                  "S1283",
+                  "S1403",
+                  "S0155"
+                ]
+              },
+              {
+                "name": "Group B: Output Swap & Sign Clinicians",
+                "description": "Students who reported swapped ordered pairs or sign mistakes. They diagnose and repair the 'swapped final pair' patient (incorrectWorkedExample2) and then listen to the whole-class third patient for sign errors.",
+                "students": [
+                  "S0340",
+                  "S0351",
+                  "S0498",
+                  "S0572",
+                  "S0719",
+                  "S0773",
+                  "S0828",
+                  "S0901",
+                  "S0959",
+                  "S1029",
+                  "S1094",
+                  "S1163",
+                  "S1308",
+                  "S1443"
+                ]
+              }
+            ],
+            "aiRecommendation": "Group students by the response pattern from the PPQ: those who picked swapped/substituted answers in one group and those who picked swapped-final-pair or wrong-sign answers in the other. Keep groups whole-class halves so no regrouping is needed."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "nextstep-ai-2",
+    "sourceMisconceptionId": "2493ec62-bd78-4c4b-8685-7f58d67b4678",
+    "title": "Improper Fraction Handling",
+    "frequency": "few",
+    "studentCount": 4,
+    "studentPercent": 0.143,
+    "wrongAnswers": [
+      {
+        "questionNumber": 2,
+        "letter": "B"
+      },
+      {
+        "questionNumber": 2,
+        "letter": "C"
+      }
+    ],
+    "linkStatus": "linked",
+    "isCore": false,
+    "occurrence": "first",
+    "example": {
+      "incorrect": "$\\frac{3}{6} + \\frac{20}{6} = \\frac{23}{12}$",
+      "correct": "$\\frac{3}{6} + \\frac{20}{6} = \\frac{23}{6}$"
+    },
+    "misconceptionSummary": "Fails to clear fractions correctly, producing incorrect combined numerators or non-equivalent equations. PPQ Q2 links 4 students' choices to fraction-clearing mistakes while 28.6% of the class answered Q2 incorrectly overall.",
+    "aiReasoning": "On PPQ Q2 two answer choices (B and C) were attributed to fraction-clearing errors (4 students total) and Q2 highConfWrongPct = 0.143 suggests a procedural execution gap rather than a confident conceptual error.",
+    "successIndicators": [
+      "Clear denominators before combining terms",
+      "Show equivalent equation after multiplying"
+    ],
+    "ccssStandards": {
+      "targetObjective": {
+        "standard": "HSA-REI.B.3",
+        "description": "Solve linear equations and inequalities in one variable, including equations with coefficients represented by letters.",
+        "learningComponents": [
+          "Solve linear equations in one variable, including equations with coefficients represented by letters",
+          "Solve linear inequalities in one variable"
+        ]
+      },
+      "impactedObjectives": [
+        {
+          "standard": "HSA-CED.A.1",
+          "description": "Create equations and inequalities in one variable and use them to solve problems. Include equations arising from linear and quadratic functions, and simple rational and exponential functions."
+        },
+        {
+          "standard": "HSA-CED.A.4",
+          "description": "Rearrange formulas to highlight a quantity of interest, using the same reasoning as in solving equations. *For example, rearrange Ohm's law $V = IR$ to highlight resistance $R$.*"
+        }
+      ],
+      "prerequisiteGaps": [
+        {
+          "standard": "8.EE.C.7",
+          "description": "Solve linear equations in one variable."
+        }
+      ]
+    },
+    "evidence": {
+      "source": "PPQ Q2",
+      "mostCommonError": "Did not clear fractions fully before combining terms",
+      "sampleStudentWork": [
+        "Combined $\\frac{3}{6}$ and $\\frac{20}{6}$ as $\\frac{23}{12}$",
+        "Multiplied only some terms by 6, yielding non-equivalent equation"
+      ],
+      "aiThinkingPattern": "Procedural difficulty with fraction operations and applying multiplication across all terms."
+    },
+    "questionErrorRates": [
+      {
+        "label": "Q1",
+        "errorRate": 25
+      },
+      {
+        "label": "Q2",
+        "errorRate": 29
+      },
+      {
+        "label": "Q3",
+        "errorRate": 46
+      },
+      {
+        "label": "Q4",
+        "errorRate": 50
+      },
+      {
+        "label": "Q5",
+        "errorRate": 43
+      },
+      {
+        "label": "Q6",
+        "errorRate": 46
+      }
+    ],
+    "ppqQuestions": [
+      {
+        "questionNumber": 1,
+        "correctAnswer": "A",
+        "classPercentCorrect": 0.75
+      },
+      {
+        "questionNumber": 2,
+        "correctAnswer": "A",
+        "classPercentCorrect": 0.7142857142857143
+      },
+      {
+        "questionNumber": 3,
+        "correctAnswer": "D",
+        "classPercentCorrect": 0.5357142857142857
+      },
+      {
+        "questionNumber": 4,
+        "correctAnswer": "B",
+        "classPercentCorrect": 0.5
+      },
+      {
+        "questionNumber": 5,
+        "correctAnswer": "B",
+        "classPercentCorrect": 0.5714285714285714
+      },
+      {
+        "questionNumber": 6,
+        "correctAnswer": "A",
+        "classPercentCorrect": 0.5357142857142857
+      }
+    ],
+    "studentGroups": {
+      "buildingUnderstanding": [
+        "S0048",
+        "S0114",
+        "S0140",
+        "S0239",
+        "S0340",
+        "S0414",
+        "S0522",
+        "S0590",
+        "S0707",
+        "S0719",
+        "S0773",
+        "S0931",
+        "S0970",
+        "S1039",
+        "S1283"
+      ],
+      "understoodConcept": [
+        "S0155",
+        "S0351",
+        "S0498",
+        "S0572",
+        "S0828",
+        "S0901",
+        "S0959",
+        "S1029",
+        "S1094",
+        "S1163",
+        "S1308",
+        "S1403",
+        "S1443"
+      ]
+    },
+    "wrongAnswerExplanations": [
+      {
+        "answer": "B",
+        "explanation": "The student likely did not recognize the need to eliminate the fractions, leading to an incorrect combination of the numerators without a common denominator."
+      },
+      {
+        "answer": "C",
+        "explanation": "The student attempted to clear the fractions but mistakenly multiplied only one side of the equation by 6, resulting in a non-equivalent equation."
+      }
+    ],
+    "correctAnswerSolution": [
+      "Identify the fractions in the equation and find a common denominator.",
+      "Multiply each term by the common denominator to eliminate the fractions.",
+      "Combine like terms and simplify the resulting equation to solve for the variable."
+    ],
+    "moveOptions": [
+      {
+        "id": "nextstep-move-ai-2-1",
+        "title": "Clear Denominators First",
+        "time": "20 min",
+        "format": "Whole class",
+        "activityStructure": "Favorite No",
+        "summary": "Students analyze an anonymous incorrect solution (",
+        "targets": "Clearing denominators before combining fractional terms and showing equivalent equations after multiplying",
+        "instructionalMove": "Model the Favorite No routine by projecting an anonymous student solution. Point out the specific step where the student combined fractional terms without clearing denominators. Show how to multiply the entire equation by the LCD to produce an equivalent equation and rerun the algebra.",
+        "strategyTag": "Guided Error Analysis",
+        "aiReasoning": "This misconception is a one-step procedural error: students combine fractional terms before producing an equivalent equation. The Favorite No structure centers an actual student error so learners confront the faulty reasoning first. Guided error analysis lets the class identify the single incorrect step and practice the equivalent-equation move (multiply whole equation by the LCD), which directly repairs the procedural gap needed for later rearranging and formula solving.",
+        "tabs": {
+          "overview": {
+            "whatStudentsDo": [
+              {
+                "label": "Think",
+                "detail": "Read an anonymous solution and find the single step that breaks equivalence. Mark that step on a whiteboard or with a raised hand."
+              },
+              {
+                "label": "Discuss",
+                "detail": "Turn and talk for 30 seconds to explain why the marked step is wrong. Each pair states what must happen to keep the equation equivalent."
+              },
+              {
+                "label": "Explain",
+                "detail": "Share a corrected sequence that multiplies the whole equation by the LCD and shows the equivalent equation before combining terms."
+              }
+            ],
+            "whatYouDo": [
+              {
+                "label": "Present",
+                "detail": "Project the anonymous student work labeled 'Favorite No.' Read it aloud and ask the class to silently mark the step that looks wrong."
+              },
+              {
+                "label": "Highlight",
+                "detail": "Circulate briefly and call on two students with different explanations. Write the correct LCD multiplication on the board."
+              },
+              {
+                "label": "Guide",
+                "detail": "Model the correct equivalent-equation step, then invite volunteers to finish solving while you watch for the same error pattern."
+              }
+            ],
+            "importance": "The activity targets the exact procedural break: combining fractional coefficients without first creating an equivalent equation. Fixing this step prevents non-equivalent manipulations that block solving and later formula rearrangement."
+          },
+          "activitySteps": {
+            "setup": [
+              "Write or project three short anonymous student solutions that each contain the single fraction-clearing error.",
+              "Prepare board space: left column for 'Student Work', right column for 'Repair'.",
+              "Distribute small whiteboards or tell students to use paper and pencil."
+            ],
+            "problem": "Analyze the anonymous student solution. Identify the one incorrect step that breaks equivalence. Then produce a corrected sequence that uses the LCD (least common denominator) to clear denominators before combining like terms and finish solving for the variable.",
+            "incorrectWorkedExample1": {
+              "problem": "Solve for $x$: $\\frac{1}{2}x + \\frac{1}{3}x = 5$",
+              "incorrectWork": "Start with $\\frac{1}{2}x + \\frac{1}{3}x = 5$. Combine like terms: $\\left(\\frac{1}{2} + \\frac{1}{3}\\right)x = 5$. Incorrectly add denominators: $\\frac{1}{5}x = 5$. Solve: $x = 5 \\times 5 = 25$."
+            },
+            "incorrectWorkedExample2": {
+              "problem": "Solve for $x$: $\\frac{1}{2}x + \\frac{1}{3} = 4$",
+              "incorrectWork": "Start with $\\frac{1}{2}x + \\frac{1}{3} = 4$. Multiply by the LCD, but apply to only one term: $6\\left(\\frac{1}{2}x\\right) + \\frac{1}{3} = 6\\cdot 4$. Simplify: $3x + \\frac{1}{3} = 24$. Subtract $\\tfrac{1}{3}$: $3x = 24 - \\frac{1}{3} = \\frac{71}{3}$. Divide: $x = \\frac{71}{9}$."
+            },
+            "incorrectWorkedExample3": {
+              "problem": "Solve for $x$: $\\frac{2}{3}x = \\frac{1}{4}x + 5$",
+              "incorrectWork": "Start with $\\frac{2}{3}x = \\frac{1}{4}x + 5$. Subtract $\\tfrac{1}{4}x$ from both sides: $\\frac{2}{3}x - \\frac{1}{4}x = 5$. Combine the fractions incorrectly by taking numerator difference over added denominators: $\\frac{1}{7}x = 5$. Solve: $x = 35$."
+            },
+            "coreActivity": [
+              "Project incorrect example 1. Ask students to mark the single incorrect step silently.",
+              "Have students turn-and-talk for 30 seconds to name the error and propose the LCD to use.",
+              "Write the correct LCD step on the board. Multiply the entire equation by the LCD and show the equivalent equation.",
+              "Invite two volunteers to finish solving from the corrected equivalent equation while you note correct algebraic moves.",
+              "Repeat with examples 2 and 3, each time asking: 'Which term did the student fail to multiply by the LCD?'",
+              "End by asking students to write a one-sentence rule on their whiteboard: what to do first when fractions appear in an equation."
+            ],
+            "discussionQuestions": [
+              "Which step made the student lose equivalence? Why does multiplying the entire equation by the LCD fix that?",
+              "How would not clearing denominators first harm you when rearranging formulas like $V=IR$?",
+              "When you multiply by the LCD, what must you remember to multiply every time?"
+            ],
+            "incorrectWorkedExamples": [
+              {
+                "problem": "Solve for $x$: $\\frac{1}{2}x + \\frac{1}{3}x = 5$",
+                "incorrectWork": "Start with $\\frac{1}{2}x + \\frac{1}{3}x = 5$. Combine like terms: $\\left(\\frac{1}{2} + \\frac{1}{3}\\right)x = 5$. Incorrectly add denominators: $\\frac{1}{5}x = 5$. Solve: $x = 5 \\times 5 = 25$."
+              },
+              {
+                "problem": "Solve for $x$: $\\frac{1}{2}x + \\frac{1}{3} = 4$",
+                "incorrectWork": "Start with $\\frac{1}{2}x + \\frac{1}{3} = 4$. Multiply by the LCD, but apply to only one term: $6\\left(\\frac{1}{2}x\\right) + \\frac{1}{3} = 6\\cdot 4$. Simplify: $3x + \\frac{1}{3} = 24$. Subtract $\\tfrac{1}{3}$: $3x = 24 - \\frac{1}{3} = \\frac{71}{3}$. Divide: $x = \\frac{71}{9}$."
+              },
+              {
+                "problem": "Solve for $x$: $\\frac{2}{3}x = \\frac{1}{4}x + 5$",
+                "incorrectWork": "Start with $\\frac{2}{3}x = \\frac{1}{4}x + 5$. Subtract $\\tfrac{1}{4}x$ from both sides: $\\frac{2}{3}x - \\frac{1}{4}x = 5$. Combine the fractions incorrectly by taking numerator difference over added denominators: $\\frac{1}{7}x = 5$. Solve: $x = 35$."
+              }
+            ]
+          },
+          "materials": {
+            "required": [
+              "Projected slides or board with the three anonymous worked examples written exactly as shown",
+              "Student whiteboards or paper and pens"
+            ],
+            "optional": [
+              "Printed one-page handout with the three examples for quick reference"
+            ]
+          },
+          "studentGroupings": {
+            "groups": [
+              {
+                "name": "Group A: Needs concrete support",
+                "description": "Students who mixed denominators when combining fractions. Focus on LCD multiplication and showing equivalent equations.",
+                "students": [
+                  "S0414",
+                  "S0522",
+                  "S0590",
+                  "S0773",
+                  "S0931",
+                  "S0959",
+                  "S1039",
+                  "S0048",
+                  "S0114"
+                ]
+              },
+              {
+                "name": "Group B: Partial understanding",
+                "description": "Students who sometimes forget to multiply one term or the RHS. Focus on checking that every term was multiplied by the LCD.",
+                "students": [
+                  "S0140",
+                  "S0155",
+                  "S0239",
+                  "S0340",
+                  "S0351",
+                  "S0498",
+                  "S0572",
+                  "S0707",
+                  "S0719"
+                ]
+              },
+              {
+                "name": "Group C: Ready to explain",
+                "description": "Students who multiply correctly but are slow. Ask them to explain why the equivalent equation step preserves solutions and model it to peers.",
+                "students": [
+                  "S0828",
+                  "S0901",
+                  "S0970",
+                  "S1029",
+                  "S1094",
+                  "S1163",
+                  "S1283",
+                  "S1308",
+                  "S1443"
+                ]
+              }
+            ],
+            "aiRecommendation": "Use whole-class instruction for the main task. After the lesson, pull Group A for 5 minutes of guided practice on simple LCD multiplication problems. Pair one Group C student with a Group A student for a quick peer explanation while you circulate."
+          }
+        }
+      },
+      {
+        "id": "nextstep-move-ai-2-2",
+        "title": "Forecast Fraction Pitfalls",
+        "time": "20 min",
+        "format": "Split class",
+        "activityStructure": "Predict Misconceptions / Error Forecasting",
+        "summary": "Students predict where a student would make a fraction-clearing mistake, then test that forecast on two parallel incorrect solutions. This targets the specific error of not multiplying every term when clearing denominators.",
+        "targets": "Clearing denominators correctly by multiplying every term and showing the equivalent equation",
+        "instructionalMove": "Guide students through the Predict Misconceptions / Error Forecasting routine. Tell the class the common error is not multiplying every term when clearing denominators and ask each group to mark the single step they expect to be wrong. Circulate to probe their prediction and then reveal the student work so students diagnose whether their forecast matched the error.",
+        "strategyTag": "Make Structure Visible",
+        "aiReasoning": "Predict Misconceptions fits this error because the core problem is a structural step: distributing an LCD multiplication across every term to preserve equivalence. Having students forecast where a mistake will occur makes the invisible structure (that multiplication must apply to each term on both sides) visible. The split_class design lets the teacher give the group with the documented misconception the concrete repair practice while the rest of the class practices spotting the structural failure and explaining why it breaks equivalence.",
+        "tabs": {
+          "overview": {
+            "whatStudentsDo": [
+              {
+                "label": "Predict",
+                "detail": "Read an equation and mark the single step where a student is likely to fail when clearing denominators. Say the reason in one sentence."
+              },
+              {
+                "label": "Analyze",
+                "detail": "Examine an incorrect worked example. Identify the exact step where the student failed to multiply every term and explain the consequence."
+              },
+              {
+                "label": "Repair",
+                "detail": "Write the corrected step showing the full multiply-by-LCD action and compute the correct solution."
+              }
+            ],
+            "whatYouDo": [
+              {
+                "label": "Present",
+                "detail": "Write each target equation on the board and announce which group gets which one."
+              },
+              {
+                "label": "Prompt",
+                "detail": "Ask each group to predict the single error step and to underline it on the example."
+              },
+              {
+                "label": "Reveal",
+                "detail": "Project the incorrect worked example. Lead a quick whole-class check of forecasts and show the correct multiply-by-LCD work."
+              }
+            ],
+            "importance": "Not multiplying every term when clearing denominators produces a non-equivalent equation and wrong answers. Forecasting the specific step trains students to see equivalence-preserving moves and prevents this procedural error in later work with formulas and rational equations."
+          },
+          "activitySteps": {
+            "setup": [
+              "Write two equations on the board, labeled A and B.",
+              "Split the class into two groups: Group 1 = students who missed Q2; Group 2 = the rest.",
+              "Have each group take one mini whiteboard or a notecard and a pen."
+            ],
+            "problem": "Group A works on equation A: $$\\frac{1}{2}x+3=7$$\nGroup B works on equation B: $$\\frac{1}{3}x+2=\\frac{2}{5}x-1$$",
+            "incorrectWorkedExample1": {
+              "problem": "Solve for $x$: $$\\frac{1}{2}x+3=7$$",
+              "incorrectWork": "Student work:\n1. Multiply both sides by 2: $$2\\left(\\frac{1}{2}x\\right)+3=14$$  ← only multiplied the fractional term and the right side.\n2. Simplify: $$x+3=14$$\n3. Subtract 3: $$x=11$$"
+            },
+            "incorrectWorkedExample2": {
+              "problem": "Solve for $x$: $$\\frac{1}{3}x+2=\\frac{2}{5}x-1$$",
+              "incorrectWork": "Student work:\n1. Multiply both sides by 15: $$15\\left(\\frac{1}{3}x\\right)+2=15\\left(\\frac{2}{5}x\\right)-1$$  ← constants were not multiplied by 15.\n2. Simplify: $$5x+2=6x-1$$\n3. Subtract $$5x$$: $$2=x-1$$\n4. Add 1: $$x=3$$"
+            },
+            "incorrectWorkedExample3": {
+              "problem": "Solve for $x$: $$\\frac{x}{4}-\\frac{1}{6}=\\frac{3}{2}$$",
+              "incorrectWork": "Student work:\n1. Multiply both sides by 12: $$12\\left(\\frac{x}{4}\\right)-\\frac{1}{6}=12\\left(\\frac{3}{2}\\right)$$  ← did not multiply the constant term by 12.\n2. Simplify: $$3x-\\frac{1}{6}=18$$\n3. Add $$\\frac{1}{6}$$: $$3x=18+\\frac{1}{6}=\\frac{109}{6}$$\n4. Divide by 3: $$x=\\frac{109}{18}$$"
+            },
+            "coreActivity": [
+              "Tell each group to read their equation and write one sentence predicting the single step where a student will fail when clearing denominators.",
+              "Ask groups to underline that predicted step on the board copy and write why that step would break equivalence in one phrase.",
+              "Give each group their assigned incorrect worked example and ask them to check whether their forecast matches the actual error.",
+              "Have groups correct the single wrong step by writing the full multiply-by-LCD step showing multiplication distributed to every term and then finish the solution.",
+              "Bring class together. Have one spokesperson from each group state whether their forecast matched and show the corrected step on the main board.",
+              "Wrap up by showing the general template: multiply every term on both sides by the LCD and then simplify."
+            ],
+            "discussionQuestions": [
+              "Which single term did the student forget to multiply and why does that change the equation's equivalence?",
+              "How does multiplying every term by the LCD connect to rearranging formulas like $$V=IR$$ when isolating a variable?",
+              "What quick check can you use before solving to make sure you cleared denominators correctly?"
+            ],
+            "incorrectWorkedExamples": [
+              {
+                "problem": "Solve for $x$: $$\\frac{1}{2}x+3=7$$",
+                "incorrectWork": "Student work:\n1. Multiply both sides by 2: $$2\\left(\\frac{1}{2}x\\right)+3=14$$  ← only multiplied the fractional term and the right side.\n2. Simplify: $$x+3=14$$\n3. Subtract 3: $$x=11$$"
+              },
+              {
+                "problem": "Solve for $x$: $$\\frac{1}{3}x+2=\\frac{2}{5}x-1$$",
+                "incorrectWork": "Student work:\n1. Multiply both sides by 15: $$15\\left(\\frac{1}{3}x\\right)+2=15\\left(\\frac{2}{5}x\\right)-1$$  ← constants were not multiplied by 15.\n2. Simplify: $$5x+2=6x-1$$\n3. Subtract $$5x$$: $$2=x-1$$\n4. Add 1: $$x=3$$"
+              },
+              {
+                "problem": "Solve for $x$: $$\\frac{x}{4}-\\frac{1}{6}=\\frac{3}{2}$$",
+                "incorrectWork": "Student work:\n1. Multiply both sides by 12: $$12\\left(\\frac{x}{4}\\right)-\\frac{1}{6}=12\\left(\\frac{3}{2}\\right)$$  ← did not multiply the constant term by 12.\n2. Simplify: $$3x-\\frac{1}{6}=18$$\n3. Add $$\\frac{1}{6}$$: $$3x=18+\\frac{1}{6}=\\frac{109}{6}$$\n4. Divide by 3: $$x=\\frac{109}{18}$$"
+              }
+            ]
+          },
+          "materials": {
+            "required": [
+              "Whiteboard or projector",
+              "Two prewritten equations labeled A and B on a slide or board",
+              "Two printed incorrect worked examples (one per group) or projected pages",
+              "Mini whiteboards or notecards for each group"
+            ],
+            "optional": [
+              "Colored markers to draw arrows showing multiplication distribution"
+            ]
+          },
+          "studentGroupings": {
+            "groups": [
+              {
+                "name": "Group 1: Q2 Missers",
+                "description": "Students who answered Q2 incorrectly. Focus on diagnosing their own error and repairing it by writing the full multiply-by-LCD step.",
+                "students": [
+                  "S0414",
+                  "S0522",
+                  "S0590",
+                  "S0773",
+                  "S0931",
+                  "S0959",
+                  "S1039",
+                  "S0048",
+                  "S0114",
+                  "S0140",
+                  "S0155",
+                  "S0239",
+                  "S0340",
+                  "S0351"
+                ]
+              },
+              {
+                "name": "Group 2: Predictors",
+                "description": "Students who answered Q2 correctly or chose other options. Focus on forecasting the single-step error and explaining why failing to multiply every term breaks equivalence.",
+                "students": [
+                  "S0498",
+                  "S0572",
+                  "S0707",
+                  "S0719",
+                  "S0828",
+                  "S0901",
+                  "S0970",
+                  "S1029",
+                  "S1094",
+                  "S1163",
+                  "S1283",
+                  "S1308",
+                  "S1443"
+                ]
+              }
+            ],
+            "aiRecommendation": "Place the 4 students who made the fraction-clearing mistake in Group 1 so they get targeted practice fixing the exact step. Put the remaining students in Group 2 to practice spotting the structural error and explaining why multiplying every term preserves equivalence."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "nextstep-ai-3",
+    "sourceMisconceptionId": "9402c9d0-f008-411c-9719-c3591ad63dc8",
+    "title": "Mistaking Inequality Type",
+    "frequency": "few",
+    "studentCount": 7,
+    "studentPercent": 0.25,
+    "wrongAnswers": [
+      {
+        "questionNumber": 1,
+        "letter": "C"
+      },
+      {
+        "questionNumber": 4,
+        "letter": "A"
+      },
+      {
+        "questionNumber": 5,
+        "letter": "A"
+      },
+      {
+        "questionNumber": 5,
+        "letter": "C"
+      }
+    ],
+    "linkStatus": "linked",
+    "isCore": false,
+    "occurrence": "first",
+    "example": {
+      "incorrect": "Graphed solid line for $y > 2x + 3$",
+      "correct": "Graphed dashed line for $y > 2x + 3$ and shaded above"
+    },
+    "misconceptionSummary": "Uses inclusive boundaries or incorrect shading when graphing inequalities, producing wrong half-planes. Multiple PPQ items (Q1, Q4, Q5) include choices attributed to this boundary/shading confusion.",
+    "aiReasoning": "Options tied to boundary style and shading appear on Q1, Q4, and Q5 totaling 8 selections; Q5 highConfWrongPct = 0.40 indicates many students are confident in this incorrect graphing model.",
+    "successIndicators": [
+      "Use dashed lines for strict inequalities",
+      "Shade the correct half-plane after testing a point"
+    ],
+    "ccssStandards": {
+      "targetObjective": {
+        "standard": "HSA-REI.D.12",
+        "description": "Graph the solutions to a linear inequality in two variables as a half-plane (excluding the boundary in the case of a strict inequality), and graph the solution set to a system of linear inequalities in two variables as the intersection of the corresponding half-planes.",
+        "learningComponents": [
+          "Graph the solution set to a system of linear inequalities in two variables as the intersection of their corresponding half-planes",
+          "Graph the solutions to a linear inequality in two variables as a half-plane, excluding the boundary for non-inclusive inequalities"
+        ]
+      },
+      "impactedObjectives": [
+        {
+          "standard": "HSA-CED.A.3",
+          "description": "Represent constraints by equations or inequalities, and by systems of equations and/or inequalities, and interpret solutions as viable or nonviable options in a modeling context. *For example, represent inequalities describing nutritional and cost constraints on combinations of different foods.*"
+        }
+      ],
+      "prerequisiteGaps": [
+        {
+          "standard": "7.EE.B.4",
+          "description": "Use variables to represent quantities in a real-world or mathematical problem, and construct simple equations and inequalities to solve problems by reasoning about the quantities."
+        }
+      ]
+    },
+    "evidence": {
+      "source": "PPQ Q1, Q4, Q5",
+      "mostCommonError": "Used solid boundary for strict inequality or shaded wrong region",
+      "sampleStudentWork": [
+        "Graphed $y > 2x + 3$ with a solid line",
+        "Shaded the side of the line that does not satisfy the inequality when tested"
+      ],
+      "aiThinkingPattern": "Overgeneralizes boundary conventions; confuses inclusive/exclusive and shading direction."
+    },
+    "questionErrorRates": [
+      {
+        "label": "Q1",
+        "errorRate": 25
+      },
+      {
+        "label": "Q2",
+        "errorRate": 29
+      },
+      {
+        "label": "Q3",
+        "errorRate": 46
+      },
+      {
+        "label": "Q4",
+        "errorRate": 50
+      },
+      {
+        "label": "Q5",
+        "errorRate": 43
+      },
+      {
+        "label": "Q6",
+        "errorRate": 46
+      }
+    ],
+    "ppqQuestions": [
+      {
+        "questionNumber": 1,
+        "correctAnswer": "A",
+        "classPercentCorrect": 0.75
+      },
+      {
+        "questionNumber": 2,
+        "correctAnswer": "A",
+        "classPercentCorrect": 0.7142857142857143
+      },
+      {
+        "questionNumber": 3,
+        "correctAnswer": "D",
+        "classPercentCorrect": 0.5357142857142857
+      },
+      {
+        "questionNumber": 4,
+        "correctAnswer": "B",
+        "classPercentCorrect": 0.5
+      },
+      {
+        "questionNumber": 5,
+        "correctAnswer": "B",
+        "classPercentCorrect": 0.5714285714285714
+      },
+      {
+        "questionNumber": 6,
+        "correctAnswer": "A",
+        "classPercentCorrect": 0.5357142857142857
+      }
+    ],
+    "studentGroups": {
+      "buildingUnderstanding": [
+        "S0048",
+        "S0114",
+        "S0140",
+        "S0239",
+        "S0340",
+        "S0414",
+        "S0522",
+        "S0590",
+        "S0707",
+        "S0719",
+        "S0773",
+        "S0931",
+        "S0970",
+        "S1039",
+        "S1283"
+      ],
+      "understoodConcept": [
+        "S0155",
+        "S0351",
+        "S0498",
+        "S0572",
+        "S0828",
+        "S0901",
+        "S0959",
+        "S1029",
+        "S1094",
+        "S1163",
+        "S1308",
+        "S1403",
+        "S1443"
+      ]
+    },
+    "wrongAnswerExplanations": [
+      {
+        "answer": "C",
+        "explanation": "Students may have confused the inequality symbol, thinking that a greater-than symbol (>) indicates the line should be included, leading them to choose a graph with an inclusive boundary."
+      },
+      {
+        "answer": "A",
+        "explanation": "The student likely misinterpreted the inequality, believing that a point on the line could satisfy an exclusive inequality, not recognizing that it should be excluded."
+      },
+      {
+        "answer": "A",
+        "explanation": "The student may have incorrectly applied the inclusive nature of the first inequality to the second, leading to an incorrect graphing of the first inequality."
+      },
+      {
+        "answer": "C",
+        "explanation": "This choice indicates a misunderstanding of how to properly shade the graph; the student likely thought that the line should be included and shaded incorrectly."
+      }
+    ],
+    "correctAnswerSolution": [
+      "Identify the type of inequality (inclusive or exclusive) from the given inequality.",
+      "Graph the boundary line accordingly: use a solid line for inclusive inequalities (\\leq or \\geq) and a dashed line for exclusive inequalities (< or >).",
+      "Shade the appropriate half-plane based on the inequality direction: above the line for \\geq or >, and below the line for \\leq or <."
+    ],
+    "moveOptions": [
+      {
+        "id": "nextstep-move-ai-3-1",
+        "title": "Spot the Boundary Error",
+        "time": "20 min",
+        "format": "Whole class",
+        "activityStructure": "Compare / Debate / Evaluate Strategies",
+        "summary": "Students compare and evaluate three student solution approaches that each make the same boundary/shading error. The class debates which parts are wrong and practices fixing the line style and shading by testing a point.",
+        "targets": "Choosing dashed vs. solid boundary and shading the correct half-plane after testing a point",
+        "instructionalMove": "Present three student solutions on the board using the \"Compare / Debate / Evaluate Strategies\" structure. Point out that each solution shows the same error pattern: a strict/inclusive confusion or wrong shading direction. Guide the class to test a point for each example, debate which region satisfies the inequality, and agree on the single concrete fix for the line style or shading.",
+        "strategyTag": "Contrast Correct vs Incorrect",
+        "aiReasoning": "Contrasting multiple incorrect solutions highlights the overgeneralization about boundaries and shading. Whole-class debate plus testing a point forces students to connect the symbol ($<$, $\\leq$, $>$, $\\\\geq$) to both the line type and the correct half-plane.",
+        "tabs": {
+          "overview": {
+            "whatStudentsDo": [
+              {
+                "label": "Observe",
+                "detail": "Read each student solution on the board and note the boundary style and shaded side."
+              },
+              {
+                "label": "Decide",
+                "detail": "Vote which solution has the conceptual error and give a one-sentence reason."
+              },
+              {
+                "label": "Test",
+                "detail": "Work with the class to test a point and use the result to choose which half-plane to shade."
+              }
+            ],
+            "whatYouDo": [
+              {
+                "label": "Display",
+                "detail": "Write or project three student solution posters that each contain exactly the boundary/shading error pattern."
+              },
+              {
+                "label": "Prompt",
+                "detail": "Ask the class to vote and defend which solution is wrong and why, using a test point when needed."
+              },
+              {
+                "label": "Model",
+                "detail": "Correct one solution on the board step-by-step and underline the rule connecting the inequality symbol to line style and shading."
+              }
+            ],
+            "importance": "The activity forces students to attend to two linked choices: whether the boundary is included and which side of the line satisfies the inequality. Confronting several versions of the same error makes the rule and fix stick."
+          },
+          "activitySteps": {
+            "setup": [
+              "Prepare three student solution slips or slides with the incorrect boundary/shading shown.",
+              "Have one large coordinate plane drawn on the board and class whiteboards or paper ready."
+            ],
+            "problem": "Graph the inequality $y < 2x + 1$ on the coordinate plane and indicate the correct boundary and shading.",
+            "incorrectWorkedExample1": {
+              "problem": "Graph $y < 2x + 1$.",
+              "incorrectWork": "Step 1: Identify the boundary: $y = 2x + 1$. Step 2: Draw the boundary as a solid line because the student thinks \"less than\" includes the boundary. Step 3: Pick a test point $(0,0)$. Evaluate: $0 < 1$ is true. Step 4: Shade the side of the line that contains $(0,0)$. Final: Solid line on $y = 2x + 1$ with shading below the line."
+            },
+            "incorrectWorkedExample2": {
+              "problem": "Graph $y > 3x - 2$.",
+              "incorrectWork": "Step 1: Identify the boundary: $y = 3x - 2$. Step 2: Draw the boundary as a dashed line. Step 3: Without testing a point, shade the half-plane below the line because the student misremembers which side 'greater than' means. Step 4: Final: Dashed line on $y = 3x - 2$ with shading below the line."
+            },
+            "incorrectWorkedExample3": {
+              "problem": "Graph $y \\\\geq -x + 4$.",
+              "incorrectWork": "Step 1: Identify the boundary: $y = -x + 4$. Step 2: Draw the boundary as a dashed line because the student confuses '$\\\\geq$' with a strict symbol. Step 3: Pick a test point $(0,0)$. Evaluate: $0 \\\\geq 4$ is false. Step 4: Shade the side opposite $(0,0)$. Final: Dashed line on $y = -x + 4$ with shading above the line."
+            },
+            "coreActivity": [
+              "Project the three student solutions side-by-side and read them aloud one at a time.",
+              "Have students vote with thumbs or quick whiteboard check: which example is wrong and why.",
+              "For each example, ask the class to pick a test point and compute the inequality result out loud.",
+              "After computing, ask students to indicate which half-plane to shade and whether the line should be dashed or solid.",
+              "Facilitate a short class debate when votes split and have two volunteers defend opposite choices for one example.",
+              "Model the corrected graph on the board and write a one-line rule: how the symbol decides line style and how testing a point decides shading."
+            ],
+            "discussionQuestions": [
+              "How does the inequality symbol tell you whether to use a dashed or solid line?",
+              "Why does testing a point tell you which half-plane to shade?",
+              "Which of the three student errors was easiest to fix and why?"
+            ],
+            "incorrectWorkedExamples": [
+              {
+                "problem": "Graph $y < 2x + 1$.",
+                "incorrectWork": "Step 1: Identify the boundary: $y = 2x + 1$. Step 2: Draw the boundary as a solid line because the student thinks \"less than\" includes the boundary. Step 3: Pick a test point $(0,0)$. Evaluate: $0 < 2(0) + 1$ is $0 < 1$, which is true. Step 4: Shade the side of the line that contains $(0,0)$. Final: Solid line on $y = 2x + 1$ with shading below the line."
+              },
+              {
+                "problem": "Graph $y > 3x - 2$.",
+                "incorrectWork": "Step 1: Identify the boundary: $y = 3x - 2$. Step 2: Draw the boundary as a dashed line. Step 3: Without testing a point, shade the half-plane below the line because the student misremembers which side 'greater than' means. Step 4: Final: Dashed line on $y = 3x - 2$ with shading below the line."
+              },
+              {
+                "problem": "Graph $y \\geq -x + 4$.",
+                "incorrectWork": "Step 1: Identify the boundary: $y = -x + 4$. Step 2: Draw the boundary as a dashed line because the student confuses '$\\geq$' with a strict symbol. Step 3: Pick a test point $(0,0)$. Evaluate: $0 \\geq -0 + 4$ is $0 \\geq 4$, which is false. Step 4: Shade the side opposite $(0,0)$, which is above the line. Final: Dashed line on $y = -x + 4$ with shading above the line."
+              }
+            ]
+          },
+          "materials": {
+            "required": [
+              "One large coordinate plane drawn on the board",
+              "Three printed or projected student solution slips (examples provided above)",
+              "Student whiteboards or paper and marker for quick votes"
+            ],
+            "optional": [
+              "Colored chalk or markers to show dashed vs. solid lines",
+              "Clicker or polling tool for votes"
+            ]
+          },
+          "studentGroupings": {
+            "groups": [
+              {
+                "name": "Group A: Needs Line-Style Support",
+                "description": "Students who draw solid lines for strict inequalities. Focus on practicing the symbol → line-style rule in quick follow-up tasks.",
+                "students": [
+                  "S0140",
+                  "S0931",
+                  "S0048",
+                  "S0239",
+                  "S0340",
+                  "S0414",
+                  "S0522",
+                  "S0590",
+                  "S0719",
+                  "S0828"
+                ]
+              },
+              {
+                "name": "Group B: Needs Shading Support",
+                "description": "Students who draw correct line style but shade the wrong half-plane. Focus on choosing and testing a point to decide shading.",
+                "students": [
+                  "S1039",
+                  "S1283",
+                  "S0114",
+                  "S0707",
+                  "S0773",
+                  "S0959",
+                  "S0970",
+                  "S1094",
+                  "S1403"
+                ]
+              },
+              {
+                "name": "Group C: Proficient with Minor Errors",
+                "description": "Students who mostly get both choices correct but occasionally hesitate. Give a short extension: graph a system of two inequalities.",
+                "students": [
+                  "S0155",
+                  "S0351",
+                  "S0498",
+                  "S0572",
+                  "S0901",
+                  "S1029",
+                  "S1163",
+                  "S1308",
+                  "S1443"
+                ]
+              }
+            ],
+            "aiRecommendation": "Group students based on exit-ticket results: put those who used the wrong boundary in Group A, those who shaded wrong in Group B, and those who were correct in Group C for a short 5-minute follow-up."
+          }
+        }
+      },
+      {
+        "id": "nextstep-move-ai-3-2",
+        "title": "Line and Region Check",
+        "time": "20 min",
+        "format": "Split class",
+        "activityStructure": "Multiple Entry Points / Representations",
+        "summary": "Students analyze incorrect graphs of linear inequalities using three representations (graph, test-point algebra, and verbal explanation). The activity targets students who used a solid boundary for a strict inequality or shaded the wrong half-plane by focusing attention on the single error in each representation.",
+        "targets": "Choose dashed vs. solid boundary correctly and shade the correct half-plane after testing a point",
+        "instructionalMove": "Model the Multiple Entry Points / Representations routine and name the specific error you want fixed. Give each group a different incorrect example and ask them to find the single mistake (either a wrong boundary style or wrong shading). Circulate between the two groups and prompt them to justify why the test point supports or rejects the shaded region.",
+        "strategyTag": "Make Structure Visible",
+        "aiReasoning": "Using multiple representations makes the abstract rule (dashed vs. solid and test-point shading) visible in several concrete ways. Splitting the class lets each half focus deeply on one specific error type from real student work (boundary vs shading). Parallel analysis forces students to compare representations during the whole-class debrief, which exposes the structural rule linking algebraic test results to the visual choice of line and region.",
+        "tabs": {
+          "overview": {
+            "whatStudentsDo": [
+              {
+                "label": "Analyze",
+                "detail": "Work in your half of the class to find the one specific error in the assigned example (boundary style or shading direction)."
+              },
+              {
+                "label": "Represent",
+                "detail": "Reproduce the example on a mini whiteboard in two forms: a quick sketch of the graph and the algebraic test using a test point."
+              },
+              {
+                "label": "Explain",
+                "detail": "Share a 30-second justification with the whole class that names the error and states the correct fix."
+              }
+            ],
+            "whatYouDo": [
+              {
+                "label": "Assign",
+                "detail": "Split the class into two groups based on prior responses: Group A (used solid boundary) and Group B (shaded wrong side)."
+              },
+              {
+                "label": "Facilitate",
+                "detail": "Circulate and ask focused questions that make the boundary-vs-shading structure explicit. Keep comments to short prompts."
+              },
+              {
+                "label": "Debrief",
+                "detail": "Bring the class back together. Project each group's revised representation and prompt them to compare how the test point determines both line type and shading."
+              }
+            ],
+            "importance": "The mistaken use of a solid line or the wrong shading both come from not linking the algebraic test to the visual choices. Multiple representations force students to see the same decision in algebra, graph, and words so they internalize the boundary rule and the test-point rule."
+          },
+          "activitySteps": {
+            "setup": [
+              "Project three incorrect worked examples on one slide. Each example shows the full student work for a single inequality.",
+              "Tell students you will split the class into two groups: Group A analyzes examples that used the wrong boundary style; Group B analyzes examples that shaded the wrong region.",
+              "Hand out mini whiteboards or paper and markers for quick sketching."
+            ],
+            "problem": "For each assigned inequality example, decide whether the graph shows the correct solution set. First, use a test point to verify if the shaded region of the graph corresponds to the solution set of the inequality. Then, identify the single step in the reasoning where the wrong inequality type was used and explain the error. Finally, state the correct reasoning step. (For example, if the inequality in question was $ax+b < c$, confirm that the test point satisfies the inequality and explain why using $\\le$ (or $\\ge$) would be incorrect.)",
+            "incorrectWorkedExample1": {
+              "problem": "Graph the solution to $y < 2x + 1$.",
+              "incorrectWork": "Student work:\n1. Start with the inequality: $y < 2x + 1$.\n2. Graph the boundary line $y = 2x + 1$ by plotting $(0,1)$ and $(1,3)$.\n3. Draw the boundary as a solid line through those points.  <- error: used solid line for a strict inequality\n4. Test point $(0,0)$: $0 < 2(0) + 1$ so $0 < 1$ is true.\n5. Shade the half-plane containing $(0,0)$ (the region below the line).\nFinal claim: The solution is the region below the solid line $y = 2x + 1$."
+            },
+            "incorrectWorkedExample2": {
+              "problem": "Graph the solution to $y < x - 3$.",
+              "incorrectWork": "Student work:\n1. Start with the inequality: $y < x - 3$.\n2. Graph the boundary line $y = x - 3$ and draw it as a dashed line (correct style).\n3. Choose test point $(0,0)$. Evaluate: $0 < 0 - 3$ so $0 < -3$ is false.\n4. Student shades the half-plane that contains $(0,0)$.  <- error: shaded the wrong half-plane after a false test\n5. Final claim: The solution is the region above the dashed line (the side containing $(0,0)$)."
+            },
+            "incorrectWorkedExample3": {
+              "problem": "Graph the solution to $y > -\\tfrac{1}{2}x + 2$.",
+              "incorrectWork": "Student work:\n1. Start with the inequality: $y > -\\tfrac{1}{2}x + 2$.\n2. Graph the boundary line $y = -\\tfrac{1}{2}x + 2$ using points $(0,2)$ and $(2,1)$.\n3. Draw the boundary as a solid line through those points.  <- error: used solid line for a strict inequality\n4. Test point $(0,0)$: $0 > -\\tfrac{1}{2}(0) + 2$, so $0 > 2$ is false.\n5. Shade the half-plane opposite $(0,0)$ (the region above the line).  (Shading choice follows the test result.)\nFinal claim: The solution is the region above the solid line $y = -\\tfrac{1}{2}x + 2$."
+            },
+            "coreActivity": [
+              "Tell Group A to analyze the example that uses an incorrect boundary style and to reproduce the graph and the algebraic test on their board.",
+              "Tell Group B to analyze the example that shades the wrong region and to reproduce the graph and the algebraic test on their board.",
+              "Give groups 8 minutes to identify the single mistake and write a one-sentence correction that names the rule (e.g., 'use dashed line for $<$ or $>$').",
+              "Bring the class together. Have one representative from each group present their corrected sketch and the test-point evaluation in one minute.",
+              "Project the third example and ask the class to decide quickly whether it is a boundary error or a shading error, and explain why in one sentence.",
+              "Conclude by writing the short rule on the board: 'For $<$ or $>$ use dashed line. Test a point not on the line. If test true, shade that side; if false, shade the other side.'"
+            ],
+            "discussionQuestions": [
+              "Which point did you test and why does the test result tell you which side to shade?",
+              "How does a strict inequality ($<$ or $>$) change your boundary drawing compared to $\u000260$ or $\u0003C0$? (Teacher target: students should say 'dashed for $<$ or $>$, solid for $\\leq$ or $\\geq$')",
+              "If a student tests a point on the line and gets equality, what does that tell you about shading and boundary style?"
+            ],
+            "incorrectWorkedExamples": [
+              {
+                "problem": "Graph the solution to $y < 2x + 1$.",
+                "incorrectWork": "Student work:\n1. Start with the inequality: $y < 2x + 1$.\n2. Graph the boundary line $y = 2x + 1$ by plotting $(0,1)$ and $(1,3)$.\n3. Draw the boundary as a solid line through those points.  <- error: used solid line for a strict inequality\n4. Test point $(0,0)$: since $0 < 2(0) + 1$, i.e. $0 < 1$, the test point satisfies the inequality.\n5. Shade the half-plane containing $(0,0)$ (the region below the line).\nFinal claim: The solution is the region below the solid line $y = 2x + 1$."
+              },
+              {
+                "problem": "Graph the solution to $y < x - 3$.",
+                "incorrectWork": "Student work:\n1. Start with the inequality: $y < x - 3$.\n2. Graph the boundary line $y = x - 3$ by plotting points (for example, $(0,-3)$ and $(3,0)$) and draw it as a dashed line (correct style for a strict inequality).\n3. Choose test point $(0,0)$. Evaluate: $0 < 0 - 3$, i.e. $0 < -3$, which is false.\n4. Instead of shading the half-plane that does not contain $(0,0)$, the student mistakenly shades the half-plane that contains $(0,0)$.  <- error: incorrect shading after test point evaluation\n5. Final claim: The solution is the region above the dashed line (the side containing $(0,0)$)."
+              },
+              {
+                "problem": "Graph the solution to $y \\ge 2x + 3$.",
+                "incorrectWork": "Student work:\n1. Start with the inequality: $y \\ge 2x + 3$.\n2. Graph the boundary line $y = 2x + 3$ using points $(0,3)$ and $(1,5)$.\n3. Draw the boundary as a dashed line instead of a solid line.  <- error: used dashed line for an inclusive inequality\n4. Test point $(0,0)$: since $0 \\ge 2(0) + 3$, i.e. $0 \\ge 3$, is false, identify that the solution region is the half-plane that does not include $(0,0)$.\n5. Shade the half-plane opposite to $(0,0)$ (the region above the line).\nFinal claim: The solution is the region above the dashed line $y = 2x + 3$."
+              }
+            ]
+          },
+          "materials": {
+            "required": [
+              "Projected slide or board with the three incorrect worked examples already written",
+              "Mini whiteboards, markers, or paper and pens for each student group"
+            ],
+            "optional": [
+              "Graph paper",
+              "Colored markers to mark dashed vs solid and shaded regions"
+            ]
+          },
+          "studentGroupings": {
+            "groups": [
+              {
+                "name": "Group A: Boundary-style group",
+                "description": "Students who used a solid boundary for a strict inequality. Focus on why $<$ and $>$ require dashed lines and how inclusion/exclusion affects solutions.",
+                "students": [
+                  "S0140",
+                  "S0931",
+                  "S0048",
+                  "S0239",
+                  "S0340",
+                  "S0414",
+                  "S0522",
+                  "S0590",
+                  "S0719",
+                  "S0828",
+                  "S1039",
+                  "S1283",
+                  "S0114",
+                  "S0707"
+                ]
+              },
+              {
+                "name": "Group B: Shading-direction group",
+                "description": "Students who shaded the wrong half-plane. Focus on using a test point and interpreting the test result to choose which side to shade.",
+                "students": [
+                  "S0773",
+                  "S0959",
+                  "S0970",
+                  "S1094",
+                  "S1403",
+                  "S0155",
+                  "S0351",
+                  "S0498",
+                  "S0572",
+                  "S0901",
+                  "S1029",
+                  "S1163",
+                  "S1308",
+                  "S1443"
+                ]
+              }
+            ],
+            "aiRecommendation": "Group students by the error they showed on the exit/quiz: those who used solid lines go to Group A; those who shaded the wrong side go to Group B. Keep groups stable for this single activity and rotate to listen to each group's explanation during the debrief."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "nextstep-ai-4",
+    "sourceMisconceptionId": "36942976-70ce-4f9f-9a0e-f509f4f34a71",
+    "title": "Slope Misidentification in Inequalities",
+    "frequency": "few",
+    "studentCount": 5,
+    "studentPercent": 0.179,
+    "wrongAnswers": [
+      {
+        "questionNumber": 1,
+        "letter": "B"
+      },
+      {
+        "questionNumber": 1,
+        "letter": "D"
+      }
+    ],
+    "linkStatus": "linked",
+    "isCore": false,
+    "occurrence": "first",
+    "example": {
+      "incorrect": "Selected graph of $y = -6x + 3$",
+      "correct": "Selected graph of $y = 6x + 3$"
+    },
+    "misconceptionSummary": "Reads slope incorrectly when converting inequalities to slope-intercept form, then selects graphs with the wrong slope. PPQ Q1 included 5 students who selected graphs reflecting slope sign or magnitude errors.",
+    "aiReasoning": "On Q1 five students chose options attributed to slope misidentification (B and D); classPercentCorrect = 75% but the remaining errors point to confusion converting to $y=mx+b$.",
+    "successIndicators": [
+      "Convert inequalities into $y=mx+b$ correctly",
+      "Plot line with correct slope and intercept"
+    ],
+    "ccssStandards": {
+      "targetObjective": {
+        "standard": "HSA-REI.D.12",
+        "description": "Graph the solutions to a linear inequality in two variables as a half-plane (excluding the boundary in the case of a strict inequality), and graph the solution set to a system of linear inequalities in two variables as the intersection of the corresponding half-planes.",
+        "learningComponents": [
+          "Graph the solution set to a system of linear inequalities in two variables as the intersection of their corresponding half-planes",
+          "Graph the solutions to a linear inequality in two variables as a half-plane, excluding the boundary for non-inclusive inequalities"
+        ]
+      },
+      "impactedObjectives": [
+        {
+          "standard": "HSA-CED.A.3",
+          "description": "Represent constraints by equations or inequalities, and by systems of equations and/or inequalities, and interpret solutions as viable or nonviable options in a modeling context. *For example, represent inequalities describing nutritional and cost constraints on combinations of different foods.*"
+        }
+      ],
+      "prerequisiteGaps": [
+        {
+          "standard": "8.EE.C.8",
+          "description": "Analyze and solve pairs of simultaneous linear equations."
+        }
+      ]
+    },
+    "evidence": {
+      "source": "PPQ Q1",
+      "mostCommonError": "Chose graph corresponding to $y=-6x+3$ instead of correct slope",
+      "sampleStudentWork": [
+        "Plotted line with opposite sign slope",
+        "Chose graph of $y=-6x+3$ when inequality required positive slope"
+      ],
+      "aiThinkingPattern": "Weakness converting forms and sign errors when isolating y or dividing coefficients."
+    },
+    "questionErrorRates": [
+      {
+        "label": "Q1",
+        "errorRate": 25
+      },
+      {
+        "label": "Q2",
+        "errorRate": 29
+      },
+      {
+        "label": "Q3",
+        "errorRate": 46
+      },
+      {
+        "label": "Q4",
+        "errorRate": 50
+      },
+      {
+        "label": "Q5",
+        "errorRate": 43
+      },
+      {
+        "label": "Q6",
+        "errorRate": 46
+      }
+    ],
+    "ppqQuestions": [
+      {
+        "questionNumber": 1,
+        "correctAnswer": "A",
+        "classPercentCorrect": 0.75
+      },
+      {
+        "questionNumber": 2,
+        "correctAnswer": "A",
+        "classPercentCorrect": 0.7142857142857143
+      },
+      {
+        "questionNumber": 3,
+        "correctAnswer": "D",
+        "classPercentCorrect": 0.5357142857142857
+      },
+      {
+        "questionNumber": 4,
+        "correctAnswer": "B",
+        "classPercentCorrect": 0.5
+      },
+      {
+        "questionNumber": 5,
+        "correctAnswer": "B",
+        "classPercentCorrect": 0.5714285714285714
+      },
+      {
+        "questionNumber": 6,
+        "correctAnswer": "A",
+        "classPercentCorrect": 0.5357142857142857
+      }
+    ],
+    "studentGroups": {
+      "buildingUnderstanding": [
+        "S0048",
+        "S0114",
+        "S0140",
+        "S0239",
+        "S0340",
+        "S0414",
+        "S0522",
+        "S0590",
+        "S0707",
+        "S0719",
+        "S0773",
+        "S0931",
+        "S0970",
+        "S1039",
+        "S1283"
+      ],
+      "understoodConcept": [
+        "S0155",
+        "S0351",
+        "S0498",
+        "S0572",
+        "S0828",
+        "S0901",
+        "S0959",
+        "S1029",
+        "S1094",
+        "S1163",
+        "S1308",
+        "S1403",
+        "S1443"
+      ]
+    },
+    "wrongAnswerExplanations": [
+      {
+        "answer": "B",
+        "explanation": "The student likely misidentified the slope because they did not convert the inequality to slope-intercept form, leading them to incorrectly assume the slope was -6."
+      },
+      {
+        "answer": "D",
+        "explanation": "The student may have confused the slope and y-intercept values, mistakenly selecting the graph of $y = -6x + 3$ instead of correctly identifying the slope from the inequality."
+      }
+    ],
+    "correctAnswerSolution": [
+      "Identify the inequality and isolate $y$ to convert it to slope-intercept form ($y = mx + b$).",
+      "Determine the slope ($m$) from the equation in slope-intercept form.",
+      "Select the graph that matches the identified slope and the correct direction based on the inequality sign."
+    ],
+    "moveOptions": [
+      {
+        "id": "nextstep-move-ai-4-1",
+        "title": "Construct the Correct Slope Pathway",
+        "time": "20 min",
+        "format": "Whole class",
+        "activityStructure": "Strategy Construction / Corrective Pathway",
+        "summary": "Students analyze three incorrect conversions of linear inequalities, identify the single step that produced the wrong slope, and build a corrected step-by-step pathway from the algebra to the graph. This targets the specific error of reading slope or sign incorrectly when converting to slope-intercept form.",
+        "targets": "Convert a linear inequality to slope-intercept form and identify the correct slope sign and magnitude for graphing",
+        "instructionalMove": "Guide the whole class through a Strategy Construction / Corrective Pathway. Show each incorrect worked example and ask the class to point to the single step where the slope is read wrong. Then model the corrected isolation or division step and draw the corresponding rise/run on the board.",
+        "strategyTag": "Guided Error Analysis",
+        "aiReasoning": "The Strategy Construction structure forces students to rebuild the correct pathway after seeing the exact error that misidentifies slope. Error-first analysis focuses attention on the one conceptual step (reading slope/intercept or sign) that causes wrong graphs. Guided whole-class work with board modeling links algebraic manipulation, sign/division reasoning, and the visual rise/run needed for graphing, addressing prerequisite isolation/division gaps.",
+        "tabs": {
+          "overview": {
+            "whatStudentsDo": [
+              {
+                "label": "Analyze",
+                "detail": "Read one incorrect conversion aloud and circle the step that produces the wrong slope or sign."
+              },
+              {
+                "label": "Build",
+                "detail": "Write a corrected, ordered pathway from the original inequality to slope-intercept form on mini whiteboards."
+              },
+              {
+                "label": "Show",
+                "detail": "Hold up corrected work and compare the board model of slope as rise/run to their answer."
+              }
+            ],
+            "whatYouDo": [
+              {
+                "label": "Present",
+                "detail": "Project or write one incorrect worked example at a time. Point out the algebra up to the incorrect step."
+              },
+              {
+                "label": "Prompt",
+                "detail": "Ask students to name the single misconception step and explain in one sentence why it is wrong."
+              },
+              {
+                "label": "Model",
+                "detail": "Write the corrected isolation/division step. Then draw a short rise/run vector and label slope and intercept on the graph."
+              }
+            ],
+            "importance": "The activity targets the exact error students made: reading slope or sign incorrectly when isolating y. Building a corrective pathway connects algebraic manipulation to the visual slope, closing the gap needed for later modeling with constraints."
+          },
+          "activitySteps": {
+            "setup": [
+              "Write or project the central problem and the three incorrect worked examples (prepared below).",
+              "Give each student a mini whiteboard and marker.",
+              "Prepare to draw a coordinate plane area on the board for quick sketching."
+            ],
+            "problem": "Convert the inequality and show its graph pathway: $$6x + y < 3$$",
+            "incorrectWorkedExample1": {
+              "problem": "Convert and identify slope/intercept: $$6x + y < 3$$",
+              "incorrectWork": "Start: $$6x + y < 3$$\nStep 1: Subtract $$6x$$ from both sides: $$y < -6x + 3$$\nStep 2: Read off slope and intercept: Slope = $$3$$, y-intercept = $$-6$$  (student swaps slope and intercept)\nConclusion: Graph the line with slope $$3$$ and intercept $$(0,-6)$$ and shade below."
+            },
+            "incorrectWorkedExample2": {
+              "problem": "Convert and identify slope/intercept: $$y - 2 \\le -4x$$",
+              "incorrectWork": "Start: $$y - 2 \\le -4x$$\nStep 1: Add $$2$$ to both sides: $$y \\le -4x + 2$$\nStep 2: Read off slope and intercept: Slope = $$4$$, y-intercept = $$2$$  (student drops the negative sign on the slope)\nConclusion: Graph the line with slope $$4$$ and intercept $$(0,2)$$ and shade below."
+            },
+            "incorrectWorkedExample3": {
+              "problem": "Convert and identify slope/intercept: $$3x - 2y \\ge 6$$",
+              "incorrectWork": "Start: $$3x - 2y \\ge 6$$\nStep 1: Subtract $$3x$$ from both sides: $$-2y \\ge -3x + 6$$\nStep 2: Divide both sides by $$-2$$ and flip inequality: $$y \\le \\frac{3}{2}x -3$$ (correct algebra)\nStep 3: Read off slope and intercept: Slope = $$-\\tfrac{3}{2}$$, y-intercept = $$-3$$  (student flips the sign of the slope when reading)\nConclusion: Graph the line with slope $$-\\tfrac{3}{2}$$ and intercept $$(0,-3)$$ and shade below."
+            },
+            "coreActivity": [
+              "Show incorrectWorkedExample1 on the board. Read aloud the algebra until the incorrect read-off step.",
+              "Ask: 'Which single statement is incorrect? Point to it.' Pause for a quick hand signal.",
+              "Have students write a corrected one-line pathway on mini whiteboards (isolate y, simplify, identify slope).",
+              "Model the corrected step and draw the line with a labeled rise/run vector on the board.",
+              "Repeat with incorrectWorkedExample2 and incorrectWorkedExample3, each time asking students to name exactly the misconception.",
+              "Wrap up by asking students to rewrite a single sentence rule for reading slope and intercept after isolating y."
+            ],
+            "discussionQuestions": [
+              "Where in the pathway did the slope get misread, and why does that change the graph direction?",
+              "How does the sign on the coefficient of $$x$$ after you isolate $$y$$ determine the rise/run?",
+              "If you get $$y < -6x + 3$$, what quick board sketch shows why slope = $$-6$$ and intercept = $$3$$?"
+            ],
+            "incorrectWorkedExamples": [
+              {
+                "problem": "Convert and identify slope/intercept: $$6x + y < 3$$",
+                "incorrectWork": "Start: $$6x + y < 3$$\nStep 1: Subtract $$6x$$ from both sides: $$y < -6x + 3$$\nStep 2: Read off slope and intercept: Slope = $$3$$, y-intercept = $$-6$$  (student swaps slope and intercept)\nConclusion: Graph the line with slope $$3$$ and intercept $$(0,-6)$$ and shade below."
+              },
+              {
+                "problem": "Convert and identify slope/intercept: $$y - 2 \\le -4x$$",
+                "incorrectWork": "Start: $$y - 2 \\le -4x$$\nStep 1: Add $$2$$ to both sides: $$y \\le -4x + 2$$\nStep 2: Read off slope and intercept: Slope = $$4$$, y-intercept = $$2$$  (student drops the negative sign on the slope)\nConclusion: Graph the line with slope $$4$$ and intercept $$(0,2)$$ and shade below."
+              },
+              {
+                "problem": "Convert and identify slope/intercept: $$3x - 2y \\ge 6$$",
+                "incorrectWork": "Start: $$3x - 2y \\ge 6$$\nStep 1: Subtract $$3x$$ from both sides: $$-2y \\ge -3x + 6$$\nStep 2: Divide both sides by $$-2$$ and flip inequality: $$y \\le \\frac{3}{2}x - 3$$ (correct algebra)\nStep 3: Read off slope and intercept: Slope = $$-\\tfrac{3}{2}$$, y-intercept = $$-3$$  (student flips the sign of the slope when reading)\nConclusion: Graph the line with slope $$-\\tfrac{3}{2}$$ and intercept $$(0,-3)$$ and shade below."
+              }
+            ]
+          },
+          "materials": {
+            "required": [
+              "Projector or board with the three incorrect worked examples written.",
+              "Mini whiteboards and markers for each student.",
+              "A drawn coordinate plane area on the main board."
+            ],
+            "optional": [
+              "Colored markers to show rise/run and intercept separately."
+            ]
+          },
+          "studentGroupings": {
+            "groups": [
+              {
+                "name": "Group A: Misreads slope sign",
+                "description": "Students who isolate y correctly but write the wrong sign for the slope. Focus: sign interpretation and rise/run.",
+                "students": [
+                  "S0140",
+                  "S0239",
+                  "S0340",
+                  "S0522",
+                  "S0828",
+                  "S0931",
+                  "S1403",
+                  "S0048",
+                  "S0114",
+                  "S0155"
+                ]
+              },
+              {
+                "name": "Group B: Swaps slope and intercept",
+                "description": "Students who swap the numbers for slope and intercept after isolating y. Focus: mapping the linear form $$y=mx+b$$ parts to graph features.",
+                "students": [
+                  "S0351",
+                  "S0414",
+                  "S0498",
+                  "S0572",
+                  "S0590",
+                  "S0707",
+                  "S0719",
+                  "S0773",
+                  "S0901"
+                ]
+              },
+              {
+                "name": "Group C: Mostly correct with minor slips",
+                "description": "Students who convert correctly but hesitate when sketching slope as rise/run. Focus: quick visual sketch practice.",
+                "students": [
+                  "S0959",
+                  "S0970",
+                  "S1029",
+                  "S1039",
+                  "S1094",
+                  "S1163",
+                  "S1283",
+                  "S1308",
+                  "S1443"
+                ]
+              }
+            ],
+            "aiRecommendation": "Use quick formative signals to sort students: after first example have students show A/B/C on cards. Pull small groups later for targeted practice based on signals."
+          }
+        }
+      },
+      {
+        "id": "nextstep-move-ai-4-2",
+        "title": "Analyze Graphs for Misidentification",
+        "time": "20 min",
+        "format": "Split class",
+        "activityStructure": "Analyze Graphs for Misidentification",
+        "summary": "Students split into two groups to analyze incorrect graphing work that misidentifies slope when converting inequalities to slope-intercept form. The activity forces students to find the single step that produced the wrong slope and to correct it before sketching the half-plane.",
+        "targets": "Convert a linear inequality into $y=mx+b$ correctly and plot the line with the correct slope and intercept",
+        "instructionalMove": "Guide students through the Analyze Graphs for Misidentification routine. Tell each group which incorrect worked examples to analyze and ask them to point to the single step that produced the wrong slope. Model a concise correction on the board after groups present and then ask students to sketch the corrected line and half-plane.",
+        "strategyTag": "Contrast Correct vs Incorrect",
+        "aiReasoning": "A split-class, contrastive analysis helps students who chose the wrong graph see exactly where algebraic manipulation produced a slope error. The chosen structure forces error-first reasoning: students diagnose a single incorrect step, compare it to correct algebraic isolation of $y$, and then connect that algebra to the visual slope on the graph. Parallel analysis gives the small group of students who picked the $y=-6x+3$ graph multiple, varied incorrect examples to reveal the same underlying misreading of slope (swap, dropped negative, magnitude confusion). The Contrast Correct vs Incorrect tag fits because students explicitly compare the incorrect reading to the correct reading of $m$ and $b$, strengthening structural understanding needed for HSA-REI.D.12 and downstream constraint modeling standards.",
+        "tabs": {
+          "overview": {
+            "whatStudentsDo": [
+              {
+                "label": "Analyze",
+                "detail": "Work in a small group to find the single step in each assigned incorrect solution that caused the wrong slope."
+              },
+              {
+                "label": "Explain",
+                "detail": "Say exactly why that step is wrong and show the corrected algebraic step that gives the true $m$ and $b$."
+              },
+              {
+                "label": "Sketch",
+                "detail": "Draw the corrected line and shade the appropriate half-plane on graph paper or whiteboard space."
+              }
+            ],
+            "whatYouDo": [
+              {
+                "label": "Assign",
+                "detail": "Name the two groups and give each group their assigned incorrect examples to analyze."
+              },
+              {
+                "label": "Circulate",
+                "detail": "Listen for whether students identify the slope-reading error and prompt them with targeted questions about isolating $y$ and dividing coefficients."
+              },
+              {
+                "label": "Highlight",
+                "detail": "Project one corrected example and explicitly contrast the incorrect reading of $m$ and $b$ with the correct reading."
+              }
+            ],
+            "importance": "The activity targets the exact error pattern: misreading the slope when converting an inequality to $y=mx+b$. By analyzing incorrect work first, students must justify the correction, linking algebraic isolation of $y$ to the visual slope on the graph."
+          },
+          "activitySteps": {
+            "setup": [
+              "Project the three incorrect worked examples on the board.",
+              "Split the class into exactly two groups: Group A (students who picked the wrong graph in the quiz) and Group B (the rest).",
+              "Give each student a mini whiteboard or graph paper and a marker."
+            ],
+            "problem": "Each group will analyze their assigned incorrect worked examples, identify the single incorrect step that produced the wrong slope, write the corrected equation in $y=mx+b$ form, and sketch the corrected line and half-plane.",
+            "incorrectWorkedExample1": {
+              "problem": "Graph the inequality $6x + 3y \\leq 18$.",
+              "incorrectWork": "1. Start: $6x + 3y \\leq 18$. \n2. Subtract $6x$: $3y \\leq -6x + 18$. \n3. Divide by $3$: $y \\leq -2x + 6$. \n4. Student reads slope and intercept: \"Slope = 6, y\\-intercept = -2.\"  \n5. Student writes: $y \\leq 6x - 2$. \n6. Student sketches the line with slope $6$ and shades below."
+            },
+            "incorrectWorkedExample2": {
+              "problem": "Graph the inequality $4x + 2y < 10$.",
+              "incorrectWork": "1. Start: $4x + 2y < 10$. \n2. Subtract $4x$: $2y < -4x + 10$. \n3. Divide by $2$: $y < -2x + 5$. \n4. Student reads slope as positive: \"Slope = 2, y\\-intercept = 5.\" \n5. Student writes: $y < 2x + 5$. \n6. Student sketches the line with slope $2$ and shades below."
+            },
+            "incorrectWorkedExample3": {
+              "problem": "Graph the inequality $x + 5y \\geq 10$.",
+              "incorrectWork": "1. Start: $x + 5y \\geq 10$. \n2. Subtract $x$: $5y \\geq -x + 10$. \n3. Divide by $5$: $y \\geq -\\frac{1}{5}x + 2$. \n4. Student reads the slope magnitude incorrectly: \"Slope = -5, y\\-intercept = 2.\" \n5. Student writes: $y \\geq -5x + 2$. \n6. Student sketches the line with slope $-5$ and shades above."
+            },
+            "coreActivity": [
+              "Tell groups their assigned examples: Group A analyzes Examples 1 and 2. Group B analyzes Example 3.",
+              "Give groups 8 minutes to underline the single incorrect step, write a one-line explanation naming the error (swap, dropped negative, wrong magnitude), and produce the corrected $y=mx+b$ equation and quick sketch.",
+              "Circulate and ask a prompting question to any group not identifying the error: \"When you isolated $y$, how did you get the coefficient in front of $x$?\"",
+              "Bring the class back. Have one spokesperson from each group read the incorrect step and the corrected equation aloud.",
+              "Project one corrected example. Ask pairs to quickly check their neighbor's corrected sketch for slope and intercept and mark OK or Fix.",
+              "End with two fresh quick problems to convert to $y=mx+b$ and sketch independently for 3 minutes."
+            ],
+            "discussionQuestions": [
+              "Which single algebraic step changed the slope reading, and why did that change the graph choice?",
+              "If a student draws a line with slope $-5$ instead of $-\\tfrac{1}{5}$, which algebraic step likely caused that error?",
+              "How does isolating $y$ make the slope $m$ visible in the equation $y=mx+b$?"
+            ],
+            "incorrectWorkedExamples": [
+              {
+                "problem": "Graph the inequality $6x + 3y \\leq 18$.",
+                "incorrectWork": "1. Start: $6x + 3y \\leq 18$. \n2. Subtract $6x$: $3y \\leq -6x + 18$. \n3. Divide by $3$: $y \\leq -2x + 6$. \n4. Student reads slope and intercept: \"Slope = 6, y\\-intercept = -2.\"  \n5. Student writes: $y \\leq 6x - 2$. \n6. Student sketches the line with slope $6$ and shades below."
+              },
+              {
+                "problem": "Graph the inequality $4x + 2y < 10$.",
+                "incorrectWork": "1. Start: $4x + 2y < 10$. \n2. Subtract $4x$: $2y < -4x + 10$. \n3. Divide by $2$: $y < -2x + 5$. \n4. Student reads slope as positive: \"Slope = 2, y\\-intercept = 5.\" \n5. Student writes: $y < 2x + 5$. \n6. Student sketches the line with slope $2$ and shades below."
+              },
+              {
+                "problem": "Graph the inequality $x + 5y \\geq 10$.",
+                "incorrectWork": "1. Start: $x + 5y \\geq 10$. \n2. Subtract $x$: $5y \\geq -x + 10$. \n3. Divide by $5$: $y \\geq -\\frac{1}{5}x + 2$. \n4. Student reads the slope magnitude incorrectly: \"Slope = -5, y\\-intercept = 2.\" \n5. Student writes: $y \\geq -5x + 2$. \n6. Student sketches the line with slope $-5$ and shades above."
+              }
+            ]
+          },
+          "materials": {
+            "required": [
+              "Projected slide or board with three incorrect worked examples",
+              "Graph paper or mini whiteboards for students",
+              "Markers"
+            ],
+            "optional": [
+              "Copy of the incorrect examples printed for students"
+            ]
+          },
+          "studentGroupings": {
+            "groups": [
+              {
+                "name": "Group A: Chose the wrong graph (slope misread)",
+                "description": "Students who selected the quiz graph that shows the slope-sign or magnitude error (for example, the graph corresponding to $y=-6x+3$). They analyze Examples 1 and 2 which show swap/drop-negative errors.",
+                "students": [
+                  "S0140",
+                  "S0239",
+                  "S0340",
+                  "S0522",
+                  "S0828",
+                  "S0931",
+                  "S1403",
+                  "S0048",
+                  "S0114",
+                  "S0155",
+                  "S0351",
+                  "S0414",
+                  "S0498",
+                  "S0572"
+                ]
+              },
+              {
+                "name": "Group B: Other responses",
+                "description": "Students who did not pick the specific slope-misidentification graph. They analyze Example 3 which shows a magnitude misreading error.",
+                "students": [
+                  "S0590",
+                  "S0707",
+                  "S0719",
+                  "S0773",
+                  "S0901",
+                  "S0959",
+                  "S0970",
+                  "S1029",
+                  "S1039",
+                  "S1094",
+                  "S1163",
+                  "S1283",
+                  "S1308",
+                  "S1443"
+                ]
+              }
+            ],
+            "aiRecommendation": "Group students by their quiz response pattern so those who made the exact slope error work together. Keep groups at normal seating (no moving) so transition is fast. Rotate which students explain aloud to rehearse mathematical language."
+          }
+        }
+      }
+    ]
+  }
+]

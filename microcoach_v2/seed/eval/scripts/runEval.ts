@@ -1,14 +1,14 @@
 /**
  * runEval.ts — the single entry point for eval runs.
  *
- *   yarn eval [options]
+ *   yarn seed:eval [options]
  *
  * Wraps the generation pipeline so the eval has one command with plain options,
- * rather than callers remembering which `yarn generate` flags put it in fixture
+ * rather than callers remembering which `yarn seed:generate` flags put it in fixture
  * mode. Everything here is read-only with respect to the database: fixture mode is
  * always on, so no run can write to DynamoDB.
  *
- * Each run writes a directory under src/eval/runs/ — see ../../README.md.
+ * Each run writes a directory under seed/eval/runs/ — see ../../README.md.
  */
 
 import * as fs from 'fs';
@@ -109,7 +109,7 @@ function main(): void {
     console.log(`Failed: ${failures.join(', ')}`);
     process.exit(1);
   }
-  console.log('Output in src/eval/runs/');
+  console.log('Output in seed/eval/runs/');
 }
 
 try {

@@ -8,6 +8,13 @@
       "cognitoUserPoolId": "authmicrocoachv2bb9ce5a2"
     },
     "conflictResolution": {},
-    "additionalAuthTypes": []
+    "additionalAuthTypes": [
+      {
+        "mode": "API_KEY",
+        "expirationTime": 30,
+        "apiKeyExpirationDate": "2026-10-10T00:58:14.806Z",
+        "keyDescription": "pipe"
+      }
+    ]
   }
 }
