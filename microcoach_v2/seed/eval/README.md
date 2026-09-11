@@ -3,14 +3,18 @@
 Measures what the Learning Commons knowledge graph contributes to pipeline output, by
 withholding one part of it at a time and comparing the results.
 
-One command, run from `api/`:
+One command, run from `microcoach_v2/`:
 
 ```bash
-yarn eval --session all
+yarn seed:eval --session all
 ```
 
-**No database access.** Every run reads frozen fixtures from disk and writes only to
-`src/eval/runs/`. It cannot touch DynamoDB, so it is safe to run against any environment.
+**No database writes.** Every run reads frozen fixtures from disk and writes only to
+`seed/eval/runs/`, so it never mutates DynamoDB and is safe to run against any environment.
+
+**It is not offline, though.** The pipeline stages are invoked as the *deployed* Lambdas —
+`microcoachv2GetLearningScience-$AMPLIFY_ENV`, `-LLMAnalysis-`, `-NextStepOption-` — so a run
+needs AWS credentials and spends real model tokens. `AMPLIFY_ENV` defaults to `dev`.
 
 ---
 
@@ -21,6 +25,7 @@ yarn eval --session all
 | `--session <id\|all>` | **required** | One session, or `all`. Accepts a prefix, so `--session ef38` works. |
 | `--condition <NAME\|all>` | `NONE` | One condition, or `all`. |
 | `--live-graph` | off | Re-query Learning Commons instead of replaying the archived response. |
+| `--version <tag>` | none | Optional label recorded in the run id and manifest, for grouping runs in the preview dropdown. Purely a tag — it does **not** pin prompt config; the Lambdas import theirs statically at deploy time. |
 | `--list` | — | Show available sessions and conditions, then exit. |
 
 `--session` has no default on purpose — fanning out across every session should be
@@ -28,11 +33,11 @@ something you asked for, not something you got by omitting a flag. The full matr
 needs both dimensions opened explicitly.
 
 ```bash
-yarn eval --list                                 # what's available
-yarn eval --session ef3872a1                     # one session, condition NONE
-yarn eval --session all                          # every session, condition NONE
-yarn eval --session ef3872a1 --condition all     # one session, every condition
-yarn eval --session all --condition all          # the full matrix — 55 runs
+yarn seed:eval --list                                 # what's available
+yarn seed:eval --session ef3872a1                     # one session, condition NONE
+yarn seed:eval --session all                          # every session, condition NONE
+yarn seed:eval --session ef3872a1 --condition all     # one session, every condition
+yarn seed:eval --session all --condition all          # the full matrix — 55 runs
 ```
 
 ### Conditions
@@ -63,7 +68,7 @@ condition rather than to the partner API changing underneath the matrix.
 ## What a run produces
 
 ```
-src/eval/runs/<classroom>-<session>-<condition>-<timestamp>/
+seed/eval/runs/<classroom>-<session>-<condition>-<timestamp>/
   output.json        the next-step array — this is what gets scored
   manifest.json      condition, git sha, tokens, model list, link-health counters
   calls/             every Lambda request and response, in order
@@ -92,11 +97,11 @@ aggregating.
 
 ## Fixtures
 
-`src/eval/fixtures/<id>/` — one folder per session, three files:
+`seed/eval/fixtures/<id>/` — one folder per session, three files:
 
 | file | contents | production equivalent |
 |---|---|---|
-| `input.json` | keyed by DynamoDB table: `Classroom`, `Student`, `Session`, `Assessment`, `StudentResponse`, `Misconception` | the rows `yarn upload` writes to the database |
+| `input.json` | keyed by DynamoDB table: `Classroom`, `Student`, `Session`, `Assessment`, `StudentResponse`, `Misconception` | the rows `yarn seed:upload` writes to the database |
 | `kg.json` | the archived Learning Commons responses | what the graph query returns at generate time |
 | `meta.json` | session id and provenance | none — harness metadata |
 
@@ -113,12 +118,12 @@ unscoreable there.
 ## Layout
 
 ```
-src/eval/
+seed/eval/
   types.ts                     shared eval types, including the condition enum
   fixtures/<id>/               frozen input
   runs/<runId>/                run output
   scripts/
-    runEval.ts                 entry point for `yarn eval`
+    runEval.ts                 entry point for `yarn seed:eval`
     util/
       importEvalFixtures.ts    loads a fixture from disk
       exportEvalOutputs.ts     writes the run directory

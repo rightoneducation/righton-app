@@ -1,0 +1,69 @@
+{
+  "runId": "classroom-1-session1-none-2026-09-10T01-59-20",
+  "startedAt": "2026-09-10T01:59:20.509Z",
+  "finishedAt": "2026-09-10T02:04:18.096Z",
+  "wallClockMs": 297587,
+  "gitSha": "8be12db76",
+  "amplifyEnv": "dev",
+  "condition": "NONE",
+  "classroomId": "5fc70102-d8b6-41b1-9c65-a97eb88b28d4",
+  "classroomName": "Classroom 1",
+  "sessionId": "ef3872a1-eb21-4eb3-8ade-56d2537b0898",
+  "sessionLabel": "Session1",
+  "models": [
+    "gpt-4o-mini",
+    "gpt-5-mini",
+    "o3-mini"
+  ],
+  "tokens": {
+    "prompt": 114436,
+    "completion": 72210,
+    "total": 186646
+  },
+  "modelCalls": 11,
+  "silentFallbacks": [],
+  "ccssRequested": [
+    "A.REI.3",
+    "A.REI.12",
+    "8.EE.C.8"
+  ],
+  "ccssUnmatched": [],
+  "graphStandardsReturned": 3,
+  "misconceptionCount": 4,
+  "activityCount": 8,
+  "targetStandardMatched": 4,
+  "sourceMisconceptionMatched": 4,
+  "sourceMisconceptionAvailable": 4,
+  "wrongAnswerLinked": 4,
+  "wrongAnswerRefs": 11,
+  "studentCountTotals": [
+    {
+      "id": "nextstep-ai-1",
+      "title": "Variables Switched With Wrong Signs",
+      "studentCount": 13,
+      "studentPercent": 0.464,
+      "frequency": "some"
+    },
+    {
+      "id": "nextstep-ai-2",
+      "title": "Improper Fraction Handling",
+      "studentCount": 4,
+      "studentPercent": 0.143,
+      "frequency": "few"
+    },
+    {
+      "id": "nextstep-ai-3",
+      "title": "Mistaking Inequality Type",
+      "studentCount": 7,
+      "studentPercent": 0.25,
+      "frequency": "few"
+    },
+    {
+      "id": "nextstep-ai-4",
+      "title": "Slope Misidentification in Inequalities",
+      "studentCount": 5,
+      "studentPercent": 0.179,
+      "frequency": "few"
+    }
+  ]
+}

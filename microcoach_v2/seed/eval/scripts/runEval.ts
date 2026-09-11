@@ -1,14 +1,14 @@
 /**
  * runEval.ts — the single entry point for eval runs.
  *
- *   yarn eval [options]
+ *   yarn seed:eval [options]
  *
  * Wraps the generation pipeline so the eval has one command with plain options,
- * rather than callers remembering which `yarn generate` flags put it in fixture
+ * rather than callers remembering which `yarn seed:generate` flags put it in fixture
  * mode. Everything here is read-only with respect to the database: fixture mode is
  * always on, so no run can write to DynamoDB.
  *
- * Each run writes a directory under src/eval/runs/ — see ../../README.md.
+ * Each run writes a directory under seed/eval/runs/ — see ../../README.md.
  */
 
 import * as fs from 'fs';
@@ -78,6 +78,14 @@ function main(): void {
     conditions = [wantedCondition];
   }
 
+  // Optional version tag. Validated here rather than downstream: a tag that
+  // sanitises away to nothing would produce a malformed run directory name, and
+  // finding that out after the model calls is too late.
+  const version = arg('--version');
+  if (version !== null && version.replace(/[^a-zA-Z0-9]+/g, '') === '') {
+    throw new Error(`--version "${version}" contains no alphanumeric characters.`);
+  }
+
   const graph = has('--live-graph') ? 'live' : 'fixture';
   const total = targets.length * conditions.length;
 
@@ -85,6 +93,7 @@ function main(): void {
   console.log(`  sessions   : ${targets.join(', ')}`);
   console.log(`  conditions : ${conditions.join(', ')}`);
   console.log(`  graph      : ${graph}${graph === 'live' ? '  (re-querying Learning Commons)' : '  (replaying archive)'}`);
+  if (version !== null) console.log(`  version    : ${version}`);
   console.log(`  runs       : ${total}\n`);
 
   let done = 0;
@@ -94,11 +103,9 @@ function main(): void {
     for (const session of targets) {
       done += 1;
       console.log(`\n──────── [${done}/${total}] ${session} · ${condition} ────────`);
-      const result = spawnSync(
-        'npx',
-        ['ts-node', GENERATE, '--fixture', session, '--condition', condition, '--graph', graph],
-        { stdio: 'inherit' },
-      );
+      const args = ['ts-node', GENERATE, '--fixture', session, '--condition', condition, '--graph', graph];
+      if (version !== null) args.push('--version', version);
+      const result = spawnSync('npx', args, { stdio: 'inherit' });
       // Keep going on failure — one bad session should not cost the whole matrix.
       if (result.status !== 0) failures.push(`${session}/${condition}`);
     }
@@ -109,7 +116,7 @@ function main(): void {
     console.log(`Failed: ${failures.join(', ')}`);
     process.exit(1);
   }
-  console.log('Output in src/eval/runs/');
+  console.log('Output in seed/eval/runs/');
 }
 
 try {

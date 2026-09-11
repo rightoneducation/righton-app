@@ -26,7 +26,10 @@ export type GqlFn = (query: string, variables?: Record<string, unknown>) => Prom
 
 function loadAwsExports(): { endpoint: string; apiKey: string } | null {
   try {
-    const exportsPath = path.resolve(__dirname, '..', 'aws-exports.js');
+    // ../../../src from seed/cli/util. The original '..' dates from v1, where this
+    // helper sat in src/util/ and its parent was src/ — the seed/ restructure moved
+    // it two levels away and the path was never re-pointed.
+    const exportsPath = path.resolve(__dirname, '../../../src', 'aws-exports.js');
     if (!fs.existsSync(exportsPath)) return null;
     const content = fs.readFileSync(exportsPath, 'utf8');
     const endpointMatch = content.match(/"aws_appsync_graphqlEndpoint"\s*:\s*"([^"]+)"/);

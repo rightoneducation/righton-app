@@ -53,6 +53,16 @@ const CONDITION: MaskOptionEnum = (() => {
   }
   return MaskOptionEnum[key];
 })();
+// Optional `--version` tag, recorded in the run id and manifest so runs can be
+// grouped for comparison. Purely a label: it changes nothing the pipeline does,
+// and in particular does NOT pin prompt config — the Lambdas import their config
+// statically at deploy time.
+const VERSION: string | undefined = (() => {
+  const i = process.argv.indexOf('--version');
+  const raw = i > -1 && process.argv[i + 1] ? process.argv[i + 1] : '';
+  return raw === '' ? undefined : raw;
+})();
+
 // Ask the Lambdas to echo `_trace` (resolved prompt, model, token usage, sub-calls).
 // Additive and inert when false, so CLI runs are unaffected.
 const WANT_TRACE = EVAL_MODE;
@@ -613,6 +623,7 @@ async function processClassroom(
         sessionLabel: currentStub.sessionLabel ?? `W${currentStub.weekNumber}`,
         amplifyEnv: AMPLIFY_ENV,
         condition: CONDITION,
+        version: VERSION,
       })
     : new NoopCapture();
 
