@@ -17,7 +17,7 @@ import { UserRole as AWSUserRole } from '../../../AWSAPI'
 // firstName/lastName are stored separately rather than as one display string,
 // so nothing has to concat to save and split to edit.
 export type AWSUser = {
-  __typename?: 'User'
+  __typename?: 'MicroCoachUser'
   id: string
   cognitoId: string
   email: string
