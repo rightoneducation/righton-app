@@ -721,6 +721,77 @@ async function processClassroom(
   }
   const wrongAnswerDist = computeWrongAnswerDist(studentResponses);
 
+  // 4c. Distractor text — fill in `answerChoices[].text` wherever the source document
+  //     had no Distractors column. Lands on `augmentedPpq` because that is the object
+  //     Analysis serialises, and Analysis renders this text next to each option. A
+  //     value that came from the document is never overwritten; a failed call leaves
+  //     bare letters, which Analysis already tolerates. Only the eval fixtures carry
+  //     `answerChoices` today (GET_SESSION does not select it), so CLI mode is a no-op.
+  let distractorTextGenerated = 0;
+  const needsText = (augmentedPpq?.questions ?? []).filter((q: any) =>
+    (q.answerChoices ?? []).some((o: any) => !o.isCorrect && !o.text),
+  );
+  if (needsText.length) {
+    // (questionNumber:letter) → the ingested misconception it was attributed to, so the
+    // model can name the error even when the option content is an image it cannot see.
+    const attributed = new Map<string, { title: string; description: string }>();
+    for (const m of currentSession?.misconceptions?.items ?? []) {
+      for (const w of m.wrongAnswers ?? []) {
+        attributed.set(`${w.questionNumber}:${String(w.letter).toUpperCase()}`, { title: m.title, description: m.description });
+      }
+    }
+    const genInput = {
+      questions: JSON.stringify(needsText.map((q: any) => ({
+        questionNumber: q.questionNumber,
+        // Per-question codes are blank in the pilot fixtures; fall back to the session's.
+        ccssStandard: q.ccssStandard || allCcss.join(', '),
+        correctAnswer: q.correctAnswer ?? null,
+        classPercentCorrect: q.classPercentCorrect ?? null,
+        questionText: q.questionText ?? null,
+        answerChoices: (q.answerChoices ?? []).map((o: any) => ({
+          letter: o.letter,
+          isCorrect: o.isCorrect ?? false,
+          content: o.content ?? null,
+          studentCount: wrongAnswerDist[q.questionNumber]?.[String(o.letter).toUpperCase()] ?? 0,
+          attributedTo: attributed.get(`${q.questionNumber}:${String(o.letter).toUpperCase()}`) ?? null,
+        })),
+      }))),
+      context: JSON.stringify({ subject: classroom.subject, ccssStandards: allCcss }),
+      trace: WANT_TRACE,
+    };
+    process.stdout.write(`  Distractor text for ${needsText.length} question(s)...`);
+    try {
+      const raw = await invokeLambda(`microcoachv2LLMGenMisconception-${AMPLIFY_ENV}`, { input: genInput });
+      const parsed = parseJson(raw);
+      capture.recordCall('gen-misconception', genInput, parsed);
+      if (parsed?.ok === false) {
+        console.log(` ✗ ${parsed?.error?.message ?? 'unknown error'} — continuing with bare letters`);
+      } else {
+        const textFor = new Map<string, string>();
+        for (const q of parsed?.questions ?? []) {
+          for (const o of q.options ?? []) textFor.set(`${q.questionNumber}:${o.letter}`, o.text);
+        }
+        augmentedPpq = {
+          ...augmentedPpq,
+          questions: augmentedPpq.questions.map((q: any) => ({
+            ...q,
+            answerChoices: (q.answerChoices ?? []).map((o: any) => {
+              if (o.text) return o;
+              const text = textFor.get(`${q.questionNumber}:${String(o.letter).toUpperCase()}`);
+              if (!text) return o;
+              distractorTextGenerated += 1;
+              return { ...o, text };
+            }),
+          })),
+        };
+        const rejected = parsed?.rejected?.length ?? 0;
+        console.log(` ✓  ${distractorTextGenerated} option descriptions${rejected ? ` (${rejected} rejected)` : ''}`);
+      }
+    } catch (err) {
+      console.log(` ✗ ${err} — continuing with bare letters`);
+    }
+  }
+
   // 5. Misconception analysis
   //
   // The snapshot is the unmasked payload and stays that way — graph-derived rubric
@@ -921,6 +992,10 @@ async function processClassroom(
     graphStandardsReturned: learningScienceData.standards.length,
     misconceptionCount: misconceptions.length,
     activityCount: activitiesPerGroup.reduce((n: number, g: any[]) => n + g.length, 0),
+    // How many option descriptions the model wrote (vs. came from the source document).
+    // A run whose distractor text was generated is not comparable to one that had the
+    // teacher-authored column, so it has to be visible here.
+    distractorTextGenerated,
     // Diagnostic, not a correction: when the analysis stage emits a code the graph
     // does not carry, the generation stage silently loses all graph context.
     targetStandardMatched: misconceptions.filter((m: any) =>

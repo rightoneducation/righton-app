@@ -57,6 +57,12 @@ Three fields come from ingest rather than the spreadsheet:
 and `Misconception[].wrongAnswers` (the distractor attribution that student counts are
 computed from).
 
+`ef3872a1` additionally carries the document's Exemplar section as
+`questions[].questionText` and `answerChoices[].content`, and has had the teacher-authored
+`answerChoices[].text` (the Distractors column) **removed** so the pipeline has to
+generate it (`microcoachv2LLMGenMisconception`). Equations in the source are images, so
+stems can end abruptly and Q3/Q4/Q6 have no option content.
+
 ### `kg.json`
 
 `knowledgeGraphQueries[]` — the **raw** API response per standard, one entry per query.

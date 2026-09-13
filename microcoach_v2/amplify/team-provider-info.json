@@ -72,7 +72,7 @@
         },
         "microcoachv2LLMGenMisconception": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2LLMGenMisconception-357678656c64722b6866-build.zip"
+          "s3Key": "amplify-builds/microcoachv2LLMGenMisconception-6b486b4c56476b757053-build.zip"
         },
         "microcoachv2LLMGenInstrNeed": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",

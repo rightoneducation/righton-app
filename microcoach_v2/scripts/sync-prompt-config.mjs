@@ -23,6 +23,7 @@ const lambdas = [
   { name: 'microcoachv2LLMAnalysis',    key: 'analysis' },
   { name: 'microcoachv2NextStepOption', key: 'nextStepOption' },
   { name: 'microcoachv2IngestPPQ',      key: 'ingestPPQ' },
+  { name: 'microcoachv2LLMGenMisconception', key: 'genMisconception' },
 ];
 
 let ok = 0;
