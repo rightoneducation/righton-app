@@ -91,6 +91,7 @@ const SECTIONS: SectionDef[] = [
     defaultOpen: false,
     keys: [
       'misconceptionSummary',
+      'instructionalNeed',
       'aiReasoning',
       'example',
       'successIndicators',

@@ -485,6 +485,8 @@ function buildNextSteps(
       example: m.example ?? null,
       misconceptionSummary: m.description,
       aiReasoning: m.aiReasoning ?? null,
+      // Wave 2 intermediate step, observation only — see 5b.
+      instructionalNeed: m.instructionalNeed ?? null,
       successIndicators: m.successIndicators ?? [],
       ccssStandards: {
         targetObjective: { standard: m.ccssStandard, description: standardsDescMap.get(m.ccssStandard) ?? frameworkItem?.description ?? '', learningComponents: (frameworkItem?.learningComponents ?? []).map((c: any) => c.description).filter(Boolean) },
@@ -820,8 +822,62 @@ async function processClassroom(
   });
   const analysis = parseJson(analysisResult);
   capture.recordCall('llm-analysis', analysisInput, analysis);
-  const misconceptions: any[] = analysis?.misconceptions ?? [];
+  let misconceptions: any[] = analysis?.misconceptions ?? [];
   console.log(` ✓  ${misconceptions.length} misconceptions`);
+
+  // 5b. Instructional need — the Wave 2 intermediate step between diagnosis and
+  //     activity generation: what students most need to understand, examine, or do
+  //     next mathematically. Attached to each misconception for observation in
+  //     /preview only; NOT yet fed to the planner or NextStepOption. The Analysis
+  //     misconceptions already carry `wrongAnswers[].text`, so the generated
+  //     distractor descriptions reach this step with no extra plumbing.
+  let instructionalNeedsGenerated = 0;
+  if (misconceptions.length) {
+    const needInput = {
+      misconceptions: JSON.stringify(misconceptions),
+      context: JSON.stringify({ subject: classroom.subject, cohortSize: classroom.cohortSize, ccssStandards: allCcss }),
+      // Code + description only — the need is about the target standard, not the graph.
+      learningScienceData: JSON.stringify({
+        standards: injected.standards.map((s: any) => ({ code: s.code, description: s.description })),
+      }),
+      trace: WANT_TRACE,
+    };
+    process.stdout.write(`  Instructional needs for ${misconceptions.length} misconception(s)...`);
+    try {
+      const raw = await invokeLambda(`microcoachv2LLMGenInstrNeed-${AMPLIFY_ENV}`, { input: needInput });
+      const parsed = parseJson(raw);
+      capture.recordCall('gen-instr-need', needInput, parsed);
+      if (parsed?.ok === false) {
+        console.log(` ✗ ${parsed?.error?.message ?? 'unknown error'} — continuing without`);
+      } else {
+        const byId = new Map<string, any>();
+        const byTitle = new Map<string, any>();
+        for (const n of parsed?.needs ?? []) {
+          if (n.sourceMisconceptionId) byId.set(n.sourceMisconceptionId, n);
+          byTitle.set(String(n.title ?? '').trim(), n);
+        }
+        misconceptions = misconceptions.map((m: any) => {
+          const need = (m.sourceMisconceptionId && byId.get(m.sourceMisconceptionId))
+            || byTitle.get(String(m.title ?? '').trim());
+          if (!need) return m;
+          instructionalNeedsGenerated += 1;
+          return {
+            ...m,
+            instructionalNeed: {
+              text: need.instructionalNeed,
+              needKind: need.needKind ?? null,
+              teacherRole: need.teacherRole ?? null,
+              evidenceUsed: need.evidenceUsed ?? [],
+            },
+          };
+        });
+        const rejected = parsed?.rejected?.length ?? 0;
+        console.log(` ✓  ${instructionalNeedsGenerated}/${misconceptions.length}${rejected ? ` (${rejected} rejected)` : ''}`);
+      }
+    } catch (err) {
+      console.log(` ✗ ${err} — continuing without`);
+    }
+  }
 
   // 5c. Per-misconception extras
   const ppqQs = (ppq?.questions ?? []).map((q: any) => ({
@@ -996,6 +1052,7 @@ async function processClassroom(
     // A run whose distractor text was generated is not comparable to one that had the
     // teacher-authored column, so it has to be visible here.
     distractorTextGenerated,
+    instructionalNeedsGenerated,
     // Diagnostic, not a correction: when the analysis stage emits a code the graph
     // does not carry, the generation stage silently loses all graph context.
     targetStandardMatched: misconceptions.filter((m: any) =>
