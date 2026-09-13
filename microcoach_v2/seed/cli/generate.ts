@@ -25,12 +25,14 @@ const AMPLIFY_ENV = process.env.AMPLIFY_ENV ?? 'dev';
 // `--fixture <id>` is the single switch between the two modes this script runs in:
 //
 //   EVAL MODE  (--fixture present)  read a frozen session from disk, write the run
-//                                   directory under eval/runs/, never touch the DB
+//                                   directory under eval/runs/, and publish it to the
+//                                   TEMPORARY MicroCoachPipelineRun table for /preview.
+//                                   Never touches session/classroom rows.
 //   CLI MODE   (no --fixture)       read from DynamoDB, write results back to it,
 //                                   and produce no eval artifacts at all
 //
 // Keeping these on one flag means a CLI run cannot leave run directories behind that
-// look like eval output, and an eval run cannot write to the database.
+// look like eval output, and an eval run cannot write to session or classroom rows.
 const FIXTURE_ARG = (() => {
   const i = process.argv.indexOf('--fixture');
   return i > -1 && process.argv[i + 1] ? process.argv[i + 1] : null;
@@ -252,6 +254,16 @@ const UPDATE_CLASSROOM_WEEK = /* GraphQL */ `
     updateClassroom(input: $input) {
       id
       currentWeek
+    }
+  }
+`;
+
+// TEMPORARY — one row per eval run so /preview can load it from the backend.
+// Pairs with the MicroCoachPipelineRun block at the bottom of schema.graphql.
+const CREATE_PIPELINE_RUN = /* GraphQL */ `
+  mutation CreateMicroCoachPipelineRun($input: CreateMicroCoachPipelineRunInput!) {
+    createMicroCoachPipelineRun(input: $input) {
+      id
     }
   }
 `;
@@ -858,10 +870,10 @@ async function processClassroom(
   // kg-snapshot.json separately.
   const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, injected, misconceptionExtras, studentResponses);
   if (fixture) {
-    // Fixture runs never write. The pilot sessions are a measurement substrate, and
+    // Fixture runs never write session data. The pilot sessions are a measurement substrate, and
     // writing generated output back would overwrite the very records the fixture was
     // extracted from. Everything lands in the run directory instead.
-    console.log(`  Fixture run — no database writes (output captured to disk)`);
+    console.log(`  Fixture run — no session writes (output captured to disk, then published to the preview table)`);
   } else {
     process.stdout.write(`  Saving ${nextSteps.length} next steps to session ${currentStub.id}...`);
     await gql(UPDATE_SESSION, {
@@ -900,7 +912,8 @@ async function processClassroom(
     console.log(' ✓');
   }
 
-  // 8. Capture — disk only, never AppSync.
+  // 8. Capture — the run directory on disk, then (eval mode only) one row in the
+  //    TEMPORARY MicroCoachPipelineRun table so /preview can load it.
   capture.writeOutput(nextSteps);
   const manifest = capture.finish({
     ccssRequested: allCcss,
@@ -950,6 +963,36 @@ async function processClassroom(
     if (manifest.silentFallbacks.length) {
       console.log(`    ⚠ ${manifest.silentFallbacks.length} silent validator fallback(s) — see manifest.json`);
     }
+
+    // 9. Publish — one row in the TEMPORARY MicroCoachPipelineRun table so /preview
+    //    can load this run from the backend. Eval mode only by construction: the
+    //    manifest is null under NoopCapture. The run directory is already on disk,
+    //    so a failed publish is reported, not fatal.
+    const outputJson = JSON.stringify(nextSteps);
+    const outputKb = Math.round(Buffer.byteLength(outputJson) / 1024);
+    if (outputKb > 350) {
+      console.warn(`    ⚠ output is ${outputKb} KB — DynamoDB's item cap is 400 KB, the publish may be rejected`);
+    }
+    try {
+      await gql(CREATE_PIPELINE_RUN, {
+        input: {
+          id: manifest.runId,
+          classroomName: manifest.classroomName,
+          sessionLabel: manifest.sessionLabel,
+          condition: manifest.condition,
+          version: manifest.version,
+          gitSha: manifest.gitSha,
+          amplifyEnv: manifest.amplifyEnv,
+          startedAt: manifest.startedAt,
+          misconceptionCount: manifest.misconceptionCount,
+          manifest: JSON.stringify(manifest),
+          output: outputJson,
+        },
+      });
+      console.log(`  Published → MicroCoachPipelineRun ${manifest.runId}`);
+    } catch (err) {
+      console.warn(`  ⚠ Publish failed (run is still on disk): ${err}`);
+    }
   }
 }
 
@@ -962,15 +1005,16 @@ async function main() {
 
   // ── Fixture mode ──────────────────────────────────────────────────────────
   // Runs against the four March 2026 pilot sessions held in eval/fixtures. Reads
-  // nothing from and writes nothing to DynamoDB; the only remote calls are to the
-  // LLM Lambdas (and the graph Lambda when --graph live is set).
+  // no session data from DynamoDB and writes only to the TEMPORARY
+  // MicroCoachPipelineRun table; the other remote calls are to the LLM Lambdas (and
+  // the graph Lambda when --graph live is set).
   if (FIXTURE_ARG) {
     // Exactly one session per invocation. `yarn eval` decides which sessions run and
     // spawns one process each, so session selection lives there rather than in two
     // places that could disagree.
     const ids = [FIXTURE_ARG];
     console.log(`Fixture: ${FIXTURE_ARG}, graph=${GRAPH_SOURCE}, condition=${CONDITION}`);
-    console.log('No database reads or writes will occur.\n');
+    console.log('No session reads or writes will occur; the run is published to MicroCoachPipelineRun.\n');
 
     // Reference examples still come from the DB — they are shared library content,
     // not session data, and the pilot ran with whatever was there.

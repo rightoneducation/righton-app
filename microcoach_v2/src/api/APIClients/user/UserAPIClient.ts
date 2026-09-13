@@ -3,14 +3,14 @@ import { IUserAPIClient } from './interfaces/IUserAPIClient';
 import { IUser, UserRole } from '../../Models/IUser';
 import { UserParser } from '../../Parsers/UserParser';
 import {
-  CreateUserInput,
-  CreateUserMutation,
-  CreateUserMutationVariables,
-  UpdateUserInput,
-  UpdateUserMutation,
-  UpdateUserMutationVariables,
-  GetUserQuery,
-  GetUserQueryVariables,
+  CreateMicroCoachUserInput as CreateUserInput,
+  CreateMicroCoachUserMutation as CreateUserMutation,
+  CreateMicroCoachUserMutationVariables as CreateUserMutationVariables,
+  UpdateMicroCoachUserInput as UpdateUserInput,
+  UpdateMicroCoachUserMutation as UpdateUserMutation,
+  UpdateMicroCoachUserMutationVariables as UpdateUserMutationVariables,
+  GetMicroCoachUserQuery as GetUserQuery,
+  GetMicroCoachUserQueryVariables as GetUserQueryVariables,
   UsersByCognitoIdQuery,
   UsersByCognitoIdQueryVariables,
   UsersByEmailQuery,
@@ -19,9 +19,12 @@ import {
   UsersByRoleQueryVariables,
   UserRole as AWSUserRole,
 } from '../../../AWSAPI';
-import { createUser, updateUser } from '../../../graphql/mutations';
 import {
-  getUser,
+  createMicroCoachUser as createUser,
+  updateMicroCoachUser as updateUser,
+} from '../../../graphql/mutations';
+import {
+  getMicroCoachUser as getUser,
   usersByCognitoId,
   usersByEmail,
   usersByRole,
@@ -51,8 +54,8 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
       createUser,
       variables as unknown as GraphQLOptions,
     );
-    if (res?.data?.createUser)
-      return UserParser.parseIUserfromAWSUser(res.data.createUser);
+    if (res?.data?.createMicroCoachUser)
+      return UserParser.parseIUserfromAWSUser(res.data.createMicroCoachUser);
     return null;
   }
 
@@ -62,8 +65,8 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
       updateUser,
       variables as unknown as GraphQLOptions,
     );
-    if (res?.data?.updateUser)
-      return UserParser.parseIUserfromAWSUser(res.data.updateUser);
+    if (res?.data?.updateMicroCoachUser)
+      return UserParser.parseIUserfromAWSUser(res.data.updateMicroCoachUser);
     return null;
   }
 
@@ -74,8 +77,8 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
       getUser,
       variables as unknown as GraphQLOptions,
     );
-    if (res?.data?.getUser)
-      return UserParser.parseIUserfromAWSUser(res.data.getUser);
+    if (res?.data?.getMicroCoachUser)
+      return UserParser.parseIUserfromAWSUser(res.data.getMicroCoachUser);
     return null;
   }
 

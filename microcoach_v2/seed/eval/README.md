@@ -9,8 +9,10 @@ One command, run from `microcoach_v2/`:
 yarn seed:eval --session all
 ```
 
-**No database writes.** Every run reads frozen fixtures from disk and writes only to
-`seed/eval/runs/`, so it never mutates DynamoDB and is safe to run against any environment.
+**No session writes.** Every run reads frozen fixtures from disk and writes to
+`seed/eval/runs/`, then publishes one row to the **temporary** `MicroCoachPipelineRun`
+table so `/preview` can load it. It never touches classroom, session, or misconception
+rows, so it is safe to run against any environment.
 
 **It is not offline, though.** The pipeline stages are invoked as the *deployed* Lambdas —
 `microcoachv2GetLearningScience-$AMPLIFY_ENV`, `-LLMAnalysis-`, `-NextStepOption-` — so a run

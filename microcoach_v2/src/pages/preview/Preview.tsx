@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import runRaw from './run.json';
-import manifestRaw from './manifest.json';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useAppOutletContext } from '../../hooks/useAppOutletContext';
+import { IPipelineRunSummary } from '../../api';
 
 /**
  * Preview — a scratchpad for eyeballing a pipeline run.
@@ -14,29 +15,17 @@ import manifestRaw from './manifest.json';
  * shape is still being decided. Fields it doesn't recognise land in the
  * "Uncategorized" section rather than being silently dropped.
  *
- * To point it at a different run, copy that run's output.json (and manifest.json)
- * over run.json / manifest.json in this folder. See the README here for the
- * one-liner that grabs the newest run.
+ * Runs come from the TEMPORARY MicroCoachPipelineRun table (one row per
+ * `yarn seed:eval` run, published by generate.ts), read over the API key so this
+ * route stays sign-in-free. See the README here.
  */
 
 type Json = string | number | boolean | null | Json[] | { [key: string]: Json };
 type Rec = { [key: string]: Json };
 
-// Bundled fallback so the page renders on a fresh clone, before anyone has run
-// `yarn preview:sync`. Once synced, everything below comes from public/preview-runs/.
-const bundledRun = runRaw as unknown as Rec[];
-const bundledManifest = manifestRaw as unknown as Rec;
-
-interface RunIndexEntry {
-  id: string;
-  n: number;
-  classroom: string;
-  session: string;
-  condition: string;
-  version: string | null;
-  startedAt: string;
-  misconceptionCount: number | null;
-}
+// A summary row plus its per-version ordinal. `n` restarts at 1 inside each
+// version group and is a display label only — never key off it, use `id`.
+type RunIndexEntry = IPipelineRunSummary & { n: number };
 
 const UNTAGGED = '(untagged)';
 
@@ -53,10 +42,11 @@ function groupByVersion(runs: RunIndexEntry[]): Array<[string, RunIndexEntry[]]>
   return Array.from(groups.entries());
 }
 
-type LoadStatus = 'bundled' | 'loading' | 'loaded' | 'error';
+// 'loading' covers both the list fetch and the run fetch — the list effect must
+// not flip to 'loaded' itself, or the body flashes empty between the two.
+type LoadStatus = 'idle' | 'loading' | 'loaded' | 'error' | 'empty';
 
 const RUN_STORAGE_KEY = 'preview.runId';
-const publicUrl = process.env.PUBLIC_URL ?? '';
 
 // localStorage throws outright in some privacy modes; a scratchpad remembering
 // your last run is not worth taking the page down over.
@@ -77,7 +67,7 @@ function storeRunId(id: string): void {
 }
 
 function runLabel(entry: RunIndexEntry): string {
-  const bits = [entry.classroom, entry.session, entry.condition].filter((b) => b !== '');
+  const bits = [entry.classroomName, entry.sessionLabel, entry.condition].filter((b) => b !== '');
   const when = entry.startedAt === '' ? '' : new Date(entry.startedAt).toLocaleString();
   const tail = when === '' ? '' : ` · ${when}`;
   return `${entry.n} — ${bits.join(' · ') || entry.id}${tail}`;
@@ -648,9 +638,6 @@ function Header({
             {String(manifest.runId ?? 'unknown run')}
             {status === 'loading' && <span className="pv-note">loading…</span>}
             {status === 'error' && <span className="pv-note pv-bad">failed to load run</span>}
-            {status === 'bundled' && runs.length === 0 && (
-              <span className="pv-note">bundled snapshot — run `yarn preview:sync` for the full list</span>
-            )}
           </div>
         </div>
         <div className="pv-actions">
@@ -818,53 +805,75 @@ const STYLES = `
 .pv-group-name { font-size: 13px; font-weight: 700; }
 .pv-group-desc { font-size: 13px; margin-bottom: 8px; }
 .pv-chip-wide { font-family: inherit; }
+.pv-loading { display: flex; justify-content: center; padding: 48px 0; }
 `;
 
 export default function Preview() {
   const [runs, setRuns] = useState<RunIndexEntry[]>([]);
   const [activeId, setActiveId] = useState('');
-  const [items, setItems] = useState<Rec[]>(() => (Array.isArray(bundledRun) ? bundledRun : []));
-  const [manifest, setManifest] = useState<Rec>(bundledManifest);
-  const [status, setStatus] = useState<LoadStatus>('bundled');
+  const [items, setItems] = useState<Rec[]>([]);
+  const [manifest, setManifest] = useState<Rec>({});
+  const [status, setStatus] = useState<LoadStatus>('idle');
   const [allOpen, setAllOpen] = useState<boolean | null>(null);
   const [generation, setGeneration] = useState(0);
 
-  // Load the run index once. A miss is expected and fine — nobody has synced
-  // yet, so the bundled snapshot stays on screen.
+  const { apiClients } = useAppOutletContext();
+
+  // Load the run list once. Deliberately leaves status on 'loading' when there
+  // are runs — the run effect below owns the 'loaded' transition, otherwise the
+  // body flashes empty between the list arriving and the first run arriving.
   useEffect(() => {
     let cancelled = false;
-    fetch(`${publicUrl}/preview-runs/index.json`)
-      .then((res) => (res.ok ? res.json() : Promise.reject(new Error('no index'))))
-      .then((list: RunIndexEntry[]) => {
-        if (cancelled || !Array.isArray(list) || list.length === 0) return;
-        setRuns(list);
+    setStatus('loading');
+    apiClients.pipelineRun
+      .listRuns()
+      .then((list) => {
+        if (cancelled) return;
+        if (list.length === 0) {
+          setStatus('empty');
+          return;
+        }
+        // Newest first, so the dropdown's #1 is the run you just produced.
+        // startedAt is ISO and the id carries the timestamp, so either sorts.
+        const sorted = [...list].sort((a, b) =>
+          (b.startedAt || b.id).localeCompare(a.startedAt || a.id),
+        );
+        // Numbering restarts per version so each group reads 1, 2, 3.
+        const seenPerVersion = new Map<string, number>();
+        const numbered: RunIndexEntry[] = sorted.map((entry) => {
+          const key = entry.version ?? UNTAGGED;
+          const n = (seenPerVersion.get(key) ?? 0) + 1;
+          seenPerVersion.set(key, n);
+          return { ...entry, n };
+        });
+        setRuns(numbered);
         const stored = readStoredRunId();
-        const match = list.find((entry) => entry.id === stored);
-        setActiveId(match ? match.id : list[0].id);
+        const match = numbered.find((entry) => entry.id === stored);
+        setActiveId(match ? match.id : numbered[0].id);
       })
       .catch(() => {
-        /* stay on the bundled snapshot */
+        if (!cancelled) setStatus('error');
       });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [apiClients]);
 
   // Load whichever run is selected.
   useEffect(() => {
     if (activeId === '') return undefined;
     let cancelled = false;
     setStatus('loading');
-    Promise.all([
-      fetch(`${publicUrl}/preview-runs/${activeId}/output.json`).then((r) => r.json()),
-      fetch(`${publicUrl}/preview-runs/${activeId}/manifest.json`)
-        .then((r) => (r.ok ? r.json() : {}))
-        .catch(() => ({})),
-    ])
-      .then(([output, loadedManifest]) => {
+    apiClients.pipelineRun
+      .getRun(activeId)
+      .then((run) => {
         if (cancelled) return;
-        setItems(Array.isArray(output) ? (output as Rec[]) : []);
-        setManifest((loadedManifest ?? {}) as Rec);
+        if (!run) {
+          setStatus('error');
+          return;
+        }
+        setItems(run.output as Rec[]);
+        setManifest(run.manifest as Rec);
         setStatus('loaded');
         // Collapse state belongs to the run that produced it — carrying it over
         // leaves sections from the previous run hanging open.
@@ -878,7 +887,7 @@ export default function Preview() {
     return () => {
       cancelled = true;
     };
-  }, [activeId]);
+  }, [activeId, apiClients]);
 
   const setAll = (open: boolean) => {
     setAllOpen(open);
@@ -901,15 +910,28 @@ export default function Preview() {
         onExpandAll={() => setAll(true)}
         onCollapseAll={() => setAll(false)}
       />
-      {shown.map((item, i) => (
-        <Misconception
-          key={`${activeId}-${typeof item.id === 'string' ? item.id : `m-${i}`}`}
-          item={item}
-          index={i}
-          allOpen={allOpen}
-          generation={generation}
-        />
-      ))}
+      {/* The spinner replaces the list rather than overlaying it, so stale items
+          never remount under the incoming run's key. */}
+      {status === 'loading' && (
+        <div className="pv-loading">
+          <CircularProgress />
+        </div>
+      )}
+      {status === 'empty' && (
+        <p className="pv-note">
+          No runs published yet — run <code>yarn seed:eval --session &lt;id&gt;</code> and refresh.
+        </p>
+      )}
+      {status !== 'loading' &&
+        shown.map((item, i) => (
+          <Misconception
+            key={`${activeId}-${typeof item.id === 'string' ? item.id : `m-${i}`}`}
+            item={item}
+            index={i}
+            allOpen={allOpen}
+            generation={generation}
+          />
+        ))}
     </div>
   );
 }

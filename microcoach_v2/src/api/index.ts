@@ -7,3 +7,8 @@ export { UserRole, isAdmin } from './Models/IUser';
 export type { IAuthAPIClient, GraphQLAuthMode } from './APIClients/auth/interfaces/IAuthAPIClient';
 export type { IUser, IClass } from './Models/IUser';
 export type { IAPIClients } from './APIClients/interfaces/IAPIClients';
+
+// ── TEMPORARY: pipeline preview (delete with MicroCoachPipelineRun) ─────────
+export { PipelineRunAPIClient } from './APIClients/pipelineRun/PipelineRunAPIClient';
+export type { IPipelineRunAPIClient } from './APIClients/pipelineRun/interfaces/IPipelineRunAPIClient';
+export type { IPipelineRun, IPipelineRunSummary } from './Models/IPipelineRun';

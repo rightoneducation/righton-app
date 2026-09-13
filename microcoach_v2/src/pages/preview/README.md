@@ -21,29 +21,26 @@ section rather than disappearing.
 ## Loading runs
 
 ```bash
-yarn seed:eval --session ef3872a1   # produce a run
-yarn preview:sync                   # publish every run to public/preview-runs/
+yarn seed:eval --session ef3872a1 --version <tag>   # produce a run — it is published automatically
 ```
 
-Then refresh `/preview` and pick a run from the dropdown. Runs are grouped by
-`--version` tag and numbered from 1 within each group, newest first. The
-selection is remembered in localStorage, so a refresh keeps you on the same run.
+Then refresh `/preview` and pick the run from the dropdown. Every eval run writes one
+row to the **temporary** `MicroCoachPipelineRun` table (`schema.graphql`, bottom) and
+the page loads the list and the selected run from there over the API key, so nothing
+has to be synced or rebuilt. Runs are grouped by `--version` tag and numbered from 1
+within each group, newest first. The selection is remembered in localStorage, so a
+refresh keeps you on the same run.
 
-`preview:sync` rebuilds `public/preview-runs/` from scratch each time, so runs
-deleted from `seed/eval/runs/` disappear from the dropdown too. Runs missing an
-`output.json` (a crashed run) are skipped rather than listed and then 404ing.
-
-`public/preview-runs/` is gitignored — runs are ~2.6MB each and `yarn build`
-copies `public/` wholesale into the production bundle.
-
-If nothing has been synced, the page falls back to the bundled `run.json`
-snapshot committed in this folder, so it always renders something.
+An MUI `CircularProgress` covers the wait; an empty table shows a one-line empty state.
 
 ## Files
 
 - `Preview.tsx` — the page; `SECTIONS` at the top controls which fields land in which collapse
-- `run.json` / `manifest.json` — bundled fallback snapshot, used only when nothing is synced
-- `../../../scripts/sync-preview-runs.mjs` — publishes runs to `public/preview-runs/` and writes `index.json`
+- `../../api/APIClients/pipelineRun/PipelineRunAPIClient.ts` — `listRuns()` (summary columns only) and `getRun(id)`, both over `authMode: 'apiKey'`
+- `../../api/Parsers/PipelineRunParser.ts`, `../../api/Models/IPipelineRun.ts` — AWS row → page shape
+
+Teardown set: the three api files above, the `MicroCoachPipelineRun` block in
+`schema.graphql`, the publish block in `seed/cli/generate.ts`, and this page.
 
 ## Notes on the data
 

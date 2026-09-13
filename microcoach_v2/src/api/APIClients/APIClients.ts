@@ -2,6 +2,7 @@ import { Amplify } from "aws-amplify";
 import { IAuthAPIClient } from './auth/interfaces/IAuthAPIClient';
 import { AuthAPIClient } from './auth/AuthAPIClient';
 import { UserAPIClient } from './user/UserAPIClient';
+import { PipelineRunAPIClient } from './pipelineRun/PipelineRunAPIClient';
 import { Environment } from './interfaces/IAPIClients';
 import awsconfig from "../../aws-exports";
 
@@ -13,11 +14,15 @@ export enum AppType {
 export class APIClients {
   auth: IAuthAPIClient;
   user: UserAPIClient;
+  // TEMPORARY — /preview reads eval runs through this. Delete with the
+  // MicroCoachPipelineRun model.
+  pipelineRun: PipelineRunAPIClient;
 
   constructor(env: Environment, authClient: IAuthAPIClient) {
     this.configAmplify(awsconfig);
     this.auth = authClient;
     this.user = new UserAPIClient(env, this.auth);
+    this.pipelineRun = new PipelineRunAPIClient(env, this.auth);
   }
 
   static async create(env: Environment, appType: AppType): Promise<APIClients> {

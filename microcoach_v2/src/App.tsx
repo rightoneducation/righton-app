@@ -138,8 +138,9 @@ function App() {
             />
             {/*
               Scratchpad for reviewing eval pipeline output. Deliberately not
-              routed through AppSwitch/AuthGuard — it renders a static run from
-              src/pages/preview/run.json and has nothing to protect.
+              routed through AppSwitch/AuthGuard — it reads the TEMPORARY
+              MicroCoachPipelineRun table over the API key and has nothing to
+              protect.
             */}
             <Route path="preview" element={<Preview />} />
         </Route>,

@@ -1,4 +1,7 @@
-import { CreateUserInput, UpdateUserInput } from "../../../../AWSAPI";
+import {
+  CreateMicroCoachUserInput as CreateUserInput,
+  UpdateMicroCoachUserInput as UpdateUserInput,
+} from "../../../../AWSAPI";
 import { IUser, UserRole } from "../../../Models/IUser";
 
 export interface IUserAPIClient{

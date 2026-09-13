@@ -1,6 +1,6 @@
 import { UserRole as AWSUserRole } from '../../../AWSAPI'
 
-// Structural mirror of the `User` shape AppSync returns.
+// Structural mirror of the `MicroCoachUser` shape AppSync returns.
 //
 // Deliberately not an alias of AWSAPI's generated `User`: codegen inlines an
 // anonymous object per operation (`CreateUserMutation['createUser']`, the items
@@ -17,7 +17,7 @@ import { UserRole as AWSUserRole } from '../../../AWSAPI'
 // firstName/lastName are stored separately rather than as one display string,
 // so nothing has to concat to save and split to edit.
 export type AWSUser = {
-  __typename?: 'User'
+  __typename?: 'MicroCoachUser'
   id: string
   cognitoId: string
   email: string
