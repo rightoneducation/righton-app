@@ -3,14 +3,14 @@ import { IUserAPIClient } from './interfaces/IUserAPIClient';
 import { IUser, UserRole } from '../../Models/IUser';
 import { UserParser } from '../../Parsers/UserParser';
 import {
-  CreateUserInput,
-  CreateUserMutation,
-  CreateUserMutationVariables,
-  UpdateUserInput,
-  UpdateUserMutation,
-  UpdateUserMutationVariables,
-  GetUserQuery,
-  GetUserQueryVariables,
+  CreateMicroCoachUserInput,
+  CreateMicroCoachUserMutation,
+  CreateMicroCoachUserMutationVariables,
+  UpdateMicroCoachUserInput,
+  UpdateMicroCoachUserMutation,
+  UpdateMicroCoachUserMutationVariables,
+  GetMicroCoachUserQuery,
+  GetMicroCoachUserQueryVariables,
   UsersByCognitoIdQuery,
   UsersByCognitoIdQueryVariables,
   UsersByEmailQuery,
@@ -19,9 +19,12 @@ import {
   UsersByRoleQueryVariables,
   UserRole as AWSUserRole,
 } from '../../../AWSAPI';
-import { createUser, updateUser } from '../../../graphql/mutations';
 import {
-  getUser,
+  createMicroCoachUser,
+  updateMicroCoachUser,
+} from '../../../graphql/mutations';
+import {
+  getMicroCoachUser,
   usersByCognitoId,
   usersByEmail,
   usersByRole,
@@ -45,37 +48,37 @@ export const userProfileLocalStorage = 'microcoach_userprofile';
 // touch every client in the package.
 export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
 
-  async createUser(input: CreateUserInput): Promise<IUser | null> {
-    const variables: CreateUserMutationVariables = { input };
-    const res = await this.callGraphQL<CreateUserMutation>(
-      createUser,
+  async createUser(input: CreateMicroCoachUserInput): Promise<IUser | null> {
+    const variables: CreateMicroCoachUserMutationVariables = { input };
+    const res = await this.callGraphQL<CreateMicroCoachUserMutation>(
+      createMicroCoachUser,
       variables as unknown as GraphQLOptions,
     );
-    if (res?.data?.createUser)
-      return UserParser.parseIUserfromAWSUser(res.data.createUser);
+    if (res?.data?.createMicroCoachUser)
+      return UserParser.parseIUserfromAWSUser(res.data.createMicroCoachUser);
     return null;
   }
 
-  async updateUser(input: UpdateUserInput): Promise<IUser | null> {
-    const variables: UpdateUserMutationVariables = { input };
-    const res = await this.callGraphQL<UpdateUserMutation>(
-      updateUser,
+  async updateUser(input: UpdateMicroCoachUserInput): Promise<IUser | null> {
+    const variables: UpdateMicroCoachUserMutationVariables = { input };
+    const res = await this.callGraphQL<UpdateMicroCoachUserMutation>(
+      updateMicroCoachUser,
       variables as unknown as GraphQLOptions,
     );
-    if (res?.data?.updateUser)
-      return UserParser.parseIUserfromAWSUser(res.data.updateUser);
+    if (res?.data?.updateMicroCoachUser)
+      return UserParser.parseIUserfromAWSUser(res.data.updateMicroCoachUser);
     return null;
   }
 
   async getUser(id: string): Promise<IUser | null> {
     if (!id) return null;
-    const variables: GetUserQueryVariables = { id };
-    const res = await this.callGraphQL<GetUserQuery>(
-      getUser,
+    const variables: GetMicroCoachUserQueryVariables = { id };
+    const res = await this.callGraphQL<GetMicroCoachUserQuery>(
+      getMicroCoachUser,
       variables as unknown as GraphQLOptions,
     );
-    if (res?.data?.getUser)
-      return UserParser.parseIUserfromAWSUser(res.data.getUser);
+    if (res?.data?.getMicroCoachUser)
+      return UserParser.parseIUserfromAWSUser(res.data.getMicroCoachUser);
     return null;
   }
 
@@ -153,7 +156,7 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
     cognitoId: string,
     email: string,
     profile: IUser,
-  ): CreateUserInput {
+  ): CreateMicroCoachUserInput {
     return {
       cognitoId,
       email,
