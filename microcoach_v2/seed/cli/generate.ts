@@ -731,6 +731,16 @@ async function processClassroom(
   }
   const wrongAnswerDist = computeWrongAnswerDist(studentResponses);
 
+  // The snapshot is the unmasked payload and stays that way — graph-derived rubric
+  // rows score against it, so masking it here would make a withheld condition score
+  // zero by construction. `injected` is what every prompt from here on receives,
+  // GenMisconception included, so the ablation conditions apply to it too.
+  capture.writeSnapshot(learningScienceData);
+  const injected = {
+    standards: learningScienceData.standards.map((s: KgQueryType) => maskQuery(s, CONDITION)),
+  };
+  capture.writeInjected(injected);
+
   // 4c. Misconception extraction from the questions themselves. The pilot documents
   //     carried a teacher-authored Distractors column naming the error behind each
   //     wrong option; new documents do not, so the mapping has to be generated. The
@@ -755,6 +765,7 @@ async function processClassroom(
         })),
       }))),
       context: JSON.stringify({ subject: classroom.subject, ccssStandards: allCcss }),
+      learningScienceData: JSON.stringify(injected),
       trace: WANT_TRACE,
     };
     process.stdout.write(`  Misconception extraction over ${withChoices.length} question(s)...`);
@@ -773,16 +784,6 @@ async function processClassroom(
   }
 
   // 5. Misconception analysis
-  //
-  // The snapshot is the unmasked payload and stays that way — graph-derived rubric
-  // rows score against it, so masking it here would make a withheld condition score
-  // zero by construction. `injected` is what the prompts actually receive.
-  capture.writeSnapshot(learningScienceData);
-  const injected = {
-    standards: learningScienceData.standards.map((s: KgQueryType) => maskQuery(s, CONDITION)),
-  };
-  capture.writeInjected(injected);
-
   process.stdout.write(`  Misconception analysis...`);
   const analysisInput = {
     classroomData: JSON.stringify({

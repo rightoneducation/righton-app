@@ -1,4 +1,7 @@
 import { loadSecret } from './util/loadsecrets.mjs';
+// Copy of microcoachv2LLMAnalysis/src/util/formatLearningScience.mjs — each Lambda
+// bundles its own src, so shared util is duplicated the same way loadsecrets.mjs is.
+import { formatLearningScience } from './util/formatLearningScience.mjs';
 import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
@@ -19,14 +22,17 @@ import config from './util/config.json' assert { type: 'json' };
  *   questions  [{ questionNumber, ccssStandard, correctAnswer, classPercentCorrect,
  *                 questionText?, answerChoices: [{ letter, isCorrect, content?,
  *                 studentCount? }] }]
- *   context    { subject?, ccssStandards? }
- *   trace      boolean — echo `_trace` (resolved prompt, model, usage)
+ *   context              { subject?, ccssStandards? }
+ *   learningScienceData  { standards: KgQueryType[] } — the knowledge-graph payload
+ *                        for the session's standards, masked by the eval condition
+ *   trace                boolean — echo `_trace` (resolved prompt, model, usage)
  *
- * Output: { ok: true, questions: [{ questionNumber, options: [{ letter, text,
- * confidence }] }], rejected } — wrong options only. A model reference that does not
- * match an input option is dropped rather than repaired, same posture as IngestPPQ's
- * validateRefs. On failure: { ok: false, error: { message } } so the caller can
- * carry on with bare letters, which Analysis already tolerates.
+ * Output: { ok: true, misconceptions: [{ title, description, wrongAnswers:
+ * [{ questionNumber, letter }] }], questions: [{ questionNumber, options: [{ letter,
+ * text, confidence }] }], rejected } — wrong options only. A model reference that does
+ * not match an input option is dropped rather than repaired. The misconception list
+ * is also written to the log as one readable block. On failure: { ok: false,
+ * error: { message } }.
  */
 
 const gc = config?.genMisconception ?? {};
@@ -36,6 +42,22 @@ const MAX_WORDS      = gc.maxWordsPerText ?? 25;
 const STYLE_EXAMPLES = gc.styleExamples ?? [];
 
 // ── Schema ────────────────────────────────────────────────────────────────────
+
+// Step 1 of the task: the misconception list, each mapped to the wrong options it
+// produces. Declared before `questions` so the model commits to the list before
+// writing the per-option text derived from it.
+const WrongAnswerRef = z.object({
+  questionNumber: z.number().describe('The question number exactly as given'),
+  letter: z.string().describe('The option letter exactly as given — wrong options only'),
+});
+
+const MisconceptionOut = z.object({
+  title: z.string().describe('Short name for the misconception'),
+  description: z.string().describe('The specific cognitive or procedural error, and why a student holding it lands on these options'),
+  wrongAnswers: z.array(WrongAnswerRef).describe(
+    'Every wrong option, across all questions, that a student holding this misconception would choose. An option may appear under more than one misconception.',
+  ),
+});
 
 const OptionText = z.object({
   letter: z.string().describe('The option letter, exactly as given'),
@@ -53,7 +75,8 @@ const QuestionOut = z.object({
 });
 
 const GenResponse = z.object({
-  questions: z.array(QuestionOut),
+  misconceptions: z.array(MisconceptionOut).describe('Step 1 — the set of misconceptions surfaced by this quiz'),
+  questions: z.array(QuestionOut).describe('Step 2 — the per-option error text, derived from the misconceptions above'),
 });
 
 // ── Prompt ────────────────────────────────────────────────────────────────────
@@ -77,39 +100,52 @@ function formatQuestion(q) {
   return `${header}\n${stem}\n${rows.join('\n')}`;
 }
 
-function buildPrompt(questions, context) {
+function buildPrompt(questions, context, learningScienceData) {
   const examples = STYLE_EXAMPLES.map((e) => `- ${e}`).join('\n');
+  const learningScienceSection = formatLearningScience(learningScienceData);
   return `
     You are an expert K-12 math instructional coach. You have received a set of multiple choice questions, containing both a correct answer and three wrong answers. The task
     is to analyze these multiple choice questions and identify the set of misconceptions that have been used to arrive at the wrong answers. It is important to note that all questions
     included in this are part of a single quiz activity, so the error that produces the wrong answer will probably be shared across multiple questions. Similarly, it is also important
     to note that some answer may have multiple misconceptions that could produce that wrong answer.
 
-    As such, the first step in the task is to analyze the set of questions and extract all possible misconceptions, mapped to the affected wrong answers. This will essentially comprise
-    the set of misconceptions that are being surfaced in the classroom. Export only JSON.
+    As such, the first step in the task is to analyze the set of questions and extract all possible misconceptions, mapped to the affected wrong answers. 
+    This set of questions is grouped per CCSS. Please integrate the Learning Science data into your analysis when generating the misconceptions. There should be
+    some tangible connection to the missteps contained in the wrong answers, and what the CCSS is targeting.
 
+    The final output will be the set of misconceptions that are being surfaced in the classroom. Export only JSON.
 
+    ## Context
+    - Subject: ${context?.subject ?? 'Math'}
+    - Standards assessed: ${(context?.ccssStandards ?? []).join(', ') || 'unknown'}
 
+    ## Learning Science Data
+    ${learningScienceSection}
 
-## Context
-- Subject: ${context?.subject ?? 'Math'}
-- Standards assessed: ${(context?.ccssStandards ?? []).join(', ') || 'unknown'}
+    ## Style
+    - One sentence, at most ${MAX_WORDS} words. Name the error directly; no preamble like "The student...".
+    - ${ws.titles ?? 'Plain language. No hedging.'}
+    - Match the register of these real examples:
+    ${examples}
 
-## Style
-- One sentence, at most ${MAX_WORDS} words. Name the error directly; no preamble like "The student...".
-- ${ws.titles ?? 'Plain language. No hedging.'}
-- Match the register of these real examples:
-${examples}
+    ## Grounding rules
+    - If the option content or question text is provided, derive the error from it and mark confidence "grounded".
+    - If neither is provided, still write the most plausible error for a wrong answer on this standard and mark "inferred".
+    - Never describe the correct answer. Never invent numbers that do not appear in the question or option content.
 
-## Grounding rules
-- If the option content or question text is provided, derive the error from it and mark confidence "grounded".
-- If neither is provided, still write the most plausible error for a wrong answer on this standard and mark "inferred".
-- Never describe the correct answer. Never invent numbers that do not appear in the question or option content.
+    ## Questions
+    ${questions.map(formatQuestion).join('\n\n')}
 
-## Questions
-${questions.map(formatQuestion).join('\n\n')}
+    ## Output
+    Two parts, in this order:
+    1. \`misconceptions\` - every misconception surfaced by this quiz
+      a. a description of the error, tailored around the actual conceptual steps required to arrive at it. DO NOT fall back on generic errors or arbitrary process issues. 
+      b. a precise title focused around the conceptual error itself. Do not provide generalities or arbitrary process issues.
+      c. a description of how the error relates to the relevant learning science data.
+      d. \`wrongAnswers\`: the (questionNumber, letter) pairs it produces. Group across questions; an option may sit under more than one misconception.
+    2. \`questions\` — for each question, one \`text\` line per WRONG option naming the error a student who chose it most likely made, derived from the misconceptions above.
 
-Return JSON only.
+    Return JSON only.
 `.trim();
 }
 
@@ -122,6 +158,23 @@ function validateOutput(structured, questions) {
     questions.map((q) => [q.questionNumber, new Map((q.answerChoices ?? []).map((o) => [String(o.letter).toUpperCase(), o]))]),
   );
   const rejected = [];
+
+  // Step 1 — misconception refs. Same posture as the per-option check below.
+  const misconceptions = [];
+  for (const m of structured.misconceptions ?? []) {
+    const kept = [];
+    for (const w of m.wrongAnswers ?? []) {
+      const letter = String(w.letter ?? '').trim().toUpperCase();
+      const option = valid.get(w.questionNumber)?.get(letter);
+      if (!option) { rejected.push({ misconception: m.title, questionNumber: w.questionNumber, letter, reason: 'unknownRef' }); continue; }
+      if (option.isCorrect) { rejected.push({ misconception: m.title, questionNumber: w.questionNumber, letter, reason: 'markedCorrect' }); continue; }
+      kept.push({ questionNumber: w.questionNumber, letter });
+    }
+    if (!kept.length) { rejected.push({ misconception: m.title, reason: 'noValidRefs' }); continue; }
+    misconceptions.push({ title: m.title, description: m.description, wrongAnswers: kept });
+  }
+
+  // Step 2 — per-option text.
   const out = [];
   for (const q of structured.questions ?? []) {
     const options = valid.get(q.questionNumber);
@@ -140,7 +193,20 @@ function validateOutput(structured, questions) {
     }
     out.push({ questionNumber: q.questionNumber, options: kept });
   }
-  return { questions: out, rejected };
+  return { misconceptions, questions: out, rejected };
+}
+
+// One log event, readable as a block in CloudWatch: every misconception with the
+// options it is connected to, before the per-option breakdown.
+function formatMisconceptionLog(misconceptions) {
+  const lines = [`[microcoachv2LLMGenMisconception] ${misconceptions.length} misconception(s) extracted:`];
+  misconceptions.forEach((m, i) => {
+    const refs = m.wrongAnswers.map((w) => `Q${w.questionNumber}${w.letter}`).join(', ');
+    lines.push(`${i + 1}. ${m.title}`);
+    lines.push(`   ${m.description}`);
+    lines.push(`   → ${refs}`);
+  });
+  return lines.join('\n');
 }
 
 // ── Handler ───────────────────────────────────────────────────────────────────
@@ -158,6 +224,7 @@ export const handler = async (event) => {
       throw new Error('questions is required and must be a non-empty array');
     }
     const context = parseJson(input.context ?? '{}') ?? {};
+    const learningScienceData = parseJson(input.learningScienceData ?? '{"standards":[]}') ?? { standards: [] };
 
     const apiSecret = await loadSecret(apiSecretName);
     const { openai_api, OPENAI_API_KEY, API } = JSON.parse(apiSecret);
@@ -165,7 +232,8 @@ export const handler = async (event) => {
     if (!apiKey) throw new Error('Secret must contain openai_api, OPENAI_API_KEY, or API');
     const openai = new OpenAI({ apiKey });
 
-    const userContent = buildPrompt(questions, context);
+    const learningScienceSection = formatLearningScience(learningScienceData);
+    const userContent = buildPrompt(questions, context, learningScienceData);
 
     const completion = await openai.chat.completions.create({
       model: MODEL,
@@ -179,13 +247,16 @@ export const handler = async (event) => {
     const raw = completion.choices[0]?.message?.content;
     if (!raw) throw new Error('Empty completion content');
     const structured = GenResponse.parse(JSON.parse(raw));
-    const { questions: validated, rejected } = validateOutput(structured, questions);
+    const { misconceptions, questions: validated, rejected } = validateOutput(structured, questions);
 
+    console.log(formatMisconceptionLog(misconceptions));
     const generated = validated.reduce((n, q) => n + q.options.length, 0);
     console.log(`[microcoachv2LLMGenMisconception] ${generated} option texts for ${validated.length} question(s), ${rejected.length} rejected`);
+    if (rejected.length) console.warn('[microcoachv2LLMGenMisconception] rejected:', JSON.stringify(rejected));
 
     return JSON.stringify({
       ok: true,
+      misconceptions,
       questions: validated,
       rejected,
       ...(wantTrace && {
@@ -193,6 +264,8 @@ export const handler = async (event) => {
           resolvedPrompt: userContent,
           model: MODEL,
           usage: completion.usage ?? null,
+          graphStandardCodes: (learningScienceData?.standards ?? []).map((s) => s.code),
+          learningScienceSectionChars: learningScienceSection.length,
         },
       }),
     });
