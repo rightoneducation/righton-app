@@ -15,7 +15,7 @@ table so `/preview` can load it. It never touches classroom, session, or misconc
 rows, so it is safe to run against any environment.
 
 **It is not offline, though.** The pipeline stages are invoked as the *deployed* Lambdas —
-`microcoachv2GetLearningScience-$AMPLIFY_ENV`, `-LLMGenMisconception-`, `-LLMGenInstrNeed-`, `-NextStepOption-` — so a run
+`microcoachv2GetLearningScience-$AMPLIFY_ENV`, `-LLMGenMisconception-`, `-LLMGenInstrNeed-`, `-LLMSelectTemplate-`, `-NextStepOption-` — so a run
 needs AWS credentials and spends real model tokens. `AMPLIFY_ENV` defaults to `dev`.
 
 ---

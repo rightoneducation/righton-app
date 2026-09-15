@@ -53,6 +53,13 @@ export type AmplifyDependentResourcesAttributes = {
       "Name": "string",
       "Region": "string"
     },
+    "microcoachv2LLMSelectTemplate": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "microcoachv2LLMVerify": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
