@@ -143,7 +143,7 @@ function buildPrompt(questions, context, learningScienceData) {
     1. \`misconceptions\` - every misconception surfaced by this quiz
       a. a description of the error, tailored around the actual conceptual steps required to arrive at it. DO NOT fall back on generic errors or arbitrary process issues. 
       b. a precise title focused around the conceptual error itself. Do not provide generalities or arbitrary process issues.
-      c. a description of how the error relates to the relevant learning science data.
+      c. a description of how the error relates to the relevant learning science data. Simply provide the mapped connection you should already have made to generate the misconception. Do not propose a remedy or solution.
       d. \`wrongAnswers\`: the (questionNumber, letter) pairs it produces. Group across questions; an option may sit under more than one misconception.
     2. \`questions\` — for each question, one \`text\` line per WRONG option naming the error a student who chose it most likely made, derived from the misconceptions above.
 
