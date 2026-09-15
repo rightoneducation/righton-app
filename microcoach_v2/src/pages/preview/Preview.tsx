@@ -7,8 +7,9 @@ import { IPipelineRunSummary } from '../../api';
  * Preview — a scratchpad for eyeballing a pipeline run.
  *
  * Structured around what the pipeline actually does, one collapsible stage per
- * step: surface a misconception, show the evidence that surfaced it, then the
- * activities generated for it.
+ * step: the misconception GenMisconception extracted from the questions, the
+ * instructional need + rationale GenInstrNeed stated for it, the two activity
+ * templates SelectTemplate picked, then any activities generated.
  *
  * Deliberately NOT wired to IPipelineOutput or the product components: this
  * renders whatever `output.json` contains, so it stays useful while the output
@@ -29,12 +30,26 @@ type RunIndexEntry = IPipelineRunSummary & { n: number };
 
 const UNTAGGED = '(untagged)';
 
-// Runs grouped by version tag, groups ordered by their newest run. `runs` is
-// already newest-first from the sync script, so first-seen order is correct.
+// Runs grouped by version NUMBER — the leading `vN` of the tag — so every
+// `v7-…` variant sits in one group; the rest of the tag stays on the option
+// label. Tags without a leading vN group under the full tag. Groups are ordered
+// by their newest run: `runs` is already newest-first, so first-seen order is
+// correct.
+const VERSION_PREFIX = /^v\d+/i;
+function versionGroup(version: string | null | undefined): string {
+  if (!version) return UNTAGGED;
+  const m = VERSION_PREFIX.exec(version);
+  return m ? m[0].toLowerCase() : version;
+}
+function versionSuffix(version: string | null | undefined): string {
+  if (!version) return '';
+  const m = VERSION_PREFIX.exec(version);
+  return m ? version.slice(m[0].length).replace(/^[-_ ]+/, '') : '';
+}
 function groupByVersion(runs: RunIndexEntry[]): Array<[string, RunIndexEntry[]]> {
   const groups = new Map<string, RunIndexEntry[]>();
   runs.forEach((entry) => {
-    const key = entry.version ?? UNTAGGED;
+    const key = versionGroup(entry.version);
     const existing = groups.get(key);
     if (existing) existing.push(entry);
     else groups.set(key, [entry]);
@@ -70,7 +85,9 @@ function runLabel(entry: RunIndexEntry): string {
   const bits = [entry.classroomName, entry.sessionLabel, entry.condition].filter((b) => b !== '');
   const when = entry.startedAt === '' ? '' : new Date(entry.startedAt).toLocaleString();
   const tail = when === '' ? '' : ` · ${when}`;
-  return `${entry.n} — ${bits.join(' · ') || entry.id}${tail}`;
+  const suffix = versionSuffix(entry.version);
+  const tag = suffix === '' ? '' : `[${suffix}] `;
+  return `${entry.n} — ${tag}${bits.join(' · ') || entry.id}${tail}`;
 }
 
 interface SectionDef {
@@ -81,49 +98,70 @@ interface SectionDef {
   keys: string[];
 }
 
-// The pipeline's own stages. Keys not listed here (and not moveOptions/title)
-// fall through to the Uncategorized section.
+// The pipeline's stages, in order. Each section lists the output keys that stage
+// produces; a key with a null/empty value is hidden, so fields the pipeline no
+// longer emits (the former analysis output) disappear rather than render as "—".
+// Keys not listed here (and not moveOptions/title/id) fall through to Uncategorized.
 const SECTIONS: SectionDef[] = [
   {
-    id: 'core',
+    id: 'extracted',
     label: 'Misconception',
-    hint: 'what it is',
+    hint: 'GenMisconception (4c) — from the questions',
     defaultOpen: false,
     keys: [
       'misconceptionSummary',
-      'instructionalNeed',
-      'aiReasoning',
-      'example',
-      'successIndicators',
+      'learningScienceConnection',
       'ccssStandards',
-      'isCore',
-      'occurrence',
+      'wrongAnswers',
+      'studentCount',
+      'studentPercent',
     ],
   },
   {
-    id: 'surface',
-    label: 'Evidence',
-    hint: 'how it surfaced',
-    defaultOpen: false,
-    keys: [
-      'frequency',
-      'studentCount',
-      'studentPercent',
-      'studentGroups',
-      'wrongAnswers',
-      'wrongAnswerExplanations',
-      'correctAnswerSolution',
-      'questionErrorRates',
-      'ppqQuestions',
-      'evidence',
-      'sourceMisconceptionId',
-      'linkStatus',
-    ],
+    id: 'need',
+    label: 'Instructional need',
+    hint: 'GenInstrNeed (5) — need + rationale',
+    defaultOpen: true,
+    keys: ['instructionalNeed', 'rationale', 'priorityRank', 'occurrence'],
+  },
+  {
+    id: 'templates',
+    label: 'Template selection',
+    hint: 'SelectTemplate (5d) — top two',
+    defaultOpen: true,
+    keys: ['selectedTemplates'],
   },
 ];
 
+// Former analysis-stage fields. Still written to output.json as null/[] for shape
+// compatibility; hidden here unless a run actually populates them.
+const LEGACY_KEY_LIST: string[] = [
+  'frequency',
+  'isCore',
+  'example',
+  'aiReasoning',
+  'successIndicators',
+  'evidence',
+  'wrongAnswerExplanations',
+  'correctAnswerSolution',
+  'sourceMisconceptionId',
+  'linkStatus',
+  'studentGroups',
+  'questionErrorRates',
+  'ppqQuestions',
+];
+
+const isEmpty = (v: Json): boolean =>
+  v === null ||
+  v === undefined ||
+  v === '' ||
+  v === false ||
+  (Array.isArray(v) && v.length === 0) ||
+  (typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length === 0);
+
 const GROUPED_KEYS = new Set<string>([
   ...SECTIONS.flatMap((section) => section.keys),
+  ...LEGACY_KEY_LIST,
   'moveOptions',
   'title',
   'id',
@@ -468,6 +506,133 @@ function TabsView({ tabs }: { tabs: Rec }) {
   );
 }
 
+/* ── need + template panels ─────────────────────────────────────────────────
+ * `instructionalNeed`, `rationale` and `selectedTemplates` are the outputs under
+ * review, so they get real renderers rather than the generic JSON dump.
+ */
+
+function Chips({ items }: { items: string[] }) {
+  if (items.length === 0) return <span className="pv-nil">(none)</span>;
+  return (
+    <div className="pv-chips">
+      {items.map((item) => (
+        <span className="pv-chip" key={item}>
+          {item}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function KV({ k, v }: { k: string; v: React.ReactNode }) {
+  return (
+    <div className="pv-field">
+      <div className="pv-key">{k}</div>
+      <div className="pv-val">{v}</div>
+    </div>
+  );
+}
+
+function NeedPanel({ item }: { item: Rec }) {
+  const need = asRec(item.instructionalNeed);
+  const r = asRec(item.rationale);
+  if (!need && !r) return <span className="pv-nil">no instructional need on this item</span>;
+  return (
+    <>
+      {need && (
+        <>
+          <Callout label="instructional need" text={asStr(need.text)} />
+          <div className="pv-fields">
+            <KV k="needKind" v={<span>{asStr(need.needKind) || '—'}</span>} />
+            <KV k="teacherRole" v={<span>{asStr(need.teacherRole) || '—'}</span>} />
+          </div>
+          <StringList label="Evidence used" items={asStrings(need.evidenceUsed)} />
+        </>
+      )}
+      {r && (
+        <>
+          <div className="pv-block-label">Rationale</div>
+          <div className="pv-fields">
+            <KV k="priorityRank" v={<span className="pv-num">{String(r.priorityRank ?? '—')}</span>} />
+            <KV k="conceptualSeverity" v={<span className="pv-num">{String(r.conceptualSeverity ?? '—')}</span>} />
+            <KV k="recurrence" v={<span>{asStr(r.recurrence) || '—'}</span>} />
+            <KV k="prerequisiteGaps" v={<Chips items={asStrings(r.prerequisiteGaps)} />} />
+            <KV k="forwardImpact" v={<Chips items={asStrings(r.forwardImpact)} />} />
+            <div className="pv-field pv-field-wide">
+              <div className="pv-key">prevalence</div>
+              <div className="pv-val">{asStr(r.prevalence) || '—'}</div>
+            </div>
+            <div className="pv-field pv-field-wide">
+              <div className="pv-key">confidenceSignal</div>
+              <div className="pv-val">{asStr(r.confidenceSignal) || '—'}</div>
+            </div>
+          </div>
+          <Callout label="why this need" text={asStr(r.whyThisNeed)} />
+        </>
+      )}
+    </>
+  );
+}
+
+function TemplatesPanel({ sel }: { sel: Rec }) {
+  const top2 = asArray(sel.top2);
+  const considered = asArray(sel.considered);
+  const agrees = sel.agreesWithNeedKind === true;
+  return (
+    <>
+      <div className="pv-grid-moves">
+        {top2.map((pick, i) => (
+          // Two picks may share a templateId; the rationale text disambiguates.
+          <div className="pv-card pv-move" key={`${asStr(pick.templateId)}-${asStr(pick.rationale).slice(0, 32)}`}>
+            <div className="pv-card-title">
+              <span className="pv-move-idx">{i + 1}</span>
+              {asStr(pick.templateId)}
+              <span className={asStr(pick.fit) === 'strong' ? 'pv-tag' : 'pv-tag pv-tag-alt'}>
+                {asStr(pick.fit) || 'fit ?'}
+              </span>
+            </div>
+            <div>{asStr(pick.rationale)}</div>
+            {asStr(pick.distinctFrom) !== '' && (
+              <Callout label="distinct from pick 1" text={asStr(pick.distinctFrom)} />
+            )}
+          </div>
+        ))}
+      </div>
+      <div className="pv-fields">
+        <KV
+          k="needKind → template"
+          v={
+            <span>
+              {asStr(sel.needKindTemplate) || '—'}{' '}
+              <span className={agrees ? 'pv-ok' : 'pv-bad'}>{agrees ? '✓ agrees' : '✗ differs'}</span>
+            </span>
+          }
+        />
+      </div>
+      {considered.length > 0 && (
+        <details className="pv-details">
+          <summary className="pv-summary">
+            <span className="pv-chevron" aria-hidden="true">
+              ▸
+            </span>
+            <span className="pv-summary-label">Considered</span>
+            <span className="pv-count">{String(considered.length)}</span>
+            <span className="pv-hint">why not the others</span>
+          </summary>
+          <div className="pv-details-body">
+            {considered.map((c) => (
+              <div className="pv-ld" key={asStr(c.templateId)}>
+                <div className="pv-ld-label">{asStr(c.templateId)}</div>
+                <div className="pv-ld-detail">{asStr(c.whyNot)}</div>
+              </div>
+            ))}
+          </div>
+        </details>
+      )}
+    </>
+  );
+}
+
 function MoveCard({ move, index }: { move: Rec; index: number }) {
   const tabs = asRec(move.tabs);
   const keys = Object.keys(move).filter((k) => k !== 'title' && k !== 'id' && k !== 'tabs');
@@ -497,24 +662,51 @@ function Misconception({
   generation: number;
 }) {
   const moves = Array.isArray(item.moveOptions) ? (item.moveOptions as unknown as Rec[]) : [];
-  const uncategorized = Object.keys(item).filter((k) => !GROUPED_KEYS.has(k));
+  // Legacy fields only surface when a run actually populated them.
+  const legacyPresent = LEGACY_KEY_LIST.filter((k) => !isEmpty(item[k]));
+  const uncategorized = [
+    ...Object.keys(item).filter((k) => !GROUPED_KEYS.has(k) && !isEmpty(item[k])),
+    ...legacyPresent,
+  ];
   const anchor = `m-${typeof item.id === 'string' ? item.id : index}`;
+  const sel = asRec(item.selectedTemplates);
+  const topPick = sel ? asArray(sel.top2)[0] : null;
+  const rank = typeof item.priorityRank === 'number' ? item.priorityRank : null;
 
   return (
     <article className="pv-section" id={anchor}>
       <h2 className="pv-h2">
-        <span className="pv-idx">{index + 1}</span>
+        <span className="pv-idx">{rank !== null ? `#${rank}` : index + 1}</span>
         {typeof item.title === 'string' ? item.title : '(untitled)'}
-        {typeof item.frequency === 'string' && <span className="pv-tag">{item.frequency}</span>}
         {typeof item.studentCount === 'number' && (
           <span className="pv-tag pv-tag-alt">{`${item.studentCount} students`}</span>
         )}
-        <span className="pv-tag pv-tag-alt">{`${moves.length} moves`}</span>
+        {topPick && <span className="pv-tag">{asStr(topPick.templateId)}</span>}
+        {sel && (
+          <span className={sel.agreesWithNeedKind === true ? 'pv-tag pv-tag-alt pv-ok' : 'pv-tag pv-tag-alt pv-bad'}>
+            {sel.agreesWithNeedKind === true ? 'needKind ✓' : 'needKind ✗'}
+          </span>
+        )}
+        {moves.length > 0 && <span className="pv-tag pv-tag-alt">{`${moves.length} moves`}</span>}
       </h2>
 
       {SECTIONS.map((section) => {
-        const present = section.keys.filter((k) => item[k] !== undefined);
+        const present = section.keys.filter((k) => !isEmpty(item[k]));
         if (present.length === 0) return null;
+        let body: React.ReactNode;
+        if (section.id === 'need') {
+          body = <NeedPanel item={item} />;
+        } else if (section.id === 'templates' && sel) {
+          body = <TemplatesPanel sel={sel} />;
+        } else {
+          body = (
+            <div className="pv-fields">
+              {present.map((k) => (
+                <Field key={k} name={k} value={item[k]} />
+              ))}
+            </div>
+          );
+        }
         return (
           <Collapse
             key={section.id}
@@ -525,18 +717,15 @@ function Misconception({
             allOpen={allOpen}
             generation={generation}
           >
-            <div className="pv-fields">
-              {present.map((k) => (
-                <Field key={k} name={k} value={item[k]} />
-              ))}
-            </div>
+            {body}
           </Collapse>
         );
       })}
 
+      {moves.length > 0 && (
       <Collapse
         label="Activities"
-        hint="generated moves"
+        hint="NextStepOption — generated moves"
         count={String(moves.length)}
         defaultOpen={false}
         allOpen={allOpen}
@@ -552,11 +741,12 @@ function Misconception({
           ))}
         </div>
       </Collapse>
+      )}
 
       {uncategorized.length > 0 && (
         <Collapse
-          label="Uncategorized"
-          hint="not yet grouped"
+          label="Other"
+          hint="legacy or ungrouped fields with a value"
           count={String(uncategorized.length)}
           defaultOpen={false}
           allOpen={allOpen}
@@ -604,6 +794,7 @@ function Header({
   onCollapseAll: () => void;
 }) {
   const tokens = manifest.tokens as { total?: number } | undefined;
+  const dedup = asRec(manifest.graphDedup) as { bytesBefore: number; bytesAfter: number } | null;
   const fallbacks = Array.isArray(manifest.silentFallbacks) ? manifest.silentFallbacks : [];
   const models = Array.isArray(manifest.models) ? (manifest.models as string[]) : [];
   const stat = (label: string, value: React.ReactNode) => (
@@ -661,13 +852,38 @@ function Header({
             <span className="pv-nil">untagged</span>
           ),
         )}
-        {stat('misconceptions', String(manifest.misconceptionCount ?? items.length))}
-        {stat('activities', String(manifest.activityCount ?? '—'))}
         {stat(
-          'source linked',
-          `${manifest.sourceMisconceptionMatched ?? '?'}/${manifest.sourceMisconceptionAvailable ?? '?'}`,
+          'misconceptions',
+          `${manifest.misconceptionCount ?? items.length}${manifest.misconceptionsFromGen != null ? ` (${manifest.misconceptionsFromGen} from gen)` : ''}`,
         )}
-        {stat('wrong-answer linked', String(manifest.wrongAnswerLinked ?? '—'))}
+        {stat('needs', `${manifest.instructionalNeedsGenerated ?? '—'}/${manifest.misconceptionCount ?? items.length}`)}
+        {stat('templates', `${manifest.templatesSelected ?? '—'}/${manifest.misconceptionCount ?? items.length}`)}
+        {stat(
+          'needKind agreement',
+          manifest.templatesSelected != null ? (
+            <span className={manifest.needKindAgreement === manifest.templatesSelected ? 'pv-ok' : ''}>
+              {`${manifest.needKindAgreement ?? 0}/${manifest.templatesSelected}`}
+            </span>
+          ) : (
+            '—'
+          ),
+        )}
+        {stat(
+          'graph dedup',
+          dedup ? `${Math.round(dedup.bytesBefore / 1024)} → ${Math.round(dedup.bytesAfter / 1024)} KB` : '—',
+        )}
+        {stat(
+          'cached prompt tokens',
+          manifest.selectCachedPromptTokens != null ? (
+            <span className={Number(manifest.selectCachedPromptTokens) > 0 ? 'pv-ok' : 'pv-bad'}>
+              {String(manifest.selectCachedPromptTokens)}
+            </span>
+          ) : (
+            '—'
+          ),
+        )}
+        {stat('stopped after', String(manifest.stoppedAfter ?? 'full run'))}
+        {stat('activities', String(manifest.activityCount ?? '—'))}
         {stat('tokens', tokens?.total ? tokens.total.toLocaleString() : '—')}
         {stat(
           'silent fallbacks',
@@ -895,7 +1111,11 @@ export default function Preview() {
     setGeneration((g) => g + 1);
   };
 
-  const shown = useMemo(() => items, [items]);
+  // Priority order from the need stage when present; otherwise as published.
+  const shown = useMemo(() => {
+    const rank = (m: Rec) => (typeof m.priorityRank === 'number' ? m.priorityRank : Number.POSITIVE_INFINITY);
+    return [...items].sort((a, b) => rank(a) - rank(b));
+  }, [items]);
 
   return (
     <div className="pv-wrap">
