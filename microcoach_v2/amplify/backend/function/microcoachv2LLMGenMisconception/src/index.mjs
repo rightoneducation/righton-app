@@ -27,8 +27,8 @@ import config from './util/config.json' assert { type: 'json' };
  *                        for the session's standards, masked by the eval condition
  *   trace                boolean — echo `_trace` (resolved prompt, model, usage)
  *
- * Output: { ok: true, misconceptions: [{ title, description, wrongAnswers:
- * [{ questionNumber, letter }] }], questions: [{ questionNumber, options: [{ letter,
+ * Output: { ok: true, misconceptions: [{ description, title,
+ * learningScienceConnection, wrongAnswers: [{ questionNumber, letter }] }], questions: [{ questionNumber, options: [{ letter,
  * text, confidence }] }], rejected } — wrong options only. A model reference that does
  * not match an input option is dropped rather than repaired. The misconception list
  * is also written to the log as one readable block. On failure: { ok: false,
@@ -51,9 +51,11 @@ const WrongAnswerRef = z.object({
   letter: z.string().describe('The option letter exactly as given — wrong options only'),
 });
 
+// Key order mirrors parts (a)–(d) of the prompt's output instructions.
 const MisconceptionOut = z.object({
-  title: z.string().describe('Short name for the misconception'),
-  description: z.string().describe('The specific cognitive or procedural error, and why a student holding it lands on these options'),
+  description: z.string().describe('(a) The specific conceptual error, tailored to the actual steps required to arrive at it'),
+  title: z.string().describe('(b) A precise title focused on the conceptual error itself'),
+  learningScienceConnection: z.string().describe('(c) How the error relates to the relevant learning science data'),
   wrongAnswers: z.array(WrongAnswerRef).describe(
     'Every wrong option, across all questions, that a student holding this misconception would choose. An option may appear under more than one misconception.',
   ),
@@ -171,7 +173,12 @@ function validateOutput(structured, questions) {
       kept.push({ questionNumber: w.questionNumber, letter });
     }
     if (!kept.length) { rejected.push({ misconception: m.title, reason: 'noValidRefs' }); continue; }
-    misconceptions.push({ title: m.title, description: m.description, wrongAnswers: kept });
+    misconceptions.push({
+      description: m.description,
+      title: m.title,
+      learningScienceConnection: m.learningScienceConnection,
+      wrongAnswers: kept,
+    });
   }
 
   // Step 2 — per-option text.
@@ -203,8 +210,11 @@ function formatMisconceptionLog(misconceptions) {
   misconceptions.forEach((m, i) => {
     const refs = m.wrongAnswers.map((w) => `Q${w.questionNumber}${w.letter}`).join(', ');
     lines.push(`${i + 1}. ${m.title}`);
-    lines.push(`   ${m.description}`);
-    lines.push(`   → ${refs}`);
+    lines.push(`   a. Error: ${m.description}`);
+    lines.push(`   b. Title: ${m.title}`);
+    lines.push(`   c. Learning science: ${m.learningScienceConnection}`);
+    lines.push(`   d. Wrong answers: ${refs}`);
+    lines.push('');
   });
   return lines.join('\n');
 }

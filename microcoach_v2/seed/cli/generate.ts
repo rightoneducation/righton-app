@@ -17,6 +17,7 @@ import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { RunCapture, NoopCapture, Capture } from '../eval/scripts/util/exportEvalOutputs';
 import { loadFixture, normalizeRawGraphItems, Fixture } from '../eval/scripts/util/importEvalFixtures';
 import { maskQuery } from '../eval/scripts/util/maskQuery';
+import { dedupeGraph } from '../eval/scripts/util/dedupeGraph';
 import { MaskOptionEnum, KgQueryType } from '../eval/types';
 import { computeMisconceptionReach } from '../eval/scripts/util/computeReach';
 
@@ -731,13 +732,25 @@ async function processClassroom(
   }
   const wrongAnswerDist = computeWrongAnswerDist(studentResponses);
 
-  // The snapshot is the unmasked payload and stays that way — graph-derived rubric
-  // rows score against it, so masking it here would make a withheld condition score
-  // zero by construction. `injected` is what every prompt from here on receives,
-  // GenMisconception included, so the ablation conditions apply to it too.
+  // The snapshot is the unmasked, undeduplicated payload and stays that way —
+  // graph-derived rubric rows score against it, so trimming it here would make a
+  // withheld condition score zero by construction. `injected` is what every prompt
+  // from here on receives, GenMisconception included, so the ablation conditions
+  // apply to it too.
+  //
+  // Dedup runs before masking: the graph repeats the same LVN factors and
+  // strategies (by id) under every standard in the session, and each prompt that
+  // takes the full payload paid for every copy. Later occurrences become
+  // `seeAbove` stubs; the formatters render those as one line.
   capture.writeSnapshot(learningScienceData);
+  const { standards: dedupedStandards, removed: graphDedup } = dedupeGraph(learningScienceData.standards);
+  console.log(
+    `  [LS] dedup: ${graphDedup.factors} factors, ${graphDedup.strategies} strategies, ` +
+    `${graphDedup.learnerModels} learner models, ${graphDedup.interactsWith} interactsWith collapsed · ` +
+    `${Math.round(graphDedup.bytesBefore / 1024)} KB → ${Math.round(graphDedup.bytesAfter / 1024)} KB`,
+  );
   const injected = {
-    standards: learningScienceData.standards.map((s: KgQueryType) => maskQuery(s, CONDITION)),
+    standards: dedupedStandards.map((s: KgQueryType) => maskQuery(s, CONDITION)),
   };
   capture.writeInjected(injected);
 
@@ -1025,6 +1038,9 @@ async function processClassroom(
     ccssRequested: allCcss,
     ccssUnmatched: unmatched,
     graphStandardsReturned: learningScienceData.standards.length,
+    // What dedupeGraph collapsed before masking. A run whose prompts carried the
+    // repeated LVN blocks is not comparable to one whose prompts carried stubs.
+    graphDedup,
     misconceptionCount: misconceptions.length,
     activityCount: activitiesPerGroup.reduce((n: number, g: any[]) => n + g.length, 0),
     instructionalNeedsGenerated,
