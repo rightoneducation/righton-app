@@ -1,6 +1,17 @@
   import { type PortableTextComponents } from '@portabletext/react';
 import { styled } from '@mui/material/styles';
+import { Box } from '@mui/material';
 import { CMSHeaderText, CMSBodyText } from './CMSStyledComponents';
+
+interface CMSTableRow {
+  _key?: string;
+  cells?: string[];
+}
+
+interface CMSTableValue {
+  headerRow?: boolean;
+  rows?: CMSTableRow[];
+}
 
 const StyledLink = styled('a')(() => ({
   color: '#FFFFFF !important',
@@ -73,4 +84,43 @@ const StyledLink = styled('a')(() => ({
       ),
     },
     hardBreak: () => <br />,
+    types: {
+      table: ({ value }: { value: CMSTableValue }) => (
+        <Box style={{ width: '100%', overflowX: 'auto' }}>
+          <table
+            style={{
+              borderCollapse: 'collapse',
+              whiteSpace: 'nowrap',
+              color: '#FFFFFF',
+            }}
+          >
+            <tbody>
+              {(value.rows ?? []).map((row, rowIndex) => {
+                const isHeader = value.headerRow && rowIndex === 0;
+                const cellStyle = {
+                  padding: '6px 12px',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  textAlign: 'left' as const,
+                };
+                return (
+                  <tr key={row._key ?? rowIndex}>
+                    {(row.cells ?? []).map((cell, cellIndex) =>
+                      isHeader ? (
+                        <th key={cellIndex} style={cellStyle}>
+                          <CMSBodyText style={{ fontWeight: 700 }}>{cell}</CMSBodyText>
+                        </th>
+                      ) : (
+                        <td key={cellIndex} style={cellStyle}>
+                          <CMSBodyText>{cell}</CMSBodyText>
+                        </td>
+                      ),
+                    )}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </Box>
+      ),
+    },
   }
