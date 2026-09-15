@@ -5,19 +5,20 @@ import { z } from 'zod';
 import config from './util/config.json' assert { type: 'json' };
 
 /**
- * microcoachv2LLMGenMisconception — writes the "mistake this option captures" text
- * for each wrong answer option of a PPQ.
+ * microcoachv2LLMGenMisconception — extracts the misconceptions behind a PPQ's wrong
+ * answer options from the questions themselves.
  *
- * The pilot documents carried this as a teacher-authored Distractors column, which
- * parsePpqTable read into `answerChoices[].text` and microcoachv2LLMAnalysis renders
- * next to each option. When a source document has no such column this Lambda fills
- * the same field, so Analysis sees identical input either way.
+ * The pilot documents carried a teacher-authored Distractors column naming the error
+ * behind each wrong option; new documents do not, so the mapping between wrong
+ * answers and misconceptions has to be generated here. The only inputs are the
+ * question stem and option content where the document provides them, plus how many
+ * students chose each option.
  *
  * Input (`event.arguments.input` from AppSync, or `event.input` from a direct
  * invoke), all JSON strings:
  *   questions  [{ questionNumber, ccssStandard, correctAnswer, classPercentCorrect,
  *                 questionText?, answerChoices: [{ letter, isCorrect, content?,
- *                 studentCount?, attributedTo?: { title, description } }] }]
+ *                 studentCount? }] }]
  *   context    { subject?, ccssStandards? }
  *   trace      boolean — echo `_trace` (resolved prompt, model, usage)
  *
@@ -42,7 +43,7 @@ const OptionText = z.object({
     `One sentence, at most ${MAX_WORDS} words, naming the specific procedural or conceptual error a student who chose this option most likely made`,
   ),
   confidence: z.enum(['grounded', 'inferred']).describe(
-    '"grounded" when the option content or question text supports the error named; "inferred" when it was derived only from the attributed misconception, the standard, or the response counts',
+    '"grounded" when the option content or question text supports the error named; "inferred" when it was derived only from the standard or the response counts',
   ),
 });
 
@@ -70,12 +71,7 @@ function formatQuestion(q) {
     const parts = [`${letter}.`];
     parts.push(o.content ? o.content : '(option content not provided)');
     if (o.isCorrect) parts.push('[CORRECT ANSWER — do not describe]');
-    else {
-      if (o.studentCount != null) parts.push(`— ${o.studentCount} student${o.studentCount === 1 ? '' : 's'} chose this`);
-      if (o.attributedTo?.title) {
-        parts.push(`— attributed at ingest to "${o.attributedTo.title}"${o.attributedTo.description ? `: ${o.attributedTo.description}` : ''}`);
-      }
-    }
+    else if (o.studentCount != null) parts.push(`— ${o.studentCount} student${o.studentCount === 1 ? '' : 's'} chose this`);
     return `  ${parts.join(' ')}`;
   });
   return `${header}\n${stem}\n${rows.join('\n')}`;
@@ -84,7 +80,16 @@ function formatQuestion(q) {
 function buildPrompt(questions, context) {
   const examples = STYLE_EXAMPLES.map((e) => `- ${e}`).join('\n');
   return `
-You are an expert K-12 math instructional coach. For each WRONG answer option below, write the one-line note a teacher would put in a "Distractors" column: the specific mistake a student who chose that option most likely made.
+    You are an expert K-12 math instructional coach. You have received a set of multiple choice questions, containing both a correct answer and three wrong answers. The task
+    is to analyze these multiple choice questions and identify the set of misconceptions that have been used to arrive at the wrong answers. It is important to note that all questions
+    included in this are part of a single quiz activity, so the error that produces the wrong answer will probably be shared across multiple questions. Similarly, it is also important
+    to note that some answer may have multiple misconceptions that could produce that wrong answer.
+
+    As such, the first step in the task is to analyze the set of questions and extract all possible misconceptions, mapped to the affected wrong answers. This will essentially comprise
+    the set of misconceptions that are being surfaced in the classroom. Export only JSON.
+
+
+
 
 ## Context
 - Subject: ${context?.subject ?? 'Math'}
@@ -98,7 +103,6 @@ ${examples}
 
 ## Grounding rules
 - If the option content or question text is provided, derive the error from it and mark confidence "grounded".
-- If only an ingest attribution is provided, derive the error from that misconception's description and mark "inferred". Do NOT copy the misconception title — describe the concrete step that goes wrong on THIS question.
 - If neither is provided, still write the most plausible error for a wrong answer on this standard and mark "inferred".
 - Never describe the correct answer. Never invent numbers that do not appear in the question or option content.
 

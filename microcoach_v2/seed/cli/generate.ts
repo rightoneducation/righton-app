@@ -77,6 +77,14 @@ const GRAPH_SOURCE: 'fixture' | 'live' = (() => {
   return v === 'live' ? 'live' : 'fixture';
 })();
 
+// `--analysis-only` stops after the misconception analysis: no instructional
+// needs, no planner, no activity generation. output.json still carries every
+// misconception-level field (reach counts, prerequisite gaps) with empty
+// moveOptions, so /preview and scoreMisconception work unchanged. Recorded in
+// the manifest as `stoppedAfter` so a truncated run cannot be compared blind
+// against a full one.
+const ANALYSIS_ONLY = process.argv.includes('--analysis-only');
+
 async function invokeLambda(functionName: string, payload: unknown): Promise<any> {
   const client = new LambdaClient({ region: process.env.AWS_REGION ?? 'us-east-1' });
   const cmd = new InvokeCommand({
@@ -474,8 +482,8 @@ function buildNextSteps(
       // rather than overwritten by it — the gap between the two is a calibration
       // signal worth scoring.
       frequency: m.frequency,
-      // Counted from the response rows via the ingest-time option attribution.
-      // null (not 0) when there was no attribution to count from.
+      // Counted from the response rows via the misconception's wrong-answer refs.
+      // null (not 0) when there were no refs to count from.
       studentCount: reach.studentCount,
       studentPercent: reach.studentPercent,
       wrongAnswers: m.wrongAnswers ?? [],
@@ -723,27 +731,16 @@ async function processClassroom(
   }
   const wrongAnswerDist = computeWrongAnswerDist(studentResponses);
 
-  // 4c. Distractor text — fill in `answerChoices[].text` wherever the source document
-  //     had no Distractors column. Lands on `augmentedPpq` because that is the object
-  //     Analysis serialises, and Analysis renders this text next to each option. A
-  //     value that came from the document is never overwritten; a failed call leaves
-  //     bare letters, which Analysis already tolerates. Only the eval fixtures carry
-  //     `answerChoices` today (GET_SESSION does not select it), so CLI mode is a no-op.
-  let distractorTextGenerated = 0;
-  const needsText = (augmentedPpq?.questions ?? []).filter((q: any) =>
-    (q.answerChoices ?? []).some((o: any) => !o.isCorrect && !o.text),
-  );
-  if (needsText.length) {
-    // (questionNumber:letter) → the ingested misconception it was attributed to, so the
-    // model can name the error even when the option content is an image it cannot see.
-    const attributed = new Map<string, { title: string; description: string }>();
-    for (const m of currentSession?.misconceptions?.items ?? []) {
-      for (const w of m.wrongAnswers ?? []) {
-        attributed.set(`${w.questionNumber}:${String(w.letter).toUpperCase()}`, { title: m.title, description: m.description });
-      }
-    }
+  // 4c. Misconception extraction from the questions themselves. The pilot documents
+  //     carried a teacher-authored Distractors column naming the error behind each
+  //     wrong option; new documents do not, so the mapping has to be generated. The
+  //     call is recorded for review only — its output is not fed back into the
+  //     pipeline yet. Only the eval fixtures carry `answerChoices` today (GET_SESSION
+  //     does not select it), so CLI mode is a no-op.
+  const withChoices = (augmentedPpq?.questions ?? []).filter((q: any) => (q.answerChoices ?? []).length);
+  if (withChoices.length) {
     const genInput = {
-      questions: JSON.stringify(needsText.map((q: any) => ({
+      questions: JSON.stringify(withChoices.map((q: any) => ({
         questionNumber: q.questionNumber,
         // Per-question codes are blank in the pilot fixtures; fall back to the session's.
         ccssStandard: q.ccssStandard || allCcss.join(', '),
@@ -755,42 +752,23 @@ async function processClassroom(
           isCorrect: o.isCorrect ?? false,
           content: o.content ?? null,
           studentCount: wrongAnswerDist[q.questionNumber]?.[String(o.letter).toUpperCase()] ?? 0,
-          attributedTo: attributed.get(`${q.questionNumber}:${String(o.letter).toUpperCase()}`) ?? null,
         })),
       }))),
       context: JSON.stringify({ subject: classroom.subject, ccssStandards: allCcss }),
       trace: WANT_TRACE,
     };
-    process.stdout.write(`  Distractor text for ${needsText.length} question(s)...`);
+    process.stdout.write(`  Misconception extraction over ${withChoices.length} question(s)...`);
     try {
       const raw = await invokeLambda(`microcoachv2LLMGenMisconception-${AMPLIFY_ENV}`, { input: genInput });
       const parsed = parseJson(raw);
       capture.recordCall('gen-misconception', genInput, parsed);
       if (parsed?.ok === false) {
-        console.log(` ✗ ${parsed?.error?.message ?? 'unknown error'} — continuing with bare letters`);
+        console.log(` ✗ ${parsed?.error?.message ?? 'unknown error'}`);
       } else {
-        const textFor = new Map<string, string>();
-        for (const q of parsed?.questions ?? []) {
-          for (const o of q.options ?? []) textFor.set(`${q.questionNumber}:${o.letter}`, o.text);
-        }
-        augmentedPpq = {
-          ...augmentedPpq,
-          questions: augmentedPpq.questions.map((q: any) => ({
-            ...q,
-            answerChoices: (q.answerChoices ?? []).map((o: any) => {
-              if (o.text) return o;
-              const text = textFor.get(`${q.questionNumber}:${String(o.letter).toUpperCase()}`);
-              if (!text) return o;
-              distractorTextGenerated += 1;
-              return { ...o, text };
-            }),
-          })),
-        };
-        const rejected = parsed?.rejected?.length ?? 0;
-        console.log(` ✓  ${distractorTextGenerated} option descriptions${rejected ? ` (${rejected} rejected)` : ''}`);
+        console.log(' ✓  recorded (not wired downstream)');
       }
     } catch (err) {
-      console.log(` ✗ ${err} — continuing with bare letters`);
+      console.log(` ✗ ${err}`);
     }
   }
 
@@ -828,11 +806,9 @@ async function processClassroom(
   // 5b. Instructional need — the Wave 2 intermediate step between diagnosis and
   //     activity generation: what students most need to understand, examine, or do
   //     next mathematically. Attached to each misconception for observation in
-  //     /preview only; NOT yet fed to the planner or NextStepOption. The Analysis
-  //     misconceptions already carry `wrongAnswers[].text`, so the generated
-  //     distractor descriptions reach this step with no extra plumbing.
+  //     /preview only; NOT yet fed to the planner or NextStepOption.
   let instructionalNeedsGenerated = 0;
-  if (misconceptions.length) {
+  if (misconceptions.length && !ANALYSIS_ONLY) {
     const needInput = {
       misconceptions: JSON.stringify(misconceptions),
       context: JSON.stringify({ subject: classroom.subject, cohortSize: classroom.cohortSize, ccssStandards: allCcss }),
@@ -906,8 +882,10 @@ async function processClassroom(
   //     misconceptions before parallel generation begins.
   type StructurePlan = { misconceptionTitle: string; whole_class: string; split_class: string };
   let structurePlan: StructurePlan[] = [];
-  process.stdout.write(`  Planning activity structures for ${misconceptions.length} misconceptions...`);
-  try {
+  if (ANALYSIS_ONLY) {
+    console.log('  --analysis-only: skipping instructional needs, planner and activity generation');
+  } else try {
+    process.stdout.write(`  Planning activity structures for ${misconceptions.length} misconceptions...`);
     const plannerInput = {
       planStructures: true,
       misconceptions: JSON.stringify(misconceptions.map((m: any) => ({ title: m.title, description: m.description, ccssStandard: m.ccssStandard }))),
@@ -938,7 +916,7 @@ async function processClassroom(
   };
 
   // 6b. Generate activities — misconceptions in parallel, formats sequential within each
-  const activitiesPerGroup: any[][] = await Promise.all(
+  const activitiesPerGroup: any[][] = ANALYSIS_ONLY ? misconceptions.map(() => []) : await Promise.all(
     misconceptions.map(async (m: any, i: number) => {
       process.stdout.write(`  Next steps [${i + 1}/${misconceptions.length}]: ${m.title}...`);
       const relevant = nextStepExamples.filter(
@@ -1048,11 +1026,8 @@ async function processClassroom(
     graphStandardsReturned: learningScienceData.standards.length,
     misconceptionCount: misconceptions.length,
     activityCount: activitiesPerGroup.reduce((n: number, g: any[]) => n + g.length, 0),
-    // How many option descriptions the model wrote (vs. came from the source document).
-    // A run whose distractor text was generated is not comparable to one that had the
-    // teacher-authored column, so it has to be visible here.
-    distractorTextGenerated,
     instructionalNeedsGenerated,
+    stoppedAfter: ANALYSIS_ONLY ? 'analysis' : null,
     // Diagnostic, not a correction: when the analysis stage emits a code the graph
     // does not carry, the generation stage silently loses all graph context.
     targetStandardMatched: misconceptions.filter((m: any) =>
@@ -1071,9 +1046,9 @@ async function processClassroom(
       return misconceptions.filter((m: any) => sourceIds.has(m.sourceMisconceptionId)).length;
     })(),
     sourceMisconceptionAvailable: (currentSession?.misconceptions?.items ?? []).length,
-    // A run where the option attribution never arrived is not comparable to one
-    // where it did, so the counting chain's health goes in the manifest rather than
-    // being inferred from output.json later.
+    // A run where the wrong-answer refs never arrived is not comparable to one
+    // where they did, so the counting chain's health goes in the manifest rather
+    // than being inferred from output.json later.
     wrongAnswerLinked: nextSteps.filter((n: any) => n.linkStatus === 'linked').length,
     wrongAnswerRefs: nextSteps.reduce((n: number, s: any) => n + (s.wrongAnswers?.length ?? 0), 0),
     studentCountTotals: nextSteps.map((n: any) => ({
@@ -1087,7 +1062,7 @@ async function processClassroom(
     console.log(`    ${manifest.modelCalls} calls · ${t.total.toLocaleString()} tokens · models: ${manifest.models.join(', ')}`);
     console.log(`    targetStandard matched on ${manifest.targetStandardMatched}/${manifest.misconceptionCount} misconceptions`);
     console.log(`    sourceMisconceptionId linked on ${manifest.sourceMisconceptionMatched}/${manifest.misconceptionCount} (${manifest.sourceMisconceptionAvailable} ingested)`);
-    console.log(`    wrong-answer attribution on ${manifest.wrongAnswerLinked}/${manifest.misconceptionCount} (${manifest.wrongAnswerRefs} option refs)`);
+    console.log(`    wrong-answer refs on ${manifest.wrongAnswerLinked}/${manifest.misconceptionCount} (${manifest.wrongAnswerRefs} option refs)`);
     for (const s of manifest.studentCountTotals) {
       const n = s.studentCount == null ? 'not linked' : `${s.studentCount} students (${Math.round((s.studentPercent ?? 0) * 100)}%)`;
       console.log(`      ${s.title}: ${n} · model said "${s.frequency}"`);

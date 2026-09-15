@@ -104,27 +104,16 @@ export const handler = async (event) => {
   }) : null;
 
   /**
-   * Renders the answer options with, per option, its text, how many students chose
-   * it, and which ingested misconception it was attributed to at ingest time.
-   *
-   * Option text only exists when a session has been enriched from its source
-   * document. Without it this degrades to bare letters and counts — which is what
-   * every run before this change had, and why the model used to invent values like
-   * "8/6" for what were really option letters.
+   * Renders the answer options with, per option, how many students chose it. The
+   * pilot documents carried a teacher-authored description of each wrong option;
+   * new documents do not, so this is letters and counts only. The option content
+   * itself, where the document provides it, is in the PPQ JSON above.
    *
    * `dist` is `{ [questionNumber]: { [answer]: studentCount } }`.
    */
-  const formatAnswerOptions = (questions, dist, misconceptions) => {
+  const formatAnswerOptions = (questions, dist) => {
     if (!Array.isArray(questions) || !questions.length) {
       return 'No question data available for this assessment.';
-    }
-
-    // (questionNumber, letter) -> misconception title, from the ingest-time linkage
-    const attribution = new Map();
-    for (const m of misconceptions ?? []) {
-      for (const w of m.wrongAnswers ?? []) {
-        attribution.set(`${w.questionNumber}:${String(w.letter).toUpperCase()}`, m.title);
-      }
     }
 
     const countFor = (qNum, letter) => {
@@ -154,11 +143,9 @@ export const handler = async (event) => {
 
         const rows = q.answerChoices.map((opt) => {
           const letter = String(opt.letter).toUpperCase();
-          if (opt.isCorrect) return `  ${letter}. ${opt.text}  [correct answer]`;
+          if (opt.isCorrect) return `  ${letter}.  [correct answer]`;
           const n = countFor(q.questionNumber, letter);
-          const who = attribution.get(`${q.questionNumber}:${letter}`);
-          return `  ${letter}. ${opt.text}  — ${n} student${n === 1 ? '' : 's'}` +
-                 (who ? `, attributed to "${who}"` : '');
+          return `  ${letter}.  — ${n} student${n === 1 ? '' : 's'}`;
         });
         return `${header}\n${rows.join('\n')}`;
       })
@@ -182,10 +169,9 @@ export const handler = async (event) => {
       occurrence: m.occurrence,
       studentCount: m.studentCount,
       studentPercent: m.studentPercent,
-      // The ingest-time option attribution. Carried so the prompt can show which
-      // wrong answers belong to which misconception, and so the count computed
-      // downstream is traceable to something the model was actually shown.
-      wrongAnswers: m.wrongAnswers,
+      // `wrongAnswers` is deliberately NOT projected: the model must derive which
+      // options belong to which misconception from the data, not read a mapping.
+      // The refs are still carried onto the output post-parse (see ingestLinks).
     })),
   }) : null;
 
@@ -253,12 +239,10 @@ ${JSON.stringify(payload.currentSession, null, 2)}
 ${JSON.stringify(payload.ppq, null, 2)}
 
 ## Answer Options and What Students Chose
-Every option on every question, how many students chose it, and — where the source
-document recorded it — which misconception that option was attributed to at ingest.
-Treat these attributions as given: they come from the printed answer key, not from
-inference. Ground your evidence and examples in this table rather than inventing
+Every option on every question and how many students chose it. Ground your evidence
+and examples in this table and the PPQ question data above rather than inventing
 plausible-looking values.
-${formatAnswerOptions(payload.ppq?.questions, payload.wrongAnswerDist, payload.currentSession?.misconceptions)}
+${formatAnswerOptions(payload.ppq?.questions, payload.wrongAnswerDist)}
 
 ## Session History (prior sessions, oldest first)
 ${payload.sessionHistory.length ? JSON.stringify(payload.sessionHistory, null, 2) : 'No prior sessions.'}
@@ -346,19 +330,14 @@ Return JSON matching the schema.
       .map((q) => `Q${q.questionNumber}: correct answer = ${q.correctAnswer}`)
       .join('\n');
 
-    // Prefer the misconception's own ingest-time option attribution over
-    // re-deriving questions from `evidence.source` free text.
+    // Prefer the misconception's own wrong-answer refs over re-deriving questions
+    // from `evidence.source` free text.
     const linked = (misconception.wrongAnswers ?? []).map(
       (w) => ({ questionNumber: w.questionNumber, letter: String(w.letter).toUpperCase() })
     );
 
-    // Collect the wrong answers to explain, with their real option text where the
-    // session has been enriched from its source document.
+    // Collect the wrong answers to explain.
     let wrongAnswerLines = [];
-    const optionText = (qNum, letter) => {
-      const q = ppqQuestions.find((x) => x.questionNumber === qNum);
-      return q?.answerChoices?.find((o) => String(o.letter).toUpperCase() === letter)?.text ?? null;
-    };
     const countFor = (qNum, letter) =>
       Object.entries(wrongAnswerDist?.[qNum] ?? {})
         .filter(([ans]) => String(ans).toUpperCase().includes(letter))
@@ -366,9 +345,8 @@ Return JSON matching the schema.
 
     if (linked.length) {
       wrongAnswerLines = linked.map(({ questionNumber, letter }) => {
-        const text = optionText(questionNumber, letter);
         const n = countFor(questionNumber, letter);
-        return `Q${questionNumber} option ${letter}${text ? `: "${text}"` : ''} — chosen by ${n} student${n === 1 ? '' : 's'}`;
+        return `Q${questionNumber} option ${letter} — chosen by ${n} student${n === 1 ? '' : 's'}`;
       });
     } else if (wrongAnswerDist && qNums.length) {
       const combined = {};
@@ -382,19 +360,17 @@ Return JSON matching the schema.
         .slice(0, 4)
         .map(([key, n]) => {
           const [qn, ans] = key.split(':');
-          const text = optionText(Number(qn), String(ans).toUpperCase());
-          return `Q${qn} option ${ans}${text ? `: "${text}"` : ''} — chosen by ${n} student${n === 1 ? '' : 's'}`;
+          return `Q${qn} option ${ans} — chosen by ${n} student${n === 1 ? '' : 's'}`;
         });
     }
 
     // The old version of this block told the model that if the raw value was a
     // letter it should "infer the likely mathematical expression" — with no option
     // text anywhere in the pipeline, that meant inventing one, and real runs
-    // produced four mutually inconsistent answer domains in a single call. When
-    // option text is present, use it verbatim; when it is absent, say so rather
-    // than asking for a guess.
+    // produced four mutually inconsistent answer domains in a single call. Only the
+    // letter is known here, so say so rather than asking for a guess.
     const wrongAnswerBlock = wrongAnswerLines.length
-      ? `Students chose these wrong answers:\n${wrongAnswerLines.join('\n')}\n\nFor each one, explain the likely thinking pattern or conceptual error. Set the "answer" field to the option text shown above, quoted as given. Where no option text is shown, use the option letter itself — do not invent a mathematical expression.`
+      ? `Students chose these wrong answers:\n${wrongAnswerLines.join('\n')}\n\nFor each one, explain the likely thinking pattern or conceptual error. Set the "answer" field to the option letter itself — do not invent a mathematical expression.`
       : `No wrong answer data is available. Omit the "wrongAnswerExplanations" array (return []).`;
 
     const prompt = `You are a math education expert analyzing a student misconception.
@@ -510,13 +486,15 @@ Return a JSON object with exactly these keys:
 
     const structured = AnalysisResponse.parse(JSON.parse(raw));
 
-    // Carry the ingest-time option attribution onto each analysis misconception via
-    // the id it claims to derive from. The analysis model never invents this link —
-    // it only says which ingested misconception it reworded, and the options come
-    // along. A misconception the model marked as genuinely new has no attribution,
-    // and correctly gets an empty list.
+    // Carry the session misconception's wrong-answer refs onto each analysis
+    // misconception via the id it claims to derive from. The analysis model never
+    // sees or invents this link — it only says which session misconception it
+    // reworded, and the refs come along for the downstream student count. Read from
+    // the untrimmed session, because the prompt projection deliberately omits them.
+    // A misconception the model marked as genuinely new has no refs, and correctly
+    // gets an empty list.
     const ingestLinks = new Map(
-      (payload.currentSession?.misconceptions ?? [])
+      (currentSession?.misconceptions?.items ?? [])
         .filter((m) => m.id)
         .map((m) => [m.id, m.wrongAnswers ?? []])
     );
@@ -527,8 +505,8 @@ Return a JSON object with exactly these keys:
       return { ...m, wrongAnswers };
     });
     console.log(
-      `[microcoachLLMAnalysis] option attribution carried to ${linkedCount}/${structured.misconceptions.length} misconceptions ` +
-      `(${ingestLinks.size} ingested available)`
+      `[microcoachLLMAnalysis] wrong-answer refs carried to ${linkedCount}/${structured.misconceptions.length} misconceptions ` +
+      `(${ingestLinks.size} session misconceptions available)`
     );
 
     // Secondary pass: enrich each misconception with solution steps + distractor expansions

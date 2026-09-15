@@ -21,7 +21,7 @@ import config from './util/config.json' assert { type: 'json' };
  * invoke), all JSON strings:
  *   misconceptions       the microcoachv2LLMAnalysis `misconceptions[]` — title,
  *                        description, aiReasoning, evidence, example, wrongAnswers
- *                        (with the per-option distractor `text`), studentCount/Percent
+ *                        (question + letter refs), studentCount/Percent
  *   context              { subject?, cohortSize?, ccssStandards? }
  *   learningScienceData  { standards: [{ code, description }] } — optional
  *   trace                boolean — echo `_trace` (resolved prompt, model, usage)
@@ -90,9 +90,9 @@ function formatMisconception(m, i, standardDesc) {
   }
   const wrong = (m.wrongAnswers ?? []).filter((w) => w && (w.questionNumber != null || w.letter));
   if (wrong.length) {
-    lines.push('- wrong answers attributed to this misconception:');
+    lines.push('- wrong answers linked to this misconception:');
     for (const w of wrong) {
-      lines.push(`    Q${w.questionNumber} ${String(w.letter ?? '').toUpperCase()}${w.text ? ` — ${w.text}` : ''}`);
+      lines.push(`    Q${w.questionNumber} ${String(w.letter ?? '').toUpperCase()}`);
     }
   }
   return lines.join('\n');
@@ -118,7 +118,7 @@ ${kinds}
 ${worked}
 ## Rules
 - State the need as the mathematical thinking students must develop, revise, test, or make visible. Never as a format, routine, template, or lesson structure.
-- Anchor it in the specific wrong reasoning the evidence shows — the attributed wrong answers and what they capture, the most common error, the representative example. Name that reasoning; do not restate the misconception title.
+- Anchor it in the specific wrong reasoning the evidence shows — the linked wrong answers, the most common error, the representative example. Name that reasoning; do not restate the misconception title.
 - Name the teacher's role in one clause (questioning, comparison, discussion, pressing for justification) without reducing the need to a teacher move.
 - ${ws.descriptions ?? 'Concrete and specific. No hedging.'}
 - Return one need per misconception, copying \`sourceMisconceptionId\` and \`title\` exactly.

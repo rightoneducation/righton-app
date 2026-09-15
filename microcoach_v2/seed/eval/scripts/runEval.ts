@@ -87,6 +87,7 @@ function main(): void {
   }
 
   const graph = has('--live-graph') ? 'live' : 'fixture';
+  const analysisOnly = has('--analysis-only');
   const total = targets.length * conditions.length;
 
   console.log('=== MicroCoach Eval ===');
@@ -94,6 +95,7 @@ function main(): void {
   console.log(`  conditions : ${conditions.join(', ')}`);
   console.log(`  graph      : ${graph}${graph === 'live' ? '  (re-querying Learning Commons)' : '  (replaying archive)'}`);
   if (version !== null) console.log(`  version    : ${version}`);
+  if (analysisOnly) console.log('  stop after : analysis  (no instructional needs, planner or activities)');
   console.log(`  runs       : ${total}\n`);
 
   let done = 0;
@@ -105,6 +107,7 @@ function main(): void {
       console.log(`\n──────── [${done}/${total}] ${session} · ${condition} ────────`);
       const args = ['ts-node', GENERATE, '--fixture', session, '--condition', condition, '--graph', graph];
       if (version !== null) args.push('--version', version);
+      if (has('--analysis-only')) args.push('--analysis-only');
       const result = spawnSync('npx', args, { stdio: 'inherit' });
       // Keep going on failure — one bad session should not cost the whole matrix.
       if (result.status !== 0) failures.push(`${session}/${condition}`);

@@ -28,6 +28,7 @@ needs AWS credentials and spends real model tokens. `AMPLIFY_ENV` defaults to `d
 | `--condition <NAME\|all>` | `NONE` | One condition, or `all`. |
 | `--live-graph` | off | Re-query Learning Commons instead of replaying the archived response. |
 | `--version <tag>` | none | Optional label recorded in the run id and manifest, for grouping runs in the preview dropdown. Purely a tag — it does **not** pin prompt config; the Lambdas import theirs statically at deploy time. |
+| `--analysis-only` | off | Stop after the misconception analysis — no instructional needs, planner or activity generation. `output.json` keeps every misconception-level field with empty `moveOptions`; the manifest records `stoppedAfter: "analysis"`. |
 | `--list` | — | Show available sessions and conditions, then exit. |
 
 `--session` has no default on purpose — fanning out across every session should be
@@ -88,7 +89,7 @@ by construction rather than by measurement.
 `manifest.json` carries the health of the run, not just its cost:
 
 - `sourceMisconceptionMatched` — how many outputs linked back to an ingested misconception
-- `wrongAnswerLinked` / `wrongAnswerRefs` — whether the frequency chain held
+- `wrongAnswerLinked` / `wrongAnswerRefs` — whether each output misconception carried wrong-answer refs for the student count
 - `silentFallbacks` — validators that failed and returned their input unchanged
 
 A condition that scored badly because the ablation hurt it is indistinguishable, in

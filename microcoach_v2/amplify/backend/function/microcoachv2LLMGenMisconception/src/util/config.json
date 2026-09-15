@@ -7,7 +7,7 @@
     "successIndicators": "Start each with an action verb. Describe observable student behavior only. 10 words max per indicator."
   },
   "genMisconception": {
-    "description": "microcoachv2LLMGenMisconception — generates the per-distractor 'mistake this option captures' text when the PPQ source document has no Distractors column. Consumed by microcoachv2LLMAnalysis via answerChoices[].text.",
+    "description": "microcoachv2LLMGenMisconception — extracts the misconceptions behind a PPQ's wrong answer options from the question stems, option content and response counts. New documents carry no Distractors column, so this mapping is generated rather than read. Output is recorded for review; not yet consumed downstream.",
     "model": "gpt-5-mini",
     "maxWordsPerText": 25,
     "styleExamples": [

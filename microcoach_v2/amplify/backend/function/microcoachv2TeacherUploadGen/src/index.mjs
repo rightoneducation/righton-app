@@ -116,13 +116,13 @@ function computeWrongAnswerDist(studentResponses) {
  * PARITY: mirrors computeMisconceptionReach in src/seed/generate-next-steps.ts.
  *
  * How many distinct students exhibited a misconception, counted from the response
- * rows rather than estimated by a model. `wrongAnswers` is the ingest-time
- * attribution — the specific answer options the source document's answer key ties
- * to this misconception. Counting distinct students matters because someone wrong
- * on two linked questions is still one student.
+ * rows rather than estimated by a model. `wrongAnswers` is the misconception's
+ * wrong-answer refs — the specific answer options tied to it by whichever stage
+ * populated them. Counting distinct students matters because someone wrong on two
+ * linked questions is still one student.
  *
- * Returns nulls when there is no attribution to work from, which is different from
- * a count of zero (attribution existed, nobody chose those options).
+ * Returns nulls when there are no refs to work from, which is different from a
+ * count of zero (refs existed, nobody chose those options).
  */
 function computeMisconceptionReach(wrongAnswers, studentResponses) {
   if (!wrongAnswers?.length) {
@@ -286,8 +286,8 @@ function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learni
       // rather than overwritten by it — the gap between the two is a calibration
       // signal worth scoring.
       frequency: m.frequency,
-      // Counted from the response rows via the ingest-time option attribution.
-      // null (not 0) when there was no attribution to count from.
+      // Counted from the response rows via the misconception's wrong-answer refs.
+      // null (not 0) when there were no refs to count from.
       studentCount: reach.studentCount,
       studentPercent: reach.studentPercent,
       wrongAnswers: m.wrongAnswers ?? [],
