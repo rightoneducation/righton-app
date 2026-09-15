@@ -457,7 +457,8 @@ async function runGeneratePipeline(gql, classroom, sessionId) {
 
   // Misconception analysis
   console.log('  Misconception analysis...');
-  const analysisResult = await invokeLambda(`microcoachv2LLMAnalysis-${AMPLIFY_ENV}`, {
+  // Analysis + instructional need in one call (microcoachv2LLMAnalysis was merged into it).
+  const analysisResult = await invokeLambda(`microcoachv2LLMGenInstrNeed-${AMPLIFY_ENV}`, {
     input: {
       classroomData: JSON.stringify({
         classroom,

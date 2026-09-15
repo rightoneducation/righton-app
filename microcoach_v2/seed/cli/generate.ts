@@ -319,14 +319,6 @@ function computeConfidenceStats(studentResponses: any[], questions: any[]): any[
 
 // ── PPQ enrichment helpers ────────────────────────────────────────────────────
 
-/** Extract question numbers from a string like "PPQ Q3, Q5" or "Q1 and Q4" → [1, 3, 4, 5] */
-function parseQuestionNumbers(source: string): number[] {
-  const matches = (source ?? '').matchAll(/Q(\d+)/gi);
-  const nums = new Set<number>();
-  for (const m of matches) nums.add(parseInt(m[1], 10));
-  return [...nums].sort((a, b) => a - b);
-}
-
 /** Per question, count occurrences of each wrong response string. */
 function computeWrongAnswerDist(studentResponses: any[]): Record<number, Record<string, number>> {
   const dist: Record<number, Record<string, number>> = {};
@@ -462,12 +454,16 @@ function buildNextSteps(
       (item: any) => normalize(item.code) === normalize(m.ccssStandard)
     );
 
-    const prerequisiteGaps = m.prerequisiteGapCodes?.length
-      ? m.prerequisiteGapCodes.map((code: string) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
+    // The need stage selects the specific prerequisite / downstream codes in its
+    // rationale; the graph's full lists are the fallback when it names none.
+    const gapCodes: string[] = m.rationale?.prerequisiteGaps ?? [];
+    const prerequisiteGaps = gapCodes.length
+      ? gapCodes.map((code: string) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
       : (frameworkItem?.prerequisiteStandards ?? []).map((r: any) => ({ standard: r.code, description: r.description }));
 
-    const impactedObjectives = m.impactedObjectiveCodes?.length
-      ? m.impactedObjectiveCodes.map((code: string) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
+    const impactCodes: string[] = m.rationale?.forwardImpact ?? [];
+    const impactedObjectives = impactCodes.length
+      ? impactCodes.map((code: string) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
       : (frameworkItem?.futureDependentStandards ?? []).map((r: any) => ({ standard: r.code, description: r.description }));
 
     const reach = computeMisconceptionReach(m.wrongAnswers, studentResponses);
@@ -490,12 +486,15 @@ function buildNextSteps(
       wrongAnswers: m.wrongAnswers ?? [],
       linkStatus: reach.linkStatus,
       isCore: m.isCore ?? false,
-      occurrence: m.occurrence,
+      occurrence: m.occurrence ?? m.rationale?.recurrence ?? null,
       example: m.example ?? null,
       misconceptionSummary: m.description,
+      learningScienceConnection: m.learningScienceConnection ?? null,
       aiReasoning: m.aiReasoning ?? null,
-      // Wave 2 intermediate step, observation only — see 5b.
+      // From the need stage (step 5): the need itself and the analysis behind it.
       instructionalNeed: m.instructionalNeed ?? null,
+      rationale: m.rationale ?? null,
+      priorityRank: m.rationale?.priorityRank ?? null,
       successIndicators: m.successIndicators ?? [],
       ccssStandards: {
         targetObjective: { standard: m.ccssStandard, description: standardsDescMap.get(m.ccssStandard) ?? frameworkItem?.description ?? '', learningComponents: (frameworkItem?.learningComponents ?? []).map((c: any) => c.description).filter(Boolean) },
@@ -756,10 +755,11 @@ async function processClassroom(
 
   // 4c. Misconception extraction from the questions themselves. The pilot documents
   //     carried a teacher-authored Distractors column naming the error behind each
-  //     wrong option; new documents do not, so the mapping has to be generated. The
-  //     call is recorded for review only — its output is not fed back into the
-  //     pipeline yet. Only the eval fixtures carry `answerChoices` today (GET_SESSION
-  //     does not select it), so CLI mode is a no-op.
+  //     wrong option; new documents do not, so the mapping has to be generated. Its
+  //     output is the misconception list every later stage works from. Only the
+  //     eval fixtures carry `answerChoices` today (GET_SESSION does not select it),
+  //     so CLI mode produces no misconceptions and stops after this step.
+  let genMisconceptions: any[] = [];
   const withChoices = (augmentedPpq?.questions ?? []).filter((q: any) => (q.answerChoices ?? []).length);
   if (withChoices.length) {
     const genInput = {
@@ -789,16 +789,46 @@ async function processClassroom(
       if (parsed?.ok === false) {
         console.log(` ✗ ${parsed?.error?.message ?? 'unknown error'}`);
       } else {
-        console.log(' ✓  recorded (not wired downstream)');
+        genMisconceptions = parsed?.misconceptions ?? [];
+        console.log(` ✓  ${genMisconceptions.length} misconception(s)`);
       }
     } catch (err) {
       console.log(` ✗ ${err}`);
     }
   }
 
-  // 5. Misconception analysis
-  process.stdout.write(`  Misconception analysis...`);
-  const analysisInput = {
+  // Reach is counted here from the response rows, not estimated by a model, and
+  // handed to the need stage as a given. `ccssStandard` is derived from the linked
+  // questions so GenMisconception's schema stays clean: the most frequent per-
+  // question code, falling back to the session's codes where those are blank (as
+  // they are in the pilot fixtures).
+  const questionStandard = new Map<number, string>(
+    (ppq?.questions ?? []).map((q: any) => [q.questionNumber, q.ccssStandard || '']),
+  );
+  genMisconceptions = genMisconceptions.map((m: any) => {
+    const reach = computeMisconceptionReach(m.wrongAnswers, studentResponses);
+    const votes = new Map<string, number>();
+    for (const w of m.wrongAnswers ?? []) {
+      const code = questionStandard.get(w.questionNumber);
+      if (code) votes.set(code, (votes.get(code) ?? 0) + 1);
+    }
+    const ranked = [...votes.entries()].sort((a, b) => b[1] - a[1]);
+    if (ranked.length > 1) console.log(`  [4c] "${m.title}" spans ${ranked.map(([c, n]) => `${c}×${n}`).join(', ')} — using ${ranked[0][0]}`);
+    const ccssStandard = ranked[0]?.[0] ?? allCcss[0] ?? null;
+    return { ...m, ccssStandard, studentCount: reach.studentCount, studentPercent: reach.studentPercent };
+  });
+
+  // 5. Instructional need — one call over the misconceptions from 4c. The analysis
+  //    the former microcoachv2LLMAnalysis did (prevalence, confidence, severity,
+  //    prerequisite gaps, forward impact, recurrence) is still done here, as the
+  //    rationale for each need; only the need and its rationale come back.
+  let misconceptions: any[] = [];
+  if (!genMisconceptions.length) {
+    console.log('  Instructional need: no misconceptions from 4c — skipping');
+  } else {
+  process.stdout.write(`  Instructional need for ${genMisconceptions.length} misconception(s)...`);
+  const needInput = {
+    misconceptions: JSON.stringify(genMisconceptions),
     classroomData: JSON.stringify({
       classroom,
       currentSession,
@@ -809,65 +839,21 @@ async function processClassroom(
     learningScienceData: JSON.stringify(injected),
     trace: WANT_TRACE,
   };
-  const analysisResult = await invokeLambda(`microcoachv2LLMAnalysis-${AMPLIFY_ENV}`, {
-    input: analysisInput,
-  });
-  const analysis = parseJson(analysisResult);
-  capture.recordCall('llm-analysis', analysisInput, analysis);
-  let misconceptions: any[] = analysis?.misconceptions ?? [];
-  console.log(` ✓  ${misconceptions.length} misconceptions`);
-
-  // 5b. Instructional need — the Wave 2 intermediate step between diagnosis and
-  //     activity generation: what students most need to understand, examine, or do
-  //     next mathematically. Attached to each misconception for observation in
-  //     /preview only; NOT yet fed to the planner or NextStepOption.
-  let instructionalNeedsGenerated = 0;
-  if (misconceptions.length && !ANALYSIS_ONLY) {
-    const needInput = {
-      misconceptions: JSON.stringify(misconceptions),
-      context: JSON.stringify({ subject: classroom.subject, cohortSize: classroom.cohortSize, ccssStandards: allCcss }),
-      // Code + description only — the need is about the target standard, not the graph.
-      learningScienceData: JSON.stringify({
-        standards: injected.standards.map((s: any) => ({ code: s.code, description: s.description })),
-      }),
-      trace: WANT_TRACE,
-    };
-    process.stdout.write(`  Instructional needs for ${misconceptions.length} misconception(s)...`);
-    try {
-      const raw = await invokeLambda(`microcoachv2LLMGenInstrNeed-${AMPLIFY_ENV}`, { input: needInput });
-      const parsed = parseJson(raw);
-      capture.recordCall('gen-instr-need', needInput, parsed);
-      if (parsed?.ok === false) {
-        console.log(` ✗ ${parsed?.error?.message ?? 'unknown error'} — continuing without`);
-      } else {
-        const byId = new Map<string, any>();
-        const byTitle = new Map<string, any>();
-        for (const n of parsed?.needs ?? []) {
-          if (n.sourceMisconceptionId) byId.set(n.sourceMisconceptionId, n);
-          byTitle.set(String(n.title ?? '').trim(), n);
-        }
-        misconceptions = misconceptions.map((m: any) => {
-          const need = (m.sourceMisconceptionId && byId.get(m.sourceMisconceptionId))
-            || byTitle.get(String(m.title ?? '').trim());
-          if (!need) return m;
-          instructionalNeedsGenerated += 1;
-          return {
-            ...m,
-            instructionalNeed: {
-              text: need.instructionalNeed,
-              needKind: need.needKind ?? null,
-              teacherRole: need.teacherRole ?? null,
-              evidenceUsed: need.evidenceUsed ?? [],
-            },
-          };
-        });
-        const rejected = parsed?.rejected?.length ?? 0;
-        console.log(` ✓  ${instructionalNeedsGenerated}/${misconceptions.length}${rejected ? ` (${rejected} rejected)` : ''}`);
-      }
-    } catch (err) {
-      console.log(` ✗ ${err} — continuing without`);
-    }
+  const needResult = await invokeLambda(`microcoachv2LLMGenInstrNeed-${AMPLIFY_ENV}`, { input: needInput });
+  const needOut = parseJson(needResult);
+  capture.recordCall('instructional-need', needInput, needOut);
+  if (needOut?.ok === false) {
+    throw new Error(`Instructional need failed: ${needOut?.error?.message ?? 'unknown error'}`);
   }
+  // Join the needs back onto the 4c list by position, falling back to exact title.
+  const needByTitle = new Map<string, any>((needOut?.needs ?? []).map((n: any) => [String(n.title ?? '').trim(), n]));
+  misconceptions = genMisconceptions.map((m: any, i: number) => {
+    const n = needOut?.needs?.[i]?.title === m.title ? needOut.needs[i] : needByTitle.get(String(m.title ?? '').trim());
+    return n ? { ...m, instructionalNeed: n.instructionalNeed, rationale: n.rationale } : m;
+  });
+  console.log(` ✓  need on ${misconceptions.filter((m: any) => m.instructionalNeed).length}/${misconceptions.length}${needOut?.rejected?.length ? ` (${needOut.rejected.length} rejected)` : ''}`);
+  }
+  const instructionalNeedsGenerated = misconceptions.filter((m: any) => m.instructionalNeed?.text?.trim()).length;
 
   // 5c. Per-misconception extras
   const ppqQs = (ppq?.questions ?? []).map((q: any) => ({
@@ -876,7 +862,8 @@ async function processClassroom(
     classPercentCorrect: q.classPercentCorrect ?? null,
   }));
   const misconceptionExtras = misconceptions.map((m: any) => {
-    const qNums = parseQuestionNumbers(m.evidence?.source ?? '');
+    // The linked wrong answers say which questions surface this misconception.
+    const qNums = [...new Set<number>((m.wrongAnswers ?? []).map((w: any) => w.questionNumber))].sort((a, b) => a - b);
     return {
       ppqQuestions: ppqQs,
       studentGroups: getStudentGroups(studentResponses, qNums, studentNameMap),
@@ -887,7 +874,7 @@ async function processClassroom(
   });
 
   // 6. Generate next step activities
-  // `grade` is deliberately excluded — see microcoachLLMAnalysis. The CCSS codes
+  // `grade` is deliberately excluded — see microcoachv2LLMGenInstrNeed. The CCSS codes
   // carry grade already, and the classroom field was unvalidated free text.
   const classroomContext = { subject: classroom.subject, cohortSize: classroom.cohortSize };
   const NEXT_STEP_FORMATS = ['whole_class', 'split_class'];
@@ -1053,16 +1040,9 @@ async function processClassroom(
                  === (m.ccssStandard ?? '').replace(/\s/g, '').toLowerCase()
       )
     ).length,
-    // A run where the model failed to link its output back to the ingested
-    // misconceptions is not comparable to one where the link held, so the count
-    // has to be visible in the manifest rather than inferred later from output.json.
-    sourceMisconceptionMatched: (() => {
-      const sourceIds = new Set(
-        (currentSession?.misconceptions?.items ?? []).map((m: any) => m.id)
-      );
-      return misconceptions.filter((m: any) => sourceIds.has(m.sourceMisconceptionId)).length;
-    })(),
-    sourceMisconceptionAvailable: (currentSession?.misconceptions?.items ?? []).length,
+    // Misconceptions now originate in GenMisconception (4c); how many of them got
+    // a need back from 5 is the join-health counter.
+    misconceptionsFromGen: genMisconceptions.length,
     // A run where the wrong-answer refs never arrived is not comparable to one
     // where they did, so the counting chain's health goes in the manifest rather
     // than being inferred from output.json later.
@@ -1078,7 +1058,7 @@ async function processClassroom(
     console.log(`  Captured → eval/runs/${manifest.runId}`);
     console.log(`    ${manifest.modelCalls} calls · ${t.total.toLocaleString()} tokens · models: ${manifest.models.join(', ')}`);
     console.log(`    targetStandard matched on ${manifest.targetStandardMatched}/${manifest.misconceptionCount} misconceptions`);
-    console.log(`    sourceMisconceptionId linked on ${manifest.sourceMisconceptionMatched}/${manifest.misconceptionCount} (${manifest.sourceMisconceptionAvailable} ingested)`);
+    console.log(`    instructional need on ${manifest.instructionalNeedsGenerated}/${manifest.misconceptionCount} (${manifest.misconceptionsFromGen} from GenMisconception)`);
     console.log(`    wrong-answer refs on ${manifest.wrongAnswerLinked}/${manifest.misconceptionCount} (${manifest.wrongAnswerRefs} option refs)`);
     for (const s of manifest.studentCountTotals) {
       const n = s.studentCount == null ? 'not linked' : `${s.studentCount} students (${Math.round((s.studentPercent ?? 0) * 100)}%)`;

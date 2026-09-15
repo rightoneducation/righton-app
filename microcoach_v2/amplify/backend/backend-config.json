@@ -105,11 +105,6 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "microcoachv2LLMAnalysis": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "microcoachv2LLMGenInstrNeed": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -206,22 +201,6 @@
         {
           "category": "function",
           "resourceName": "microcoachv2InitialEvaluator"
-        }
-      ]
-    },
-    "AMPLIFY_function_microcoachv2LLMAnalysis_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "microcoachv2LLMAnalysis"
-        }
-      ]
-    },
-    "AMPLIFY_function_microcoachv2LLMAnalysis_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "microcoachv2LLMAnalysis"
         }
       ]
     },

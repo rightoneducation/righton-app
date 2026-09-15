@@ -1,5 +1,5 @@
 import { loadSecret } from './util/loadsecrets.mjs';
-// Copy of microcoachv2LLMAnalysis/src/util/formatLearningScience.mjs — each Lambda
+// Copy of microcoachv2LLMGenInstrNeed/src/util/formatLearningScience.mjs — each Lambda
 // bundles its own src, so shared util is duplicated the same way loadsecrets.mjs is.
 import { formatLearningScience } from './util/formatLearningScience.mjs';
 import { OpenAI } from 'openai';

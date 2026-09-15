@@ -6,8 +6,32 @@
     "instructionalMoves": "Write in short, scannable chunks. Use plain conversational language — imagine a teacher reading this quickly between classes. Break steps into separate sentences. Avoid dense paragraphs. No academic or clinical language. Active voice. Each instruction should be one action: 'Show students two worked examples side by side.' not 'Teachers should consider presenting students with two worked examples simultaneously for comparison purposes.'",
     "successIndicators": "Start each with an action verb. Describe observable student behavior only. 10 words max per indicator."
   },
+  "analysis": {
+    "description": "Rationale dimensions carried over from the former microcoachv2LLMAnalysis. Used by microcoachv2LLMGenInstrNeed to explain and rank each need, not to select or filter misconceptions.",
+    "misconceptionScoring": {
+      "description": "Weights for the composite that orders priorityRank across misconceptions. Weights should sum to 1.0.",
+      "prevalenceWeight": 0.4,
+      "conceptualSeverityWeight": 0.3,
+      "prerequisiteLeverageWeight": 0.15,
+      "forwardImpactWeight": 0.15,
+      "conceptualSeverityScale": {
+        "description": "Guide for the LLM when estimating conceptual severity: 1.0 = structural conceptual misunderstanding of the math concept; 0.6 = mixed conceptual and procedural; 0.3 = procedural/execution error only"
+      }
+    },
+    "futureScoringSignals": {
+      "confidenceScoring": {
+        "description": "Confidence modifies existing scoring dimensions rather than adding a new one.",
+        "highConfWrongThreshold": 0.25,
+        "highConfidenceMinRating": 4,
+        "lowConfidenceMaxRating": 2,
+        "lowAvgConfidenceCorrectThreshold": 2.5,
+        "conceptualSeverityBoost": "raise toward 1.0 when highConfWrongPct >= highConfWrongThreshold",
+        "prevalenceAdjustment": "discount correct rate when avgConfidenceCorrect < lowAvgConfidenceCorrectThreshold"
+      }
+    }
+  },
   "genInstrNeed": {
-    "description": "microcoachv2LLMGenInstrNeed — Wave 2 intermediate step: from a prioritized misconception + student evidence, states what students most need to understand, examine, or do next mathematically. Internal reasoning step that will drive template selection; surfaced in /preview only for now.",
+    "description": "microcoachv2LLMGenInstrNeed — for each misconception from microcoachv2LLMGenMisconception, states the instructional need (what students most need to understand, examine, or do next mathematically) and the rationale built from the classroom evidence. Internal reasoning step that will drive template selection; not teacher-facing.",
     "model": "gpt-5-mini",
     "maxSentences": 3,
     "needKinds": [

@@ -39,13 +39,6 @@ export type AmplifyDependentResourcesAttributes = {
       "Name": "string",
       "Region": "string"
     },
-    "microcoachv2LLMAnalysis": {
-      "Arn": "string",
-      "LambdaExecutionRole": "string",
-      "LambdaExecutionRoleArn": "string",
-      "Name": "string",
-      "Region": "string"
-    },
     "microcoachv2LLMGenInstrNeed": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
