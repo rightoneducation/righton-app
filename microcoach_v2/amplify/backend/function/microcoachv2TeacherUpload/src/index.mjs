@@ -123,7 +123,7 @@ async function uploadSession(gql, classroomId, sessionLabel, weekNumber, topic, 
   return session;
 }
 
-async function uploadAssessment(gql, classroomId, sessionId, parsed, type, sourceAssessmentId, optionsByQuestion) {
+async function uploadAssessment(gql, classroomId, sessionId, parsed, type, sourceAssessmentId, docxQuestionByStored) {
   console.log(`    Creating ${type} assessment (${parsed.questionMeta.length} questions)...`);
   const input = {
     classroomId,
@@ -136,7 +136,7 @@ async function uploadAssessment(gql, classroomId, sessionId, parsed, type, sourc
     ccssStandards: parsed.ccssStandards,
     classPercentCorrect: parsed.classPercentCorrect,
     questions: parsed.questionMeta.map((q) => {
-      const opt = optionsByQuestion?.get(q.questionNumber);
+      const docxQuestion = docxQuestionByStored?.get(q.questionNumber);
       return {
         questionNumber: q.questionNumber,
         questionType: 'MC',
@@ -144,7 +144,7 @@ async function uploadAssessment(gql, classroomId, sessionId, parsed, type, sourc
         pointValue: 1,
         ccssStandard: q.ccssStandard,
         classPercentCorrect: q.classPercentCorrect,
-        ...(opt && { docxQuestion: opt.docxQuestion, answerChoices: opt.options }),
+        ...(docxQuestion != null && { docxQuestion }),
       };
     }),
   };
@@ -196,52 +196,19 @@ async function uploadStudentResponses(gql, label, assessmentId, students, studen
 }
 
 /**
- * PARITY: mirrors buildOptionsByQuestion in src/cli/upload.ts.
+ * PARITY: mirrors buildDocxQuestionMap in src/cli/upload.ts.
  *
- * Keys the parsed answer-option table by the assessment's question numbering, so the
- * options can be written onto the AssessmentQuestion rows.
+ * Maps the assessment's stored question numbering back to the document's, so
+ * `docxQuestion` can be written onto the AssessmentQuestion rows.
+ * `reconcileQuestionNumbers` asserts the correct-answer letter sequence matches
+ * position-for-position and throws if it does not, rather than silently mapping
+ * onto the wrong questions.
  */
-function buildOptionsByQuestion(optionTable, questionMeta) {
-  if (!optionTable?.length || !questionMeta?.length) return undefined;
-  const qNumMap = reconcileQuestionNumbers(optionTable, questionMeta);
+function buildDocxQuestionMap(answerKey, questionMeta) {
+  if (!answerKey?.length || !questionMeta?.length) return undefined;
+  const qNumMap = reconcileQuestionNumbers(answerKey, questionMeta);
   const out = new Map();
-  for (const q of optionTable) {
-    const stored = qNumMap.get(q.docxQuestion);
-    if (stored != null) out.set(stored, { docxQuestion: q.docxQuestion, options: q.options });
-  }
-  return out;
-}
-
-/**
- * PARITY: mirrors reconcileWrongAnswers in src/cli/upload.ts.
- *
- * Rewrites each misconception's `wrongAnswers` from document question numbering to
- * the numbering the assessment stores. `reconcileQuestionNumbers` asserts the
- * correct-answer letter sequence matches position-for-position and throws if it
- * does not, rather than silently mapping references onto the wrong questions.
- *
- * A session ingested before the option table existed has no `optionTable`; it
- * passes through untouched.
- */
-function reconcileWrongAnswers(misconceptions, optionTable, questionMeta) {
-  const hasRefs = misconceptions.some((m) => m.wrongAnswers?.length);
-  if (!optionTable?.length || !questionMeta?.length || !hasRefs) return misconceptions;
-
-  const qNumMap = reconcileQuestionNumbers(optionTable, questionMeta);
-
-  let mapped = 0;
-  const out = misconceptions.map((m) => ({
-    ...m,
-    wrongAnswers: (m.wrongAnswers ?? [])
-      .map((w) => {
-        const questionNumber = qNumMap.get(w.docxQuestion);
-        if (questionNumber == null) return null;
-        mapped += 1;
-        return { questionNumber, letter: w.letter };
-      })
-      .filter(Boolean),
-  }));
-  console.log(`  Reconciled ${mapped} wrong-answer reference(s) to stored question numbers`);
+  for (const [docxQuestion, stored] of qNumMap) out.set(stored, docxQuestion);
   return out;
 }
 
@@ -264,8 +231,6 @@ async function uploadMisconceptions(gql, classroomId, sessionId, misconceptions)
         priority: m.priority,
         occurrence: m.occurrence,
         successIndicators: m.successIndicators,
-        // Reconciled to the assessment's question numbering by reconcileWrongAnswers.
-        ...(m.wrongAnswers?.length && { wrongAnswers: m.wrongAnswers }),
       },
     });
     const misconception = data.createMisconception;
@@ -377,20 +342,13 @@ async function runPipeline(input) {
     },
   });
   const ingestData = JSON.parse(ingestResult.ingestPPQ);
-  let misconceptions = ingestData.misconceptions ?? [];
+  const misconceptions = ingestData.misconceptions ?? [];
   console.log(`  ✓ ${misconceptions.length} misconceptions extracted`);
 
-  // PARITY: mirrors reconcileWrongAnswers in src/cli/upload.ts.
-  //
-  // Ingest reports wrong answers against the question numbers printed in the
-  // document (1,3,5,7,9,11 in the pilot files). The assessment stores them
-  // resequenced (1..N). This is the only stage holding both, so the translation
-  // happens here or the references point at the wrong questions.
-  misconceptions = reconcileWrongAnswers(misconceptions, ingestData.optionTable, parsed.questionMeta);
-
-  // Same reconciliation, keyed for the AssessmentQuestion rows so option text is
-  // persisted alongside the answers it belongs to.
-  const optionsByQuestion = buildOptionsByQuestion(ingestData.optionTable, parsed.questionMeta);
+  // The document numbers questions 1,3,5,7,9,11 (pilot files); the assessment
+  // stores them resequenced (1..N). Keyed for the AssessmentQuestion rows so
+  // `docxQuestion` is persisted alongside each stored question.
+  const docxQuestionByStored = buildDocxQuestionMap(ingestData.answerKey, parsed.questionMeta);
 
   // ── Step 3: Upload (yarn upload) ────────────────────────────────────────────
   // Derive CCSS: use xlsx if available, fall back to misconception ccssStandards
@@ -427,7 +385,7 @@ async function runPipeline(input) {
 
   // 3c. Create PPQ assessment
   console.log('Step 3c: Creating PPQ assessment...');
-  const ppqAssessment = await uploadAssessment(gql, classroomId, sessionId, ppqData, 'PPQ', undefined, optionsByQuestion);
+  const ppqAssessment = await uploadAssessment(gql, classroomId, sessionId, ppqData, 'PPQ', undefined, docxQuestionByStored);
 
   // 3d. Upload PPQ student responses
   console.log('Step 3d: Uploading PPQ student responses...');

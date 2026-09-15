@@ -1,0 +1,21 @@
+{
+  "writingStyle": {
+    "description": "Language quality guidance injected into all LLM prompts",
+    "titles": "3-6 words. Plain noun phrase that names the specific error. No parentheticals or clarifications inside parentheses. Write the error directly: 'Did Not Flip the Second Fraction' — never 'Did Not Flip the Second Fraction (no reciprocal)'.",
+    "descriptions": "2-3 sentences maximum. Keep it concrete and specific. Do NOT start every sentence with 'Students' — vary the subject. Good openers: the error itself ('Slope and intercept get swapped...'), a conditional ('When reading y = mx + b, the two numbers...'), or the consequence ('The result is...'). One idea per sentence. No hedging words (often, typically, usually, tend to). Do not restate the same idea in different words. Write for a classroom teacher, not a researcher.",
+    "instructionalMoves": "Write in short, scannable chunks. Use plain conversational language — imagine a teacher reading this quickly between classes. Break steps into separate sentences. Avoid dense paragraphs. No academic or clinical language. Active voice. Each instruction should be one action: 'Show students two worked examples side by side.' not 'Teachers should consider presenting students with two worked examples simultaneously for comparison purposes.'",
+    "successIndicators": "Start each with an action verb. Describe observable student behavior only. 10 words max per indicator."
+  },
+  "genMisconception": {
+    "description": "microcoachv2LLMGenMisconception — extracts the misconceptions behind a PPQ's wrong answer options from the question stems, option content and response counts. New documents carry no Distractors column, so this mapping is generated rather than read. Output is recorded for review; not yet consumed downstream.",
+    "model": "gpt-5-mini",
+    "maxWordsPerText": 25,
+    "styleExamples": [
+      "Chose graph with slope of -6 (did not convert to slope-intercept)",
+      "Did not clear fraction – error when combining 3/6 and 20/6",
+      "Tried to clear fraction but multiplied by 6 all terms on LHS creating a new, non-equivalent equation",
+      "X and y switched, wrong sign",
+      "Point is on the line that is exclusive"
+    ]
+  }
+}

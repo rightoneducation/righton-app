@@ -1,0 +1,539 @@
+{
+  "version": "2026-09-15",
+  "source": "Activity Library docs (Wave 2) — six activity templates, selection guidance, and template bodies",
+  "selectionPrinciples": {
+    "purpose": "The six activity templates support different instructional moves, from locating and repairing misconceptions to comparing strategies, building mathematical arguments, and using interactive experiences to surface student thinking. Select the routine that best fits the misconception, student response data, mathematical content, and lesson context — not simply the type of question or distractor.",
+    "primaryMoveOverArtifact": "Several templates may appear to fit the same misconception or student response. When multiple templates could work, select the template whose primary instructional move best matches the learning opportunity, rather than selecting based simply on the type of error, response, or instructional artifact available.",
+    "fitDimensions": [
+      "the misconception",
+      "student response data",
+      "mathematical content",
+      "lesson context",
+      "the defining purpose of the activity"
+    ],
+    "topTwo": {
+      "count": 2,
+      "preferDistinct": "When generating the top two recommendations, generally recommend activities using two different templates when both offer strong instructional fits.",
+      "sameTemplateAllowedWhen": "If one template is a substantially stronger fit than the alternatives, two activities may use that same template, provided that they use meaningfully different problems, contexts, or mathematical situations.",
+      "neverForVariety": "Do not select a poorly suited template simply to create variety."
+    },
+    "terminology": [
+      {
+        "term": "Charting the Error",
+        "meansTemplate": "compare-the-thinking",
+        "note": "Uncommon terminology for a comparison between one correct and one incorrect solution — a specific application of Compare the Thinking."
+      },
+      {
+        "term": "Charting the Sophistication",
+        "meansTemplate": "compare-the-thinking",
+        "note": "Uncommon terminology for a comparison between two correct solutions — a specific application of Compare the Thinking. Select the template on the instructional value of the comparison, not on one particular configuration."
+      }
+    ]
+  },
+  "templates": [
+    {
+      "id": "spot-the-slip",
+      "title": "Spot the Slip",
+      "primaryMove": "Locate the breakdown",
+      "primaryMoveLong": "Incorrect Worked Example Analysis",
+      "needKind": "locating and understanding the first point where valid reasoning breaks down",
+      "description": "Students examine a worked solution, identify the first step where the reasoning goes off track, explain why the step is invalid, and work together to correct the error.",
+      "requiresCatalog": false,
+      "selection": {
+        "selectWhen": "Locate the first point where a procedure or line of reasoning goes off track or breaks down, and explain and correct the error.",
+        "bestFit": "An incorrect worked solution in which there is a discernible point where valid mathematical reasoning goes off track or breaks down. Especially useful when locating and revising that breakdown is more instructionally valuable than simply identifying the incorrect answer or solving the problem again. Generally a stronger fit for a localized procedural or reasoning breakdown.",
+        "guidance": "Select when the student response or worked solution provides a clear opportunity to locate the first point where valid mathematical reasoning breaks down and revise that reasoning.",
+        "prioritizeWhen": [
+          "There is a discernible first breakdown in the sequence of reasoning.",
+          "Students can explain why the step is invalid rather than simply identify it as wrong.",
+          "Revising the reasoning is mathematically meaningful and can help students understand how the error affected subsequent work.",
+          "Analyzing the reasoning is more valuable than simply revealing or practicing the correct procedure."
+        ],
+        "lessAppropriateWhen": [
+          "The response contains only a final-answer error with no meaningful reasoning to examine.",
+          "There is no clear point of breakdown.",
+          "The primary instructional opportunity is to investigate an underlying mathematical issue that could have multiple plausible explanations.",
+          "The activity would amount primarily to having students redo the problem from scratch."
+        ],
+        "steering": [
+          {
+            "when": "The incorrect solution may reflect a deeper mathematical issue that requires further investigation, particularly when there are multiple plausible explanations for the student's reasoning.",
+            "prefer": "math-detective"
+          }
+        ],
+        "doNot": [
+          "Do not manufacture intermediate steps that are not supported by the student response or original work."
+        ]
+      },
+      "infill": {
+        "classroomFlow": [
+          { "step": "Present the worked solution", "description": "Students examine an incorrect worked solution without being told where the reasoning breaks down." },
+          { "step": "Locate the slip", "description": "Students identify the first step where the reasoning goes off track." },
+          { "step": "Explain the error", "description": "Students explain why the step is invalid and what mathematical idea or reasoning is involved." },
+          { "step": "Revise the reasoning", "description": "Students revise the reasoning and determine how the corrected step affects the remainder of the solution." },
+          { "step": "Name the takeaway", "description": "Students articulate what they should look for or do differently in similar problems." }
+        ],
+        "examples": [
+          { "topic": "Adding fractions", "summary": "A student adds numerators and denominators separately. Students locate the first invalid step and explain why the denominators cannot be combined that way." },
+          { "topic": "Solving equations", "summary": "A student applies an operation incorrectly to one side of an equation. Students identify the first invalid step, explain why it is invalid, and repair the reasoning." },
+          { "topic": "Area and perimeter", "summary": "A student uses a perimeter strategy when calculating area. Students identify where the reasoning shifts from the relevant quantity, explain the distinction, and revise the reasoning." }
+        ],
+        "facilitation": {
+          "guidance": "Provide targeted prompts that keep students focused on the reasoning rather than simply identifying the answer as wrong. Help distinguish the first breakdown from errors that occur later as a consequence of the initial mistake. Listen for whether students can explain the mathematical reason the step is invalid, not simply identify the correct procedure.",
+          "prompts": [
+            "Where do you first notice something that does not work?",
+            "What is happening mathematically at this step?",
+            "Why is this step valid or invalid?",
+            "What might have made this step seem reasonable?",
+            "How would you repair the reasoning?",
+            "If we correct this step, what happens to the rest of the solution?"
+          ]
+        },
+        "assessmentContext": {
+          "multipleChoice": "Generate or select a plausible incorrect worked solution with a clear first point of breakdown. Distractors may vary in the location or nature of the error when doing so reveals meaningful differences in student reasoning.",
+          "openResponse": "Use an authentic student solution when available, particularly when the work contains enough reasoning to identify and discuss a first breakdown. Especially valuable when the goal is to examine how an error develops across multiple steps rather than simply identify an incorrect final answer."
+        },
+        "designNotes": [
+          "The initial error should not be identified for students. Students should locate the first point where the reasoning breaks down.",
+          "Focus on analyzing and repairing reasoning rather than simply finding the correct answer.",
+          "Do not manufacture intermediate steps or reasoning that are not supported by the source response or worked solution.",
+          "The worked solution should contain enough information for students to identify why the step is invalid.",
+          "Later errors may result from the initial breakdown; encourage students to distinguish the first breakdown from its consequences."
+        ],
+        "views": {
+          "student": "Present the worked solution without revealing where the reasoning first becomes invalid or how it should be revised, so students can independently locate and analyze the error.",
+          "teacher": "May include annotations identifying the first invalid step, anticipated reasoning, and facilitation guidance. Where useful, provide a side-by-side comparison showing (1) how the identified error carries through the remaining steps to produce the original result and (2) how correcting that step changes the subsequent reasoning and leads to the mathematically correct result."
+        },
+        "optionalExtension": "When an invalid step happens to produce a correct final answer, use the example to distinguish a correct result from valid mathematical reasoning. The Teacher View can surface the question, \"Does getting the right answer show that the reasoning is valid?\" and, where appropriate, test the reasoning on another example."
+      }
+    },
+    {
+      "id": "my-favorite-no",
+      "title": "My Favorite No",
+      "primaryMove": "Preserve and build on productive thinking",
+      "primaryMoveLong": "Student Thinking Analysis",
+      "needKind": "understanding why an incorrect response is tempting or reasonable and revising the underlying reasoning",
+      "description": "Students analyze a meaningful incorrect answer (or an anonymous student response) that reveals a mathematical idea, intuition, strategy, or assumption worth preserving or building on. They discuss why the response might seem reasonable, identify what the reasoning gets right or is productively attending to, and revise the reasoning or answer while preserving what is mathematically useful.",
+      "requiresCatalog": false,
+      "selection": {
+        "selectWhen": "Understand the thinking represented by an incorrect response, including what is reasonable or productive about it, before revising the reasoning.",
+        "bestFit": "An incorrect response that contains a meaningful mathematical idea, intuition, strategy, or assumption worth understanding and building on. Especially useful when the response reveals something mathematically reasonable or productive alongside an idea that needs to change. A Favorite No is not simply a good example of a wrong answer; the value comes from examining the thinking, identifying what is worth preserving, and then revising. Generally a stronger fit when the response offers a meaningful line of thinking to unpack before moving to correction.",
+        "guidance": "Select when an incorrect response reveals a meaningful and understandable line of mathematical thinking that is worth examining before revising the reasoning.",
+        "prioritizeWhen": [
+          "The response contains a mathematical idea, intuition, strategy, or assumption that students can meaningfully examine.",
+          "There is something mathematically reasonable or productive worth preserving or building on.",
+          "Understanding why the response may seem reasonable can help students recognize what needs to change.",
+          "The error creates an opportunity to develop a more precise or productive understanding of the mathematics.",
+          "The response can support discussion of both what the reasoning gets right and where it needs to change."
+        ],
+        "lessAppropriateWhen": [
+          "The response reflects a procedural slip, arithmetic mistake, transcription error, or other localized error.",
+          "The response appears random or does not reveal a meaningful line of mathematical thinking.",
+          "There is little to preserve or build on in the reasoning.",
+          "The primary instructional opportunity is to investigate a deeper mathematical issue that may have multiple plausible explanations.",
+          "The activity would amount primarily to identifying the correct answer without examining the thinking represented in the incorrect response."
+        ],
+        "steering": [
+          {
+            "when": "The response reflects a procedural slip, arithmetic mistake, transcription error, or other localized error.",
+            "prefer": "spot-the-slip"
+          },
+          {
+            "when": "The primary instructional opportunity is to investigate a deeper mathematical issue that may have multiple plausible explanations.",
+            "prefer": "math-detective"
+          }
+        ],
+        "doNot": [
+          "Do not select a response simply because it is the most common incorrect answer. The response should offer meaningful mathematical thinking that students can understand, examine, and build upon."
+        ]
+      },
+      "infill": {
+        "classroomFlow": [
+          { "step": "Present the response", "description": "Students examine an incorrect response without being told what is right or wrong about the thinking." },
+          { "step": "Notice what is worth keeping", "description": "Students identify what makes sense or is mathematically useful about the response." },
+          { "step": "Understand the thinking", "description": "Students discuss how the student may have been thinking and why the response might seem reasonable." },
+          { "step": "Identify what needs to change", "description": "Students identify where the reasoning needs to be revised and explain why." },
+          { "step": "Revise the reasoning", "description": "Students revise the reasoning or answer while preserving what is mathematically useful." },
+          { "step": "Name the takeaway", "description": "Students articulate what they can keep in mind when solving similar problems." }
+        ],
+        "examples": [
+          { "topic": "Adding fractions", "summary": "A student adds the numerators and denominators separately, showing an understanding that the numerator and denominator each play a role in the fraction. Students examine what makes the approach seem reasonable, identify why the denominators cannot be combined that way, and revise the reasoning." },
+          { "topic": "Integer operations", "summary": "A student reasons that subtracting a negative should make the result smaller because \"you are subtracting something.\" Students unpack the intuition behind the response, examine how the number line or context challenges that intuition, and revise the reasoning." },
+          { "topic": "Equivalent expressions", "summary": "A student claims that two expressions are not equivalent because they look different, while correctly simplifying part of each expression. Students identify what the student is attending to correctly, examine what equivalence means, and revise the reasoning." }
+        ],
+        "facilitation": {
+          "guidance": "Provide prompts that examine the thinking represented in the response before moving to correction. Acknowledge mathematically useful thinking without suggesting that the incorrect reasoning is fully correct. Make the productive idea visible, identify what needs to change, and help students build a more complete or precise understanding.",
+          "prompts": [
+            "What makes this approach seem reasonable?",
+            "What is the student noticing or understanding?",
+            "What part of this thinking could we keep?",
+            "Where does the reasoning need to change?",
+            "What would you revise while keeping the useful part of the idea?",
+            "How can we test whether this reasoning works?",
+            "What can we learn from this response?"
+          ]
+        },
+        "assessmentContext": {
+          "multipleChoice": "Select or generate a plausible incorrect response that reveals a meaningful mathematical idea, intuition, strategy, or assumption worth examining. The distractor should provide something substantive for students to preserve or build on rather than simply represent a common mistake.",
+          "openResponse": "Use an authentic student response when available, particularly when it contains enough reasoning to identify what is mathematically useful and where the thinking needs to change. Especially valuable when the goal is to understand and build on a student's reasoning rather than simply categorize the response as correct or incorrect."
+        },
+        "designNotes": [
+          "The incorrect response should contain a meaningful line of mathematical thinking that students can examine and build upon.",
+          "For Wave 2 MIUs, the Favorite No will typically be based on an incorrect worked example generated from the corresponding distractor rather than authentic student work.",
+          "Begin by identifying what is mathematically useful, reasonable, or productive in the response before focusing on what needs to change.",
+          "Avoid framing the response as simply \"good\" or \"bad\" thinking. Students should examine the specific mathematical ideas that are useful and the ideas that need revision.",
+          "Do not require students to infer the student's actual thought process. Interpret the mathematical thinking represented in the response and consider why the approach might seem reasonable.",
+          "Avoid procedural slips, arithmetic mistakes, transcription errors, or random incorrect responses that offer little meaningful thinking to examine.",
+          "Teacher prompts should maintain a positive error culture while preserving mathematical precision."
+        ],
+        "views": {
+          "student": "Present the response without revealing what is mathematically useful or where the reasoning needs to change, so students can examine the thinking themselves.",
+          "teacher": "May include annotations identifying what is worth preserving or building on, where the reasoning needs to change, anticipated student interpretations, and facilitation guidance."
+        },
+        "optionalExtension": "Students can generate a revised response that preserves the productive idea while addressing the misconception, or compare the original and revised reasoning to identify what changed and what was intentionally preserved."
+      }
+    },
+    {
+      "id": "compare-the-thinking",
+      "title": "Compare the Thinking",
+      "primaryMove": "Examine meaningful contrasts",
+      "primaryMoveLong": "Compare Strategies & Representations",
+      "needKind": "comparing meaningfully different approaches to make mathematical thinking visible",
+      "description": "Students compare two meaningfully different solution strategies or representations, which may be two correct approaches or a correct and an incorrect approach, and examine the reasoning, strengths, limitations, and important mathematical differences between them.",
+      "requiresCatalog": false,
+      "selection": {
+        "selectWhen": "Compare two meaningfully different approaches to make mathematical similarities, differences, strengths, weaknesses, or choices visible.",
+        "bestFit": "Two or more meaningfully different solution strategies or responses can be examined side-by-side to make important mathematical similarities, differences, choices, or tradeoffs visible.",
+        "guidance": "Select when two solution strategies or responses offer a meaningful mathematical contrast that students can analyze side-by-side. The two strategies may both be correct or may include one correct and one incorrect approach. When both are correct, there should be a meaningful basis for comparison (efficiency, generalizability, representation, assumptions, reasoning). When one is incorrect, the error should be sufficiently interpretable for students to analyze the reasoning rather than simply identify a wrong answer. Use two correct approaches when the opportunity is to examine meaningful differences among valid strategies; use one correct and one incorrect when the opportunity is to investigate a meaningful misconception, assumption, or limitation revealed by the incorrect reasoning.",
+        "prioritizeWhen": [
+          "The comparison highlights meaningfully different mathematical reasoning, representations, assumptions, or strategic choices.",
+          "The contrast makes the selected misconception or incomplete understanding visible.",
+          "Students have something substantive to analyze or evaluate, rather than simply identifying which answer is correct.",
+          "The comparison leads to a meaningful mathematical takeaway about why a strategy works, does not work, or may be more useful for a particular purpose."
+        ],
+        "lessAppropriateWhen": [
+          "The strategies are essentially equivalent.",
+          "One approach is obviously superior without meaningful mathematical discussion.",
+          "The comparison adds variety without adding instructional value."
+        ],
+        "steering": [],
+        "doNot": [
+          "Do not let the activity become a simple \"Which one is right?\" exercise."
+        ]
+      },
+      "infill": {
+        "classroomFlow": [
+          { "step": "Present the strategies", "description": "Display two solution strategies or responses with equal visual weight. The strategies may be two correct approaches or one correct and one incorrect approach." },
+          { "step": "Examine the thinking", "description": "Students work to understand what each approach is doing and the reasoning behind it before evaluating whether the approaches are correct or useful." },
+          { "step": "Compare the approaches", "description": "Students identify important similarities, differences, assumptions, or mathematical choices between the strategies." },
+          { "step": "Evaluate the reasoning", "description": "Students discuss whether and why each approach works, and, when relevant, which approach is more efficient, generalizable, or useful for the given purpose." },
+          { "step": "Name the takeaway", "description": "The teacher reinforces the mathematical idea that the comparison makes visible and connects it to the misconception or learning goal." }
+        ],
+        "examples": [
+          { "topic": "Solving an equation", "summary": "Compare a student who distributes first with a student who divides by 2 first to solve 2(x + 3) = 14. Both approaches are correct; students examine why both preserve equivalence, what each strategy makes easier to see, and whether one is more efficient for this problem." },
+          { "topic": "Fraction comparison", "summary": "Compare a number-line strategy with a common-denominator strategy for determining whether 5/8 or 2/3 is greater. Students discuss the reasoning behind each approach, what each representation makes visible, and why both support the same conclusion." },
+          { "topic": "Proportional reasoning", "summary": "Compare a correct proportional-reasoning strategy with an incorrect strategy that adds quantities rather than maintaining the multiplicative relationship. Students identify the important difference in the reasoning, explain why one approach preserves the relationship and the other does not, and revise the incorrect reasoning." }
+        ],
+        "facilitation": {
+          "guidance": "Provide a small number of targeted follow-up questions appropriate to the specific strategies and mathematical goal. For each key question, indicate what the teacher should listen for, and where useful a likely mathematical resolution or takeaway and a follow-up move. Help students understand each approach before evaluating it, surface similarities/differences/assumptions/choices, ask what each approach makes easier or harder to see, press for justification, and distinguish a difference in method from a difference in correctness. When one approach is incorrect, help students identify the first point where the reasoning becomes invalid; when both are correct, help them determine whether and why they are equivalent and connect to a broader takeaway.",
+          "prompts": [
+            "What is each student doing, and how are their approaches different?",
+            "What do these strategies have in common?",
+            "What mathematical idea or choice is different between the two approaches?",
+            "What does each strategy make easier or harder to see?",
+            "Why does this approach work?",
+            "What assumption is this strategy making?",
+            "Which approach would be more useful here, and why?",
+            "Would this strategy work for a different problem? Why or why not?",
+            "If one approach is incorrect, where does the reasoning first become invalid?",
+            "If both approaches are correct, how do we know they lead to an equivalent result?"
+          ]
+        },
+        "assessmentContext": {
+          "multipleChoice": "Generate two solution strategies based on the selected misconception and available response data: one correct and one incorrect approach, particularly when the goal is to analyze a misconception; or two correct approaches when comparing strategies, efficiency, representations, assumptions, or reasoning is instructionally valuable.",
+          "openResponse": "Compare two authentic student solutions when available, or generate a second strategy that provides a meaningful mathematical contrast with the student's response."
+        },
+        "designNotes": [
+          "Use two strategies by default. More than two may be appropriate when multiple responses represent meaningfully different approaches and comparing them adds clear instructional value.",
+          "Give the strategies equal visual weight so students evaluate the mathematical thinking before the teacher reveals or emphasizes the conclusion.",
+          "The comparison should have a clear mathematical purpose; avoid presenting multiple approaches simply for the sake of variety.",
+          "When one approach is incorrect, students should analyze and explain the reasoning before being told which strategy is correct.",
+          "When both approaches are correct, focus on what the comparison reveals — efficiency, generalizability, representation, assumptions, or the principles that make both work.",
+          "The goal is to make differences in mathematical thinking visible, discussable, and useful for learning."
+        ],
+        "views": {
+          "student": "Present the strategies or responses with equal visual weight and without prematurely revealing which approach is correct, more efficient, or more useful, so students can independently analyze and compare the mathematical thinking.",
+          "teacher": "May include annotations identifying important similarities, differences, assumptions, mathematical strengths or weaknesses, and the intended takeaway, along with facilitation guidance."
+        },
+        "optionalExtension": null
+      }
+    },
+    {
+      "id": "math-detective",
+      "title": "Math Detective",
+      "primaryMove": "Investigate underlying issues",
+      "primaryMoveLong": "Investigate & Solve",
+      "needKind": "diagnosing an underlying mathematical issue, developing a repair, and checking whether the repair works",
+      "description": "Students become \"math detectives\" by investigating an incorrect solution, identifying the underlying mathematical issue, revising the reasoning, and checking whether the revision works.",
+      "requiresCatalog": false,
+      "selection": {
+        "selectWhen": "Investigate an incorrect solution to identify an underlying mathematical issue, revise the reasoning, and check whether the revision works.",
+        "bestFit": "An incorrect solution or response provides evidence of a deeper mathematical issue that students can investigate, explain, revise, and test.",
+        "guidance": "Select when the visible error or incorrect response points to a deeper mathematical issue that requires investigation rather than simply correction. Multiple plausible explanations for the visible error are a particularly strong signal, because the activity lets students use evidence from the response to investigate what mathematical issue may be involved — but multiple explanations are not required.",
+        "prioritizeWhen": [
+          "The response provides evidence of an underlying mathematical idea, assumption, model, or representation that may need to be examined.",
+          "The error offers more than a simple localized procedural error or first-step breakdown.",
+          "Students can investigate the reasoning represented by the response and develop a revision that addresses the underlying issue.",
+          "Students can apply the revised reasoning to the original problem or a related example to determine whether it works.",
+          "The activity supports a meaningful mathematical takeaway that helps students recognize, understand, or avoid the underlying issue in future problems."
+        ],
+        "lessAppropriateWhen": [
+          "The error is primarily a localized procedural slip that can be addressed by identifying and revising the first invalid step.",
+          "There is little evidence of a deeper mathematical issue to investigate.",
+          "The diagnosis-and-revision process would feel artificial."
+        ],
+        "steering": [
+          {
+            "when": "The main instructional opportunity is simply to locate and revise a clear first breakdown in reasoning.",
+            "prefer": "spot-the-slip"
+          }
+        ],
+        "doNot": [
+          "Do not require students to infer the student's actual thought process. Investigate the mathematical issue represented by the response and use available evidence to determine what reasoning needs to change.",
+          "Do not let the activity become \"Spot the Slip with more steps.\" The central purpose is to investigate and explain a deeper mathematical issue represented by the response."
+        ]
+      },
+      "infill": {
+        "classroomFlow": [
+          { "step": "Present the evidence", "description": "Show an incorrect solution or response representing the selected misconception." },
+          { "step": "Investigate the issue", "description": "Students examine the response, identify what is going wrong, and consider what underlying mathematical idea, assumption, model, or representation may be contributing to the error." },
+          { "step": "Build an explanation", "description": "Students use evidence from the response to explain why the reasoning does not work and identify the mathematical issue that needs to change." },
+          { "step": "Revise and check", "description": "Students revise the reasoning to address the underlying issue and apply the revised reasoning to the original problem or a related example to determine whether it works." },
+          { "step": "Name the takeaway", "description": "The teacher reinforces the mathematical idea that resolves the issue and helps students recognize or avoid it in future problems." }
+        ],
+        "examples": [
+          { "topic": "Distributive property", "summary": "A student transforms 3(x + 4) into 3x + 4. Students examine the response for evidence about how the student is treating the terms inside the parentheses, identify the underlying issue with distribution, and revise the reasoning. They then apply the revised reasoning to a new example, such as 5(x + 2), to check whether it works." },
+          { "topic": "Integer operations", "summary": "A student reasons that -5 - (-2) = -7 because \"subtracting means move left.\" Students investigate what this reasoning suggests about the student's model of subtraction, examine why that model does not work for subtracting a negative number, and develop and test a more useful model." },
+          { "topic": "Slope", "summary": "A student calculates slope using rise/run but reverses the numerator and denominator. Students investigate whether the issue is a misunderstanding of the slope definition, confusion about which quantities correspond to rise and run, or an inconsistency in applying the formula. They revise the reasoning and check it against a graph or a second pair of points." }
+        ],
+        "facilitation": {
+          "guidance": "Provide a small number of targeted follow-up questions that guide students from examining the visible error to investigating the underlying mathematical issue, revising the reasoning, and checking whether the revision works. Questions should help students use evidence from the response rather than guess at why the student made the error. Where useful, indicate what to listen for and suggest a follow-up move. Distinguish evidence-supported interpretations of the mathematical issue from speculation about the student's actual thought process.",
+          "prompts": [
+            "What do you notice about this response?",
+            "What does this response suggest the student understands or is assuming?",
+            "What mathematical idea might be causing the problem?",
+            "What evidence in the response supports that interpretation?",
+            "Could there be more than one explanation for what went wrong?",
+            "Why does this reasoning lead to the result we see?",
+            "What would need to change in the reasoning to address the underlying issue?",
+            "How could we test whether this revision actually works?",
+            "Does the revised reasoning work on a different example? Why?",
+            "What should we look for in future problems that might signal this issue?"
+          ]
+        },
+        "assessmentContext": {
+          "multipleChoice": "Generate an incorrect solution or worked response that plausibly illustrates the selected misconception and provides sufficient evidence for students to investigate the underlying mathematical issue. When multiple plausible interpretations are instructionally useful, the response should contain enough evidence for students to consider and distinguish among them.",
+          "openResponse": "Use an authentic student response containing the misconception, when available, and structure the activity around investigating the mathematical issue represented in the response. Preserve enough of the student's reasoning for students to use the response as evidence."
+        },
+        "designNotes": [
+          "The activity should progress through Investigation → Explanation → Revision → Check, with generalization incorporated when appropriate.",
+          "The investigation itself is part of the learning. Students go beyond identifying where an answer is wrong to examine what mathematical idea, assumption, model, or representation may be contributing to the error.",
+          "The response should provide meaningful evidence for investigating the underlying issue. Students base their interpretation on the mathematical evidence in the response rather than speculate beyond what the response supports.",
+          "Multiple plausible explanations can be particularly valuable because students can compare interpretations and use evidence from the response to determine which is best supported.",
+          "Include an opportunity to check whether the revision addresses the underlying issue, ideally using the original problem or a closely related example."
+        ],
+        "views": {
+          "student": "Initially present the response without revealing the underlying issue or intended revision, so students can independently investigate the evidence, develop an explanation, and test their revision.",
+          "teacher": "May include the anticipated mathematical issue, evidence supporting the interpretation, possible revisions, alternative interpretations when relevant, and facilitation guidance."
+        },
+        "optionalExtension": null
+      }
+    },
+    {
+      "id": "make-your-case",
+      "title": "Make Your Case",
+      "primaryMove": "Articulate and justify claims",
+      "primaryMoveLong": "Mathematical Justification",
+      "needKind": "investigating, defending, challenging, or refining a mathematical claim",
+      "description": "Students make or evaluate a mathematical claim, articulate their thinking, build a case for it using evidence and reasoning, and consider whether the evidence and reasoning support the claim.",
+      "requiresCatalog": false,
+      "selection": {
+        "selectWhen": "Develop students' ability to articulate, defend, challenge, or refine a meaningful mathematical claim using evidence and reasoning.",
+        "bestFit": "A meaningful mathematical claim, conjecture, or generalization that students can reasonably defend, challenge, or refine using evidence and reasoning. Especially useful when students need to move beyond getting an answer to articulating why a statement holds, does not hold, or holds only under particular conditions. The claim can be true, false, or conditionally true; it should create enough uncertainty or interpretive space that students have something meaningful to investigate rather than making the answer immediately obvious.",
+        "guidance": "Select when students can meaningfully develop, evaluate, or refine an argument about a mathematical claim using evidence and reasoning. A claim does not need equally strong arguments on both sides, but students should have a genuine opportunity to investigate and reason about it.",
+        "prioritizeWhen": [
+          "The claim invites students to take and explain a mathematical position.",
+          "The claim requires more than stating an answer or preference.",
+          "The claim can be supported or challenged using meaningful mathematical evidence.",
+          "The claim connects to the misconception or instructional need being addressed.",
+          "The claim creates an opportunity to examine examples, counterexamples, representations, calculations, or generalizations.",
+          "Students can evaluate the strength of different arguments rather than simply identify a correct answer.",
+          "The activity leads to a meaningful mathematical takeaway, including a condition, boundary case, or refinement of the original claim when appropriate."
+        ],
+        "lessAppropriateWhen": [
+          "The claim is so obviously true or false that argumentation would feel artificial.",
+          "The activity would primarily ask students to guess or vote without requiring mathematical evidence.",
+          "There is little meaningful mathematical reasoning students can use to support or challenge the claim.",
+          "The primary opportunity is better addressed by locating a procedural breakdown, examining productive thinking in an incorrect response, comparing solution strategies, or investigating a deeper mathematical issue.",
+          "The activity would turn into a debate about opinions rather than a mathematical argument."
+        ],
+        "steering": [
+          { "when": "The primary opportunity is to locate a procedural breakdown.", "prefer": "spot-the-slip" },
+          { "when": "The primary opportunity is to examine productive thinking in an incorrect response.", "prefer": "my-favorite-no" },
+          { "when": "The primary opportunity is to compare solution strategies.", "prefer": "compare-the-thinking" },
+          { "when": "The primary opportunity is to investigate a deeper mathematical issue.", "prefer": "math-detective" }
+        ],
+        "doNot": [
+          "Do not require students to defend a mathematically indefensible position simply to create disagreement. When appropriate, students should be able to qualify or refine the original claim rather than choosing only between accepting or rejecting it."
+        ]
+      },
+      "infill": {
+        "classroomFlow": [
+          { "step": "Present the claim", "description": "The teacher presents a meaningful mathematical claim, conjecture, or generalization." },
+          { "step": "Initial vote", "description": "Students independently vote yes, no, or undecided." },
+          { "step": "Make Your Case", "description": "The teacher invites students to explain and support their positions using mathematical evidence and reasoning — e.g. yes voters: \"Why do you think the claim is true? What mathematical evidence supports your thinking?\"; no voters: \"Why do you think the claim is not true? Can you give a counterexample or other mathematical evidence?\" Students question, challenge, extend, or refine one another's arguments; the teacher draws on suggested arguments and facilitation questions to introduce a missing perspective, elicit additional reasoning, or keep the discussion moving." },
+          { "step": "Revisit the claim", "description": "Students vote again — yes, no, or undecided — and discuss what mathematical evidence or reasoning influenced their thinking." },
+          { "step": "Name the takeaway", "description": "Students articulate what the mathematics supports and, when appropriate, refine or qualify the original claim." }
+        ],
+        "examples": [
+          {
+            "topic": "Perimeter and area",
+            "claim": "A larger perimeter means a larger area.",
+            "summary": "Students can find examples that appear to support the claim, but counterexamples involving rectangles with the same perimeter and different areas help them refine the relationship.",
+            "facilitation": [
+              { "ask": "Can you find two rectangles where the one with the larger perimeter also has the larger area?", "expected": "Yes. A 3 × 4 rectangle has perimeter 14 and area 12; a 5 × 6 rectangle has perimeter 22 and area 30.", "why": "Establishes that the claim can appear reasonable based on examples." },
+              { "ask": "Can two rectangles have the same perimeter but different areas?", "expected": "Yes. A 1 × 11 rectangle and a 5 × 7 rectangle both have perimeter 24, but their areas are 11 and 35.", "why": "Surfaces a counterexample showing that perimeter and area are not directly determined by one another." },
+              { "ask": "What can we conclude about the relationship between perimeter and area from these examples?", "expected": "A larger perimeter does not necessarily mean a larger area; perimeter and area measure different attributes, and knowing one does not determine the other.", "why": "Moves beyond finding a counterexample to articulating the broader mathematical relationship." }
+            ],
+            "takeaway": "Perimeter and area measure different attributes. Knowing that one rectangle has a larger perimeter does not necessarily tell us that it has a larger area."
+          },
+          {
+            "topic": "Slope",
+            "claim": "A line with a greater slope is always steeper.",
+            "summary": "Students begin with positive slopes that support the claim, then consider a negative slope that challenges it, distinguishing the magnitude of slope (steepness) from its sign (direction).",
+            "facilitation": [
+              { "ask": "Which is steeper: a line with slope 2 or a line with slope 5? How do you know?", "expected": "The line with slope 5 is steeper because its slope has greater magnitude.", "why": "Establishes an intuitive case that supports the claim." },
+              { "ask": "Now compare slopes 2 and −5. Which line is steeper?", "expected": "The line with slope −5 is steeper.", "why": "Provides a counterexample to the claim as stated and surfaces the distinction between slope's sign and magnitude." },
+              { "ask": "So what is misleading about the phrase 'greater slope'?", "expected": "A greater numerical slope is not necessarily a steeper slope; the absolute value of the slope determines steepness, while the sign indicates direction.", "why": "Refines the informal rule into a more precise mathematical statement." }
+            ],
+            "takeaway": "The absolute value of the slope determines steepness; the sign of the slope indicates direction."
+          },
+          {
+            "topic": "Dividing fractions",
+            "claim": "Keep-Change-Flip is always the best way to divide two fractions.",
+            "summary": "Students initially support the claim because Keep-Change-Flip is reliable, then examine cases where numerators and denominators divide directly, revealing that a procedure that always works is not necessarily the most efficient strategy.",
+            "facilitation": [
+              { "ask": "How would you use Keep-Change-Flip to solve 21/12 ÷ 7/6? Why does this procedure work?", "expected": "Keep 21/12, change division to multiplication, and flip 7/6 to get 21/12 × 6/7.", "why": "Establishes Keep-Change-Flip as a valid and dependable procedure." },
+              { "ask": "Is there another way to look at 21/12 ÷ 7/6? What happens if we divide the two numerators and the two denominators?", "expected": "21 ÷ 7 = 3 and 12 ÷ 6 = 2, giving 3/2.", "why": "Surfaces a more direct strategy when the numerators and denominators divide evenly, and shows that the structure of the fractions can sometimes simplify the calculation." },
+              { "ask": "Does this mean Keep-Change-Flip is wrong? What should we change about the original claim?", "expected": "No. Keep-Change-Flip works, but it is not always the most efficient strategy. When the numerators and denominators divide evenly, directly simplifying the corresponding parts may be quicker.", "why": "Moves students from evaluating a procedure as simply right or wrong to considering when different strategies are useful and efficient." }
+            ],
+            "takeaway": "Keep-Change-Flip is a reliable way to divide fractions, but it is not always the most efficient strategy. When the structure of the fractions allows for direct simplification, another strategy may be quicker."
+          }
+        ],
+        "facilitation": {
+          "guidance": "Provide a small set of targeted facilitation questions tailored to the specific claim and anticipated student reasoning, with what to listen for and a follow-up move where useful. Always provide a small set of substantive arguments supporting and challenging the claim as teacher-reference material, not a script — the challenging argument may identify a counterexample, boundary condition, assumption, or limitation. Teachers prioritize students' own arguments and use suggestions selectively. Maintain a discussion in which students respond to evidence and reasoning, not to one another's opinions or confidence.",
+          "prompts": [
+            "Why do you think the claim is true? / Why do you think the claim is not true?",
+            "What mathematical evidence supports your thinking?",
+            "Can you give an example that supports your position?",
+            "Does that always work? How do you know?",
+            "Can anyone find a case that challenges this argument?",
+            "What assumptions are you making?",
+            "Does this argument apply to all cases or only some?",
+            "What would you change about the claim based on what we've found?",
+            "What does this example tell us about the claim?",
+            "Did the mathematics change your mind? Why?"
+          ]
+        },
+        "assessmentContext": {
+          "multipleChoice": "Develop the claim from the misconception or distractor pattern. Identify a claim that captures the relevant mathematical idea and generate supporting and challenging arguments for the teacher to reference during discussion.",
+          "openResponse": "When authentic student responses are available, connect the claim to patterns in students' reasoning. Student responses may also provide examples, counterexamples, or arguments the teacher can bring into the discussion."
+        },
+        "designNotes": [
+          "The claim should be mathematically meaningful and closely connected to the misconception, instructional need, content, and lesson context.",
+          "Students use mathematical evidence and reasoning to support, challenge, or refine the claim rather than simply state whether they agree.",
+          "The yes / no / undecided voting structure surfaces initial thinking without forcing a binary position. The initial vote should not reveal the intended resolution.",
+          "Generated arguments should represent meaningful mathematical reasoning rather than a \"correct\" argument and a deliberately weak opposing one.",
+          "When presenting a generated argument, the teacher invites students to evaluate, question, extend, or challenge it rather than simply accept it.",
+          "Arguments are mathematical objects for examination. The goal is not a \"winning\" side but determining what the mathematics supports and why.",
+          "When appropriate, the original claim should be qualified or refined rather than simply accepted or rejected."
+        ],
+        "views": {
+          "student": "Present the claim and activity without revealing the intended mathematical resolution or which arguments are strongest.",
+          "teacher": "May include the suggested supporting and challenging arguments, anticipated reasoning, possible counterexamples or qualifications, facilitation guidance, and the mathematical takeaway."
+        },
+        "optionalExtension": "Structured debate: when time and preparation allow, identify two teams in advance, one preparing a case supporting the claim and the other challenging or qualifying it, with generated arguments as starting points and the remaining students as an evaluating audience. Extension: students generate their own related claim, identify a counterexample or boundary condition, or revise the original claim to make it more mathematically precise."
+      }
+    },
+    {
+      "id": "righton",
+      "title": "RightOn!",
+      "primaryMove": "Surface thinking through interaction",
+      "primaryMoveLong": "Interactive Student Thinking & Discussion",
+      "needKind": "individually or in small teams engaging with targeted mathematical questions that elicit and surface student thinking for subsequent discussion and reasoning",
+      "description": "Students interact with a targeted mathematical task designed with plausible distractors and an often-unexpected correct answer. Students reveal their thinking through their responses, self-rated confidence, and optional hints, and discuss popular incorrect answers to examine why they may seem reasonable or tempting. Seeing that classmates may have thought similarly helps students share, examine, and develop more productive mathematical reasoning.",
+      "requiresCatalog": true,
+      "selection": {
+        "selectWhen": "Use an interactive experience to elicit and surface individual student thinking in ways that support subsequent mathematical discussion and reasoning.",
+        "bestFit": "Students can engage individually or in small teams with targeted mathematical questions that elicit and surface their thinking for subsequent discussion. Particularly well suited to questions where common, plausible, or initially intuitive misconceptions lead students to different or unexpected answers, so patterns in student thinking become visible. Especially valuable when the shared response patterns become an instructional resource: students see that others made the same choice, examine why a response was tempting, and use the patterns as a starting point for discussion.",
+        "guidance": "Consider RightOn! when the instructional need suits students engaging with targeted questions before a teacher-facilitated discussion, AND an existing RightOn! game has strong alignment with the identified misconception, mathematical content, response data, and instructional context, AND the interactive format provides a meaningful advantage over a simpler analog routine. RightOn! games and questions are already vetted for instructional quality; judge instructional fit, not the quality of the game. A close match between an existing game and the identified need is a meaningful factor in favor. Attend to whether the interaction will produce useful evidence of student thinking — response patterns that can become a starting point for discussion, reasoning, revision, or generalization — not simply whether students will have an engaging experience.",
+        "prioritizeWhen": [
+          "The identified instructional need is well suited to students engaging individually or in small teams with targeted mathematical questions before participating in a teacher-facilitated discussion.",
+          "An existing RightOn! game has strong alignment with the identified misconception or learning need, relevant mathematical content, student response data, and instructional context.",
+          "The game provides a meaningful opportunity to surface and discuss the mathematical thinking relevant to the identified need.",
+          "The interactive format provides a meaningful instructional advantage over a simpler analog routine."
+        ],
+        "lessAppropriateWhen": [
+          "No existing RightOn! game aligns with the identified need.",
+          "The topic or CCSS standard matches but the game does not provide a plausible instructional response to what students most need to understand, examine, or do next."
+        ],
+        "steering": [],
+        "doNot": [
+          "Do not recommend RightOn! solely because the topic or CCSS standard matches. The existing game must also provide a plausible instructional response to what students most need to understand, examine, or do next.",
+          "Do not infer or manufacture a misconception simply because a particular answer is available as a distractor. Ground discussion suggestions in the responses that actually surface during the activity."
+        ]
+      },
+      "infill": {
+        "classroomFlow": [
+          { "step": "Experience the questions", "description": "Students engage individually or in small teams with targeted mathematical questions designed around the selected misconception or learning goal. The experience may consist of a single question or multiple questions, depending on the game." },
+          { "step": "Reveal the thinking", "description": "Students' responses surface different approaches, interpretations, or misconceptions, including prevalent incorrect responses. Where available, confidence ratings or hints provide additional information about how students are approaching the mathematics." },
+          { "step": "Notice the patterns", "description": "Students examine patterns in the responses, including which answers were common and what those responses might reveal about mathematical thinking." },
+          { "step": "Discuss and reason", "description": "The teacher facilitates discussion around selected responses, using prevalent incorrect responses as opportunities to examine reasoning rather than simply identifying them as wrong. Students consider why different responses might seem reasonable, compare the thinking behind them, and work toward a more productive understanding. The discussion helps students recognize that classmates may share their uncertainty or initial reasoning." },
+          { "step": "Name the takeaway", "description": "The teacher reinforces the mathematical idea that resolves or extends the misconception and connects it to the thinking surfaced during the activity. Where appropriate, students test, generalize, or apply the idea in a new context." }
+        ],
+        "examples": [
+          { "topic": "Why Keep-Change-Flip works when dividing fractions", "summary": "A three-question game: students first identify the reciprocal of a fractional denominator, then generalize that idea using variables, and finally explore what happens when they multiply a complex fraction by a fraction equivalent to 1. The progression investigates the reasoning behind the standard procedure rather than memorizing the steps." },
+          { "topic": "Do the percents cancel?", "summary": "A three-question game: students first experience a concrete 20% increase-then-decrease example, apply the idea to a different percentage, and then evaluate and justify a claim in a new context. Response patterns let the teacher surface why the tempting idea that the changes \"cancel\" seems reasonable, rather than simply revealing the answer." },
+          { "topic": "The percent pattern", "summary": "A three-question game: students encounter a 25% increase/decrease and a 6.25% overall decrease, compare examples such as 10% and 30%, and then use multipliers and algebra to explain why (1 + r)(1 − r) = 1 − r². Response patterns support the transition from noticing the pattern to explaining and generalizing why it occurs." }
+        ],
+        "facilitation": {
+          "guidance": "Provide targeted follow-up questions that help the teacher use students' individual responses and patterns across the class as a foundation for mathematical discussion, rather than simply reviewing correct and incorrect answers. Help the teacher: ask what students notice in their own responses or in class patterns; surface and compare different approaches, interpretations, or misconceptions; ask why a response might seem reasonable and what thinking it reveals; use prevalent incorrect responses as opportunities to examine reasoning; help students recognize shared uncertainty as normal; and move from noticing a pattern to explaining it, testing an emerging idea, revising reasoning, or connecting to a broader concept. For each key question, provide what to listen for and, where useful, a likely resolution and follow-up move.",
+          "prompts": [
+            "What do you notice about the responses?",
+            "Why might someone choose this answer?",
+            "What mathematical idea might this response represent?",
+            "What makes this answer seem reasonable?",
+            "Do you see a pattern in how people responded?",
+            "Can we find an example that helps us test this idea?",
+            "What would have to be true for this reasoning to work?",
+            "What should we revise about our thinking?",
+            "What does this pattern tell us about the mathematics?"
+          ]
+        },
+        "assessmentContext": {
+          "multipleChoice": "Select an existing RightOn! game whose questions and distractors align with the identified misconception and instructional need.",
+          "openResponse": "Select an existing RightOn! game whose questions surface the thinking represented in students' responses."
+        },
+        "designNotes": [
+          "Ground discussion suggestions in the responses that actually surface during the activity; do not infer or manufacture a misconception simply because a particular answer is available as a distractor.",
+          "Future opportunity: use identified misconceptions and instructional needs to generate candidate RightOn! questions and distractors, evaluate their mathematical quality, and — once response data are available — whether the resulting response patterns create meaningful opportunities to examine, discuss, and learn from plausible mistakes."
+        ],
+        "views": {
+          "student": "The RightOn! game itself; students respond individually or in small teams, with self-rated confidence and optional hints.",
+          "teacher": "Response patterns across the class, prevalent incorrect responses, and facilitation guidance for the discussion that follows."
+        },
+        "optionalExtension": null
+      }
+    }
+  ]
+}

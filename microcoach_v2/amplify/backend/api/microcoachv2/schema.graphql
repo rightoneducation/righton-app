@@ -247,8 +247,9 @@ enum ContextDataType {
 
 # Shared knowledge library for the coaching pipeline — reference lessons,
 # strategies, exemplars. Not classroom data: no FK to Class/Session/Student.
-# Carries an apiKey rule because the seed/eval CLI reads it over the API key;
-# no other model in this schema should.
+# Carries an apiKey rule because the seed/eval CLI reads it over the API key.
+# The only other apiKey model is the TEMPORARY MicroCoachPipelineRun at the
+# bottom of this file; nothing else should.
 type ContextData
   @model
   @auth(rules: [{ allow: private }, { allow: public, provider: apiKey }]) {
@@ -333,4 +334,30 @@ type SchoolObservation {
   schoolCode: String!
   rubricScores: AWSJSON
   notes: String
+}
+
+# ── TEMPORARY: pipeline preview ─────────────────────────────────────────────
+# One row per `yarn seed:eval` run so /preview can load output from the backend
+# instead of a locally synced folder. apiKey rule because the seed CLI writes it
+# over the API key and /preview reads it signed-out.
+# Teardown: delete this block + `amplify push`, then delete
+#   src/api/APIClients/pipelineRun/, src/api/Parsers/PipelineRunParser.ts,
+#   src/api/Models/IPipelineRun.ts, and revert seed/cli/generate.ts (publish
+#   block) and src/pages/preview/Preview.tsx.
+type MicroCoachPipelineRun
+  @model
+  @auth(rules: [{ allow: private }, { allow: public, provider: apiKey }]) {
+  id: ID! # = runId, the directory name under seed/eval/runs/
+  classroomName: String
+  sessionLabel: String
+  condition: String
+  version: String
+  gitSha: String
+  amplifyEnv: String
+  startedAt: AWSDateTime
+  misconceptionCount: Int
+  manifest: AWSJSON
+  output: AWSJSON # the next-step array, same shape as MicroCoachSession.pregeneratedNextSteps
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
 }

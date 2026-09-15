@@ -35,7 +35,7 @@
         "minConceptualSeverity": 0.8,
         "minForwardImpact": 0.7
       },
-      "maxMisconceptions": 4,
+      "maxMisconceptions": 3,
       "secondaryMustBeMeaningfullyDistinct": true,
       "tiebreakers": ["prefer_conceptual_over_procedural", "prefer_broader_downstream_impact"]
     },
@@ -88,6 +88,37 @@
     "model": "gpt-4o",
     "maxMisconceptions": 4,
     "successIndicatorsPerMisconception": { "min": 2, "max": 4 }
+  },
+
+  "genMisconception": {
+    "description": "microcoachv2LLMGenMisconception — generates the per-distractor 'mistake this option captures' text when the PPQ source document has no Distractors column. Consumed by microcoachv2LLMAnalysis via answerChoices[].text.",
+    "model": "gpt-5-mini",
+    "maxWordsPerText": 25,
+    "styleExamples": [
+      "Chose graph with slope of -6 (did not convert to slope-intercept)",
+      "Did not clear fraction – error when combining 3/6 and 20/6",
+      "Tried to clear fraction but multiplied by 6 all terms on LHS creating a new, non-equivalent equation",
+      "X and y switched, wrong sign",
+      "Point is on the line that is exclusive"
+    ]
+  },
+
+  "genInstrNeed": {
+    "description": "microcoachv2LLMGenInstrNeed — Wave 2 intermediate step: from a prioritized misconception + student evidence, states what students most need to understand, examine, or do next mathematically. Internal reasoning step that will drive template selection; surfaced in /preview only for now.",
+    "model": "gpt-5-mini",
+    "maxSentences": 3,
+    "needKinds": [
+      "locating and understanding the first point where valid reasoning breaks down",
+      "understanding why an incorrect response is tempting or reasonable and revising the underlying reasoning",
+      "comparing meaningfully different approaches to make mathematical thinking visible",
+      "diagnosing an underlying mathematical issue, developing a repair, and checking whether the repair works",
+      "investigating, defending, challenging, or refining a mathematical claim",
+      "individually or in small teams engaging with targeted mathematical questions that elicit and surface student thinking for subsequent discussion and reasoning"
+    ],
+    "worked": {
+      "misconception": "Multiplying powers with the same base requires multiplying the exponents",
+      "instructionalNeed": "Test the apparent rule, examine why it initially seems to work, and use the meaning of exponents to construct the correct generalization."
+    }
   }
 
 }

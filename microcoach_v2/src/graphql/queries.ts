@@ -1767,3 +1767,55 @@ export const listContextData = /* GraphQL */ `
     }
   }
 `;
+export const getMicroCoachPipelineRun = /* GraphQL */ `
+  query GetMicroCoachPipelineRun($id: ID!) {
+    getMicroCoachPipelineRun(id: $id) {
+      id
+      classroomName
+      sessionLabel
+      condition
+      version
+      gitSha
+      amplifyEnv
+      startedAt
+      misconceptionCount
+      manifest
+      output
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listMicroCoachPipelineRuns = /* GraphQL */ `
+  query ListMicroCoachPipelineRuns(
+    $filter: ModelMicroCoachPipelineRunFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMicroCoachPipelineRuns(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        classroomName
+        sessionLabel
+        condition
+        version
+        gitSha
+        amplifyEnv
+        startedAt
+        misconceptionCount
+        manifest
+        output
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;

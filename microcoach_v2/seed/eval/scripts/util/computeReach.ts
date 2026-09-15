@@ -13,14 +13,14 @@ export interface MisconceptionReach {
  * How many distinct students exhibited a misconception, counted from the response
  * rows rather than estimated by a model.
  *
- * `wrongAnswers` is the ingest-time attribution: the specific answer options the
- * source document's answer key ties to this misconception. A student is affected if
+ * `wrongAnswers` is the misconception's wrong-answer refs — the specific answer
+ * options tied to it by whichever stage populated them. A student is affected if
  * they chose any of them. Counting distinct students matters because someone wrong
  * on two linked questions is still one student.
  *
- * Returns nulls when there is no attribution to work from — a session that predates
- * enrichment, or a misconception the analysis model reported as genuinely new. That
- * is different from a count of zero, which means the attribution existed and no
+ * Returns nulls when there are no refs to work from — a session without them, or a
+ * misconception the analysis model reported as genuinely new. That is different
+ * from a count of zero, which means refs existed and no
  * student chose any of those options. A misconception nobody exhibited is a real
  * result and must survive to scoring rather than being dropped.
  *

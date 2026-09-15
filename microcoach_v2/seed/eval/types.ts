@@ -29,6 +29,16 @@ export interface LVNInteractsWithType {
   description: string
 }
 
+// Stand-in left by dedupeGraph where an LVN entry already appeared in full under an
+// earlier standard (or earlier factor) in the same session payload. Prompt
+// formatters render it as one "see above" line; NextStepOption resolves it back to
+// the full entry because it renders a single standard in isolation.
+export interface SeeAboveRef {
+  id: string,
+  name: string,
+  seeAbove: true
+}
+
 export interface LVNFactorType {
   id: string,
   name: string,
@@ -36,9 +46,9 @@ export interface LVNFactorType {
   category: string,
   gradeLevel: string[],
   academicSubject: string | null,
-  strategies: LVNStrategyType[],
-  learnerModels: LVNLearnerModelType[],
-  interactsWith: LVNInteractsWithType[]
+  strategies: (LVNStrategyType | SeeAboveRef)[],
+  learnerModels: (LVNLearnerModelType | SeeAboveRef)[],
+  interactsWith: (LVNInteractsWithType | SeeAboveRef)[]
 }
 
 // A reference to another standard in the graph. The four *Standards arrays below
@@ -60,7 +70,7 @@ export interface KgQueryType {
   childStandards: RelatedStandardType[],
   relatedStandards: RelatedStandardType[],
   learningComponents: LearningComponentType[],
-  lvnFactors: LVNFactorType[]
+  lvnFactors: (LVNFactorType | SeeAboveRef)[]
 }
 
 // Enum that describes masking options for normalized KG query

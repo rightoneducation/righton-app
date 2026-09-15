@@ -23,14 +23,15 @@ export const maskQuery = (query: KgQueryType, maskOption: MaskOptionEnum ) => {
     case MaskOptionEnum.NO_LVN_FULL:
       clonedQuery.lvnFactors = [];
       return clonedQuery;
+    // A `seeAbove` stub (left by dedupeGraph) carries none of the nested lists.
     case MaskOptionEnum.NO_LVN_INTERACTSWITH:
-      lvnFactors.forEach(f => { f.interactsWith = []; });
+      lvnFactors.forEach(f => { if (!('seeAbove' in f)) f.interactsWith = []; });
       return clonedQuery;
     case MaskOptionEnum.NO_LVN_LEARNERMODELS:
-      lvnFactors.forEach(f => { f.learnerModels = []; });
+      lvnFactors.forEach(f => { if (!('seeAbove' in f)) f.learnerModels = []; });
       return clonedQuery;
     case MaskOptionEnum.NO_LVN_STRATEGY:
-      lvnFactors.forEach(f => { f.strategies = []; });
+      lvnFactors.forEach(f => { if (!('seeAbove' in f)) f.strategies = []; });
       return clonedQuery;
     case MaskOptionEnum.NO_LC:
       clonedQuery.learningComponents = [];

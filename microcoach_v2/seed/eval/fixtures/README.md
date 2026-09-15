@@ -52,10 +52,22 @@ order. Field-for-field, this matches what `yarn upload` writes:
 `StudentResponse` holds rows for **both** assessments; the loader scopes to the PPQ by
 `assessmentId`, the same way production does.
 
-Three fields come from ingest rather than the spreadsheet:
-`Assessment[].questions[].answerChoices` and `.docxQuestion` (parsed from `PPQ.docx`),
-and `Misconception[].wrongAnswers` (the distractor attribution that student counts are
-computed from).
+One field comes from ingest rather than the spreadsheet:
+`Assessment[].questions[].docxQuestion` (the question number as printed in `PPQ.docx`).
+
+**Legacy data the pipeline no longer reads.** The pilot documents carried a
+teacher-authored Distractors column, and the March pipeline stored it as
+`answerChoices[].text` and used it to attribute options to misconceptions as
+`Misconception[].wrongAnswers`. New documents have no such column, so no stage reads,
+renders or writes either field any more. The values are left in the fixtures for
+reference; `Misconception[].wrongAnswers` still feeds the dormant student-count path
+(`computeMisconceptionReach`) until `microcoachv2LLMGenMisconception` replaces it as
+the source of the misconception ↔ wrong-answer mapping.
+
+`ef3872a1` additionally carries the document's Exemplar section as
+`questions[].questionText` and `answerChoices[].content` — the substrate
+GenMisconception reasons from. Equations in the source are images, so stems can end
+abruptly and Q3/Q4/Q6 have no option content.
 
 ### `kg.json`
 
