@@ -1,5 +1,4 @@
 import {
-  CreateMicroCoachStudentInput,
   CreateMicroCoachStudentMutation,
   CreateMicroCoachStudentMutationVariables,
   DeleteMicroCoachStudentMutation,
@@ -8,7 +7,6 @@ import {
   GetMicroCoachStudentQueryVariables,
   MicroCoachStudentsByClassIdQuery,
   MicroCoachStudentsByClassIdQueryVariables,
-  UpdateMicroCoachStudentInput,
   UpdateMicroCoachStudentMutation,
   UpdateMicroCoachStudentMutationVariables,
 } from "../../../AWSAPI";
@@ -61,32 +59,36 @@ export class StudentAPIClient
   }
 
   async createStudent(
-    input: CreateMicroCoachStudentInput,
+    student: IMicroCoachStudent,
   ): Promise<IMicroCoachStudent | null> {
+    const input =
+      StudentParser.parseAWSStudentInputfromIMicroCoachStudent(student);
     const variables: CreateMicroCoachStudentMutationVariables = { input };
     const res = await this.mutateGraphQL<CreateMicroCoachStudentMutation>(
       createMicroCoachStudent,
       variables as unknown as GraphQLOptions,
     );
 
-    const student = res?.data?.createMicroCoachStudent;
-    return student
-      ? StudentParser.parseIMicroCoachStudentfromAWSStudent(student)
+    const createdStudent = res?.data?.createMicroCoachStudent;
+    return createdStudent
+      ? StudentParser.parseIMicroCoachStudentfromAWSStudent(createdStudent)
       : null;
   }
 
   async updateStudent(
-    input: UpdateMicroCoachStudentInput,
+    student: IMicroCoachStudent,
   ): Promise<IMicroCoachStudent | null> {
+    const input =
+      StudentParser.parseAWSStudentInputfromIMicroCoachStudent(student);
     const variables: UpdateMicroCoachStudentMutationVariables = { input };
     const res = await this.mutateGraphQL<UpdateMicroCoachStudentMutation>(
       updateMicroCoachStudent,
       variables as unknown as GraphQLOptions,
     );
 
-    const student = res?.data?.updateMicroCoachStudent;
-    return student
-      ? StudentParser.parseIMicroCoachStudentfromAWSStudent(student)
+    const updatedStudent = res?.data?.updateMicroCoachStudent;
+    return updatedStudent
+      ? StudentParser.parseIMicroCoachStudentfromAWSStudent(updatedStudent)
       : null;
   }
 

@@ -1,5 +1,4 @@
 import {
-  CreateMicroCoachAssessmentInput,
   CreateMicroCoachAssessmentMutation,
   CreateMicroCoachAssessmentMutationVariables,
   DeleteMicroCoachAssessmentMutation,
@@ -10,7 +9,6 @@ import {
   MicroCoachAssessmentsByClassIdQueryVariables,
   MicroCoachAssessmentsBySessionIdQuery,
   MicroCoachAssessmentsBySessionIdQueryVariables,
-  UpdateMicroCoachAssessmentInput,
   UpdateMicroCoachAssessmentMutation,
   UpdateMicroCoachAssessmentMutationVariables,
 } from "../../../AWSAPI";
@@ -89,32 +87,44 @@ export class AssessmentAPIClient
   }
 
   async createAssessment(
-    input: CreateMicroCoachAssessmentInput,
+    assessment: IMicroCoachAssessment,
   ): Promise<IMicroCoachAssessment | null> {
+    const input =
+      AssessmentParser.parseAWSAssessmentInputfromIMicroCoachAssessment(
+        assessment,
+      );
     const variables: CreateMicroCoachAssessmentMutationVariables = { input };
     const res = await this.mutateGraphQL<CreateMicroCoachAssessmentMutation>(
       createMicroCoachAssessment,
       variables as unknown as GraphQLOptions,
     );
 
-    const assessment = res?.data?.createMicroCoachAssessment;
-    return assessment
-      ? AssessmentParser.parseIMicroCoachAssessmentfromAWSAssessment(assessment)
+    const createdAssessment = res?.data?.createMicroCoachAssessment;
+    return createdAssessment
+      ? AssessmentParser.parseIMicroCoachAssessmentfromAWSAssessment(
+          createdAssessment,
+        )
       : null;
   }
 
   async updateAssessment(
-    input: UpdateMicroCoachAssessmentInput,
+    assessment: IMicroCoachAssessment,
   ): Promise<IMicroCoachAssessment | null> {
+    const input =
+      AssessmentParser.parseAWSAssessmentInputfromIMicroCoachAssessment(
+        assessment,
+      );
     const variables: UpdateMicroCoachAssessmentMutationVariables = { input };
     const res = await this.mutateGraphQL<UpdateMicroCoachAssessmentMutation>(
       updateMicroCoachAssessment,
       variables as unknown as GraphQLOptions,
     );
 
-    const assessment = res?.data?.updateMicroCoachAssessment;
-    return assessment
-      ? AssessmentParser.parseIMicroCoachAssessmentfromAWSAssessment(assessment)
+    const updatedAssessment = res?.data?.updateMicroCoachAssessment;
+    return updatedAssessment
+      ? AssessmentParser.parseIMicroCoachAssessmentfromAWSAssessment(
+          updatedAssessment,
+        )
       : null;
   }
 

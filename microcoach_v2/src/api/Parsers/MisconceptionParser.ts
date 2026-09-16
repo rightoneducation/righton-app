@@ -5,14 +5,32 @@ import {
   ISkillContext,
   IStudentWork,
 } from "../../lib/PipelineModels";
+import { Badge, PrevalenceLevel } from "../../AWSAPI";
+import { isNullOrUndefined } from "../util/util";
 
 export class MisconceptionParser {
   static parseIMisconceptionfromAWSMisconception(misconception: AWSMisconception): IMisconception {
+    if (
+      isNullOrUndefined(misconception.id) ||
+      isNullOrUndefined(misconception.sessionId) ||
+      isNullOrUndefined(misconception.classId) ||
+      isNullOrUndefined(misconception.rank) ||
+      isNullOrUndefined(misconception.title) ||
+      isNullOrUndefined(misconception.description) ||
+      isNullOrUndefined(misconception.detailStatus) ||
+      isNullOrUndefined(misconception.createdAt) ||
+      isNullOrUndefined(misconception.updatedAt)
+    ) {
+      throw new Error(
+        "Misconception has null field for the attributes that are not nullable",
+      );
+    }
+
     const parsedMisconception: IMisconception = {
       id: misconception.id,
       rank: misconception.rank,
       badge: misconception.badge ?? null,
-      isRecommendedFocus: misconception.badge === "RECOMMENDED_FOCUS",
+      isRecommendedFocus: misconception.badge === Badge.RECOMMENDED_FOCUS,
       title: misconception.title,
       titleCased: misconception.titleCased ?? misconception.title,
       shortLabel: misconception.shortLabel ?? misconception.title,
@@ -20,7 +38,7 @@ export class MisconceptionParser {
       consequence: misconception.consequence ?? "",
 
       prevalence: {
-        level: misconception.prevalence?.level ?? "FEW", // would this be a good fallback ?
+        level: misconception.prevalence?.level ?? PrevalenceLevel.FEW,
         label: misconception.prevalence?.label ?? "",
         studentsNeedingSupport: misconception.prevalence?.studentsNeedingSupport ?? null,
         studentsUnderstood: misconception.prevalence?.studentsUnderstood ?? null,

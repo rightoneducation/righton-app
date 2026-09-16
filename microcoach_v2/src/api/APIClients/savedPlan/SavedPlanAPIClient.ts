@@ -1,5 +1,4 @@
 import {
-  CreateMicroCoachSavedPlanInput,
   CreateMicroCoachSavedPlanMutation,
   CreateMicroCoachSavedPlanMutationVariables,
   DeleteMicroCoachSavedPlanMutation,
@@ -10,7 +9,6 @@ import {
   MicroCoachSavedPlansByClassIdQueryVariables,
   MicroCoachSavedPlansBySessionIdQuery,
   MicroCoachSavedPlansBySessionIdQueryVariables,
-  UpdateMicroCoachSavedPlanInput,
   UpdateMicroCoachSavedPlanMutation,
   UpdateMicroCoachSavedPlanMutationVariables,
 } from "../../../AWSAPI";
@@ -87,32 +85,40 @@ export class SavedPlanAPIClient
   }
 
   async createSavedPlan(
-    input: CreateMicroCoachSavedPlanInput,
+    savedPlan: IMicroCoachSavedPlan,
   ): Promise<IMicroCoachSavedPlan | null> {
+    const input =
+      SavedPlanParser.parseAWSSavedPlanInputfromIMicroCoachSavedPlan(savedPlan);
     const variables: CreateMicroCoachSavedPlanMutationVariables = { input };
     const res = await this.mutateGraphQL<CreateMicroCoachSavedPlanMutation>(
       createMicroCoachSavedPlan,
       variables as unknown as GraphQLOptions,
     );
 
-    const savedPlan = res?.data?.createMicroCoachSavedPlan;
-    return savedPlan
-      ? SavedPlanParser.parseIMicroCoachSavedPlanfromAWSSavedPlan(savedPlan)
+    const createdSavedPlan = res?.data?.createMicroCoachSavedPlan;
+    return createdSavedPlan
+      ? SavedPlanParser.parseIMicroCoachSavedPlanfromAWSSavedPlan(
+          createdSavedPlan,
+        )
       : null;
   }
 
   async updateSavedPlan(
-    input: UpdateMicroCoachSavedPlanInput,
+    savedPlan: IMicroCoachSavedPlan,
   ): Promise<IMicroCoachSavedPlan | null> {
+    const input =
+      SavedPlanParser.parseAWSSavedPlanInputfromIMicroCoachSavedPlan(savedPlan);
     const variables: UpdateMicroCoachSavedPlanMutationVariables = { input };
     const res = await this.mutateGraphQL<UpdateMicroCoachSavedPlanMutation>(
       updateMicroCoachSavedPlan,
       variables as unknown as GraphQLOptions,
     );
 
-    const savedPlan = res?.data?.updateMicroCoachSavedPlan;
-    return savedPlan
-      ? SavedPlanParser.parseIMicroCoachSavedPlanfromAWSSavedPlan(savedPlan)
+    const updatedSavedPlan = res?.data?.updateMicroCoachSavedPlan;
+    return updatedSavedPlan
+      ? SavedPlanParser.parseIMicroCoachSavedPlanfromAWSSavedPlan(
+          updatedSavedPlan,
+        )
       : null;
   }
 

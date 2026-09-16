@@ -1,6 +1,10 @@
 import { IUser, UserRole } from '../Models/IUser';
 import { AWSUser } from '../Models/AWS/AWSUser';
-import { UserRole as AWSUserRole } from '../../AWSAPI';
+import {
+  CreateMicroCoachUserInput,
+  UserRole as AWSUserRole,
+} from '../../AWSAPI';
+import { isNullOrUndefined } from '../util/util';
 
 /*
  * Boundary between the generated AWS shapes and the app's own `IUser`.
@@ -19,6 +23,19 @@ import { UserRole as AWSUserRole } from '../../AWSAPI';
  */
 export class UserParser {
   static parseIUserfromAWSUser(user: AWSUser): IUser {
+    if (
+      isNullOrUndefined(user.id) ||
+      isNullOrUndefined(user.cognitoId) ||
+      isNullOrUndefined(user.email) ||
+      isNullOrUndefined(user.role) ||
+      isNullOrUndefined(user.createdAt) ||
+      isNullOrUndefined(user.updatedAt)
+    ) {
+      throw new Error(
+        'User has null field for the attributes that are not nullable',
+      );
+    }
+
     const parsedUser: IUser = {
       id: user.id,
       cognitoId: user.cognitoId,
@@ -35,6 +52,26 @@ export class UserParser {
     // `password` is intentionally absent: transient signup state, never stored
     // on the User model and never returned by AppSync.
     return parsedUser;
+  }
+
+  static parseAWSUserInputfromIUser(user: IUser): CreateMicroCoachUserInput {
+    if (
+      isNullOrUndefined(user.cognitoId) ||
+      isNullOrUndefined(user.role)
+    ) {
+      throw new Error(
+        'User has null field for the attributes required to mutate it',
+      );
+    }
+
+    return {
+      id: user.id,
+      cognitoId: user.cognitoId,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: this.parseAWSRolefromUserRole(user.role),
+    };
   }
 
   static parseAWSRolefromUserRole(role: UserRole): AWSUserRole {

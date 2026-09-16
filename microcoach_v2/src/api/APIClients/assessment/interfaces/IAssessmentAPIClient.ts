@@ -1,7 +1,3 @@
-import {
-  CreateMicroCoachAssessmentInput,
-  UpdateMicroCoachAssessmentInput,
-} from "../../../../AWSAPI";
 import { IMicroCoachAssessment } from "../../../Models/IMicroCoachAssessment";
 
 export interface IAssessmentAPIClient {
@@ -9,10 +5,10 @@ export interface IAssessmentAPIClient {
   getAssessmentsByClassId(classId: string): Promise<IMicroCoachAssessment[]>;
   getAssessmentsBySessionId(sessionId: string): Promise<IMicroCoachAssessment[]>;
   createAssessment(
-    input: CreateMicroCoachAssessmentInput,
+    assessment: IMicroCoachAssessment,
   ): Promise<IMicroCoachAssessment | null>;
   updateAssessment(
-    input: UpdateMicroCoachAssessmentInput,
+    assessment: IMicroCoachAssessment,
   ): Promise<IMicroCoachAssessment | null>;
   deleteAssessment(id: string): Promise<IMicroCoachAssessment | null>;
 }

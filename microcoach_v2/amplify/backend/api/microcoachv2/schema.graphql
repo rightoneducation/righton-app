@@ -128,7 +128,7 @@ type MicroCoachMisconception @model @auth(rules: [{ allow: private }]) {
   id: ID!
   sessionId: ID! @index(name: "bySession")
   classId: ID! @index(name: "byClass")
-  activities: [MicroCoachActivity]
+  activity: [MicroCoachActivity]
     @hasMany(indexName: "byMisconception", fields: ["id"])
 
   rank: Int!

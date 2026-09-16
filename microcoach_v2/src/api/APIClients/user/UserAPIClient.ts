@@ -3,7 +3,6 @@ import { IUserAPIClient } from './interfaces/IUserAPIClient';
 import { IUser, UserRole } from '../../Models/IUser';
 import { UserParser } from '../../Parsers/UserParser';
 import {
-  CreateMicroCoachUserInput,
   CreateMicroCoachUserMutation,
   CreateMicroCoachUserMutationVariables,
   UpdateMicroCoachUserInput,
@@ -17,7 +16,6 @@ import {
   UsersByEmailQueryVariables,
   UsersByRoleQuery,
   UsersByRoleQueryVariables,
-  UserRole as AWSUserRole,
 } from '../../../AWSAPI';
 import {
   createMicroCoachUser,
@@ -48,7 +46,8 @@ export const userProfileLocalStorage = 'microcoach_userprofile';
 // touch every client in the package.
 export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
 
-  async createUser(input: CreateMicroCoachUserInput): Promise<IUser | null> {
+  async createUser(user: IUser): Promise<IUser | null> {
+    const input = UserParser.parseAWSUserInputfromIUser(user);
     const variables: CreateMicroCoachUserMutationVariables = { input };
     const res = await this.callGraphQL<CreateMicroCoachUserMutation>(
       createMicroCoachUser,
@@ -141,31 +140,6 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
     localStorage.removeItem(userProfileLocalStorage);
   }
 
-  // Builds the create mutation's input field by field rather than spreading an
-  // `IUser`: the profile carries a transient `password` that isn't on the User
-  // model, and AppSync rejects unknown input fields.
-  //
-  // `role` is fixed at MEMBER (the wire spelling of the app's TEACHER) and
-  // never read off the profile — promotion to ADMIN is an admin-side action,
-  // not something the signup form gets to post.
-  //
-  // `classes` is absent on purpose: it is a @hasMany relation, so it is not a
-  // field on CreateUserInput at all. Class names collected by the wizard are
-  // not persisted yet — they would need their own Class rows keyed by userId.
-  private static buildCreateUserInput(
-    cognitoId: string,
-    email: string,
-    profile: IUser,
-  ): CreateMicroCoachUserInput {
-    return {
-      cognitoId,
-      email,
-      firstName: profile.firstName,
-      lastName: profile.lastName,
-      role: AWSUserRole.MEMBER,
-    };
-  }
-
   // ── Email / password login ───────────────────────────────────────────────
   async loginAndRetrieveUserProfile(
     email: string,
@@ -204,7 +178,11 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
     const session = await this.auth.getCurrentSession();
     const cognitoId = session.userSub ?? '';
     const created = await this.createUser(
-      UserAPIClient.buildCreateUserInput(cognitoId, profile.email, profile),
+      {
+        ...profile,
+        cognitoId,
+        role: UserRole.TEACHER,
+      },
     );
     // The Cognito user exists by now, so a null here means the row didn't land:
     // signed in with no profile to render. Fail loudly rather than hand the
@@ -225,7 +203,12 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
     // grant, so calling it unconditionally logs a 400 on every Google signup.
     const email = profile.email || (await this.auth.getUserEmail()) || '';
     const created = await this.createUser(
-      UserAPIClient.buildCreateUserInput(cognitoId, email, profile),
+      {
+        ...profile,
+        cognitoId,
+        email,
+        role: UserRole.TEACHER,
+      },
     );
     if (!created) throw new Error('googleSignUp: createUser returned no user');
     this.setLocalUserProfile(created);

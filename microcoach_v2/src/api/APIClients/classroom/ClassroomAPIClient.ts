@@ -1,5 +1,4 @@
 import {
-  CreateMicroCoachClassroomInput,
   CreateMicroCoachClassroomMutation,
   CreateMicroCoachClassroomMutationVariables,
   DeleteMicroCoachClassroomMutation,
@@ -8,7 +7,6 @@ import {
   GetMicroCoachClassroomQueryVariables,
   MicroCoachClassroomsByUserIdQuery,
   MicroCoachClassroomsByUserIdQueryVariables,
-  UpdateMicroCoachClassroomInput,
   UpdateMicroCoachClassroomMutation,
   UpdateMicroCoachClassroomMutationVariables,
 } from "../../../AWSAPI";
@@ -63,32 +61,40 @@ export class ClassroomAPIClient
   }
 
   async createClassroom(
-    input: CreateMicroCoachClassroomInput,
+    classroom: IMicroCoachClassroom,
   ): Promise<IMicroCoachClassroom | null> {
+    const input =
+      ClassroomParser.parseAWSClassroomInputfromIMicroCoachClassroom(classroom);
     const variables: CreateMicroCoachClassroomMutationVariables = { input };
     const res = await this.mutateGraphQL<CreateMicroCoachClassroomMutation>(
       createMicroCoachClassroom,
       variables as unknown as GraphQLOptions,
     );
 
-    const classroom = res?.data?.createMicroCoachClassroom;
-    return classroom
-      ? ClassroomParser.parseIMicroCoachClassroomfromAWSClassroom(classroom)
+    const createdClassroom = res?.data?.createMicroCoachClassroom;
+    return createdClassroom
+      ? ClassroomParser.parseIMicroCoachClassroomfromAWSClassroom(
+          createdClassroom,
+        )
       : null;
   }
 
   async updateClassroom(
-    input: UpdateMicroCoachClassroomInput,
+    classroom: IMicroCoachClassroom,
   ): Promise<IMicroCoachClassroom | null> {
+    const input =
+      ClassroomParser.parseAWSClassroomInputfromIMicroCoachClassroom(classroom);
     const variables: UpdateMicroCoachClassroomMutationVariables = { input };
     const res = await this.mutateGraphQL<UpdateMicroCoachClassroomMutation>(
       updateMicroCoachClassroom,
       variables as unknown as GraphQLOptions,
     );
 
-    const classroom = res?.data?.updateMicroCoachClassroom;
-    return classroom
-      ? ClassroomParser.parseIMicroCoachClassroomfromAWSClassroom(classroom)
+    const updatedClassroom = res?.data?.updateMicroCoachClassroom;
+    return updatedClassroom
+      ? ClassroomParser.parseIMicroCoachClassroomfromAWSClassroom(
+          updatedClassroom,
+        )
       : null;
   }
 

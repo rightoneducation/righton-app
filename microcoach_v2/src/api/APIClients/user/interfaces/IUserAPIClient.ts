@@ -1,11 +1,10 @@
 import {
-  CreateMicroCoachUserInput,
   UpdateMicroCoachUserInput,
 } from "../../../../AWSAPI";
 import { IUser, UserRole } from "../../../Models/IUser";
 
 export interface IUserAPIClient{
-    createUser(input: CreateMicroCoachUserInput): Promise<IUser | null>,
+    createUser(user: IUser): Promise<IUser | null>,
     updateUser(input: UpdateMicroCoachUserInput): Promise<IUser | null>,
     getUser(id: string): Promise<IUser | null>,
     getUserByCognitoId(cognitoId: string): Promise<IUser | null>,

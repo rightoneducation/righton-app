@@ -1,7 +1,5 @@
 import {
   ContextDataType,
-  CreateContextDataInput,
-  UpdateContextDataInput,
 } from "../../../../AWSAPI";
 import { IMicroCoachContextData } from "../../../Models/IMicroCoachContextData";
 
@@ -12,10 +10,10 @@ export interface IContextDataAPIClient {
     type: ContextDataType,
   ): Promise<IMicroCoachContextData[]>;
   createContextData(
-    input: CreateContextDataInput,
+    contextData: IMicroCoachContextData,
   ): Promise<IMicroCoachContextData | null>;
   updateContextData(
-    input: UpdateContextDataInput,
+    contextData: IMicroCoachContextData,
   ): Promise<IMicroCoachContextData | null>;
   deleteContextData(id: string): Promise<IMicroCoachContextData | null>;
 }

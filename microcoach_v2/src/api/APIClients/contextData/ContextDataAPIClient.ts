@@ -1,6 +1,5 @@
 import {
   ContextDataType,
-  CreateContextDataInput,
   CreateContextDataMutation,
   CreateContextDataMutationVariables,
   DeleteContextDataMutation,
@@ -9,7 +8,6 @@ import {
   GetContextDataQueryVariables,
   ListContextDataQuery,
   ListContextDataQueryVariables,
-  UpdateContextDataInput,
   UpdateContextDataMutation,
   UpdateContextDataMutationVariables,
 } from "../../../AWSAPI";
@@ -65,35 +63,43 @@ export class ContextDataAPIClient
   }
 
   async createContextData(
-    input: CreateContextDataInput,
+    contextData: IMicroCoachContextData,
   ): Promise<IMicroCoachContextData | null> {
+    const input =
+      ContextDataParser.parseAWSContextDataInputfromIMicroCoachContextData(
+        contextData,
+      );
     const variables: CreateContextDataMutationVariables = { input };
     const res = await this.mutateGraphQL<CreateContextDataMutation>(
       createContextData,
       variables as unknown as GraphQLOptions,
     );
 
-    const contextData = res?.data?.createContextData;
-    return contextData
+    const createdContextData = res?.data?.createContextData;
+    return createdContextData
       ? ContextDataParser.parseIMicroCoachContextDatafromAWSContextData(
-          contextData,
+          createdContextData,
         )
       : null;
   }
 
   async updateContextData(
-    input: UpdateContextDataInput,
+    contextData: IMicroCoachContextData,
   ): Promise<IMicroCoachContextData | null> {
+    const input =
+      ContextDataParser.parseAWSContextDataInputfromIMicroCoachContextData(
+        contextData,
+      );
     const variables: UpdateContextDataMutationVariables = { input };
     const res = await this.mutateGraphQL<UpdateContextDataMutation>(
       updateContextData,
       variables as unknown as GraphQLOptions,
     );
 
-    const contextData = res?.data?.updateContextData;
-    return contextData
+    const updatedContextData = res?.data?.updateContextData;
+    return updatedContextData
       ? ContextDataParser.parseIMicroCoachContextDatafromAWSContextData(
-          contextData,
+          updatedContextData,
         )
       : null;
   }

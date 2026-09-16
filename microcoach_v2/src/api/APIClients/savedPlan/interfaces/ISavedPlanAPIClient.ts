@@ -1,7 +1,3 @@
-import {
-  CreateMicroCoachSavedPlanInput,
-  UpdateMicroCoachSavedPlanInput,
-} from "../../../../AWSAPI";
 import { IMicroCoachSavedPlan } from "../../../Models/IMicroCoachSavedPlan";
 
 export interface ISavedPlanAPIClient {
@@ -9,10 +5,10 @@ export interface ISavedPlanAPIClient {
   getSavedPlansByClassId(classId: string): Promise<IMicroCoachSavedPlan[]>;
   getSavedPlansBySessionId(sessionId: string): Promise<IMicroCoachSavedPlan[]>;
   createSavedPlan(
-    input: CreateMicroCoachSavedPlanInput,
+    savedPlan: IMicroCoachSavedPlan,
   ): Promise<IMicroCoachSavedPlan | null>;
   updateSavedPlan(
-    input: UpdateMicroCoachSavedPlanInput,
+    savedPlan: IMicroCoachSavedPlan,
   ): Promise<IMicroCoachSavedPlan | null>;
   deleteSavedPlan(id: string): Promise<IMicroCoachSavedPlan | null>;
 }
