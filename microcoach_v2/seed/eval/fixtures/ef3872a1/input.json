@@ -346,7 +346,7 @@
               "content": "The graph shows a dashed line with a steep negative slope, crossing the y-axis at approximately (0, 3). The region on one side of the line is shaded, and the dashed boundary indicates a strict inequality. However, the boundary line corresponds to the equation y = -6x + 3, which reflects an incorrect interpretation of the inequality. This error occurs when a student directly treats the coefficients in -6x + 3y > 12 as if the equation were already in slope-intercept form. The inequality must first be solved for y, which gives y > 2x + 4. Because this graph uses the line y = -6x + 3 instead of the correct boundary line, it does not represent the given inequality."
             }
           ],
-          "questionText": "Which graph below represents the inequality"
+          "questionText": "Which graph below represents the inequality -6x+3y>12?"
         },
         {
           "ccssStandard": "",
@@ -360,25 +360,25 @@
             {
               "letter": "A",
               "isCorrect": true,
-              "content": "There is no solution."
+              "content": "x=6/17"
             },
             {
               "letter": "B",
               "isCorrect": false,
-              "content": null
+              "content": "x=23/6"
             },
             {
               "letter": "C",
               "isCorrect": false,
-              "content": null
+              "content": "x=156/117"
             },
             {
               "letter": "D",
               "isCorrect": false,
-              "content": null
+              "content": "There is no solution."
             }
           ],
-          "questionText": "Solve the equation for x:"
+          "questionText": "Solve the equation for x: 1/3(15-10x)=4-1/2x"
         },
         {
           "ccssStandard": "",
@@ -392,25 +392,25 @@
             {
               "letter": "A",
               "isCorrect": false,
-              "content": null
+              "content": "(0,-5)"
             },
             {
               "letter": "B",
               "isCorrect": false,
-              "content": null
+              "content": "(-5,0)"
             },
             {
               "letter": "C",
               "isCorrect": false,
-              "content": null
+              "content": "(0,5)"
             },
             {
               "letter": "D",
               "isCorrect": true,
-              "content": null
+              "content": "(5,0)"
             }
           ],
-          "questionText": "Solve the system of equations below.\n4x + 2y = 20\n-4x + 5y = -20"
+          "questionText": "Solve the system of equations below. 4x + 2y = 20 -4x + 5y = -20"
         },
         {
           "ccssStandard": "",
@@ -424,25 +424,25 @@
             {
               "letter": "A",
               "isCorrect": false,
-              "content": null
+              "content": "(0,4)"
             },
             {
               "letter": "B",
               "isCorrect": true,
-              "content": null
+              "content": "(-4,-2)"
             },
             {
               "letter": "C",
               "isCorrect": false,
-              "content": null
+              "content": "(1,-6)"
             },
             {
               "letter": "D",
               "isCorrect": false,
-              "content": null
+              "content": "(7,0)"
             }
           ],
-          "questionText": "y >= x - 5\ny < -2x + 4\nWhich of the following is a solution to the system of linear inequalities above?"
+          "questionText": "y >= x - 5 y < -2x + 4 Which of the following is a solution to the system of linear inequalities above?"
         },
         {
           "ccssStandard": "",
@@ -474,7 +474,7 @@
               "content": "Graph D: Two boundary lines: a solid line for y + x = 2 and a solid line for y = 3x − 2, with the solution region shaded to the upper-left. Incorrect on two counts: y + x > 2 requires a dashed boundary line, and the shading is in the wrong region."
             }
           ],
-          "questionText": "y + x > 2\ny <= 3x -2\nWhich graph shows the solution of the set of inequalities above?"
+          "questionText": "y + x > 2 y <= 3x -2 Which graph shows the solution of the set of inequalities above?"
         },
         {
           "ccssStandard": "",
@@ -488,25 +488,25 @@
             {
               "letter": "A",
               "isCorrect": true,
-              "content": null
+              "content": "x=-32,y=-19"
             },
             {
               "letter": "B",
               "isCorrect": false,
-              "content": null
+              "content": "x=8,y=1"
             },
             {
               "letter": "C",
               "isCorrect": false,
-              "content": null
+              "content": "x=-32"
             },
             {
               "letter": "D",
               "isCorrect": false,
-              "content": null
+              "content": "(-32,-58)"
             }
           ],
-          "questionText": "Solve the system below algebraically."
+          "questionText": "Solve the system below algebraically. { y = 3/4x + 5 ; y = 0.5x − 3 }"
         }
       ],
       "classroomId": "5fc70102-d8b6-41b1-9c65-a97eb88b28d4",
