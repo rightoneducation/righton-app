@@ -132,7 +132,10 @@ function buildSessionSection({ assessmentType, classroom, ppq, wrongAnswerDist, 
   needs.forEach((n, i) => {
     const r = n.rationale ?? {};
     const need = n.instructionalNeed ?? {};
-    out.push('', `### Need ${i + 1}: ${n.title}${r.priorityRank != null ? `  (priority #${r.priorityRank})` : ''}`);
+    // The heading carries only the title: it is the join key the model echoes back,
+    // so nothing else may share the line.
+    out.push('', `### Need ${i + 1}: ${n.title}`);
+    if (r.priorityRank != null) out.push(`- priority: #${r.priorityRank}`);
     out.push(`- standard: ${n.ccssStandard ?? 'unknown'}`);
     if (n.description) out.push(`- error: ${n.description}`);
     if (n.learningScienceConnection) out.push(`- learning science: ${n.learningScienceConnection}`);

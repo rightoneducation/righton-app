@@ -826,6 +826,9 @@ async function processClassroom(
   //    prerequisite gaps, forward impact, recurrence) is still done here, as the
   //    rationale for each need; only the need and its rationale come back.
   let misconceptions: any[] = [];
+  // Misconceptions the need model returned nothing for — recorded in the manifest
+  // because such an item reaches the output with no rank and no templates.
+  let instructionalNeedsMissing: Array<{ title: string; position: number }> = [];
   if (!genMisconceptions.length) {
     console.log('  Instructional need: no misconceptions from 4c — skipping');
   } else {
@@ -854,7 +857,12 @@ async function processClassroom(
     const n = needOut?.needs?.[i]?.title === m.title ? needOut.needs[i] : needByTitle.get(String(m.title ?? '').trim());
     return n ? { ...m, instructionalNeed: n.instructionalNeed, rationale: n.rationale } : m;
   });
-  console.log(` ✓  need on ${misconceptions.filter((m: any) => m.instructionalNeed).length}/${misconceptions.length}${needOut?.rejected?.length ? ` (${needOut.rejected.length} rejected)` : ''}`);
+  console.log(` ✓  need on ${misconceptions.filter((m: any) => m.instructionalNeed).length}/${misconceptions.length}${needOut?.rejected?.length ? ` (${needOut.rejected.length} rejected)` : ''}${needOut?.missing?.length ? ` (${needOut.missing.length} missing)` : ''}`);
+  instructionalNeedsMissing = needOut?.missing ?? [];
+  if (instructionalNeedsMissing.length) {
+    // A misconception with no need has no rank and no templates; it must not pass silently.
+    console.warn(`  ⚠ no instructional need returned for: ${instructionalNeedsMissing.map((x) => `#${x.position} ${x.title}`).join('; ')}`);
+  }
   }
   const instructionalNeedsGenerated = misconceptions.filter((m: any) => m.instructionalNeed?.text?.trim()).length;
 
@@ -1071,6 +1079,7 @@ async function processClassroom(
     misconceptionCount: misconceptions.length,
     activityCount: activitiesPerGroup.reduce((n: number, g: any[]) => n + g.length, 0),
     instructionalNeedsGenerated,
+    instructionalNeedsMissing,
     stoppedAfter: ANALYSIS_ONLY ? 'analysis' : null,
     // Diagnostic, not a correction: when the analysis stage emits a code the graph
     // does not carry, the generation stage silently loses all graph context.

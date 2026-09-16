@@ -27,7 +27,7 @@
  * Output: { ok: true, needs: [{ title, wrongAnswers, instructionalNeed: { text,
  * teacherRole, evidenceUsed }, rationale: { priorityRank, prevalence,
  * confidenceSignal, conceptualSeverity, prerequisiteGaps, forwardImpact,
- * recurrence, whyThisNeed } }], rejected } — one per input misconception, matched
+ * recurrence, whyThisNeed } }], rejected, missing } — one per input misconception, matched
  * by position then exact title; an unmatched need is dropped and counted. On
  * failure: { ok: false, error: { message } }.
  */
@@ -323,7 +323,12 @@ function validateOutput(structured, misconceptions) {
       },
     };
   });
-  return { needs, rejected };
+  // Input misconceptions the model returned nothing for. Distinct from `rejected`
+  // (things it returned that could not be used): an omission is silent otherwise.
+  const missing = misconceptions
+    .map((m, i) => ({ title: m.title, position: i + 1 }))
+    .filter((_, i) => !seen.has(i));
+  return { needs, rejected, missing };
 }
 
 // One log event, readable as a block in CloudWatch.
@@ -402,16 +407,18 @@ export const handler = async (event) => {
     const raw = completion.choices[0]?.message?.content;
     if (!raw) throw new Error('Empty completion content');
     const structured = NeedResponse.parse(JSON.parse(raw));
-    const { needs, rejected } = validateOutput(structured, misconceptions);
+    const { needs, rejected, missing } = validateOutput(structured, misconceptions);
 
     console.log(formatNeedLog(needs));
-    console.log(`[microcoachv2LLMGenInstrNeed] ${needs.length}/${misconceptions.length} needs, ${rejected.length} rejected`);
+    console.log(`[microcoachv2LLMGenInstrNeed] ${needs.length}/${misconceptions.length} needs, ${rejected.length} rejected, ${missing.length} missing`);
     if (rejected.length) console.warn('[microcoachv2LLMGenInstrNeed] rejected:', JSON.stringify(rejected));
+    if (missing.length) console.warn('[microcoachv2LLMGenInstrNeed] no need returned for:', JSON.stringify(missing));
 
     return JSON.stringify({
       ok: true,
       needs,
       rejected,
+      missing,
       ...(wantTrace && {
         _trace: {
           resolvedPrompt: userContent,

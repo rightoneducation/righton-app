@@ -115,6 +115,13 @@ function buildPrompt(questions, context, learningScienceData) {
     This set of questions is grouped per CCSS. Please integrate the Learning Science data into your analysis when generating the misconceptions. There should be
     some tangible connection to the missteps contained in the wrong answers, and what the CCSS is targeting.
 
+    A misconception is a reasoning pattern, not an answer option.
+    - Merge: when two wrong options — on the same question or different questions — are produced by the same reasoning, they are ONE misconception. List both under its wrongAnswers. Do not create a separate misconception for each option.
+    - Keep separate: options that share a topic but come from different reasoning. "Forgot to find y" and "substituted into the wrong equation" are two misconceptions even though both are wrong answers to the same problem.
+    - Do not merge across questions just because the questions share a standard or a skill. Merge across questions only when the same error would produce the wrong option on each.
+    - One option may sit under two misconceptions only when its value is genuinely consistent with two different errors; say which reasoning each is.
+    - The misconception's description must name the reasoning in a way that explains every option listed under it. If it cannot, split.
+
     The final output will be the set of misconceptions that are being surfaced in the classroom. Export only JSON.
 
     ## Context
