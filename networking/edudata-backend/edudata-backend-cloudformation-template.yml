@@ -232,7 +232,7 @@ Resources:
       ExecutionRoleArn: !GetAtt ECSTaskExecutionRole.Arn
       ContainerDefinitions:
       - Name: "edudata-backend"
-        Image: "484006752749.dkr.ecr.us-east-1.amazonaws.com/edudata-backend:6.3.0"
+        Image: "484006752749.dkr.ecr.us-east-1.amazonaws.com/edudata-backend:6.6.10"
         Essential: true
         PortMappings:
         - ContainerPort: 3030
