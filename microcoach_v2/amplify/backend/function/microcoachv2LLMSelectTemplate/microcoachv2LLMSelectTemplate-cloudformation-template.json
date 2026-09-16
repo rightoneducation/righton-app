@@ -47,12 +47,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "microcoachv2LLMAnalysis",
+            "microcoachv2LLMSelectTemplate",
             {
               "Fn::Join": [
                 "",
                 [
-                  "microcoachv2LLMAnalysis",
+                  "microcoachv2LLMSelectTemplate",
                   "-",
                   {
                     "Ref": "env"
@@ -90,12 +90,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "microcoachv2LambdaRole42975a00",
+            "microcoachv2LambdaRole3c6059f6",
             {
               "Fn::Join": [
                 "",
                 [
-                  "microcoachv2LambdaRole42975a00",
+                  "microcoachv2LambdaRole3c6059f6",
                   "-",
                   {
                     "Ref": "env"

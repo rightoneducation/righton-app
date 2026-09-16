@@ -1,5 +1,6 @@
 import { IAuthAPIClient } from "../auth/interfaces/IAuthAPIClient";
 import { IUserAPIClient } from "../user/interfaces/IUserAPIClient";
+import { IPipelineRunAPIClient } from "../pipelineRun/interfaces/IPipelineRunAPIClient";
 
 export enum Environment {
   Staging = 'staging',
@@ -9,5 +10,6 @@ export enum Environment {
 
 export interface IAPIClients {
   auth: IAuthAPIClient,
-  user: IUserAPIClient
+  user: IUserAPIClient,
+  pipelineRun: IPipelineRunAPIClient // TEMPORARY — see MicroCoachPipelineRun
 }

@@ -19,6 +19,8 @@ import { useAuthResolver } from './hooks/useAuthActions';
 import { useUserState } from './hooks/useUserState';
 import { usePlanItems } from './hooks/usePlanItems';
 import AppSwitch from './switches/AppSwitch';
+import Preview from './pages/preview/Preview';
+import Preview2 from './pages/preview/Preview2';
 
 /**
  * Parent layout route. React Router keeps this element mounted across child
@@ -135,6 +137,14 @@ function App() {
               path="myplan"
               element={<AppSwitch currentScreen={ScreenType.MY_PLAN} />}
             />
+            {/*
+              Scratchpad for reviewing eval pipeline output. Deliberately not
+              routed through AppSwitch/AuthGuard — it reads the TEMPORARY
+              MicroCoachPipelineRun table over the API key and has nothing to
+              protect.
+            */}
+            <Route path="preview" element={<Preview />} />
+            <Route path="preview2" element={<Preview2 />} />
         </Route>,
       ),
     );

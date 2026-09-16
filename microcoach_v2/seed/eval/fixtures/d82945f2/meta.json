@@ -7,6 +7,15 @@
     ],
     "runMode": "CLI (yarn generate, AMPLIFY_ENV defaulted to dev)",
     "enrichedAt": "2026-08-12T11:40:01.007Z",
-    "enrichedFrom": "Classroom2/Session1/PPQ.docx"
+    "enrichedFrom": "Classroom2/Session1/PPQ.docx",
+    "optionContent": {
+      "sourceDocument": "microcoach/Data/Classroom1/Session1/PPQ.docx (identical across Classroom1-4)",
+      "sourceMd5": "961842e279b5577324feadf52062fc59",
+      "method": "questionText and answerChoices[].content extracted from the Exemplar section; equations linearised from OMML (mammoth drops them). Options are in exemplar order A-D, verified against the header-table key. Legacy answerChoices[].text (teacher Distractors column) removed.",
+      "notes": [
+        "Q11 system split at the second \"y=\" for readability; the OMML is one flat run."
+      ],
+      "repairedAt": "2026-09-16"
+    }
   }
 }

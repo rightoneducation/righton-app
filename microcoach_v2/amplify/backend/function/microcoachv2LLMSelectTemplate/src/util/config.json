@@ -1,0 +1,8 @@
+{
+  "selectTemplate": {
+    "description": "microcoachv2LLMSelectTemplate — for each instructional need from microcoachv2LLMGenInstrNeed, selects the top two activity templates from util/activityLibrary.json on instructional fit (misconception, response data, content, lesson context, template purpose), not on artifact type.",
+    "model": "gpt-5-mini",
+    "topN": 2,
+    "library": "util/activityLibrary.json"
+  }
+}

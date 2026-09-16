@@ -17,6 +17,7 @@ import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { RunCapture, NoopCapture, Capture } from '../eval/scripts/util/exportEvalOutputs';
 import { loadFixture, normalizeRawGraphItems, Fixture } from '../eval/scripts/util/importEvalFixtures';
 import { maskQuery } from '../eval/scripts/util/maskQuery';
+import { dedupeGraph } from '../eval/scripts/util/dedupeGraph';
 import { MaskOptionEnum, KgQueryType } from '../eval/types';
 import { computeMisconceptionReach } from '../eval/scripts/util/computeReach';
 
@@ -25,12 +26,14 @@ const AMPLIFY_ENV = process.env.AMPLIFY_ENV ?? 'dev';
 // `--fixture <id>` is the single switch between the two modes this script runs in:
 //
 //   EVAL MODE  (--fixture present)  read a frozen session from disk, write the run
-//                                   directory under eval/runs/, never touch the DB
+//                                   directory under eval/runs/, and publish it to the
+//                                   TEMPORARY MicroCoachPipelineRun table for /preview.
+//                                   Never touches session/classroom rows.
 //   CLI MODE   (no --fixture)       read from DynamoDB, write results back to it,
 //                                   and produce no eval artifacts at all
 //
 // Keeping these on one flag means a CLI run cannot leave run directories behind that
-// look like eval output, and an eval run cannot write to the database.
+// look like eval output, and an eval run cannot write to session or classroom rows.
 const FIXTURE_ARG = (() => {
   const i = process.argv.indexOf('--fixture');
   return i > -1 && process.argv[i + 1] ? process.argv[i + 1] : null;
@@ -53,6 +56,16 @@ const CONDITION: MaskOptionEnum = (() => {
   }
   return MaskOptionEnum[key];
 })();
+// Optional `--version` tag, recorded in the run id and manifest so runs can be
+// grouped for comparison. Purely a label: it changes nothing the pipeline does,
+// and in particular does NOT pin prompt config — the Lambdas import their config
+// statically at deploy time.
+const VERSION: string | undefined = (() => {
+  const i = process.argv.indexOf('--version');
+  const raw = i > -1 && process.argv[i + 1] ? process.argv[i + 1] : '';
+  return raw === '' ? undefined : raw;
+})();
+
 // Ask the Lambdas to echo `_trace` (resolved prompt, model, token usage, sub-calls).
 // Additive and inert when false, so CLI runs are unaffected.
 const WANT_TRACE = EVAL_MODE;
@@ -64,6 +77,14 @@ const GRAPH_SOURCE: 'fixture' | 'live' = (() => {
   const v = i > -1 && process.argv[i + 1] ? process.argv[i + 1] : null;
   return v === 'live' ? 'live' : 'fixture';
 })();
+
+// `--analysis-only` stops after the misconception analysis: no instructional
+// needs, no planner, no activity generation. output.json still carries every
+// misconception-level field (reach counts, prerequisite gaps) with empty
+// moveOptions, so /preview and scoreMisconception work unchanged. Recorded in
+// the manifest as `stoppedAfter` so a truncated run cannot be compared blind
+// against a full one.
+const ANALYSIS_ONLY = process.argv.includes('--analysis-only');
 
 async function invokeLambda(functionName: string, payload: unknown): Promise<any> {
   const client = new LambdaClient({ region: process.env.AWS_REGION ?? 'us-east-1' });
@@ -246,6 +267,16 @@ const UPDATE_CLASSROOM_WEEK = /* GraphQL */ `
   }
 `;
 
+// TEMPORARY — one row per eval run so /preview can load it from the backend.
+// Pairs with the MicroCoachPipelineRun block at the bottom of schema.graphql.
+const CREATE_PIPELINE_RUN = /* GraphQL */ `
+  mutation CreateMicroCoachPipelineRun($input: CreateMicroCoachPipelineRunInput!) {
+    createMicroCoachPipelineRun(input: $input) {
+      id
+    }
+  }
+`;
+
 // ── Confidence stats aggregator ───────────────────────────────────────────────
 
 function computeConfidenceStats(studentResponses: any[], questions: any[]): any[] {
@@ -287,14 +318,6 @@ function computeConfidenceStats(studentResponses: any[], questions: any[]): any[
 }
 
 // ── PPQ enrichment helpers ────────────────────────────────────────────────────
-
-/** Extract question numbers from a string like "PPQ Q3, Q5" or "Q1 and Q4" → [1, 3, 4, 5] */
-function parseQuestionNumbers(source: string): number[] {
-  const matches = (source ?? '').matchAll(/Q(\d+)/gi);
-  const nums = new Set<number>();
-  for (const m of matches) nums.add(parseInt(m[1], 10));
-  return [...nums].sort((a, b) => a - b);
-}
 
 /** Per question, count occurrences of each wrong response string. */
 function computeWrongAnswerDist(studentResponses: any[]): Record<number, Record<string, number>> {
@@ -431,12 +454,16 @@ function buildNextSteps(
       (item: any) => normalize(item.code) === normalize(m.ccssStandard)
     );
 
-    const prerequisiteGaps = m.prerequisiteGapCodes?.length
-      ? m.prerequisiteGapCodes.map((code: string) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
+    // The need stage selects the specific prerequisite / downstream codes in its
+    // rationale; the graph's full lists are the fallback when it names none.
+    const gapCodes: string[] = m.rationale?.prerequisiteGaps ?? [];
+    const prerequisiteGaps = gapCodes.length
+      ? gapCodes.map((code: string) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
       : (frameworkItem?.prerequisiteStandards ?? []).map((r: any) => ({ standard: r.code, description: r.description }));
 
-    const impactedObjectives = m.impactedObjectiveCodes?.length
-      ? m.impactedObjectiveCodes.map((code: string) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
+    const impactCodes: string[] = m.rationale?.forwardImpact ?? [];
+    const impactedObjectives = impactCodes.length
+      ? impactCodes.map((code: string) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
       : (frameworkItem?.futureDependentStandards ?? []).map((r: any) => ({ standard: r.code, description: r.description }));
 
     const reach = computeMisconceptionReach(m.wrongAnswers, studentResponses);
@@ -452,17 +479,25 @@ function buildNextSteps(
       // rather than overwritten by it — the gap between the two is a calibration
       // signal worth scoring.
       frequency: m.frequency,
-      // Counted from the response rows via the ingest-time option attribution.
-      // null (not 0) when there was no attribution to count from.
+      // Counted from the response rows via the misconception's wrong-answer refs.
+      // null (not 0) when there were no refs to count from.
       studentCount: reach.studentCount,
       studentPercent: reach.studentPercent,
       wrongAnswers: m.wrongAnswers ?? [],
       linkStatus: reach.linkStatus,
       isCore: m.isCore ?? false,
-      occurrence: m.occurrence,
+      occurrence: m.occurrence ?? m.rationale?.recurrence ?? null,
       example: m.example ?? null,
       misconceptionSummary: m.description,
+      learningScienceConnection: m.learningScienceConnection ?? null,
       aiReasoning: m.aiReasoning ?? null,
+      // From the need stage (step 5): the need itself and the analysis behind it.
+      instructionalNeed: m.instructionalNeed ?? null,
+      rationale: m.rationale ?? null,
+      // From the template-selection stage (step 5d): top two activity templates
+      // for the need, with rationale.
+      selectedTemplates: m.selectedTemplates ?? null,
+      priorityRank: m.rationale?.priorityRank ?? null,
       successIndicators: m.successIndicators ?? [],
       ccssStandards: {
         targetObjective: { standard: m.ccssStandard, description: standardsDescMap.get(m.ccssStandard) ?? frameworkItem?.description ?? '', learningComponents: (frameworkItem?.learningComponents ?? []).map((c: any) => c.description).filter(Boolean) },
@@ -613,6 +648,7 @@ async function processClassroom(
         sessionLabel: currentStub.sessionLabel ?? `W${currentStub.weekNumber}`,
         amplifyEnv: AMPLIFY_ENV,
         condition: CONDITION,
+        version: VERSION,
       })
     : new NoopCapture();
 
@@ -698,19 +734,107 @@ async function processClassroom(
   }
   const wrongAnswerDist = computeWrongAnswerDist(studentResponses);
 
-  // 5. Misconception analysis
+  // The snapshot is the unmasked, undeduplicated payload and stays that way —
+  // graph-derived rubric rows score against it, so trimming it here would make a
+  // withheld condition score zero by construction. `injected` is what every prompt
+  // from here on receives, GenMisconception included, so the ablation conditions
+  // apply to it too.
   //
-  // The snapshot is the unmasked payload and stays that way — graph-derived rubric
-  // rows score against it, so masking it here would make a withheld condition score
-  // zero by construction. `injected` is what the prompts actually receive.
+  // Dedup runs before masking: the graph repeats the same LVN factors and
+  // strategies (by id) under every standard in the session, and each prompt that
+  // takes the full payload paid for every copy. Later occurrences become
+  // `seeAbove` stubs; the formatters render those as one line.
   capture.writeSnapshot(learningScienceData);
+  const { standards: dedupedStandards, removed: graphDedup } = dedupeGraph(learningScienceData.standards);
+  console.log(
+    `  [LS] dedup: ${graphDedup.factors} factors, ${graphDedup.strategies} strategies, ` +
+    `${graphDedup.learnerModels} learner models, ${graphDedup.interactsWith} interactsWith collapsed · ` +
+    `${Math.round(graphDedup.bytesBefore / 1024)} KB → ${Math.round(graphDedup.bytesAfter / 1024)} KB`,
+  );
   const injected = {
-    standards: learningScienceData.standards.map((s: KgQueryType) => maskQuery(s, CONDITION)),
+    standards: dedupedStandards.map((s: KgQueryType) => maskQuery(s, CONDITION)),
   };
   capture.writeInjected(injected);
 
-  process.stdout.write(`  Misconception analysis...`);
-  const analysisInput = {
+  // 4c. Misconception extraction from the questions themselves. The pilot documents
+  //     carried a teacher-authored Distractors column naming the error behind each
+  //     wrong option; new documents do not, so the mapping has to be generated. Its
+  //     output is the misconception list every later stage works from. Only the
+  //     eval fixtures carry `answerChoices` today (GET_SESSION does not select it),
+  //     so CLI mode produces no misconceptions and stops after this step.
+  let genMisconceptions: any[] = [];
+  const withChoices = (augmentedPpq?.questions ?? []).filter((q: any) => (q.answerChoices ?? []).length);
+  if (withChoices.length) {
+    const genInput = {
+      questions: JSON.stringify(withChoices.map((q: any) => ({
+        questionNumber: q.questionNumber,
+        // Per-question codes are blank in the pilot fixtures; fall back to the session's.
+        ccssStandard: q.ccssStandard || allCcss.join(', '),
+        correctAnswer: q.correctAnswer ?? null,
+        classPercentCorrect: q.classPercentCorrect ?? null,
+        questionText: q.questionText ?? null,
+        answerChoices: (q.answerChoices ?? []).map((o: any) => ({
+          letter: o.letter,
+          isCorrect: o.isCorrect ?? false,
+          content: o.content ?? null,
+          studentCount: wrongAnswerDist[q.questionNumber]?.[String(o.letter).toUpperCase()] ?? 0,
+        })),
+      }))),
+      context: JSON.stringify({ subject: classroom.subject, ccssStandards: allCcss }),
+      learningScienceData: JSON.stringify(injected),
+      trace: WANT_TRACE,
+    };
+    process.stdout.write(`  Misconception extraction over ${withChoices.length} question(s)...`);
+    try {
+      const raw = await invokeLambda(`microcoachv2LLMGenMisconception-${AMPLIFY_ENV}`, { input: genInput });
+      const parsed = parseJson(raw);
+      capture.recordCall('gen-misconception', genInput, parsed);
+      if (parsed?.ok === false) {
+        console.log(` ✗ ${parsed?.error?.message ?? 'unknown error'}`);
+      } else {
+        genMisconceptions = parsed?.misconceptions ?? [];
+        console.log(` ✓  ${genMisconceptions.length} misconception(s)`);
+      }
+    } catch (err) {
+      console.log(` ✗ ${err}`);
+    }
+  }
+
+  // Reach is counted here from the response rows, not estimated by a model, and
+  // handed to the need stage as a given. `ccssStandard` is derived from the linked
+  // questions so GenMisconception's schema stays clean: the most frequent per-
+  // question code, falling back to the session's codes where those are blank (as
+  // they are in the pilot fixtures).
+  const questionStandard = new Map<number, string>(
+    (ppq?.questions ?? []).map((q: any) => [q.questionNumber, q.ccssStandard || '']),
+  );
+  genMisconceptions = genMisconceptions.map((m: any) => {
+    const reach = computeMisconceptionReach(m.wrongAnswers, studentResponses);
+    const votes = new Map<string, number>();
+    for (const w of m.wrongAnswers ?? []) {
+      const code = questionStandard.get(w.questionNumber);
+      if (code) votes.set(code, (votes.get(code) ?? 0) + 1);
+    }
+    const ranked = [...votes.entries()].sort((a, b) => b[1] - a[1]);
+    if (ranked.length > 1) console.log(`  [4c] "${m.title}" spans ${ranked.map(([c, n]) => `${c}×${n}`).join(', ')} — using ${ranked[0][0]}`);
+    const ccssStandard = ranked[0]?.[0] ?? allCcss[0] ?? null;
+    return { ...m, ccssStandard, studentCount: reach.studentCount, studentPercent: reach.studentPercent };
+  });
+
+  // 5. Instructional need — one call over the misconceptions from 4c. The analysis
+  //    the former microcoachv2LLMAnalysis did (prevalence, confidence, severity,
+  //    prerequisite gaps, forward impact, recurrence) is still done here, as the
+  //    rationale for each need; only the need and its rationale come back.
+  let misconceptions: any[] = [];
+  // Misconceptions the need model returned nothing for — recorded in the manifest
+  // because such an item reaches the output with no rank and no templates.
+  let instructionalNeedsMissing: Array<{ title: string; position: number }> = [];
+  if (!genMisconceptions.length) {
+    console.log('  Instructional need: no misconceptions from 4c — skipping');
+  } else {
+  process.stdout.write(`  Instructional need for ${genMisconceptions.length} misconception(s)...`);
+  const needInput = {
+    misconceptions: JSON.stringify(genMisconceptions),
     classroomData: JSON.stringify({
       classroom,
       currentSession,
@@ -721,13 +845,63 @@ async function processClassroom(
     learningScienceData: JSON.stringify(injected),
     trace: WANT_TRACE,
   };
-  const analysisResult = await invokeLambda(`microcoachv2LLMAnalysis-${AMPLIFY_ENV}`, {
-    input: analysisInput,
+  const needResult = await invokeLambda(`microcoachv2LLMGenInstrNeed-${AMPLIFY_ENV}`, { input: needInput });
+  const needOut = parseJson(needResult);
+  capture.recordCall('instructional-need', needInput, needOut);
+  if (needOut?.ok === false) {
+    throw new Error(`Instructional need failed: ${needOut?.error?.message ?? 'unknown error'}`);
+  }
+  // Join the needs back onto the 4c list by position, falling back to exact title.
+  const needByTitle = new Map<string, any>((needOut?.needs ?? []).map((n: any) => [String(n.title ?? '').trim(), n]));
+  misconceptions = genMisconceptions.map((m: any, i: number) => {
+    const n = needOut?.needs?.[i]?.title === m.title ? needOut.needs[i] : needByTitle.get(String(m.title ?? '').trim());
+    return n ? { ...m, instructionalNeed: n.instructionalNeed, rationale: n.rationale } : m;
   });
-  const analysis = parseJson(analysisResult);
-  capture.recordCall('llm-analysis', analysisInput, analysis);
-  const misconceptions: any[] = analysis?.misconceptions ?? [];
-  console.log(` ✓  ${misconceptions.length} misconceptions`);
+  console.log(` ✓  need on ${misconceptions.filter((m: any) => m.instructionalNeed).length}/${misconceptions.length}${needOut?.rejected?.length ? ` (${needOut.rejected.length} rejected)` : ''}${needOut?.missing?.length ? ` (${needOut.missing.length} missing)` : ''}`);
+  instructionalNeedsMissing = needOut?.missing ?? [];
+  if (instructionalNeedsMissing.length) {
+    // A misconception with no need has no rank and no templates; it must not pass silently.
+    console.warn(`  ⚠ no instructional need returned for: ${instructionalNeedsMissing.map((x) => `#${x.position} ${x.title}`).join('; ')}`);
+  }
+  }
+  const instructionalNeedsGenerated = misconceptions.filter((m: any) => m.instructionalNeed?.text?.trim()).length;
+
+  // 5d. Template selection — one call over every need, top two activity templates
+  //     each. The library render sits first in that prompt so it is cache-eligible;
+  //     `cachedPromptTokens` in the manifest is the check that it landed. RightOn!
+  //     is only selectable when a game catalog is passed; none is today.
+  let templatesSelected = 0;
+  let selectCachedPromptTokens: number | null = null;
+  const withNeeds = misconceptions.filter((m: any) => m.instructionalNeed?.text?.trim());
+  if (withNeeds.length) {
+    const selectInput = {
+      needs: JSON.stringify(withNeeds),
+      classroomData: JSON.stringify({ classroom, ppq: augmentedPpq, wrongAnswerDist }),
+      assessmentType: 'multiple_choice',
+      trace: WANT_TRACE,
+    };
+    process.stdout.write(`  Template selection for ${withNeeds.length} need(s)...`);
+    try {
+      const raw = await invokeLambda(`microcoachv2LLMSelectTemplate-${AMPLIFY_ENV}`, { input: selectInput });
+      const parsed = parseJson(raw);
+      capture.recordCall('select-template', selectInput, parsed);
+      if (parsed?.ok === false) {
+        console.log(` ✗ ${parsed?.error?.message ?? 'unknown error'}`);
+      } else {
+        const byTitle = new Map<string, any>((parsed?.selections ?? []).map((x: any) => [String(x.title ?? '').trim(), x]));
+        misconceptions = misconceptions.map((m: any) => {
+          const sel = byTitle.get(String(m.title ?? '').trim());
+          if (!sel) return m;
+          templatesSelected += 1;
+          return { ...m, selectedTemplates: sel };
+        });
+        selectCachedPromptTokens = parsed?._trace?.usage?.prompt_tokens_details?.cached_tokens ?? null;
+        console.log(` ✓  ${templatesSelected}/${withNeeds.length} selected${selectCachedPromptTokens != null ? ` · cached prompt tokens ${selectCachedPromptTokens}` : ''}${parsed?.rejected?.length ? ` (${parsed.rejected.length} rejected)` : ''}`);
+      }
+    } catch (err) {
+      console.log(` ✗ ${err}`);
+    }
+  }
 
   // 5c. Per-misconception extras
   const ppqQs = (ppq?.questions ?? []).map((q: any) => ({
@@ -736,7 +910,8 @@ async function processClassroom(
     classPercentCorrect: q.classPercentCorrect ?? null,
   }));
   const misconceptionExtras = misconceptions.map((m: any) => {
-    const qNums = parseQuestionNumbers(m.evidence?.source ?? '');
+    // The linked wrong answers say which questions surface this misconception.
+    const qNums = [...new Set<number>((m.wrongAnswers ?? []).map((w: any) => w.questionNumber))].sort((a, b) => a - b);
     return {
       ppqQuestions: ppqQs,
       studentGroups: getStudentGroups(studentResponses, qNums, studentNameMap),
@@ -747,7 +922,7 @@ async function processClassroom(
   });
 
   // 6. Generate next step activities
-  // `grade` is deliberately excluded — see microcoachLLMAnalysis. The CCSS codes
+  // `grade` is deliberately excluded — see microcoachv2LLMGenInstrNeed. The CCSS codes
   // carry grade already, and the classroom field was unvalidated free text.
   const classroomContext = { subject: classroom.subject, cohortSize: classroom.cohortSize };
   const NEXT_STEP_FORMATS = ['whole_class', 'split_class'];
@@ -756,8 +931,10 @@ async function processClassroom(
   //     misconceptions before parallel generation begins.
   type StructurePlan = { misconceptionTitle: string; whole_class: string; split_class: string };
   let structurePlan: StructurePlan[] = [];
-  process.stdout.write(`  Planning activity structures for ${misconceptions.length} misconceptions...`);
-  try {
+  if (ANALYSIS_ONLY) {
+    console.log('  --analysis-only: skipping instructional needs, planner and activity generation');
+  } else try {
+    process.stdout.write(`  Planning activity structures for ${misconceptions.length} misconceptions...`);
     const plannerInput = {
       planStructures: true,
       misconceptions: JSON.stringify(misconceptions.map((m: any) => ({ title: m.title, description: m.description, ccssStandard: m.ccssStandard }))),
@@ -788,7 +965,7 @@ async function processClassroom(
   };
 
   // 6b. Generate activities — misconceptions in parallel, formats sequential within each
-  const activitiesPerGroup: any[][] = await Promise.all(
+  const activitiesPerGroup: any[][] = ANALYSIS_ONLY ? misconceptions.map(() => []) : await Promise.all(
     misconceptions.map(async (m: any, i: number) => {
       process.stdout.write(`  Next steps [${i + 1}/${misconceptions.length}]: ${m.title}...`);
       const relevant = nextStepExamples.filter(
@@ -847,10 +1024,10 @@ async function processClassroom(
   // kg-snapshot.json separately.
   const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, injected, misconceptionExtras, studentResponses);
   if (fixture) {
-    // Fixture runs never write. The pilot sessions are a measurement substrate, and
+    // Fixture runs never write session data. The pilot sessions are a measurement substrate, and
     // writing generated output back would overwrite the very records the fixture was
     // extracted from. Everything lands in the run directory instead.
-    console.log(`  Fixture run — no database writes (output captured to disk)`);
+    console.log(`  Fixture run — no session writes (output captured to disk, then published to the preview table)`);
   } else {
     process.stdout.write(`  Saving ${nextSteps.length} next steps to session ${currentStub.id}...`);
     await gql(UPDATE_SESSION, {
@@ -889,14 +1066,21 @@ async function processClassroom(
     console.log(' ✓');
   }
 
-  // 8. Capture — disk only, never AppSync.
+  // 8. Capture — the run directory on disk, then (eval mode only) one row in the
+  //    TEMPORARY MicroCoachPipelineRun table so /preview can load it.
   capture.writeOutput(nextSteps);
   const manifest = capture.finish({
     ccssRequested: allCcss,
     ccssUnmatched: unmatched,
     graphStandardsReturned: learningScienceData.standards.length,
+    // What dedupeGraph collapsed before masking. A run whose prompts carried the
+    // repeated LVN blocks is not comparable to one whose prompts carried stubs.
+    graphDedup,
     misconceptionCount: misconceptions.length,
     activityCount: activitiesPerGroup.reduce((n: number, g: any[]) => n + g.length, 0),
+    instructionalNeedsGenerated,
+    instructionalNeedsMissing,
+    stoppedAfter: ANALYSIS_ONLY ? 'analysis' : null,
     // Diagnostic, not a correction: when the analysis stage emits a code the graph
     // does not carry, the generation stage silently loses all graph context.
     targetStandardMatched: misconceptions.filter((m: any) =>
@@ -905,19 +1089,16 @@ async function processClassroom(
                  === (m.ccssStandard ?? '').replace(/\s/g, '').toLowerCase()
       )
     ).length,
-    // A run where the model failed to link its output back to the ingested
-    // misconceptions is not comparable to one where the link held, so the count
-    // has to be visible in the manifest rather than inferred later from output.json.
-    sourceMisconceptionMatched: (() => {
-      const sourceIds = new Set(
-        (currentSession?.misconceptions?.items ?? []).map((m: any) => m.id)
-      );
-      return misconceptions.filter((m: any) => sourceIds.has(m.sourceMisconceptionId)).length;
-    })(),
-    sourceMisconceptionAvailable: (currentSession?.misconceptions?.items ?? []).length,
-    // A run where the option attribution never arrived is not comparable to one
-    // where it did, so the counting chain's health goes in the manifest rather than
-    // being inferred from output.json later.
+    // Misconceptions now originate in GenMisconception (4c); how many of them got
+    // a need back from 5 is the join-health counter.
+    misconceptionsFromGen: genMisconceptions.length,
+    // Template selection health: how many needs got two picks, and whether the
+    // static library prefix was served from the prompt cache.
+    templatesSelected,
+    selectCachedPromptTokens,
+    // A run where the wrong-answer refs never arrived is not comparable to one
+    // where they did, so the counting chain's health goes in the manifest rather
+    // than being inferred from output.json later.
     wrongAnswerLinked: nextSteps.filter((n: any) => n.linkStatus === 'linked').length,
     wrongAnswerRefs: nextSteps.reduce((n: number, s: any) => n + (s.wrongAnswers?.length ?? 0), 0),
     studentCountTotals: nextSteps.map((n: any) => ({
@@ -930,14 +1111,44 @@ async function processClassroom(
     console.log(`  Captured → eval/runs/${manifest.runId}`);
     console.log(`    ${manifest.modelCalls} calls · ${t.total.toLocaleString()} tokens · models: ${manifest.models.join(', ')}`);
     console.log(`    targetStandard matched on ${manifest.targetStandardMatched}/${manifest.misconceptionCount} misconceptions`);
-    console.log(`    sourceMisconceptionId linked on ${manifest.sourceMisconceptionMatched}/${manifest.misconceptionCount} (${manifest.sourceMisconceptionAvailable} ingested)`);
-    console.log(`    wrong-answer attribution on ${manifest.wrongAnswerLinked}/${manifest.misconceptionCount} (${manifest.wrongAnswerRefs} option refs)`);
+    console.log(`    instructional need on ${manifest.instructionalNeedsGenerated}/${manifest.misconceptionCount} (${manifest.misconceptionsFromGen} from GenMisconception)`);
+    console.log(`    wrong-answer refs on ${manifest.wrongAnswerLinked}/${manifest.misconceptionCount} (${manifest.wrongAnswerRefs} option refs)`);
     for (const s of manifest.studentCountTotals) {
       const n = s.studentCount == null ? 'not linked' : `${s.studentCount} students (${Math.round((s.studentPercent ?? 0) * 100)}%)`;
       console.log(`      ${s.title}: ${n} · model said "${s.frequency}"`);
     }
     if (manifest.silentFallbacks.length) {
       console.log(`    ⚠ ${manifest.silentFallbacks.length} silent validator fallback(s) — see manifest.json`);
+    }
+
+    // 9. Publish — one row in the TEMPORARY MicroCoachPipelineRun table so /preview
+    //    can load this run from the backend. Eval mode only by construction: the
+    //    manifest is null under NoopCapture. The run directory is already on disk,
+    //    so a failed publish is reported, not fatal.
+    const outputJson = JSON.stringify(nextSteps);
+    const outputKb = Math.round(Buffer.byteLength(outputJson) / 1024);
+    if (outputKb > 350) {
+      console.warn(`    ⚠ output is ${outputKb} KB — DynamoDB's item cap is 400 KB, the publish may be rejected`);
+    }
+    try {
+      await gql(CREATE_PIPELINE_RUN, {
+        input: {
+          id: manifest.runId,
+          classroomName: manifest.classroomName,
+          sessionLabel: manifest.sessionLabel,
+          condition: manifest.condition,
+          version: manifest.version,
+          gitSha: manifest.gitSha,
+          amplifyEnv: manifest.amplifyEnv,
+          startedAt: manifest.startedAt,
+          misconceptionCount: manifest.misconceptionCount,
+          manifest: JSON.stringify(manifest),
+          output: outputJson,
+        },
+      });
+      console.log(`  Published → MicroCoachPipelineRun ${manifest.runId}`);
+    } catch (err) {
+      console.warn(`  ⚠ Publish failed (run is still on disk): ${err}`);
     }
   }
 }
@@ -951,15 +1162,16 @@ async function main() {
 
   // ── Fixture mode ──────────────────────────────────────────────────────────
   // Runs against the four March 2026 pilot sessions held in eval/fixtures. Reads
-  // nothing from and writes nothing to DynamoDB; the only remote calls are to the
-  // LLM Lambdas (and the graph Lambda when --graph live is set).
+  // no session data from DynamoDB and writes only to the TEMPORARY
+  // MicroCoachPipelineRun table; the other remote calls are to the LLM Lambdas (and
+  // the graph Lambda when --graph live is set).
   if (FIXTURE_ARG) {
     // Exactly one session per invocation. `yarn eval` decides which sessions run and
     // spawns one process each, so session selection lives there rather than in two
     // places that could disagree.
     const ids = [FIXTURE_ARG];
     console.log(`Fixture: ${FIXTURE_ARG}, graph=${GRAPH_SOURCE}, condition=${CONDITION}`);
-    console.log('No database reads or writes will occur.\n');
+    console.log('No session reads or writes will occur; the run is published to MicroCoachPipelineRun.\n');
 
     // Reference examples still come from the DB — they are shared library content,
     // not session data, and the pilot ran with whatever was there.

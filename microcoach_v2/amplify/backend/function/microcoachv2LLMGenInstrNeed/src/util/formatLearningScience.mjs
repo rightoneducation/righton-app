@@ -48,6 +48,12 @@ export function formatLearningScience(data) {
     if (s.lvnFactors?.length) {
       lines.push('', '**Learning variability factors** (research-backed, relevant to this standard):');
       for (const f of s.lvnFactors) {
+        // An entry the caller already rendered in full under an earlier standard
+        // (dedupeGraph leaves a `seeAbove` stub) is named once, not repeated.
+        if (f.seeAbove) {
+          lines.push('', `  - **${f.name}** — described above`);
+          continue;
+        }
         lines.push('', `  - **${f.name}** (${f.category}): ${f.description}`);
         if (f.gradeLevel?.length)  lines.push(`    Grade levels: ${f.gradeLevel.join(', ')}`);
         if (f.academicSubject)     lines.push(`    Subject: ${f.academicSubject}`);
@@ -55,21 +61,27 @@ export function formatLearningScience(data) {
         if (f.strategies?.length) {
           lines.push('    Instructional strategies targeting this factor:');
           lines.push(...f.strategies.map(
-            (x) => `      - **${x.name}**${x.category ? ` (${x.category})` : ''}: ${x.description}`
+            (x) => x.seeAbove
+              ? `      - **${x.name}** — described above`
+              : `      - **${x.name}**${x.category ? ` (${x.category})` : ''}: ${x.description}`
           ));
         }
 
         if (f.learnerModels?.length) {
           lines.push('    Learner models carrying this factor:');
           lines.push(...f.learnerModels.map(
-            (m) => `      - **${m.name}**${m.description ? `: ${m.description}` : ''}`
+            (m) => m.seeAbove
+              ? `      - **${m.name}** — described above`
+              : `      - **${m.name}**${m.description ? `: ${m.description}` : ''}`
           ));
         }
 
         if (f.interactsWith?.length) {
           lines.push('    Interacts with these other factors:');
           lines.push(...f.interactsWith.map(
-            (i) => `      - **${i.name}**${i.description ? `: ${i.description}` : ''}`
+            (i) => i.seeAbove
+              ? `      - **${i.name}** — described above`
+              : `      - **${i.name}**${i.description ? `: ${i.description}` : ''}`
           ));
         }
       }

@@ -995,6 +995,77 @@ export type DeleteContextDataInput = {
   id: string,
 };
 
+export type CreateMicroCoachPipelineRunInput = {
+  id?: string | null,
+  classroomName?: string | null,
+  sessionLabel?: string | null,
+  condition?: string | null,
+  version?: string | null,
+  gitSha?: string | null,
+  amplifyEnv?: string | null,
+  startedAt?: string | null,
+  misconceptionCount?: number | null,
+  manifest?: string | null,
+  output?: string | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
+};
+
+export type ModelMicroCoachPipelineRunConditionInput = {
+  classroomName?: ModelStringInput | null,
+  sessionLabel?: ModelStringInput | null,
+  condition?: ModelStringInput | null,
+  version?: ModelStringInput | null,
+  gitSha?: ModelStringInput | null,
+  amplifyEnv?: ModelStringInput | null,
+  startedAt?: ModelStringInput | null,
+  misconceptionCount?: ModelIntInput | null,
+  manifest?: ModelStringInput | null,
+  output?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelMicroCoachPipelineRunConditionInput | null > | null,
+  or?: Array< ModelMicroCoachPipelineRunConditionInput | null > | null,
+  not?: ModelMicroCoachPipelineRunConditionInput | null,
+};
+
+export type MicroCoachPipelineRun = {
+  __typename: "MicroCoachPipelineRun",
+  id: string,
+  classroomName?: string | null,
+  sessionLabel?: string | null,
+  condition?: string | null,
+  version?: string | null,
+  gitSha?: string | null,
+  amplifyEnv?: string | null,
+  startedAt?: string | null,
+  misconceptionCount?: number | null,
+  manifest?: string | null,
+  output?: string | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdateMicroCoachPipelineRunInput = {
+  id: string,
+  classroomName?: string | null,
+  sessionLabel?: string | null,
+  condition?: string | null,
+  version?: string | null,
+  gitSha?: string | null,
+  amplifyEnv?: string | null,
+  startedAt?: string | null,
+  misconceptionCount?: number | null,
+  manifest?: string | null,
+  output?: string | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
+};
+
+export type DeleteMicroCoachPipelineRunInput = {
+  id: string,
+};
+
 export type ModelMicroCoachUserFilterInput = {
   id?: ModelIDInput | null,
   cognitoId?: ModelStringInput | null,
@@ -1163,6 +1234,31 @@ export type ModelContextDataFilterInput = {
 export type ModelContextDataConnection = {
   __typename: "ModelContextDataConnection",
   items:  Array<ContextData | null >,
+  nextToken?: string | null,
+};
+
+export type ModelMicroCoachPipelineRunFilterInput = {
+  id?: ModelIDInput | null,
+  classroomName?: ModelStringInput | null,
+  sessionLabel?: ModelStringInput | null,
+  condition?: ModelStringInput | null,
+  version?: ModelStringInput | null,
+  gitSha?: ModelStringInput | null,
+  amplifyEnv?: ModelStringInput | null,
+  startedAt?: ModelStringInput | null,
+  misconceptionCount?: ModelIntInput | null,
+  manifest?: ModelStringInput | null,
+  output?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelMicroCoachPipelineRunFilterInput | null > | null,
+  or?: Array< ModelMicroCoachPipelineRunFilterInput | null > | null,
+  not?: ModelMicroCoachPipelineRunFilterInput | null,
+};
+
+export type ModelMicroCoachPipelineRunConnection = {
+  __typename: "ModelMicroCoachPipelineRunConnection",
+  items:  Array<MicroCoachPipelineRun | null >,
   nextToken?: string | null,
 };
 
@@ -1348,6 +1444,24 @@ export type ModelSubscriptionContextDataFilterInput = {
   updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionContextDataFilterInput | null > | null,
   or?: Array< ModelSubscriptionContextDataFilterInput | null > | null,
+};
+
+export type ModelSubscriptionMicroCoachPipelineRunFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  classroomName?: ModelSubscriptionStringInput | null,
+  sessionLabel?: ModelSubscriptionStringInput | null,
+  condition?: ModelSubscriptionStringInput | null,
+  version?: ModelSubscriptionStringInput | null,
+  gitSha?: ModelSubscriptionStringInput | null,
+  amplifyEnv?: ModelSubscriptionStringInput | null,
+  startedAt?: ModelSubscriptionStringInput | null,
+  misconceptionCount?: ModelSubscriptionIntInput | null,
+  manifest?: ModelSubscriptionStringInput | null,
+  output?: ModelSubscriptionStringInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionMicroCoachPipelineRunFilterInput | null > | null,
+  or?: Array< ModelSubscriptionMicroCoachPipelineRunFilterInput | null > | null,
 };
 
 export type CreateMicroCoachUserMutationVariables = {
@@ -2887,6 +3001,78 @@ export type DeleteContextDataMutation = {
         notes?: string | null,
       } | null > | null,
     } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateMicroCoachPipelineRunMutationVariables = {
+  input: CreateMicroCoachPipelineRunInput,
+  condition?: ModelMicroCoachPipelineRunConditionInput | null,
+};
+
+export type CreateMicroCoachPipelineRunMutation = {
+  createMicroCoachPipelineRun?:  {
+    __typename: "MicroCoachPipelineRun",
+    id: string,
+    classroomName?: string | null,
+    sessionLabel?: string | null,
+    condition?: string | null,
+    version?: string | null,
+    gitSha?: string | null,
+    amplifyEnv?: string | null,
+    startedAt?: string | null,
+    misconceptionCount?: number | null,
+    manifest?: string | null,
+    output?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateMicroCoachPipelineRunMutationVariables = {
+  input: UpdateMicroCoachPipelineRunInput,
+  condition?: ModelMicroCoachPipelineRunConditionInput | null,
+};
+
+export type UpdateMicroCoachPipelineRunMutation = {
+  updateMicroCoachPipelineRun?:  {
+    __typename: "MicroCoachPipelineRun",
+    id: string,
+    classroomName?: string | null,
+    sessionLabel?: string | null,
+    condition?: string | null,
+    version?: string | null,
+    gitSha?: string | null,
+    amplifyEnv?: string | null,
+    startedAt?: string | null,
+    misconceptionCount?: number | null,
+    manifest?: string | null,
+    output?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteMicroCoachPipelineRunMutationVariables = {
+  input: DeleteMicroCoachPipelineRunInput,
+  condition?: ModelMicroCoachPipelineRunConditionInput | null,
+};
+
+export type DeleteMicroCoachPipelineRunMutation = {
+  deleteMicroCoachPipelineRun?:  {
+    __typename: "MicroCoachPipelineRun",
+    id: string,
+    classroomName?: string | null,
+    sessionLabel?: string | null,
+    condition?: string | null,
+    version?: string | null,
+    gitSha?: string | null,
+    amplifyEnv?: string | null,
+    startedAt?: string | null,
+    misconceptionCount?: number | null,
+    manifest?: string | null,
+    output?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4590,6 +4776,58 @@ export type ListContextDataQuery = {
   } | null,
 };
 
+export type GetMicroCoachPipelineRunQueryVariables = {
+  id: string,
+};
+
+export type GetMicroCoachPipelineRunQuery = {
+  getMicroCoachPipelineRun?:  {
+    __typename: "MicroCoachPipelineRun",
+    id: string,
+    classroomName?: string | null,
+    sessionLabel?: string | null,
+    condition?: string | null,
+    version?: string | null,
+    gitSha?: string | null,
+    amplifyEnv?: string | null,
+    startedAt?: string | null,
+    misconceptionCount?: number | null,
+    manifest?: string | null,
+    output?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListMicroCoachPipelineRunsQueryVariables = {
+  filter?: ModelMicroCoachPipelineRunFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListMicroCoachPipelineRunsQuery = {
+  listMicroCoachPipelineRuns?:  {
+    __typename: "ModelMicroCoachPipelineRunConnection",
+    items:  Array< {
+      __typename: "MicroCoachPipelineRun",
+      id: string,
+      classroomName?: string | null,
+      sessionLabel?: string | null,
+      condition?: string | null,
+      version?: string | null,
+      gitSha?: string | null,
+      amplifyEnv?: string | null,
+      startedAt?: string | null,
+      misconceptionCount?: number | null,
+      manifest?: string | null,
+      output?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type OnCreateMicroCoachUserSubscriptionVariables = {
   filter?: ModelSubscriptionMicroCoachUserFilterInput | null,
   cognitoId?: string | null,
@@ -6103,6 +6341,75 @@ export type OnDeleteContextDataSubscription = {
         notes?: string | null,
       } | null > | null,
     } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateMicroCoachPipelineRunSubscriptionVariables = {
+  filter?: ModelSubscriptionMicroCoachPipelineRunFilterInput | null,
+};
+
+export type OnCreateMicroCoachPipelineRunSubscription = {
+  onCreateMicroCoachPipelineRun?:  {
+    __typename: "MicroCoachPipelineRun",
+    id: string,
+    classroomName?: string | null,
+    sessionLabel?: string | null,
+    condition?: string | null,
+    version?: string | null,
+    gitSha?: string | null,
+    amplifyEnv?: string | null,
+    startedAt?: string | null,
+    misconceptionCount?: number | null,
+    manifest?: string | null,
+    output?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateMicroCoachPipelineRunSubscriptionVariables = {
+  filter?: ModelSubscriptionMicroCoachPipelineRunFilterInput | null,
+};
+
+export type OnUpdateMicroCoachPipelineRunSubscription = {
+  onUpdateMicroCoachPipelineRun?:  {
+    __typename: "MicroCoachPipelineRun",
+    id: string,
+    classroomName?: string | null,
+    sessionLabel?: string | null,
+    condition?: string | null,
+    version?: string | null,
+    gitSha?: string | null,
+    amplifyEnv?: string | null,
+    startedAt?: string | null,
+    misconceptionCount?: number | null,
+    manifest?: string | null,
+    output?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteMicroCoachPipelineRunSubscriptionVariables = {
+  filter?: ModelSubscriptionMicroCoachPipelineRunFilterInput | null,
+};
+
+export type OnDeleteMicroCoachPipelineRunSubscription = {
+  onDeleteMicroCoachPipelineRun?:  {
+    __typename: "MicroCoachPipelineRun",
+    id: string,
+    classroomName?: string | null,
+    sessionLabel?: string | null,
+    condition?: string | null,
+    version?: string | null,
+    gitSha?: string | null,
+    amplifyEnv?: string | null,
+    startedAt?: string | null,
+    misconceptionCount?: number | null,
+    manifest?: string | null,
+    output?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
