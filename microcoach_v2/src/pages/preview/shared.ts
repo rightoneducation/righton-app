@@ -3,11 +3,9 @@ import { useAppOutletContext } from '../../hooks/useAppOutletContext';
 import { IPipelineRunSummary } from '../../api';
 
 /**
- * Shared between /preview (the field-by-field scratchpad) and /preview2 (the
- * pipeline presentation): the loose JSON types the run output is read through,
+ * Support for /preview: the loose JSON types the run output is read through,
  * the run-list grouping helpers, and the hook that loads the run list + the
- * selected run. Both pages read the same TEMPORARY MicroCoachPipelineRun table
- * and remember the same last-selected run.
+ * selected run from the TEMPORARY MicroCoachPipelineRun table.
  */
 
 export type Json = string | number | boolean | null | Json[] | { [key: string]: Json };

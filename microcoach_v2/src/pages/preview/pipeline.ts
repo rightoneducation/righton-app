@@ -1,5 +1,5 @@
 /**
- * The pipeline as drawn on /preview2: the stages in run order (following
+ * The pipeline as drawn on /preview: the stages in run order (following
  * seed/cli/generate.ts) and the boxes drawn around them. Both the diagram and
  * the formulae section read from here, so a formula can only point at a stage
  * that is actually in the diagram.

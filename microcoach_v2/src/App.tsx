@@ -20,7 +20,6 @@ import { useUserState } from './hooks/useUserState';
 import { usePlanItems } from './hooks/usePlanItems';
 import AppSwitch from './switches/AppSwitch';
 import Preview from './pages/preview/Preview';
-import Preview2 from './pages/preview/Preview2';
 
 /**
  * Parent layout route. React Router keeps this element mounted across child
@@ -144,7 +143,6 @@ function App() {
               protect.
             */}
             <Route path="preview" element={<Preview />} />
-            <Route path="preview2" element={<Preview2 />} />
         </Route>,
       ),
     );
