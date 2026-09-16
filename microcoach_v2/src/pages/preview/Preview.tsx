@@ -1,7 +1,19 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useAppOutletContext } from '../../hooks/useAppOutletContext';
-import { IPipelineRunSummary } from '../../api';
+import {
+  Json,
+  Rec,
+  RunIndexEntry,
+  LoadStatus,
+  groupByVersion,
+  runLabel,
+  isEmpty,
+  asArray,
+  asStrings,
+  asRec,
+  asStr,
+  usePipelineRun,
+} from './shared';
 
 /**
  * Preview — a scratchpad for eyeballing a pipeline run.
@@ -20,75 +32,6 @@ import { IPipelineRunSummary } from '../../api';
  * `yarn seed:eval` run, published by generate.ts), read over the API key so this
  * route stays sign-in-free. See the README here.
  */
-
-type Json = string | number | boolean | null | Json[] | { [key: string]: Json };
-type Rec = { [key: string]: Json };
-
-// A summary row plus its per-version ordinal. `n` restarts at 1 inside each
-// version group and is a display label only — never key off it, use `id`.
-type RunIndexEntry = IPipelineRunSummary & { n: number };
-
-const UNTAGGED = '(untagged)';
-
-// Runs grouped by version NUMBER — the leading `vN` of the tag — so every
-// `v7-…` variant sits in one group; the rest of the tag stays on the option
-// label. Tags without a leading vN group under the full tag. Groups are ordered
-// by their newest run: `runs` is already newest-first, so first-seen order is
-// correct.
-const VERSION_PREFIX = /^v\d+/i;
-function versionGroup(version: string | null | undefined): string {
-  if (!version) return UNTAGGED;
-  const m = VERSION_PREFIX.exec(version);
-  return m ? m[0].toLowerCase() : version;
-}
-function versionSuffix(version: string | null | undefined): string {
-  if (!version) return '';
-  const m = VERSION_PREFIX.exec(version);
-  return m ? version.slice(m[0].length).replace(/^[-_ ]+/, '') : '';
-}
-function groupByVersion(runs: RunIndexEntry[]): Array<[string, RunIndexEntry[]]> {
-  const groups = new Map<string, RunIndexEntry[]>();
-  runs.forEach((entry) => {
-    const key = versionGroup(entry.version);
-    const existing = groups.get(key);
-    if (existing) existing.push(entry);
-    else groups.set(key, [entry]);
-  });
-  return Array.from(groups.entries());
-}
-
-// 'loading' covers both the list fetch and the run fetch — the list effect must
-// not flip to 'loaded' itself, or the body flashes empty between the two.
-type LoadStatus = 'idle' | 'loading' | 'loaded' | 'error' | 'empty';
-
-const RUN_STORAGE_KEY = 'preview.runId';
-
-// localStorage throws outright in some privacy modes; a scratchpad remembering
-// your last run is not worth taking the page down over.
-function readStoredRunId(): string | null {
-  try {
-    return window.localStorage.getItem(RUN_STORAGE_KEY);
-  } catch {
-    return null;
-  }
-}
-
-function storeRunId(id: string): void {
-  try {
-    window.localStorage.setItem(RUN_STORAGE_KEY, id);
-  } catch {
-    /* ignore */
-  }
-}
-
-function runLabel(entry: RunIndexEntry): string {
-  const bits = [entry.classroomName, entry.sessionLabel, entry.condition].filter((b) => b !== '');
-  const when = entry.startedAt === '' ? '' : new Date(entry.startedAt).toLocaleString();
-  const tail = when === '' ? '' : ` · ${when}`;
-  const suffix = versionSuffix(entry.version);
-  const tag = suffix === '' ? '' : `[${suffix}] `;
-  return `${entry.n} — ${tag}${bits.join(' · ') || entry.id}${tail}`;
-}
 
 interface SectionDef {
   id: string;
@@ -150,14 +93,6 @@ const LEGACY_KEY_LIST: string[] = [
   'questionErrorRates',
   'ppqQuestions',
 ];
-
-const isEmpty = (v: Json): boolean =>
-  v === null ||
-  v === undefined ||
-  v === '' ||
-  v === false ||
-  (Array.isArray(v) && v.length === 0) ||
-  (typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length === 0);
 
 const GROUPED_KEYS = new Set<string>([
   ...SECTIONS.flatMap((section) => section.keys),
@@ -260,14 +195,6 @@ function Collapse({
  * Content is LaTeX and katex is not a dependency here, so maths renders as
  * monospace source.
  */
-
-const asArray = (v: Json): Rec[] =>
-  Array.isArray(v) ? v.filter((x): x is Rec => typeof x === 'object' && x !== null && !Array.isArray(x)) : [];
-const asStrings = (v: Json): string[] =>
-  Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : [];
-const asRec = (v: Json): Rec | null =>
-  v !== null && typeof v === 'object' && !Array.isArray(v) ? (v as Rec) : null;
-const asStr = (v: Json): string => (typeof v === 'string' ? v : '');
 
 function Callout({ label, text }: { label: string; text: string }) {
   if (text === '') return null;
@@ -543,7 +470,6 @@ function NeedPanel({ item }: { item: Rec }) {
         <>
           <Callout label="instructional need" text={asStr(need.text)} />
           <div className="pv-fields">
-            <KV k="needKind" v={<span>{asStr(need.needKind) || '—'}</span>} />
             <KV k="teacherRole" v={<span>{asStr(need.teacherRole) || '—'}</span>} />
           </div>
           <StringList label="Evidence used" items={asStrings(need.evidenceUsed)} />
@@ -577,7 +503,6 @@ function NeedPanel({ item }: { item: Rec }) {
 function TemplatesPanel({ sel }: { sel: Rec }) {
   const top2 = asArray(sel.top2);
   const considered = asArray(sel.considered);
-  const agrees = sel.agreesWithNeedKind === true;
   return (
     <>
       <div className="pv-grid-moves">
@@ -597,17 +522,6 @@ function TemplatesPanel({ sel }: { sel: Rec }) {
             )}
           </div>
         ))}
-      </div>
-      <div className="pv-fields">
-        <KV
-          k="needKind → template"
-          v={
-            <span>
-              {asStr(sel.needKindTemplate) || '—'}{' '}
-              <span className={agrees ? 'pv-ok' : 'pv-bad'}>{agrees ? '✓ agrees' : '✗ differs'}</span>
-            </span>
-          }
-        />
       </div>
       {considered.length > 0 && (
         <details className="pv-details">
@@ -682,11 +596,6 @@ function Misconception({
           <span className="pv-tag pv-tag-alt">{`${item.studentCount} students`}</span>
         )}
         {topPick && <span className="pv-tag">{asStr(topPick.templateId)}</span>}
-        {sel && (
-          <span className={sel.agreesWithNeedKind === true ? 'pv-tag pv-tag-alt pv-ok' : 'pv-tag pv-tag-alt pv-bad'}>
-            {sel.agreesWithNeedKind === true ? 'needKind ✓' : 'needKind ✗'}
-          </span>
-        )}
         {moves.length > 0 && <span className="pv-tag pv-tag-alt">{`${moves.length} moves`}</span>}
       </h2>
 
@@ -859,16 +768,6 @@ function Header({
         {stat('needs', `${manifest.instructionalNeedsGenerated ?? '—'}/${manifest.misconceptionCount ?? items.length}`)}
         {stat('templates', `${manifest.templatesSelected ?? '—'}/${manifest.misconceptionCount ?? items.length}`)}
         {stat(
-          'needKind agreement',
-          manifest.templatesSelected != null ? (
-            <span className={manifest.needKindAgreement === manifest.templatesSelected ? 'pv-ok' : ''}>
-              {`${manifest.needKindAgreement ?? 0}/${manifest.templatesSelected}`}
-            </span>
-          ) : (
-            '—'
-          ),
-        )}
-        {stat(
           'graph dedup',
           dedup ? `${Math.round(dedup.bytesBefore / 1024)} → ${Math.round(dedup.bytesAfter / 1024)} KB` : '—',
         )}
@@ -1026,85 +925,16 @@ const STYLES = `
 `;
 
 export default function Preview() {
-  const [runs, setRuns] = useState<RunIndexEntry[]>([]);
-  const [activeId, setActiveId] = useState('');
-  const [items, setItems] = useState<Rec[]>([]);
-  const [manifest, setManifest] = useState<Rec>({});
-  const [status, setStatus] = useState<LoadStatus>('idle');
+  const { runs, activeId, setActiveId, status, items, manifest, loadSeq } = usePipelineRun();
   const [allOpen, setAllOpen] = useState<boolean | null>(null);
   const [generation, setGeneration] = useState(0);
 
-  const { apiClients } = useAppOutletContext();
-
-  // Load the run list once. Deliberately leaves status on 'loading' when there
-  // are runs — the run effect below owns the 'loaded' transition, otherwise the
-  // body flashes empty between the list arriving and the first run arriving.
+  // Collapse state belongs to the run that produced it — carrying it over
+  // leaves sections from the previous run hanging open.
   useEffect(() => {
-    let cancelled = false;
-    setStatus('loading');
-    apiClients.pipelineRun
-      .listRuns()
-      .then((list) => {
-        if (cancelled) return;
-        if (list.length === 0) {
-          setStatus('empty');
-          return;
-        }
-        // Newest first, so the dropdown's #1 is the run you just produced.
-        // startedAt is ISO and the id carries the timestamp, so either sorts.
-        const sorted = [...list].sort((a, b) =>
-          (b.startedAt || b.id).localeCompare(a.startedAt || a.id),
-        );
-        // Numbering restarts per version so each group reads 1, 2, 3.
-        const seenPerVersion = new Map<string, number>();
-        const numbered: RunIndexEntry[] = sorted.map((entry) => {
-          const key = entry.version ?? UNTAGGED;
-          const n = (seenPerVersion.get(key) ?? 0) + 1;
-          seenPerVersion.set(key, n);
-          return { ...entry, n };
-        });
-        setRuns(numbered);
-        const stored = readStoredRunId();
-        const match = numbered.find((entry) => entry.id === stored);
-        setActiveId(match ? match.id : numbered[0].id);
-      })
-      .catch(() => {
-        if (!cancelled) setStatus('error');
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [apiClients]);
-
-  // Load whichever run is selected.
-  useEffect(() => {
-    if (activeId === '') return undefined;
-    let cancelled = false;
-    setStatus('loading');
-    apiClients.pipelineRun
-      .getRun(activeId)
-      .then((run) => {
-        if (cancelled) return;
-        if (!run) {
-          setStatus('error');
-          return;
-        }
-        setItems(run.output as Rec[]);
-        setManifest(run.manifest as Rec);
-        setStatus('loaded');
-        // Collapse state belongs to the run that produced it — carrying it over
-        // leaves sections from the previous run hanging open.
-        setAllOpen(null);
-        setGeneration((g) => g + 1);
-        storeRunId(activeId);
-      })
-      .catch(() => {
-        if (!cancelled) setStatus('error');
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [activeId, apiClients]);
+    setAllOpen(null);
+    setGeneration((g) => g + 1);
+  }, [loadSeq]);
 
   const setAll = (open: boolean) => {
     setAllOpen(open);

@@ -36,7 +36,6 @@
       "title": "Spot the Slip",
       "primaryMove": "Locate the breakdown",
       "primaryMoveLong": "Incorrect Worked Example Analysis",
-      "needKind": "locating and understanding the first point where valid reasoning breaks down",
       "description": "Students examine a worked solution, identify the first step where the reasoning goes off track, explain why the step is invalid, and work together to correct the error.",
       "requiresCatalog": false,
       "selection": {
@@ -112,7 +111,6 @@
       "title": "My Favorite No",
       "primaryMove": "Preserve and build on productive thinking",
       "primaryMoveLong": "Student Thinking Analysis",
-      "needKind": "understanding why an incorrect response is tempting or reasonable and revising the underlying reasoning",
       "description": "Students analyze a meaningful incorrect answer (or an anonymous student response) that reveals a mathematical idea, intuition, strategy, or assumption worth preserving or building on. They discuss why the response might seem reasonable, identify what the reasoning gets right or is productively attending to, and revise the reasoning or answer while preserving what is mathematically useful.",
       "requiresCatalog": false,
       "selection": {
@@ -198,7 +196,6 @@
       "title": "Compare the Thinking",
       "primaryMove": "Examine meaningful contrasts",
       "primaryMoveLong": "Compare Strategies & Representations",
-      "needKind": "comparing meaningfully different approaches to make mathematical thinking visible",
       "description": "Students compare two meaningfully different solution strategies or representations, which may be two correct approaches or a correct and an incorrect approach, and examine the reasoning, strengths, limitations, and important mathematical differences between them.",
       "requiresCatalog": false,
       "selection": {
@@ -273,7 +270,6 @@
       "title": "Math Detective",
       "primaryMove": "Investigate underlying issues",
       "primaryMoveLong": "Investigate & Solve",
-      "needKind": "diagnosing an underlying mathematical issue, developing a repair, and checking whether the repair works",
       "description": "Students become \"math detectives\" by investigating an incorrect solution, identifying the underlying mathematical issue, revising the reasoning, and checking whether the revision works.",
       "requiresCatalog": false,
       "selection": {
@@ -354,7 +350,6 @@
       "title": "Make Your Case",
       "primaryMove": "Articulate and justify claims",
       "primaryMoveLong": "Mathematical Justification",
-      "needKind": "investigating, defending, challenging, or refining a mathematical claim",
       "description": "Students make or evaluate a mathematical claim, articulate their thinking, build a case for it using evidence and reasoning, and consider whether the evidence and reasoning support the claim.",
       "requiresCatalog": false,
       "selection": {
@@ -470,7 +465,6 @@
       "title": "RightOn!",
       "primaryMove": "Surface thinking through interaction",
       "primaryMoveLong": "Interactive Student Thinking & Discussion",
-      "needKind": "individually or in small teams engaging with targeted mathematical questions that elicit and surface student thinking for subsequent discussion and reasoning",
       "description": "Students interact with a targeted mathematical task designed with plausible distractors and an often-unexpected correct answer. Students reveal their thinking through their responses, self-rated confidence, and optional hints, and discuss popular incorrect answers to examine why they may seem reasonable or tempting. Seeing that classmates may have thought similarly helps students share, examine, and develop more productive mathematical reasoning.",
       "requiresCatalog": true,
       "selection": {

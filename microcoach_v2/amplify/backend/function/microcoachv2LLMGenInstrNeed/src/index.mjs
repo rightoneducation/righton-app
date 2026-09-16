@@ -25,7 +25,7 @@
  *   trace                boolean — echo `_trace` (resolved prompt, model, usage)
  *
  * Output: { ok: true, needs: [{ title, wrongAnswers, instructionalNeed: { text,
- * needKind, teacherRole, evidenceUsed }, rationale: { priorityRank, prevalence,
+ * teacherRole, evidenceUsed }, rationale: { priorityRank, prevalence,
  * confidenceSignal, conceptualSeverity, prerequisiteGaps, forwardImpact,
  * recurrence, whyThisNeed } }], rejected } — one per input misconception, matched
  * by position then exact title; an unmatched need is dropped and counted. On
@@ -45,7 +45,6 @@ const ws = config?.writingStyle ?? {};
 
 const MODEL              = nc.model ?? ac.model ?? 'gpt-5-mini';
 const NEED_MAX_SENTENCES = nc.maxSentences ?? 3;
-const NEED_KINDS         = nc.needKinds ?? [];
 const NEED_WORKED        = nc.worked ?? null;
 
 // Rationale dimensions — the same four the former analysis scored on, now stated
@@ -91,9 +90,6 @@ const Need = z.object({
   instructionalNeed: z.object({
     text: z.string().describe(
       `At most ${NEED_MAX_SENTENCES} sentences. What students most need to understand, examine, or do next mathematically to make progress on this misconception. Describe the thinking, never a format, routine, template or lesson structure.`,
-    ),
-    needKind: z.string().describe(
-      'Which of the listed kinds of instructional need this most resembles, quoted from the list — or "other" with a short label if none fits',
     ),
     teacherRole: z.string().describe(
       'One clause naming the facilitation this need implies — questioning, comparison, discussion, pressing for justification — without naming an activity or template',
@@ -201,7 +197,6 @@ function formatMisconception(m, i, standardsByCode) {
 }
 
 function buildPrompt(payload, misconceptions, learningScienceSection, standardsByCode) {
-  const kinds = NEED_KINDS.map((k) => `- ${k}`).join('\n');
   const worked = NEED_WORKED
     ? `\nWorked example:\nMisconception: ${NEED_WORKED.misconception}\nInstructional need: ${NEED_WORKED.instructionalNeed}\n`
     : '';
@@ -263,8 +258,6 @@ For EACH misconception above, in the same order, produce one entry with:
 
 **1. Instructional need** — what students most need to understand, examine, or do next mathematically to make progress on this misconception.
 
-Kinds of instructional need (choose the closest for \`needKind\`):
-${kinds}
 ${worked}
 Rules for the need:
 - State it as the mathematical thinking students must develop, revise, test, or make visible. Never as a format, routine, template, or lesson structure.
@@ -321,7 +314,6 @@ function validateOutput(structured, misconceptions) {
       wrongAnswers: m.wrongAnswers ?? [],
       instructionalNeed: {
         text: n.instructionalNeed.text.trim(),
-        needKind: n.instructionalNeed.needKind,
         teacherRole: n.instructionalNeed.teacherRole,
         evidenceUsed: n.instructionalNeed.evidenceUsed ?? [],
       },
@@ -340,7 +332,6 @@ function formatNeedLog(needs) {
   [...needs].sort((a, b) => a.rationale.priorityRank - b.rationale.priorityRank).forEach((n) => {
     lines.push(`#${n.rationale.priorityRank} ${n.title}`);
     lines.push(`   need: ${n.instructionalNeed.text}`);
-    lines.push(`   kind: ${n.instructionalNeed.needKind}`);
     lines.push(`   teacher: ${n.instructionalNeed.teacherRole}`);
     lines.push(`   prevalence: ${n.rationale.prevalence}`);
     lines.push(`   confidence: ${n.rationale.confidenceSignal}`);

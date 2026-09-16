@@ -495,7 +495,7 @@ function buildNextSteps(
       instructionalNeed: m.instructionalNeed ?? null,
       rationale: m.rationale ?? null,
       // From the template-selection stage (step 5d): top two activity templates
-      // for the need, with rationale, and whether the first agrees with needKind.
+      // for the need, with rationale.
       selectedTemplates: m.selectedTemplates ?? null,
       priorityRank: m.rationale?.priorityRank ?? null,
       successIndicators: m.successIndicators ?? [],
@@ -863,7 +863,6 @@ async function processClassroom(
   //     `cachedPromptTokens` in the manifest is the check that it landed. RightOn!
   //     is only selectable when a game catalog is passed; none is today.
   let templatesSelected = 0;
-  let needKindAgreement = 0;
   let selectCachedPromptTokens: number | null = null;
   const withNeeds = misconceptions.filter((m: any) => m.instructionalNeed?.text?.trim());
   if (withNeeds.length) {
@@ -886,11 +885,10 @@ async function processClassroom(
           const sel = byTitle.get(String(m.title ?? '').trim());
           if (!sel) return m;
           templatesSelected += 1;
-          if (sel.agreesWithNeedKind) needKindAgreement += 1;
           return { ...m, selectedTemplates: sel };
         });
         selectCachedPromptTokens = parsed?._trace?.usage?.prompt_tokens_details?.cached_tokens ?? null;
-        console.log(` ✓  ${templatesSelected}/${withNeeds.length} selected · needKind agreement ${needKindAgreement}/${templatesSelected}${selectCachedPromptTokens != null ? ` · cached prompt tokens ${selectCachedPromptTokens}` : ''}${parsed?.rejected?.length ? ` (${parsed.rejected.length} rejected)` : ''}`);
+        console.log(` ✓  ${templatesSelected}/${withNeeds.length} selected${selectCachedPromptTokens != null ? ` · cached prompt tokens ${selectCachedPromptTokens}` : ''}${parsed?.rejected?.length ? ` (${parsed.rejected.length} rejected)` : ''}`);
       }
     } catch (err) {
       console.log(` ✗ ${err}`);
@@ -1085,11 +1083,9 @@ async function processClassroom(
     // Misconceptions now originate in GenMisconception (4c); how many of them got
     // a need back from 5 is the join-health counter.
     misconceptionsFromGen: genMisconceptions.length,
-    // Template selection health: how many needs got two picks, how often the
-    // first pick matched the need's own needKind, and whether the static library
-    // prefix was served from the prompt cache.
+    // Template selection health: how many needs got two picks, and whether the
+    // static library prefix was served from the prompt cache.
     templatesSelected,
-    needKindAgreement,
     selectCachedPromptTokens,
     // A run where the wrong-answer refs never arrived is not comparable to one
     // where they did, so the counting chain's health goes in the manifest rather

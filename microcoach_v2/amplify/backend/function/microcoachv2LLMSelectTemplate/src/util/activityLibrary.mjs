@@ -57,7 +57,6 @@ export function formatForSelection(lib = library, { rightOnAvailable = false } =
     out.push('');
     out.push(`### ${t.id} — ${t.title}${unavailable ? '  [UNAVAILABLE: no game catalog supplied — do not select]' : ''}`);
     out.push(`Primary move: ${t.primaryMove} (${t.primaryMoveLong})`);
-    out.push(`Instructional need kind: ${t.needKind}`);
     const s = t.selection;
     out.push(`Select when the need is to: ${s.selectWhen}`);
     out.push(`Best fit: ${s.bestFit}`);

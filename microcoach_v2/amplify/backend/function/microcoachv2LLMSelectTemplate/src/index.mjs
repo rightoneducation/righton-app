@@ -16,7 +16,7 @@
  * invoke), all JSON strings:
  *   needs           [{ title, description, learningScienceConnection, ccssStandard,
  *                      wrongAnswers, studentCount, studentPercent,
- *                      instructionalNeed: { text, needKind, teacherRole, evidenceUsed },
+ *                      instructionalNeed: { text, teacherRole, evidenceUsed },
  *                      rationale: { priorityRank, conceptualSeverity, prerequisiteGaps,
  *                                   forwardImpact, recurrence, whyThisNeed, ... } }]
  *   classroomData   { classroom, ppq (questions + confidenceStats), wrongAnswerDist }
@@ -26,10 +26,8 @@
  *   trace           boolean — echo `_trace`
  *
  * Output: { ok: true, selections: [{ title, top2: [{ templateId, fit, rationale,
- * distinctFrom }], considered: [{ templateId, whyNot }], needKindTemplate,
- * agreesWithNeedKind }], rejected } — one per need, matched by position then exact
- * title. `needKindTemplate` is recomputed here from the library, not taken from the
- * model. On failure: { ok: false, error: { message } }.
+ * distinctFrom }], considered: [{ templateId, whyNot }] }], rejected } — one per
+ * need, matched by position then exact title. On failure: { ok: false, error: { message } }.
  */
 
 import { loadSecret } from './util/loadsecrets.mjs';
@@ -45,7 +43,6 @@ const TOP_N = 2; // schema pins two; `sc.topN` is informational until the schema
 
 const library = loadLibrary();
 const TEMPLATE_IDS = library.templates.map((t) => t.id);
-const TEMPLATE_BY_NEED_KIND = new Map(library.templates.map((t) => [t.needKind, t.id]));
 const CATALOG_ONLY = new Set(library.templates.filter((t) => t.requiresCatalog).map((t) => t.id));
 
 // ── Schema ────────────────────────────────────────────────────────────────────
@@ -143,7 +140,6 @@ function buildSessionSection({ assessmentType, classroom, ppq, wrongAnswerDist, 
     out.push(`- linked wrong answers: ${refs.join(', ') || 'none'}`);
     out.push(`- reach: ${n.studentCount != null ? `${n.studentCount} students${n.studentPercent != null ? ` (${pct(n.studentPercent)})` : ''}` : 'not counted'}`);
     out.push(`- instructional need: ${need.text ?? '(none)'}`);
-    if (need.needKind) out.push(`- need kind: ${need.needKind}`);
     if (need.teacherRole) out.push(`- teacher role: ${need.teacherRole}`);
     if (need.evidenceUsed?.length) out.push(`- evidence used: ${need.evidenceUsed.join(' | ')}`);
     if (r.conceptualSeverity != null) out.push(`- conceptual severity: ${r.conceptualSeverity}`);
@@ -181,15 +177,11 @@ function validateOutput(structured, needs, rightOnAvailable) {
       rejected.push({ title: t, reason: 'sameTemplateWithoutDistinctFrom' }); return;
     }
 
-    const needKind = needs[idx].instructionalNeed?.needKind;
-    const needKindTemplate = TEMPLATE_BY_NEED_KIND.get(needKind) ?? null;
     seen.add(idx);
     selections.push({
       title: needs[idx].title,
       top2,
       considered: (s.considered ?? []).filter((c) => TEMPLATE_IDS.includes(c.templateId)),
-      needKindTemplate,
-      agreesWithNeedKind: needKindTemplate != null && top2[0].templateId === needKindTemplate,
     });
   });
   return { selections, rejected };
@@ -204,7 +196,6 @@ function formatSelectionLog(selections, needs) {
       lines.push(`   ${i + 1}. ${p.templateId} (${p.fit}) — ${p.rationale}`);
       if (p.distinctFrom) lines.push(`      distinct from pick 1: ${p.distinctFrom}`);
     });
-    lines.push(`   needKind → ${s.needKindTemplate ?? '?'} · agrees: ${s.agreesWithNeedKind ? 'yes' : 'no'}`);
     lines.push('');
   });
   return lines.join('\n');

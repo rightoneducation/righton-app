@@ -34,14 +34,6 @@
     "description": "microcoachv2LLMGenInstrNeed — for each misconception from microcoachv2LLMGenMisconception, states the instructional need (what students most need to understand, examine, or do next mathematically) and the rationale built from the classroom evidence. Internal reasoning step that will drive template selection; not teacher-facing.",
     "model": "gpt-5-mini",
     "maxSentences": 3,
-    "needKinds": [
-      "locating and understanding the first point where valid reasoning breaks down",
-      "understanding why an incorrect response is tempting or reasonable and revising the underlying reasoning",
-      "comparing meaningfully different approaches to make mathematical thinking visible",
-      "diagnosing an underlying mathematical issue, developing a repair, and checking whether the repair works",
-      "investigating, defending, challenging, or refining a mathematical claim",
-      "individually or in small teams engaging with targeted mathematical questions that elicit and surface student thinking for subsequent discussion and reasoning"
-    ],
     "worked": {
       "misconception": "Multiplying powers with the same base requires multiplying the exponents",
       "instructionalNeed": "Test the apparent rule, examine why it initially seems to work, and use the meaning of exponents to construct the correct generalization."
