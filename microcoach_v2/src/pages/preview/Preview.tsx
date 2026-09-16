@@ -369,6 +369,9 @@ function MisconceptionCard({
 
 // ── Run bar ───────────────────────────────────────────────────────────────────
 
+// Where reviewers leave feedback on what this page shows.
+const COMMENTS_DOC = 'https://docs.google.com/document/d/1cRwPZ1bL2TnYl0KKLsviWSD0tPh-5c8eWsU3jHylHxA/edit?usp=sharing';
+
 function RunBar({
   runs,
   activeId,
@@ -424,6 +427,9 @@ function RunBar({
         <button type="button" className="p2-btn" onClick={onCollapseAll}>
           Collapse all
         </button>
+        <a className="p2-btn p2-btn-primary" href={COMMENTS_DOC} target="_blank" rel="noreferrer">
+          Add Comments ↗
+        </a>
       </div>
       <div className="p2-bar-row p2-stats">
         {stat('version', asStr(manifest.version) || 'untagged')}
@@ -452,6 +458,9 @@ const STYLES = `
 .p2-btn { background: #fff; border: 1px solid #cfd5dc; border-radius: 6px; padding: 4px 10px; font-size: 12px;
   cursor: pointer; color: #4b535c; }
 .p2-btn:hover { background: #f2f4f7; }
+.p2-btn-primary { background: #2f6df6; border-color: #2f6df6; color: #fff; font-weight: 600; text-decoration: none;
+  display: inline-flex; align-items: center; }
+.p2-btn-primary:hover { background: #2559d6; }
 .p2-stat { display: inline-flex; gap: 6px; align-items: baseline; }
 .p2-stat-k { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: #79818a; }
 .p2-stat-v { font-size: 13px; font-weight: 600; }
