@@ -1,13 +1,12 @@
 import { AWSActivity } from "../Models/AWS/AWSActivity";
-import {
-  IActivity,
-  IActivityPhases,
-  IRoutine,
-} from "../../lib/PipelineModels";
+import { IActivityPhases, IRoutine } from "../../lib/PipelineModels";
+import { IMicroCoachActivity } from "../Models/IMicroCoachActivity";
 import { isNullOrUndefined } from "../util/util";
 
 export class ActivityParser {
-  static parseIActivityfromAWSActivity(activity: AWSActivity): IActivity {
+  static parseIMicroCoachActivityfromAWSActivity(
+    activity: AWSActivity,
+  ): IMicroCoachActivity {
     if (
       isNullOrUndefined(activity.id) ||
       isNullOrUndefined(activity.misconceptionId) ||
@@ -23,7 +22,7 @@ export class ActivityParser {
       );
     }
 
-    const parsedActivity: IActivity = {
+    const parsedActivity: IMicroCoachActivity = {
       activityType: activity.activityType,
       id: activity.id,
       misconceptionId: activity.misconceptionId,

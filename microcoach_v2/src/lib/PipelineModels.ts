@@ -1,3 +1,5 @@
+import type { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
+
 export type PrevalenceLevel = 'FEW' | 'SOME' | 'MOST';
 
 export type DetailStatus =
@@ -260,23 +262,6 @@ export interface IActivityPhases {
   discussion: { title: string; questions: IPhaseStep[] } | null;
 }
 
-export interface IActivity {
-  activityType: ActivityType;
-  id: string;
-  misconceptionId: string;
-  title: string | null;
-  isSelected: boolean;
-  selectLabel: string;
-  detailStatus: DetailStatus;
-  routine: IRoutine;
-  durationLabel: string | null;
-  grouping: IGrouping | null;
-  targets: string | null;
-  instructionalMove: string | null;
-  strategyTag: string | null;
-  phases: IActivityPhases | null;
-}
-
 export type PlanStatus = 'SAVED' | 'COMPLETED';
 
 export interface IPlanItem {
@@ -289,23 +274,6 @@ export interface IPlanItem {
   misconceptionTitle: string;
   prevalence: { level: string; label: string };
   grouping: IGrouping;
-}
-
-export interface IMisconception {
-  id: string;
-  rank: number;
-  badge: string | null;
-  isRecommendedFocus: boolean;
-  title: string;
-  titleCased: string;
-  shortLabel: string;
-  description: string;
-  consequence: string;
-  prevalence: IPrevalence;
-  detailStatus: DetailStatus;
-  nextStepActivities: IActivity[];
-  studentWork: IStudentWork | null;
-  skillContext: ISkillContext | null;
 }
 
 export interface ISessionTeacher {
@@ -365,6 +333,6 @@ export interface IReflect {
 
 export interface IPipelineOutput {
   session: ISession;
-  misconceptions: IMisconception[];
+  misconceptions: IMicroCoachMisconception[];
   reflect: IReflect;
 }

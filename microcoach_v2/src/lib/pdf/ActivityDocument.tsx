@@ -1,6 +1,7 @@
 import React from 'react';
 import { Document, Page, Text, View } from '@react-pdf/renderer';
-import { IActivity, IMisconception } from '../PipelineModels';
+import { IMicroCoachActivity } from '../../api/Models/IMicroCoachActivity';
+import { IMicroCoachMisconception } from '../../api/Models/IMicroCoachMisconception';
 import { pdfStyles } from './pdfTheme';
 import {
   ActivitySection,
@@ -19,8 +20,8 @@ export interface ActivityDocumentLabels extends StepLabels {
 }
 
 interface ActivityDocumentProps {
-  activity: IActivity;
-  misconception: IMisconception;
+  activity: IMicroCoachActivity;
+  misconception: IMicroCoachMisconception;
   /** Passed in rather than read from i18n — the renderer runs outside React context. */
   labels: ActivityDocumentLabels;
 }

@@ -1,5 +1,7 @@
-import { IActivity } from "../../../../lib/PipelineModels";
+import { IMicroCoachActivity } from "../../../Models/IMicroCoachActivity";
 
 export interface IActivityAPIClient {
-  getActivitiesByMisconceptionId(misconceptionId: string): Promise<IActivity[]>;
+  getActivitiesByMisconceptionId(
+    misconceptionId: string,
+  ): Promise<IMicroCoachActivity[]>;
 }

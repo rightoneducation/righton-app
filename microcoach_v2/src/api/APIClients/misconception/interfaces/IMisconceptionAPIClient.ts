@@ -1,5 +1,7 @@
-import { IMisconception } from "../../../../lib/PipelineModels";
+import { IMicroCoachMisconception } from "../../../Models/IMicroCoachMisconception";
 
 export interface IMisconceptionAPIClient {
-  getMisconceptionsBySessionId(sessionId: string): Promise<IMisconception[]>;
+  getMisconceptionsBySessionId(
+    sessionId: string,
+  ): Promise<IMicroCoachMisconception[]>;
 }

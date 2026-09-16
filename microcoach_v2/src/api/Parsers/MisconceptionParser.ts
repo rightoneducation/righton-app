@@ -1,15 +1,17 @@
 import { AWSMisconception } from "../Models/AWS/AWSMisconception";
 import {
-  IMisconception,
   IPrevalence,
   ISkillContext,
   IStudentWork,
 } from "../../lib/PipelineModels";
 import { Badge, PrevalenceLevel } from "../../AWSAPI";
+import { IMicroCoachMisconception } from "../Models/IMicroCoachMisconception";
 import { isNullOrUndefined } from "../util/util";
 
 export class MisconceptionParser {
-  static parseIMisconceptionfromAWSMisconception(misconception: AWSMisconception): IMisconception {
+  static parseIMicroCoachMisconceptionfromAWSMisconception(
+    misconception: AWSMisconception,
+  ): IMicroCoachMisconception {
     if (
       isNullOrUndefined(misconception.id) ||
       isNullOrUndefined(misconception.sessionId) ||
@@ -26,7 +28,7 @@ export class MisconceptionParser {
       );
     }
 
-    const parsedMisconception: IMisconception = {
+    const parsedMisconception: IMicroCoachMisconception = {
       id: misconception.id,
       rank: misconception.rank,
       badge: misconception.badge ?? null,

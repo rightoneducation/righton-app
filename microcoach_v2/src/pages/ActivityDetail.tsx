@@ -12,7 +12,8 @@ import ActivityPhase from '../components/phases/ActivityPhase';
 import BeforeClassPhase from '../components/phases/BeforeClassPhase';
 import StepListPhase from '../components/phases/StepListPhase';
 import { ScreenSize } from '../lib/MicroCoachModels';
-import { IActivity, IMisconception } from '../lib/PipelineModels';
+import { IMicroCoachActivity } from '../api/Models/IMicroCoachActivity';
+import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
 import { ContextBanner } from '../lib/styledcomponents/ChooseActivityStyledComponents';
 import { PlanBackButton } from '../lib/styledcomponents/MyPlanStyledComponents';
 import {
@@ -30,8 +31,8 @@ import { useMisconceptions } from '../hooks/useMisconceptions';
 import formatStepAnnotation from '../lib/activityMarks';
 
 interface ActivityDetailViewProps extends ScreenSizeProps {
-  activity: IActivity;
-  misconception: IMisconception;
+  activity: IMicroCoachActivity;
+  misconception: IMicroCoachMisconception;
 }
 
 function ActivityDetailView({

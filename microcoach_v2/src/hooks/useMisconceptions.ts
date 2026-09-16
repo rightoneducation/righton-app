@@ -1,16 +1,12 @@
 import mockPipelineOutput from '../lib/mocks/mockPipelineOutput.json';
-import {
-  IMisconception,
-  IPipelineOutput,
-  IReflect,
-  ISession,
-} from '../lib/PipelineModels';
+import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
+import { IPipelineOutput, IReflect, ISession } from '../lib/PipelineModels';
 
 const data = mockPipelineOutput as unknown as IPipelineOutput;
 
 interface UseMisconceptionsResult {
   session: ISession;
-  misconceptions: IMisconception[];
+  misconceptions: IMicroCoachMisconception[];
   reflect: IReflect;
   isReady: boolean;
 }
