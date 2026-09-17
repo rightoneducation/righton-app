@@ -27,7 +27,6 @@ export interface IAPIClients {
   classroom: IClassroomAPIClient,
   assessment: IAssessmentAPIClient,
   contextData: IContextDataAPIClient,
-  student: IStudentAPIClient
-}
+  student: IStudentAPIClient,
   pipelineRun: IPipelineRunAPIClient // TEMPORARY — see MicroCoachPipelineRun
 }
