@@ -369,6 +369,28 @@ function MisconceptionCard({
 
 // ── Run bar ───────────────────────────────────────────────────────────────────
 
+// One line from input scale to output totals. Stage ratios are fixed (1 need and
+// 2 templates per misconception), so totals read better than completion ratios;
+// a shortfall is called out separately. Segments whose counts an older run's
+// manifest lacks are left out rather than shown as dashes.
+function flowLine(manifest: Rec, misconceptionCount: number): string {
+  const num = (k: string): number | null => (typeof manifest[k] === 'number' ? (manifest[k] as number) : null);
+  const input = [
+    num('questionCount') !== null && `${num('questionCount')} questions`,
+    num('distractorCount') !== null && `${num('distractorCount')} distractors`,
+    num('studentCount') !== null && `${num('studentCount')} students`,
+  ].filter(Boolean);
+  const mis = num('misconceptionCount') ?? misconceptionCount;
+  const needs = num('instructionalNeedsGenerated');
+  const picks = num('templatePicks') ?? (num('templatesSelected') !== null ? (num('templatesSelected') as number) * 2 : null);
+  const stages = [
+    `${mis} misconceptions`,
+    needs !== null && `${needs} instructional needs (1 each)`,
+    picks !== null && `${picks} activity templates (2 each)`,
+  ].filter(Boolean);
+  return [input.join(' · '), ...stages].filter((s) => s !== '').join('  →  ');
+}
+
 // Where reviewers leave feedback on what this page shows.
 const COMMENTS_DOC = 'https://docs.google.com/document/d/1cRwPZ1bL2TnYl0KKLsviWSD0tPh-5c8eWsU3jHylHxA/edit?usp=sharing';
 
@@ -391,6 +413,7 @@ function RunBar({
   onExpandAll: () => void;
   onCollapseAll: () => void;
 }) {
+  const missing = asArray(manifest.instructionalNeedsMissing);
   const stat = (label: string, value: React.ReactNode) => (
     <span className="p2-stat" key={label}>
       <span className="p2-stat-k">{label}</span>
@@ -434,10 +457,13 @@ function RunBar({
       <div className="p2-bar-row p2-stats">
         {stat('version', asStr(manifest.version) || 'untagged')}
         {stat('condition', String(manifest.condition ?? '—'))}
-        {stat('misconceptions', String(manifest.misconceptionCount ?? count))}
-        {stat('needs', `${manifest.instructionalNeedsGenerated ?? '—'}/${manifest.misconceptionCount ?? count}`)}
-        {stat('templates', `${manifest.templatesSelected ?? '—'}/${manifest.misconceptionCount ?? count}`)}
+        <span className="p2-flowline">{flowLine(manifest, count)}</span>
       </div>
+      {missing.length > 0 && (
+        <div className="p2-bar-row p2-bad p2-note">
+          {`No instructional need was returned for ${missing.length === 1 ? 'one misconception' : `${missing.length} misconceptions`}: ${missing.map((m) => asStr(m.title)).join('; ')}`}
+        </div>
+      )}
     </header>
   );
 }
@@ -451,6 +477,7 @@ const STYLES = `
   padding: 10px 24px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
 .p2-bar-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
 .p2-stats { margin-top: 6px; gap: 18px; }
+.p2-flowline { font-size: 13px; font-weight: 600; }
 .p2-spacer { flex: 1; }
 .p2-select { font: inherit; font-size: 13px; font-weight: 600; background: #fff; border: 1px solid #cfd5dc;
   border-radius: 6px; padding: 4px 8px; max-width: 520px; cursor: pointer; }
