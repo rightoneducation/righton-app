@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { IMisconception } from '../lib/PipelineModels';
+import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
 import {
   MisconceptionCard as CardSurface,
   BadgeSlot,
@@ -13,7 +13,7 @@ import {
 } from '../lib/styledcomponents/ReviewStyledComponents';
 
 interface MisconceptionCardProps extends ScreenSizeProps {
-  misconception: IMisconception;
+  misconception: IMicroCoachMisconception;
   onViewDetails: (misconceptionId: string) => void;
 }
 

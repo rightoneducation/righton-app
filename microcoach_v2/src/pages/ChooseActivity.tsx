@@ -24,10 +24,11 @@ import {
 } from '../lib/styledcomponents/ReviewStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 import { useMisconceptions } from '../hooks/useMisconceptions';
-import { IActivity, IMisconception } from '../lib/PipelineModels';
+import { IMicroCoachActivity } from '../api/Models/IMicroCoachActivity';
+import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
 
 interface ChooseActivityViewProps extends ScreenSizeProps, PlanProps {
-  misconception: IMisconception;
+  misconception: IMicroCoachMisconception;
 }
 
 function ChooseActivityView({
@@ -49,7 +50,7 @@ function ChooseActivityView({
         item.status === 'SAVED' && item.misconceptionId === misconception.id,
     )?.activityId ?? null;
 
-  const handleSelect = (activity: IActivity) => {
+  const handleSelect = (activity: IMicroCoachActivity) => {
     saveActivity({
       id: `plan-${misconception.id}-${activity.id}`,
       status: 'SAVED',

@@ -3,28 +3,26 @@ import { IUserAPIClient } from './interfaces/IUserAPIClient';
 import { IUser, UserRole } from '../../Models/IUser';
 import { UserParser } from '../../Parsers/UserParser';
 import {
-  CreateMicroCoachUserInput as CreateUserInput,
-  CreateMicroCoachUserMutation as CreateUserMutation,
-  CreateMicroCoachUserMutationVariables as CreateUserMutationVariables,
-  UpdateMicroCoachUserInput as UpdateUserInput,
-  UpdateMicroCoachUserMutation as UpdateUserMutation,
-  UpdateMicroCoachUserMutationVariables as UpdateUserMutationVariables,
-  GetMicroCoachUserQuery as GetUserQuery,
-  GetMicroCoachUserQueryVariables as GetUserQueryVariables,
+  CreateMicroCoachUserMutation,
+  CreateMicroCoachUserMutationVariables,
+  UpdateMicroCoachUserInput,
+  UpdateMicroCoachUserMutation,
+  UpdateMicroCoachUserMutationVariables,
+  GetMicroCoachUserQuery,
+  GetMicroCoachUserQueryVariables,
   UsersByCognitoIdQuery,
   UsersByCognitoIdQueryVariables,
   UsersByEmailQuery,
   UsersByEmailQueryVariables,
   UsersByRoleQuery,
   UsersByRoleQueryVariables,
-  UserRole as AWSUserRole,
 } from '../../../AWSAPI';
 import {
-  createMicroCoachUser as createUser,
-  updateMicroCoachUser as updateUser,
+  createMicroCoachUser,
+  updateMicroCoachUser,
 } from '../../../graphql/mutations';
 import {
-  getMicroCoachUser as getUser,
+  getMicroCoachUser,
   usersByCognitoId,
   usersByEmail,
   usersByRole,
@@ -48,10 +46,11 @@ export const userProfileLocalStorage = 'microcoach_userprofile';
 // touch every client in the package.
 export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
 
-  async createUser(input: CreateUserInput): Promise<IUser | null> {
-    const variables: CreateUserMutationVariables = { input };
-    const res = await this.callGraphQL<CreateUserMutation>(
-      createUser,
+  async createUser(user: IUser): Promise<IUser | null> {
+    const input = UserParser.parseAWSUserInputfromIUser(user);
+    const variables: CreateMicroCoachUserMutationVariables = { input };
+    const res = await this.callGraphQL<CreateMicroCoachUserMutation>(
+      createMicroCoachUser,
       variables as unknown as GraphQLOptions,
     );
     if (res?.data?.createMicroCoachUser)
@@ -59,10 +58,10 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
     return null;
   }
 
-  async updateUser(input: UpdateUserInput): Promise<IUser | null> {
-    const variables: UpdateUserMutationVariables = { input };
-    const res = await this.callGraphQL<UpdateUserMutation>(
-      updateUser,
+  async updateUser(input: UpdateMicroCoachUserInput): Promise<IUser | null> {
+    const variables: UpdateMicroCoachUserMutationVariables = { input };
+    const res = await this.callGraphQL<UpdateMicroCoachUserMutation>(
+      updateMicroCoachUser,
       variables as unknown as GraphQLOptions,
     );
     if (res?.data?.updateMicroCoachUser)
@@ -72,9 +71,9 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
 
   async getUser(id: string): Promise<IUser | null> {
     if (!id) return null;
-    const variables: GetUserQueryVariables = { id };
-    const res = await this.callGraphQL<GetUserQuery>(
-      getUser,
+    const variables: GetMicroCoachUserQueryVariables = { id };
+    const res = await this.callGraphQL<GetMicroCoachUserQuery>(
+      getMicroCoachUser,
       variables as unknown as GraphQLOptions,
     );
     if (res?.data?.getMicroCoachUser)
@@ -141,31 +140,6 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
     localStorage.removeItem(userProfileLocalStorage);
   }
 
-  // Builds the create mutation's input field by field rather than spreading an
-  // `IUser`: the profile carries a transient `password` that isn't on the User
-  // model, and AppSync rejects unknown input fields.
-  //
-  // `role` is fixed at MEMBER (the wire spelling of the app's TEACHER) and
-  // never read off the profile — promotion to ADMIN is an admin-side action,
-  // not something the signup form gets to post.
-  //
-  // `classes` is absent on purpose: it is a @hasMany relation, so it is not a
-  // field on CreateUserInput at all. Class names collected by the wizard are
-  // not persisted yet — they would need their own Class rows keyed by userId.
-  private static buildCreateUserInput(
-    cognitoId: string,
-    email: string,
-    profile: IUser,
-  ): CreateUserInput {
-    return {
-      cognitoId,
-      email,
-      firstName: profile.firstName,
-      lastName: profile.lastName,
-      role: AWSUserRole.MEMBER,
-    };
-  }
-
   // ── Email / password login ───────────────────────────────────────────────
   async loginAndRetrieveUserProfile(
     email: string,
@@ -204,7 +178,11 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
     const session = await this.auth.getCurrentSession();
     const cognitoId = session.userSub ?? '';
     const created = await this.createUser(
-      UserAPIClient.buildCreateUserInput(cognitoId, profile.email, profile),
+      {
+        ...profile,
+        cognitoId,
+        role: UserRole.TEACHER,
+      },
     );
     // The Cognito user exists by now, so a null here means the row didn't land:
     // signed in with no profile to render. Fail loudly rather than hand the
@@ -225,7 +203,12 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
     // grant, so calling it unconditionally logs a 400 on every Google signup.
     const email = profile.email || (await this.auth.getUserEmail()) || '';
     const created = await this.createUser(
-      UserAPIClient.buildCreateUserInput(cognitoId, email, profile),
+      {
+        ...profile,
+        cognitoId,
+        email,
+        role: UserRole.TEACHER,
+      },
     );
     if (!created) throw new Error('googleSignUp: createUser returned no user');
     this.setLocalUserProfile(created);

@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { IActivity } from '../lib/PipelineModels';
+import { IMicroCoachActivity } from '../api/Models/IMicroCoachActivity';
 import {
   ActivityCard as CardSurface,
   DurationChip,
@@ -14,7 +14,7 @@ import {
 } from '../lib/styledcomponents/ChooseActivityStyledComponents';
 
 interface ActivityCardProps extends ScreenSizeProps {
-  activity: IActivity;
+  activity: IMicroCoachActivity;
   /** Owned by the page, not read off the activity — selection is page state. */
   isSelected: boolean;
   onSelect: (activityId: string) => void;

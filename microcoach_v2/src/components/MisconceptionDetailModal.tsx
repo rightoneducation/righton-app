@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Modal from 'react-modal';
-import { IMisconception } from '../lib/PipelineModels';
+import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import StudentWorkTab, { UnderstoodConceptSection } from './StudentWorkTab';
 import SkillContextTab from './SkillContextTab';
@@ -28,7 +28,7 @@ import { CardCta } from '../lib/styledcomponents/ReviewStyledComponents';
 type ModalTabId = 'student-work' | 'skill-context';
 
 interface MisconceptionDetailModalProps {
-  misconception: IMisconception | null;
+  misconception: IMicroCoachMisconception | null;
   screenSize: ScreenSize;
   onClose: () => void;
   onChooseActivity: (misconceptionId: string) => void;
