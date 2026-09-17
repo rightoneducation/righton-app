@@ -2,6 +2,7 @@ import { Amplify } from "aws-amplify";
 import { IAuthAPIClient } from './auth/interfaces/IAuthAPIClient';
 import { AuthAPIClient } from './auth/AuthAPIClient';
 import { UserAPIClient } from './user/UserAPIClient';
+import { PipelineRunAPIClient } from './pipelineRun/PipelineRunAPIClient';
 import { Environment } from './interfaces/IAPIClients';
 import awsconfig from "../../aws-exports";
 import { MisconceptionAPIClient } from "./misconception/MisconceptionAPIClient";
@@ -29,6 +30,9 @@ export class APIClients {
   assessment: AssessmentAPIClient;
   contextData: ContextDataAPIClient;
   student: StudentAPIClient;
+  // TEMPORARY — /preview reads eval runs through this. Delete with the
+  // MicroCoachPipelineRun model.
+  pipelineRun: PipelineRunAPIClient;
 
   constructor(env: Environment, authClient: IAuthAPIClient) {
     this.configAmplify(awsconfig);
@@ -42,6 +46,7 @@ export class APIClients {
     this.assessment = new AssessmentAPIClient(env, this.auth);
     this.contextData = new ContextDataAPIClient(env, this.auth);
     this.student = new StudentAPIClient(env, this.auth);
+    this.pipelineRun = new PipelineRunAPIClient(env, this.auth);
   }
 
   static async create(env: Environment, appType: AppType): Promise<APIClients> {

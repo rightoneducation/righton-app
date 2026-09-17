@@ -1,5 +1,6 @@
 import {
-  UpdateMicroCoachUserInput,
+  CreateMicroCoachUserInput as CreateUserInput,
+  UpdateMicroCoachUserInput as UpdateUserInput,
 } from "../../../../AWSAPI";
 import { IUser, UserRole } from "../../../Models/IUser";
 

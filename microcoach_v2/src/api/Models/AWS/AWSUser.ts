@@ -1,6 +1,6 @@
 import { UserRole as AWSUserRole } from '../../../AWSAPI'
 
-// Structural mirror of the `User` shape AppSync returns.
+// Structural mirror of the `MicroCoachUser` shape AppSync returns.
 //
 // Deliberately not an alias of AWSAPI's generated `User`: codegen inlines an
 // anonymous object per operation (`CreateUserMutation['createUser']`, the items

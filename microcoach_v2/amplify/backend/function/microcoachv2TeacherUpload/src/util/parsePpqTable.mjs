@@ -1,39 +1,42 @@
 /**
- * Deterministic parser for the answer-option table at the top of a PPQ.docx.
+ * Deterministic parser for the answer-key table at the top of a PPQ.docx.
  *
- * This is the only place in the pipeline that ever sees answer-option text. The
- * ingest model is shown the table so it can attribute misconceptions to specific
- * options; every stage after this one has nothing but a correct-answer letter.
+ * The table gives, per question, the number as printed in the document, the correct
+ * option letter and the standard assessed. Upload uses it to reconcile the
+ * document's question numbering to the assessment's; ingest shows it to the model
+ * alongside the document body.
  *
- * Shape of the mammoth raw text (verified against all four pilot documents):
+ * Expected shape of the mammoth raw text (header cells one per line, YOY empty so it
+ * collapses out of the body):
  *
  *   Algebra I: Power Practice Quiz, Week 27 COACH
- *   Q | Correct Answer | Standard | YOY | Distractors      <- header cells, one per line
+ *   Q | Correct Answer | Standard | YOY            <- header cells, one per line
  *   1
  *   A
  *   A.REI.12
- *   Correct
- *   Chose graph with slope of -6 (did not convert to slope-intercept)
- *   ...
  *   3
+ *   B
+ *   A.REI.3
  *   ...
- *   *Exemplar on the next page.                            <- table ends here
+ *   *Exemplar on the next page.                    <- table ends here
  *
- * The YOY column is empty in every document, so it collapses out of the raw text
- * entirely and a question block reads [number, letter, standard, ...4 distractors].
- * If YOY is ever populated the slice shifts by one, which is why the option count
- * is asserted rather than assumed.
+ * ASSUMPTION (2026-09-15): this layout is inferred from the pilot documents minus
+ * their Distractors column; no new-format document has been parsed yet. Verify
+ * against a real one and adjust the header / block rules if the export differs.
+ *
+ * The pilot documents carried a teacher-authored Distractors column — four extra
+ * lines per question describing each option. New documents do not, and the
+ * pipeline no longer reads it. Any lines between a question's standard and the next
+ * question number are skipped, so an old-format document still parses; its
+ * distractor text is simply ignored.
  */
 
-const CORRECT_MARKER = /^correct\b/i;   // matches both "Correct" and "Correct Answer"
-const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E'];
-const EXPECTED_OPTIONS = 4;
+const LETTER = /^[A-E]$/;
 
 /**
  * @param {string} ppqText  mammoth `extractRawText` output
- * @returns {{docxQuestion: number, correctAnswer: string, standard: string,
- *            options: {letter: string, text: string, isCorrect: boolean}[]}[]}
- * @throws if the table is absent, malformed, or fails the correct-answer checksum
+ * @returns {{docxQuestion: number, correctAnswer: string, standard: string}[]}
+ * @throws if the table is absent or a question block is malformed
  */
 export function parsePpqTable(ppqText) {
   const lines = String(ppqText ?? '')
@@ -41,17 +44,17 @@ export function parsePpqTable(ppqText) {
     .map((l) => l.trim())
     .filter((l) => l.length > 0);
 
-  const headerIdx = lines.findIndex((l) => l === 'Distractors');
+  const headerIdx = lines.findIndex((l) => /^correct answer$/i.test(l));
   if (headerIdx === -1) {
-    throw new Error('parsePpqTable: no "Distractors" header cell — this is not a PPQ table');
+    throw new Error('parsePpqTable: no "Correct Answer" header cell — this is not a PPQ answer key');
   }
 
   const endIdx = lines.findIndex((l, i) => i > headerIdx && /^\*?Exemplar/i.test(l));
   const body = lines.slice(headerIdx + 1, endIdx === -1 ? undefined : endIdx);
 
   const isQuestionNumber = (l) => /^\d+$/.test(l);
-  const questions = [];
 
+  const questions = [];
   let i = 0;
   while (i < body.length) {
     if (!isQuestionNumber(body[i])) { i += 1; continue; }
@@ -60,47 +63,24 @@ export function parsePpqTable(ppqText) {
     const correctAnswer = (body[i + 1] ?? '').trim().toUpperCase();
     const standard = (body[i + 2] ?? '').trim();
 
-    let j = i + 3;
-    const distractors = [];
-    while (j < body.length && !isQuestionNumber(body[j])) {
-      distractors.push(body[j]);
-      j += 1;
-    }
-
-    // Guards the YOY-collapse assumption above. A block that does not yield exactly
-    // four options means the column layout changed, and every letter assignment
-    // after this point would be silently wrong.
-    if (distractors.length !== EXPECTED_OPTIONS) {
+    if (!LETTER.test(correctAnswer)) {
       throw new Error(
-        `parsePpqTable: Q${docxQuestion} yielded ${distractors.length} options, expected ${EXPECTED_OPTIONS}. ` +
-        `Column layout may have changed. Got: ${JSON.stringify(distractors)}`
+        `parsePpqTable: Q${docxQuestion} correct answer "${correctAnswer}" is not an option letter. ` +
+        `Column layout may have changed.`
+      );
+    }
+    if (!standard || isQuestionNumber(standard)) {
+      throw new Error(
+        `parsePpqTable: Q${docxQuestion} has no standard cell. Column layout may have changed.`
       );
     }
 
-    const options = distractors.map((text, idx) => ({
-      letter: OPTION_LETTERS[idx],
-      text,
-      isCorrect: CORRECT_MARKER.test(text),
-    }));
+    questions.push({ docxQuestion, correctAnswer, standard });
 
-    // Checksum: the document states the correct answer twice — once as a letter in
-    // the "Correct Answer" column, once as the position of the "Correct" entry in
-    // the distractor list. They must agree, or the position→letter mapping that the
-    // whole linkage depends on is not trustworthy for this question.
-    const markerIdx = options.findIndex((o) => o.isCorrect);
-    const expectedIdx = OPTION_LETTERS.indexOf(correctAnswer);
-    if (markerIdx === -1) {
-      throw new Error(`parsePpqTable: Q${docxQuestion} has no option marked "Correct"`);
-    }
-    if (markerIdx !== expectedIdx) {
-      throw new Error(
-        `parsePpqTable: Q${docxQuestion} checksum failed — "Correct" sits at position ${markerIdx} ` +
-        `(${OPTION_LETTERS[markerIdx]}) but the answer key says ${correctAnswer}`
-      );
-    }
-
-    questions.push({ docxQuestion, correctAnswer, standard, options });
-    i = j;
+    // Skip to the next question number. Anything in between (the old Distractors
+    // column, stray cells) is not read.
+    i += 3;
+    while (i < body.length && !isQuestionNumber(body[i])) i += 1;
   }
 
   if (questions.length === 0) {
@@ -142,14 +122,9 @@ export function reconcileQuestionNumbers(parsedTable, storedQuestions) {
   return map;
 }
 
-/** Renders the table for a prompt, so the model selects options instead of inventing them. */
-export function formatOptionTable(parsedTable) {
+/** Renders the answer key for a prompt: one line per question. */
+export function formatAnswerKey(parsedTable) {
   return parsedTable
-    .map((q) => {
-      const opts = q.options
-        .map((o) => `  ${o.letter}. ${o.text}`)
-        .join('\n');
-      return `Q${q.docxQuestion}  (correct answer: ${q.correctAnswer}, standard: ${q.standard})\n${opts}`;
-    })
-    .join('\n\n');
+    .map((q) => `Q${q.docxQuestion}: correct ${q.correctAnswer} · ${q.standard}`)
+    .join('\n');
 }

@@ -9,6 +9,7 @@ import { IAssessmentAPIClient } from "../assessment/interfaces/IAssessmentAPICli
 import { IContextDataAPIClient } from "../contextData/interfaces/IContextDataAPIClient";
 import { IStudentAPIClient } from "../student/interfaces/IStudentAPIClient";
 
+import { IPipelineRunAPIClient } from "../pipelineRun/interfaces/IPipelineRunAPIClient";
 
 export enum Environment {
   Staging = 'staging',
@@ -27,4 +28,6 @@ export interface IAPIClients {
   assessment: IAssessmentAPIClient,
   contextData: IContextDataAPIClient,
   student: IStudentAPIClient
+}
+  pipelineRun: IPipelineRunAPIClient // TEMPORARY — see MicroCoachPipelineRun
 }

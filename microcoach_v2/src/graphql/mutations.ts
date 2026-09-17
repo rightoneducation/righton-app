@@ -1652,3 +1652,72 @@ export const deleteMicroCoachPipelineRun = /* GraphQL */ `mutation DeleteMicroCo
   APITypes.DeleteMicroCoachPipelineRunMutationVariables,
   APITypes.DeleteMicroCoachPipelineRunMutation
 >;
+export const createMicroCoachPipelineRun = /* GraphQL */ `
+  mutation CreateMicroCoachPipelineRun(
+    $input: CreateMicroCoachPipelineRunInput!
+    $condition: ModelMicroCoachPipelineRunConditionInput
+  ) {
+    createMicroCoachPipelineRun(input: $input, condition: $condition) {
+      id
+      classroomName
+      sessionLabel
+      condition
+      version
+      gitSha
+      amplifyEnv
+      startedAt
+      misconceptionCount
+      manifest
+      output
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateMicroCoachPipelineRun = /* GraphQL */ `
+  mutation UpdateMicroCoachPipelineRun(
+    $input: UpdateMicroCoachPipelineRunInput!
+    $condition: ModelMicroCoachPipelineRunConditionInput
+  ) {
+    updateMicroCoachPipelineRun(input: $input, condition: $condition) {
+      id
+      classroomName
+      sessionLabel
+      condition
+      version
+      gitSha
+      amplifyEnv
+      startedAt
+      misconceptionCount
+      manifest
+      output
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteMicroCoachPipelineRun = /* GraphQL */ `
+  mutation DeleteMicroCoachPipelineRun(
+    $input: DeleteMicroCoachPipelineRunInput!
+    $condition: ModelMicroCoachPipelineRunConditionInput
+  ) {
+    deleteMicroCoachPipelineRun(input: $input, condition: $condition) {
+      id
+      classroomName
+      sessionLabel
+      condition
+      version
+      gitSha
+      amplifyEnv
+      startedAt
+      misconceptionCount
+      manifest
+      output
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;

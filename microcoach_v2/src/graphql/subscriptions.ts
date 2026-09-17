@@ -1625,3 +1625,69 @@ export const onDeleteMicroCoachPipelineRun = /* GraphQL */ `subscription OnDelet
   APITypes.OnDeleteMicroCoachPipelineRunSubscriptionVariables,
   APITypes.OnDeleteMicroCoachPipelineRunSubscription
 >;
+export const onCreateMicroCoachPipelineRun = /* GraphQL */ `
+  subscription OnCreateMicroCoachPipelineRun(
+    $filter: ModelSubscriptionMicroCoachPipelineRunFilterInput
+  ) {
+    onCreateMicroCoachPipelineRun(filter: $filter) {
+      id
+      classroomName
+      sessionLabel
+      condition
+      version
+      gitSha
+      amplifyEnv
+      startedAt
+      misconceptionCount
+      manifest
+      output
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateMicroCoachPipelineRun = /* GraphQL */ `
+  subscription OnUpdateMicroCoachPipelineRun(
+    $filter: ModelSubscriptionMicroCoachPipelineRunFilterInput
+  ) {
+    onUpdateMicroCoachPipelineRun(filter: $filter) {
+      id
+      classroomName
+      sessionLabel
+      condition
+      version
+      gitSha
+      amplifyEnv
+      startedAt
+      misconceptionCount
+      manifest
+      output
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteMicroCoachPipelineRun = /* GraphQL */ `
+  subscription OnDeleteMicroCoachPipelineRun(
+    $filter: ModelSubscriptionMicroCoachPipelineRunFilterInput
+  ) {
+    onDeleteMicroCoachPipelineRun(filter: $filter) {
+      id
+      classroomName
+      sessionLabel
+      condition
+      version
+      gitSha
+      amplifyEnv
+      startedAt
+      misconceptionCount
+      manifest
+      output
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;

@@ -105,17 +105,17 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "microcoachv2LLMAnalysis": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "microcoachv2LLMGenInstrNeed": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
     "microcoachv2LLMGenMisconception": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachv2LLMSelectTemplate": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -209,22 +209,6 @@
         }
       ]
     },
-    "AMPLIFY_function_microcoachv2LLMAnalysis_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "microcoachv2LLMAnalysis"
-        }
-      ]
-    },
-    "AMPLIFY_function_microcoachv2LLMAnalysis_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "microcoachv2LLMAnalysis"
-        }
-      ]
-    },
     "AMPLIFY_function_microcoachv2LLMGenInstrNeed_deploymentBucketName": {
       "usedBy": [
         {
@@ -254,6 +238,22 @@
         {
           "category": "function",
           "resourceName": "microcoachv2LLMGenMisconception"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2LLMSelectTemplate_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2LLMSelectTemplate"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2LLMSelectTemplate_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2LLMSelectTemplate"
         }
       ]
     },

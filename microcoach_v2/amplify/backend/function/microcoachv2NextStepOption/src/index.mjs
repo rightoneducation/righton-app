@@ -274,7 +274,36 @@ Return only the JSON array, no explanation.`;
   const learningComponents    = targetStandard?.learningComponents ?? [];
   const childStandards        = targetStandard?.childStandards ?? [];
   const relatedStandards      = targetStandard?.relatedStandards ?? [];
-  const lvnFactors            = targetStandard?.lvnFactors ?? [];
+
+  // The caller deduplicates LVN entries across the session's standards, leaving a
+  // `{ id, name, seeAbove: true }` stub wherever an entry already appeared in full
+  // under an earlier standard. That reads correctly in a prompt that renders every
+  // standard; this prompt renders ONE, so "above" may not exist. Resolve each stub
+  // back to its full entry from the session-wide payload before formatting.
+  const resolveSeeAbove = (allStandards) => {
+    const full = { factor: new Map(), strategy: new Map(), learnerModel: new Map(), interactsWith: new Map() };
+    for (const st of allStandards) {
+      for (const f of st.lvnFactors ?? []) {
+        if (f.seeAbove) continue;
+        if (!full.factor.has(f.id)) full.factor.set(f.id, f);
+        for (const x of f.strategies    ?? []) if (!x.seeAbove && !full.strategy.has(x.id))      full.strategy.set(x.id, x);
+        for (const x of f.learnerModels ?? []) if (!x.seeAbove && !full.learnerModel.has(x.id))  full.learnerModel.set(x.id, x);
+        for (const x of f.interactsWith ?? []) if (!x.seeAbove && !full.interactsWith.has(x.id)) full.interactsWith.set(x.id, x);
+      }
+    }
+    const pick = (map) => (x) => (x?.seeAbove ? (map.get(x.id) ?? x) : x);
+    return (factors) => factors.map((f) => {
+      const resolved = pick(full.factor)(f);
+      if (resolved.seeAbove) return resolved; // no full copy anywhere — leave the stub
+      return {
+        ...resolved,
+        strategies:    (resolved.strategies    ?? []).map(pick(full.strategy)),
+        learnerModels: (resolved.learnerModels ?? []).map(pick(full.learnerModel)),
+        interactsWith: (resolved.interactsWith ?? []).map(pick(full.interactsWith)),
+      };
+    });
+  };
+  const lvnFactors = resolveSeeAbove(standards)(targetStandard?.lvnFactors ?? []);
 
   // Diagnostic: when the analysis stage emits a code the graph does not carry,
   // targetStandard is undefined and ALL graph context silently drops out of this
@@ -317,6 +346,7 @@ Framing the importance of this fix in terms of these downstream skills can motiv
   // 2026-08 rework these were fetched and then never rendered, so the model was
   // asked to "use the LVN factors" while seeing only factor names.
   const formatFactor = (f) => {
+    if (f.seeAbove) return `- **${f.name}**`;
     const strategies = f.strategies ?? [];
     const detailed   = strategies.slice(0, MAX_LVN_STRATEGY_DETAIL);
     const remaining  = strategies.slice(MAX_LVN_STRATEGY_DETAIL);
@@ -326,7 +356,9 @@ Framing the importance of this fix in terms of these downstream skills can motiv
     if (detailed.length > 0) {
       lines.push('  Research-backed strategies targeting this factor:');
       lines.push(...detailed.map(
-        (s) => `    - **${s.name}**${s.category ? ` (${s.category})` : ''}: ${s.description}`
+        (s) => s.seeAbove
+          ? `    - **${s.name}**`
+          : `    - **${s.name}**${s.category ? ` (${s.category})` : ''}: ${s.description}`
       ));
     }
     if (remaining.length > 0) {
