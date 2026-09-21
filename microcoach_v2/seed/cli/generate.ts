@@ -1076,6 +1076,15 @@ async function processClassroom(
     // What dedupeGraph collapsed before masking. A run whose prompts carried the
     // repeated LVN blocks is not comparable to one whose prompts carried stubs.
     graphDedup,
+    // Scale of the analysis, so a reader can weigh the output counts against the input.
+    questionCount: (ppq?.questions ?? []).length,
+    distractorCount: (ppq?.questions ?? []).reduce(
+      (n: number, q: any) => n + (q.answerChoices ?? []).filter((o: any) => !o.isCorrect).length, 0,
+    ),
+    distractorsLinked: new Set(
+      misconceptions.flatMap((m: any) => (m.wrongAnswers ?? []).map((w: any) => `${w.questionNumber}:${String(w.letter).toUpperCase()}`)),
+    ).size,
+    studentCount: studentResponses.length,
     misconceptionCount: misconceptions.length,
     activityCount: activitiesPerGroup.reduce((n: number, g: any[]) => n + g.length, 0),
     instructionalNeedsGenerated,
@@ -1095,6 +1104,8 @@ async function processClassroom(
     // Template selection health: how many needs got two picks, and whether the
     // static library prefix was served from the prompt cache.
     templatesSelected,
+    // Every selection is two picks, so this is 2 × templatesSelected unless a pick was rejected.
+    templatePicks: misconceptions.reduce((n: number, m: any) => n + (m.selectedTemplates?.top2?.length ?? 0), 0),
     selectCachedPromptTokens,
     // A run where the wrong-answer refs never arrived is not comparable to one
     // where they did, so the counting chain's health goes in the manifest rather

@@ -49,12 +49,12 @@ export const STAGES: Stage[] = [
     subtitle: "Look up what the standards build on and lead to",
     who: 'api',
     where: 'GetLearningScience → Learning Commons',
-    detail: 'Queries the knowledge graph for the session\'s standards, then masks fields according to the eval condition.',
-    out: ['knowledge-graph standards', 'prerequisite + dependent standards', 'masked by condition'],
+    detail: 'Queries the knowledge graph for the session\'s standards. In eval runs, the chosen condition then excludes one section of the response before it reaches any prompt, so the run measures what that section contributes. For example, NO_PREREQ empties the prerequisite standards; NONE keeps the full graph.',
+    out: ['knowledge-graph standards', 'prerequisite + dependent standards', 'one section excluded per eval condition'],
   },
   {
     id: 'count',
-    label: 'Compute Responses',
+    label: 'Compute Response Patterns',
     subtitle: "Tally who picked which wrong answer, and how sure they were",
     who: 'code',
     where: 'generate.ts 4b',
@@ -63,7 +63,7 @@ export const STAGES: Stage[] = [
   },
   {
     id: 'gen',
-    label: 'Generate Misconceptions',
+    label: 'Identify/Generate Misconceptions',
     subtitle: "Name the thinking behind each wrong answer",
     who: 'llm',
     where: 'LLMGenMisconception',
@@ -72,7 +72,7 @@ export const STAGES: Stage[] = [
   },
   {
     id: 'reach',
-    label: 'Compute Reach',
+    label: 'Compute Misconception Reach',
     subtitle: "Count how many students each misconception affects",
     who: 'code',
     where: 'generate.ts 4c → computeReach.ts',
@@ -81,7 +81,7 @@ export const STAGES: Stage[] = [
   },
   {
     id: 'need',
-    label: 'Generate Instructional Needs',
+    label: 'Identify/Generate Instructional Needs',
     subtitle: "Decide what students need next, and which to address first",
     who: 'llm',
     where: 'LLMGenInstrNeed',
@@ -99,7 +99,7 @@ export const STAGES: Stage[] = [
   },
   {
     id: 'activity',
-    label: 'Generate Activity Template Contents',
+    label: 'Generate Activities',
     subtitle: "Write the classroom activity for each routine",
     who: 'llm',
     where: 'NextStepOption (6a planner, 6b generator)',
