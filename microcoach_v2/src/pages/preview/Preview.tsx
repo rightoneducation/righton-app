@@ -137,21 +137,19 @@ function Formulae() {
             FORMULAE.filter((f) => f.stageId === stageId).map((f) => {
               const hit = byId.get(stageId);
               return (
-                <article className="p2-formula" key={f.id}>
-                  <div className="p2-formula-head">
+                <details className="p2-formula" key={f.id}>
+                  <summary className="p2-formula-head">
+                    <span className="p2-chevron" aria-hidden="true">
+                      ▸
+                    </span>
                     {hit && <span className="p2-stage-n">{hit.n}</span>}
                     <span className="p2-formula-title">
                       {hit && <span className="p2-formula-stage">{hit.stage.label} · </span>}
                       {f.title}
                     </span>
                     <WhoBadge who={f.who} />
-                  </div>
-                  {f.origin && (
-                    <div className="p2-origin-row">
-                      <span className="p2-origin-label">Logic from:</span>
-                      <OriginTag origin={f.origin} />
-                    </div>
-                  )}
+                    {f.origin && <OriginTag origin={f.origin} />}
+                  </summary>
                   <ol className="p2-steps">
                     {f.steps.map((step) => (
                       <li key={step.text}>
@@ -172,14 +170,14 @@ function Formulae() {
                       ))}
                     </ul>
                   )}
-                </article>
+                </details>
               );
             }),
           );
           // Boxes with nothing to compute (fetch-only, under construction) are left out.
           if (cards.length === 0) return null;
           return (
-            <li className="p2-group" key={g.id} style={{ flexGrow: g.stageIds.length }}>
+            <li className="p2-group" key={g.id}>
               <div className="p2-group-head">
                 <span className="p2-group-label">{g.label}</span>
               </div>
@@ -262,7 +260,74 @@ const RUBRIC_LABELS: Record<string, string> = {
   conceptualDepth: 'conceptual depth',
 };
 
-function RubricBlock({ item }: { item: Rec }) {
+// How a tie on the rubric total is broken, in order. Copied from
+// microcoachv2ScoresCalc/src/misconceptionRubric.json → selection.tiebreak; the
+// values compared are on each item's rubric.inputs.
+const TIEBREAK: Array<{ key: string; label: string; fmt: (v: unknown) => string }> = [
+  { key: 'conceptualDepth', label: 'conceptual depth', fmt: (v) => String(v) },
+  { key: 'studentPercent', label: 'share of class', fmt: (v) => pct(v) || String(v) },
+  { key: 'meanConfidence', label: 'mean confidence', fmt: (v) => String(v) },
+];
+
+interface TieNote {
+  withRank: number | null;
+  decidedBy: string;
+  detail: string | null;
+}
+
+// For each card that shares its normalized rubric score with the card ranked
+// just above it, say which tiebreak separated them. Keyed by position in the
+// ranked list; the note goes on the lower-ranked card, since that is the rank
+// that needs explaining.
+function findTies(ranked: Rec[]): Map<number, TieNote> {
+  const ties = new Map<number, TieNote>();
+  ranked.forEach((item, i) => {
+    if (i === 0) return;
+    const a = asRec(ranked[i - 1].rubric);
+    const b = asRec(item.rubric);
+    if (!a || !b || typeof a.normalized !== 'number' || a.normalized !== b.normalized) return;
+    const ai = asRec(a.inputs) ?? {};
+    const bi = asRec(b.inputs) ?? {};
+    const withRank = typeof ranked[i - 1].priorityRank === 'number' ? (ranked[i - 1].priorityRank as number) : null;
+    const decider = TIEBREAK.find((t) => ai[t.key] !== bi[t.key]);
+    if (decider) {
+      ties.set(i, {
+        withRank,
+        decidedBy: decider.label,
+        detail: `${decider.fmt(bi[decider.key])} vs ${decider.fmt(ai[decider.key])}`,
+      });
+    } else {
+      ties.set(i, { withRank, decidedBy: 'the order the model listed them', detail: null });
+    }
+  });
+  return ties;
+}
+
+function TieTag({ tie }: { tie: TieNote | undefined }) {
+  if (!tie) return null;
+  return (
+    <span className="p2-meta p2-tie" title="same rubric total as the card above; the tiebreak decided the order">
+      Tied with #{tie.withRank ?? '?'} · ranked lower on {tie.decidedBy}
+      {tie.detail && ` (${tie.detail})`}
+    </span>
+  );
+}
+
+// The rubric total for a card header: the reason the rank is what it is, read
+// left to right from the rank chip. The per-metric breakdown is in the body.
+function ScoreStrip({ item }: { item: Rec }) {
+  const rubric = asRec(item.rubric);
+  if (!rubric || typeof rubric.total !== 'number' || typeof rubric.maxPossible !== 'number') return null;
+  return (
+    <span className="p2-meta p2-meta-scores" title="misconception rubric total">
+      <span className="p2-mono p2-score-total">
+        {rubric.total}/{rubric.maxPossible}
+      </span>
+    </span>
+  );
+}
+
+function RubricBlock({ item, tie }: { item: Rec; tie?: TieNote }) {
   const rubric = asRec(item.rubric);
   if (!rubric) {
     return (
@@ -297,6 +362,7 @@ function RubricBlock({ item }: { item: Rec }) {
             </span>
           }
         />
+        {tie && <Row k="tie" v={<TieTag tie={tie} />} />}
         {asStr(rubric.conceptualDepthWhy) !== '' && (
           <Row k="depth — why" v={<MathText text={asStr(rubric.conceptualDepthWhy)} />} />
         )}
@@ -384,16 +450,15 @@ function MisconceptionCard({
   index,
   open,
   generation,
+  tie,
 }: {
   item: Rec;
   index: number;
   open: boolean;
   generation: number;
+  tie?: TieNote;
 }) {
   const rank = typeof item.priorityRank === 'number' ? item.priorityRank : index + 1;
-  const sel = asRec(item.selectedTemplates);
-  const topPick = sel ? asArray(sel.top2)[0] : null;
-  const count = typeof item.studentCount === 'number' ? item.studentCount : null;
   return (
     // Remounted on `generation` so Expand/Collapse all re-applies the default:
     // <details open> is uncontrolled after first render.
@@ -405,17 +470,12 @@ function MisconceptionCard({
         <span className={item.isRecommendedFocus === true ? 'p2-rank p2-rank-focus' : 'p2-rank'}>#{rank}</span>
         <span className="p2-card-title">{asStr(item.title) || '(untitled)'}</span>
         {item.isRecommendedFocus === true && <span className="p2-meta p2-focus">Recommended Focus</span>}
-        {item.retained === false && <span className="p2-meta p2-dropped">dropped by cap</span>}
-        {count !== null && (
-          <span className="p2-meta">
-            {count} students{pct(item.studentPercent) ? ` · ${pct(item.studentPercent)}` : ''}
-          </span>
-        )}
-        {topPick && <span className="p2-meta p2-meta-template">{asStr(topPick.templateId)}</span>}
+        <ScoreStrip item={item} />
+        <TieTag tie={tie} />
       </summary>
       <div className="p2-card-body">
         <MisconceptionBlock item={item} />
-        <RubricBlock item={item} />
+        <RubricBlock item={item} tie={tie} />
         <NeedBlock item={item} />
         <TemplateBlock item={item} />
       </div>
@@ -601,9 +661,10 @@ const STYLES = `
 .p2-flow-static .p2-group::after { content: none; }
 .p2-group-formulae { display: flex; flex-direction: column; gap: 10px; }
 .p2-formula { background: #fff; border: 1px solid #dfe3e8; border-radius: 8px; padding: 10px 12px; min-width: 0; }
-.p2-formula-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
-.p2-origin-row { display: flex; align-items: center; gap: 6px; margin: -4px 0 8px; }
-.p2-origin-label { font-size: 11px; color: #5b636b; }
+.p2-formula-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 0; cursor: pointer; list-style: none; }
+.p2-formula-head::-webkit-details-marker { display: none; }
+.p2-formula[open] > .p2-formula-head { margin-bottom: 8px; }
+.p2-formula[open] > .p2-formula-head > .p2-chevron { transform: rotate(90deg); }
 .p2-origin { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; text-decoration: none;
   background: #fde7ef; color: #b0234f; border-radius: 4px; padding: 2px 7px; white-space: nowrap; }
 .p2-origin:hover { background: #fbd0df; }
@@ -636,7 +697,6 @@ const STYLES = `
 .p2-card-title { font-size: 15px; font-weight: 700; }
 .p2-meta { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; background: #eceff3;
   color: #4b535c; border-radius: 4px; padding: 2px 7px; }
-.p2-meta-template { background: #e5edff; color: #2f5bd0; text-transform: none; letter-spacing: 0; }
 .p2-card-body { border-top: 1px solid #dfe3e8; padding: 12px; background: #f4f5f7; display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px; }
 .p2-block { background: #fff; border: 1px solid #dfe3e8; border-radius: 8px; padding: 12px 14px; min-width: 0; }
@@ -669,6 +729,10 @@ const STYLES = `
   color: #4b535c; border-radius: 4px; padding: 1px 6px; }
 .p2-fit-strong { background: #e5edff; color: #2f5bd0; }
 .p2-fit-below { background: #fdecec; color: #b3261e; margin-left: 4px; }
+.p2-meta-scores { display: inline-flex; gap: 4px; align-items: center; }
+.p2-tie { font-size: 11px; color: #9a5b00; background: #fdf1dc; border-radius: 6px; padding: 2px 7px; }
+.p2-score-total { font-weight: 700; color: #2c3238; }
+
 .p2-focus { color: #1f7a3a; font-weight: 700; }
 .p2-dropped { color: #8a8f98; font-style: italic; }
 .p2-rank-focus { background: #1f7a3a; color: #fff; }
@@ -696,6 +760,7 @@ export default function Preview() {
     const rank = (m: Rec) => (typeof m.priorityRank === 'number' ? m.priorityRank : Number.POSITIVE_INFINITY);
     return [...items].sort((a, b) => rank(a) - rank(b));
   }, [items]);
+  const ties = useMemo(() => findTies(shown), [shown]);
 
   const models = Array.isArray(manifest.models) ? asStrings(manifest.models) : [];
 
@@ -742,6 +807,7 @@ export default function Preview() {
               index={i}
               open={allOpen}
               generation={generation}
+              tie={ties.get(i)}
             />
           ))}
       </section>
