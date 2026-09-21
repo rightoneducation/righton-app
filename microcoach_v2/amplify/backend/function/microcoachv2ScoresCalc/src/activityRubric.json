@@ -1,0 +1,409 @@
+{
+  "version": "wave2-2026-09",
+  "source": {
+    "label": "MicroCoach Wave 2 — Recommendation Pipeline, Evaluation Framework, and Evaluation Harness, §3b Instructional Activity Rubric (v0.1)",
+    "href": "TODO",
+    "note": "The doc's v0.0 section (Misconception grounding, LC Standards Alignment Evaluator, Differentiation, Conceptual Change, the older Classroom Feasibility bands) is superseded by v0.1 in the same document and is not transcribed here."
+  },
+  "description": "The Wave 2 approach to generating and recommending instructional activities, and the rubric that evaluates them, as data. Two parts are consumed by the pipeline now: `instructionalNeed` shapes the microcoachv2LLMGenInstrNeed prompt and `metrics[instructionalFit]` scores each template pick in microcoachv2LLMSelectTemplate. Everything from `templateFidelity` onward is scored on the generated activity and belongs to the evaluation harness, which is not built yet. See `wiring`.",
+
+  "pipeline": {
+    "wave1": "misconception → activity from scratch",
+    "templateFirst": "misconception → template → activity",
+    "wave2": "misconception + student evidence → instructional need → template → activity → quality evaluation",
+    "steps": [
+      "Determine the instructional need: what students most need to understand, examine, or do next mathematically to make progress on the identified misconception or learning need",
+      "Select the activity template(s) that best support that instructional need",
+      "Generate and adapt an activity in line with the selected template and its guidelines",
+      "Provide teacher facilitation support appropriate to the selected routine and instructional need",
+      "Evaluate the resulting recommendation against explicit quality criteria"
+    ],
+    "why": "A misconception does not, by itself, determine the appropriate instructional response. The same misconception may call for different next steps depending on what the student evidence reveals about students' reasoning, what mathematical understanding is missing or unstable, and what would most effectively help students make progress. Explicitly identifying the instructional need creates an intermediate instructional judgment between diagnosis and activity generation: it translates what students appear to misunderstand into what students most need to do or understand next. The misconception identifies the learning opportunity, while the instructional need identifies the desired next step in student thinking. The activity template then provides a structured way to enact that response."
+  },
+
+  "instructionalNeed": {
+    "definition": "What students most need to understand, examine, or do next mathematically to make progress. The instructional need should describe the mathematical thinking students need to develop, revise, test, or make visible — not simply the activity they should complete.",
+    "considers": ["the misconception", "student response data", "relevant mathematical content", "instructional context"],
+    "mightInclude": [
+      "locating and understanding the first point where valid reasoning breaks down",
+      "understanding why an incorrect response is tempting or reasonable and revising the underlying reasoning",
+      "comparing meaningfully different approaches to make mathematical thinking visible",
+      "diagnosing an underlying mathematical issue, developing a repair, and checking whether the repair works",
+      "investigating, defending, challenging, or refining a mathematical claim",
+      "individually or in small teams engaging with targeted mathematical questions that elicit and surface student thinking for subsequent discussion and reasoning"
+    ],
+    "rules": [
+      "State it in terms of the mathematical thinking students need to develop or revise, rather than simply in terms of the activity format.",
+      "Reflect the role the teacher may need to play in supporting that learning — for example, through questioning, discussion, comparison, or other facilitation — without reducing the instructional need to a particular teacher move or activity template."
+    ],
+    "workedExample": {
+      "misconception": "Multiplying powers with the same base requires multiplying the exponents",
+      "instructionalNeed": "Help students test the apparent rule, examine why it initially seems to work, and use the meaning of exponents to construct the correct generalization."
+    },
+    "teacherFacing": false,
+    "teacherFacingNote": "The instructional need is an internal reasoning step rather than a required user-facing output. MicroCoach uses it to guide template selection and activity generation, while the teacher-facing experience focuses on the identified misconception and resulting instructional activity options. It may inform teacher-facing rationale in the future, but is not currently treated as a separate required output."
+  },
+
+  "templates": {
+    "description": "A deliberately bounded, curated starting set of six instructional routines: varied enough to support meaningfully different instructional responses, but focused enough to promote consistency, instructional fidelity, and meaningful evaluation of recommendations. MicroCoach should not force a template when none provides a strong instructional fit. The six templates are not themselves the primary object of the Wave 2 evaluation.",
+    "list": [
+      { "name": "Spot the Slip",         "libraryId": "spot-the-slip",        "primaryPurpose": "Locate the first point where valid reasoning breaks down and repair that reasoning." },
+      { "name": "My Favorite No",        "libraryId": "my-favorite-no",       "primaryPurpose": "Understand the thinking represented by an incorrect response, including what is reasonable or productive about it, before revising the reasoning." },
+      { "name": "Compare the Thinking",  "libraryId": "compare-the-thinking", "primaryPurpose": "Compare two meaningfully different approaches to make mathematical similarities, differences, strengths, weaknesses, or choices visible." },
+      { "name": "Math Hospital",         "libraryId": "math-detective",       "primaryPurpose": "Diagnose an underlying mathematical issue, develop a repair, and check whether the repair works.", "note": "The doc names this template Math Hospital; microcoachv2LLMSelectTemplate/src/util/activityLibrary.json ships it as math-detective / Math Detective. Recorded as-is until reconciled." },
+      { "name": "Make Your Case",        "libraryId": "make-your-case",       "primaryPurpose": "Investigate, defend, challenge, or refine a meaningful mathematical claim using evidence and reasoning." },
+      { "name": "RightOn!",              "libraryId": "righton",              "primaryPurpose": "Use an interactive experience to elicit and surface targeted mathematical thinking and use resulting response patterns as a basis for discussion and reasoning." }
+    ]
+  },
+
+  "templateSelection": {
+    "principle": "Select the template whose core instructional move best enables the response identified in the instructional need, not simply the template most commonly associated with the misconception. A template should be selected because its defining instructional move is well matched to the identified instructional need — not simply because the misconception resembles an example previously associated with that template.",
+    "considers": ["the identified misconception", "student response data", "relevant mathematical content", "instructional context", "the defining instructional purpose of the routine"],
+    "whenMoreThanOneStrongFit": "Generate two distinct instructional approaches for the two activity options for that misconception. Where possible, the two recommendations should use different templates, but template diversity should never take precedence over instructional fit.",
+    "sameTemplateTwice": "If two different templates do not provide comparably strong instructional fits, MicroCoach may use the same template for both options, provided the activities are meaningfully distinct (e.g., through different problems, prompts, representations, or discussion questions).",
+    "neverWeakForVariety": "MicroCoach should not select a weakly matched template merely to provide variety.",
+    "optionsPerMisconception": 2
+  },
+
+  "activityGeneration": {
+    "principle": "Generate an activity that faithfully enacts the template's defining instructional purpose and core instructional move while addressing the specific misconception, mathematical content, and instructional need. The template functions as a constraint and instructional scaffold for generation, not simply as a label applied after an activity has been created. The template should not override the instructional need.",
+    "should": [
+      "directly address the identified misconception or underlying conceptual difficulty",
+      "make the intended mathematical thinking visible and give students meaningful opportunities to develop, examine, or revise that thinking",
+      "provide an appropriate level of cognitive demand for the identified learning need",
+      "follow the defining instructional move and classroom flow of the selected template, while adapting the activity as needed to the specific students and context",
+      "use available student response data meaningfully when appropriate, particularly when that data can inform the mathematical content, examples, distractors, approaches, or discussion prompts",
+      "include sufficient mathematical substance to support reasoning rather than merely provide additional practice",
+      "be feasible for a typical classroom and consistent with the relevant assessment context"
+    ]
+  },
+
+  "facilitationSupport": {
+    "principle": "Help an early-career teacher facilitate and respond to students' mathematical thinking, rather than simply reveal whether an answer is correct. Treated as part of the activity recommendation itself, not as a generic add-on. The support should help the teacher understand what to listen for, what to ask next, and how to move students toward the intended mathematical understanding.",
+    "mayInclude": [
+      "targeted follow-up questions that help the teacher surface, probe, compare, or extend students' reasoning",
+      "the expected mathematical answer, resolution, or takeaway",
+      "a brief explanation of what each key question or prompt is intended to surface",
+      "likely student responses, approaches, or misconceptions and what they may reveal",
+      "prompts for pressing students to explain, justify, provide evidence, or respond to another student's reasoning",
+      "guidance for connecting students' responses and the discussion to the intended mathematical takeaway or next step"
+    ],
+    "mustBeSpecificToMove": "Facilitation support should be specific to the instructional move of the selected activity. For example, Make Your Case may emphasize whether evidence establishes a general claim, how a counterexample affects the argument, or what additional evidence is needed. Spot the Slip should emphasize identifying the first point where reasoning breaks down, distinguishing that breakdown from later consequences, and helping students repair the reasoning.",
+    "useUnexpectedResponses": "Where appropriate, help the teacher use unexpected, prevalent, or contrasting student responses as opportunities for mathematical discussion, rather than simply identifying them as correct or incorrect."
+  },
+
+  "scoringPrinciple": {
+    "noComposite": "The individual scores are not intended to be combined into a single overall composite quality score. Strengths in one evaluation dimension should not generally offset weaknesses in another.",
+    "fitCannotBeOffset": "A weakness in instructional fit cannot be offset by strengths in activity quality.",
+    "soundnessCannotBeOffset": "A weakness in mathematical soundness cannot be offset by feasibility or engagement.",
+    "gatesNotAverages": "The framework uses explicit gates for dimensions that are essential to a recommendation.",
+    "observableNotImpressions": "Scores should be based on observable characteristics of the activity and its fit with the available evidence, rather than on general impressions such as whether an activity feels 'strong' or 'engaging'.",
+    "fitVsQuality": "Instructional fit asks: is this an appropriate instructional response for this learning opportunity? Activity quality asks: is the resulting activity well designed, mathematically sound, feasible, and faithful to that instructional purpose? A template may be the right choice for an instructional need, but the generated activity may fail to enact the template's defining instructional move. Similarly, an activity may faithfully follow a template but still be poorly designed or insufficiently responsive to the identified learning need."
+  },
+
+  "metrics": [
+    {
+      "id": "instructionalFit",
+      "label": "Instructional Fit",
+      "group": "recommendationFit",
+      "evaluatedAt": "templateSelection",
+      "evaluates": "Whether the selected template provides an appropriate instructional response to the identified instructional need, misconception, student evidence, mathematical content, and instructional context, including whether it addresses what students most need to do next rather than simply addressing the topic or misconception at a surface level.",
+      "threshold": 2,
+      "levels": {
+        "3": "Exceptional fit: The selected template provides a highly appropriate instructional response to the identified instructional need and is particularly well suited to the student evidence, mathematical content, and context.",
+        "2": "Strong fit: The selected template appropriately addresses the instructional need and provides a meaningful opportunity for students to engage in the intended mathematical thinking.",
+        "1": "Partial fit: The selected template is related to the misconception or content, but does not adequately address what students most need to do next.",
+        "0": "Poor fit: The selected template does not meaningfully address the instructional need or is based on a substantially incorrect understanding of the student difficulty."
+      },
+      "examples": {
+        "context": "Students believe that a percentage increase followed by the same percentage decrease returns a quantity to its original value. The identified instructional need is to test the apparent rule, examine why it initially seems reasonable, and use multiplicative reasoning to construct a correct generalization.",
+        "3": "The selected template provides a strong structure for students to predict, test, compare cases, explain the pattern, and generalize it.",
+        "2": "The selected template asks them to compare two percentage-change examples and explain why the outcomes differ. This provides a meaningful opportunity to revise their reasoning, although it does not develop the generalization as fully as a 3-level response.",
+        "1": "The selected template primarily gives them several percentage-change calculations to complete. The topic matches, but students have little opportunity to investigate why the misconception arises or revise the underlying reasoning.",
+        "0": "The selected template asks them to memorize or practice an unrelated procedure, such as converting percentages to decimals, without addressing the misconception or the identified instructional need."
+      }
+    },
+    {
+      "id": "templateFidelity",
+      "label": "Template Fidelity",
+      "group": "recommendationFit",
+      "evaluatedAt": "afterGeneration",
+      "evaluates": "Whether the activity actually enacts the defining instructional purpose and core instructional move of the selected template.",
+      "threshold": 2,
+      "levels": {
+        "3": "Exceptional fidelity: The defining instructional move of the template clearly drives the activity and, where applicable, the discussion. Replacing the template with another routine would substantially change the instructional experience.",
+        "2": "Strong fidelity: The activity clearly enacts the defining instructional move and core classroom flow of the template, although some elements could be more tightly integrated.",
+        "1": "Partial fidelity: The activity contains recognizable elements of the template, but its primary instructional move could largely be accomplished through another routine.",
+        "0": "Poor fidelity: The activity does not meaningfully enact the defining instructional move of the selected template."
+      },
+      "examples": {
+        "3": "A Make Your Case activity asks students to investigate a mathematical claim, produce evidence, challenge the claim with a counterexample if possible, and revise or defend the argument. The claim-and-evidence structure drives the activity.",
+        "2": "A Compare the Thinking activity presents two meaningfully different student approaches and asks students to identify similarities, differences, and relative strengths. The comparison is central to the activity, although the final discussion could make the comparison more explicit.",
+        "1": "A Make Your Case activity asks students to solve a conventional problem and then write one sentence explaining their answer. Although students technically make a claim, the activity is primarily conventional problem solving rather than investigation and argumentation.",
+        "0": "A Make Your Case activity simply presents a set of practice problems and asks students to calculate answers, with no meaningful claim, evidence, argument, challenge, or revision. The selected template is essentially only a label."
+      }
+    },
+    {
+      "id": "mathematicalSoundness",
+      "label": "Mathematical Soundness",
+      "group": "criticalQuality",
+      "evaluatedAt": "afterGeneration",
+      "evaluates": "Whether the mathematical content, reasoning, representations, answers, explanations, and generalizations are mathematically correct, internally coherent, appropriately precise, and appropriate to the intended content and students.",
+      "threshold": 2,
+      "note": "Includes both mathematical accuracy and the soundness of the mathematical reasoning and representation. An activity can be numerically correct while still receiving a lower score if its explanation, generalization, representation, or implied reasoning is misleading or mathematically imprecise.",
+      "levels": {
+        "3": "Particularly strong: The mathematics is not only correct but precise, coherent, and especially well suited to supporting the intended reasoning, representation, or generalization.",
+        "2": "Sound: The mathematics is correct, sufficiently precise, and appropriate to the intended content and students.",
+        "1": "Meaningful weakness: The central mathematics is substantially correct, but the activity contains a meaningful ambiguity, imprecision, incomplete explanation, misleading simplification, or other mathematical weakness that could confuse or mislead students.",
+        "0": "Substantive error: The activity contains a substantive mathematical error, incorrect answer, invalid reasoning, or misleading mathematical claim."
+      },
+      "examples": {
+        "3": "An activity about percentage change consistently distinguishes additive percentage points from multiplicative percentage changes, uses accurate representations, and guides students toward the general relationship without introducing misleading shortcuts.",
+        "2": "The activity uses correct percentage calculations and explanations and appropriately represents the intended mathematical idea, but its explanation could be made somewhat more precise.",
+        "1": "The activity reaches the correct answer but describes a percentage decrease as 'undoing' the preceding increase without explaining the change in the reference quantity, creating a potentially misleading explanation.",
+        "0": "The activity states or relies on the false claim that increasing a quantity by 20% and then decreasing it by 20% returns it to its original value, or otherwise contains a mathematical error that undermines the activity."
+      }
+    },
+    {
+      "id": "conceptualLearning",
+      "label": "Conceptual Learning",
+      "group": "criticalQuality",
+      "evaluatedAt": "afterGeneration",
+      "evaluates": "Whether the activity provides a meaningful opportunity for students to develop or revise the targeted mathematical understanding in a way that addresses the identified instructional need, rather than merely being related to the concept or providing practice with a procedure.",
+      "threshold": 2,
+      "note": "Instructional Fit evaluates whether the selected template is an appropriate instructional response to the identified need. Conceptual Learning evaluates whether the generated activity actually gives students a meaningful opportunity to develop or revise the intended understanding.",
+      "levels": {
+        "3": "Strong conceptual development: The activity deliberately supports conceptual development through mechanisms such as explanation, comparison, productive error analysis, repair, generalization, or transfer, and those mechanisms are well matched to the instructional need.",
+        "2": "Meaningful opportunity: The activity gives students a substantive opportunity to examine, explain, revise, strengthen, or connect the relevant mathematical understanding.",
+        "1": "Limited opportunity: The activity exposes students to the relevant misconception or concept but provides little opportunity to examine, explain, revise, or develop their understanding.",
+        "0": "Little conceptual learning: The activity primarily asks students to produce answers or repeat a procedure without meaningfully engaging the underlying mathematical idea."
+      },
+      "examples": {
+        "3": "Students who think 'keep-change-flip' is simply a memorized rule first examine what division means, identify the reciprocal of the denominator, test multiplication by an equivalent form of 1, and use the resulting reasoning to explain why the procedure works.",
+        "2": "Students compare an incorrect and correct strategy for solving a fraction problem and explain the mathematical difference, creating a meaningful opportunity to revise their understanding.",
+        "1": "Students complete several fraction-division problems and are asked to explain the answer at the end, but the activity provides little opportunity to investigate why the procedure works.",
+        "0": "Students are simply shown the 'keep-change-flip' procedure and asked to apply it to a series of fraction-division problems, with no opportunity to examine its meaning, reasoning, or justification."
+      }
+    },
+    {
+      "id": "cognitiveDemand",
+      "label": "Cognitive Demand",
+      "group": "criticalQuality",
+      "evaluatedAt": "afterGeneration",
+      "evaluates": "Whether students engage in meaningful mathematical thinking appropriate to the instructional need. Cognitive Demand should be judged by the mathematical thinking required to accomplish the activity's instructional purpose, not by the number of steps, amount of writing, open-endedness, or apparent complexity. The activity should not be made more complex merely to increase its Cognitive Demand score.",
+      "threshold": 2,
+      "thresholdException": "A lower score may be acceptable when it is explicitly justified by the identified instructional need and the defining purpose of the selected template.",
+      "levels": {
+        "3": "Substantial reasoning: Students must investigate, justify, evaluate, generalize, defend, challenge, or otherwise engage in sustained mathematical reasoning that is central to the activity.",
+        "2": "Meaningful reasoning: Students must explain, interpret, compare, connect, or otherwise reason mathematically beyond routine answer production.",
+        "1": "Routine procedural demand: Students perform a familiar procedure with limited interpretation or reasoning.",
+        "0": "Minimal demand: Students primarily recall information, select answers without explanation, or reproduce a demonstrated procedure."
+      },
+      "examples": {
+        "3": "Students determine whether a percentage-change claim is always true, test multiple cases, identify a counterexample if possible, and use algebra to explain the resulting pattern.",
+        "2": "Students compare two approaches and explain why they produce different results.",
+        "1": "Students solve a set of increasingly difficult problems using the same demonstrated procedure and provide answers but little explanation.",
+        "0": "Students recall a definition or select an answer directly stated or demonstrated immediately beforehand, with no meaningful interpretation or mathematical reasoning required."
+      },
+      "taskExamples": {
+        "description": "Prompt-level examples from the doc's expanded Cognitive Demand table.",
+        "0": ["What is the formula for the area of a triangle?", "Define a prime number.", "State the commutative property of multiplication."],
+        "1": ["Use the formula A=(1/2)bh to find the area of a triangle with base 8 and height 5.", "Solve 3x+5=17.", "Add 2/3+1/4 and simplify your answer."],
+        "2": ["Explain why multiplying both the numerator and denominator of a fraction by the same number does not change its value.", "A student says that 0.4>0.35 because 4 is greater than 3. Explain the error.", "Two rectangles have the same perimeter. Explain why one can have a greater area than the other."],
+        "3": ["Two students solve 48×25 using different strategies. Compare their strategies and justify which strategy you would prefer.", "Is the statement 'multiplying two numbers always makes the result larger' always, sometimes, or never true? Justify your answer with examples and explain the conditions under which it holds.", "A student claims that adding the same number to the numerator and denominator of a fraction preserves its value. Determine whether the claim is always, sometimes, or never true, and justify your conclusion."]
+      }
+    },
+    {
+      "id": "studentThinkingVisibility",
+      "label": "Student Thinking Visibility",
+      "group": "supportingQuality",
+      "evaluatedAt": "afterGeneration",
+      "evaluates": "Whether the activity elicits student reasoning in ways that make relevant approaches, misconceptions, decisions, or changes in thinking visible. Visibility should be judged relative to the instructional need; the goal is not to maximize the amount of student explanation, but to surface the particular thinking that is useful for instruction.",
+      "threshold": 2,
+      "soft": true,
+      "levels": {
+        "3": "High visibility: The activity is deliberately structured to surface the specific approaches, misconceptions, reasoning, or changes in thinking relevant to the instructional need.",
+        "2": "Meaningful visibility: The activity elicits responses, explanations, comparisons, or other evidence that makes relevant student thinking visible.",
+        "1": "Limited visibility: The activity elicits answers or choices but provides limited information about why students responded as they did.",
+        "0": "Low visibility: The activity provides little opportunity for the teacher or students to observe the reasoning behind responses."
+      },
+      "examples": {
+        "3": "RightOn! presents several plausible answer choices that correspond to recognizable misconceptions, captures the distribution of student responses, and gives the teacher a basis for asking students why different responses might seem reasonable.",
+        "2": "A My Favorite No activity presents an incorrect student solution and asks students to identify where the reasoning changes from valid to problematic and explain what the student may have been thinking.",
+        "1": "A multiple-choice activity reveals which answer students selected but provides limited information about why students chose those answers.",
+        "0": "The activity simply presents information or demonstrates a solution and then asks students to reproduce it, providing essentially no evidence of their individual reasoning or understanding."
+      }
+    },
+    {
+      "id": "teacherFacilitationSupport",
+      "label": "Teacher Facilitation Support",
+      "group": "supportingQuality",
+      "evaluatedAt": "afterGeneration",
+      "evaluates": "Whether the activity provides useful, mathematically accurate support for facilitating the intended student thinking and discussion.",
+      "threshold": 2,
+      "soft": true,
+      "levels": {
+        "3": "Highly actionable support: The recommendation anticipates likely student responses, identifies what the teacher should listen for, provides targeted follow-up questions and mathematically sound resolutions, and suggests appropriate next moves based on what students say.",
+        "2": "Targeted support: The recommendation provides questions and relevant mathematical resolutions targeted to the activity and instructional need.",
+        "1": "Generic or incomplete support: The recommendation includes broad prompts such as 'ask students to explain' but provides little guidance about what to listen for or how to respond.",
+        "0": "Little or no support: The recommendation provides no useful guidance for facilitating the intended mathematical thinking."
+      },
+      "examples": {
+        "3": "For a Spot the Slip activity, MicroCoach identifies the first valid-to-invalid transition, explains the likely reasoning behind the error, provides questions that help students locate and explain the breakdown, and suggests a follow-up question if students identify a later consequence rather than the original error.",
+        "2": "For a Make Your Case activity, MicroCoach provides questions asking students what evidence supports the claim, whether a counterexample would change the argument, and what conclusion is justified.",
+        "1": "MicroCoach simply tells the teacher to 'ask students to justify their answers' without identifying what mathematical reasoning to listen for or how to respond to likely answers.",
+        "0": "The recommendation provides the activity and answer key but gives the teacher no guidance for facilitating student reasoning, interpreting responses, or connecting the activity to the intended mathematical takeaway."
+      }
+    },
+    {
+      "id": "classroomFeasibility",
+      "label": "Classroom Feasibility",
+      "group": "supportingQuality",
+      "evaluatedAt": "afterGeneration",
+      "evaluates": "Whether the activity can be implemented by a typical teacher in the intended classroom context given preparation, resources, instructional time, technology, and classroom-management requirements.",
+      "threshold": 2,
+      "soft": true,
+      "blockingIfMaterial": "A meaningful feasibility issue that would materially prevent effective classroom use should be treated as a blocking issue rather than simply a low supporting-quality score.",
+      "baseline": "Assume a classroom with one teacher, ordinary classroom supplies (e.g., paper, pencils, whiteboard), grade-level instructional materials, and the technology and resources already used as part of Uncommon's Wave 2 digital diagnostic workflow. Do not assume access to specialized technology, equipment, additional personnel, or other resources beyond this baseline. Technology already available as part of the Wave 2 workflow should not be treated as an additional feasibility burden.",
+      "levels": {
+        "3": "Highly feasible: The activity can be implemented by a typical teacher with minimal preparation and fits naturally within the available instructional time, resources, technology, and ordinary classroom routines. As a general guide, this might involve less than 5 minutes of teacher preparation and no more than approximately 30 minutes of instructional time, although the instructional context should take precedence over these guidelines.",
+        "2": "Feasible: The activity requires modest preparation or coordination but can reasonably be implemented within the available instructional time, resources, technology, and classroom routines. As a general guide, this might involve approximately 5–15 minutes of teacher preparation and 30–60 minutes of instructional time, with only modest additional resource or setup requirements.",
+        "1": "High burden: The activity requires substantial additional preparation, time, resources, technology, or classroom-management demands that make implementation difficult relative to its instructional purpose. As a general guide, this might involve more than approximately 15 minutes of teacher preparation, more than 60 minutes of instructional time, substantial setup, or meaningful additional management or coordination. The activity may still be implementable by one teacher, but the burden is significant.",
+        "0": "Not feasible: The activity cannot realistically be implemented within the intended classroom context because it requires unavailable resources, technology, staffing, time, or classroom conditions — for example, specialized equipment, additional personnel, or a multi-day investigation when the instructional context allows only a brief activity."
+      },
+      "examples": {
+        "3": "A short discussion routine requires only a projected student response, a few targeted questions, and approximately 10–15 minutes of class time. No unusual materials or preparation are required.",
+        "2": "An activity requires students to prepare a brief written response and the teacher to organize two or three examples before discussion. This requires some preparation but remains practical within a typical lesson.",
+        "1": "An activity requires substantial printing and setup, multiple materials, extensive teacher preparation, or significantly more class time than the instructional context reasonably allows. The activity could be implemented, but the burden is substantial relative to its instructional purpose.",
+        "0": "The activity requires resources, technology, staffing, time, or classroom conditions that are unavailable or unrealistic in the intended context — for example, a multi-day technology-dependent investigation when only 10 minutes of class time are available."
+      },
+      "evaluationNote": "The time ranges above are guidelines, not hard thresholds. Classroom Feasibility should be judged relative to the intended instructional context and the activity's instructional purpose. A longer or more resource-intensive activity can still be highly feasible when those demands are reasonable for the setting and justified by the instructional purpose. Conversely, even a short activity may be difficult to implement if it requires unusual preparation, technology, coordination, or classroom-management demands.",
+      "dimensions": {
+        "description": "Draft proposal: five sub-dimensions scored 0–3, then combined by rule — never averaged — into the overall Classroom Feasibility score.",
+        "list": [
+          { "id": "teacherPreparation", "label": "Teacher preparation",
+            "levels": { "0": ">30 min or substantial advance planning/material creation", "1": "15–30 min", "2": "5–15 min", "3": "<5 min" } },
+          { "id": "materials", "label": "Materials / resources",
+            "levels": { "0": "Requires resources a typical classroom would not reasonably be expected to have or obtain easily", "1": "Requires materials beyond ordinary classroom supplies that the teacher must obtain, print, prepare, or organize", "2": "Uses ordinary classroom supplies or materials provided with the activity", "3": "Uses materials already present in a typical classroom, or no physical materials" } },
+          { "id": "technology", "label": "Technology",
+            "levels": { "0": "Requires specific software, hardware, accounts, or platforms that cannot reasonably be assumed to be available", "1": "Requires student devices or a specific software/platform whose availability may vary", "2": "Requires no technology or commonly available classroom technology", "3": "Requires no technology; technology is entirely optional" } },
+          { "id": "instructionalTime", "label": "Instructional time",
+            "levels": { "0": ">2 class periods or unusually large amount of instructional time", "1": "1–2 class periods", "2": "≤1 class period", "3": "≤30 min" } },
+          { "id": "classroomManagement", "label": "Classroom management / logistics",
+            "levels": { "0": "Requires additional personnel, extensive coordination, or logistics that one teacher could not reasonably manage", "1": "Requires substantial grouping, movement, setup, monitoring, or coordination beyond ordinary routines", "2": "Requires ordinary whole-class, partner, or small-group management", "3": "Fits ordinary classroom routines with no unusual grouping, movement, setup, monitoring, or coordination" } }
+        ],
+        "procedure": [
+          "Identify requirements. Based only on the activity as written, identify its requirements for preparation, materials/resources, technology, instructional time, and classroom management/logistics.",
+          "Score each dimension. Assign each dimension a 0–3 score using the criteria above.",
+          "Identify limiting factors. Determine whether any dimension creates a genuine implementation barrier that could prevent the activity from being implemented in a typical classroom.",
+          "Assign the overall score using the rules below.",
+          "Provide a brief evidence-based rationale identifying the features of the activity that drove the overall score."
+        ],
+        "overallRules": {
+          "3": "All dimensions are 2 or 3. At least three dimensions are 3. No dimension creates a meaningful implementation barrier.",
+          "2": "Most dimensions are 2 or 3. No dimension presents a genuine score-0 barrier. Any lower-scoring dimension represents a manageable burden rather than something that would substantially constrain implementation.",
+          "1": "At least one dimension presents a meaningful score-1 burden, or multiple dimensions impose moderate implementation burdens. The activity remains realistically implementable by a typical teacher, but requires noticeably more preparation, resources, time, technology, or management than an ordinary classroom activity.",
+          "0": "At least one dimension represents a genuine score-0 implementation barrier that makes the activity impractical for a typical classroom."
+        },
+        "evaluatorInstructions": [
+          "Do not average the five dimension scores. The overall score should reflect overall implementation burden using the rules above.",
+          "Do not assume favorable conditions. Do not assume access to technology, specialized materials, additional personnel, or preparation time that is not provided by the activity or included in the classroom baseline.",
+          "Do not assume unfavorable conditions either. If the activity requires a resource but does not establish whether that resource is available, identify the requirement and note the uncertainty rather than assuming that it is either available or unavailable.",
+          "Use the activity as written. Evaluate what a teacher would actually need to do to implement the activity, rather than what the activity could become with substantial modification."
+        ]
+      }
+    }
+  ],
+
+  "gates": [
+    {
+      "id": 1,
+      "name": "Activity Recommendation Fit",
+      "metrics": ["instructionalFit", "templateFidelity"],
+      "rule": "both ≥ 2",
+      "reportedAs": "min(instructionalFit, templateFidelity)",
+      "why": "This prevents a high score on one dimension from compensating for a weak score on the other. The two are evaluated separately because they imply different revision strategies: a poor instructional fit may require reconsidering the instructional need or template selection, whereas poor template fidelity may require regenerating or revising the activity within the selected template.",
+      "onFail": "A recommendation that fails either threshold should not proceed to final evaluation or presentation. Depending on the source of the failure, MicroCoach should reconsider the instructional need or selected template, or revise/regenerate the activity.",
+      "table": [
+        { "instructionalFit": 3, "templateFidelity": 3, "fit": 3, "result": "Pass" },
+        { "instructionalFit": 3, "templateFidelity": 2, "fit": 2, "result": "Pass" },
+        { "instructionalFit": 2, "templateFidelity": 3, "fit": 2, "result": "Pass" },
+        { "instructionalFit": 2, "templateFidelity": 2, "fit": 2, "result": "Pass" },
+        { "instructionalFit": 3, "templateFidelity": 1, "fit": 1, "result": "Fail" },
+        { "instructionalFit": 1, "templateFidelity": 3, "fit": 1, "result": "Fail" }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Critical Activity Quality",
+      "metrics": ["mathematicalSoundness", "conceptualLearning", "cognitiveDemand"],
+      "rule": "mathematicalSoundness ≥ 2 AND conceptualLearning ≥ 2; cognitiveDemand normally ≥ 2 unless a lower score is explicitly justified by the identified instructional need and the defining purpose of the selected template",
+      "onFail": "A recommendation should not be considered ready for presentation if it contains a substantive mathematical error or fails to provide a meaningful opportunity for the intended conceptual learning and reasoning."
+    },
+    {
+      "id": 3,
+      "name": "Supporting Quality",
+      "metrics": ["studentThinkingVisibility", "teacherFacilitationSupport", "classroomFeasibility"],
+      "rule": "generally ≥ 2 when relevant to the activity and instructional context",
+      "onFail": "A lower score should prompt refinement rather than automatically disqualify an otherwise appropriate recommendation when the criterion is genuinely less central to the particular activity or context. However, a meaningful feasibility issue that would materially prevent effective classroom use should be treated as a blocking issue rather than simply a low supporting-quality score."
+    }
+  ],
+
+  "readyForPresentation": [
+    "it passes the Activity Recommendation Fit threshold",
+    "it meets the minimum thresholds for Mathematical Soundness and Conceptual Learning, and Cognitive Demand is ≥ 2 unless a lower score is explicitly justified by the identified instructional need and the defining purpose of the selected template",
+    "it has no feasibility issue that would materially prevent effective use in the intended context",
+    "any remaining weaknesses are minor enough that they do not materially compromise the instructional value of the recommendation"
+  ],
+
+  "graderOutput": {
+    "perCriterion": [
+      "a 0–3 score",
+      "a brief rationale explaining why the activity received that score",
+      "where applicable, specific evidence from the activity supporting the score",
+      "when the score is below the required threshold, a recommended refinement or regeneration action"
+    ],
+    "basis": "Scores should be based on the actual generated activity, the identified instructional need, and the available student evidence — not on assumptions about the quality of the selected template alone.",
+    "example": {
+      "instructionalFit": { "score": 2, "rationale": "The activity addresses students' misconception that equal percentage increases and decreases cancel by having them compare concrete examples and explain the different outcomes. It provides a meaningful opportunity to revise the misconception, although it does not yet support the intended generalization." },
+      "templateFidelity": { "score": 3, "rationale": "The activity uses comparison of meaningfully different approaches as its central instructional move, and the discussion explicitly asks students to examine why the approaches lead to different conclusions." },
+      "result": "PASS"
+    },
+    "rationaleStandard": "Concise but sufficiently specific that a human reviewer can understand why the model assigned the score and what evidence it used."
+  },
+
+  "refinement": {
+    "principle": "Evaluation is part of the generation loop: MicroCoach should use the evaluation results to guide a limited number of targeted revisions or regenerations. Refinement should address the underlying quality issue rather than optimize for a higher rubric score.",
+    "byWeakness": {
+      "poorInstructionalFit": "Reconsider the instructional need or selected template before regenerating the activity.",
+      "poorTemplateFidelity": "Retain the instructional need if appropriate, but regenerate the activity so that the defining instructional move of the selected template drives the activity.",
+      "weakMathematicalSoundness": "Correct the mathematical content, reasoning, representations, or explanations and re-evaluate.",
+      "weakConceptualLearning": "Revise the activity so students have a more meaningful opportunity to confront, explain, revise, or generalize their understanding.",
+      "weakCognitiveDemand": "Increase the mathematical reasoning required without adding unnecessary complexity.",
+      "weakStudentThinkingVisibility": "Add or revise prompts, response structures, comparisons, or other mechanisms that make relevant student thinking more visible.",
+      "weakTeacherFacilitationSupport": "Add targeted questions, expected resolutions, likely student responses, and guidance on what to listen for and what to do next.",
+      "weakFeasibility": "Simplify preparation, materials, timing, technology, or classroom-management demands."
+    },
+    "limitedAttempts": true,
+    "onExhaustion": "If the recommendation does not meet the required quality threshold after the permitted revision attempts, it should be flagged for review or withheld from presentation rather than repeatedly regenerated.",
+    "noScoreGaming": "MicroCoach should not add unnecessary complexity, student explanation, or other features solely to improve an evaluation score when those additions do not serve the instructional purpose."
+  },
+
+  "calibration": {
+    "status": "The rubric and exemplars should be treated as an initial evaluation system and refined through comparison with human expert judgments before being relied upon as a production-quality gate.",
+    "exemplars": "For each non-deterministic metric, multiple human-reviewed exemplars at each score level (0, 1, 2, and 3), with particular attention to borderline cases between adjacent score levels. Each exemplar should include a brief rationale explaining why it belongs at that level and, where useful, why it does not belong at an adjacent level.",
+    "checks": [
+      "distinguishes adjacent scores consistently, particularly 1 vs. 2 and 2 vs. 3, and does not systematically overuse the middle score",
+      "identifies the same strengths and weaknesses as expert reviewers",
+      "applies the rubric across different templates rather than associating quality with particular activity formats",
+      "distinguishes mathematical correctness from mathematical soundness, including cases where an activity produces correct answers but uses misleading, incomplete, or overly simplistic mathematical reasoning",
+      "provides rationales that are grounded in observable features of the activity rather than general impressions"
+    ]
+  },
+
+  "wiring": {
+    "instructionalNeed": "microcoachv2LLMGenInstrNeed — definition, rules and worked example shape its prompt (mirrored in that lambda's config.json; this file is canonical).",
+    "instructionalFit": "microcoachv2LLMSelectTemplate — the four levels replace the former strong/moderate fit label; each pick carries instructionalFit 0–3 and belowThreshold = fit < 2. No regeneration on a fail in this pass; the flag is recorded for the harness.",
+    "templateFidelity through classroomFeasibility, gates, refinement": "Evaluation harness (seed/eval) — not yet built. Nothing in the pipeline reads these today."
+  }
+}

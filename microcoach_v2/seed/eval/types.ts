@@ -153,11 +153,3 @@ export interface MisconceptionOutputType {
   questionErrorRates: QuestionErrorRateType[],
   ppqQuestions: PPQQuestionType[] 
 }
-
-export interface MisconceptionScore {
-  frequency: number,
-  learningProgressionInfluence: number,
-  studentConfidence: number,
-  lcMisconceptionEvalScore: number,
-  conceptualDepth: number
-}

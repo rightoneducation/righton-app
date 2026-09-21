@@ -1,0 +1,91 @@
+{
+  "version": "wave2-2026-09",
+  "source": {
+    "label": "MicroCoach Wave 2 — Recommendation Pipeline, Evaluation Framework, and Evaluation Harness, §3a Misconception Rubric",
+    "href": "TODO"
+  },
+  "description": "The Misconception Rubric as data. Every misconception is scored 0–3 on each enabled metric; the highest total is the Recommended Focus. This file is the only place the bands, level definitions, cap and tiebreak live — scoreRubric.mjs reads it and does no arithmetic of its own.",
+
+  "metrics": [
+    {
+      "id": "frequency",
+      "label": "Frequency",
+      "description": "% of class impacted by misconception",
+      "source": "measured",
+      "input": "studentPercent",
+      "inputDescription": "Share of students (0–1) who chose any wrong option linked to the misconception, counted from the response rows by computeMisconceptionReach.",
+      "bands": [
+        { "score": 3, "min": 0.50, "exclusive": true, "label": ">50%" },
+        { "score": 2, "min": 0.25, "exclusive": true, "label": ">25–50%" },
+        { "score": 1, "min": 0.10, "exclusive": true, "label": ">10–25%" },
+        { "score": 0, "label": "0–10%" }
+      ]
+    },
+    {
+      "id": "learningProgressionInfluence",
+      "label": "Learning Progression Influence",
+      "description": "Estimated influence of the underlying standard on future learning within the learning progression, operationalized for the Wave 2 pilot as the number of immediate buildsTowards relationships in the Learning Commons knowledge graph. This is a pilot operationalization of progression influence, not a validated measure of instructional importance.",
+      "source": "measured",
+      "input": "downstreamCount",
+      "inputDescription": "futureDependentStandards.length for the misconception's ccssStandard in the knowledge-graph response. Pilot proxy: the query returns buildsTowards at the STANDARD level; learning-component edges are not fetched. null when the standard is not in the response.",
+      "bands": [
+        { "score": 3, "min": 3, "label": "3 or more buildsTowards" },
+        { "score": 2, "min": 2, "label": "2 buildsTowards" },
+        { "score": 1, "min": 1, "label": "1 buildsTowards" },
+        { "score": 0, "label": "No buildsTowards" }
+      ]
+    },
+    {
+      "id": "studentConfidence",
+      "label": "Student Confidence",
+      "description": "Average self-reported confidence of students exhibiting the misconception, based on the MIU confidence scale. Higher scores indicate greater confidence despite answering incorrectly.",
+      "source": "measured",
+      "input": "meanConfidence",
+      "inputDescription": "Mean of the 1–5 confidence ratings on the linked wrong picks, counted alongside reach. null when no linked pick carried a rating.",
+      "bands": [
+        { "score": 3, "min": 4.0, "label": "≥ 4.0 — High confidence: students were highly confident despite answering incorrectly, suggesting a strongly held misconception." },
+        { "score": 2, "min": 3.0, "label": "≥ 3.0 & < 4.0 — Moderate-to-high confidence: students were generally confident despite answering incorrectly." },
+        { "score": 1, "min": 2.0, "label": "≥ 2.0 & < 3.0 — Low-to-moderate confidence: students showed some confidence despite answering incorrectly." },
+        { "score": 0, "label": "< 2.0 — Low confidence: students were generally uncertain about their incorrect responses." }
+      ]
+    },
+    {
+      "id": "lcMisconceptionEvalScore",
+      "label": "Score on LC Misconception Evaluator",
+      "description": "Score produced by the Learning Commons Misconception Evaluator for an identified misconception, providing complementary external evidence alongside MicroCoach's custom evaluation metrics. Normalize the LC score to a 0–3 scale using: 3 × (LC score / 100).",
+      "source": "external",
+      "input": "lcScore",
+      "inputDescription": "Raw 0–100 evaluator score. No integration exists yet; the slot is reserved.",
+      "transform": { "multiply": 3, "divide": 100 },
+      "enabled": false
+    },
+    {
+      "id": "conceptualDepth",
+      "label": "Conceptual Depth",
+      "description": "The extent to which a misconception reflects an underlying misunderstanding of the mathematical concept or mental model, rather than primarily an error in carrying out a mathematical procedure or algorithm. Higher Conceptual Depth indicates that the misconception reflects a more fundamental conceptual misunderstanding.",
+      "source": "llm",
+      "input": "conceptualDepth",
+      "levels": {
+        "0": "The misconception primarily reflects an error in carrying out a mathematical procedure or algorithm. The underlying mathematical concept appears largely intact.",
+        "1": "The misconception reflects mostly procedural difficulty, but there is some evidence of incomplete or emerging conceptual understanding.",
+        "2": "The misconception reflects an incorrect or incomplete understanding of an important mathematical concept, although students may still demonstrate partial conceptual understanding.",
+        "3": "The misconception reflects a fundamentally incorrect mental model or core mathematical idea that is likely to affect reasoning across multiple problems or contexts."
+      }
+    }
+  ],
+
+  "selection": {
+    "description": "MicroCoach surfaces up to three identified misconceptions and highlights the highest-scoring misconception as the Recommended Focus for the teacher.",
+    "rule": "highest total",
+    "rankOn": "normalized",
+    "rankOnDescription": "total / maxPossible, so a misconception missing one metric (e.g. its standard was not in the graph) is not penalized against peers. Session-wide gaps (no confidence data, LC disabled) affect every misconception equally.",
+    "cap": 3,
+    "tiebreak": ["conceptualDepth", "studentPercent", "meanConfidence", "inputOrder"],
+    "tiebreakDescription": "Not specified in the doc. Higher wins at each step; inputOrder is the order the misconceptions were given, so the result is deterministic."
+  },
+
+  "llm": {
+    "model": "gpt-5-mini",
+    "description": "One call over all misconceptions returns conceptualDepth 0–3 plus a one-sentence justification each. The level definitions above are the whole scale the model is given."
+  }
+}

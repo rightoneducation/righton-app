@@ -135,6 +135,11 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "microcoachv2ScoresCalc": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "microcoachv2TeacherUpload": {
       "build": true,
       "dependsOn": [
@@ -302,6 +307,22 @@
         {
           "category": "function",
           "resourceName": "microcoachv2RegenEvaluator"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2ScoresCalc_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2ScoresCalc"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2ScoresCalc_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2ScoresCalc"
         }
       ]
     },

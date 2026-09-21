@@ -1,35 +1,35 @@
 /**
  * microcoachv2LLMGenInstrNeed — the instructional need for each misconception.
  *
- * Misconceptions arrive from microcoachv2LLMGenMisconception; this Lambda does not
- * identify or reword them. For each one it states the INSTRUCTIONAL NEED — what
- * students most need to understand, examine, or do next mathematically: the
- * thinking they need to develop, revise, test, or make visible, not the activity
+ * Misconceptions arrive from microcoachv2LLMGenMisconception, already scored and
+ * ranked by microcoachv2ScoresCalc on the Wave 2 Misconception Rubric; this Lambda
+ * does not identify, reword or rank them. For each one it states the INSTRUCTIONAL
+ * NEED — what students most need to understand, examine, or do next mathematically:
+ * the thinking they need to develop, revise, test, or make visible, not the activity
  * they should complete — and the RATIONALE for that need, built from the classroom
- * evidence (prevalence, confidence, severity, prerequisite gaps, forward impact,
- * recurrence). The need is an internal reasoning step that will drive template
- * selection; it is not teacher-facing.
+ * evidence. The need is an internal reasoning step that drives template selection;
+ * it is not teacher-facing. (Wave 2 doc §3b "Identify the Instructional Need" —
+ * canonical text in microcoachv2ScoresCalc/src/activityRubric.json.)
  *
- * The analysis that the former microcoachv2LLMAnalysis performed (2026-09-15 merge)
- * is still done here — it is what the rationale is made of — but only the need and
- * its rationale are emitted. Prevalence is computed by the caller from the response
- * rows and passed in; the model is told not to estimate it.
+ * Prevalence, confidence, rank and Conceptual Depth are givens from the caller and
+ * the rubric stage; the model is told not to estimate or re-derive them.
  *
  * Input (`event.arguments.input` from AppSync, or `event.input` from a direct
  * invoke), all JSON strings:
  *   misconceptions       [{ title, description, learningScienceConnection,
  *                           wrongAnswers: [{ questionNumber, letter }],
- *                           ccssStandard?, studentCount?, studentPercent? }]
+ *                           ccssStandard?, studentCount?, studentPercent?, meanConfidence?,
+ *                           priorityRank?, isRecommendedFocus?, rubric? }]
  *   classroomData        { classroom, currentSession, sessionHistory, ppq, wrongAnswerDist }
  *   learningScienceData  { standards: KgQueryType[] } — masked/deduped by the caller
  *   trace                boolean — echo `_trace` (resolved prompt, model, usage)
  *
  * Output: { ok: true, needs: [{ title, wrongAnswers, instructionalNeed: { text,
  * teacherRole, evidenceUsed }, rationale: { priorityRank, prevalence,
- * confidenceSignal, conceptualSeverity, prerequisiteGaps, forwardImpact,
- * recurrence, whyThisNeed } }], rejected, missing } — one per input misconception, matched
- * by position then exact title; an unmatched need is dropped and counted. On
- * failure: { ok: false, error: { message } }.
+ * confidenceSignal, prerequisiteGaps, forwardImpact, recurrence, whyThisNeed } }],
+ * rejected, missing } — one per input misconception, matched by position then exact
+ * title; an unmatched need is dropped and counted. `priorityRank` is echoed from the
+ * input, never produced here. On failure: { ok: false, error: { message } }.
  */
 
 import { loadSecret } from './util/loadsecrets.mjs';
@@ -39,37 +39,22 @@ import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
 import config from './util/config.json' assert { type: 'json' };
 
-const ac = config?.analysis ?? {};
 const nc = config?.genInstrNeed ?? {};
 const ws = config?.writingStyle ?? {};
 
-const MODEL              = nc.model ?? ac.model ?? 'gpt-5-mini';
+const MODEL              = nc.model ?? 'gpt-5-mini';
 const NEED_MAX_SENTENCES = nc.maxSentences ?? 3;
 const NEED_WORKED        = nc.worked ?? null;
-
-// Rationale dimensions — the same four the former analysis scored on, now stated
-// per misconception rather than used to pick a core.
-const PREVALENCE_WEIGHT  = ac.misconceptionScoring?.prevalenceWeight ?? 0.40;
-const CONCEPTUAL_WEIGHT  = ac.misconceptionScoring?.conceptualSeverityWeight ?? 0.30;
-const PREREQ_WEIGHT      = ac.misconceptionScoring?.prerequisiteLeverageWeight ?? 0.15;
-const FORWARD_WEIGHT     = ac.misconceptionScoring?.forwardImpactWeight ?? 0.15;
-const HIGH_CONF_WRONG    = ac.futureScoringSignals?.confidenceScoring?.highConfWrongThreshold ?? 0.25;
-const LOW_AVG_CORRECT    = ac.futureScoringSignals?.confidenceScoring?.lowAvgConfidenceCorrectThreshold ?? 2.5;
+const NEED_MIGHT_INCLUDE = nc.mightInclude ?? [];
 
 // ── Schema ────────────────────────────────────────────────────────────────────
 
 const Rationale = z.object({
-  priorityRank: z.number().int().describe(
-    '1 = the misconception most worth addressing first. Unique across the list. Rank on the weighted composite of the four dimensions below; the composite is a basis, not an output.',
-  ),
   prevalence: z.string().describe(
     'The given studentCount/studentPercent restated, plus what the linked questions\' correct rates add. Do NOT estimate prevalence — it is given.',
   ),
   confidenceSignal: z.string().describe(
-    'What highConfWrongPct / avgConfidenceCorrect on the linked questions say about whether students hold a wrong model confidently or know they are unsure. "No confidence data" when confidenceStats is absent.',
-  ),
-  conceptualSeverity: z.number().describe(
-    '0–1. 1.0 = structural conceptual misunderstanding; 0.6 = mixed conceptual/procedural; 0.3 = procedural slip only. Raise toward 1.0 when the confidence signal shows confident wrong answers.',
+    'What the given mean confidence of affected students and the per-question confidenceStats say about whether students hold a wrong model confidently or know they are unsure. "No confidence data" when neither is present.',
   ),
   prerequisiteGaps: z.array(z.string()).describe(
     'CCSS codes from the standard\'s prerequisiteStandards list whose absence would DIRECTLY cause this error. Empty if none apply.',
@@ -191,6 +176,11 @@ function formatMisconception(m, i, standardsByCode) {
     ? `${m.studentCount} students${m.studentPercent != null ? ` (${Math.round(m.studentPercent * 100)}%)` : ''} — counted from the response rows`
     : 'not counted';
   lines.push(`- prevalence (given): ${reach}`);
+  if (m.meanConfidence != null) lines.push(`- mean confidence of affected students (given): ${m.meanConfidence} of 5`);
+  if (m.priorityRank != null) {
+    const depth = m.rubric?.scores?.conceptualDepth;
+    lines.push(`- priority (given): #${m.priorityRank}${m.isRecommendedFocus ? ' — Recommended Focus' : ''}${depth != null ? ` · conceptual depth ${depth} of 3` : ''}${m.rubric?.conceptualDepthWhy ? ` (${m.rubric.conceptualDepthWhy})` : ''}`);
+  }
   const refs = (m.wrongAnswers ?? []).map((w) => `Q${w.questionNumber}${String(w.letter ?? '').toUpperCase()}`);
   if (refs.length) lines.push(`- linked wrong answers: ${refs.join(', ')}`);
   return lines.join('\n');
@@ -201,9 +191,9 @@ function buildPrompt(payload, misconceptions, learningScienceSection, standardsB
     ? `\nWorked example:\nMisconception: ${NEED_WORKED.misconception}\nInstructional need: ${NEED_WORKED.instructionalNeed}\n`
     : '';
   return `
-You are an expert K-12 math instructional coach. For each misconception below — already identified from the assessment's answer choices — determine the INSTRUCTIONAL NEED and the RATIONALE for it, from the classroom evidence.
+You are an expert K-12 math instructional coach. For each misconception below — already identified from the assessment's answer choices, and already scored and ranked — determine the INSTRUCTIONAL NEED and the RATIONALE for it, from the classroom evidence.
 
-A misconception does not, by itself, determine the instructional response. The same misconception can call for different next steps depending on what the student evidence reveals about their reasoning — where it breaks down, why the wrong answer looked reasonable, whether they can test or defend a claim. Do not re-identify, rename or merge the misconceptions; reason about the ones given.
+A misconception does not, by itself, determine the instructional response. The same misconception can call for different next steps depending on what the student evidence reveals about their reasoning — where it breaks down, why the wrong answer looked reasonable, whether they can test or defend a claim. Do not re-identify, rename, merge or re-rank the misconceptions; reason about the ones given, in the order given.
 
 ## Writing Style Requirements
 - **Descriptions**: ${ws.descriptions ?? 'Short sentences. Plain language. No run-ons.'}
@@ -258,7 +248,7 @@ For EACH misconception above, in the same order, produce one entry with:
 
 **1. Instructional need** — what students most need to understand, examine, or do next mathematically to make progress on this misconception.
 
-${worked}
+${worked}${NEED_MIGHT_INCLUDE.length ? `\nThe need might be, for example:\n${NEED_MIGHT_INCLUDE.map((x) => `- ${x}`).join('\n')}\n` : ''}
 Rules for the need:
 - State it as the mathematical thinking students must develop, revise, test, or make visible. Never as a format, routine, template, or lesson structure.
 - Anchor it in the specific wrong reasoning the evidence shows — the linked wrong answers, the error described, the confidence pattern. Name that reasoning; do not restate the misconception title.
@@ -268,12 +258,10 @@ Rules for the need:
 **2. Rationale** — the analysis that justifies this need. Every field is required.
 
 - prevalence: restate the GIVEN studentCount/studentPercent and what the linked questions' correct rates add. Never estimate prevalence; it was counted from the response rows.
-- confidenceSignal: read \`confidenceStats\` for the linked questions when present. highConfWrongPct ≥ ${HIGH_CONF_WRONG} means students believe they understand but hold the wrong model — a strong structural signal. avgConfidenceCorrect < ${LOW_AVG_CORRECT} means correct answers were likely guesses, so the correct rate overstates mastery. Say "No confidence data" if absent.
-- conceptualSeverity: 1.0 = structural conceptual misunderstanding (wrong mental model); 0.6 = mixed conceptual and procedural; 0.3 = procedural slip or execution error only. Raise toward 1.0 when the confidence signal shows confident wrong answers.
+- confidenceSignal: read the given mean confidence of affected students and \`confidenceStats\` for the linked questions when present, and say whether students hold the wrong model confidently or know they are unsure. Say "No confidence data" if neither is present.
 - prerequisiteGaps: from the standard's \`prerequisiteStandards\` in the learning science data (EARLIER-grade topics), ONLY the codes where a gap in that skill would DIRECTLY cause this error. Empty if none.
 - forwardImpact: from the standard's \`futureDependentStandards\` (LATER-grade topics), ONLY the codes this error would DIRECTLY threaten. Empty if none.
 - recurrence: "recurring" only if the same error pattern appears in session history; otherwise "first".
-- priorityRank: rank all misconceptions 1..N (1 = address first) on the weighted composite ${PREVALENCE_WEIGHT}·prevalence + ${CONCEPTUAL_WEIGHT}·conceptualSeverity + ${PREREQ_WEIGHT}·prerequisiteLeverage + ${FORWARD_WEIGHT}·forwardImpact (each normalized 0–1). Ties: prefer conceptual over procedural, then broader downstream impact, then higher highConfWrongPct. Ranks must be unique.
 - whyThisNeed: 2–3 sentences tying the evidence to the need — why THIS thinking is what students must do next, rather than another response to the same misconception.
 
 Return JSON matching the schema.
@@ -284,8 +272,8 @@ Return JSON matching the schema.
 
 // One need per input misconception, matched by position when the title agrees,
 // else by exact title. A need matching nothing is dropped and counted; a
-// misconception that gets two keeps the first. Ranks are re-checked for
-// uniqueness and, if the model broke it, reassigned by the order it returned.
+// misconception that gets two keeps the first. `priorityRank` is copied from the
+// input misconception — it was set by the rubric stage, not the model.
 function validateOutput(structured, misconceptions) {
   const byTitle = new Map(misconceptions.map((m, i) => [String(m.title ?? '').trim(), i]));
   const seen = new Set();
@@ -301,13 +289,7 @@ function validateOutput(structured, misconceptions) {
     matched.push({ idx, n });
   });
 
-  const ranks = matched.map(({ n }) => n.rationale?.priorityRank);
-  const ranksUnique = new Set(ranks).size === ranks.length && ranks.every((r) => Number.isInteger(r) && r >= 1);
-  if (!ranksUnique && matched.length) {
-    console.warn(`[microcoachv2LLMGenInstrNeed] priorityRank not unique (${JSON.stringify(ranks)}) — reassigning by returned order`);
-  }
-
-  const needs = matched.map(({ idx, n }, i) => {
+  const needs = matched.map(({ idx, n }) => {
     const m = misconceptions[idx];
     return {
       title: m.title,
@@ -319,7 +301,7 @@ function validateOutput(structured, misconceptions) {
       },
       rationale: {
         ...n.rationale,
-        priorityRank: ranksUnique ? n.rationale.priorityRank : i + 1,
+        priorityRank: m.priorityRank ?? null,
       },
     };
   });
@@ -334,13 +316,13 @@ function validateOutput(structured, misconceptions) {
 // One log event, readable as a block in CloudWatch.
 function formatNeedLog(needs) {
   const lines = [`[microcoachv2LLMGenInstrNeed] ${needs.length} instructional need(s):`];
-  [...needs].sort((a, b) => a.rationale.priorityRank - b.rationale.priorityRank).forEach((n) => {
-    lines.push(`#${n.rationale.priorityRank} ${n.title}`);
+  [...needs].sort((a, b) => (a.rationale.priorityRank ?? Infinity) - (b.rationale.priorityRank ?? Infinity)).forEach((n) => {
+    lines.push(`#${n.rationale.priorityRank ?? '?'} ${n.title}`);
     lines.push(`   need: ${n.instructionalNeed.text}`);
     lines.push(`   teacher: ${n.instructionalNeed.teacherRole}`);
     lines.push(`   prevalence: ${n.rationale.prevalence}`);
     lines.push(`   confidence: ${n.rationale.confidenceSignal}`);
-    lines.push(`   severity: ${n.rationale.conceptualSeverity} · prereq gaps: ${n.rationale.prerequisiteGaps.join(', ') || '—'} · forward: ${n.rationale.forwardImpact.join(', ') || '—'} · ${n.rationale.recurrence}`);
+    lines.push(`   prereq gaps: ${n.rationale.prerequisiteGaps.join(', ') || '—'} · forward: ${n.rationale.forwardImpact.join(', ') || '—'} · ${n.rationale.recurrence}`);
     lines.push(`   why: ${n.rationale.whyThisNeed}`);
     lines.push('');
   });

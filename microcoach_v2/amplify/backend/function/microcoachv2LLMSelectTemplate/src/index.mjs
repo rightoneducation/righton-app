@@ -17,17 +17,22 @@
  *   needs           [{ title, description, learningScienceConnection, ccssStandard,
  *                      wrongAnswers, studentCount, studentPercent,
  *                      instructionalNeed: { text, teacherRole, evidenceUsed },
- *                      rationale: { priorityRank, conceptualSeverity, prerequisiteGaps,
- *                                   forwardImpact, recurrence, whyThisNeed, ... } }]
+ *                      priorityRank, isRecommendedFocus, rubric,
+ *                      rationale: { priorityRank, prerequisiteGaps, forwardImpact,
+ *                                   recurrence, whyThisNeed, ... } }]
  *   classroomData   { classroom, ppq (questions + confidenceStats), wrongAnswerDist }
  *   assessmentType  'multiple_choice' | 'open_response'   (default multiple_choice)
  *   rightOnGames    optional [{ title, ccssStandards, description }] — RightOn! is
  *                   only selectable when this is supplied
  *   trace           boolean — echo `_trace`
  *
- * Output: { ok: true, selections: [{ title, top2: [{ templateId, fit, rationale,
- * distinctFrom }], considered: [{ templateId, whyNot }] }], rejected } — one per
- * need, matched by position then exact title. On failure: { ok: false, error: { message } }.
+ * Output: { ok: true, selections: [{ title, top2: [{ templateId, instructionalFit,
+ * belowThreshold, rationale, distinctFrom }], considered: [{ templateId, whyNot }] }],
+ * rejected } — one per need, matched by position then exact title. `instructionalFit`
+ * is the Wave 2 doc's 0–3 Instructional Fit scale (§3b, mirrored in util/config.json
+ * from microcoachv2ScoresCalc/src/activityRubric.json); `belowThreshold` marks a pick
+ * under the doc's ≥ 2 gate. Nothing is regenerated on a fail here — the flag is
+ * recorded for the harness. On failure: { ok: false, error: { message } }.
  */
 
 import { loadSecret } from './util/loadsecrets.mjs';
@@ -40,6 +45,10 @@ import config from './util/config.json' assert { type: 'json' };
 const sc = config?.selectTemplate ?? {};
 const MODEL = sc.model ?? 'gpt-5-mini';
 const TOP_N = 2; // schema pins two; `sc.topN` is informational until the schema is generalised
+const FIT = sc.instructionalFit ?? {};
+const FIT_THRESHOLD = FIT.threshold ?? 2;
+const FIT_LEVELS = FIT.levels ?? {};
+const FIT_EXAMPLES = FIT.examples ?? null;
 
 const library = loadLibrary();
 const TEMPLATE_IDS = library.templates.map((t) => t.id);
@@ -51,8 +60,8 @@ const templateIdSchema = z.enum(TEMPLATE_IDS);
 
 const Pick = z.object({
   templateId: templateIdSchema,
-  fit: z.enum(['strong', 'moderate']).describe('"strong" when the template\'s primary move is the need itself; "moderate" when it fits but another move is closer'),
-  rationale: z.string().describe('2-3 sentences: why this template\'s primary instructional move fits THIS need, citing the evidence (linked wrong answers, confidence, severity, the need text). Name the fit, not the template description.'),
+  instructionalFit: z.number().int().min(0).max(3).describe('0–3 on the Instructional Fit scale given: 3 exceptional, 2 strong, 1 partial, 0 poor'),
+  rationale: z.string().describe('2-3 sentences: why this template\'s primary instructional move fits THIS need at that level, citing the evidence (linked wrong answers, confidence, conceptual depth, the need text). Name the fit, not the template description.'),
   distinctFrom: z.string().nullable().describe('Only when both picks use the same template: how the second activity would use a meaningfully different problem, context, or mathematical situation. Otherwise null.'),
 });
 
@@ -84,10 +93,21 @@ You are an expert K-12 math instructional coach choosing classroom activity temp
 
 ${formatForSelection(library, { rightOnAvailable })}
 
+## Instructional Fit
+
+Score each pick 0–3 on whether the template provides an appropriate instructional response to the identified instructional need, misconception, student evidence, mathematical content, and instructional context — including whether it addresses what students most need to do next rather than simply addressing the topic or misconception at a surface level.
+
+${Object.entries(FIT_LEVELS).sort((a, b) => Number(b[0]) - Number(a[0])).map(([k, v]) => `- **${k}** — ${v}`).join('\n')}
+${FIT_EXAMPLES ? `
+Example. ${FIT_EXAMPLES.context}
+${['3', '2', '1', '0'].filter((k) => FIT_EXAMPLES[k]).map((k) => `- ${k}: ${FIT_EXAMPLES[k]}`).join('\n')}
+` : ''}
+A pick scoring below ${FIT_THRESHOLD} is a weak recommendation. Select the template whose core instructional move best enables the response identified in the need, not simply the template most commonly associated with the misconception.
+
 ## Output
 
 For EACH need, in the same order given:
-- \`top2\`: exactly ${TOP_N} templates, strongest fit first. Judge fit on the template's primary instructional move against the need, the misconception, the student response data, the mathematical content and the lesson context. Prefer two different templates when both are strong; use the same template twice only when it is substantially stronger than every alternative, and then say in \`distinctFrom\` how the two activities would differ. Never pick a poorly suited template for variety.
+- \`top2\`: exactly ${TOP_N} templates, highest instructionalFit first. Judge fit on the template's primary instructional move against the need, the misconception, the student response data, the mathematical content and the lesson context. Prefer two different templates when both fit strongly (≥ ${FIT_THRESHOLD}); use the same template twice only when it is substantially stronger than every alternative, and then say in \`distinctFrom\` how the two activities would differ. Never pick a poorly suited template for variety.
 - \`considered\`: every other available template with one sentence on why it is weaker here.
 - \`rationale\` must cite the evidence for THIS need — the linked wrong answers, what students chose, confidence, severity, the need text — not restate the template's description.
 - A template marked UNAVAILABLE must not appear in \`top2\`; list it under \`considered\` with whyNot "unavailable".
@@ -135,7 +155,9 @@ function buildSessionSection({ assessmentType, classroom, ppq, wrongAnswerDist, 
     // The heading carries only the title: it is the join key the model echoes back,
     // so nothing else may share the line.
     out.push('', `### Need ${i + 1}: ${n.title}`);
-    if (r.priorityRank != null) out.push(`- priority: #${r.priorityRank}`);
+    const rank = n.priorityRank ?? r.priorityRank;
+    if (rank != null) out.push(`- priority (given): #${rank}${n.isRecommendedFocus ? ' — Recommended Focus' : ''}`);
+    if (n.rubric?.scores?.conceptualDepth != null) out.push(`- conceptual depth (given): ${n.rubric.scores.conceptualDepth} of 3`);
     out.push(`- standard: ${n.ccssStandard ?? 'unknown'}`);
     if (n.description) out.push(`- error: ${n.description}`);
     if (n.learningScienceConnection) out.push(`- learning science: ${n.learningScienceConnection}`);
@@ -145,7 +167,6 @@ function buildSessionSection({ assessmentType, classroom, ppq, wrongAnswerDist, 
     out.push(`- instructional need: ${need.text ?? '(none)'}`);
     if (need.teacherRole) out.push(`- teacher role: ${need.teacherRole}`);
     if (need.evidenceUsed?.length) out.push(`- evidence used: ${need.evidenceUsed.join(' | ')}`);
-    if (r.conceptualSeverity != null) out.push(`- conceptual severity: ${r.conceptualSeverity}`);
     if (r.confidenceSignal) out.push(`- confidence signal: ${r.confidenceSignal}`);
     if (r.prerequisiteGaps?.length) out.push(`- prerequisite gaps: ${r.prerequisiteGaps.join(', ')}`);
     if (r.forwardImpact?.length) out.push(`- forward impact: ${r.forwardImpact.join(', ')}`);
@@ -173,9 +194,21 @@ function validateOutput(structured, needs, rightOnAvailable) {
     for (const p of s.top2 ?? []) {
       if (!TEMPLATE_IDS.includes(p.templateId)) { rejected.push({ title: t, templateId: p.templateId, reason: 'unknownTemplate' }); continue; }
       if (CATALOG_ONLY.has(p.templateId) && !rightOnAvailable) { rejected.push({ title: t, templateId: p.templateId, reason: 'requiresCatalog' }); continue; }
-      top2.push({ templateId: p.templateId, fit: p.fit, rationale: p.rationale, distinctFrom: p.distinctFrom ?? null });
+      top2.push({
+        templateId: p.templateId,
+        instructionalFit: p.instructionalFit,
+        belowThreshold: p.instructionalFit < FIT_THRESHOLD,
+        rationale: p.rationale,
+        distinctFrom: p.distinctFrom ?? null,
+      });
     }
     if (top2.length !== TOP_N) { rejected.push({ title: t, reason: `expected ${TOP_N} picks, kept ${top2.length}` }); return; }
+    // Highest fit first regardless of the order returned; a same-template pair keeps
+    // its distinctFrom on whichever pick ends up second.
+    top2.sort((a, b) => b.instructionalFit - a.instructionalFit);
+    if (top2[0].templateId === top2[1].templateId && !top2[1].distinctFrom && top2[0].distinctFrom) {
+      top2[1].distinctFrom = top2[0].distinctFrom; top2[0].distinctFrom = null;
+    }
     if (top2[0].templateId === top2[1].templateId && !top2[1].distinctFrom) {
       rejected.push({ title: t, reason: 'sameTemplateWithoutDistinctFrom' }); return;
     }
@@ -191,12 +224,12 @@ function validateOutput(structured, needs, rightOnAvailable) {
 }
 
 function formatSelectionLog(selections, needs) {
-  const rank = new Map(needs.map((n) => [n.title, n.rationale?.priorityRank ?? null]));
+  const rank = new Map(needs.map((n) => [n.title, n.priorityRank ?? n.rationale?.priorityRank ?? null]));
   const lines = [`[microcoachv2LLMSelectTemplate] ${selections.length} selection(s):`];
   [...selections].sort((a, b) => (rank.get(a.title) ?? 99) - (rank.get(b.title) ?? 99)).forEach((s) => {
     lines.push(`#${rank.get(s.title) ?? '?'} ${s.title}`);
     s.top2.forEach((p, i) => {
-      lines.push(`   ${i + 1}. ${p.templateId} (${p.fit}) — ${p.rationale}`);
+      lines.push(`   ${i + 1}. ${p.templateId} (fit ${p.instructionalFit}/3${p.belowThreshold ? ' — below threshold' : ''}) — ${p.rationale}`);
       if (p.distinctFrom) lines.push(`      distinct from pick 1: ${p.distinctFrom}`);
     });
     lines.push('');
