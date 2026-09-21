@@ -131,9 +131,12 @@ seed/eval/
       importEvalFixtures.ts    loads a fixture from disk
       exportEvalOutputs.ts     writes the run directory
       maskQuery.ts             applies a condition to the graph payload
-      computeReach.ts          student counts from response data
+      computeReach.ts          student counts + mean confidence from response data
       print-prompt.mjs         offline prompt inspector
-    scoring/
-      scoreMisconception.ts    misconception rubric
-      scoreNextStep.ts         activity rubric
 ```
+
+The rubrics themselves live with the lambda that applies them:
+`amplify/backend/function/microcoachv2ScoresCalc/src/{misconceptionRubric,activityRubric}.json`.
+Every run's `output.json` carries the misconception rubric scores per item and
+`calls/NN-rubric-score.json` echoes the rubric that was applied, so scoring a run
+again is a matter of invoking that lambda on the output.

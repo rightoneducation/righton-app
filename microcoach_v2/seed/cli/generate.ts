@@ -81,7 +81,7 @@ const GRAPH_SOURCE: 'fixture' | 'live' = (() => {
 // `--analysis-only` stops after the misconception analysis: no instructional
 // needs, no planner, no activity generation. output.json still carries every
 // misconception-level field (reach counts, prerequisite gaps) with empty
-// moveOptions, so /preview and scoreMisconception work unchanged. Recorded in
+// moveOptions, so /preview reads it unchanged. Recorded in
 // the manifest as `stoppedAfter` so a truncated run cannot be compared blind
 // against a full one.
 const ANALYSIS_ONLY = process.argv.includes('--analysis-only');
@@ -483,9 +483,16 @@ function buildNextSteps(
       // null (not 0) when there were no refs to count from.
       studentCount: reach.studentCount,
       studentPercent: reach.studentPercent,
+      meanConfidence: reach.meanConfidence,
       wrongAnswers: m.wrongAnswers ?? [],
       linkStatus: reach.linkStatus,
       isCore: m.isCore ?? false,
+      // From the rubric stage (step 4d): the Wave 2 Misconception Rubric scores, the
+      // rank they produce, and whether this one survived the cap.
+      rubric: m.rubric ?? null,
+      priorityRank: m.priorityRank ?? null,
+      isRecommendedFocus: m.isRecommendedFocus === true,
+      retained: m.retained !== false,
       occurrence: m.occurrence ?? m.rationale?.recurrence ?? null,
       example: m.example ?? null,
       misconceptionSummary: m.description,
@@ -497,7 +504,6 @@ function buildNextSteps(
       // From the template-selection stage (step 5d): top two activity templates
       // for the need, with rationale.
       selectedTemplates: m.selectedTemplates ?? null,
-      priorityRank: m.rationale?.priorityRank ?? null,
       successIndicators: m.successIndicators ?? [],
       ccssStandards: {
         targetObjective: { standard: m.ccssStandard, description: standardsDescMap.get(m.ccssStandard) ?? frameworkItem?.description ?? '', learningComponents: (frameworkItem?.learningComponents ?? []).map((c: any) => c.description).filter(Boolean) },
@@ -818,13 +824,74 @@ async function processClassroom(
     const ranked = [...votes.entries()].sort((a, b) => b[1] - a[1]);
     if (ranked.length > 1) console.log(`  [4c] "${m.title}" spans ${ranked.map(([c, n]) => `${c}×${n}`).join(', ')} — using ${ranked[0][0]}`);
     const ccssStandard = ranked[0]?.[0] ?? allCcss[0] ?? null;
-    return { ...m, ccssStandard, studentCount: reach.studentCount, studentPercent: reach.studentPercent };
+    return { ...m, ccssStandard, studentCount: reach.studentCount, studentPercent: reach.studentPercent, meanConfidence: reach.meanConfidence };
   });
 
-  // 5. Instructional need — one call over the misconceptions from 4c. The analysis
-  //    the former microcoachv2LLMAnalysis did (prevalence, confidence, severity,
-  //    prerequisite gaps, forward impact, recurrence) is still done here, as the
-  //    rationale for each need; only the need and its rationale come back.
+  // 4d. Score and rank on the Wave 2 Misconception Rubric (microcoachv2ScoresCalc —
+  //     misconceptionRubric.json is the rubric). Frequency, confidence and reach are
+  //     the measured inputs from above; the lambda judges Conceptual Depth, bands,
+  //     sums and ranks. Rank 1 is the Recommended Focus; only the `retained` set
+  //     (rubric cap) goes on to needs, templates and activities. Dropped ones keep
+  //     their scores and rejoin the output at the end with no need or activities.
+  let rubricVersion: string | null = null;
+  let droppedMisconceptions: any[] = [];
+  if (genMisconceptions.length) {
+    const scoreInput = {
+      misconceptions: JSON.stringify(genMisconceptions.map((m: any) => ({
+        title: m.title,
+        description: m.description ?? null,
+        learningScienceConnection: m.learningScienceConnection ?? null,
+        ccssStandard: m.ccssStandard ?? null,
+        studentPercent: m.studentPercent ?? null,
+        meanConfidence: m.meanConfidence ?? null,
+      }))),
+      learningScienceData: JSON.stringify(injected),
+      trace: WANT_TRACE,
+    };
+    process.stdout.write(`  Rubric scoring for ${genMisconceptions.length} misconception(s)...`);
+    const scoreRaw = await invokeLambda(`microcoachv2ScoresCalc-${AMPLIFY_ENV}`, { input: scoreInput });
+    const scoreOut = parseJson(scoreRaw);
+    capture.recordCall('rubric-score', scoreInput, scoreOut);
+    if (scoreOut?.ok === false) {
+      throw new Error(`Rubric scoring failed: ${scoreOut?.error?.message ?? 'unknown error'}`);
+    }
+    rubricVersion = scoreOut?.rubricVersion ?? null;
+    const scoredByTitle = new Map<string, any>((scoreOut?.scored ?? []).map((x: any) => [String(x.title ?? '').trim(), x]));
+    genMisconceptions = genMisconceptions.map((m: any) => {
+      const sc = scoredByTitle.get(String(m.title ?? '').trim());
+      if (!sc) return { ...m, rubric: null, priorityRank: null, isRecommendedFocus: false, retained: false };
+      return {
+        ...m,
+        rubric: {
+          version: rubricVersion,
+          scores: sc.scores,
+          total: sc.total,
+          maxPossible: sc.maxPossible,
+          normalized: sc.normalized,
+          missing: sc.missing ?? [],
+          inputs: sc.inputs ?? null,
+          conceptualDepthWhy: sc.conceptualDepthWhy ?? null,
+        },
+        priorityRank: sc.priorityRank,
+        isRecommendedFocus: sc.isRecommendedFocus === true,
+        retained: sc.retained === true,
+      };
+    });
+    genMisconceptions.sort((a: any, b: any) => (a.priorityRank ?? Infinity) - (b.priorityRank ?? Infinity));
+    droppedMisconceptions = genMisconceptions.filter((m: any) => !m.retained);
+    genMisconceptions = genMisconceptions.filter((m: any) => m.retained);
+    const focus = genMisconceptions.find((m: any) => m.isRecommendedFocus);
+    console.log(` ✓  ${genMisconceptions.length} retained, ${droppedMisconceptions.length} dropped · focus: ${focus?.title ?? '—'}`);
+    for (const m of [...genMisconceptions, ...droppedMisconceptions]) {
+      const r = m.rubric;
+      const cells = r ? Object.entries(r.scores).map(([k, v]) => `${k.replace(/[a-z]/g, '')}${v ?? '–'}`).join(' ') : 'unscored';
+      console.log(`    #${m.priorityRank ?? '?'} ${m.title} — ${r ? `${r.total}/${r.maxPossible}` : ''} (${cells})${m.isRecommendedFocus ? ' ★' : ''}${m.retained ? '' : ' (dropped)'}`);
+    }
+  }
+
+  // 5. Instructional need — one call over the retained misconceptions from 4d.
+  //    Rank and Conceptual Depth arrive as givens; the call writes the need and the
+  //    rationale prose behind it.
   let misconceptions: any[] = [];
   // Misconceptions the need model returned nothing for — recorded in the manifest
   // because such an item reaches the output with no rank and no templates.
@@ -1022,6 +1089,10 @@ async function processClassroom(
   // `injected`, not the snapshot: output.json is the artifact under test and must
   // reflect what the pipeline actually had. Scoring reads ground truth from
   // kg-snapshot.json separately.
+  // Misconceptions the rubric cap dropped rejoin here, after the retained set, so
+  // they land in output.json with their scores and rank but no need, templates or
+  // activities (buildNextSteps defaults the positional extras/activities to empty).
+  misconceptions = [...misconceptions, ...droppedMisconceptions];
   const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, injected, misconceptionExtras, studentResponses);
   if (fixture) {
     // Fixture runs never write session data. The pilot sessions are a measurement substrate, and
@@ -1100,7 +1171,12 @@ async function processClassroom(
     ).length,
     // Misconceptions now originate in GenMisconception (4c); how many of them got
     // a need back from 5 is the join-health counter.
-    misconceptionsFromGen: genMisconceptions.length,
+    misconceptionsFromGen: genMisconceptions.length + droppedMisconceptions.length,
+    // Rubric stage (4d): which rubric ran, what it picked, and how many it dropped.
+    rubricVersion,
+    recommendedFocus: nextSteps.find((n: any) => n.isRecommendedFocus)?.title ?? null,
+    misconceptionsRetained: genMisconceptions.length,
+    misconceptionsDropped: droppedMisconceptions.length,
     // Template selection health: how many needs got two picks, and whether the
     // static library prefix was served from the prompt cache.
     templatesSelected,
@@ -1122,6 +1198,7 @@ async function processClassroom(
     console.log(`  Captured → eval/runs/${manifest.runId}`);
     console.log(`    ${manifest.modelCalls} calls · ${t.total.toLocaleString()} tokens · models: ${manifest.models.join(', ')}`);
     console.log(`    targetStandard matched on ${manifest.targetStandardMatched}/${manifest.misconceptionCount} misconceptions`);
+    console.log(`    rubric ${manifest.rubricVersion ?? '—'} · focus: ${manifest.recommendedFocus ?? '—'} · ${manifest.misconceptionsRetained} retained / ${manifest.misconceptionsDropped} dropped`);
     console.log(`    instructional need on ${manifest.instructionalNeedsGenerated}/${manifest.misconceptionCount} (${manifest.misconceptionsFromGen} from GenMisconception)`);
     console.log(`    wrong-answer refs on ${manifest.wrongAnswerLinked}/${manifest.misconceptionCount} (${manifest.wrongAnswerRefs} option refs)`);
     for (const s of manifest.studentCountTotals) {

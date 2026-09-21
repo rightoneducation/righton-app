@@ -252,6 +252,59 @@ function MisconceptionBlock({ item }: { item: Rec }) {
   );
 }
 
+// The Wave 2 Misconception Rubric scorecard as the run recorded it — read from
+// the item, not recomputed here.
+const RUBRIC_LABELS: Record<string, string> = {
+  frequency: 'frequency',
+  learningProgressionInfluence: 'progression influence',
+  studentConfidence: 'student confidence',
+  lcMisconceptionEvalScore: 'LC evaluator',
+  conceptualDepth: 'conceptual depth',
+};
+
+function RubricBlock({ item }: { item: Rec }) {
+  const rubric = asRec(item.rubric);
+  if (!rubric) {
+    return (
+      <Block label="Rubric" hint="ScoresCalc">
+        <span className="p2-nil">not scored on this run</span>
+      </Block>
+    );
+  }
+  const scores = asRec(rubric.scores) ?? {};
+  const missing = asStrings(rubric.missing);
+  const total = typeof rubric.total === 'number' ? rubric.total : null;
+  const max = typeof rubric.maxPossible === 'number' ? rubric.maxPossible : null;
+  const retained = item.retained !== false;
+  return (
+    <Block label="Rubric" hint={`ScoresCalc · ${asStr(rubric.version) || 'misconceptionRubric.json'}`}>
+      <div className="p2-inputs">
+        <div className="p2-inputs-head">Misconception rubric</div>
+        {Object.entries(scores).map(([k, v]) => {
+          let cell = `${String(v)} / 3`;
+          if (v == null) cell = missing.includes(k) ? 'not measured' : '—';
+          return <Row key={k} k={RUBRIC_LABELS[k] ?? k} v={<span className="p2-mono">{cell}</span>} />;
+        })}
+        <Row
+          k="→ total"
+          v={
+            <span>
+              <span className="p2-mono">{total == null || max == null ? '—' : `${total} / ${max}`}</span>
+              {' · '}
+              <span className="p2-rank-inline">#{String(item.priorityRank ?? '—')}</span>
+              {item.isRecommendedFocus === true && <span className="p2-focus"> Recommended Focus</span>}
+              {!retained && <span className="p2-dropped"> dropped by cap</span>}
+            </span>
+          }
+        />
+        {asStr(rubric.conceptualDepthWhy) !== '' && (
+          <Row k="depth — why" v={<MathText text={asStr(rubric.conceptualDepthWhy)} />} />
+        )}
+      </div>
+    </Block>
+  );
+}
+
 function NeedBlock({ item }: { item: Rec }) {
   const need = asRec(item.instructionalNeed);
   const r = asRec(item.rationale);
@@ -263,7 +316,7 @@ function NeedBlock({ item }: { item: Rec }) {
     );
   }
   return (
-    <Block label="Instructional need" hint="LLMGenInstrNeed · need + priority inputs">
+    <Block label="Instructional need" hint="LLMGenInstrNeed · need + rationale">
       {need && (
         <>
           <p className="p2-callout">
@@ -274,13 +327,12 @@ function NeedBlock({ item }: { item: Rec }) {
       )}
       {r && (
         <div className="p2-inputs">
-          <div className="p2-inputs-head">Priority inputs</div>
-          <Row k="prevalence · 0.40" v={<span>{asStr(r.prevalence) || '—'}</span>} />
-          <Row k="conceptual severity · 0.30" v={<span className="p2-mono">{String(r.conceptualSeverity ?? '—')}</span>} />
-          <Row k="prerequisite gaps · 0.15" v={<Chips items={asStrings(r.prerequisiteGaps)} />} />
-          <Row k="forward impact · 0.15" v={<Chips items={asStrings(r.forwardImpact)} />} />
+          <div className="p2-inputs-head">Rationale</div>
+          <Row k="prevalence" v={<span>{asStr(r.prevalence) || '—'}</span>} />
           <Row k="confidence signal" v={<span>{asStr(r.confidenceSignal) || '—'}</span>} />
-          <Row k="→ priority rank" v={<span className="p2-rank-inline">#{String(r.priorityRank ?? '—')}</span>} />
+          <Row k="prerequisite gaps" v={<Chips items={asStrings(r.prerequisiteGaps)} />} />
+          <Row k="forward impact" v={<Chips items={asStrings(r.forwardImpact)} />} />
+          <Row k="recurrence" v={<span>{asStr(r.recurrence) || '—'}</span>} />
         </div>
       )}
       {r && asStr(r.whyThisNeed) !== '' && <Row k="why this need" v={<MathText text={asStr(r.whyThisNeed)} />} />}
@@ -310,9 +362,10 @@ function TemplateBlock({ item }: { item: Rec }) {
               <div className="p2-pick-head">
                 <span className="p2-pick-n">{i + 1}</span>
                 <span className="p2-pick-id">{asStr(pick.templateId)}</span>
-                <span className={asStr(pick.fit) === 'strong' ? 'p2-fit p2-fit-strong' : 'p2-fit'}>
-                  {asStr(pick.fit) || '?'}
+                <span className={typeof pick.instructionalFit === 'number' && pick.instructionalFit >= 2 ? 'p2-fit p2-fit-strong' : 'p2-fit'}>
+                  {typeof pick.instructionalFit === 'number' ? `fit ${pick.instructionalFit}/3` : asStr(pick.fit) || '?'}
                 </span>
+                {pick.belowThreshold === true && <span className="p2-fit p2-fit-below">below threshold</span>}
               </div>
               <div className="p2-text">
                 <MathText text={asStr(pick.rationale)} />
@@ -349,8 +402,10 @@ function MisconceptionCard({
         <span className="p2-chevron" aria-hidden="true">
           ▸
         </span>
-        <span className="p2-rank">#{rank}</span>
+        <span className={item.isRecommendedFocus === true ? 'p2-rank p2-rank-focus' : 'p2-rank'}>#{rank}</span>
         <span className="p2-card-title">{asStr(item.title) || '(untitled)'}</span>
+        {item.isRecommendedFocus === true && <span className="p2-meta p2-focus">Recommended Focus</span>}
+        {item.retained === false && <span className="p2-meta p2-dropped">dropped by cap</span>}
         {count !== null && (
           <span className="p2-meta">
             {count} students{pct(item.studentPercent) ? ` · ${pct(item.studentPercent)}` : ''}
@@ -360,6 +415,7 @@ function MisconceptionCard({
       </summary>
       <div className="p2-card-body">
         <MisconceptionBlock item={item} />
+        <RubricBlock item={item} />
         <NeedBlock item={item} />
         <TemplateBlock item={item} />
       </div>
@@ -612,6 +668,10 @@ const STYLES = `
 .p2-fit { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; background: #eceff3;
   color: #4b535c; border-radius: 4px; padding: 1px 6px; }
 .p2-fit-strong { background: #e5edff; color: #2f5bd0; }
+.p2-fit-below { background: #fdecec; color: #b3261e; margin-left: 4px; }
+.p2-focus { color: #1f7a3a; font-weight: 700; }
+.p2-dropped { color: #8a8f98; font-style: italic; }
+.p2-rank-focus { background: #1f7a3a; color: #fff; }
 .p2-distinct { margin-top: 6px; font-size: 12px; color: #5b636b; }
 .p2-loading { display: flex; justify-content: center; padding: 48px 0; }
 `;
