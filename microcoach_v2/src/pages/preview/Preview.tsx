@@ -462,7 +462,7 @@ function MisconceptionCard({
   return (
     // Remounted on `generation` so Expand/Collapse all re-applies the default:
     // <details open> is uncontrolled after first render.
-    <details className="p2-card" key={generation} open={open}>
+    <details className={item.retained === false ? 'p2-card p2-card-dropped' : 'p2-card'} key={generation} open={open}>
       <summary className="p2-card-summary">
         <span className="p2-chevron" aria-hidden="true">
           ▸
@@ -638,14 +638,14 @@ const STYLES = `
 .p2-inner-label { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; color: #8b939c;
   margin-bottom: 4px; }
 .p2-inner-stages { display: flex; gap: 8px; align-items: stretch; flex: 1; }
-.p2-stage { position: relative; flex: 1 1 0; min-width: 140px; background: #fff; border: 1px solid #dfe3e8;
+.p2-stage { position: relative; flex: 1 1 0; min-width: 0; background: #fff; border: 1px solid #dfe3e8;
   border-radius: 8px; padding: 12px 14px 14px; cursor: default; outline: none; }
 .p2-stage:hover, .p2-stage:focus-within { border-color: #b9c3d0; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
 .p2-stage-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 8px; }
 .p2-stage-n { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px;
   border-radius: 9px; background: #2f6df6; color: #fff; font-size: 10px; font-weight: 700; flex: none; }
-.p2-stage-label { font-size: 14px; font-weight: 700; line-height: 1.3; margin-bottom: 4px; }
-.p2-stage-sub { font-size: 12px; font-weight: 400; color: #5b636b; line-height: 1.4; }
+.p2-stage-label { font-size: 14px; font-weight: 700; line-height: 1.3; margin-bottom: 4px; overflow-wrap: anywhere; hyphens: auto; }
+.p2-stage-sub { font-size: 12px; font-weight: 400; color: #5b636b; line-height: 1.4; overflow-wrap: anywhere; }
 .p2-stage-tip { display: none; position: absolute; top: calc(100% + 8px); left: 0; z-index: 5; min-width: 280px;
   max-width: 360px; background: #fff; border: 1px solid #dfe3e8; border-radius: 8px; padding: 10px 12px;
   box-shadow: 0 6px 20px rgba(0,0,0,.12); font-size: 12px; white-space: normal; }
@@ -689,6 +689,10 @@ const STYLES = `
   list-style: none; user-select: none; }
 .p2-card-summary::-webkit-details-marker { display: none; }
 .p2-card-summary:hover { background: #fafbfc; }
+/* Past the rubric cap: scored and ranked, but not carried into needs or activities. */
+.p2-card-dropped > .p2-card-summary { background: #f3f4f6; color: #5b636b; }
+.p2-card-dropped > .p2-card-summary:hover { background: #eceef1; }
+.p2-card-dropped > .p2-card-summary .p2-rank { background: #d5d9df; color: #4b525a; }
 .p2-chevron { color: #8b939c; font-size: 11px; transition: transform .12s ease; }
 .p2-card[open] > .p2-card-summary > .p2-chevron { transform: rotate(90deg); }
 .p2-rank, .p2-rank-inline { display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 22px;

@@ -2,7 +2,7 @@
   "version": "wave2-2026-09",
   "source": {
     "label": "MicroCoach Wave 2 — Recommendation Pipeline, Evaluation Framework, and Evaluation Harness, §3b Instructional Activity Rubric (v0.1)",
-    "href": "TODO",
+    "href": "https://docs.google.com/document/d/1YnGsDBJGAlpy0nyE36nAogB9hl38YLav8TdP6guvdRA/edit?tab=t.0",
     "note": "The doc's v0.0 section (Misconception grounding, LC Standards Alignment Evaluator, Differentiation, Conceptual Change, the older Classroom Feasibility bands) is superseded by v0.1 in the same document and is not transcribed here."
   },
   "description": "The Wave 2 approach to generating and recommending instructional activities, and the rubric that evaluates them, as data. Two parts are consumed by the pipeline now: `instructionalNeed` shapes the microcoachv2LLMGenInstrNeed prompt and `metrics[instructionalFit]` scores each template pick in microcoachv2LLMSelectTemplate. Everything from `templateFidelity` onward is scored on the generated activity and belongs to the evaluation harness, which is not built yet. See `wiring`.",
