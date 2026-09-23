@@ -2,7 +2,7 @@
   "version": "wave2-2026-09",
   "source": {
     "label": "MicroCoach Wave 2 — Recommendation Pipeline, Evaluation Framework, and Evaluation Harness, §3a Misconception Rubric",
-    "href": "TODO"
+    "href": "https://docs.google.com/document/d/1YnGsDBJGAlpy0nyE36nAogB9hl38YLav8TdP6guvdRA/edit?tab=t.0"
   },
   "description": "The Misconception Rubric as data. Every misconception is scored 0–3 on each enabled metric; the highest total is the Recommended Focus. This file is the only place the bands, level definitions, cap and tiebreak live — scoreRubric.mjs reads it and does no arithmetic of its own.",
 

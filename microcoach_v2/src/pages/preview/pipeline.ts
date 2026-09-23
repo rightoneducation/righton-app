@@ -19,8 +19,7 @@ export interface Origin {
 
 export const WAVE2_DOC: Origin = {
   label: 'Wave 2 doc',
-  // TODO: link to "MicroCoach Wave 2 — Recommendation Pipeline, Evaluation Framework, and Evaluation Harness".
-  href: '#',
+  href: 'https://docs.google.com/document/d/1YnGsDBJGAlpy0nyE36nAogB9hl38YLav8TdP6guvdRA/edit?tab=t.0',
 };
 
 export interface Stage {
