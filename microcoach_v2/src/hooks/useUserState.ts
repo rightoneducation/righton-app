@@ -1,12 +1,11 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { IAPIClients, IUser } from '../api';
 import { UserStatusType } from '../lib/MicroCoachModels';
+import {
+  useMicroCoachDataDispatch,
+  useMicroCoachDataState,
+} from './context/useMicroCoachDataContext';
 
-// Signed-in user state, owned by RootLayout and passed down as props (see
-// App.tsx). Deliberately plain useState rather than a reducer or a context:
-// three fields, no cross-field invariants beyond "clear them together", and a
-// preliminary app that doesn't yet warrant either. Context/reducer can come
-// back when the shape earns it.
 export interface IUserState {
   userProfile: IUser | null;
   userStatus: UserStatusType;
@@ -36,11 +35,22 @@ export interface UserProps {
 }
 
 export function useUserState(apiClients: IAPIClients): IUserState {
-  const [userProfile, setUserProfile] = useState<IUser | null>(null);
-  const [userStatus, setUserStatus] = useState<UserStatusType>(
-    UserStatusType.LOADING,
+  const { userProfile, userStatus, userErrorString } = useMicroCoachDataState();
+  const dispatch = useMicroCoachDataDispatch();
+
+  const setUserStatus = useCallback(
+    (status: UserStatusType) => {
+      dispatch({ type: 'SET_USER_STATUS', payload: status });
+    },
+    [dispatch],
   );
-  const [userErrorString, setUserErrorString] = useState('');
+
+  const setUserErrorString = useCallback(
+    (message: string) => {
+      dispatch({ type: 'SET_USER_ERROR_STRING', payload: message });
+    },
+    [dispatch],
+  );
 
   const signIn = useCallback(
     async (user: IUser) => {
@@ -67,9 +77,9 @@ export function useUserState(apiClients: IAPIClients): IUserState {
           setUserErrorString('We could not find your account. Please sign up.');
           return null;
         }
-        setUserProfile(profile);
-        setUserErrorString('');
-        setUserStatus(UserStatusType.LOGGEDIN);
+        dispatch({ type: 'SET_USER_PROFILE', payload: profile });
+        dispatch({ type: 'SET_USER_ERROR_STRING', payload: '' });
+        dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
         return profile;
       } catch (e) {
         console.error('Sign in call failed with:');
@@ -78,42 +88,41 @@ export function useUserState(apiClients: IAPIClients): IUserState {
       }
       return null;
     },
-    // The useState setters are stable, so apiClients is the only real dependency.
-    [apiClients],
+    [apiClients, dispatch, setUserErrorString],
   );
 
   const setSignedInUser = useCallback(
     (profile: IUser, status: UserStatusType = UserStatusType.LOGGEDIN) => {
-      setUserProfile(profile);
-      setUserStatus(status);
+      dispatch({ type: 'SET_USER_PROFILE', payload: profile });
+      dispatch({ type: 'SET_USER_STATUS', payload: status });
     },
-    [],
+    [dispatch],
   );
 
   const signOut = useCallback(() => {
-    
-    setUserProfile(null);
-    setUserErrorString('');
-    setUserStatus(UserStatusType.LOGGEDOUT);
-  }, []);
+    dispatch({ type: 'CLEAR_USER_PROFILE' });
+    dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDOUT });
+  }, [dispatch]);
 
-  const updateUserProfile = useCallback((changes: Partial<IUser>) => {
-    setUserProfile((prev) => ({ ...(prev ?? {}), ...changes }) as IUser);
-  }, []);
+  const updateUserProfile = useCallback(
+    (changes: Partial<IUser>) => {
+      dispatch({ type: 'UPDATE_USER_PROFILE', payload: changes });
+    },
+    [dispatch],
+  );
 
   const advanceGoogleSignUp = useCallback(
     (firstName: string, lastName: string) => {
-      setUserProfile(
-        (prev) =>
-          ({
-            ...(prev ?? {}),
-            firstName,
-            lastName,
-          }) as IUser,
-      );
-      setUserStatus(UserStatusType.GOOGLE_SIGNUP);
+      dispatch({
+        type: 'UPDATE_USER_PROFILE',
+        payload: { firstName, lastName },
+      });
+      dispatch({
+        type: 'SET_USER_STATUS',
+        payload: UserStatusType.GOOGLE_SIGNUP,
+      });
     },
-    [],
+    [dispatch],
   );
 
   return useMemo(
@@ -138,6 +147,8 @@ export function useUserState(apiClients: IAPIClients): IUserState {
       signOut,
       updateUserProfile,
       advanceGoogleSignUp,
+      setUserStatus,
+      setUserErrorString,
     ],
   );
 }

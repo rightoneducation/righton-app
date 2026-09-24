@@ -1,8 +1,13 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { IAPIClients } from '../api';
 import { IMicroCoachSavedPlan } from '../api/Models/IMicroCoachSavedPlan';
+import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
 import { IPlanItem } from '../lib/PipelineModels';
 import mockPipelineOutput from '../lib/mocks/mockPipelineOutput.json';
+import {
+  useMicroCoachDataDispatch,
+  useMicroCoachDataState,
+} from './context/useMicroCoachDataContext';
 
 // Seeded from the mock until the plan is persisted server-side. The COMPLETED
 // entry references a misconception outside this week's three, so it can only
@@ -13,7 +18,7 @@ const seededPlanItems = (
   }
 ).savedPlan.items;
 
-export type PlanItemsStatus = 'idle' | 'loading' | 'ready' | 'error';
+export type PlanItemsStatus = MicroCoachDataStatus;
 
 export type PlanItemsScope =
   | { type: 'class'; classId: string }
@@ -59,10 +64,9 @@ export function usePlanItems(
   apiClients: IAPIClients,
   scope: PlanItemsScope,
 ): IPlanItemsState {
-  const [planItems, setPlanItems] = useState<IPlanItem[]>([]);
-  const [planItemsStatus, setPlanItemsStatus] =
-    useState<PlanItemsStatus>('idle');
-  const [planItemsError, setPlanItemsError] = useState<Error | null>(null);
+  const { planItems, planItemsStatus, planItemsError } =
+    useMicroCoachDataState();
+  const dispatch = useMicroCoachDataDispatch();
 
   const scopeType = scope?.type ?? null;
   let scopeId: string | null = null;
@@ -73,17 +77,17 @@ export function usePlanItems(
     let cancelled = false;
 
     if (!scopeType || !scopeId) {
-      setPlanItems([]);
-      setPlanItemsStatus('idle');
-      setPlanItemsError(null);
+      dispatch({ type: 'SET_PLAN_ITEMS', payload: [] });
+      dispatch({ type: 'SET_PLAN_ITEMS_STATUS', payload: 'idle' });
+      dispatch({ type: 'SET_PLAN_ITEMS_ERROR', payload: null });
       return undefined;
     }
 
     const activeScopeType = scopeType;
     const activeScopeId = scopeId;
-    setPlanItems([]);
-    setPlanItemsStatus('loading');
-    setPlanItemsError(null);
+    dispatch({ type: 'SET_PLAN_ITEMS', payload: [] });
+    dispatch({ type: 'SET_PLAN_ITEMS_STATUS', payload: 'loading' });
+    dispatch({ type: 'SET_PLAN_ITEMS_ERROR', payload: null });
 
     async function loadPlanItems() {
       try {
@@ -95,17 +99,22 @@ export function usePlanItems(
               );
         if (cancelled) return;
 
-        setPlanItems(combineSavedPlanItemsWithMockData(fetchedSavedPlans));
-        setPlanItemsStatus('ready');
+        dispatch({
+          type: 'SET_PLAN_ITEMS',
+          payload: combineSavedPlanItemsWithMockData(fetchedSavedPlans),
+        });
+        dispatch({ type: 'SET_PLAN_ITEMS_STATUS', payload: 'ready' });
       } catch (error) {
         if (cancelled) return;
 
-        setPlanItemsError(
-          error instanceof Error
-            ? error
-            : new Error('Failed to load saved plans'),
-        );
-        setPlanItemsStatus('error');
+        dispatch({
+          type: 'SET_PLAN_ITEMS_ERROR',
+          payload:
+            error instanceof Error
+              ? error
+              : new Error('Failed to load saved plans'),
+        });
+        dispatch({ type: 'SET_PLAN_ITEMS_STATUS', payload: 'error' });
       }
     }
 
@@ -114,32 +123,30 @@ export function usePlanItems(
     return () => {
       cancelled = true;
     };
-  }, [apiClients, scopeId, scopeType]);
+  }, [apiClients, dispatch, scopeId, scopeType]);
 
   // One saved activity per misconception — selecting a different one replaces
   // the previous entry rather than stacking up.
-  const saveActivity = useCallback((item: IPlanItem) => {
-    setPlanItems((items) => [
-      ...items.filter(
-        (existing) =>
-          existing.status !== 'SAVED' ||
-          existing.misconceptionId !== item.misconceptionId,
-      ),
-      item,
-    ]);
-  }, []);
+  const saveActivity = useCallback(
+    (item: IPlanItem) => {
+      dispatch({ type: 'SAVE_PLAN_ITEM', payload: item });
+    },
+    [dispatch],
+  );
 
-  const markPlanItemDone = useCallback((id: string) => {
-    setPlanItems((items) =>
-      items.map((item) =>
-        item.id === id ? { ...item, status: 'COMPLETED' as const } : item,
-      ),
-    );
-  }, []);
+  const markPlanItemDone = useCallback(
+    (id: string) => {
+      dispatch({ type: 'MARK_PLAN_ITEM_DONE', payload: id });
+    },
+    [dispatch],
+  );
 
-  const removePlanItem = useCallback((id: string) => {
-    setPlanItems((items) => items.filter((item) => item.id !== id));
-  }, []);
+  const removePlanItem = useCallback(
+    (id: string) => {
+      dispatch({ type: 'REMOVE_PLAN_ITEM', payload: id });
+    },
+    [dispatch],
+  );
 
   return useMemo(
     () => ({

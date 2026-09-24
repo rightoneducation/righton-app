@@ -1,8 +1,13 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { IAPIClients } from '../api';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
+import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
+import {
+  useMicroCoachDataDispatch,
+  useMicroCoachDataState,
+} from './context/useMicroCoachDataContext';
 
-export type SessionsStatus = 'idle' | 'loading' | 'ready' | 'error';
+export type SessionsStatus = MicroCoachDataStatus;
 
 export interface UseSessionsResult {
   sessions: IMicroCoachSession[];
@@ -17,30 +22,26 @@ export function useSessions(
   apiClients: IAPIClients,
   classId: string | null,
 ): UseSessionsResult {
-  const [sessions, setSessions] = useState<IMicroCoachSession[]>([]);
-  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(
-    null,
-  );
-  const [sessionsStatus, setSessionsStatus] =
-    useState<SessionsStatus>('idle');
-  const [sessionsError, setSessionsError] = useState<Error | null>(null);
+  const { sessions, selectedSessionId, sessionsStatus, sessionsError } =
+    useMicroCoachDataState();
+  const dispatch = useMicroCoachDataDispatch();
 
   useEffect(() => {
     let cancelled = false;
 
     if (!classId) {
-      setSessions([]);
-      setSelectedSessionId(null);
-      setSessionsStatus('idle');
-      setSessionsError(null);
+      dispatch({ type: 'SET_SESSIONS', payload: [] });
+      dispatch({ type: 'SET_SELECTED_SESSION_ID', payload: null });
+      dispatch({ type: 'SET_SESSIONS_STATUS', payload: 'idle' });
+      dispatch({ type: 'SET_SESSIONS_ERROR', payload: null });
       return undefined;
     }
 
     const activeClassId = classId;
-    setSessions([]);
-    setSelectedSessionId(null);
-    setSessionsStatus('loading');
-    setSessionsError(null);
+    dispatch({ type: 'SET_SESSIONS', payload: [] });
+    dispatch({ type: 'SET_SELECTED_SESSION_ID', payload: null });
+    dispatch({ type: 'SET_SESSIONS_STATUS', payload: 'loading' });
+    dispatch({ type: 'SET_SESSIONS_ERROR', payload: null });
 
     async function loadSessions() {
       try {
@@ -48,17 +49,19 @@ export function useSessions(
           await apiClients.session.getSessionsByClassId(activeClassId);
         if (cancelled) return;
 
-        setSessions(fetchedSessions);
-        setSessionsStatus('ready');
+        dispatch({ type: 'SET_SESSIONS', payload: fetchedSessions });
+        dispatch({ type: 'SET_SESSIONS_STATUS', payload: 'ready' });
       } catch (error) {
         if (cancelled) return;
 
-        setSessionsError(
-          error instanceof Error
-            ? error
-            : new Error('Failed to load sessions'),
-        );
-        setSessionsStatus('error');
+        dispatch({
+          type: 'SET_SESSIONS_ERROR',
+          payload:
+            error instanceof Error
+              ? error
+              : new Error('Failed to load sessions'),
+        });
+        dispatch({ type: 'SET_SESSIONS_STATUS', payload: 'error' });
       }
     }
 
@@ -67,32 +70,32 @@ export function useSessions(
     return () => {
       cancelled = true;
     };
-  }, [apiClients, classId]);
+  }, [apiClients, classId, dispatch]);
 
-  const selectSession = useCallback((sessionId: string) => {
-    setSelectedSessionId(sessionId);
-  }, []);
-
-  return useMemo(
-    () => {
-      const selectedSession =
-        sessions.find((session) => session.id === selectedSessionId) ?? null;
-
-      return {
-        sessions,
-        selectedSessionId,
-        selectedSession,
-        selectSession,
-        status: sessionsStatus,
-        error: sessionsError,
-      };
+  const selectSession = useCallback(
+    (sessionId: string) => {
+      dispatch({ type: 'SET_SELECTED_SESSION_ID', payload: sessionId });
     },
-    [
-      selectSession,
-      selectedSessionId,
-      sessions,
-      sessionsError,
-      sessionsStatus,
-    ],
+    [dispatch],
   );
+
+  return useMemo(() => {
+    const selectedSession =
+      sessions.find((session) => session.id === selectedSessionId) ?? null;
+
+    return {
+      sessions,
+      selectedSessionId,
+      selectedSession,
+      selectSession,
+      status: sessionsStatus,
+      error: sessionsError,
+    };
+  }, [
+    selectSession,
+    selectedSessionId,
+    sessions,
+    sessionsError,
+    sessionsStatus,
+  ]);
 }

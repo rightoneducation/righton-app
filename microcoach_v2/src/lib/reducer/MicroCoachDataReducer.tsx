@@ -31,6 +31,9 @@ export type MicroCoachDataAction =
   | { type: 'SET_MISCONCEPTIONS_STATUS'; payload: MicroCoachDataStatus }
   | { type: 'SET_MISCONCEPTIONS_ERROR'; payload: Error | null }
   | { type: 'SET_PLAN_ITEMS'; payload: IPlanItem[] }
+  | { type: 'SAVE_PLAN_ITEM'; payload: IPlanItem }
+  | { type: 'MARK_PLAN_ITEM_DONE'; payload: string }
+  | { type: 'REMOVE_PLAN_ITEM'; payload: string }
   | { type: 'SET_PLAN_ITEMS_STATUS'; payload: MicroCoachDataStatus }
   | { type: 'SET_PLAN_ITEMS_ERROR'; payload: Error | null };
 
@@ -78,6 +81,32 @@ export function microCoachDataReducer(
       return { ...state, misconceptionsError: action.payload };
     case 'SET_PLAN_ITEMS':
       return { ...state, planItems: action.payload };
+    case 'SAVE_PLAN_ITEM':
+      return {
+        ...state,
+        planItems: [
+          ...state.planItems.filter(
+            (item) =>
+              item.status !== 'SAVED' ||
+              item.misconceptionId !== action.payload.misconceptionId,
+          ),
+          action.payload,
+        ],
+      };
+    case 'MARK_PLAN_ITEM_DONE':
+      return {
+        ...state,
+        planItems: state.planItems.map((item) =>
+          item.id === action.payload
+            ? { ...item, status: 'COMPLETED' as const }
+            : item,
+        ),
+      };
+    case 'REMOVE_PLAN_ITEM':
+      return {
+        ...state,
+        planItems: state.planItems.filter((item) => item.id !== action.payload),
+      };
     case 'SET_PLAN_ITEMS_STATUS':
       return { ...state, planItemsStatus: action.payload };
     case 'SET_PLAN_ITEMS_ERROR':
