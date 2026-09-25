@@ -26,6 +26,8 @@ import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
 import { readFileSync } from 'node:fs';
 import { scoreOne, rank } from './scoreRubric.mjs';
+import { matchStandard } from './util/ccssCode.mjs';
+import { matchByTitle } from './util/matchByTitle.mjs';
 
 // Read rather than `import … with { type: 'json' }` so the file loads the same on
 // nodejs20 (Lambda) and 22 (local), which disagree on the import-attribute keyword.
@@ -49,10 +51,9 @@ const DepthResponse = z.object({
 // ── Prompt ────────────────────────────────────────────────────────────────────
 
 const parseJson = (raw) => (typeof raw === 'string' ? JSON.parse(raw) : raw);
-const normalizeCode = (c) => String(c ?? '').replace(/\s/g, '').toLowerCase();
 
 function formatMisconception(m, i) {
-  const lines = [`### Misconception ${i + 1}: ${m.title}`];
+  const lines = [`### Misconception ${i + 1}`, `- title: ${m.title}`];
   if (m.ccssStandard) lines.push(`- standard: ${m.ccssStandard}`);
   if (m.description) lines.push(`- error: ${m.description}`);
   if (m.learningScienceConnection) lines.push(`- learning science connection: ${m.learningScienceConnection}`);
@@ -78,7 +79,7 @@ ${misconceptions.map(formatMisconception).join('\n\n')}
 
 ---
 
-For EACH misconception above, in the same order, return its title copied exactly, a conceptualDepth of 0, 1, 2 or 3, and one sentence saying which feature of the error places it at that level.
+For EACH misconception above, in the same order, return its \`title\` copied exactly as given on the \`- title:\` line — not the "Misconception N" heading — a conceptualDepth of 0, 1, 2 or 3, and one sentence saying which feature of the error places it at that level.
 
 Return JSON matching the schema.
 `.trim();
@@ -90,17 +91,18 @@ Return JSON matching the schema.
 // exact title. A misconception the model returned nothing for gets null — the
 // engine then records the metric as missing rather than guessing.
 function matchDepths(structured, misconceptions) {
-  const byTitle = new Map(misconceptions.map((m, i) => [String(m.title ?? '').trim(), i]));
+  const rows = structured.depths ?? [];
   const out = new Array(misconceptions.length).fill(null);
   const rejected = [];
-  (structured.depths ?? []).forEach((d, pos) => {
-    const t = String(d.title ?? '').trim();
-    const idx = misconceptions[pos] && String(misconceptions[pos].title ?? '').trim() === t ? pos : byTitle.get(t);
-    if (idx == null) { rejected.push({ title: d.title, reason: 'unmatched' }); return; }
-    if (out[idx]) { rejected.push({ title: d.title, reason: 'duplicate' }); return; }
-    out[idx] = { conceptualDepth: d.conceptualDepth, why: d.why };
+  let positionMatches = 0;
+  rows.forEach((d, pos) => {
+    const { index, matchedBy } = matchByTitle(d.title, misconceptions, pos, rows.length);
+    if (index == null) { rejected.push({ title: d.title, reason: 'unmatched' }); return; }
+    if (out[index]) { rejected.push({ title: d.title, reason: 'duplicate' }); return; }
+    if (matchedBy === 'position') positionMatches += 1;
+    out[index] = { conceptualDepth: d.conceptualDepth, why: d.why };
   });
-  return { depths: out, rejected };
+  return { depths: out, rejected, positionMatches };
 }
 
 // One log event, readable as a block in CloudWatch.
@@ -134,16 +136,15 @@ export const handler = async (event) => {
     if (input.learningScienceData == null) throw new Error('learningScienceData is required');
 
     const learningScienceData = parseJson(input.learningScienceData) ?? { standards: [] };
-    const byCode = new Map(
-      (learningScienceData?.standards ?? [])
-        .filter((s) => s?.code)
-        .map((s) => [normalizeCode(s.code), s]),
-    );
-    // null, not 0, when the standard is not in the (possibly masked) response —
-    // the engine treats that as unmeasured.
+    const graphStandards = learningScienceData?.standards ?? [];
+    // Questions spell the code one way, the graph another; matchStandard tries the
+    // literal string first and the spelling-independent key second. null, not 0,
+    // when the standard is genuinely absent — the engine treats that as unmeasured.
+    const canonicalMatches = [];
     const downstreamCount = (m) => {
-      const std = m.ccssStandard ? byCode.get(normalizeCode(m.ccssStandard)) : null;
-      return std ? (std.futureDependentStandards ?? []).length : null;
+      const { standard, matchedBy } = matchStandard(m.ccssStandard, graphStandards);
+      if (matchedBy === 'canonical') canonicalMatches.push({ given: m.ccssStandard, matched: standard.code });
+      return standard ? (standard.futureDependentStandards ?? []).length : null;
     };
 
     const apiSecret = await loadSecret(apiSecretName);
@@ -163,7 +164,7 @@ export const handler = async (event) => {
     });
     const raw = completion.choices[0]?.message?.content;
     if (!raw) throw new Error('Empty completion content');
-    const { depths, rejected } = matchDepths(DepthResponse.parse(JSON.parse(raw)), misconceptions);
+    const { depths, rejected, positionMatches } = matchDepths(DepthResponse.parse(JSON.parse(raw)), misconceptions);
 
     const items = misconceptions.map((m, i) => {
       const rawInputs = {
@@ -184,7 +185,14 @@ export const handler = async (event) => {
     const scored = rank(items, rubric.selection).map(({ raw: r, inputOrder, ...rest }) => ({ ...rest, inputs: r }));
 
     console.log(formatScoreLog(scored));
+    if (canonicalMatches.length) {
+      // Worth seeing: the codes disagree in spelling and only matched on the
+      // fallback. Harmless, but it is the symptom that hid the empty scores before.
+      const shown = [...new Map(canonicalMatches.map((x) => [`${x.given}->${x.matched}`, x])).values()];
+      console.log(`[microcoachv2ScoresCalc] matched ${shown.length} standard spelling(s) by canonical key: ${shown.map((x) => `${x.given} → ${x.matched}`).join(', ')}`);
+    }
     if (rejected.length) console.warn('[microcoachv2ScoresCalc] rejected depth rows:', JSON.stringify(rejected));
+    if (positionMatches) console.warn(`[microcoachv2ScoresCalc] ${positionMatches} depth row(s) paired by position because the title did not match — check the reply order`);
 
     return JSON.stringify({
       ok: true,
@@ -192,12 +200,14 @@ export const handler = async (event) => {
       rubric,
       scored,
       rejected,
+      positionMatches,
       ...(wantTrace && {
         _trace: {
           resolvedPrompt: userContent,
           model: MODEL,
           usage: completion.usage ?? null,
-          graphStandardCodes: [...byCode.keys()],
+          graphStandardCodes: graphStandards.map((x) => x.code),
+          canonicalMatches,
           subCalls: [{ label: 'conceptual-depth', model: MODEL, usage: completion.usage ?? null, fellBack: false }],
         },
       }),

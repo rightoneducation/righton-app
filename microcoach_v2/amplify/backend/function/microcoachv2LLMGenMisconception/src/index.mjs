@@ -55,7 +55,10 @@ const WrongAnswerRef = z.object({
 const MisconceptionOut = z.object({
   description: z.string().describe('(a) The specific conceptual error, tailored to the actual steps required to arrive at it'),
   title: z.string().describe('(b) A precise title focused on the conceptual error itself'),
-  learningScienceConnection: z.string().describe('(c) How the error relates to the relevant learning science data'),
+  learningScienceConnection: z.string().describe('(c) The mathematical relationship this error breaks — which idea from the standard, its learning components, or its prerequisites the student is not coordinating. A mathematical claim about this error, never a learning-science category.'),
+  evidenceBasis: z.enum(['grounded', 'inferred']).describe(
+    '(d) "grounded" when the option content or question text supports this misconception as the explanation for the linked wrong answers; "inferred" when it is the most plausible reading of the response pattern but other explanations fit the same data. Deliberately not called "confidence" — that word already names the students\' 1-5 self-rating and the per-option grounding label.',
+  ),
   wrongAnswers: z.array(WrongAnswerRef).describe(
     'Every wrong option, across all questions, that a student holding this misconception would choose. An option may appear under more than one misconception.',
   ),
@@ -138,6 +141,9 @@ function buildPrompt(questions, context, learningScienceData) {
     ${examples}
 
     ## Grounding rules
+    - Infer the most plausible mathematical misconception supported by the response pattern and the question content. Do not assume an incorrect answer corresponds to a single known misconception: a distractor can be reached by more than one route, and the Wave 2 answer key says which option is correct without saying what any distractor represents.
+    - When several interpretations fit the same data, choose the one most worth addressing mathematically, mark \`evidenceBasis\` "inferred", and keep the description to what the evidence supports rather than asserting a single mental model.
+    - Mark \`evidenceBasis\` "grounded" only when the option content or question text supports this misconception as the explanation for the linked wrong answers.
     - If the option content or question text is provided, derive the error from it and mark confidence "grounded".
     - If neither is provided, still write the most plausible error for a wrong answer on this standard and mark "inferred".
     - Never describe the correct answer. Never invent numbers that do not appear in the question or option content.
@@ -150,8 +156,11 @@ function buildPrompt(questions, context, learningScienceData) {
     1. \`misconceptions\` - every misconception surfaced by this quiz
       a. a description of the error, tailored around the actual conceptual steps required to arrive at it. DO NOT fall back on generic errors or arbitrary process issues. 
       b. a precise title focused around the conceptual error itself. Do not provide generalities or arbitrary process issues.
-      c. a description of how the error relates to the relevant learning science data. Simply provide the mapped connection you should already have made to generate the misconception. Do not propose a remedy or solution.
-      d. \`wrongAnswers\`: the (questionNumber, letter) pairs it produces. Group across questions; an option may sit under more than one misconception.
+      c. the mathematical relationship this error breaks: which specific idea from the standard, its learning components, or its prerequisites the student is not coordinating. Name the mathematics, not a learning-science category — never "working memory", "representational fluency", "strategy use", "cognitive load", or a named instructional strategy. Do not propose a remedy or solution.
+         Good: "Treats the coefficients as graph features without coordinating them with the algebraic form the inequality must be rewritten into first."
+         Not: "Reflects weak strategy use and incomplete conceptual understanding."
+      d. \`evidenceBasis\`: "grounded" when the option content or question text supports this reading, "inferred" when it is the most plausible of several explanations that fit the same responses.
+      e. \`wrongAnswers\`: the (questionNumber, letter) pairs it produces. Group across questions; an option may sit under more than one misconception.
     2. \`questions\` — for each question, one \`text\` line per WRONG option naming the error a student who chose it most likely made, derived from the misconceptions above.
 
     Return JSON only.
@@ -184,6 +193,7 @@ function validateOutput(structured, questions) {
       description: m.description,
       title: m.title,
       learningScienceConnection: m.learningScienceConnection,
+      evidenceBasis: m.evidenceBasis ?? null,
       wrongAnswers: kept,
     });
   }
@@ -219,7 +229,8 @@ function formatMisconceptionLog(misconceptions) {
     lines.push(`${i + 1}. ${m.title}`);
     lines.push(`   a. Error: ${m.description}`);
     lines.push(`   b. Title: ${m.title}`);
-    lines.push(`   c. Learning science: ${m.learningScienceConnection}`);
+    lines.push(`   c. Mathematical connection: ${m.learningScienceConnection}`);
+    lines.push(`   d. Evidence basis: ${m.evidenceBasis ?? 'not stated'}`);
     lines.push(`   d. Wrong answers: ${refs}`);
     lines.push('');
   });
