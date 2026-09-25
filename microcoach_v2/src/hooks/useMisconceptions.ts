@@ -1,6 +1,10 @@
 import { useEffect } from 'react';
 import { IAPIClients } from '../api';
+import { IPipelineOutput } from '../lib/PipelineModels';
+import mockPipelineOutput from '../lib/mocks/mockPipelineOutput.json';
 import { useMicroCoachDataDispatch } from './context/useMicroCoachDataContext';
+
+const mockMisconceptionsData = mockPipelineOutput as unknown as IPipelineOutput;
 
 // eslint-disable-next-line import/prefer-default-export
 export function useMisconceptions(
@@ -13,8 +17,11 @@ export function useMisconceptions(
     let cancelled = false;
 
     if (!sessionId) {
-      dispatch({ type: 'SET_MISCONCEPTIONS', payload: [] });
-      dispatch({ type: 'SET_MISCONCEPTIONS_STATUS', payload: 'idle' });
+      dispatch({
+        type: 'SET_MISCONCEPTIONS',
+        payload: mockMisconceptionsData.misconceptions,
+      });
+      dispatch({ type: 'SET_MISCONCEPTIONS_STATUS', payload: 'ready' });
       dispatch({ type: 'SET_MISCONCEPTIONS_ERROR', payload: null });
       return undefined;
     }
