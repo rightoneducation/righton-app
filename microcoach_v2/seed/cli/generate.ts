@@ -20,6 +20,7 @@ import { maskQuery } from '../eval/scripts/util/maskQuery';
 import { dedupeGraph } from '../eval/scripts/util/dedupeGraph';
 import { MaskOptionEnum, KgQueryType } from '../eval/types';
 import { computeMisconceptionReach } from '../eval/scripts/util/computeReach';
+import { checkNeedSeparation } from '../eval/scripts/util/checkNeedSeparation';
 
 const AMPLIFY_ENV = process.env.AMPLIFY_ENV ?? 'dev';
 
@@ -933,6 +934,15 @@ async function processClassroom(
   }
   const instructionalNeedsGenerated = misconceptions.filter((m: any) => m.instructionalNeed?.text?.trim()).length;
 
+  // The need must say what students need to understand, not what the teacher or
+  // students do — that is decided at template selection and activity generation.
+  // Flagged per run rather than reviewed by eye, so a regression here is visible.
+  const needSeparation = checkNeedSeparation(misconceptions);
+  if (needSeparation.flagged.length) {
+    console.warn(`  ⚠ ${needSeparation.flagged.length}/${needSeparation.checked} instructional need(s) prescribe an activity:`);
+    for (const f of needSeparation.flagged) console.warn(`      ${f.title} → ${f.hits.join(', ')}`);
+  }
+
   // 5d. Template selection — one call over every need, top two activity templates
   //     each. The library render sits first in that prompt so it is cache-eligible;
   //     `cachedPromptTokens` in the manifest is the check that it landed. RightOn!
@@ -1160,6 +1170,10 @@ async function processClassroom(
     activityCount: activitiesPerGroup.reduce((n: number, g: any[]) => n + g.length, 0),
     instructionalNeedsGenerated,
     instructionalNeedsMissing,
+    // Needs that read like an activity recommendation. Surface pattern, so this is
+    // a review flag, not proof; 0 is the intended state.
+    needSeparationFlags: needSeparation.flagged,
+    needSeparationChecked: needSeparation.checked,
     stoppedAfter: ANALYSIS_ONLY ? 'analysis' : null,
     // Diagnostic, not a correction: when the analysis stage emits a code the graph
     // does not carry, the generation stage silently loses all graph context.

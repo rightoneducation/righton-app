@@ -45,7 +45,6 @@ const ws = config?.writingStyle ?? {};
 const MODEL              = nc.model ?? 'gpt-5-mini';
 const NEED_MAX_SENTENCES = nc.maxSentences ?? 3;
 const NEED_WORKED        = nc.worked ?? null;
-const NEED_MIGHT_INCLUDE = nc.mightInclude ?? [];
 
 // ── Schema ────────────────────────────────────────────────────────────────────
 
@@ -74,7 +73,7 @@ const Need = z.object({
   title: z.string().describe('The misconception title, copied exactly — the join key'),
   instructionalNeed: z.object({
     text: z.string().describe(
-      `At most ${NEED_MAX_SENTENCES} sentences. What students most need to understand, examine, or do next mathematically to make progress on this misconception. Describe the thinking, never a format, routine, template or lesson structure.`,
+      `At most ${NEED_MAX_SENTENCES} sentences. The mathematical understanding or connection students must build to make progress on this misconception. State what they need to understand — never what anyone does to get there: no teacher moves, no student tasks, no grouping, no solution strategies, no activity formats.`,
     ),
     teacherRole: z.string().describe(
       'One clause naming the facilitation this need implies — questioning, comparison, discussion, pressing for justification — without naming an activity or template',
@@ -248,9 +247,13 @@ For EACH misconception above, in the same order, produce one entry with:
 
 **1. Instructional need** — what students most need to understand, examine, or do next mathematically to make progress on this misconception.
 
-${worked}${NEED_MIGHT_INCLUDE.length ? `\nThe need might be, for example:\n${NEED_MIGHT_INCLUDE.map((x) => `- ${x}`).join('\n')}\n` : ''}
+${worked}
+Not the need: "Have students explain why a boundary point is included, then test a convenient point to check the shading."
+The need: "Students need to connect the inequality symbol to whether points on the boundary satisfy the inequality."
+
 Rules for the need:
-- State it as the mathematical thinking students must develop, revise, test, or make visible. Never as a format, routine, template, or lesson structure.
+- State it as the mathematical understanding or connection students must build. Never state what anyone DOES to get there — no teacher moves ("have students explain"), no student tasks, no grouping, no solution strategies ("test a convenient point"), no activity formats, routines or templates. Those are decided downstream.
+- Phrase it as "Students need to understand / connect / distinguish ...", never "Students should do ..." or "Have students ...".
 - Anchor it in the specific wrong reasoning the evidence shows — the linked wrong answers, the error described, the confidence pattern. Name that reasoning; do not restate the misconception title.
 - Name the teacher's role in one clause (questioning, comparison, discussion, pressing for justification) without reducing the need to a teacher move.
 - evidenceUsed: 1-3 specific facts from the data above that the need rests on.
