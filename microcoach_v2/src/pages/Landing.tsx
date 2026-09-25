@@ -19,7 +19,7 @@ import {
   ScreenSizeProps,
 } from '../lib/styledcomponents/LandingStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
-import { UserProps } from '../hooks/useUserState';
+import { IUserState } from '../hooks/useUserState';
 import heroClassroom from '../images/heroClassroom.jpg';
 import landingPagePattern from '../images/landingPagePattern.svg';
 import landingPagePatternDetail from '../images/landingPagePatternDetail.svg';
@@ -86,11 +86,14 @@ const STEPS = [
   { key: 'step3', image: stepCard3 },
 ] as const;
 
-export default function Landing({ screenSize, user }: ScreenSizeProps & UserProps) {
+interface LandingProps extends ScreenSizeProps {
+  signOut: IUserState['signOut'];
+}
+
+export default function Landing({ screenSize, signOut }: LandingProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { signOut } = user;
   const isLarge = screenSize === ScreenSize.LARGE;
 
   /*

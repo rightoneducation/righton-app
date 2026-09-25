@@ -19,12 +19,17 @@ import {
   TeacherSelectField,
 } from '../lib/styledcomponents/SignUpStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 
-export default function SignUpSelect({ screenSize, state, user }: SignUpStepProps) {
+export default function SignUpSelect({
+  screenSize,
+  state,
+  setSignedInUser,
+}: SignUpStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { setSignedInUser, userProfile } = user;
+  const { userProfile } = useMicroCoachDataState();
   const isReady = useAllReady(useI18nReady());
 
   const classes = namedClasses(state);

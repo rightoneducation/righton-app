@@ -29,11 +29,6 @@ export interface IUserState {
   setUserErrorString: (message: string) => void;
 }
 
-// Screens receive the user handle as a prop, alongside their screenSize.
-export interface UserProps {
-  user: IUserState;
-}
-
 export function useUserState(apiClients: IAPIClients): IUserState {
   const { userProfile, userStatus, userErrorString } = useMicroCoachDataState();
   const dispatch = useMicroCoachDataDispatch();

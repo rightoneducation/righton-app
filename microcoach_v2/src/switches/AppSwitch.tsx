@@ -8,6 +8,8 @@ import { useMisconceptions } from '../hooks/useMisconceptions';
 import { usePlanItems, PlanItemsScope } from '../hooks/usePlanItems';
 import { useScreenSize } from '../hooks/useScreenSize';
 import { useSessions } from '../hooks/useSessions';
+import { useUserState } from '../hooks/useUserState';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import AppContainer from '../containers/AppContainer';
 import { HeaderVariant } from '../components/Header';
 import TemplateDebugMenu from '../components/TemplateDebugMenu';
@@ -103,8 +105,10 @@ interface AppSwitchProps {
 }
 
 export default function AppSwitch({ currentScreen }: AppSwitchProps) {
-  const { apiClients, user } = useAppOutletContext();
-  const classrooms = useClassrooms(apiClients, user.userProfile?.id ?? null);
+  const { apiClients } = useAppOutletContext();
+  const user = useUserState(apiClients);
+  const { userProfile } = useMicroCoachDataState();
+  const classrooms = useClassrooms(apiClients, userProfile?.id ?? null);
   const sessions = useSessions(apiClients, classrooms.selectedClassroomId);
   useMisconceptions(apiClients, sessions.selectedSessionId);
 
@@ -148,7 +152,11 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
   switch (currentScreen) {
     case ScreenType.LOGIN:
       screenComponent = (
-        <Login apiClients={apiClients} screenSize={screenSize} user={user} />
+        <Login
+          apiClients={apiClients}
+          screenSize={screenSize}
+          signIn={user.signIn}
+        />
       );
       break;
     case ScreenType.SIGNUP:
@@ -156,7 +164,8 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
         <SignUpWizard
           apiClients={apiClients}
           screenSize={screenSize}
-          user={user}
+          setSignedInUser={user.setSignedInUser}
+          updateUserProfile={user.updateUserProfile}
         />
       );
       break;
@@ -165,7 +174,8 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
         <AuthCallback
           apiClients={apiClients}
           screenSize={screenSize}
-          user={user}
+          setSignedInUser={user.setSignedInUser}
+          signOut={user.signOut}
         />
       );
       break;
@@ -192,14 +202,18 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       screenComponent = <ActivityDetail screenSize={screenSize} />;
       break;
     case ScreenType.UPLOAD_RTD:
-      screenComponent = <UploadFlow screenSize={screenSize} user={user} />;
+      screenComponent = <UploadFlow screenSize={screenSize} />;
       break;
     case ScreenType.REFLECT:
       screenComponent = <Reflect screenSize={screenSize} />;
       break;
     case ScreenType.PROFILE:
       screenComponent = (
-        <Profile apiClients={apiClients} screenSize={screenSize} user={user} />
+        <Profile
+          apiClients={apiClients}
+          screenSize={screenSize}
+          updateUserProfile={user.updateUserProfile}
+        />
       );
       break;
     case ScreenType.MY_PLAN:
@@ -213,7 +227,9 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       break;
     case ScreenType.LANDING:
     default:
-      screenComponent = <Landing screenSize={screenSize} user={user} />;
+      screenComponent = (
+        <Landing screenSize={screenSize} signOut={user.signOut} />
+      );
   }
 
   const usesAppChrome = APP_CHROME_SCREENS.has(currentScreen);
@@ -227,14 +243,14 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
   return (
     <AppContainer
       headerVariant={headerVariant}
-      user={user}
       onLogOut={handleHeaderLogOut}
       // The sign-up frames carry no footer either.
       showFooter={!usesAppChrome && !isSignUp}
     >
       <AuthGuard
         handleLogOut={handleLogOut}
-        user={user}
+        setUserStatus={user.setUserStatus}
+        setUserErrorString={user.setUserErrorString}
         screenSize={screenSize}
         requiresAuth={!PUBLIC_SCREENS.has(currentScreen)}
       >

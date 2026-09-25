@@ -29,6 +29,7 @@ import {
   GhostAction,
 } from '../lib/styledcomponents/UploadStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 
 /**
  * RTD upload — one screen in four states, exactly as the frames draw it:
@@ -39,12 +40,16 @@ import { useAllReady, useI18nReady } from '../hooks/readiness';
  * "Upload file" marks a slot complete and "Replace file" clears it. The error
  * state is reachable through the second slot so it can be demonstrated.
  */
-export default function UploadRtd({ screenSize, upload, actions, user }: UploadStepProps) {
+export default function UploadRtd({
+  screenSize,
+  upload,
+  actions,
+}: UploadStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
   const { session } = mockPipelineOutput as unknown as IPipelineOutput;
-  const { userProfile } = user;
+  const { userProfile } = useMicroCoachDataState();
 
   const isReady = useAllReady(useI18nReady());
 
@@ -225,9 +230,9 @@ export default function UploadRtd({ screenSize, upload, actions, user }: UploadS
                 disableElevation
                 sx={{ alignSelf: 'center' }}
                 onClick={() =>
-                  (file
+                  file
                     ? actions.clearFile(slot.key)
-                    : actions.completeFile(slot.key))
+                    : actions.completeFile(slot.key)
                 }
               >
                 {t(file ? 'upload.replaceFile' : 'upload.uploadFile')}

@@ -1,5 +1,4 @@
 import { ScreenSize } from './MicroCoachModels';
-import { IUserState } from '../hooks/useUserState';
 
 // Upload state, actions and step-prop shape — split out of UploadFlow for the
 // same reason as SignUpModels: the steps type their props from here.
@@ -35,5 +34,4 @@ export interface UploadStepProps {
   screenSize: ScreenSize;
   upload: IUploadState;
   actions: IUploadActions;
-  user: IUserState;
 }

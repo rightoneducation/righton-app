@@ -1,13 +1,10 @@
 import { useOutletContext } from 'react-router-dom';
 import { APIClients } from '../api';
-import { IUserState } from './useUserState';
 
-// RootLayout now passes the API clients and user actions through the router's
-// Outlet. AppSwitch reads them here, while shared data lives in
-// MicroCoachDataContext.
+// RootLayout passes the API clients through the router's Outlet. Shared data
+// lives in MicroCoachDataContext, and AppSwitch creates the action handlers.
 export interface IAppOutletContext {
   apiClients: APIClients;
-  user: IUserState;
 }
 
 // eslint-disable-next-line import/prefer-default-export

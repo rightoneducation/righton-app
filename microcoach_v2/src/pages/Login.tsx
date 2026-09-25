@@ -17,7 +17,8 @@ import {
 } from '../lib/googleProfileStash';
 import { IAPIClients } from '../api';
 import AppContentRow from '../components/AppContentRow';
-import { UserProps } from '../hooks/useUserState';
+import { IUserState } from '../hooks/useUserState';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import {
   GoogleButton,
   GoogleMark,
@@ -34,15 +35,16 @@ import {
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 import googleIcon from '../images/googleicon.svg';
 
-interface LoginProps extends ScreenSizeProps, UserProps {
+interface LoginProps extends ScreenSizeProps {
   apiClients: IAPIClients;
+  signIn: IUserState['signIn'];
 }
 
-export default function Login({ apiClients, screenSize, user }: LoginProps) {
+export default function Login({ apiClients, screenSize, signIn }: LoginProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { signIn, userErrorString } = user;
+  const { userErrorString } = useMicroCoachDataState();
   const isReady = useAllReady(useI18nReady());
 
   const [email, setEmail] = React.useState('');

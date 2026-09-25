@@ -29,15 +29,17 @@ import SignUpSelect from '../pages/SignUpSelect';
  */
 
 interface SignUpWizardProps {
-  apiClients: IAPIClients,
+  apiClients: IAPIClients;
   screenSize: ScreenSize;
-  user: IUserState;
+  setSignedInUser: IUserState['setSignedInUser'];
+  updateUserProfile: IUserState['updateUserProfile'];
 }
 
-export default function SignUpWizard({ 
-  apiClients, 
-  screenSize, 
-  user 
+export default function SignUpWizard({
+  apiClients,
+  screenSize,
+  setSignedInUser,
+  updateUserProfile,
 }: SignUpWizardProps) {
   const [state, setState] = useState<ISignUpState>(initialSignUpState);
   const step = useParams()['*'] ?? '';
@@ -61,7 +63,14 @@ export default function SignUpWizard({
       })),
   };
 
-  const stepProps: SignUpStepProps = { apiClients, screenSize, state, actions, user };
+  const stepProps: SignUpStepProps = {
+    apiClients,
+    screenSize,
+    state,
+    actions,
+    setSignedInUser,
+    updateUserProfile,
+  };
 
   switch (step) {
     case 'register':

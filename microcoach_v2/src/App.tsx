@@ -42,10 +42,7 @@ Modal.setAppElement('#root');
 function RootLayout({ apiClients }: { apiClients: APIClients }) {
   const user = useUserState(apiClients);
   useAuthResolver(apiClients, user);
-  const outletContext = useMemo(
-    () => ({ apiClients, user }),
-    [apiClients, user],
-  );
+  const outletContext = useMemo(() => ({ apiClients }), [apiClients]);
   return (
     <>
       {/*

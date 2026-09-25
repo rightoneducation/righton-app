@@ -18,14 +18,19 @@ import {
   SummaryRow,
 } from '../lib/styledcomponents/UploadStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 
 /** The confirmation step: what is about to be submitted, and for whom. */
-export default function UploadRtdReview({ screenSize, upload, actions, user }: UploadStepProps) {
+export default function UploadRtdReview({
+  screenSize,
+  upload,
+  actions,
+}: UploadStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
   const { session } = mockPipelineOutput as unknown as IPipelineOutput;
-  const { userProfile } = user;
+  const { userProfile } = useMicroCoachDataState();
 
   const isReady = useAllReady(useI18nReady());
 
@@ -46,9 +51,7 @@ export default function UploadRtdReview({ screenSize, upload, actions, user }: U
         [userProfile?.firstName, userProfile?.lastName]
           .filter(Boolean)
           .join(' ') || session.teacher.displayName
-      } · ${
-        userProfile?.email ?? session.teacher.email
-      }`,
+      } · ${userProfile?.email ?? session.teacher.email}`,
     },
     { label: t('upload.class'), value: className },
     { label: t('upload.week'), value: session.selectedWeek },
