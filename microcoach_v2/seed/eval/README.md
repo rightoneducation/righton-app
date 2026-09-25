@@ -57,10 +57,15 @@ Each condition deletes one part of the graph payload before it reaches the promp
 | `NO_RELATED` | related standards |
 | `NO_LC` | learning components |
 | `NO_LVN_FULL` | all learning-variability factors |
-| `NO_LVN_STRATEGY` | LVN strategies only |
+| `NO_LVN_STRATEGY` | LVN strategies only — see the note below |
 | `NO_LVN_LEARNERMODELS` | LVN learner models only |
 | `NO_LVN_INTERACTSWITH` | LVN interacts-with only |
 | `FULL` | everything — no graph data at all |
+
+`NO_LVN_STRATEGY` now only varies **activity generation**. As of 2026-09-25 the
+misconception and instructional-need prompts no longer render LVN strategies at all
+(see `formatLearningScience.mjs`), so masking them changes nothing at those two
+stages. Runs before that date are not comparable to later ones on this condition.
 
 `--live-graph` is off by default deliberately: replaying the archived response keeps the
 input identical across every run, so a score difference can be attributed to the
