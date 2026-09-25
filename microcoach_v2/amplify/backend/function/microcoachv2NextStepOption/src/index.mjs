@@ -115,6 +115,11 @@ const NextStepActivity = z.object({
     '(e.g. "Distributing multiplication across addition/subtraction", ' +
     '"Applying integer sign rules in algebraic expressions"). Not ontology IDs.'
   ),
+  mathematicalTakeaway: z.string().describe(
+    'One sentence: what students should understand when this is done — the mathematical ' +
+    'statement they should be able to make. What they leave understanding, never what ' +
+    'they did during the activity.'
+  ),
   instructionalMove: z.string().describe(
     'What the teacher concretely does to address the misconception. ' +
     'Begin with a verb (Model, Facilitate, Guide, Compare, Have students…). ' +
@@ -561,6 +566,9 @@ Requirements for each field:
 - **activityStructure**: The named structure you chose (e.g. "Favorite No", "Math Hospital / Diagnose & Repair"). Use one of the example names or your own — must be distinct from any already-generated activity for this misconception.
 - **summary**: 1-2 sentences; what the activity is and why it targets this error
 - **targets**: The specific skill this activity builds, in plain skill language (not ontology IDs)
+- **mathematicalTakeaway**: One sentence stating what students should leave understanding. Three different things, do not blur them: the misconception is what mathematical thinking is getting in the way, the instructional need is what students need to understand, and the takeaway is what they should leave understanding. Write the mathematics, not the lesson.
+    Good: "When an inequality is rewritten in slope-intercept form, the resulting coefficients represent the slope and y-intercept of the boundary line."
+    Not: "Students compared two graphs and discussed which side to shade"
 - **instructionalMove**: What the teacher concretely does — begin with a verb, 2–4 sentences, must reference the error pattern and name the activity structure being used
 - **strategyTag**: Must be exactly one of: ${STRATEGY_TAGS.map(t => `"${t.name}"`).join(', ')}${lvnFactors.length ? '. Use the LVN factors above to select the best fit.' : ''}
 - **durationMinutes**: Choose a value within one of these buckets: ${ALLOWED_DURATION_BUCKETS.map(b => b.label).join(', ')}

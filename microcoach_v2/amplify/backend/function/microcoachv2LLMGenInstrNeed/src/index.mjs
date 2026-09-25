@@ -34,6 +34,8 @@
 
 import { loadSecret } from './util/loadsecrets.mjs';
 import { formatLearningScience } from './util/formatLearningScience.mjs';
+import { matchStandard } from './util/ccssCode.mjs';
+import { matchByTitle } from './util/matchByTitle.mjs';
 import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
@@ -45,7 +47,6 @@ const ws = config?.writingStyle ?? {};
 const MODEL              = nc.model ?? 'gpt-5-mini';
 const NEED_MAX_SENTENCES = nc.maxSentences ?? 3;
 const NEED_WORKED        = nc.worked ?? null;
-const NEED_MIGHT_INCLUDE = nc.mightInclude ?? [];
 
 // ── Schema ────────────────────────────────────────────────────────────────────
 
@@ -66,15 +67,15 @@ const Rationale = z.object({
     '"recurring" only if the same error pattern appears in a prior session\'s data; otherwise "first".',
   ),
   whyThisNeed: z.string().describe(
-    '2–3 sentences tying the evidence above to the need stated: why THIS thinking is what students must do next, rather than another response to the same misconception.',
+    '2–3 sentences on what students gain mathematically from addressing this need — what it unlocks in their reasoning, or what it lets them do that they cannot do now. Do not restate the misconception or re-narrate the errors; the evidence is already recorded above.',
   ),
 });
 
 const Need = z.object({
-  title: z.string().describe('The misconception title, copied exactly — the join key'),
+  title: z.string().describe('The misconception title, copied exactly as given on its `- title:` line — not the "Misconception N" heading. This is the join key.'),
   instructionalNeed: z.object({
     text: z.string().describe(
-      `At most ${NEED_MAX_SENTENCES} sentences. What students most need to understand, examine, or do next mathematically to make progress on this misconception. Describe the thinking, never a format, routine, template or lesson structure.`,
+      `At most ${NEED_MAX_SENTENCES} sentences. The mathematical understanding or connection students must build to make progress on this misconception. State what they need to understand — never what anyone does to get there: no teacher moves, no student tasks, no grouping, no solution strategies, no activity formats.`,
     ),
     teacherRole: z.string().describe(
       'One clause naming the facilitation this need implies — questioning, comparison, discussion, pressing for justification — without naming an activity or template',
@@ -93,7 +94,6 @@ const NeedResponse = z.object({
 // ── Prompt ────────────────────────────────────────────────────────────────────
 
 const parseJson = (raw) => (typeof raw === 'string' ? JSON.parse(raw) : raw);
-const normalizeCode = (c) => String(c ?? '').replace(/\s/g, '').toLowerCase();
 
 // Strip individual student responses — the model works from aggregated question
 // stats (classPercentCorrect per question + answer key + confidenceStats).
@@ -166,10 +166,13 @@ function formatAnswerOptions(questions, dist, misconceptions) {
     .join('\n\n');
 }
 
-function formatMisconception(m, i, standardsByCode) {
-  const lines = [`### Misconception ${i + 1}: ${m.title}`];
-  const std = m.ccssStandard ? standardsByCode.get(normalizeCode(m.ccssStandard)) : null;
-  lines.push(`- standard: ${m.ccssStandard ?? 'unknown'}${std ? ` — ${std}` : ''}`);
+function formatMisconception(m, i, graphStandards) {
+  const lines = [`### Misconception ${i + 1}`, `- title: ${m.title}`];
+  // The question's spelling of the code and the graph's often differ; match on the
+  // spelling-independent key so the description is not silently dropped.
+  const { standard } = matchStandard(m.ccssStandard, graphStandards);
+  const desc = standard?.description ?? '';
+  lines.push(`- standard: ${m.ccssStandard ?? 'unknown'}${desc ? ` — ${desc}` : ''}`);
   if (m.description) lines.push(`- error: ${m.description}`);
   if (m.learningScienceConnection) lines.push(`- learning science connection: ${m.learningScienceConnection}`);
   const reach = m.studentCount != null
@@ -186,7 +189,7 @@ function formatMisconception(m, i, standardsByCode) {
   return lines.join('\n');
 }
 
-function buildPrompt(payload, misconceptions, learningScienceSection, standardsByCode) {
+function buildPrompt(payload, misconceptions, learningScienceSection, graphStandards) {
   const worked = NEED_WORKED
     ? `\nWorked example:\nMisconception: ${NEED_WORKED.misconception}\nInstructional need: ${NEED_WORKED.instructionalNeed}\n`
     : '';
@@ -238,19 +241,23 @@ ${formatAnswerOptions(payload.ppq?.questions, payload.wrongAnswerDist, misconcep
 ${payload.sessionHistory.length ? JSON.stringify(payload.sessionHistory, null, 2) : 'No prior sessions.'}
 
 ## Misconceptions
-${misconceptions.map((m, i) => formatMisconception(m, i, standardsByCode)).join('\n\n')}
+${misconceptions.map((m, i) => formatMisconception(m, i, graphStandards)).join('\n\n')}
 
 ---
 
 ## Your Task
 
-For EACH misconception above, in the same order, produce one entry with:
+For EACH misconception above, in the same order, produce one entry. Copy \`title\` exactly as given on its \`- title:\` line — not the "Misconception N" heading. Each entry has:
 
 **1. Instructional need** — what students most need to understand, examine, or do next mathematically to make progress on this misconception.
 
-${worked}${NEED_MIGHT_INCLUDE.length ? `\nThe need might be, for example:\n${NEED_MIGHT_INCLUDE.map((x) => `- ${x}`).join('\n')}\n` : ''}
+${worked}
+Not the need: "Have students explain why a boundary point is included, then test a convenient point to check the shading."
+The need: "Students need to connect the inequality symbol to whether points on the boundary satisfy the inequality."
+
 Rules for the need:
-- State it as the mathematical thinking students must develop, revise, test, or make visible. Never as a format, routine, template, or lesson structure.
+- State it as the mathematical understanding or connection students must build. Never state what anyone DOES to get there — no teacher moves ("have students explain"), no student tasks, no grouping, no solution strategies ("test a convenient point"), no activity formats, routines or templates. Those are decided downstream.
+- Phrase it as "Students need to understand / connect / distinguish ...", never "Students should do ..." or "Have students ...".
 - Anchor it in the specific wrong reasoning the evidence shows — the linked wrong answers, the error described, the confidence pattern. Name that reasoning; do not restate the misconception title.
 - Name the teacher's role in one clause (questioning, comparison, discussion, pressing for justification) without reducing the need to a teacher move.
 - evidenceUsed: 1-3 specific facts from the data above that the need rests on.
@@ -262,7 +269,9 @@ Rules for the need:
 - prerequisiteGaps: from the standard's \`prerequisiteStandards\` in the learning science data (EARLIER-grade topics), ONLY the codes where a gap in that skill would DIRECTLY cause this error. Empty if none.
 - forwardImpact: from the standard's \`futureDependentStandards\` (LATER-grade topics), ONLY the codes this error would DIRECTLY threaten. Empty if none.
 - recurrence: "recurring" only if the same error pattern appears in session history; otherwise "first".
-- whyThisNeed: 2–3 sentences tying the evidence to the need — why THIS thinking is what students must do next, rather than another response to the same misconception.
+- whyThisNeed: 2–3 sentences on the mathematical value of addressing this need — what it unlocks in students' reasoning, or what it lets them do that they cannot do now. Do not restate the misconception or re-narrate the errors; those are already recorded above.
+  Good: "Connecting the algebraic transformation to the meaning of slope and y-intercept lets students see why the inequality must be rewritten before its coefficients can be read graphically — which is what makes the rule generalize rather than be memorized."
+  Not: "Students repeatedly shaded the wrong side, so they need to check which side satisfies the inequality." 
 
 Return JSON matching the schema.
 `.trim();
@@ -275,16 +284,17 @@ Return JSON matching the schema.
 // misconception that gets two keeps the first. `priorityRank` is copied from the
 // input misconception — it was set by the rubric stage, not the model.
 function validateOutput(structured, misconceptions) {
-  const byTitle = new Map(misconceptions.map((m, i) => [String(m.title ?? '').trim(), i]));
+  const rows = structured.needs ?? [];
   const seen = new Set();
   const rejected = [];
   const matched = [];
-  (structured.needs ?? []).forEach((n, pos) => {
-    const t = String(n.title ?? '').trim();
-    let idx = misconceptions[pos] && String(misconceptions[pos].title ?? '').trim() === t ? pos : byTitle.get(t);
+  let positionMatches = 0;
+  rows.forEach((n, pos) => {
+    const { index: idx, matchedBy } = matchByTitle(n.title, misconceptions, pos, rows.length);
     if (idx == null) { rejected.push({ title: n.title, reason: 'unmatched' }); return; }
     if (seen.has(idx)) { rejected.push({ title: n.title, reason: 'duplicate' }); return; }
     if (!n.instructionalNeed?.text?.trim()) { rejected.push({ title: n.title, reason: 'emptyNeed' }); return; }
+    if (matchedBy === 'position') positionMatches += 1;
     seen.add(idx);
     matched.push({ idx, n });
   });
@@ -310,7 +320,7 @@ function validateOutput(structured, misconceptions) {
   const missing = misconceptions
     .map((m, i) => ({ title: m.title, position: i + 1 }))
     .filter((_, i) => !seen.has(i));
-  return { needs, rejected, missing };
+  return { needs, rejected, missing, positionMatches };
 }
 
 // One log event, readable as a block in CloudWatch.
@@ -348,11 +358,7 @@ export const handler = async (event) => {
 
     const learningScienceData = parseJson(input.learningScienceData) ?? { standards: [] };
     const learningScienceSection = formatLearningScience(learningScienceData);
-    const standardsByCode = new Map(
-      (learningScienceData?.standards ?? [])
-        .filter((s) => s?.code)
-        .map((s) => [normalizeCode(s.code), s.description ?? '']),
-    );
+    const graphStandards = learningScienceData?.standards ?? [];
 
     const { classroom, currentSession, sessionHistory, ppq, wrongAnswerDist } = parseJson(input.classroomData);
     const payload = {
@@ -375,7 +381,7 @@ export const handler = async (event) => {
     if (!apiKey) throw new Error('Secret must contain openai_api, OPENAI_API_KEY, or API');
     const openai = new OpenAI({ apiKey });
 
-    const userContent = buildPrompt(payload, misconceptions, learningScienceSection, standardsByCode);
+    const userContent = buildPrompt(payload, misconceptions, learningScienceSection, graphStandards);
 
     const completion = await openai.chat.completions.create({
       model: MODEL,
@@ -389,7 +395,8 @@ export const handler = async (event) => {
     const raw = completion.choices[0]?.message?.content;
     if (!raw) throw new Error('Empty completion content');
     const structured = NeedResponse.parse(JSON.parse(raw));
-    const { needs, rejected, missing } = validateOutput(structured, misconceptions);
+    const { needs, rejected, missing, positionMatches } = validateOutput(structured, misconceptions);
+    if (positionMatches) console.warn(`[microcoachv2LLMGenInstrNeed] ${positionMatches} need(s) paired by position because the title did not match — check the reply order`);
 
     console.log(formatNeedLog(needs));
     console.log(`[microcoachv2LLMGenInstrNeed] ${needs.length}/${misconceptions.length} needs, ${rejected.length} rejected, ${missing.length} missing`);
@@ -401,6 +408,7 @@ export const handler = async (event) => {
       needs,
       rejected,
       missing,
+      positionMatches,
       ...(wantTrace && {
         _trace: {
           resolvedPrompt: userContent,

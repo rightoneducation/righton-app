@@ -22,6 +22,7 @@
     "worked": {
       "misconception": "Multiplying powers with the same base requires multiplying the exponents",
       "instructionalNeed": "Test the apparent rule, examine why it initially seems to work, and use the meaning of exponents to construct the correct generalization."
-    }
+    },
+    "mightIncludeNote": "Documentation only — NOT injected into the prompt. The doc's examples describe instructional moves (comparing approaches, small-team questioning), which is what the need must not prescribe; feeding them to the model produced needs that recommended activities. Kept here as the record of Wave 2 doc section 3b."
   }
 }
