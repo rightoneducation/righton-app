@@ -11,7 +11,8 @@ import ProfileSkeleton from '../components/ProfileSkeleton';
 import { IAPIClients } from '../api';
 import errorIcon from '../images/errorIcon.svg';
 import { avatarIcons, DEFAULT_AVATAR_INDEX } from '../images/avatars';
-import { UserProps } from '../hooks/useUserState';
+import { IUserState } from '../hooks/useUserState';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import {
   EditPictureChip,
   ProfileAction,
@@ -45,14 +46,19 @@ const NAME_ERROR_ID = 'profile-name-error';
  * uniqueness check and password modal are all out of scope here — the frame
  * has none of them, and editing is scoped to the two name fields.
  */
-interface ProfileProps extends ScreenSizeProps, UserProps {
+interface ProfileProps extends ScreenSizeProps {
   apiClients: IAPIClients;
+  updateUserProfile: IUserState['updateUserProfile'];
 }
 
-export default function Profile({ apiClients, screenSize, user }: ProfileProps) {
+export default function Profile({
+  apiClients,
+  screenSize,
+  updateUserProfile,
+}: ProfileProps) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { userProfile, updateUserProfile } = user;
+  const { userProfile } = useMicroCoachDataState();
   const isReady = useAllReady(useI18nReady());
 
   /*

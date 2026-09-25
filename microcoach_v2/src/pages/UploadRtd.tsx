@@ -11,7 +11,8 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import AppContentRow from '../components/AppContentRow';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import { UploadStepProps } from '../lib/UploadModels';
-import { useMisconceptions } from '../hooks/useMisconceptions';
+import mockPipelineOutput from '../lib/mocks/mockPipelineOutput.json';
+import { IPipelineOutput } from '../lib/PipelineModels';
 import { PromptIconTile } from '../lib/styledcomponents/ActivityDetailStyledComponents';
 import { SignUpCta } from '../lib/styledcomponents/SignUpStyledComponents';
 import {
@@ -28,6 +29,7 @@ import {
   GhostAction,
 } from '../lib/styledcomponents/UploadStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 
 /**
  * RTD upload — one screen in four states, exactly as the frames draw it:
@@ -38,12 +40,16 @@ import { useAllReady, useI18nReady } from '../hooks/readiness';
  * "Upload file" marks a slot complete and "Replace file" clears it. The error
  * state is reachable through the second slot so it can be demonstrated.
  */
-export default function UploadRtd({ screenSize, upload, actions, user }: UploadStepProps) {
+export default function UploadRtd({
+  screenSize,
+  upload,
+  actions,
+}: UploadStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { session } = useMisconceptions();
-  const { userProfile } = user;
+  const { session } = mockPipelineOutput as unknown as IPipelineOutput;
+  const { userProfile } = useMicroCoachDataState();
 
   const isReady = useAllReady(useI18nReady());
 
@@ -224,9 +230,9 @@ export default function UploadRtd({ screenSize, upload, actions, user }: UploadS
                 disableElevation
                 sx={{ alignSelf: 'center' }}
                 onClick={() =>
-                  (file
+                  file
                     ? actions.clearFile(slot.key)
-                    : actions.completeFile(slot.key))
+                    : actions.completeFile(slot.key)
                 }
               >
                 {t(file ? 'upload.replaceFile' : 'upload.uploadFile')}

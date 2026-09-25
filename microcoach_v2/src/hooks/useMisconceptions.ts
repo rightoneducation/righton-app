@@ -1,49 +1,35 @@
-import { useEffect, useMemo, useState } from 'react';
-import mockPipelineOutput from '../lib/mocks/mockPipelineOutput.json';
-import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
-import { IPipelineOutput, IReflect, ISession } from '../lib/PipelineModels';
+import { useEffect } from 'react';
 import { IAPIClients } from '../api';
+import { IPipelineOutput } from '../lib/PipelineModels';
+import mockPipelineOutput from '../lib/mocks/mockPipelineOutput.json';
+import { useMicroCoachDataDispatch } from './context/useMicroCoachDataContext';
 
 const mockMisconceptionsData = mockPipelineOutput as unknown as IPipelineOutput;
-
-export type MisconceptionsStatus = 'idle' | 'loading' | 'ready' | 'error';
-
-export interface UseMisconceptionsResult {
-  session: ISession;
-  misconceptions: IMicroCoachMisconception[];
-  reflect: IReflect;
-  status: MisconceptionsStatus;
-  error: Error | null;
-  isReady: boolean;
-}
 
 // eslint-disable-next-line import/prefer-default-export
 export function useMisconceptions(
   apiClients: IAPIClients,
   sessionId: string | null,
-): UseMisconceptionsResult {
-  const [misconceptions, setMisconceptions] = useState<
-    IMicroCoachMisconception[]
-  >([]);
-  const [misconceptionsStatus, setMisconceptionsStatus] =
-    useState<MisconceptionsStatus>('idle');
-  const [misconceptionsError, setMisconceptionsError] =
-    useState<Error | null>(null);
+): void {
+  const dispatch = useMicroCoachDataDispatch();
 
   useEffect(() => {
     let cancelled = false;
 
     if (!sessionId) {
-      setMisconceptions([]);
-      setMisconceptionsStatus('idle');
-      setMisconceptionsError(null);
+      dispatch({
+        type: 'SET_MISCONCEPTIONS',
+        payload: mockMisconceptionsData.misconceptions,
+      });
+      dispatch({ type: 'SET_MISCONCEPTIONS_STATUS', payload: 'ready' });
+      dispatch({ type: 'SET_MISCONCEPTIONS_ERROR', payload: null });
       return undefined;
     }
 
     const activeSessionId = sessionId;
-    setMisconceptions([]);
-    setMisconceptionsStatus('loading');
-    setMisconceptionsError(null);
+    dispatch({ type: 'SET_MISCONCEPTIONS', payload: [] });
+    dispatch({ type: 'SET_MISCONCEPTIONS_STATUS', payload: 'loading' });
+    dispatch({ type: 'SET_MISCONCEPTIONS_ERROR', payload: null });
 
     async function loadMisconceptions() {
       try {
@@ -53,17 +39,22 @@ export function useMisconceptions(
           );
         if (cancelled) return;
 
-        setMisconceptions(fetchedMisconceptions);
-        setMisconceptionsStatus('ready');
+        dispatch({
+          type: 'SET_MISCONCEPTIONS',
+          payload: fetchedMisconceptions,
+        });
+        dispatch({ type: 'SET_MISCONCEPTIONS_STATUS', payload: 'ready' });
       } catch (error) {
         if (cancelled) return;
 
-        setMisconceptionsError(
-          error instanceof Error
-            ? error
-            : new Error('Failed to load misconceptions'),
-        );
-        setMisconceptionsStatus('error');
+        dispatch({
+          type: 'SET_MISCONCEPTIONS_ERROR',
+          payload:
+            error instanceof Error
+              ? error
+              : new Error('Failed to load misconceptions'),
+        });
+        dispatch({ type: 'SET_MISCONCEPTIONS_STATUS', payload: 'error' });
       }
     }
 
@@ -72,17 +63,5 @@ export function useMisconceptions(
     return () => {
       cancelled = true;
     };
-  }, [apiClients, sessionId]);
-
-  return useMemo(
-    () => ({
-      session: mockMisconceptionsData.session,
-      misconceptions,
-      reflect: mockMisconceptionsData.reflect,
-      status: misconceptionsStatus,
-      error: misconceptionsError,
-      isReady: misconceptionsStatus === 'ready',
-    }),
-    [misconceptions, misconceptionsError, misconceptionsStatus],
-  );
+  }, [apiClients, dispatch, sessionId]);
 }

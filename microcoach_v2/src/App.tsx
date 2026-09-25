@@ -17,9 +17,9 @@ import { GOOGLE_OAUTH_CLIENT_ID, ScreenType } from './lib/MicroCoachModels';
 import { useAPIClients } from './hooks/useAPIClients';
 import { useAuthResolver } from './hooks/useAuthActions';
 import { useUserState } from './hooks/useUserState';
-import { usePlanItems } from './hooks/usePlanItems';
 import AppSwitch from './switches/AppSwitch';
 import Preview from './pages/preview/Preview';
+import { MicroCoachDataProvider } from './lib/context/MicroCoachDataContext';
 
 /**
  * Parent layout route. React Router keeps this element mounted across child
@@ -41,12 +41,8 @@ Modal.setAppElement('#root');
 
 function RootLayout({ apiClients }: { apiClients: APIClients }) {
   const user = useUserState(apiClients);
-  const plan = usePlanItems();
   useAuthResolver(apiClients, user);
-  const outletContext = useMemo(
-    () => ({ apiClients, user, plan }),
-    [apiClients, user, plan],
-  );
+  const outletContext = useMemo(() => ({ apiClients }), [apiClients]);
   return (
     <>
       {/*
@@ -159,9 +155,9 @@ function App() {
             does no I/O, so the null branch lasts a single frame; rendering
             nothing there beats a spinner that flashes for one paint.
           */}
-          {router && (
-            <RouterProvider router={router} />
-          )}
+          <MicroCoachDataProvider>
+            {router && <RouterProvider router={router} />}
+          </MicroCoachDataProvider>
         </ThemeProvider>
       </StyledEngineProvider>
     </GoogleOAuthProvider>

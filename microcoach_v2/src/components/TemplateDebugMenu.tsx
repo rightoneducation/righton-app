@@ -7,7 +7,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { ActivityType } from '../lib/PipelineModels';
-import { useMisconceptions } from '../hooks/useMisconceptions';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 
 /**
  * Review scaffolding: jumps straight to any activity template while the
@@ -56,7 +56,7 @@ const DebugFab = styled(Fab)(({ theme }) => ({
 export default function TemplateDebugMenu() {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const { activityId } = useParams();
-  const { misconceptions } = useMisconceptions();
+  const { misconceptions } = useMicroCoachDataState();
   const navigate = useNavigate();
 
   // Derived rather than listed, so the menu keeps up with the mock.

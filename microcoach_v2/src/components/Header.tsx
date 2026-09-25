@@ -14,7 +14,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ContentRow from './ContentRow';
 import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
-import { IUserState } from '../hooks/useUserState';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { avatarIcons, DEFAULT_AVATAR_INDEX } from '../images/avatars';
 
 /**
@@ -33,7 +33,6 @@ export type HeaderVariant = 'public' | 'signup' | 'app' | 'profile';
 
 interface HeaderProps {
   screenSize: ScreenSize;
-  user: IUserState;
   variant?: HeaderVariant;
   onLogOut?: () => void;
 }
@@ -206,12 +205,11 @@ const authSkeletonSx = { bgcolor: 'designSystem.background.fadedWhiteVeil' };
 
 export default function Header({
   screenSize,
-  user,
   variant = 'public',
   onLogOut,
 }: HeaderProps) {
   const { t } = useTranslation();
-  const { userStatus, userProfile } = user;
+  const { userStatus, userProfile } = useMicroCoachDataState();
   const isResolvingAuth = userStatus === UserStatusType.LOADING;
 
   /*

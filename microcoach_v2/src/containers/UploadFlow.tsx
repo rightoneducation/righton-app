@@ -8,7 +8,6 @@ import {
   UploadStepProps,
   initialUploadState,
 } from '../lib/UploadModels';
-import { IUserState } from '../hooks/useUserState';
 import UploadRtd from '../pages/UploadRtd';
 import UploadRtdReview from '../pages/UploadRtdReview';
 
@@ -26,10 +25,9 @@ const MOCK_FILE_NAMES: Record<UploadSlot, string> = {
 
 interface UploadFlowProps {
   screenSize: ScreenSize;
-  user: IUserState;
 }
 
-export default function UploadFlow({ screenSize, user }: UploadFlowProps) {
+export default function UploadFlow({ screenSize }: UploadFlowProps) {
   const [upload, setUpload] = useState<IUploadState>(initialUploadState);
   const step = useParams()['*'] ?? '';
 
@@ -48,7 +46,7 @@ export default function UploadFlow({ screenSize, user }: UploadFlowProps) {
     submit: () => setUpload((s) => ({ ...s, isSubmitted: true })),
   };
 
-  const stepProps: UploadStepProps = { screenSize, upload, actions, user };
+  const stepProps: UploadStepProps = { screenSize, upload, actions };
 
   return step === 'review' ? (
     <UploadRtdReview {...stepProps} />

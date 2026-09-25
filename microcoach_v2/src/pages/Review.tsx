@@ -20,7 +20,9 @@ import {
   ScreenSizeProps,
 } from '../lib/styledcomponents/ReviewStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
-import { useMisconceptions } from '../hooks/useMisconceptions';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import mockPipelineOutput from '../lib/mocks/mockPipelineOutput.json';
+import { IPipelineOutput } from '../lib/PipelineModels';
 
 export default function Review({ screenSize }: ScreenSizeProps) {
   const { t } = useTranslation();
@@ -28,7 +30,9 @@ export default function Review({ screenSize }: ScreenSizeProps) {
   const navigate = useNavigate();
   const isLarge = screenSize === ScreenSize.LARGE;
 
-  const { session, misconceptions, isReady: dataReady } = useMisconceptions();
+  const { misconceptions, misconceptionsStatus } = useMicroCoachDataState();
+  const { session } = mockPipelineOutput as unknown as IPipelineOutput;
+  const dataReady = misconceptionsStatus === 'ready';
   const isReady = useAllReady(useI18nReady(), dataReady);
 
   const [isBannerOpen, setIsBannerOpen] = React.useState(true);

@@ -3,11 +3,13 @@ import { Navigate, useMatch, useSearchParams } from 'react-router-dom';
 import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import { IUserState } from '../hooks/useUserState';
 import LandingSkeleton from '../components/LandingSkeleton';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 
 interface AuthGuardProps {
   children: ReactElement;
-  user: IUserState;
   handleLogOut: () => void;
+  setUserStatus: IUserState['setUserStatus'];
+  setUserErrorString: IUserState['setUserErrorString'];
   screenSize: ScreenSize;
   /**
    * Whether this screen's content actually depends on knowing who the user is.
@@ -23,12 +25,13 @@ interface AuthGuardProps {
 // inside AppContainer, so anything returned here replaces the body only.
 export default function AuthGuard({
   children,
-  user,
   handleLogOut,
+  setUserStatus,
+  setUserErrorString,
   screenSize,
   requiresAuth,
 }: AuthGuardProps) {
-  const { userStatus, setUserStatus, setUserErrorString } = user;
+  const { userStatus } = useMicroCoachDataState();
   const [search] = useSearchParams();
 
   const isLandingPage = Boolean(useMatch('/'));
