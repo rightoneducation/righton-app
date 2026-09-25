@@ -8,13 +8,15 @@ import Typography from '@mui/material/Typography';
 import AppContentRow from '../components/AppContentRow';
 import FlowNav, { FlowTabId } from '../components/FlowNav';
 import { ScreenSize } from '../lib/MicroCoachModels';
-import { useMisconceptions } from '../hooks/useMisconceptions';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { ContentPanel } from '../lib/styledcomponents/ActivityDetailStyledComponents';
 import {
   CountChip,
   ScreenSizeProps,
 } from '../lib/styledcomponents/ReviewStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
+import mockPipelineOutput from '../lib/mocks/mockPipelineOutput.json';
+import { IPipelineOutput } from '../lib/PipelineModels';
 
 /**
  * Reflect — the impact of the next steps the teacher actually ran.
@@ -28,7 +30,9 @@ export default function Reflect({ screenSize }: ScreenSizeProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { reflect, isReady: dataReady } = useMisconceptions();
+  const { misconceptionsStatus } = useMicroCoachDataState();
+  const { reflect } = mockPipelineOutput as unknown as IPipelineOutput;
+  const dataReady = misconceptionsStatus === 'ready';
   const isReady = useAllReady(useI18nReady(), dataReady);
 
   if (!isReady) return null;

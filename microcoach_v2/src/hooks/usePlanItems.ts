@@ -38,11 +38,6 @@ export interface IPlanItemsState {
   removePlanItem: (id: string) => void;
 }
 
-// Screens receive the plan handle as a prop, alongside their screenSize.
-export interface PlanProps {
-  plan: IPlanItemsState;
-}
-
 function combineSavedPlanItemsWithMockData(
   savedPlans: IMicroCoachSavedPlan[],
 ): IPlanItem[] {

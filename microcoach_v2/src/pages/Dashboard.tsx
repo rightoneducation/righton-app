@@ -27,7 +27,9 @@ import {
   ScreenSizeProps,
 } from '../lib/styledcomponents/ReviewStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
-import { useMisconceptions } from '../hooks/useMisconceptions';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import mockPipelineOutput from '../lib/mocks/mockPipelineOutput.json';
+import { IPipelineOutput } from '../lib/PipelineModels';
 
 const weekOptions = ['Week of Jul 7', 'Week of Jun 30', 'Week of Jun 23'];
 
@@ -35,7 +37,9 @@ export default function Dashboard({ screenSize }: ScreenSizeProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { session, isReady: dataReady } = useMisconceptions();
+  const { misconceptionsStatus } = useMicroCoachDataState();
+  const { session } = mockPipelineOutput as unknown as IPipelineOutput;
+  const dataReady = misconceptionsStatus === 'ready';
   const isReady = useAllReady(useI18nReady(), dataReady);
 
   const [selectedClassId, setSelectedClassId] = React.useState(

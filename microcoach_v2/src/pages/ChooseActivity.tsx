@@ -11,7 +11,7 @@ import FlowNav, { FlowTabId } from '../components/FlowNav';
 import ActivityCard from '../components/ActivityCard';
 import ChooseActivitySkeleton from '../components/ChooseActivitySkeleton';
 import { ScreenSize } from '../lib/MicroCoachModels';
-import { PlanProps } from '../hooks/usePlanItems';
+import { IPlanItem } from '../lib/PipelineModels';
 import {
   BackButton,
   ContextBanner,
@@ -23,25 +23,29 @@ import {
   ScreenSizeProps,
 } from '../lib/styledcomponents/ReviewStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
-import { useMisconceptions } from '../hooks/useMisconceptions';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { IMicroCoachActivity } from '../api/Models/IMicroCoachActivity';
 import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
 
-interface ChooseActivityViewProps extends ScreenSizeProps, PlanProps {
+interface ChooseActivityProps extends ScreenSizeProps {
+  saveActivity: (item: IPlanItem) => void;
+}
+
+interface ChooseActivityViewProps extends ChooseActivityProps {
   misconception: IMicroCoachMisconception;
+  planItems: IPlanItem[];
 }
 
 function ChooseActivityView({
   misconception,
   screenSize,
-  plan,
+  planItems,
+  saveActivity,
 }: ChooseActivityViewProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
   const isLarge = screenSize === ScreenSize.LARGE;
-
-  const { planItems, saveActivity } = plan;
 
   // Selection lives in the plan, so choosing here is what populates My Plan.
   const selectedActivityId =
@@ -168,9 +172,14 @@ function ChooseActivityView({
   );
 }
 
-export default function ChooseActivity({ screenSize, plan }: ScreenSizeProps & PlanProps) {
+export default function ChooseActivity({
+  screenSize,
+  saveActivity,
+}: ChooseActivityProps) {
   const { misconceptionId } = useParams();
-  const { misconceptions, isReady: dataReady } = useMisconceptions();
+  const { misconceptions, misconceptionsStatus, planItems } =
+    useMicroCoachDataState();
+  const dataReady = misconceptionsStatus === 'ready';
   const isReady = useAllReady(useI18nReady(), dataReady);
 
   if (!isReady) {
@@ -188,7 +197,8 @@ export default function ChooseActivity({ screenSize, plan }: ScreenSizeProps & P
     <ChooseActivityView
       misconception={misconception}
       screenSize={screenSize}
-      plan={plan}
+      planItems={planItems}
+      saveActivity={saveActivity}
     />
   );
 }

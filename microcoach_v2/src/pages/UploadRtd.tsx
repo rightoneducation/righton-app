@@ -11,7 +11,8 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import AppContentRow from '../components/AppContentRow';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import { UploadStepProps } from '../lib/UploadModels';
-import { useMisconceptions } from '../hooks/useMisconceptions';
+import mockPipelineOutput from '../lib/mocks/mockPipelineOutput.json';
+import { IPipelineOutput } from '../lib/PipelineModels';
 import { PromptIconTile } from '../lib/styledcomponents/ActivityDetailStyledComponents';
 import { SignUpCta } from '../lib/styledcomponents/SignUpStyledComponents';
 import {
@@ -42,7 +43,7 @@ export default function UploadRtd({ screenSize, upload, actions, user }: UploadS
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { session } = useMisconceptions();
+  const { session } = mockPipelineOutput as unknown as IPipelineOutput;
   const { userProfile } = user;
 
   const isReady = useAllReady(useI18nReady());

@@ -7,7 +7,8 @@ import Typography from '@mui/material/Typography';
 import ContentRow from '../components/ContentRow';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import { UploadStepProps } from '../lib/UploadModels';
-import { useMisconceptions } from '../hooks/useMisconceptions';
+import mockPipelineOutput from '../lib/mocks/mockPipelineOutput.json';
+import { IPipelineOutput } from '../lib/PipelineModels';
 import { SignUpCta } from '../lib/styledcomponents/SignUpStyledComponents';
 import {
   GhostAction,
@@ -23,7 +24,7 @@ export default function UploadRtdReview({ screenSize, upload, actions, user }: U
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { session } = useMisconceptions();
+  const { session } = mockPipelineOutput as unknown as IPipelineOutput;
   const { userProfile } = user;
 
   const isReady = useAllReady(useI18nReady());

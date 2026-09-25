@@ -17,7 +17,6 @@ import { GOOGLE_OAUTH_CLIENT_ID, ScreenType } from './lib/MicroCoachModels';
 import { useAPIClients } from './hooks/useAPIClients';
 import { useAuthResolver } from './hooks/useAuthActions';
 import { useUserState } from './hooks/useUserState';
-import { usePlanItems } from './hooks/usePlanItems';
 import AppSwitch from './switches/AppSwitch';
 import Preview from './pages/preview/Preview';
 import { MicroCoachDataProvider } from './lib/context/MicroCoachDataContext';
@@ -42,11 +41,10 @@ Modal.setAppElement('#root');
 
 function RootLayout({ apiClients }: { apiClients: APIClients }) {
   const user = useUserState(apiClients);
-  const plan = usePlanItems();
   useAuthResolver(apiClients, user);
   const outletContext = useMemo(
-    () => ({ apiClients, user, plan }),
-    [apiClients, user, plan],
+    () => ({ apiClients, user }),
+    [apiClients, user],
   );
   return (
     <>
