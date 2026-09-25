@@ -38,6 +38,7 @@
 
 import { loadSecret } from './util/loadsecrets.mjs';
 import { loadLibrary, formatForSelection } from './util/activityLibrary.mjs';
+import { matchByTitle } from './util/matchByTitle.mjs';
 import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
@@ -73,7 +74,7 @@ const Considered = z.object({
 });
 
 const Selection = z.object({
-  title: z.string().describe('The need\'s misconception title, copied exactly — the join key'),
+  title: z.string().describe('The need\'s misconception title, copied exactly as given on its `- title:` line — not the "Need N" heading. This is the join key.'),
   top2: z.array(Pick).describe(`Exactly ${TOP_N} picks, strongest first`),
   distinctInstructionalMoves: z.boolean().describe('true when the two picks ask students to do mathematically different things — not merely when they use different templates. Two activities that both amount to "explain the difference between these" are NOT distinct.'),
   considered: z.array(Considered).describe('Every other available template, each with a reason it was not selected'),
@@ -159,7 +160,7 @@ function buildSessionSection({ assessmentType, classroom, ppq, wrongAnswerDist, 
     const need = n.instructionalNeed ?? {};
     // The heading carries only the title: it is the join key the model echoes back,
     // so nothing else may share the line.
-    out.push('', `### Need ${i + 1}: ${n.title}`);
+    out.push('', `### Need ${i + 1}`, `- title: ${n.title}`);
     const rank = n.priorityRank ?? r.priorityRank;
     if (rank != null) out.push(`- priority (given): #${rank}${n.isRecommendedFocus ? ' — Recommended Focus' : ''}`);
     if (n.rubric?.scores?.conceptualDepth != null) out.push(`- conceptual depth (given): ${n.rubric.scores.conceptualDepth} of 3`);
@@ -184,16 +185,18 @@ function buildSessionSection({ assessmentType, classroom, ppq, wrongAnswerDist, 
 // ── Validate ──────────────────────────────────────────────────────────────────
 
 function validateOutput(structured, needs, rightOnAvailable) {
-  const byTitle = new Map(needs.map((n, i) => [String(n.title ?? '').trim(), i]));
+  const rows = structured.selections ?? [];
   const seen = new Set();
   const rejected = [];
   const selections = [];
+  let positionMatches = 0;
 
-  (structured.selections ?? []).forEach((s, pos) => {
+  rows.forEach((s, pos) => {
     const t = String(s.title ?? '').trim();
-    const idx = needs[pos] && String(needs[pos].title ?? '').trim() === t ? pos : byTitle.get(t);
+    const { index: idx, matchedBy } = matchByTitle(s.title, needs, pos, rows.length);
     if (idx == null) { rejected.push({ title: s.title, reason: 'unmatched' }); return; }
     if (seen.has(idx)) { rejected.push({ title: s.title, reason: 'duplicate' }); return; }
+    if (matchedBy === 'position') positionMatches += 1;
 
     const top2 = [];
     for (const p of s.top2 ?? []) {
@@ -237,7 +240,7 @@ function validateOutput(structured, needs, rightOnAvailable) {
       considered: (s.considered ?? []).filter((c) => TEMPLATE_IDS.includes(c.templateId)),
     });
   });
-  return { selections, rejected };
+  return { selections, rejected, positionMatches };
 }
 
 function formatSelectionLog(selections, needs) {
@@ -298,7 +301,8 @@ export const handler = async (event) => {
     const raw = completion.choices[0]?.message?.content;
     if (!raw) throw new Error('Empty completion content');
     const structured = SelectResponse.parse(JSON.parse(raw));
-    const { selections, rejected } = validateOutput(structured, needs, rightOnAvailable);
+    const { selections, rejected, positionMatches } = validateOutput(structured, needs, rightOnAvailable);
+    if (positionMatches) console.warn(`[microcoachv2LLMSelectTemplate] ${positionMatches} selection(s) paired by position because the title did not match — check the reply order`);
 
     console.log(formatSelectionLog(selections, needs));
     console.log(`[microcoachv2LLMSelectTemplate] ${selections.length}/${needs.length} selections, ${rejected.length} rejected, cached prompt tokens: ${completion.usage?.prompt_tokens_details?.cached_tokens ?? 0}`);

@@ -35,6 +35,7 @@
 import { loadSecret } from './util/loadsecrets.mjs';
 import { formatLearningScience } from './util/formatLearningScience.mjs';
 import { matchStandard } from './util/ccssCode.mjs';
+import { matchByTitle } from './util/matchByTitle.mjs';
 import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
@@ -71,7 +72,7 @@ const Rationale = z.object({
 });
 
 const Need = z.object({
-  title: z.string().describe('The misconception title, copied exactly — the join key'),
+  title: z.string().describe('The misconception title, copied exactly as given on its `- title:` line — not the "Misconception N" heading. This is the join key.'),
   instructionalNeed: z.object({
     text: z.string().describe(
       `At most ${NEED_MAX_SENTENCES} sentences. The mathematical understanding or connection students must build to make progress on this misconception. State what they need to understand — never what anyone does to get there: no teacher moves, no student tasks, no grouping, no solution strategies, no activity formats.`,
@@ -166,7 +167,7 @@ function formatAnswerOptions(questions, dist, misconceptions) {
 }
 
 function formatMisconception(m, i, graphStandards) {
-  const lines = [`### Misconception ${i + 1}: ${m.title}`];
+  const lines = [`### Misconception ${i + 1}`, `- title: ${m.title}`];
   // The question's spelling of the code and the graph's often differ; match on the
   // spelling-independent key so the description is not silently dropped.
   const { standard } = matchStandard(m.ccssStandard, graphStandards);
@@ -246,7 +247,7 @@ ${misconceptions.map((m, i) => formatMisconception(m, i, graphStandards)).join('
 
 ## Your Task
 
-For EACH misconception above, in the same order, produce one entry with:
+For EACH misconception above, in the same order, produce one entry. Copy \`title\` exactly as given on its \`- title:\` line — not the "Misconception N" heading. Each entry has:
 
 **1. Instructional need** — what students most need to understand, examine, or do next mathematically to make progress on this misconception.
 
@@ -283,16 +284,17 @@ Return JSON matching the schema.
 // misconception that gets two keeps the first. `priorityRank` is copied from the
 // input misconception — it was set by the rubric stage, not the model.
 function validateOutput(structured, misconceptions) {
-  const byTitle = new Map(misconceptions.map((m, i) => [String(m.title ?? '').trim(), i]));
+  const rows = structured.needs ?? [];
   const seen = new Set();
   const rejected = [];
   const matched = [];
-  (structured.needs ?? []).forEach((n, pos) => {
-    const t = String(n.title ?? '').trim();
-    let idx = misconceptions[pos] && String(misconceptions[pos].title ?? '').trim() === t ? pos : byTitle.get(t);
+  let positionMatches = 0;
+  rows.forEach((n, pos) => {
+    const { index: idx, matchedBy } = matchByTitle(n.title, misconceptions, pos, rows.length);
     if (idx == null) { rejected.push({ title: n.title, reason: 'unmatched' }); return; }
     if (seen.has(idx)) { rejected.push({ title: n.title, reason: 'duplicate' }); return; }
     if (!n.instructionalNeed?.text?.trim()) { rejected.push({ title: n.title, reason: 'emptyNeed' }); return; }
+    if (matchedBy === 'position') positionMatches += 1;
     seen.add(idx);
     matched.push({ idx, n });
   });
@@ -318,7 +320,7 @@ function validateOutput(structured, misconceptions) {
   const missing = misconceptions
     .map((m, i) => ({ title: m.title, position: i + 1 }))
     .filter((_, i) => !seen.has(i));
-  return { needs, rejected, missing };
+  return { needs, rejected, missing, positionMatches };
 }
 
 // One log event, readable as a block in CloudWatch.
@@ -393,7 +395,8 @@ export const handler = async (event) => {
     const raw = completion.choices[0]?.message?.content;
     if (!raw) throw new Error('Empty completion content');
     const structured = NeedResponse.parse(JSON.parse(raw));
-    const { needs, rejected, missing } = validateOutput(structured, misconceptions);
+    const { needs, rejected, missing, positionMatches } = validateOutput(structured, misconceptions);
+    if (positionMatches) console.warn(`[microcoachv2LLMGenInstrNeed] ${positionMatches} need(s) paired by position because the title did not match — check the reply order`);
 
     console.log(formatNeedLog(needs));
     console.log(`[microcoachv2LLMGenInstrNeed] ${needs.length}/${misconceptions.length} needs, ${rejected.length} rejected, ${missing.length} missing`);
@@ -405,6 +408,7 @@ export const handler = async (event) => {
       needs,
       rejected,
       missing,
+      positionMatches,
       ...(wantTrace && {
         _trace: {
           resolvedPrompt: userContent,
