@@ -21,6 +21,7 @@ import { dedupeGraph } from '../eval/scripts/util/dedupeGraph';
 import { MaskOptionEnum, KgQueryType } from '../eval/types';
 import { computeMisconceptionReach } from '../eval/scripts/util/computeReach';
 import { checkNeedSeparation } from '../eval/scripts/util/checkNeedSeparation';
+import { matchStandard } from '../eval/scripts/util/ccssCode';
 
 const AMPLIFY_ENV = process.env.AMPLIFY_ENV ?? 'dev';
 
@@ -438,7 +439,6 @@ function buildNextSteps(
     }));
 
   const frameworkItems: any[] = learningScienceData?.standards ?? [];
-  const normalize = (s: string) => s?.replace(/\s/g, '').toLowerCase() ?? '';
 
   const standardsDescMap = new Map<string, string>();
   for (const item of frameworkItems) {
@@ -451,9 +451,9 @@ function buildNextSteps(
   return misconceptions.map((m: any, i: number) => {
     const extras = misconceptionExtras[i] ?? {};
     const activityList: any[] = (activitiesPerGroup[i] ?? []).filter(Boolean);
-    const frameworkItem = frameworkItems.find(
-      (item: any) => normalize(item.code) === normalize(m.ccssStandard)
-    );
+    // Questions spell the code one way and the graph another, so an exact string
+    // match drops the standard description and both fallback lists.
+    const frameworkItem = matchStandard(m.ccssStandard, frameworkItems).standard;
 
     // The need stage selects the specific prerequisite / downstream codes in its
     // rationale; the graph's full lists are the fallback when it names none.
@@ -498,6 +498,9 @@ function buildNextSteps(
       example: m.example ?? null,
       misconceptionSummary: m.description,
       learningScienceConnection: m.learningScienceConnection ?? null,
+      // Whether the misconception is read directly off the option content or is the
+      // most plausible of several explanations that fit the same responses.
+      evidenceBasis: m.evidenceBasis ?? null,
       aiReasoning: m.aiReasoning ?? null,
       // From the need stage (step 5): the need itself and the analysis behind it.
       instructionalNeed: m.instructionalNeed ?? null,
@@ -525,6 +528,7 @@ function buildNextSteps(
         activityStructure: activity.activityStructure ?? null,
         summary: activity.summary,
         targets: activity.targets ?? null,
+        mathematicalTakeaway: activity.mathematicalTakeaway ?? null,
         instructionalMove: activity.instructionalMove ?? null,
         strategyTag: activity.strategyTag ?? null,
         aiReasoning: activity.aiReasoning,
@@ -1177,11 +1181,14 @@ async function processClassroom(
     stoppedAfter: ANALYSIS_ONLY ? 'analysis' : null,
     // Diagnostic, not a correction: when the analysis stage emits a code the graph
     // does not carry, the generation stage silently loses all graph context.
-    targetStandardMatched: misconceptions.filter((m: any) =>
-      learningScienceData.standards.some(
-        (s: any) => (s.code ?? '').replace(/\s/g, '').toLowerCase()
-                 === (m.ccssStandard ?? '').replace(/\s/g, '').toLowerCase()
-      )
+    targetStandardMatched: misconceptions.filter(
+      (m: any) => matchStandard(m.ccssStandard, learningScienceData.standards).standard != null,
+    ).length,
+    // How many of those matched only on the spelling-independent key. Non-zero is
+    // fine — it means the assessment and the graph disagree on how to write a code —
+    // but it is worth seeing, because an exact-only match silently scored zero here.
+    targetStandardMatchedByCanonical: misconceptions.filter(
+      (m: any) => matchStandard(m.ccssStandard, learningScienceData.standards).matchedBy === 'canonical',
     ).length,
     // Misconceptions now originate in GenMisconception (4c); how many of them got
     // a need back from 5 is the join-health counter.

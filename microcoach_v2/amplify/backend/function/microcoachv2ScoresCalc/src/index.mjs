@@ -26,6 +26,7 @@ import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
 import { readFileSync } from 'node:fs';
 import { scoreOne, rank } from './scoreRubric.mjs';
+import { matchStandard } from './util/ccssCode.mjs';
 
 // Read rather than `import … with { type: 'json' }` so the file loads the same on
 // nodejs20 (Lambda) and 22 (local), which disagree on the import-attribute keyword.
@@ -49,7 +50,6 @@ const DepthResponse = z.object({
 // ── Prompt ────────────────────────────────────────────────────────────────────
 
 const parseJson = (raw) => (typeof raw === 'string' ? JSON.parse(raw) : raw);
-const normalizeCode = (c) => String(c ?? '').replace(/\s/g, '').toLowerCase();
 
 function formatMisconception(m, i) {
   const lines = [`### Misconception ${i + 1}: ${m.title}`];
@@ -134,16 +134,15 @@ export const handler = async (event) => {
     if (input.learningScienceData == null) throw new Error('learningScienceData is required');
 
     const learningScienceData = parseJson(input.learningScienceData) ?? { standards: [] };
-    const byCode = new Map(
-      (learningScienceData?.standards ?? [])
-        .filter((s) => s?.code)
-        .map((s) => [normalizeCode(s.code), s]),
-    );
-    // null, not 0, when the standard is not in the (possibly masked) response —
-    // the engine treats that as unmeasured.
+    const graphStandards = learningScienceData?.standards ?? [];
+    // Questions spell the code one way, the graph another; matchStandard tries the
+    // literal string first and the spelling-independent key second. null, not 0,
+    // when the standard is genuinely absent — the engine treats that as unmeasured.
+    const canonicalMatches = [];
     const downstreamCount = (m) => {
-      const std = m.ccssStandard ? byCode.get(normalizeCode(m.ccssStandard)) : null;
-      return std ? (std.futureDependentStandards ?? []).length : null;
+      const { standard, matchedBy } = matchStandard(m.ccssStandard, graphStandards);
+      if (matchedBy === 'canonical') canonicalMatches.push({ given: m.ccssStandard, matched: standard.code });
+      return standard ? (standard.futureDependentStandards ?? []).length : null;
     };
 
     const apiSecret = await loadSecret(apiSecretName);
@@ -184,6 +183,12 @@ export const handler = async (event) => {
     const scored = rank(items, rubric.selection).map(({ raw: r, inputOrder, ...rest }) => ({ ...rest, inputs: r }));
 
     console.log(formatScoreLog(scored));
+    if (canonicalMatches.length) {
+      // Worth seeing: the codes disagree in spelling and only matched on the
+      // fallback. Harmless, but it is the symptom that hid the empty scores before.
+      const shown = [...new Map(canonicalMatches.map((x) => [`${x.given}->${x.matched}`, x])).values()];
+      console.log(`[microcoachv2ScoresCalc] matched ${shown.length} standard spelling(s) by canonical key: ${shown.map((x) => `${x.given} → ${x.matched}`).join(', ')}`);
+    }
     if (rejected.length) console.warn('[microcoachv2ScoresCalc] rejected depth rows:', JSON.stringify(rejected));
 
     return JSON.stringify({

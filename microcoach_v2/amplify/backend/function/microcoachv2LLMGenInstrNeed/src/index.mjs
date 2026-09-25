@@ -34,6 +34,7 @@
 
 import { loadSecret } from './util/loadsecrets.mjs';
 import { formatLearningScience } from './util/formatLearningScience.mjs';
+import { matchStandard } from './util/ccssCode.mjs';
 import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
@@ -65,7 +66,7 @@ const Rationale = z.object({
     '"recurring" only if the same error pattern appears in a prior session\'s data; otherwise "first".',
   ),
   whyThisNeed: z.string().describe(
-    '2–3 sentences tying the evidence above to the need stated: why THIS thinking is what students must do next, rather than another response to the same misconception.',
+    '2–3 sentences on what students gain mathematically from addressing this need — what it unlocks in their reasoning, or what it lets them do that they cannot do now. Do not restate the misconception or re-narrate the errors; the evidence is already recorded above.',
   ),
 });
 
@@ -92,7 +93,6 @@ const NeedResponse = z.object({
 // ── Prompt ────────────────────────────────────────────────────────────────────
 
 const parseJson = (raw) => (typeof raw === 'string' ? JSON.parse(raw) : raw);
-const normalizeCode = (c) => String(c ?? '').replace(/\s/g, '').toLowerCase();
 
 // Strip individual student responses — the model works from aggregated question
 // stats (classPercentCorrect per question + answer key + confidenceStats).
@@ -165,10 +165,13 @@ function formatAnswerOptions(questions, dist, misconceptions) {
     .join('\n\n');
 }
 
-function formatMisconception(m, i, standardsByCode) {
+function formatMisconception(m, i, graphStandards) {
   const lines = [`### Misconception ${i + 1}: ${m.title}`];
-  const std = m.ccssStandard ? standardsByCode.get(normalizeCode(m.ccssStandard)) : null;
-  lines.push(`- standard: ${m.ccssStandard ?? 'unknown'}${std ? ` — ${std}` : ''}`);
+  // The question's spelling of the code and the graph's often differ; match on the
+  // spelling-independent key so the description is not silently dropped.
+  const { standard } = matchStandard(m.ccssStandard, graphStandards);
+  const desc = standard?.description ?? '';
+  lines.push(`- standard: ${m.ccssStandard ?? 'unknown'}${desc ? ` — ${desc}` : ''}`);
   if (m.description) lines.push(`- error: ${m.description}`);
   if (m.learningScienceConnection) lines.push(`- learning science connection: ${m.learningScienceConnection}`);
   const reach = m.studentCount != null
@@ -185,7 +188,7 @@ function formatMisconception(m, i, standardsByCode) {
   return lines.join('\n');
 }
 
-function buildPrompt(payload, misconceptions, learningScienceSection, standardsByCode) {
+function buildPrompt(payload, misconceptions, learningScienceSection, graphStandards) {
   const worked = NEED_WORKED
     ? `\nWorked example:\nMisconception: ${NEED_WORKED.misconception}\nInstructional need: ${NEED_WORKED.instructionalNeed}\n`
     : '';
@@ -237,7 +240,7 @@ ${formatAnswerOptions(payload.ppq?.questions, payload.wrongAnswerDist, misconcep
 ${payload.sessionHistory.length ? JSON.stringify(payload.sessionHistory, null, 2) : 'No prior sessions.'}
 
 ## Misconceptions
-${misconceptions.map((m, i) => formatMisconception(m, i, standardsByCode)).join('\n\n')}
+${misconceptions.map((m, i) => formatMisconception(m, i, graphStandards)).join('\n\n')}
 
 ---
 
@@ -265,7 +268,9 @@ Rules for the need:
 - prerequisiteGaps: from the standard's \`prerequisiteStandards\` in the learning science data (EARLIER-grade topics), ONLY the codes where a gap in that skill would DIRECTLY cause this error. Empty if none.
 - forwardImpact: from the standard's \`futureDependentStandards\` (LATER-grade topics), ONLY the codes this error would DIRECTLY threaten. Empty if none.
 - recurrence: "recurring" only if the same error pattern appears in session history; otherwise "first".
-- whyThisNeed: 2–3 sentences tying the evidence to the need — why THIS thinking is what students must do next, rather than another response to the same misconception.
+- whyThisNeed: 2–3 sentences on the mathematical value of addressing this need — what it unlocks in students' reasoning, or what it lets them do that they cannot do now. Do not restate the misconception or re-narrate the errors; those are already recorded above.
+  Good: "Connecting the algebraic transformation to the meaning of slope and y-intercept lets students see why the inequality must be rewritten before its coefficients can be read graphically — which is what makes the rule generalize rather than be memorized."
+  Not: "Students repeatedly shaded the wrong side, so they need to check which side satisfies the inequality." 
 
 Return JSON matching the schema.
 `.trim();
@@ -351,11 +356,7 @@ export const handler = async (event) => {
 
     const learningScienceData = parseJson(input.learningScienceData) ?? { standards: [] };
     const learningScienceSection = formatLearningScience(learningScienceData);
-    const standardsByCode = new Map(
-      (learningScienceData?.standards ?? [])
-        .filter((s) => s?.code)
-        .map((s) => [normalizeCode(s.code), s.description ?? '']),
-    );
+    const graphStandards = learningScienceData?.standards ?? [];
 
     const { classroom, currentSession, sessionHistory, ppq, wrongAnswerDist } = parseJson(input.classroomData);
     const payload = {
@@ -378,7 +379,7 @@ export const handler = async (event) => {
     if (!apiKey) throw new Error('Secret must contain openai_api, OPENAI_API_KEY, or API');
     const openai = new OpenAI({ apiKey });
 
-    const userContent = buildPrompt(payload, misconceptions, learningScienceSection, standardsByCode);
+    const userContent = buildPrompt(payload, misconceptions, learningScienceSection, graphStandards);
 
     const completion = await openai.chat.completions.create({
       model: MODEL,

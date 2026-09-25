@@ -27,7 +27,8 @@
  *   trace           boolean — echo `_trace`
  *
  * Output: { ok: true, selections: [{ title, top2: [{ templateId, instructionalFit,
- * belowThreshold, rationale, distinctFrom }], considered: [{ templateId, whyNot }] }],
+ * belowThreshold, instructionalApproach, rationale, distinctFrom }],
+ * distinctInstructionalMoves, considered: [{ templateId, whyNot }] }],
  * rejected } — one per need, matched by position then exact title. `instructionalFit`
  * is the Wave 2 doc's 0–3 Instructional Fit scale (§3b, mirrored in util/config.json
  * from microcoachv2ScoresCalc/src/activityRubric.json); `belowThreshold` marks a pick
@@ -61,6 +62,7 @@ const templateIdSchema = z.enum(TEMPLATE_IDS);
 const Pick = z.object({
   templateId: templateIdSchema,
   instructionalFit: z.number().int().min(0).max(3).describe('0–3 on the Instructional Fit scale given: 3 exceptional, 2 strong, 1 partial, 0 poor'),
+  instructionalApproach: z.string().describe('The instructional move this template would enact for THIS need, as a short phrase — "contrast correct and incorrect interpretations", "investigate the reasoning behind the error". Not the template name, and not a restatement of the need.'),
   rationale: z.string().describe('2-3 sentences: why this template\'s primary instructional move fits THIS need at that level, citing the evidence (linked wrong answers, confidence, conceptual depth, the need text). Name the fit, not the template description.'),
   distinctFrom: z.string().nullable().describe('Only when both picks use the same template: how the second activity would use a meaningfully different problem, context, or mathematical situation. Otherwise null.'),
 });
@@ -73,6 +75,7 @@ const Considered = z.object({
 const Selection = z.object({
   title: z.string().describe('The need\'s misconception title, copied exactly — the join key'),
   top2: z.array(Pick).describe(`Exactly ${TOP_N} picks, strongest first`),
+  distinctInstructionalMoves: z.boolean().describe('true when the two picks ask students to do mathematically different things — not merely when they use different templates. Two activities that both amount to "explain the difference between these" are NOT distinct.'),
   considered: z.array(Considered).describe('Every other available template, each with a reason it was not selected'),
 });
 
@@ -108,6 +111,8 @@ A pick scoring below ${FIT_THRESHOLD} is a weak recommendation. Select the templ
 
 For EACH need, in the same order given:
 - \`top2\`: exactly ${TOP_N} templates, highest instructionalFit first. Judge fit on the template's primary instructional move against the need, the misconception, the student response data, the mathematical content and the lesson context. Prefer two different templates when both fit strongly (≥ ${FIT_THRESHOLD}); use the same template twice only when it is substantially stronger than every alternative, and then say in \`distinctFrom\` how the two activities would differ. Never pick a poorly suited template for variety.
+- \`instructionalApproach\`: for each pick, the instructional move that template would enact for this need, as a short phrase. Two picks may use different templates and still describe the same move; say what each would actually have students do.
+- \`distinctInstructionalMoves\`: true only when the two picks ask students to do mathematically different things. Different templates alone do not make them distinct.
 - \`considered\`: every other available template with one sentence on why it is weaker here.
 - \`rationale\` must cite the evidence for THIS need — the linked wrong answers, what students chose, confidence, severity, the need text — not restate the template's description.
 - A template marked UNAVAILABLE must not appear in \`top2\`; list it under \`considered\` with whyNot "unavailable".
@@ -198,6 +203,7 @@ function validateOutput(structured, needs, rightOnAvailable) {
         templateId: p.templateId,
         instructionalFit: p.instructionalFit,
         belowThreshold: p.instructionalFit < FIT_THRESHOLD,
+        instructionalApproach: p.instructionalApproach,
         rationale: p.rationale,
         distinctFrom: p.distinctFrom ?? null,
       });
@@ -213,10 +219,21 @@ function validateOutput(structured, needs, rightOnAvailable) {
       rejected.push({ title: t, reason: 'sameTemplateWithoutDistinctFrom' }); return;
     }
 
+    // The model judges distinctness, because two differently worded approaches can
+    // still be the same move and only it can read that. Code catches the one case
+    // it cannot be wrong about: the two phrases are literally the same.
+    const norm = (x) => String(x ?? '').toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
+    let distinctInstructionalMoves = s.distinctInstructionalMoves === true;
+    if (distinctInstructionalMoves && norm(top2[0].instructionalApproach) === norm(top2[1].instructionalApproach)) {
+      console.warn(`[microcoachv2LLMSelectTemplate] "${t}": claimed distinct moves but both read "${top2[0].instructionalApproach}" — recording as not distinct`);
+      distinctInstructionalMoves = false;
+    }
+
     seen.add(idx);
     selections.push({
       title: needs[idx].title,
       top2,
+      distinctInstructionalMoves,
       considered: (s.considered ?? []).filter((c) => TEMPLATE_IDS.includes(c.templateId)),
     });
   });
@@ -228,8 +245,10 @@ function formatSelectionLog(selections, needs) {
   const lines = [`[microcoachv2LLMSelectTemplate] ${selections.length} selection(s):`];
   [...selections].sort((a, b) => (rank.get(a.title) ?? 99) - (rank.get(b.title) ?? 99)).forEach((s) => {
     lines.push(`#${rank.get(s.title) ?? '?'} ${s.title}`);
+    if (!s.distinctInstructionalMoves) lines.push('   ⚠ the two picks enact the same instructional move');
     s.top2.forEach((p, i) => {
-      lines.push(`   ${i + 1}. ${p.templateId} (fit ${p.instructionalFit}/3${p.belowThreshold ? ' — below threshold' : ''}) — ${p.rationale}`);
+      lines.push(`   ${i + 1}. ${p.templateId} (fit ${p.instructionalFit}/3${p.belowThreshold ? ' — below threshold' : ''}) — ${p.instructionalApproach}`);
+      lines.push(`      ${p.rationale}`);
       if (p.distinctFrom) lines.push(`      distinct from pick 1: ${p.distinctFrom}`);
     });
     lines.push('');
