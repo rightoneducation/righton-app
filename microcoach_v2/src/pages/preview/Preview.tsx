@@ -508,7 +508,7 @@ function flowLine(manifest: Rec, misconceptionCount: number): string {
 }
 
 // Where reviewers leave feedback on what this page shows.
-const COMMENTS_DOC = 'https://docs.google.com/document/d/1cRwPZ1bL2TnYl0KKLsviWSD0tPh-5c8eWsU3jHylHxA/edit?usp=sharing';
+const COMMENTS_DOC = 'https://docs.google.com/document/d/1EYX660oFYXbRket8Zg4jQnqSckBGD4TnKJFhV31HWGE/edit?usp=sharing';
 
 function RunBar({
   runs,
