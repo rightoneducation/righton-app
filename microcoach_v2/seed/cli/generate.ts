@@ -901,6 +901,9 @@ async function processClassroom(
         rubric: {
           version: rubricVersion,
           scores: sc.scores,
+          // Each metric's contribution after its weight, so a reader can reconcile
+          // the 0–3 scores against the weighted total without knowing the weights.
+          weighted: sc.weighted ?? null,
           total: sc.total,
           maxPossible: sc.maxPossible,
           normalized: sc.normalized,

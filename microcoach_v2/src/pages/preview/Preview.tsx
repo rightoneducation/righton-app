@@ -275,6 +275,25 @@ function MisconceptionBlock({ item }: { item: Rec }) {
 
 // The Wave 2 Misconception Rubric scorecard as the run recorded it — read from
 // the item, not recomputed here.
+// Weights and row order, copied by hand from
+// microcoachv2ScoresCalc/src/misconceptionRubric.json — CRA cannot import from
+// amplify/. A weight shown here that disagrees with that file is a bug in this
+// copy; the lambda's own `weighted` values are what the totals are built from.
+const RUBRIC_WEIGHTS: Record<string, number> = {
+  frequency: 3,
+  learningProgressionInfluence: 1,
+  studentConfidence: 3,
+  conceptualDepth: 3,
+  lcMisconceptionEvalScore: 3,
+};
+const RUBRIC_ORDER = [
+  'frequency',
+  'learningProgressionInfluence',
+  'studentConfidence',
+  'conceptualDepth',
+  'lcMisconceptionEvalScore',
+];
+
 const RUBRIC_LABELS: Record<string, string> = {
   frequency: 'frequency',
   learningProgressionInfluence: 'progression influence',
@@ -350,6 +369,33 @@ function ScoreStrip({ item }: { item: Rec }) {
   );
 }
 
+// Rubric order first, then anything the lambda emitted that this page does not
+// know about — so a new metric shows up rather than disappearing.
+function orderedKeys(scores: Rec): string[] {
+  const known = RUBRIC_ORDER.filter((k) => k in scores);
+  const rest = Object.keys(scores).filter((k) => !RUBRIC_ORDER.includes(k));
+  return [...known, ...rest];
+}
+
+// What the score was computed from. Frequency is continuous now, so the raw
+// share of class is what makes a value like 2.57 readable.
+function measuredFrom(key: string, inputs: Rec): string {
+  if (key === 'frequency') {
+    const p = pct(inputs.studentPercent);
+    return p === '' ? '' : `${p} of class`;
+  }
+  if (key === 'learningProgressionInfluence') {
+    const n = inputs.downstreamCount;
+    return typeof n === 'number' ? `${n} downstream standard${n === 1 ? '' : 's'}` : '';
+  }
+  if (key === 'studentConfidence') {
+    const c = inputs.meanConfidence;
+    return typeof c === 'number' ? `mean ${c} of 5` : '';
+  }
+  if (key === 'conceptualDepth') return 'model judgement';
+  return '';
+}
+
 function RubricBlock({ item, tie }: { item: Rec; tie?: TieNote }) {
   const rubric = asRec(item.rubric);
   if (!rubric) {
@@ -360,6 +406,8 @@ function RubricBlock({ item, tie }: { item: Rec; tie?: TieNote }) {
     );
   }
   const scores = asRec(rubric.scores) ?? {};
+  const weighted = asRec(rubric.weighted) ?? {};
+  const inputs = asRec(rubric.inputs) ?? {};
   const missing = asStrings(rubric.missing);
   const total = typeof rubric.total === 'number' ? rubric.total : null;
   const max = typeof rubric.maxPossible === 'number' ? rubric.maxPossible : null;
@@ -368,16 +416,48 @@ function RubricBlock({ item, tie }: { item: Rec; tie?: TieNote }) {
     <Block label="Rubric" hint={`ScoresCalc · ${asStr(rubric.version) || 'misconceptionRubric.json'}`}>
       <div className="p2-inputs">
         <div className="p2-inputs-head">Misconception rubric</div>
-        {Object.entries(scores).map(([k, v]) => {
-          let cell = `${String(v)} / 3`;
-          if (v == null) cell = missing.includes(k) ? 'not measured' : '—';
-          return <Row key={k} k={RUBRIC_LABELS[k] ?? k} v={<span className="p2-mono">{cell}</span>} />;
+        {orderedKeys(scores).map((k) => {
+          const v = scores[k];
+          if (v == null) {
+            return (
+              <Row
+                key={k}
+                k={RUBRIC_LABELS[k] ?? k}
+                v={<span className="p2-nil">{missing.includes(k) ? 'not measured' : '—'}</span>}
+              />
+            );
+          }
+          const weight = RUBRIC_WEIGHTS[k] ?? 1;
+          const contribution = typeof weighted[k] === 'number' ? weighted[k] : (v as number) * weight;
+          return (
+            <Row
+              key={k}
+              k={RUBRIC_LABELS[k] ?? k}
+              v={
+                <span className="p2-rubric-row">
+                  {/* The contribution leads: these are the numbers that add to the
+                      total. The rubric's 0–3 score and the weight follow as the
+                      derivation, for anyone reconciling against the doc. */}
+                  <span className="p2-mono p2-rubric-points">
+                    {String(contribution)} <span className="p2-rubric-of">of {3 * weight}</span>
+                  </span>
+                  <span className="p2-rubric-from">
+                    {measuredFrom(k, inputs)}
+                    {measuredFrom(k, inputs) === '' ? '' : ' · '}
+                    {String(v)}/3 × {weight}
+                  </span>
+                </span>
+              }
+            />
+          );
         })}
         <Row
           k="→ total"
           v={
             <span>
-              <span className="p2-mono">{total == null || max == null ? '—' : `${total} / ${max}`}</span>
+              <span className="p2-mono p2-rubric-points p2-rubric-total">
+                {total == null || max == null ? '—' : `${total} of ${max}`}
+              </span>
               {' · '}
               <span className="p2-rank-inline">#{String(item.priorityRank ?? '—')}</span>
               {item.isRecommendedFocus === true && <span className="p2-focus"> Recommended Focus</span>}
@@ -795,6 +875,11 @@ const STYLES = `
 .p2-fit-strong { background: #e5edff; color: #2f5bd0; }
 .p2-fit-below { background: #fdecec; color: #b3261e; margin-left: 4px; }
 .p2-nofit { color: #9a5b00; font-weight: 600; }
+.p2-rubric-row { display: inline-flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.p2-rubric-points { font-size: 13px; font-weight: 700; color: #2c3238; min-width: 62px; display: inline-block; }
+.p2-rubric-of { font-weight: 400; color: #8b939c; font-size: 11px; }
+.p2-rubric-total { color: #2f6df6; }
+.p2-rubric-from { color: #8b939c; font-size: 11px; }
 .p2-considered { margin-top: 8px; }
 .p2-considered > summary { font-size: 11px; color: #6b7280; cursor: pointer; list-style: none; }
 .p2-considered > summary::-webkit-details-marker { display: none; }
