@@ -228,6 +228,28 @@ function Block({ label, hint, children }: { label: string; hint: string; childre
   );
 }
 
+// Observed evidence, stated as what was counted rather than as who "has" the
+// misconception: unique students and linked responses are different numbers and
+// are shown apart, because one student can contribute several responses.
+function EvidenceCount({ item }: { item: Rec }) {
+  const students = typeof item.studentCount === 'number' ? item.studentCount : null;
+  if (students === null) return <span className="p2-nil">not linked</span>;
+  const responses = typeof item.linkedResponses === 'number' ? item.linkedResponses : null;
+  const share = pct(item.studentPercent);
+  return (
+    <span>
+      <span className="p2-mono">{students}</span> unique student{students === 1 ? '' : 's'}
+      {share === '' ? '' : ` (${share} of class)`}
+      {responses !== null && (
+        <>
+          {' · '}
+          <span className="p2-mono">{responses}</span> linked response{responses === 1 ? '' : 's'}
+        </>
+      )}
+    </span>
+  );
+}
+
 function MisconceptionBlock({ item }: { item: Rec }) {
   const refs = asArray(item.wrongAnswers).map((w) => `Q${String(w.questionNumber)}·${asStr(w.letter)}`);
   const ccss = asRec(item.ccssStandards);
@@ -241,6 +263,7 @@ function MisconceptionBlock({ item }: { item: Rec }) {
           <span className="p2-nil">no summary</span>
         )}
       </p>
+      <Row k="selected one or more linked responses" v={<EvidenceCount item={item} />} />
       <Row k="wrong answers" v={<Chips items={refs} />} />
       {target && <Row k="standard" v={<span className="p2-mono">{asStr(target.standard)}</span>} />}
       {asStr(item.learningScienceConnection) !== '' && (
@@ -508,11 +531,7 @@ function flowLine(manifest: Rec, misconceptionCount: number): string {
 }
 
 // Where reviewers leave feedback on what this page shows.
-<<<<<<< HEAD
 const COMMENTS_DOC = 'https://docs.google.com/document/d/1EYX660oFYXbRket8Zg4jQnqSckBGD4TnKJFhV31HWGE/edit?usp=sharing';
-=======
-const COMMENTS_DOC = 'https://docs.google.com/document/d/1EYX660oFYXbRket8Zg4jQnqSckBGD4TnKJFhV31HWGE/edit?tab=t.0#heading=h.r0os072v8cgd';
->>>>>>> ddf87085d188804c878d1f83168814fc663214db
 
 function RunBar({
   runs,
@@ -769,6 +788,21 @@ export default function Preview() {
     return [...items].sort((a, b) => rank(a) - rank(b));
   }, [items]);
   const ties = useMemo(() => findTies(shown), [shown]);
+  // Answer options claimed by more than one misconception. Derived, so the note
+  // stays true run to run rather than asserting a fixed list.
+  const sharedOptions = useMemo(() => {
+    const owners = new Map<string, number>();
+    shown.forEach((m) => {
+      asArray(m.wrongAnswers).forEach((w) => {
+        const key = `Q${String(w.questionNumber)}·${asStr(w.letter).toUpperCase()}`;
+        owners.set(key, (owners.get(key) ?? 0) + 1);
+      });
+    });
+    // Array.from, not spread: the CRA target predates downlevel iteration of Map.
+    return Array.from(owners.entries())
+      .filter(([, n]) => n > 1)
+      .map(([key, n]) => ({ key, n }));
+  }, [shown]);
 
   const models = Array.isArray(manifest.models) ? asStrings(manifest.models) : [];
 
@@ -805,6 +839,20 @@ export default function Preview() {
         {status === 'empty' && (
           <p className="p2-note">
             No runs published yet — run <code>yarn seed:eval --session &lt;id&gt;</code> and refresh.
+          </p>
+        )}
+        {status !== 'loading' && sharedOptions.length > 0 && (
+          <p className="p2-note">
+            A response can be linked to more than one misconception, so these groups are not
+            mutually exclusive and the percentages do not sum to 100%. In this run{' '}
+            {sharedOptions.map((o, i) => (
+              <React.Fragment key={o.key}>
+                {i > 0 && ', '}
+                <span className="p2-mono">{o.key}</span>
+                {o.n > 2 && ` (${o.n})`}
+              </React.Fragment>
+            ))}{' '}
+            {sharedOptions.length === 1 ? 'is' : 'are'} linked to more than one.
           </p>
         )}
         {status !== 'loading' &&

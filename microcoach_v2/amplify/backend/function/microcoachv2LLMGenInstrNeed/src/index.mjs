@@ -52,7 +52,7 @@ const NEED_WORKED        = nc.worked ?? null;
 
 const Rationale = z.object({
   prevalence: z.string().describe(
-    'The given studentCount/studentPercent restated, plus what the linked questions\' correct rates add. Do NOT estimate prevalence — it is given.',
+    'Restate the GIVEN counts as what was observed: N unique students selected one or more responses linked to this misconception, with the linked-response total when given, then each linked question\'s correct rate separately as a whole-number percentage. Never sum or average correct rates across questions. Never write that students "have", "hold" or "demonstrate" the misconception — the responses are observed, the misconception is inferred from them. Do NOT estimate prevalence; it was counted from the response rows.',
   ),
   confidenceSignal: z.string().describe(
     'What the given mean confidence of affected students and the per-question confidenceStats say about whether students hold a wrong model confidently or know they are unsure. "No confidence data" when neither is present.',
@@ -176,9 +176,9 @@ function formatMisconception(m, i, graphStandards) {
   if (m.description) lines.push(`- error: ${m.description}`);
   if (m.learningScienceConnection) lines.push(`- learning science connection: ${m.learningScienceConnection}`);
   const reach = m.studentCount != null
-    ? `${m.studentCount} students${m.studentPercent != null ? ` (${Math.round(m.studentPercent * 100)}%)` : ''} — counted from the response rows`
+    ? `${m.studentCount} unique students${m.studentPercent != null ? ` (${Math.round(m.studentPercent * 100)}%)` : ''} selected one or more linked responses${m.linkedResponses != null ? `; ${m.linkedResponses} linked responses in total` : ''} — counted from the response rows`
     : 'not counted';
-  lines.push(`- prevalence (given): ${reach}`);
+  lines.push(`- evidence (given): ${reach}`);
   if (m.meanConfidence != null) lines.push(`- mean confidence of affected students (given): ${m.meanConfidence} of 5`);
   if (m.priorityRank != null) {
     const depth = m.rubric?.scores?.conceptualDepth;
@@ -264,7 +264,7 @@ Rules for the need:
 
 **2. Rationale** — the analysis that justifies this need. Every field is required.
 
-- prevalence: restate the GIVEN studentCount/studentPercent and what the linked questions' correct rates add. Never estimate prevalence; it was counted from the response rows.
+- prevalence: restate the GIVEN counts as what was observed — N unique students selected one or more responses linked to this misconception, with the linked-response total when given — then give each linked question's correct rate separately, as a whole-number percentage (for example "Q1 75% correct, Q5 57% correct"). Never sum or average correct rates across questions: they describe different items and a combined figure is meaningless. Keep the observed/inferred line: the responses are what we saw, the misconception is what we infer, so never write that students "have", "hold" or "demonstrate" it. A response can be linked to more than one misconception, so these counts do not partition the class. Never estimate prevalence; it was counted from the response rows.
 - confidenceSignal: read the given mean confidence of affected students and \`confidenceStats\` for the linked questions when present, and say whether students hold the wrong model confidently or know they are unsure. Say "No confidence data" if neither is present.
 - prerequisiteGaps: from the standard's \`prerequisiteStandards\` in the learning science data (EARLIER-grade topics), ONLY the codes where a gap in that skill would DIRECTLY cause this error. Empty if none.
 - forwardImpact: from the standard's \`futureDependentStandards\` (LATER-grade topics), ONLY the codes this error would DIRECTLY threaten. Empty if none.

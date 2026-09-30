@@ -485,6 +485,10 @@ function buildNextSteps(
       studentCount: reach.studentCount,
       studentPercent: reach.studentPercent,
       meanConfidence: reach.meanConfidence,
+      // Unique students and linked responses are reported apart: a response is
+      // what was observed, the misconception behind it is inferred, and one
+      // student can contribute several responses.
+      linkedResponses: reach.linkedResponses,
       wrongAnswers: m.wrongAnswers ?? [],
       linkStatus: reach.linkStatus,
       isCore: m.isCore ?? false,
@@ -829,7 +833,13 @@ async function processClassroom(
     const ranked = [...votes.entries()].sort((a, b) => b[1] - a[1]);
     if (ranked.length > 1) console.log(`  [4c] "${m.title}" spans ${ranked.map(([c, n]) => `${c}×${n}`).join(', ')} — using ${ranked[0][0]}`);
     const ccssStandard = ranked[0]?.[0] ?? allCcss[0] ?? null;
-    return { ...m, ccssStandard, studentCount: reach.studentCount, studentPercent: reach.studentPercent, meanConfidence: reach.meanConfidence };
+    return {
+      ...m, ccssStandard,
+      studentCount: reach.studentCount,
+      studentPercent: reach.studentPercent,
+      meanConfidence: reach.meanConfidence,
+      linkedResponses: reach.linkedResponses,
+    };
   });
 
   // 4d. Score and rank on the Wave 2 Misconception Rubric (microcoachv2ScoresCalc —
