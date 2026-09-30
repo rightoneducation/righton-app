@@ -6,7 +6,6 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AppSidebar from '../components/AppSidebar';
 import FlowStepper from '../components/FlowStepper';
 import {
@@ -26,26 +25,29 @@ import {
   ResultsBanner,
   ScreenSizeProps,
 } from '../lib/styledcomponents/ReviewStyledComponents';
+import { UseClassroomsResult } from '../hooks/useClassrooms';
+import { UseSessionsResult } from '../hooks/useSessions';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
-import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import mockPipelineOutput from '../lib/mocks/mockPipelineOutput.json';
 import { IPipelineOutput } from '../lib/PipelineModels';
 
-const weekOptions = ['Week of Jul 7', 'Week of Jun 30', 'Week of Jun 23'];
+interface DashboardProps extends ScreenSizeProps {
+  classrooms: UseClassroomsResult;
+  sessions: UseSessionsResult;
+}
 
-export default function Dashboard({ screenSize }: ScreenSizeProps) {
+export default function Dashboard({
+  screenSize,
+  classrooms,
+  sessions,
+}: DashboardProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { misconceptionsStatus } = useMicroCoachDataState();
   const { session } = mockPipelineOutput as unknown as IPipelineOutput;
-  const dataReady = misconceptionsStatus === 'ready';
+  const dataReady = classrooms.status === 'ready';
   const isReady = useAllReady(useI18nReady(), dataReady);
 
-  const [selectedClassId, setSelectedClassId] = React.useState(
-    session.selectedClassId,
-  );
-  const [selectedWeek, setSelectedWeek] = React.useState(session.selectedWeek);
   const [isBannerOpen, setIsBannerOpen] = React.useState(true);
 
   const handleSidebarSelect = (itemId: string) => {
@@ -124,24 +126,17 @@ export default function Dashboard({ screenSize }: ScreenSizeProps) {
                   {t('home.classPrompt')}
                 </PickerLabel>
                 <ChipWrap>
-                  {session.classes.map((classOption) => (
+                  {classrooms.classrooms.map((classroom) => (
                     <ClassChip
-                      key={classOption.id}
-                      isActive={classOption.id === selectedClassId}
-                      onClick={() => setSelectedClassId(classOption.id)}
+                      key={classroom.id}
+                      isActive={
+                        classroom.id === classrooms.selectedClassroomId
+                      }
+                      onClick={() => classrooms.selectClassroom(classroom.id)}
                     >
-                      {classOption.name}
+                      {classroom.name}
                     </ClassChip>
                   ))}
-                  {session.hasMoreClasses && (
-                    <ClassChip
-                      isActive={false}
-                      isMore
-                      endIcon={<KeyboardArrowDownIcon />}
-                    >
-                      {t('home.moreClasses')}
-                    </ClassChip>
-                  )}
                 </ChipWrap>
               </PickerColumn>
 
@@ -150,13 +145,34 @@ export default function Dashboard({ screenSize }: ScreenSizeProps) {
                   {t('home.weekLabel')}
                 </PickerLabel>
                 <WeekSelect
-                  value={selectedWeek}
-                  onChange={(event) => setSelectedWeek(event.target.value)}
+                  value={sessions.selectedSessionId ?? ''}
+                  disabled={
+                    !classrooms.selectedClassroomId ||
+                    sessions.status === 'loading' ||
+                    sessions.sessions.length === 0
+                  }
+                  displayEmpty
+                  renderValue={(sessionId) => {
+                    const selectedSession = sessions.sessions.find(
+                      (classSession) => classSession.id === sessionId,
+                    );
+
+                    return (
+                      selectedSession?.weekLabel ??
+                      selectedSession?.sessionLabel ??
+                      t('home.weekLabel')
+                    );
+                  }}
+                  onChange={(event) =>
+                    sessions.selectSession(event.target.value as string)
+                  }
                   inputProps={{ 'aria-label': t('home.weekLabel') }}
                 >
-                  {weekOptions.map((week) => (
-                    <MenuItem key={week} value={week}>
-                      {week}
+                  {sessions.sessions.map((classSession) => (
+                    <MenuItem key={classSession.id} value={classSession.id}>
+                      {classSession.weekLabel ??
+                        classSession.sessionLabel ??
+                        `Week ${classSession.weekNumber ?? ''}`.trim()}
                     </MenuItem>
                   ))}
                 </WeekSelect>
@@ -164,6 +180,7 @@ export default function Dashboard({ screenSize }: ScreenSizeProps) {
             </PickerRow>
 
             <HomeCta
+              disabled={!sessions.selectedSessionId}
               onClick={() => navigate('/review')}
               sx={{ mt: `${theme.sizing.space12}px` }}
             >

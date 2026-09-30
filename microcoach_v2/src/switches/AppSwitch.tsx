@@ -3,13 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ScreenType } from '../lib/MicroCoachModels';
 import { useAppOutletContext } from '../hooks/useAppOutletContext';
 import { useLogOut } from '../hooks/useAuthActions';
-import { useClassrooms } from '../hooks/useClassrooms';
-import { useMisconceptions } from '../hooks/useMisconceptions';
-import { usePlanItems, PlanItemsScope } from '../hooks/usePlanItems';
 import { useScreenSize } from '../hooks/useScreenSize';
-import { useSessions } from '../hooks/useSessions';
-import { useUserState } from '../hooks/useUserState';
-import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import AppContainer from '../containers/AppContainer';
 import { HeaderVariant } from '../components/Header';
 import TemplateDebugMenu from '../components/TemplateDebugMenu';
@@ -105,29 +99,9 @@ interface AppSwitchProps {
 }
 
 export default function AppSwitch({ currentScreen }: AppSwitchProps) {
-  const { apiClients } = useAppOutletContext();
-  const user = useUserState(apiClients);
-  const { userProfile } = useMicroCoachDataState();
-  const classrooms = useClassrooms(apiClients, userProfile?.id ?? null);
-  const sessions = useSessions(apiClients, classrooms.selectedClassroomId);
-  useMisconceptions(apiClients, sessions.selectedSessionId);
-
-  let planScope: PlanItemsScope = null;
-  if (sessions.selectedSessionId) {
-    planScope = {
-      type: 'session',
-      sessionId: sessions.selectedSessionId,
-    };
-  } else if (classrooms.selectedClassroomId) {
-    planScope = {
-      type: 'class',
-      classId: classrooms.selectedClassroomId,
-    };
-  }
-  const { saveActivity, markPlanItemDone, removePlanItem } = usePlanItems(
-    apiClients,
-    planScope,
-  );
+  const { apiClients, user, classrooms, sessions, plan } =
+    useAppOutletContext();
+  const { saveActivity, markPlanItemDone, removePlanItem } = plan;
 
   const screenSize = useScreenSize();
   const { handleLogOut } = useLogOut(apiClients, user);
@@ -188,7 +162,13 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       screenComponent = <ResetPassword screenSize={screenSize} isInSession />;
       break;
     case ScreenType.DASHBOARD:
-      screenComponent = <Dashboard screenSize={screenSize} />;
+      screenComponent = (
+        <Dashboard
+          screenSize={screenSize}
+          classrooms={classrooms}
+          sessions={sessions}
+        />
+      );
       break;
     case ScreenType.REVIEW:
       screenComponent = <Review screenSize={screenSize} />;
@@ -244,6 +224,9 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
     <AppContainer
       headerVariant={headerVariant}
       onLogOut={handleHeaderLogOut}
+      classrooms={classrooms.classrooms}
+      selectedClassroomId={classrooms.selectedClassroomId}
+      onSelectClassroom={classrooms.selectClassroom}
       // The sign-up frames carry no footer either.
       showFooter={!usesAppChrome && !isSignUp}
     >
