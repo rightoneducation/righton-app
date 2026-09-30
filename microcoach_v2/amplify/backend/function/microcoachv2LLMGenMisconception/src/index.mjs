@@ -79,10 +79,27 @@ const QuestionOut = z.object({
   options: z.array(OptionText).describe('WRONG options only — never the correct answer'),
 });
 
-const GenResponse = z.object({
-  misconceptions: z.array(MisconceptionOut).describe('Step 1 — the set of misconceptions surfaced by this quiz'),
-  questions: z.array(QuestionOut).describe('Step 2 — the per-option error text, derived from the misconceptions above'),
-});
+/**
+ * The response schema depends on the session: `ccssStandard` is an enum over the
+ * standards this quiz assesses, so the model cannot answer with a code we did not
+ * ask about. With fewer than two codes there is nothing to choose between, so the
+ * field is omitted and the caller keeps its own fallback — `z.enum` also needs a
+ * non-empty member list, which an empty `ccssStandards` would not give it.
+ */
+function buildGenResponse(sessionCodes) {
+  const codes = (sessionCodes ?? []).map((c) => String(c ?? '').trim()).filter(Boolean);
+  const misconception = codes.length > 1
+    ? MisconceptionOut.extend({
+      ccssStandard: z.enum(codes).describe(
+        '(e) Which of the standards listed under "Standards assessed" this misconception sits under — the standard the LINKED QUESTIONS assess, chosen from that list exactly. Never a code outside it.',
+      ),
+    })
+    : MisconceptionOut;
+  return z.object({
+    misconceptions: z.array(misconception).describe('Step 1 — the set of misconceptions surfaced by this quiz'),
+    questions: z.array(QuestionOut).describe('Step 2 — the per-option error text, derived from the misconceptions above'),
+  });
+}
 
 // ── Prompt ────────────────────────────────────────────────────────────────────
 
@@ -160,6 +177,7 @@ function buildPrompt(questions, context, learningScienceData) {
          Good: "Treats the coefficients as graph features without coordinating them with the algebraic form the inequality must be rewritten into first."
          Not: "Reflects weak strategy use and incomplete conceptual understanding."
       d. \`evidenceBasis\`: "grounded" when the option content or question text supports this reading, "inferred" when it is the most plausible of several explanations that fit the same responses.
+      e. \`ccssStandard\`: which of the standards under "Standards assessed" this misconception sits under. Choose the standard the linked questions assess — the mathematics the student was actually doing — not the standard a remediation would target. Use one of the listed codes exactly.
       e. \`wrongAnswers\`: the (questionNumber, letter) pairs it produces. Group across questions; an option may sit under more than one misconception.
     2. \`questions\` — for each question, one \`text\` line per WRONG option naming the error a student who chose it most likely made, derived from the misconceptions above.
 
@@ -194,6 +212,9 @@ function validateOutput(structured, questions) {
       title: m.title,
       learningScienceConnection: m.learningScienceConnection,
       evidenceBasis: m.evidenceBasis ?? null,
+      // Null when the session had fewer than two codes, so the field was not asked
+      // for; the caller then keeps whatever it derived itself.
+      ccssStandard: m.ccssStandard ?? null,
       wrongAnswers: kept,
     });
   }
@@ -231,6 +252,7 @@ function formatMisconceptionLog(misconceptions) {
     lines.push(`   b. Title: ${m.title}`);
     lines.push(`   c. Mathematical connection: ${m.learningScienceConnection}`);
     lines.push(`   d. Evidence basis: ${m.evidenceBasis ?? 'not stated'}`);
+    lines.push(`   e. Standard: ${m.ccssStandard ?? 'not stated'}`);
     lines.push(`   d. Wrong answers: ${refs}`);
     lines.push('');
   });
@@ -261,6 +283,7 @@ export const handler = async (event) => {
     const openai = new OpenAI({ apiKey });
 
     const learningScienceSection = formatLearningScience(learningScienceData);
+    const GenResponseForSession = buildGenResponse(context?.ccssStandards);
     const userContent = buildPrompt(questions, context, learningScienceData);
 
     const completion = await openai.chat.completions.create({
@@ -269,12 +292,12 @@ export const handler = async (event) => {
         { role: 'system', content: 'You are an expert K-12 math instructional coach. Output exclusively valid JSON.' },
         { role: 'user', content: userContent },
       ],
-      response_format: zodResponseFormat(GenResponse, 'genMisconception'),
+      response_format: zodResponseFormat(GenResponseForSession, 'genMisconception'),
     });
 
     const raw = completion.choices[0]?.message?.content;
     if (!raw) throw new Error('Empty completion content');
-    const structured = GenResponse.parse(JSON.parse(raw));
+    const structured = GenResponseForSession.parse(JSON.parse(raw));
     const { misconceptions, questions: validated, rejected } = validateOutput(structured, questions);
 
     console.log(formatMisconceptionLog(misconceptions));

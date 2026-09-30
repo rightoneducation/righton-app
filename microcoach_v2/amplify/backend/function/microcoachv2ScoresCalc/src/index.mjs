@@ -109,7 +109,10 @@ function matchDepths(structured, misconceptions) {
 function formatScoreLog(scored) {
   const ids = rubric.metrics.filter((m) => m.enabled !== false).map((m) => m.id);
   const abbr = (id) => id.replace(/[a-z]/g, '').slice(0, 2) || id.slice(0, 2).toUpperCase();
-  const lines = [`[microcoachv2ScoresCalc] ${scored.length} misconception(s) scored on ${rubric.version}:`];
+  // The per-metric figures are the doc's 0–3 scores; the total is weighted, so the
+  // weights are printed alongside or the arithmetic looks wrong.
+  const weightsUsed = rubric.metrics.filter((m) => m.enabled !== false).map((m) => `${abbr(m.id)}×${m.weight ?? 1}`).join(' ');
+  const lines = [`[microcoachv2ScoresCalc] ${scored.length} misconception(s) scored on ${rubric.version} (weights ${weightsUsed})`];
   for (const s of scored) {
     const parts = ids.map((id) => `${abbr(id)}${s.scores[id] ?? '–'}`).join(' ');
     const tag = s.isRecommendedFocus ? ' ★ Recommended Focus' : s.retained ? '' : ' (dropped)';

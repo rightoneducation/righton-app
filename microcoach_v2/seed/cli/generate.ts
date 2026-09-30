@@ -485,6 +485,10 @@ function buildNextSteps(
       studentCount: reach.studentCount,
       studentPercent: reach.studentPercent,
       meanConfidence: reach.meanConfidence,
+      // Unique students and linked responses are reported apart: a response is
+      // what was observed, the misconception behind it is inferred, and one
+      // student can contribute several responses.
+      linkedResponses: reach.linkedResponses,
       wrongAnswers: m.wrongAnswers ?? [],
       linkStatus: reach.linkStatus,
       isCore: m.isCore ?? false,
@@ -501,6 +505,10 @@ function buildNextSteps(
       // Whether the misconception is read directly off the option content or is the
       // most plausible of several explanations that fit the same responses.
       evidenceBasis: m.evidenceBasis ?? null,
+      // 'question' when the linked questions carried CCSS codes, 'model' when
+      // GenMisconception chose from the session's list, 'fallback' when neither —
+      // and a run of all 'fallback' means the progression score cannot vary.
+      standardSource: m.standardSource ?? null,
       aiReasoning: m.aiReasoning ?? null,
       // From the need stage (step 5): the need itself and the analysis behind it.
       instructionalNeed: m.instructionalNeed ?? null,
@@ -812,10 +820,15 @@ async function processClassroom(
   }
 
   // Reach is counted here from the response rows, not estimated by a model, and
-  // handed to the need stage as a given. `ccssStandard` is derived from the linked
-  // questions so GenMisconception's schema stays clean: the most frequent per-
-  // question code, falling back to the session's codes where those are blank (as
-  // they are in the pilot fixtures).
+  // handed to the need stage as a given.
+  //
+  // `ccssStandard` decides the misconception's progression score, so where it comes
+  // from matters and is recorded. Preference order: the most frequent code across
+  // the misconception's linked questions; then the standard GenMisconception chose
+  // from the session's list; then the first session code. Assessment Matrix uploads
+  // carry no per-question codes (upload.ts leaves them blank), which is why the
+  // second source exists — without it every misconception inherited the same
+  // standard and the progression criterion scored identically for all of them.
   const questionStandard = new Map<number, string>(
     (ppq?.questions ?? []).map((q: any) => [q.questionNumber, q.ccssStandard || '']),
   );
@@ -828,8 +841,26 @@ async function processClassroom(
     }
     const ranked = [...votes.entries()].sort((a, b) => b[1] - a[1]);
     if (ranked.length > 1) console.log(`  [4c] "${m.title}" spans ${ranked.map(([c, n]) => `${c}×${n}`).join(', ')} — using ${ranked[0][0]}`);
-    const ccssStandard = ranked[0]?.[0] ?? allCcss[0] ?? null;
-    return { ...m, ccssStandard, studentCount: reach.studentCount, studentPercent: reach.studentPercent, meanConfidence: reach.meanConfidence };
+
+    let ccssStandard: string | null;
+    let standardSource: 'question' | 'model' | 'fallback';
+    if (ranked.length) {
+      ccssStandard = ranked[0][0];
+      standardSource = 'question';
+    } else if (m.ccssStandard) {
+      ccssStandard = m.ccssStandard;
+      standardSource = 'model';
+    } else {
+      ccssStandard = allCcss[0] ?? null;
+      standardSource = 'fallback';
+    }
+    return {
+      ...m, ccssStandard, standardSource,
+      studentCount: reach.studentCount,
+      studentPercent: reach.studentPercent,
+      meanConfidence: reach.meanConfidence,
+      linkedResponses: reach.linkedResponses,
+    };
   });
 
   // 4d. Score and rank on the Wave 2 Misconception Rubric (microcoachv2ScoresCalc —
@@ -870,6 +901,9 @@ async function processClassroom(
         rubric: {
           version: rubricVersion,
           scores: sc.scores,
+          // Each metric's contribution after its weight, so a reader can reconcile
+          // the 0–3 scores against the weighted total without knowing the weights.
+          weighted: sc.weighted ?? null,
           total: sc.total,
           maxPossible: sc.maxPossible,
           normalized: sc.normalized,
@@ -1193,6 +1227,17 @@ async function processClassroom(
     // Misconceptions now originate in GenMisconception (4c); how many of them got
     // a need back from 5 is the join-health counter.
     misconceptionsFromGen: genMisconceptions.length + droppedMisconceptions.length,
+    // Where each misconception's standard came from. `fallback` means every
+    // misconception inherited the same code, which makes the progression criterion
+    // score identically for all of them — worth seeing rather than inferring.
+    standardSourceCounts: [...genMisconceptions, ...droppedMisconceptions].reduce(
+      (acc: Record<string, number>, m: any) => {
+        const k = m.standardSource ?? 'unknown';
+        acc[k] = (acc[k] ?? 0) + 1;
+        return acc;
+      },
+      {},
+    ),
     // Rubric stage (4d): which rubric ran, what it picked, and how many it dropped.
     rubricVersion,
     recommendedFocus: nextSteps.find((n: any) => n.isRecommendedFocus)?.title ?? null,
@@ -1201,8 +1246,15 @@ async function processClassroom(
     // Template selection health: how many needs got two picks, and whether the
     // static library prefix was served from the prompt cache.
     templatesSelected,
-    // Every selection is two picks, so this is 2 × templatesSelected unless a pick was rejected.
-    templatePicks: misconceptions.reduce((n: number, m: any) => n + (m.selectedTemplates?.top2?.length ?? 0), 0),
+    // No longer 2 × templatesSelected: a selection returns up to two picks, and
+    // fewer when fewer clear the instructional-fit gate.
+    templatePicks: misconceptions.reduce((n: number, m: any) => n + (m.selectedTemplates?.picks?.length ?? 0), 0),
+    // How often the pipeline declined to force a template. Non-zero is a valid
+    // outcome, not a failure — the doc says not to pick a weak template to fill a slot.
+    selectionsWithOnePick: misconceptions.filter((m: any) => m.selectedTemplates?.picks?.length === 1).length,
+    selectionsWithNoFit: misconceptions.filter(
+      (m: any) => m.selectedTemplates != null && m.selectedTemplates.picks?.length === 0,
+    ).length,
     selectCachedPromptTokens,
     // A run where the wrong-answer refs never arrived is not comparable to one
     // where they did, so the counting chain's health goes in the manifest rather

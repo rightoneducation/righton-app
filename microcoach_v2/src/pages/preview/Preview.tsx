@@ -228,6 +228,28 @@ function Block({ label, hint, children }: { label: string; hint: string; childre
   );
 }
 
+// Observed evidence, stated as what was counted rather than as who "has" the
+// misconception: unique students and linked responses are different numbers and
+// are shown apart, because one student can contribute several responses.
+function EvidenceCount({ item }: { item: Rec }) {
+  const students = typeof item.studentCount === 'number' ? item.studentCount : null;
+  if (students === null) return <span className="p2-nil">not linked</span>;
+  const responses = typeof item.linkedResponses === 'number' ? item.linkedResponses : null;
+  const share = pct(item.studentPercent);
+  return (
+    <span>
+      <span className="p2-mono">{students}</span> unique student{students === 1 ? '' : 's'}
+      {share === '' ? '' : ` (${share} of class)`}
+      {responses !== null && (
+        <>
+          {' · '}
+          <span className="p2-mono">{responses}</span> linked response{responses === 1 ? '' : 's'}
+        </>
+      )}
+    </span>
+  );
+}
+
 function MisconceptionBlock({ item }: { item: Rec }) {
   const refs = asArray(item.wrongAnswers).map((w) => `Q${String(w.questionNumber)}·${asStr(w.letter)}`);
   const ccss = asRec(item.ccssStandards);
@@ -241,6 +263,7 @@ function MisconceptionBlock({ item }: { item: Rec }) {
           <span className="p2-nil">no summary</span>
         )}
       </p>
+      <Row k="selected one or more linked responses" v={<EvidenceCount item={item} />} />
       <Row k="wrong answers" v={<Chips items={refs} />} />
       {target && <Row k="standard" v={<span className="p2-mono">{asStr(target.standard)}</span>} />}
       {asStr(item.learningScienceConnection) !== '' && (
@@ -252,6 +275,25 @@ function MisconceptionBlock({ item }: { item: Rec }) {
 
 // The Wave 2 Misconception Rubric scorecard as the run recorded it — read from
 // the item, not recomputed here.
+// Weights and row order, copied by hand from
+// microcoachv2ScoresCalc/src/misconceptionRubric.json — CRA cannot import from
+// amplify/. A weight shown here that disagrees with that file is a bug in this
+// copy; the lambda's own `weighted` values are what the totals are built from.
+const RUBRIC_WEIGHTS: Record<string, number> = {
+  frequency: 3,
+  learningProgressionInfluence: 1,
+  studentConfidence: 3,
+  conceptualDepth: 3,
+  lcMisconceptionEvalScore: 3,
+};
+const RUBRIC_ORDER = [
+  'frequency',
+  'learningProgressionInfluence',
+  'studentConfidence',
+  'conceptualDepth',
+  'lcMisconceptionEvalScore',
+];
+
 const RUBRIC_LABELS: Record<string, string> = {
   frequency: 'frequency',
   learningProgressionInfluence: 'progression influence',
@@ -327,6 +369,33 @@ function ScoreStrip({ item }: { item: Rec }) {
   );
 }
 
+// Rubric order first, then anything the lambda emitted that this page does not
+// know about — so a new metric shows up rather than disappearing.
+function orderedKeys(scores: Rec): string[] {
+  const known = RUBRIC_ORDER.filter((k) => k in scores);
+  const rest = Object.keys(scores).filter((k) => !RUBRIC_ORDER.includes(k));
+  return [...known, ...rest];
+}
+
+// What the score was computed from. Frequency is continuous now, so the raw
+// share of class is what makes a value like 2.57 readable.
+function measuredFrom(key: string, inputs: Rec): string {
+  if (key === 'frequency') {
+    const p = pct(inputs.studentPercent);
+    return p === '' ? '' : `${p} of class`;
+  }
+  if (key === 'learningProgressionInfluence') {
+    const n = inputs.downstreamCount;
+    return typeof n === 'number' ? `${n} downstream standard${n === 1 ? '' : 's'}` : '';
+  }
+  if (key === 'studentConfidence') {
+    const c = inputs.meanConfidence;
+    return typeof c === 'number' ? `mean ${c} of 5` : '';
+  }
+  if (key === 'conceptualDepth') return 'model judgement';
+  return '';
+}
+
 function RubricBlock({ item, tie }: { item: Rec; tie?: TieNote }) {
   const rubric = asRec(item.rubric);
   if (!rubric) {
@@ -337,6 +406,8 @@ function RubricBlock({ item, tie }: { item: Rec; tie?: TieNote }) {
     );
   }
   const scores = asRec(rubric.scores) ?? {};
+  const weighted = asRec(rubric.weighted) ?? {};
+  const inputs = asRec(rubric.inputs) ?? {};
   const missing = asStrings(rubric.missing);
   const total = typeof rubric.total === 'number' ? rubric.total : null;
   const max = typeof rubric.maxPossible === 'number' ? rubric.maxPossible : null;
@@ -345,16 +416,48 @@ function RubricBlock({ item, tie }: { item: Rec; tie?: TieNote }) {
     <Block label="Rubric" hint={`ScoresCalc · ${asStr(rubric.version) || 'misconceptionRubric.json'}`}>
       <div className="p2-inputs">
         <div className="p2-inputs-head">Misconception rubric</div>
-        {Object.entries(scores).map(([k, v]) => {
-          let cell = `${String(v)} / 3`;
-          if (v == null) cell = missing.includes(k) ? 'not measured' : '—';
-          return <Row key={k} k={RUBRIC_LABELS[k] ?? k} v={<span className="p2-mono">{cell}</span>} />;
+        {orderedKeys(scores).map((k) => {
+          const v = scores[k];
+          if (v == null) {
+            return (
+              <Row
+                key={k}
+                k={RUBRIC_LABELS[k] ?? k}
+                v={<span className="p2-nil">{missing.includes(k) ? 'not measured' : '—'}</span>}
+              />
+            );
+          }
+          const weight = RUBRIC_WEIGHTS[k] ?? 1;
+          const contribution = typeof weighted[k] === 'number' ? weighted[k] : (v as number) * weight;
+          return (
+            <Row
+              key={k}
+              k={RUBRIC_LABELS[k] ?? k}
+              v={
+                <span className="p2-rubric-row">
+                  {/* The contribution leads: these are the numbers that add to the
+                      total. The rubric's 0–3 score and the weight follow as the
+                      derivation, for anyone reconciling against the doc. */}
+                  <span className="p2-mono p2-rubric-points">
+                    {String(contribution)} <span className="p2-rubric-of">of {3 * weight}</span>
+                  </span>
+                  <span className="p2-rubric-from">
+                    {measuredFrom(k, inputs)}
+                    {measuredFrom(k, inputs) === '' ? '' : ' · '}
+                    {String(v)}/3 × {weight}
+                  </span>
+                </span>
+              }
+            />
+          );
         })}
         <Row
           k="→ total"
           v={
             <span>
-              <span className="p2-mono">{total == null || max == null ? '—' : `${total} / ${max}`}</span>
+              <span className="p2-mono p2-rubric-points p2-rubric-total">
+                {total == null || max == null ? '—' : `${total} of ${max}`}
+              </span>
               {' · '}
               <span className="p2-rank-inline">#{String(item.priorityRank ?? '—')}</span>
               {item.isRecommendedFocus === true && <span className="p2-focus"> Recommended Focus</span>}
@@ -406,20 +509,57 @@ function NeedBlock({ item }: { item: Rec }) {
   );
 }
 
+// The templates the model weighed and set aside, with its reason. Emitted by
+// LLMSelectTemplate and useful when judging why a pick won — especially when
+// nothing cleared the threshold and this is the whole explanation.
+function Considered({ sel }: { sel: Rec }) {
+  const considered = asArray(sel.considered);
+  if (considered.length === 0) return null;
+  return (
+    <details className="p2-considered">
+      <summary>considered and passed over ({considered.length})</summary>
+      {considered.map((c) => (
+        <div className="p2-distinct" key={asStr(c.templateId)}>
+          <span className="p2-mono">{asStr(c.templateId)}</span> — {asStr(c.whyNot)}
+        </div>
+      ))}
+    </details>
+  );
+}
+
 function TemplateBlock({ item }: { item: Rec }) {
   const sel = asRec(item.selectedTemplates);
-  const top2 = sel ? asArray(sel.top2) : [];
-  if (!sel || top2.length === 0) {
+  const picks = sel ? asArray(sel.picks) : [];
+  const noFitReason = sel ? asStr(sel.noFitReason) : '';
+  // Two different outcomes, and they should not read the same: the stage never ran
+  // for this item, versus it ran and declined to force a weakly fitting template.
+  if (!sel) {
     return (
       <Block label="Activity selected" hint="LLMSelectTemplate">
         <span className="p2-nil">no selection on this item</span>
       </Block>
     );
   }
+  if (picks.length === 0) {
+    return (
+      <Block label="Activity selected" hint="LLMSelectTemplate · no strong fit">
+        <p className="p2-text">
+          <span className="p2-nofit">No template cleared the instructional-fit threshold.</span>
+          {noFitReason === '' ? '' : ` ${noFitReason}`}
+        </p>
+        <Considered sel={sel} />
+      </Block>
+    );
+  }
   return (
     <Block label="Activity selected" hint="LLMSelectTemplate · top two templates">
+      {picks.length === 1 && (
+        <p className="p2-text">
+          <span className="p2-nofit">Only one template cleared the threshold.</span>
+        </p>
+      )}
       <div className="p2-picks">
-        {top2.map((pick, i) => {
+        {picks.map((pick, i) => {
           // The model sometimes returns the string "null" rather than null.
           const distinct = asStr(pick.distinctFrom);
           const showDistinct = distinct !== '' && distinct !== 'null';
@@ -441,6 +581,7 @@ function TemplateBlock({ item }: { item: Rec }) {
           );
         })}
       </div>
+      <Considered sel={sel} />
     </Block>
   );
 }
@@ -508,11 +649,7 @@ function flowLine(manifest: Rec, misconceptionCount: number): string {
 }
 
 // Where reviewers leave feedback on what this page shows.
-<<<<<<< HEAD
 const COMMENTS_DOC = 'https://docs.google.com/document/d/1EYX660oFYXbRket8Zg4jQnqSckBGD4TnKJFhV31HWGE/edit?usp=sharing';
-=======
-const COMMENTS_DOC = 'https://docs.google.com/document/d/1EYX660oFYXbRket8Zg4jQnqSckBGD4TnKJFhV31HWGE/edit?tab=t.0#heading=h.r0os072v8cgd';
->>>>>>> ddf87085d188804c878d1f83168814fc663214db
 
 function RunBar({
   runs,
@@ -737,6 +874,18 @@ const STYLES = `
   color: #4b535c; border-radius: 4px; padding: 1px 6px; }
 .p2-fit-strong { background: #e5edff; color: #2f5bd0; }
 .p2-fit-below { background: #fdecec; color: #b3261e; margin-left: 4px; }
+.p2-nofit { color: #9a5b00; font-weight: 600; }
+.p2-rubric-row { display: inline-flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.p2-rubric-points { font-size: 13px; font-weight: 700; color: #2c3238; min-width: 62px; display: inline-block; }
+.p2-rubric-of { font-weight: 400; color: #8b939c; font-size: 11px; }
+.p2-rubric-total { color: #2f6df6; }
+.p2-rubric-from { color: #8b939c; font-size: 11px; }
+.p2-considered { margin-top: 8px; }
+.p2-considered > summary { font-size: 11px; color: #6b7280; cursor: pointer; list-style: none; }
+.p2-considered > summary::-webkit-details-marker { display: none; }
+.p2-considered > summary:hover { color: #2c3238; }
+.p2-considered > summary::before { content: "▸ "; }
+.p2-considered[open] > summary::before { content: "▾ "; }
 .p2-meta-scores { display: inline-flex; gap: 4px; align-items: center; }
 .p2-tie { font-size: 11px; color: #9a5b00; background: #fdf1dc; border-radius: 6px; padding: 2px 7px; }
 .p2-score-total { font-weight: 700; color: #2c3238; }
@@ -769,6 +918,21 @@ export default function Preview() {
     return [...items].sort((a, b) => rank(a) - rank(b));
   }, [items]);
   const ties = useMemo(() => findTies(shown), [shown]);
+  // Answer options claimed by more than one misconception. Derived, so the note
+  // stays true run to run rather than asserting a fixed list.
+  const sharedOptions = useMemo(() => {
+    const owners = new Map<string, number>();
+    shown.forEach((m) => {
+      asArray(m.wrongAnswers).forEach((w) => {
+        const key = `Q${String(w.questionNumber)}·${asStr(w.letter).toUpperCase()}`;
+        owners.set(key, (owners.get(key) ?? 0) + 1);
+      });
+    });
+    // Array.from, not spread: the CRA target predates downlevel iteration of Map.
+    return Array.from(owners.entries())
+      .filter(([, n]) => n > 1)
+      .map(([key, n]) => ({ key, n }));
+  }, [shown]);
 
   const models = Array.isArray(manifest.models) ? asStrings(manifest.models) : [];
 
@@ -805,6 +969,20 @@ export default function Preview() {
         {status === 'empty' && (
           <p className="p2-note">
             No runs published yet — run <code>yarn seed:eval --session &lt;id&gt;</code> and refresh.
+          </p>
+        )}
+        {status !== 'loading' && sharedOptions.length > 0 && (
+          <p className="p2-note">
+            A response can be linked to more than one misconception, so these groups are not
+            mutually exclusive and the percentages do not sum to 100%. In this run{' '}
+            {sharedOptions.map((o, i) => (
+              <React.Fragment key={o.key}>
+                {i > 0 && ', '}
+                <span className="p2-mono">{o.key}</span>
+                {o.n > 2 && ` (${o.n})`}
+              </React.Fragment>
+            ))}{' '}
+            {sharedOptions.length === 1 ? 'is' : 'are'} linked to more than one.
           </p>
         )}
         {status !== 'loading' &&
