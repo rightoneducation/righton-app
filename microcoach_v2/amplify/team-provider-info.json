@@ -76,7 +76,7 @@
         },
         "microcoachv2LLMSelectTemplate": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2LLMSelectTemplate-6d48763539764959685a-build.zip"
+          "s3Key": "amplify-builds/microcoachv2LLMSelectTemplate-416537512b2b67437556-build.zip"
         },
         "microcoachv2ScoresCalc": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
