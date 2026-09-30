@@ -429,20 +429,57 @@ function NeedBlock({ item }: { item: Rec }) {
   );
 }
 
+// The templates the model weighed and set aside, with its reason. Emitted by
+// LLMSelectTemplate and useful when judging why a pick won — especially when
+// nothing cleared the threshold and this is the whole explanation.
+function Considered({ sel }: { sel: Rec }) {
+  const considered = asArray(sel.considered);
+  if (considered.length === 0) return null;
+  return (
+    <details className="p2-considered">
+      <summary>considered and passed over ({considered.length})</summary>
+      {considered.map((c) => (
+        <div className="p2-distinct" key={asStr(c.templateId)}>
+          <span className="p2-mono">{asStr(c.templateId)}</span> — {asStr(c.whyNot)}
+        </div>
+      ))}
+    </details>
+  );
+}
+
 function TemplateBlock({ item }: { item: Rec }) {
   const sel = asRec(item.selectedTemplates);
-  const top2 = sel ? asArray(sel.top2) : [];
-  if (!sel || top2.length === 0) {
+  const picks = sel ? asArray(sel.picks) : [];
+  const noFitReason = sel ? asStr(sel.noFitReason) : '';
+  // Two different outcomes, and they should not read the same: the stage never ran
+  // for this item, versus it ran and declined to force a weakly fitting template.
+  if (!sel) {
     return (
       <Block label="Activity selected" hint="LLMSelectTemplate">
         <span className="p2-nil">no selection on this item</span>
       </Block>
     );
   }
+  if (picks.length === 0) {
+    return (
+      <Block label="Activity selected" hint="LLMSelectTemplate · no strong fit">
+        <p className="p2-text">
+          <span className="p2-nofit">No template cleared the instructional-fit threshold.</span>
+          {noFitReason === '' ? '' : ` ${noFitReason}`}
+        </p>
+        <Considered sel={sel} />
+      </Block>
+    );
+  }
   return (
     <Block label="Activity selected" hint="LLMSelectTemplate · top two templates">
+      {picks.length === 1 && (
+        <p className="p2-text">
+          <span className="p2-nofit">Only one template cleared the threshold.</span>
+        </p>
+      )}
       <div className="p2-picks">
-        {top2.map((pick, i) => {
+        {picks.map((pick, i) => {
           // The model sometimes returns the string "null" rather than null.
           const distinct = asStr(pick.distinctFrom);
           const showDistinct = distinct !== '' && distinct !== 'null';
@@ -464,6 +501,7 @@ function TemplateBlock({ item }: { item: Rec }) {
           );
         })}
       </div>
+      <Considered sel={sel} />
     </Block>
   );
 }
@@ -756,6 +794,13 @@ const STYLES = `
   color: #4b535c; border-radius: 4px; padding: 1px 6px; }
 .p2-fit-strong { background: #e5edff; color: #2f5bd0; }
 .p2-fit-below { background: #fdecec; color: #b3261e; margin-left: 4px; }
+.p2-nofit { color: #9a5b00; font-weight: 600; }
+.p2-considered { margin-top: 8px; }
+.p2-considered > summary { font-size: 11px; color: #6b7280; cursor: pointer; list-style: none; }
+.p2-considered > summary::-webkit-details-marker { display: none; }
+.p2-considered > summary:hover { color: #2c3238; }
+.p2-considered > summary::before { content: "▸ "; }
+.p2-considered[open] > summary::before { content: "▾ "; }
 .p2-meta-scores { display: inline-flex; gap: 4px; align-items: center; }
 .p2-tie { font-size: 11px; color: #9a5b00; background: #fdf1dc; border-radius: 6px; padding: 2px 7px; }
 .p2-score-total { font-weight: 700; color: #2c3238; }

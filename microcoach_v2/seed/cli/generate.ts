@@ -1243,8 +1243,15 @@ async function processClassroom(
     // Template selection health: how many needs got two picks, and whether the
     // static library prefix was served from the prompt cache.
     templatesSelected,
-    // Every selection is two picks, so this is 2 × templatesSelected unless a pick was rejected.
-    templatePicks: misconceptions.reduce((n: number, m: any) => n + (m.selectedTemplates?.top2?.length ?? 0), 0),
+    // No longer 2 × templatesSelected: a selection returns up to two picks, and
+    // fewer when fewer clear the instructional-fit gate.
+    templatePicks: misconceptions.reduce((n: number, m: any) => n + (m.selectedTemplates?.picks?.length ?? 0), 0),
+    // How often the pipeline declined to force a template. Non-zero is a valid
+    // outcome, not a failure — the doc says not to pick a weak template to fill a slot.
+    selectionsWithOnePick: misconceptions.filter((m: any) => m.selectedTemplates?.picks?.length === 1).length,
+    selectionsWithNoFit: misconceptions.filter(
+      (m: any) => m.selectedTemplates != null && m.selectedTemplates.picks?.length === 0,
+    ).length,
     selectCachedPromptTokens,
     // A run where the wrong-answer refs never arrived is not comparable to one
     // where they did, so the counting chain's health goes in the manifest rather
