@@ -366,7 +366,7 @@ export function ActivitySection({
         </View>
       );
 
-    case 'MATH_HOSPITAL':
+    case 'MATH_DETECTIVE':
       return (
         <View>
           <Text style={pdfStyles.blockTitle}>{content.title}</Text>

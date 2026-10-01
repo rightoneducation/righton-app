@@ -695,6 +695,282 @@ export const deleteMicroCoachAssessment = /* GraphQL */ `
     }
   }
 `;
+export const createMicroCoachSavedPlan = /* GraphQL */ `
+  mutation CreateMicroCoachSavedPlan(
+    $input: CreateMicroCoachSavedPlanInput!
+    $condition: ModelMicroCoachSavedPlanConditionInput
+  ) {
+    createMicroCoachSavedPlan(input: $input, condition: $condition) {
+      id
+      classId
+      sessionId
+      items {
+        id
+        status
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateMicroCoachSavedPlan = /* GraphQL */ `
+  mutation UpdateMicroCoachSavedPlan(
+    $input: UpdateMicroCoachSavedPlanInput!
+    $condition: ModelMicroCoachSavedPlanConditionInput
+  ) {
+    updateMicroCoachSavedPlan(input: $input, condition: $condition) {
+      id
+      classId
+      sessionId
+      items {
+        id
+        status
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteMicroCoachSavedPlan = /* GraphQL */ `
+  mutation DeleteMicroCoachSavedPlan(
+    $input: DeleteMicroCoachSavedPlanInput!
+    $condition: ModelMicroCoachSavedPlanConditionInput
+  ) {
+    deleteMicroCoachSavedPlan(input: $input, condition: $condition) {
+      id
+      classId
+      sessionId
+      items {
+        id
+        status
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createMicroCoachUser = /* GraphQL */ `
+  mutation CreateMicroCoachUser(
+    $input: CreateMicroCoachUserInput!
+    $condition: ModelMicroCoachUserConditionInput
+  ) {
+    createMicroCoachUser(input: $input, condition: $condition) {
+      id
+      cognitoId
+      email
+      firstName
+      lastName
+      classes {
+        items {
+          id
+          userId
+          sessions {
+            items {
+              id
+              classId
+              sessionLabel
+              weekLabel
+              weekNumber
+              topic
+              ccssStandards
+              status
+              publishStatus
+              studentWorksAnalyzed
+              studentsWithStrongUnderstanding
+              studentsWithStrongUnderstandingIds
+              studentIdsNeedingSupport
+              ppqAssessmentId
+              postPpqAssessmentId
+              pregeneratedNextSteps
+              evaluationResults
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          students {
+            items {
+              id
+              classId
+              name
+              externalId
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          name
+          grade
+          state
+          schoolYear
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateMicroCoachUser = /* GraphQL */ `
+  mutation UpdateMicroCoachUser(
+    $input: UpdateMicroCoachUserInput!
+    $condition: ModelMicroCoachUserConditionInput
+  ) {
+    updateMicroCoachUser(input: $input, condition: $condition) {
+      id
+      cognitoId
+      email
+      firstName
+      lastName
+      classes {
+        items {
+          id
+          userId
+          sessions {
+            items {
+              id
+              classId
+              sessionLabel
+              weekLabel
+              weekNumber
+              topic
+              ccssStandards
+              status
+              publishStatus
+              studentWorksAnalyzed
+              studentsWithStrongUnderstanding
+              studentsWithStrongUnderstandingIds
+              studentIdsNeedingSupport
+              ppqAssessmentId
+              postPpqAssessmentId
+              pregeneratedNextSteps
+              evaluationResults
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          students {
+            items {
+              id
+              classId
+              name
+              externalId
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          name
+          grade
+          state
+          schoolYear
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteMicroCoachUser = /* GraphQL */ `
+  mutation DeleteMicroCoachUser(
+    $input: DeleteMicroCoachUserInput!
+    $condition: ModelMicroCoachUserConditionInput
+  ) {
+    deleteMicroCoachUser(input: $input, condition: $condition) {
+      id
+      cognitoId
+      email
+      firstName
+      lastName
+      classes {
+        items {
+          id
+          userId
+          sessions {
+            items {
+              id
+              classId
+              sessionLabel
+              weekLabel
+              weekNumber
+              topic
+              ccssStandards
+              status
+              publishStatus
+              studentWorksAnalyzed
+              studentsWithStrongUnderstanding
+              studentsWithStrongUnderstandingIds
+              studentIdsNeedingSupport
+              ppqAssessmentId
+              postPpqAssessmentId
+              pregeneratedNextSteps
+              evaluationResults
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          students {
+            items {
+              id
+              classId
+              name
+              externalId
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          name
+          grade
+          state
+          schoolYear
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createMicroCoachMisconception = /* GraphQL */ `
   mutation CreateMicroCoachMisconception(
     $input: CreateMicroCoachMisconceptionInput!
@@ -989,282 +1265,6 @@ export const deleteMicroCoachActivity = /* GraphQL */ `
       instructionalMove
       strategyTag
       phases
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const createMicroCoachSavedPlan = /* GraphQL */ `
-  mutation CreateMicroCoachSavedPlan(
-    $input: CreateMicroCoachSavedPlanInput!
-    $condition: ModelMicroCoachSavedPlanConditionInput
-  ) {
-    createMicroCoachSavedPlan(input: $input, condition: $condition) {
-      id
-      classId
-      sessionId
-      items {
-        id
-        status
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const updateMicroCoachSavedPlan = /* GraphQL */ `
-  mutation UpdateMicroCoachSavedPlan(
-    $input: UpdateMicroCoachSavedPlanInput!
-    $condition: ModelMicroCoachSavedPlanConditionInput
-  ) {
-    updateMicroCoachSavedPlan(input: $input, condition: $condition) {
-      id
-      classId
-      sessionId
-      items {
-        id
-        status
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const deleteMicroCoachSavedPlan = /* GraphQL */ `
-  mutation DeleteMicroCoachSavedPlan(
-    $input: DeleteMicroCoachSavedPlanInput!
-    $condition: ModelMicroCoachSavedPlanConditionInput
-  ) {
-    deleteMicroCoachSavedPlan(input: $input, condition: $condition) {
-      id
-      classId
-      sessionId
-      items {
-        id
-        status
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const createMicroCoachUser = /* GraphQL */ `
-  mutation CreateMicroCoachUser(
-    $input: CreateMicroCoachUserInput!
-    $condition: ModelMicroCoachUserConditionInput
-  ) {
-    createMicroCoachUser(input: $input, condition: $condition) {
-      id
-      cognitoId
-      email
-      firstName
-      lastName
-      classes {
-        items {
-          id
-          userId
-          sessions {
-            items {
-              id
-              classId
-              sessionLabel
-              weekLabel
-              weekNumber
-              topic
-              ccssStandards
-              status
-              publishStatus
-              studentWorksAnalyzed
-              studentsWithStrongUnderstanding
-              studentsWithStrongUnderstandingIds
-              studentIdsNeedingSupport
-              ppqAssessmentId
-              postPpqAssessmentId
-              pregeneratedNextSteps
-              evaluationResults
-              createdAt
-              updatedAt
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          students {
-            items {
-              id
-              classId
-              name
-              externalId
-              createdAt
-              updatedAt
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          name
-          grade
-          state
-          schoolYear
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      role
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const updateMicroCoachUser = /* GraphQL */ `
-  mutation UpdateMicroCoachUser(
-    $input: UpdateMicroCoachUserInput!
-    $condition: ModelMicroCoachUserConditionInput
-  ) {
-    updateMicroCoachUser(input: $input, condition: $condition) {
-      id
-      cognitoId
-      email
-      firstName
-      lastName
-      classes {
-        items {
-          id
-          userId
-          sessions {
-            items {
-              id
-              classId
-              sessionLabel
-              weekLabel
-              weekNumber
-              topic
-              ccssStandards
-              status
-              publishStatus
-              studentWorksAnalyzed
-              studentsWithStrongUnderstanding
-              studentsWithStrongUnderstandingIds
-              studentIdsNeedingSupport
-              ppqAssessmentId
-              postPpqAssessmentId
-              pregeneratedNextSteps
-              evaluationResults
-              createdAt
-              updatedAt
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          students {
-            items {
-              id
-              classId
-              name
-              externalId
-              createdAt
-              updatedAt
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          name
-          grade
-          state
-          schoolYear
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      role
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const deleteMicroCoachUser = /* GraphQL */ `
-  mutation DeleteMicroCoachUser(
-    $input: DeleteMicroCoachUserInput!
-    $condition: ModelMicroCoachUserConditionInput
-  ) {
-    deleteMicroCoachUser(input: $input, condition: $condition) {
-      id
-      cognitoId
-      email
-      firstName
-      lastName
-      classes {
-        items {
-          id
-          userId
-          sessions {
-            items {
-              id
-              classId
-              sessionLabel
-              weekLabel
-              weekNumber
-              topic
-              ccssStandards
-              status
-              publishStatus
-              studentWorksAnalyzed
-              studentsWithStrongUnderstanding
-              studentsWithStrongUnderstandingIds
-              studentIdsNeedingSupport
-              ppqAssessmentId
-              postPpqAssessmentId
-              pregeneratedNextSteps
-              evaluationResults
-              createdAt
-              updatedAt
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          students {
-            items {
-              id
-              classId
-              name
-              externalId
-              createdAt
-              updatedAt
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          name
-          grade
-          state
-          schoolYear
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      role
       createdAt
       updatedAt
       __typename
