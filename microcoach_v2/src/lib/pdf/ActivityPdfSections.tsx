@@ -366,7 +366,7 @@ export function ActivitySection({
         </View>
       );
 
-    case 'MATH_HOSPITAL':
+    case 'MATH_DETECTIVE':
       return (
         <View>
           <Text style={pdfStyles.blockTitle}>{content.title}</Text>
@@ -406,6 +406,54 @@ export function ActivitySection({
             </View>
           ))}
           <Text style={pdfStyles.small}>{content.footnote}</Text>
+        </View>
+      );
+
+    // The PDF is the teacher's copy, so the worked positions and the resolution
+    // are included here even though the student view hides them.
+    case 'MAKE_YOUR_CASE':
+      return (
+        <View>
+          <Text style={pdfStyles.blockTitle}>{content.title}</Text>
+          <View
+            style={[
+              pdfStyles.tonedPanel,
+              { backgroundColor: pdfColors.sky, marginTop: 8 },
+            ]}
+          >
+            <Text style={pdfStyles.label}>{content.claim.label}</Text>
+            <Text style={pdfStyles.bodyBold}>{content.claim.text}</Text>
+          </View>
+          <View style={pdfStyles.panel}>
+            <Text style={pdfStyles.label}>{content.initialVote.label}</Text>
+            <Text style={pdfStyles.body}>
+              {content.initialVote.options.join('  ·  ')}
+            </Text>
+          </View>
+          <View style={pdfStyles.panel}>
+            <Text style={pdfStyles.label}>{content.evidence.label}</Text>
+            {content.evidence.prompts.map((prompt) => (
+              <Text key={prompt} style={pdfStyles.body}>
+                {prompt}
+              </Text>
+            ))}
+          </View>
+          {content.positions.map((position) => (
+            <View key={position.label} style={pdfStyles.panel} wrap={false}>
+              <View style={[pdfStyles.row, { marginBottom: 6 }]}>
+                <Text style={pdfStyles.label}>{position.label}</Text>
+                <Text style={pdfStyles.body}>{position.stance}</Text>
+              </View>
+              <Text style={pdfStyles.body}>{position.argument}</Text>
+            </View>
+          ))}
+          <View
+            style={[pdfStyles.tonedPanel, { backgroundColor: pdfColors.grey }]}
+          >
+            <Text style={pdfStyles.label}>{content.resolution.label}</Text>
+            <Text style={pdfStyles.body}>{content.resolution.text}</Text>
+          </View>
+          <Text style={pdfStyles.small}>{content.keyTakeaway.text}</Text>
         </View>
       );
 

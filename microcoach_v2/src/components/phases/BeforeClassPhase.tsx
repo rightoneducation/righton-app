@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
+import MathTypography from '../MathTypography';
 import { IActivityPhases } from '../../lib/PipelineModels';
 import {
   ContentPanel,
@@ -35,43 +36,39 @@ export default function BeforeClassPhase({ beforeClass }: Props) {
 
   return (
     <Stack spacing={`${theme.sizing.space4}px`}>
-      <Typography
+      <MathTypography
         variant="headingMd"
         sx={{ color: 'designSystem.surface.atlanticNavy' }}
-      >
-        {beforeClass.title}
-      </Typography>
+        text={beforeClass.title}
+      />
 
       {beforeClass.checklist.map((item) => (
         <Stack key={item.order} direction="row" spacing={2}>
           <NumberBadge>{item.order}</NumberBadge>
-          <Typography
+          <MathTypography
             variant="rubikBody"
             sx={{
               flex: 1,
               minWidth: 0,
               color: 'designSystem.surface.atlanticNavy',
             }}
-          >
-            {item.title}
-          </Typography>
+            text={item.title}
+          />
         </Stack>
       ))}
 
       {beforeClass.groupFormation && (
         <>
-          <Typography
+          <MathTypography
             variant="headingMd"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {beforeClass.groupFormation.title}
-          </Typography>
-          <Typography
+            text={beforeClass.groupFormation.title}
+          />
+          <MathTypography
             variant="smallBodyText"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {beforeClass.groupFormation.guidance}
-          </Typography>
+            text={beforeClass.groupFormation.guidance}
+          />
 
           <Box
             sx={{
@@ -82,18 +79,16 @@ export default function BeforeClassPhase({ beforeClass }: Props) {
           >
             {beforeClass.groupFormation.groups.map((group) => (
               <ContentPanel key={group.label}>
-                <Typography
+                <MathTypography
                   variant="headingSm"
                   sx={{ color: 'designSystem.surface.atlanticNavy' }}
-                >
-                  {group.label}
-                </Typography>
-                <Typography
+                  text={group.label}
+                />
+                <MathTypography
                   variant="microLabel"
                   sx={{ color: 'designSystem.surface.atlanticNavy' }}
-                >
-                  {group.description}
-                </Typography>
+                  text={group.description}
+                />
                 <NamePillGroup>
                   {group.students.map((name) => (
                     <StudentNamePill key={name} tone="understood">

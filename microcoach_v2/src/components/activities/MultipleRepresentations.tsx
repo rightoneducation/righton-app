@@ -1,8 +1,9 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import MathText from '../MathText';
+import MathTypography from '../MathTypography';
 import {
   IRepresentation,
   IRepresentationsContent,
@@ -37,7 +38,7 @@ function RepresentationBody({ item }: { item: IRepresentation }) {
             <tr>
               {columns.map((column) => (
                 <RepHeadCell key={column} scope="col">
-                  {column}
+                  <MathText text={column} inline />
                 </RepHeadCell>
               ))}
             </tr>
@@ -47,7 +48,7 @@ function RepresentationBody({ item }: { item: IRepresentation }) {
               <tr key={row.join(',')}>
                 {row.map((cell, index) => (
                   <RepBodyCell key={`${row.join(',')}-${columns[index]}`}>
-                    {cell}
+                    <MathText text={String(cell)} inline />
                   </RepBodyCell>
                 ))}
               </tr>
@@ -72,27 +73,24 @@ function RepresentationBody({ item }: { item: IRepresentation }) {
         textAlign: 'center',
       }}
     >
-      <Typography
+      <MathTypography
         variant="headingMd"
         sx={{ color: 'designSystem.surface.atlanticNavy' }}
-      >
-        {item.value ?? item.lineLabel}
-      </Typography>
+        text={item.value ?? item.lineLabel}
+      />
       {item.detail && (
-        <Typography
+        <MathTypography
           variant="rubikBody"
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {item.detail}
-        </Typography>
+          text={item.detail}
+        />
       )}
       {item.plottedPoints && (
-        <Typography
+        <MathTypography
           variant="smallBodyText"
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {item.plottedPoints.join('  ·  ')}
-        </Typography>
+          text={item.plottedPoints.join('  ·  ')}
+        />
       )}
     </Box>
   );
@@ -104,18 +102,16 @@ export default function MultipleRepresentations({ content }: Props) {
   return (
     <Stack spacing={`${theme.sizing.space4}px`}>
       <TonedPanel tone="greyDeep">
-        <Typography
+        <MathTypography
           variant="rubikLabelSm"
           sx={{ color: 'designSystem.foreground.slateGrey' }}
-        >
-          {content.studentTaskLabel}
-        </Typography>
-        <Typography
+          text={content.studentTaskLabel}
+        />
+        <MathTypography
           variant="rubikBody"
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {`"${content.studentTask}"`}
-        </Typography>
+          text={`"${content.studentTask}"`}
+        />
       </TonedPanel>
 
       <Box
@@ -140,12 +136,11 @@ export default function MultipleRepresentations({ content }: Props) {
               justifyContent="space-between"
               spacing={1}
             >
-              <Typography
+              <MathTypography
                 variant="rubikLabel"
                 sx={{ color: 'designSystem.background.navyBlue' }}
-              >
-                {item.label}
-              </Typography>
+                text={item.label}
+              />
               <VerdictChip tone={item.matches ? 'match' : 'noMatch'}>
                 {item.matchLabel}
               </VerdictChip>
@@ -155,28 +150,25 @@ export default function MultipleRepresentations({ content }: Props) {
         ))}
       </Box>
 
-      <Typography
+      <MathTypography
         variant="headingMdBold"
         sx={{ color: 'designSystem.surface.atlanticNavy' }}
-      >
-        {content.teachingNotesLabel}
-      </Typography>
+        text={content.teachingNotesLabel}
+      />
       {content.teachingNotes.map((note) => (
         <Stack key={note.order} direction="row" spacing={2}>
           <NumberBadge>{note.order}</NumberBadge>
           <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Typography
+            <MathTypography
               variant="rubikLabel"
               sx={{ color: 'designSystem.surface.atlanticNavy' }}
-            >
-              {note.title}
-            </Typography>
-            <Typography
+              text={note.title}
+            />
+            <MathTypography
               variant="rubikBody"
               sx={{ color: 'designSystem.surface.atlanticNavy' }}
-            >
-              {note.body}
-            </Typography>
+              text={note.body}
+            />
           </Box>
         </Stack>
       ))}

@@ -2,11 +2,11 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
+import MathTypography from '../MathTypography';
 import { ICompareContent, IExampleStep } from '../../lib/PipelineModels';
 import {
   ColumnBadge,
@@ -49,18 +49,16 @@ export default function CompareTheThinking({ content, isTeacherView }: Props) {
           borderColor: 'designSystem.background.navyBlue',
         }}
       >
-        <Typography
+        <MathTypography
           variant="rubikBody"
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {content.problemLabel}
-        </Typography>
-        <Typography
+          text={content.problemLabel}
+        />
+        <MathTypography
           variant="headingMd"
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {content.problem}
-        </Typography>
+          text={content.problem}
+        />
       </Box>
 
       <Stack
@@ -112,12 +110,12 @@ export default function CompareTheThinking({ content, isTeacherView }: Props) {
                   <StepChip>
                     {t('activityDetail.stepNumber', { number: step.step })}
                   </StepChip>
-                  <Typography
+                  <MathTypography
                     variant="smallBodyText"
                     sx={{ color: 'designSystem.surface.atlanticNavy' }}
-                  >
-                    {`${step.text} ${mark}`.trimEnd()}
-                  </Typography>
+                    text={step.text}
+                    suffix={mark}
+                  />
                 </StepRow>
               );
             })}
@@ -140,12 +138,11 @@ export default function CompareTheThinking({ content, isTeacherView }: Props) {
                     sx={{ color: 'designSystem.status.errorIcon' }}
                   />
                 )}
-                <Typography
+                <MathTypography
                   variant="rubikBody"
                   sx={{ color: 'designSystem.surface.atlanticNavy' }}
-                >
-                  {column.annotation}
-                </Typography>
+                  text={column.annotation}
+                />
               </Stack>
             )}
           </Box>
@@ -157,24 +154,22 @@ export default function CompareTheThinking({ content, isTeacherView }: Props) {
       {!isTeacherView && (
         <PromptBand tone="grey">
           <Box sx={{ minWidth: 0 }}>
-            <Typography
+            <MathTypography
               variant="rubikBody"
               sx={{
                 display: 'block',
                 color: 'designSystem.surface.atlanticNavy',
               }}
-            >
-              {content.keyTakeaway.label}
-            </Typography>
-            <Typography
+              text={content.keyTakeaway.label}
+            />
+            <MathTypography
               variant="rubikBody"
               sx={{
                 display: 'block',
                 color: 'designSystem.surface.atlanticNavy',
               }}
-            >
-              {content.keyTakeaway.text}
-            </Typography>
+              text={content.keyTakeaway.text}
+            />
           </Box>
         </PromptBand>
       )}

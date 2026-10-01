@@ -1031,8 +1031,8 @@
           "phases": {
             "beforeClass": null,
             "activity": {
-              "type": "MATH_HOSPITAL",
-              "title": "Math Hospital — Diagnose & Repair",
+              "type": "MATH_DETECTIVE",
+              "title": "Math Detective — Diagnose & Repair",
               "supportsViewToggle": false,
               "problem": "Graph the solution set for y < −½x + 3",
               "problemChecklist": "Plot line ✓ Dashed ✓ Slope = −½ ✓ y < → shade above ✗",
@@ -1067,7 +1067,7 @@
             "facilitation": null,
             "discussion": null
           },
-          "activityType": "MATH_HOSPITAL"
+          "activityType": "MATH_DETECTIVE"
         },
         {
           "id": "activity-boundary-2",
@@ -1276,7 +1276,7 @@
     "blockType": [
       "INCORRECT_WORKED_EXAMPLES",
       "COMPARE_THE_THINKING",
-      "MATH_HOSPITAL",
+      "MATH_DETECTIVE",
       "MULTIPLE_REPRESENTATIONS",
       "FAVORITE_NO"
     ],

@@ -1,12 +1,12 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import MathTypography from '../MathTypography';
 import { IFavoriteNoContent } from '../../lib/PipelineModels';
 import { withWorkMark } from '../../lib/activityMarks';
 import {
@@ -31,18 +31,16 @@ export default function FavoriteNo({ content }: Props) {
           <EditOutlinedIcon />
         </PromptIconTile>
         <Box sx={{ minWidth: 0 }}>
-          <Typography
+          <MathTypography
             variant="headingMd"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {content.boardPrompt.problem}
-          </Typography>
-          <Typography
+            text={content.boardPrompt.problem}
+          />
+          <MathTypography
             variant="rubikBody"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {content.boardPrompt.instruction}
-          </Typography>
+            text={content.boardPrompt.instruction}
+          />
         </Box>
       </PromptBand>
 
@@ -54,18 +52,16 @@ export default function FavoriteNo({ content }: Props) {
           flexWrap="wrap"
           gap={1}
         >
-          <Typography
+          <MathTypography
             variant="headingMd"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {example.title}
-          </Typography>
-          <Typography
+            text={example.title}
+          />
+          <MathTypography
             variant="headingSm"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {example.sourceLabel}
-          </Typography>
+            text={example.sourceLabel}
+          />
         </Stack>
 
         <Stack
@@ -73,12 +69,11 @@ export default function FavoriteNo({ content }: Props) {
           spacing={`${theme.sizing.space5}px`}
         >
           <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Typography
+            <MathTypography
               variant="rubikSubBold"
               sx={{ color: 'designSystem.surface.atlanticNavy' }}
-            >
-              {example.studentWorkLabel}
-            </Typography>
+              text={example.studentWorkLabel}
+            />
             {/* Figma fills every one of these rows — 489 x 18, no radius —
                 green for the working that holds up and rose for the step that
                 breaks. The first row is filled but carries no tick, which is
@@ -97,25 +92,25 @@ export default function FavoriteNo({ content }: Props) {
                   minHeight: 0,
                 }}
               >
-                <Typography
+                <MathTypography
                   variant="smallBodyText"
                   sx={{ color: 'designSystem.surface.atlanticNavy' }}
-                >
-                  {line.showMark === false
-                    ? line.text
-                    : withWorkMark(line.text, line.status)}
-                </Typography>
+                  text={
+                    line.showMark === false
+                      ? line.text
+                      : withWorkMark(line.text, line.status)
+                  }
+                />
               </StepRow>
             ))}
           </Box>
 
           <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Typography
+            <MathTypography
               variant="rubikSubBold"
               sx={{ color: 'designSystem.surface.atlanticNavy' }}
-            >
-              {example.whatToNoticeLabel}
-            </Typography>
+              text={example.whatToNoticeLabel}
+            />
             {example.whatToNotice.map((note) => (
               <Stack
                 key={note.text}
@@ -135,12 +130,11 @@ export default function FavoriteNo({ content }: Props) {
                     sx={{ color: 'designSystem.status.errorIcon' }}
                   />
                 )}
-                <Typography
+                <MathTypography
                   variant="smallBodyText"
                   sx={{ color: 'designSystem.surface.atlanticNavy' }}
-                >
-                  {note.text}
-                </Typography>
+                  text={note.text}
+                />
               </Stack>
             ))}
           </Box>
@@ -151,12 +145,11 @@ export default function FavoriteNo({ content }: Props) {
         <InfoOutlinedIcon
           sx={{ color: 'designSystem.surface.atlanticNavy', flexShrink: 0 }}
         />
-        <Typography
+        <MathTypography
           variant="rubikBody"
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {content.footnote}
-        </Typography>
+          text={content.footnote}
+        />
       </PromptBand>
     </Stack>
   );

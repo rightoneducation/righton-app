@@ -1,4 +1,7 @@
 import { loadSecret } from './util/loadsecrets.mjs';
+import { templateById, formatForInfill } from './util/activityLibrary.mjs';
+import { matchStandard } from './util/ccssCode.mjs';
+import { phasesSchemaFor, CONTENT_TYPES } from './util/activityContent.mjs';
 import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
@@ -6,10 +9,8 @@ import config from './util/config.json' assert { type: 'json' };
 
 const nso = config?.nextStepOption ?? {};
 const vco = nso.validator ?? {};
-const plo = nso.planner ?? {};
 const ws  = config?.writingStyle ?? {};
 const MODEL                          = nso.model ?? 'gpt-4o';
-const PLANNER_MODEL                  = plo.model ?? 'gpt-4o-mini';
 const VALIDATOR_MODEL                = vco.model ?? 'o3-mini';
 const VALIDATOR_SYSTEM_PROMPT        = vco.systemPrompt ?? 'You are a math accuracy reviewer. Output only valid JSON.';
 const VALIDATOR_PROBLEM_INSTRUCTIONS = vco.problemReviewInstructions ?? 'Is the problem mathematically correct? If it contains errors, return the corrected version. If correct, return it unchanged. Return JSON: { "problem": "<corrected or original problem>" }';
@@ -37,8 +38,6 @@ const INCORRECT_EXAMPLES_COUNT     = nso.incorrectWorkedExamplesCount ?? 3;
 const INCORRECT_EXAMPLE_RULES      = nso.incorrectWorkedExampleRules ?? [];
 const INCORRECT_EXAMPLE_FEW_SHOT   = nso.incorrectWorkedExampleFewShot ?? [];
 const DESIGN_PRINCIPLES            = nso.designPrinciples ?? [];
-const ACTIVITY_STRUCTURES          = nso.activityStructures?.structures ?? [];
-const DISTINCTNESS_RULES           = nso.distinctnessRules ?? [];
 const CLASSROOM_FEASIBILITY        = nso.classroomFeasibility ?? [];
 const UDL_REQUIREMENTS             = nso.udlRequirements ?? [];
 const FORMAT_CONSTRAINTS           = nso.formatConstraints ?? {};
@@ -134,7 +133,7 @@ const NextStepActivity = z.object({
     ALLOWED_DURATION_BUCKETS.map(b => b.label).join(', ')
   ),
   format: z.enum(['whole_class', 'split_class']),
-  activityStructure: z.string().describe('The named structure used for this activity (e.g. "Favorite No", "Math Hospital / Diagnose & Repair"). Must be distinct from any previously generated activity for this misconception.'),
+  activityStructure: z.string().describe('The title of the activity template this activity enacts, copied exactly as given. Not an invented name.'),
   aiReasoning: z.string().describe('Why this specific activity design targets this specific misconception'),
   aiGenerated: z.literal(true),
   tabs: Tabs.describe('Full structured activity content'),
@@ -157,96 +156,22 @@ export const handler = async (event) => {
   // because the planning branch returns before reaching them and reads this.
   const wantTrace = (event?.arguments?.input?.trace ?? event?.input?.trace) === true;
 
-  // ── Planning mode: assign diverse structures across all misconceptions ────────
-  // Triggered by planStructures: true. Runs once per classroom before generation.
-  const planStructures = event?.arguments?.input?.planStructures ?? event?.input?.planStructures;
-  if (planStructures) {
-    const rawMisconceptions   = event?.arguments?.input?.misconceptions ?? event?.input?.misconceptions;
-    const rawClassroomContext = event?.arguments?.input?.classroomContext ?? event?.input?.classroomContext;
-    const misconceptions      = typeof rawMisconceptions   === 'string' ? JSON.parse(rawMisconceptions)   : (rawMisconceptions ?? []);
-    const classroomCtx        = typeof rawClassroomContext === 'string' ? JSON.parse(rawClassroomContext) : (rawClassroomContext ?? {});
-
-    const exampleStructures = ACTIVITY_STRUCTURES.length > 0
-      ? ACTIVITY_STRUCTURES.map(s => `- ${s.name}: ${s.description}`).join('\n')
-      : '(none provided — use your own judgment)';
-
-    const planPrompt = `You are an instructional design planner for a K-12 math coaching tool.
-
-A teacher will see activities for ${misconceptions.length} misconception(s) in a single session.
-Subject: ${classroomCtx.subject ?? 'math'} | Class size: ${classroomCtx.cohortSize ?? 'unknown'}
-
-Your job: assign a diverse set of activity structures across all misconceptions so that no two misconceptions use the same structure, and the overall session feels varied and pedagogically rich.
-
-Each misconception needs two structure assignments — one for a whole_class activity and one for a split_class activity. The two structures for a single misconception must also differ from each other.
-
-## Example Structures (for inspiration — you are not limited to this list)
-${exampleStructures}
-
-Feel free to name structures not on this list if they better fit a misconception. What matters is that:
-1. The assigned structures are diverse across all misconceptions in the session
-2. Each misconception's whole_class and split_class structures differ from each other
-3. The structure fits the nature of the misconception
-
-## Misconceptions
-${misconceptions.map((m, i) => `${i + 1}. "${m.title}" — ${m.description}`).join('\n')}
-
-Return a JSON array with one entry per misconception, in the same order:
-[
-  { "misconceptionTitle": "...", "whole_class": "structure name", "split_class": "structure name" },
-  ...
-]
-
-Return only the JSON array, no explanation.`;
-
-    try {
-      const completion = await openai.chat.completions.create({
-        model: PLANNER_MODEL,
-        response_format: { type: 'json_object' },
-        messages: [
-          { role: 'system', content: 'You are an instructional design planner. Return only valid JSON.' },
-          { role: 'user', content: planPrompt },
-        ],
-      });
-      const raw = completion.choices[0]?.message?.content ?? '{}';
-      const parsed = JSON.parse(raw);
-      // Handle both { assignments: [...] } and bare array responses
-      const assignments = Array.isArray(parsed) ? parsed : (parsed.assignments ?? parsed[Object.keys(parsed)[0]] ?? []);
-
-      // Returns an envelope rather than a bare array so the call's token usage is
-      // visible. Previously this branch reported nothing, and its gpt-4o-mini spend
-      // was missing from every run manifest. Consumers accept both shapes, so a
-      // deployed Lambda on the old contract still works.
-      return JSON.stringify({
-        ok: true,
-        assignments,
-        ...(wantTrace && {
-          _trace: {
-            model: PLANNER_MODEL,
-            misconceptionCount: misconceptions.length,
-            resolvedPrompt: planPrompt,
-            subCalls: [{ label: 'plan-structures', model: PLANNER_MODEL, usage: completion?.usage ?? null, fellBack: false }],
-          },
-        }),
-      });
-    } catch (err) {
-      // An empty array used to be indistinguishable from a failed call. Say which.
-      console.error('[microcoachNextStepOption] planStructures failed:', err?.message);
-      return JSON.stringify({
-        ok: false,
-        assignments: [],
-        error: err?.message ?? 'planStructures failed',
-      });
-    }
-  }
+  // Wave 1 had a planning call here that assigned a distinct invented structure to
+  // each misconception, so a session felt varied. Wave 2 does not invent structures:
+  // the template is chosen upstream and the activity infills it, so variety comes
+  // from the templates themselves and the planner has nothing left to decide.
 
   // ── Parse activity-generation inputs ──────────────────────────────────────
   const rawMisconception        = event?.arguments?.input?.misconception        ?? event?.input?.misconception;
   const rawLearningScienceData  = event?.arguments?.input?.learningScienceData  ?? event?.input?.learningScienceData;
   const rawClassroomContext     = event?.arguments?.input?.classroomContext     ?? event?.input?.classroomContext;
   const rawContextData          = event?.arguments?.input?.contextData          ?? event?.input?.contextData;
-  const rawExistingActivities   = event?.arguments?.input?.existingActivities   ?? event?.input?.existingActivities;
-  const suggestedStructure      = event?.arguments?.input?.suggestedStructure   ?? event?.input?.suggestedStructure ?? null;
   const preferredFormat         = event?.arguments?.input?.preferredFormat      ?? event?.input?.preferredFormat ?? 'whole_class';
+  // The template chosen upstream by microcoachv2LLMSelectTemplate. Its id resolves
+  // against activityLibrary.json for the classroom flow, facilitation and views the
+  // activity has to enact, and its `contentType` fixes the output shape. Optional so
+  // the old prose-only behaviour still works for a caller that does not pass one.
+  const rawSelectedTemplate     = event?.arguments?.input?.selectedTemplate     ?? event?.input?.selectedTemplate ?? null;
 
   // Eval instrumentation. Additive and inert unless explicitly requested, so
   // production callers see byte-identical responses.
@@ -263,15 +188,31 @@ Return only the JSON array, no explanation.`;
   const learningScienceData = typeof rawLearningScienceData === 'string' ? JSON.parse(rawLearningScienceData) : rawLearningScienceData;
   const classroomContext    = typeof rawClassroomContext    === 'string' ? JSON.parse(rawClassroomContext)    : (rawClassroomContext ?? {});
   const contextDataItems    = rawContextData ? (typeof rawContextData === 'string' ? JSON.parse(rawContextData) : rawContextData) : [];
-  const existingActivities  = rawExistingActivities ? (typeof rawExistingActivities === 'string' ? JSON.parse(rawExistingActivities) : rawExistingActivities) : [];
+  const selectedTemplate    = rawSelectedTemplate ? (typeof rawSelectedTemplate === 'string' ? JSON.parse(rawSelectedTemplate) : rawSelectedTemplate) : null;
+
+  // Resolve the template and its output shape. A template with no `contentType`
+  // (RightOn!, which renders as the game rather than a generated layout) falls back
+  // to prose, as does a caller that passed no template at all.
+  const template     = selectedTemplate?.templateId ? templateById(selectedTemplate.templateId) : null;
+  const contentType  = template?.contentType ?? null;
+  const phasesSchema = contentType ? phasesSchemaFor(contentType) : null;
+  if (selectedTemplate?.templateId && !template) {
+    console.warn(`[microcoachNextStepOption] unknown templateId "${selectedTemplate.templateId}" — generating prose only`);
+  }
+  if (contentType && !phasesSchema) {
+    console.warn(`[microcoachNextStepOption] no content schema for "${contentType}" (known: ${CONTENT_TYPES.join(', ')}) — generating prose only`);
+  }
 
   // ── Extract relevant knowledge graph context ───────────────────────────────
   // Find the standard entry matching the misconception's CCSS standard
   const standards = learningScienceData?.standards ?? [];
   const normalize = (s) => s?.replace(/\s/g, '').toLowerCase() ?? '';
-  const targetStandard = standards.find(
-    (s) => normalize(s.code) === normalize(misconception.ccssStandard)
-  );
+  // Questions spell the code one way and the graph another — A.REI.12 against
+  // HSA-REI.D.12 — so an exact string match silently dropped EVERY graph section
+  // from this prompt. matchStandard tries the literal string first, then the
+  // spelling-independent key. Same helper the rubric and need stages use.
+  const { standard: targetStandard, matchedBy: standardMatchedBy } =
+    matchStandard(misconception.ccssStandard, standards);
 
   const prerequisiteStandards = targetStandard?.prerequisiteStandards ?? [];
   const futureStandards       = targetStandard?.futureDependentStandards ?? [];
@@ -318,6 +259,8 @@ Return only the JSON array, no explanation.`;
       misconceptionStandard: misconception.ccssStandard,
       availableCodes: standards.map((s) => s.code),
     });
+  } else if (standardMatchedBy === 'canonical') {
+    console.log(`[microcoachNextStepOption] matched ${misconception.ccssStandard} → ${targetStandard.code} by canonical key`);
   }
 
   // ── Format knowledge graph section ────────────────────────────────────────
@@ -455,6 +398,44 @@ ${SPLIT_CLASS_AVOID.map(a => `  - ${a}`).join('\n')}
 ${WHOLE_CLASS_DESC}
 `.trim();
 
+  // The schema the model answers against. With a template it carries `phases`,
+  // whose `activity` member is the typed layout the frontend renders; without one
+  // it is the original prose-only shape.
+  const ActivitySchema = phasesSchema
+    ? NextStepActivity.extend({ phases: phasesSchema })
+    : NextStepActivity;
+
+  // The template's own brief — classroom flow, worked examples, facilitation
+  // prompts, student/teacher views. formatForInfill already renders exactly this.
+  const templateSection = template ? `
+## The activity template you must enact
+
+${formatForInfill(template)}
+
+This template is not a label applied after the fact. The activity you generate must
+follow its classroom flow and its defining instructional move; an activity that could
+equally have come from another template has failed, however good it is on its own.
+${selectedTemplate?.instructionalApproach ? `
+The move this template was selected to enact for THIS need: ${selectedTemplate.instructionalApproach}` : ''}
+` : '';
+
+  // How the typed content has to come back, when a template fixed the shape.
+  const contentSection = phasesSchema ? `
+## Activity content — \`phases\`
+
+Fill \`phases\` as well as the fields above. \`phases.activity.type\` must be exactly
+"${contentType}" — it selects the layout this activity renders in, so no other value
+will display.
+
+- \`beforeClass.checklist\`: what the teacher prepares beforehand. Keep it to what fits the time budget.
+- \`activity\`: the activity itself, in the shape the schema gives for ${contentType}. This is what students see, so the mathematics must be correct and complete — real problems, real steps, real numbers drawn from the student evidence above, never placeholders.
+- \`facilitation.steps\`: how to run it, following the template's classroom flow.
+- \`discussion.questions\`: the closing questions, drawn from the template's facilitation prompts.
+
+Where the schema marks a field teacher-only, it must not give away what students are
+meant to work out — the template's Views section says what each view may show.
+` : '';
+
   const userContent = `
 You are an expert K-12 math instructional coach designing a targeted intervention activity for early-career teachers.
 
@@ -468,17 +449,7 @@ Every activity MUST explicitly follow these principles:
 
 ${DESIGN_PRINCIPLES.map((p, i) => `${i + 1}. **${p.split(':')[0]}**: ${p.split(':').slice(1).join(':').trim()}`).join('\n')}
 
-## Activity Structure
-Each activity must have a clearly named structure. The following are examples of strong structures — you may use one of these or design a different structure that fits the misconception and format. Whatever structure you choose, it must be meaningfully different from any other activity generated for this misconception:
-
-${ACTIVITY_STRUCTURES.map((s, i) => `${i + 1}. **${s.name}**: ${s.description}`).join('\n')}
-
-You are not limited to this list. If a different structure better fits the misconception, use it and name it clearly.
-${suggestedStructure ? `
-**Required structure for this activity: "${suggestedStructure}"**
-A planning step reviewed all misconceptions in this session and assigned this structure to ensure the session feels varied and pedagogically rich. You MUST use this structure. Do not substitute a more familiar structure simply because it feels easier to generate. Do not default to your preferred template. The only acceptable reason to deviate is if this structure is genuinely impossible to apply to this specific misconception — in that case, use the closest available alternative and explain the reason clearly in aiReasoning.
-` : ''}
-
+${templateSection}
 ## Classroom Feasibility
 This activity will be used in a live classroom by an early-career teacher. It must:
 ${CLASSROOM_FEASIBILITY.map(r => `- ${r}`).join('\n')}
@@ -486,31 +457,7 @@ ${CLASSROOM_FEASIBILITY.map(r => `- ${r}`).join('\n')}
 ## UDL-Informed Instruction
 Provide multiple entry points for participation:
 ${UDL_REQUIREMENTS.map(r => `- ${r}`).join('\n')}
-
-## Distinctness Requirement
-${DISTINCTNESS_RULES.map((r, i) => `${i + 1}. ${r}`).join('\n')}
-${existingActivities.length > 0 ? `
-## Already Generated for This Misconception — You Must Be Genuinely Different
-An activity has already been generated for this misconception. Read it carefully. Your job is to design something a teacher would experience as a fundamentally different instructional move — not a variation of the same idea.
-
-${existingActivities.map((a, i) => `### Existing Activity ${i + 1}: "${a.title}"
-- **Format**: ${a.format ?? 'unspecified'}
-- **Structure**: ${a.activityStructure ?? 'unspecified'}
-- **Strategy Tag**: ${a.strategyTag ?? 'unspecified'}
-- **What it targets**: ${a.targets ?? 'unspecified'}
-- **What the teacher does**: ${a.instructionalMove ?? 'unspecified'}
-- **Summary**: ${a.summary ?? 'unspecified'}`).join('\n\n')}
-
-Your activity MUST differ meaningfully in at least one of these four dimensions (ideally more):
-1. **Instructional approach** — e.g. if the existing activity has students analyze an error, yours should have them do something structurally different: construct a correct path from scratch, compare competing strategies, or predict where errors will occur
-2. **Activity structure** — must be a different named structure than any listed above
-3. **Strategy tag** — must be a different tag than any listed above
-4. **Representation or explanation strategy** — if the existing activity works symbolically, yours might use a visual, verbal, or concrete representation of the same misconception
-
-Also: the title must **not be a rewording** of any title above.
-
-If you cannot generate a genuinely distinct activity for this misconception and format, say so in the aiReasoning field — but still produce your best attempt.
-` : ''}
+${contentSection}
 ## Math Formatting Requirements
 Always use LaTeX for mathematical expressions. Never use Unicode math symbols or caret/underscore ASCII notation outside of LaTeX delimiters. Wrap ALL math in LaTeX delimiters:
 - Inline math: $...$ (e.g. $\\frac{2}{3} \\div \\frac{3}{4}$, $-6x + 12$, $x^2$)
@@ -558,12 +505,12 @@ The activity MUST:
 - Target the **specific** cognitive error pattern identified in the misconception
 - Connect to the prerequisite knowledge gaps and downstream standards from the knowledge graph
 - Use format: **"${preferredFormat}"** — do not use any other format
-- Be completable in <= ${MAX_DURATION} minutes (target: ${DEFAULT_DURATION} minutes)
+- Be completable in <= ${MAX_DURATION} minutes end to end — setup, the activity itself AND the closing discussion all fit inside that budget (target: ${DEFAULT_DURATION} minutes). Teachers have no more than ${MAX_DURATION} minutes of class time for this, so an activity that needs longer is not usable. Cut scope rather than overrunning: fewer steps or a shorter problem is better than an activity a teacher cannot finish.
 ${DISALLOWED_METHODS.length ? `- NOT use these teaching methods: ${DISALLOWED_METHODS.join(', ')}` : ''}
 
 Requirements for each field:
 - **title**: Short, action-oriented title only (e.g. "Keep-Change-Flip Error Analysis"). Do NOT append the format name, a parenthetical, or any other label — just the title.
-- **activityStructure**: The named structure you chose (e.g. "Favorite No", "Math Hospital / Diagnose & Repair"). Use one of the example names or your own — must be distinct from any already-generated activity for this misconception.
+- **activityStructure**: The title of the template you are enacting, copied exactly from the Template section above. Do not invent a name or substitute a different structure.
 - **summary**: 1-2 sentences; what the activity is and why it targets this error
 - **targets**: The specific skill this activity builds, in plain skill language (not ontology IDs)
 - **mathematicalTakeaway**: One sentence stating what students should leave understanding. Three different things, do not blur them: the misconception is what mathematical thinking is getting in the way, the instructional need is what students need to understand, and the takeaway is what they should leave understanding. Write the mathematics, not the lesson.
@@ -687,7 +634,10 @@ ${JSON.stringify(examples, null, 2)}`;
         { role: 'system', content: 'You are an expert K-12 math instructional coach. Output exclusively valid JSON.' },
         { role: 'user', content: userContent },
       ],
-      response_format: zodResponseFormat(NextStepActivity, 'nextStepActivity'),
+      // `phases` is added only when a template fixed the output shape. The prose
+      // fields are unchanged either way, so a caller that passes no template gets
+      // byte-identical behaviour to before.
+      response_format: zodResponseFormat(ActivitySchema, 'nextStepActivity'),
     });
 
     const raw = completion.choices[0]?.message?.content;
@@ -695,7 +645,7 @@ ${JSON.stringify(examples, null, 2)}`;
 
     recordSubCall('generate-activity', MODEL, completion, { fellBack: false });
 
-    const structured = NextStepActivity.parse(JSON.parse(raw));
+    const structured = ActivitySchema.parse(JSON.parse(raw));
 
     // Merge named example properties into the array the frontend expects
     const rawSteps = structured.tabs.activitySteps;
