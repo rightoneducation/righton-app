@@ -83,7 +83,7 @@ export type ActivityType =
   | 'FAVORITE_NO'
   | 'COMPARE_THE_THINKING'
   | 'MULTIPLE_REPRESENTATIONS'
-  | 'MATH_HOSPITAL';
+  | 'MATH_DETECTIVE';
 
 export type WorkStatus = 'CORRECT' | 'INCORRECT' | 'NEUTRAL';
 
@@ -213,7 +213,7 @@ export interface IRepresentationsContent {
 }
 
 export interface IMathHospitalContent {
-  type: 'MATH_HOSPITAL';
+  type: 'MATH_DETECTIVE';
   title: string;
   problem: string;
   problemChecklist: string;

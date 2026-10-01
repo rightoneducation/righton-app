@@ -57,7 +57,7 @@ export default function ActivityPhase({ content }: Props) {
         );
       case 'MULTIPLE_REPRESENTATIONS':
         return <MultipleRepresentations content={content} />;
-      case 'MATH_HOSPITAL':
+      case 'MATH_DETECTIVE':
         return <MathHospital content={content} />;
       default:
         return null;

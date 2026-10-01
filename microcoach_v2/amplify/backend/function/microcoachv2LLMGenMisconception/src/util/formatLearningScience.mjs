@@ -6,10 +6,20 @@
  * prompt as raw JSON — roughly 21k tokens per session — with nothing labelled or
  * explained to the model.
  *
- * Everything the graph returns is rendered here, deliberately. This is an
- * exploratory study: a field that is not in the prompt cannot be ablated, so
- * filtering before we have evidence would pre-judge the very question the
- * experiment exists to answer. Narrow it later, from results.
+ * Everything the graph returns is rendered here, deliberately — a field that is not
+ * in the prompt cannot be ablated, so filtering before we had evidence would have
+ * pre-judged the question the experiment exists to answer. One narrowing has since
+ * been made from results, as anticipated:
+ *
+ * The instructional strategies attached to each LVN factor are NOT rendered. This
+ * function feeds only the misconception and instructional-need stages, which should
+ * name mathematics rather than pedagogy. Listing the strategies there gave the model
+ * a hundred named teaching moves to draw on, and it did: misconceptions came back
+ * written in learning-science vocabulary ("weak strategy use", "working-memory
+ * demands") and instructional needs came back recommending activities. Activity
+ * generation still receives them, and renders them itself.
+ *
+ * Both lambdas hold an identical copy of this file — change them together.
  */
 export function formatLearningScience(data) {
   const standards = data?.standards ?? [];
@@ -46,7 +56,7 @@ export function formatLearningScience(data) {
     }
 
     if (s.lvnFactors?.length) {
-      lines.push('', '**Learning variability factors** (research-backed, relevant to this standard):');
+      lines.push('', '**Learning variability factors** (research-backed, relevant to this standard — factors only; instructional strategies are deliberately excluded at this stage):');
       for (const f of s.lvnFactors) {
         // An entry the caller already rendered in full under an earlier standard
         // (dedupeGraph leaves a `seeAbove` stub) is named once, not repeated.
@@ -57,15 +67,6 @@ export function formatLearningScience(data) {
         lines.push('', `  - **${f.name}** (${f.category}): ${f.description}`);
         if (f.gradeLevel?.length)  lines.push(`    Grade levels: ${f.gradeLevel.join(', ')}`);
         if (f.academicSubject)     lines.push(`    Subject: ${f.academicSubject}`);
-
-        if (f.strategies?.length) {
-          lines.push('    Instructional strategies targeting this factor:');
-          lines.push(...f.strategies.map(
-            (x) => x.seeAbove
-              ? `      - **${x.name}** — described above`
-              : `      - **${x.name}**${x.category ? ` (${x.category})` : ''}: ${x.description}`
-          ));
-        }
 
         if (f.learnerModels?.length) {
           lines.push('    Learner models carrying this factor:');

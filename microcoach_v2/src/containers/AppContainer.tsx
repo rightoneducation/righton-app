@@ -5,6 +5,7 @@ import Header, { HeaderVariant } from '../components/Header';
 import Footer from '../components/Footer';
 import NeedHelpButton from '../components/NeedHelpButton';
 import { useScreenSize } from '../hooks/useScreenSize';
+import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 
 /**
  * Owns the persistent page chrome. Mirrors central_v2's AppContainer, with a
@@ -35,6 +36,9 @@ interface AppContainerProps {
   headerVariant?: HeaderVariant;
   showFooter?: boolean;
   onLogOut?: () => void;
+  classrooms?: IMicroCoachClassroom[];
+  selectedClassroomId?: string | null;
+  onSelectClassroom?: (classroomId: string) => void;
 }
 
 export default function AppContainer({
@@ -42,6 +46,9 @@ export default function AppContainer({
   headerVariant = 'public',
   showFooter = true,
   onLogOut,
+  classrooms,
+  selectedClassroomId,
+  onSelectClassroom,
 }: AppContainerProps) {
   const screenSize = useScreenSize();
 
@@ -51,6 +58,9 @@ export default function AppContainer({
         screenSize={screenSize}
         variant={headerVariant}
         onLogOut={onLogOut}
+        classrooms={classrooms}
+        selectedClassroomId={selectedClassroomId}
+        onSelectClassroom={onSelectClassroom}
       />
       <BodyContainer component="main">{children}</BodyContainer>
       {headerVariant === 'app' && <NeedHelpButton />}

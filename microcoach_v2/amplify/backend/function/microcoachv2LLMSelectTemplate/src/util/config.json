@@ -3,6 +3,23 @@
     "description": "microcoachv2LLMSelectTemplate — for each instructional need from microcoachv2LLMGenInstrNeed, selects the top two activity templates from util/activityLibrary.json on instructional fit (misconception, response data, content, lesson context, template purpose), not on artifact type.",
     "model": "gpt-5-mini",
     "topN": 2,
-    "library": "util/activityLibrary.json"
+    "library": "util/activityLibrary.json",
+    "instructionalFit": {
+      "canonical": "Mirror of microcoachv2ScoresCalc/src/activityRubric.json → metrics[instructionalFit] (Wave 2 doc §3b). That file is canonical; keep this block in sync.",
+      "threshold": 2,
+      "levels": {
+        "3": "Exceptional fit: The selected template provides a highly appropriate instructional response to the identified instructional need and is particularly well suited to the student evidence, mathematical content, and context.",
+        "2": "Strong fit: The selected template appropriately addresses the instructional need and provides a meaningful opportunity for students to engage in the intended mathematical thinking.",
+        "1": "Partial fit: The selected template is related to the misconception or content, but does not adequately address what students most need to do next.",
+        "0": "Poor fit: The selected template does not meaningfully address the instructional need or is based on a substantially incorrect understanding of the student difficulty."
+      },
+      "examples": {
+        "context": "Students believe that a percentage increase followed by the same percentage decrease returns a quantity to its original value. The identified instructional need is to test the apparent rule, examine why it initially seems reasonable, and use multiplicative reasoning to construct a correct generalization.",
+        "3": "The selected template provides a strong structure for students to predict, test, compare cases, explain the pattern, and generalize it.",
+        "2": "The selected template asks them to compare two percentage-change examples and explain why the outcomes differ. This provides a meaningful opportunity to revise their reasoning, although it does not develop the generalization as fully as a 3-level response.",
+        "1": "The selected template primarily gives them several percentage-change calculations to complete. The topic matches, but students have little opportunity to investigate why the misconception arises or revise the underlying reasoning.",
+        "0": "The selected template asks them to memorize or practice an unrelated procedure, such as converting percentages to decimals, without addressing the misconception or the identified instructional need."
+      }
+    }
   }
 }

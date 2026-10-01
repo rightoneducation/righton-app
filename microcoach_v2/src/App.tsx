@@ -16,6 +16,10 @@ import Theme from './lib/Theme';
 import { GOOGLE_OAUTH_CLIENT_ID, ScreenType } from './lib/MicroCoachModels';
 import { useAPIClients } from './hooks/useAPIClients';
 import { useAuthResolver } from './hooks/useAuthActions';
+import { useClassrooms } from './hooks/useClassrooms';
+import { useMisconceptions } from './hooks/useMisconceptions';
+import { PlanItemsScope, usePlanItems } from './hooks/usePlanItems';
+import { useSessions } from './hooks/useSessions';
 import { useUserState } from './hooks/useUserState';
 import AppSwitch from './switches/AppSwitch';
 import Preview from './pages/preview/Preview';
@@ -41,8 +45,30 @@ Modal.setAppElement('#root');
 
 function RootLayout({ apiClients }: { apiClients: APIClients }) {
   const user = useUserState(apiClients);
-  useAuthResolver(apiClients, user);
-  const outletContext = useMemo(() => ({ apiClients }), [apiClients]);
+  // useAuthResolver(apiClients, user);
+  const classrooms = useClassrooms(apiClients, user.userProfile?.id ?? null);
+  const sessions = useSessions(apiClients, classrooms.selectedClassroomId);
+
+  useMisconceptions(apiClients, 'ef3872a1-eb21-4eb3-8ade-56d2537b0898');
+
+  let planScope: PlanItemsScope = null;
+  if (sessions.selectedSessionId) {
+    planScope = {
+      type: 'session',
+      sessionId: sessions.selectedSessionId,
+    };
+  } else if (classrooms.selectedClassroomId) {
+    planScope = {
+      type: 'class',
+      classId: classrooms.selectedClassroomId,
+    };
+  }
+  const plan = usePlanItems(apiClients, planScope);
+
+  const outletContext = useMemo(
+    () => ({ apiClients, user, classrooms, sessions, plan }),
+    [apiClients, classrooms, plan, sessions, user],
+  );
   return (
     <>
       {/*

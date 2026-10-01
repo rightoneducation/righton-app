@@ -44,8 +44,9 @@ export abstract class BaseAPIClient {
     query: any,
     options?: GraphQLOptions
   ): Promise<GraphQLResult<T>> {
-    const authMode = await this.auth.verifyAuth() ? "userPool" : "iam";
+    const authMode = await this.auth.verifyAuth() ? "userPool" : "apiKey";
     const response = client.graphql({query: query, variables: options, authMode: authMode as GraphQLAuthMode}) as unknown;
+    console.log(response);
     return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
   }
 
@@ -57,7 +58,7 @@ export abstract class BaseAPIClient {
     mutation: any,
     options?: GraphQLOptions
   ): Promise<GraphQLResult<T>> {
-    const authMode = await this.auth.verifyAuth() ? "userPool" : "iam";
+    const authMode = await this.auth.verifyAuth() ? "userPool" : "apiKey";
     const response = client.graphql({query: mutation, variables: options, authMode: authMode as GraphQLAuthMode}) as unknown;
     return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
   }
@@ -67,7 +68,7 @@ export abstract class BaseAPIClient {
     callback: (value: T) => void
   ) {
     //@ts-ignore
-    const authMode = await this.auth.verifyAuth() ? "userPool" : "iam";
+    const authMode = await this.auth.verifyAuth() ? "userPool" : "apiKey";
     const result = client.graphql({
       query: subscription.query,
       variables: subscription.variables,

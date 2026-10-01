@@ -2,121 +2,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getMicroCoachUser = /* GraphQL */ `
-  query GetMicroCoachUser($id: ID!) {
-    getMicroCoachUser(id: $id) {
-      id
-      cognitoId
-      email
-      firstName
-      lastName
-      classes {
-        items {
-          id
-          userId
-          sessions {
-            items {
-              id
-              classId
-              sessionLabel
-              weekLabel
-              weekNumber
-              topic
-              ccssStandards
-              status
-              publishStatus
-              studentWorksAnalyzed
-              studentsWithStrongUnderstanding
-              studentsWithStrongUnderstandingIds
-              studentIdsNeedingSupport
-              ppqAssessmentId
-              postPpqAssessmentId
-              pregeneratedNextSteps
-              evaluationResults
-              createdAt
-              updatedAt
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          students {
-            items {
-              id
-              classId
-              name
-              externalId
-              createdAt
-              updatedAt
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          name
-          grade
-          state
-          schoolYear
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      role
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const listMicroCoachUsers = /* GraphQL */ `
-  query ListMicroCoachUsers(
-    $filter: ModelMicroCoachUserFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMicroCoachUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        cognitoId
-        email
-        firstName
-        lastName
-        classes {
-          items {
-            id
-            userId
-            sessions {
-              nextToken
-              __typename
-            }
-            students {
-              nextToken
-              __typename
-            }
-            name
-            grade
-            state
-            schoolYear
-            createdAt
-            updatedAt
-            __typename
-          }
-          nextToken
-          __typename
-        }
-        role
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
 export const getMicroCoachClassroom = /* GraphQL */ `
   query GetMicroCoachClassroom($id: ID!) {
     getMicroCoachClassroom(id: $id) {
@@ -358,7 +243,7 @@ export const getMicroCoachSession = /* GraphQL */ `
           id
           sessionId
           classId
-          activities {
+          activity {
             items {
               id
               misconceptionId
@@ -467,7 +352,7 @@ export const listMicroCoachSessions = /* GraphQL */ `
             id
             sessionId
             classId
-            activities {
+            activity {
               nextToken
               __typename
             }
@@ -553,218 +438,6 @@ export const listMicroCoachAssessments = /* GraphQL */ `
     }
   }
 `;
-export const getMicroCoachMisconception = /* GraphQL */ `
-  query GetMicroCoachMisconception($id: ID!) {
-    getMicroCoachMisconception(id: $id) {
-      id
-      sessionId
-      classId
-      activities {
-        items {
-          id
-          misconceptionId
-          sessionId
-          classId
-          activityType
-          title
-          isSelected
-          selectLabel
-          detailStatus
-          routine
-          durationMinutes
-          durationLabel
-          grouping {
-            level
-            label
-            __typename
-          }
-          targets
-          instructionalMove
-          strategyTag
-          phases
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      rank
-      badge
-      title
-      titleCased
-      shortLabel
-      description
-      consequence
-      prevalence {
-        level
-        label
-        studentsNeedingSupport
-        studentsUnderstood
-        studentsNoResponse
-        totalAnalyzed
-        supportSummaryLabel
-        understoodSummaryLabel
-        shortCountLabel
-        __typename
-      }
-      detailStatus
-      studentWork
-      skillContext
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const listMicroCoachMisconceptions = /* GraphQL */ `
-  query ListMicroCoachMisconceptions(
-    $filter: ModelMicroCoachMisconceptionFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMicroCoachMisconceptions(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        sessionId
-        classId
-        activities {
-          items {
-            id
-            misconceptionId
-            sessionId
-            classId
-            activityType
-            title
-            isSelected
-            selectLabel
-            detailStatus
-            routine
-            durationMinutes
-            durationLabel
-            grouping {
-              level
-              label
-              __typename
-            }
-            targets
-            instructionalMove
-            strategyTag
-            phases
-            createdAt
-            updatedAt
-            __typename
-          }
-          nextToken
-          __typename
-        }
-        rank
-        badge
-        title
-        titleCased
-        shortLabel
-        description
-        consequence
-        prevalence {
-          level
-          label
-          studentsNeedingSupport
-          studentsUnderstood
-          studentsNoResponse
-          totalAnalyzed
-          supportSummaryLabel
-          understoodSummaryLabel
-          shortCountLabel
-          __typename
-        }
-        detailStatus
-        studentWork
-        skillContext
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const getMicroCoachActivity = /* GraphQL */ `
-  query GetMicroCoachActivity($id: ID!) {
-    getMicroCoachActivity(id: $id) {
-      id
-      misconceptionId
-      sessionId
-      classId
-      activityType
-      title
-      isSelected
-      selectLabel
-      detailStatus
-      routine
-      durationMinutes
-      durationLabel
-      grouping {
-        level
-        label
-        __typename
-      }
-      targets
-      instructionalMove
-      strategyTag
-      phases
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const listMicroCoachActivities = /* GraphQL */ `
-  query ListMicroCoachActivities(
-    $filter: ModelMicroCoachActivityFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMicroCoachActivities(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        misconceptionId
-        sessionId
-        classId
-        activityType
-        title
-        isSelected
-        selectLabel
-        detailStatus
-        routine
-        durationMinutes
-        durationLabel
-        grouping {
-          level
-          label
-          __typename
-        }
-        targets
-        instructionalMove
-        strategyTag
-        phases
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
 export const getMicroCoachSavedPlan = /* GraphQL */ `
   query GetMicroCoachSavedPlan($id: ID!) {
     getMicroCoachSavedPlan(id: $id) {
@@ -802,6 +475,451 @@ export const listMicroCoachSavedPlans = /* GraphQL */ `
           status
           __typename
         }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const microCoachClassroomsByUserId = /* GraphQL */ `
+  query MicroCoachClassroomsByUserId(
+    $userId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMicroCoachClassroomFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    microCoachClassroomsByUserId(
+      userId: $userId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        sessions {
+          items {
+            id
+            classId
+            sessionLabel
+            weekLabel
+            weekNumber
+            topic
+            ccssStandards
+            status
+            publishStatus
+            studentWorksAnalyzed
+            studentsWithStrongUnderstanding
+            studentsWithStrongUnderstandingIds
+            studentIdsNeedingSupport
+            ppqAssessmentId
+            postPpqAssessmentId
+            assessments {
+              nextToken
+              __typename
+            }
+            misconceptions {
+              nextToken
+              __typename
+            }
+            pregeneratedNextSteps
+            evaluationResults
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        students {
+          items {
+            id
+            classId
+            name
+            externalId
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        name
+        grade
+        state
+        schoolYear
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const microCoachStudentsByClassId = /* GraphQL */ `
+  query MicroCoachStudentsByClassId(
+    $classId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMicroCoachStudentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    microCoachStudentsByClassId(
+      classId: $classId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        classId
+        name
+        externalId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const microCoachSessionsByClassId = /* GraphQL */ `
+  query MicroCoachSessionsByClassId(
+    $classId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMicroCoachSessionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    microCoachSessionsByClassId(
+      classId: $classId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        classId
+        sessionLabel
+        weekLabel
+        weekNumber
+        topic
+        ccssStandards
+        status
+        publishStatus
+        studentWorksAnalyzed
+        studentsWithStrongUnderstanding
+        studentsWithStrongUnderstandingIds
+        studentIdsNeedingSupport
+        ppqAssessmentId
+        postPpqAssessmentId
+        assessments {
+          items {
+            id
+            classId
+            sessionId
+            assessmentCode
+            type
+            weekNumber
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        misconceptions {
+          items {
+            id
+            sessionId
+            classId
+            activity {
+              nextToken
+              __typename
+            }
+            rank
+            badge
+            title
+            titleCased
+            shortLabel
+            description
+            consequence
+            prevalence {
+              level
+              label
+              studentsNeedingSupport
+              studentsUnderstood
+              studentsNoResponse
+              totalAnalyzed
+              supportSummaryLabel
+              understoodSummaryLabel
+              shortCountLabel
+              __typename
+            }
+            detailStatus
+            studentWork
+            skillContext
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        pregeneratedNextSteps
+        evaluationResults
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const microCoachAssessmentsByClassId = /* GraphQL */ `
+  query MicroCoachAssessmentsByClassId(
+    $classId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMicroCoachAssessmentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    microCoachAssessmentsByClassId(
+      classId: $classId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        classId
+        sessionId
+        assessmentCode
+        type
+        weekNumber
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const microCoachAssessmentsBySessionId = /* GraphQL */ `
+  query MicroCoachAssessmentsBySessionId(
+    $sessionId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMicroCoachAssessmentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    microCoachAssessmentsBySessionId(
+      sessionId: $sessionId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        classId
+        sessionId
+        assessmentCode
+        type
+        weekNumber
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const microCoachSavedPlansByClassId = /* GraphQL */ `
+  query MicroCoachSavedPlansByClassId(
+    $classId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMicroCoachSavedPlanFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    microCoachSavedPlansByClassId(
+      classId: $classId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        classId
+        sessionId
+        items {
+          id
+          status
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const microCoachSavedPlansBySessionId = /* GraphQL */ `
+  query MicroCoachSavedPlansBySessionId(
+    $sessionId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMicroCoachSavedPlanFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    microCoachSavedPlansBySessionId(
+      sessionId: $sessionId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        classId
+        sessionId
+        items {
+          id
+          status
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getMicroCoachUser = /* GraphQL */ `
+  query GetMicroCoachUser($id: ID!) {
+    getMicroCoachUser(id: $id) {
+      id
+      cognitoId
+      email
+      firstName
+      lastName
+      classes {
+        items {
+          id
+          userId
+          sessions {
+            items {
+              id
+              classId
+              sessionLabel
+              weekLabel
+              weekNumber
+              topic
+              ccssStandards
+              status
+              publishStatus
+              studentWorksAnalyzed
+              studentsWithStrongUnderstanding
+              studentsWithStrongUnderstandingIds
+              studentIdsNeedingSupport
+              ppqAssessmentId
+              postPpqAssessmentId
+              pregeneratedNextSteps
+              evaluationResults
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          students {
+            items {
+              id
+              classId
+              name
+              externalId
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          name
+          grade
+          state
+          schoolYear
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listMicroCoachUsers = /* GraphQL */ `
+  query ListMicroCoachUsers(
+    $filter: ModelMicroCoachUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMicroCoachUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        cognitoId
+        email
+        firstName
+        lastName
+        classes {
+          items {
+            id
+            userId
+            sessions {
+              nextToken
+              __typename
+            }
+            students {
+              nextToken
+              __typename
+            }
+            name
+            grade
+            state
+            schoolYear
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        role
         createdAt
         updatedAt
         __typename
@@ -973,190 +1091,108 @@ export const usersByRole = /* GraphQL */ `
     }
   }
 `;
-export const microCoachClassroomsByUserId = /* GraphQL */ `
-  query MicroCoachClassroomsByUserId(
-    $userId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelMicroCoachClassroomFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    microCoachClassroomsByUserId(
-      userId: $userId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        userId
-        sessions {
-          items {
-            id
-            classId
-            sessionLabel
-            weekLabel
-            weekNumber
-            topic
-            ccssStandards
-            status
-            publishStatus
-            studentWorksAnalyzed
-            studentsWithStrongUnderstanding
-            studentsWithStrongUnderstandingIds
-            studentIdsNeedingSupport
-            ppqAssessmentId
-            postPpqAssessmentId
-            assessments {
-              nextToken
-              __typename
-            }
-            misconceptions {
-              nextToken
-              __typename
-            }
-            pregeneratedNextSteps
-            evaluationResults
-            createdAt
-            updatedAt
+export const getMicroCoachMisconception = /* GraphQL */ `
+  query GetMicroCoachMisconception($id: ID!) {
+    getMicroCoachMisconception(id: $id) {
+      id
+      sessionId
+      classId
+      activity {
+        items {
+          id
+          misconceptionId
+          sessionId
+          classId
+          activityType
+          title
+          isSelected
+          selectLabel
+          detailStatus
+          routine
+          durationMinutes
+          durationLabel
+          grouping {
+            level
+            label
             __typename
           }
-          nextToken
+          targets
+          instructionalMove
+          strategyTag
+          phases
+          createdAt
+          updatedAt
           __typename
         }
-        students {
-          items {
-            id
-            classId
-            name
-            externalId
-            createdAt
-            updatedAt
-            __typename
-          }
-          nextToken
-          __typename
-        }
-        name
-        grade
-        state
-        schoolYear
-        createdAt
-        updatedAt
+        nextToken
         __typename
       }
-      nextToken
+      rank
+      badge
+      title
+      titleCased
+      shortLabel
+      description
+      consequence
+      prevalence {
+        level
+        label
+        studentsNeedingSupport
+        studentsUnderstood
+        studentsNoResponse
+        totalAnalyzed
+        supportSummaryLabel
+        understoodSummaryLabel
+        shortCountLabel
+        __typename
+      }
+      detailStatus
+      studentWork
+      skillContext
+      createdAt
+      updatedAt
       __typename
     }
   }
 `;
-export const microCoachStudentsByClassId = /* GraphQL */ `
-  query MicroCoachStudentsByClassId(
-    $classId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelMicroCoachStudentFilterInput
+export const listMicroCoachMisconceptions = /* GraphQL */ `
+  query ListMicroCoachMisconceptions(
+    $filter: ModelMicroCoachMisconceptionFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    microCoachStudentsByClassId(
-      classId: $classId
-      sortDirection: $sortDirection
+    listMicroCoachMisconceptions(
       filter: $filter
       limit: $limit
       nextToken: $nextToken
     ) {
       items {
         id
+        sessionId
         classId
-        name
-        externalId
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const microCoachSessionsByClassId = /* GraphQL */ `
-  query MicroCoachSessionsByClassId(
-    $classId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelMicroCoachSessionFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    microCoachSessionsByClassId(
-      classId: $classId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        classId
-        sessionLabel
-        weekLabel
-        weekNumber
-        topic
-        ccssStandards
-        status
-        publishStatus
-        studentWorksAnalyzed
-        studentsWithStrongUnderstanding
-        studentsWithStrongUnderstandingIds
-        studentIdsNeedingSupport
-        ppqAssessmentId
-        postPpqAssessmentId
-        assessments {
+        activity {
           items {
             id
-            classId
-            sessionId
-            assessmentCode
-            type
-            weekNumber
-            createdAt
-            updatedAt
-            __typename
-          }
-          nextToken
-          __typename
-        }
-        misconceptions {
-          items {
-            id
+            misconceptionId
             sessionId
             classId
-            activities {
-              nextToken
-              __typename
-            }
-            rank
-            badge
+            activityType
             title
-            titleCased
-            shortLabel
-            description
-            consequence
-            prevalence {
+            isSelected
+            selectLabel
+            detailStatus
+            routine
+            durationMinutes
+            durationLabel
+            grouping {
               level
               label
-              studentsNeedingSupport
-              studentsUnderstood
-              studentsNoResponse
-              totalAnalyzed
-              supportSummaryLabel
-              understoodSummaryLabel
-              shortCountLabel
               __typename
             }
-            detailStatus
-            studentWork
-            skillContext
+            targets
+            instructionalMove
+            strategyTag
+            phases
             createdAt
             updatedAt
             __typename
@@ -1164,70 +1200,28 @@ export const microCoachSessionsByClassId = /* GraphQL */ `
           nextToken
           __typename
         }
-        pregeneratedNextSteps
-        evaluationResults
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const microCoachAssessmentsByClassId = /* GraphQL */ `
-  query MicroCoachAssessmentsByClassId(
-    $classId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelMicroCoachAssessmentFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    microCoachAssessmentsByClassId(
-      classId: $classId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        classId
-        sessionId
-        assessmentCode
-        type
-        weekNumber
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const microCoachAssessmentsBySessionId = /* GraphQL */ `
-  query MicroCoachAssessmentsBySessionId(
-    $sessionId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelMicroCoachAssessmentFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    microCoachAssessmentsBySessionId(
-      sessionId: $sessionId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        classId
-        sessionId
-        assessmentCode
-        type
-        weekNumber
+        rank
+        badge
+        title
+        titleCased
+        shortLabel
+        description
+        consequence
+        prevalence {
+          level
+          label
+          studentsNeedingSupport
+          studentsUnderstood
+          studentsNoResponse
+          totalAnalyzed
+          supportSummaryLabel
+          understoodSummaryLabel
+          shortCountLabel
+          __typename
+        }
+        detailStatus
+        studentWork
+        skillContext
         createdAt
         updatedAt
         __typename
@@ -1256,7 +1250,7 @@ export const microCoachMisconceptionsBySessionId = /* GraphQL */ `
         id
         sessionId
         classId
-        activities {
+        activity {
           items {
             id
             misconceptionId
@@ -1336,7 +1330,7 @@ export const microCoachMisconceptionsByClassId = /* GraphQL */ `
         id
         sessionId
         classId
-        activities {
+        activity {
           items {
             id
             misconceptionId
@@ -1388,6 +1382,78 @@ export const microCoachMisconceptionsByClassId = /* GraphQL */ `
         detailStatus
         studentWork
         skillContext
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getMicroCoachActivity = /* GraphQL */ `
+  query GetMicroCoachActivity($id: ID!) {
+    getMicroCoachActivity(id: $id) {
+      id
+      misconceptionId
+      sessionId
+      classId
+      activityType
+      title
+      isSelected
+      selectLabel
+      detailStatus
+      routine
+      durationMinutes
+      durationLabel
+      grouping {
+        level
+        label
+        __typename
+      }
+      targets
+      instructionalMove
+      strategyTag
+      phases
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listMicroCoachActivities = /* GraphQL */ `
+  query ListMicroCoachActivities(
+    $filter: ModelMicroCoachActivityFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMicroCoachActivities(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        misconceptionId
+        sessionId
+        classId
+        activityType
+        title
+        isSelected
+        selectLabel
+        detailStatus
+        routine
+        durationMinutes
+        durationLabel
+        grouping {
+          level
+          label
+          __typename
+        }
+        targets
+        instructionalMove
+        strategyTag
+        phases
         createdAt
         updatedAt
         __typename
@@ -1526,72 +1592,6 @@ export const microCoachActivitiesByClassId = /* GraphQL */ `
         instructionalMove
         strategyTag
         phases
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const microCoachSavedPlansByClassId = /* GraphQL */ `
-  query MicroCoachSavedPlansByClassId(
-    $classId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelMicroCoachSavedPlanFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    microCoachSavedPlansByClassId(
-      classId: $classId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        classId
-        sessionId
-        items {
-          id
-          status
-          __typename
-        }
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const microCoachSavedPlansBySessionId = /* GraphQL */ `
-  query MicroCoachSavedPlansBySessionId(
-    $sessionId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelMicroCoachSavedPlanFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    microCoachSavedPlansBySessionId(
-      sessionId: $sessionId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        classId
-        sessionId
-        items {
-          id
-          status
-          __typename
-        }
         createdAt
         updatedAt
         __typename
