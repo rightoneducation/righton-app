@@ -10,7 +10,7 @@ type MicroCoachUser
       # each teacher owns (creates/reads/updates/deletes) their own record,
       # keyed by their Cognito sub stored in `cognitoId`
       {
-        allow: owner
+        allow: public
         ownerField: "cognitoId"
         operations: [create, read, update, delete]
       }
@@ -165,7 +165,7 @@ type Prevalence {
 enum ActivityType {
   INCORRECT_WORKED_EXAMPLES
   COMPARE_THE_THINKING
-  MATH_HOSPITAL
+  MATH_DETECTIVE
   MULTIPLE_REPRESENTATIONS
   FAVORITE_NO
 }

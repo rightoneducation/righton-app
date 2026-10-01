@@ -2,121 +2,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getMicroCoachUser = /* GraphQL */ `
-  query GetMicroCoachUser($id: ID!) {
-    getMicroCoachUser(id: $id) {
-      id
-      cognitoId
-      email
-      firstName
-      lastName
-      classes {
-        items {
-          id
-          userId
-          sessions {
-            items {
-              id
-              classId
-              sessionLabel
-              weekLabel
-              weekNumber
-              topic
-              ccssStandards
-              status
-              publishStatus
-              studentWorksAnalyzed
-              studentsWithStrongUnderstanding
-              studentsWithStrongUnderstandingIds
-              studentIdsNeedingSupport
-              ppqAssessmentId
-              postPpqAssessmentId
-              pregeneratedNextSteps
-              evaluationResults
-              createdAt
-              updatedAt
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          students {
-            items {
-              id
-              classId
-              name
-              externalId
-              createdAt
-              updatedAt
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          name
-          grade
-          state
-          schoolYear
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      role
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const listMicroCoachUsers = /* GraphQL */ `
-  query ListMicroCoachUsers(
-    $filter: ModelMicroCoachUserFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMicroCoachUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        cognitoId
-        email
-        firstName
-        lastName
-        classes {
-          items {
-            id
-            userId
-            sessions {
-              nextToken
-              __typename
-            }
-            students {
-              nextToken
-              __typename
-            }
-            name
-            grade
-            state
-            schoolYear
-            createdAt
-            updatedAt
-            __typename
-          }
-          nextToken
-          __typename
-        }
-        role
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
 export const getMicroCoachClassroom = /* GraphQL */ `
   query GetMicroCoachClassroom($id: ID!) {
     getMicroCoachClassroom(id: $id) {
@@ -358,7 +243,7 @@ export const getMicroCoachSession = /* GraphQL */ `
           id
           sessionId
           classId
-          activities {
+          activity {
             items {
               id
               misconceptionId
@@ -467,7 +352,7 @@ export const listMicroCoachSessions = /* GraphQL */ `
             id
             sessionId
             classId
-            activities {
+            activity {
               nextToken
               __typename
             }
@@ -559,7 +444,7 @@ export const getMicroCoachMisconception = /* GraphQL */ `
       id
       sessionId
       classId
-      activities {
+      activity {
         items {
           id
           misconceptionId
@@ -632,7 +517,7 @@ export const listMicroCoachMisconceptions = /* GraphQL */ `
         id
         sessionId
         classId
-        activities {
+        activity {
           items {
             id
             misconceptionId
@@ -811,168 +696,6 @@ export const listMicroCoachSavedPlans = /* GraphQL */ `
     }
   }
 `;
-export const usersByCognitoId = /* GraphQL */ `
-  query UsersByCognitoId(
-    $cognitoId: String!
-    $sortDirection: ModelSortDirection
-    $filter: ModelMicroCoachUserFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    usersByCognitoId(
-      cognitoId: $cognitoId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        cognitoId
-        email
-        firstName
-        lastName
-        classes {
-          items {
-            id
-            userId
-            sessions {
-              nextToken
-              __typename
-            }
-            students {
-              nextToken
-              __typename
-            }
-            name
-            grade
-            state
-            schoolYear
-            createdAt
-            updatedAt
-            __typename
-          }
-          nextToken
-          __typename
-        }
-        role
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const usersByEmail = /* GraphQL */ `
-  query UsersByEmail(
-    $email: String!
-    $sortDirection: ModelSortDirection
-    $filter: ModelMicroCoachUserFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    usersByEmail(
-      email: $email
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        cognitoId
-        email
-        firstName
-        lastName
-        classes {
-          items {
-            id
-            userId
-            sessions {
-              nextToken
-              __typename
-            }
-            students {
-              nextToken
-              __typename
-            }
-            name
-            grade
-            state
-            schoolYear
-            createdAt
-            updatedAt
-            __typename
-          }
-          nextToken
-          __typename
-        }
-        role
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const usersByRole = /* GraphQL */ `
-  query UsersByRole(
-    $role: UserRole!
-    $sortDirection: ModelSortDirection
-    $filter: ModelMicroCoachUserFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    usersByRole(
-      role: $role
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        cognitoId
-        email
-        firstName
-        lastName
-        classes {
-          items {
-            id
-            userId
-            sessions {
-              nextToken
-              __typename
-            }
-            students {
-              nextToken
-              __typename
-            }
-            name
-            grade
-            state
-            schoolYear
-            createdAt
-            updatedAt
-            __typename
-          }
-          nextToken
-          __typename
-        }
-        role
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
 export const microCoachClassroomsByUserId = /* GraphQL */ `
   query MicroCoachClassroomsByUserId(
     $userId: ID!
@@ -1131,7 +854,7 @@ export const microCoachSessionsByClassId = /* GraphQL */ `
             id
             sessionId
             classId
-            activities {
+            activity {
               nextToken
               __typename
             }
@@ -1256,7 +979,7 @@ export const microCoachMisconceptionsBySessionId = /* GraphQL */ `
         id
         sessionId
         classId
-        activities {
+        activity {
           items {
             id
             misconceptionId
@@ -1336,7 +1059,7 @@ export const microCoachMisconceptionsByClassId = /* GraphQL */ `
         id
         sessionId
         classId
-        activities {
+        activity {
           items {
             id
             misconceptionId
@@ -1592,6 +1315,283 @@ export const microCoachSavedPlansBySessionId = /* GraphQL */ `
           status
           __typename
         }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getMicroCoachUser = /* GraphQL */ `
+  query GetMicroCoachUser($id: ID!) {
+    getMicroCoachUser(id: $id) {
+      id
+      cognitoId
+      email
+      firstName
+      lastName
+      classes {
+        items {
+          id
+          userId
+          sessions {
+            items {
+              id
+              classId
+              sessionLabel
+              weekLabel
+              weekNumber
+              topic
+              ccssStandards
+              status
+              publishStatus
+              studentWorksAnalyzed
+              studentsWithStrongUnderstanding
+              studentsWithStrongUnderstandingIds
+              studentIdsNeedingSupport
+              ppqAssessmentId
+              postPpqAssessmentId
+              pregeneratedNextSteps
+              evaluationResults
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          students {
+            items {
+              id
+              classId
+              name
+              externalId
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          name
+          grade
+          state
+          schoolYear
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listMicroCoachUsers = /* GraphQL */ `
+  query ListMicroCoachUsers(
+    $filter: ModelMicroCoachUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMicroCoachUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        cognitoId
+        email
+        firstName
+        lastName
+        classes {
+          items {
+            id
+            userId
+            sessions {
+              nextToken
+              __typename
+            }
+            students {
+              nextToken
+              __typename
+            }
+            name
+            grade
+            state
+            schoolYear
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        role
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const usersByCognitoId = /* GraphQL */ `
+  query UsersByCognitoId(
+    $cognitoId: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMicroCoachUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    usersByCognitoId(
+      cognitoId: $cognitoId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        cognitoId
+        email
+        firstName
+        lastName
+        classes {
+          items {
+            id
+            userId
+            sessions {
+              nextToken
+              __typename
+            }
+            students {
+              nextToken
+              __typename
+            }
+            name
+            grade
+            state
+            schoolYear
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        role
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const usersByEmail = /* GraphQL */ `
+  query UsersByEmail(
+    $email: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMicroCoachUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    usersByEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        cognitoId
+        email
+        firstName
+        lastName
+        classes {
+          items {
+            id
+            userId
+            sessions {
+              nextToken
+              __typename
+            }
+            students {
+              nextToken
+              __typename
+            }
+            name
+            grade
+            state
+            schoolYear
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        role
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const usersByRole = /* GraphQL */ `
+  query UsersByRole(
+    $role: UserRole!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMicroCoachUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    usersByRole(
+      role: $role
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        cognitoId
+        email
+        firstName
+        lastName
+        classes {
+          items {
+            id
+            userId
+            sessions {
+              nextToken
+              __typename
+            }
+            students {
+              nextToken
+              __typename
+            }
+            name
+            grade
+            state
+            schoolYear
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        role
         createdAt
         updatedAt
         __typename
