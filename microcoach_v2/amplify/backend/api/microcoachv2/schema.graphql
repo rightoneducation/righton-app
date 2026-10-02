@@ -124,7 +124,7 @@ enum DetailStatus {
   NOT_IN_WIREFRAMES
 }
 
-type MicroCoachMisconception @model @auth(rules: [{ allow: private }]) {
+type MicroCoachMisconception @model @auth(rules: [{ allow: private }, { allow: public, provider: apiKey }]) {
   id: ID!
   sessionId: ID! @index(name: "bySession")
   classId: ID! @index(name: "byClass")
@@ -187,7 +187,7 @@ enum ViewMode {
   STUDENT
 }
 
-type MicroCoachActivity @model @auth(rules: [{ allow: private }]) {
+type MicroCoachActivity @model @auth(rules: [{ allow: private }, { allow: public, provider: apiKey }]) {
   id: ID!
   misconceptionId: ID! @index(name: "byMisconception")
   sessionId: ID! @index(name: "bySession")
@@ -248,8 +248,8 @@ enum ContextDataType {
 # Shared knowledge library for the coaching pipeline — reference lessons,
 # strategies, exemplars. Not classroom data: no FK to Class/Session/Student.
 # Carries an apiKey rule because the seed/eval CLI reads it over the API key.
-# The only other apiKey model is the TEMPORARY MicroCoachPipelineRun at the
-# bottom of this file; nothing else should.
+# The other apiKey models are MicroCoachMisconception + MicroCoachActivity (guest
+# reads on Review) and the TEMPORARY MicroCoachPipelineRun at the bottom.
 type ContextData
   @model
   @auth(rules: [{ allow: private }, { allow: public, provider: apiKey }]) {

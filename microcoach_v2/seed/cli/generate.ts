@@ -500,6 +500,7 @@ function buildNextSteps(
     studentGroups: { buildingUnderstanding: string[]; understoodConcept: string[] };
     wrongAnswerExplanations: Array<{ answer: string; explanation: string }>;
     correctAnswerSolution: string[];
+    evidence?: any;
   }> = [],
   studentResponses: any[] = [],
 ): any[] {
@@ -595,7 +596,9 @@ function buildNextSteps(
         impactedObjectives,
         prerequisiteGaps,
       },
-      evidence: m.evidence ?? null,
+      // extras.evidence carries mostCommonError, derived from the most-chosen linked
+      // option; fall back to whatever the misconception itself had.
+      evidence: extras.evidence ?? m.evidence ?? null,
       questionErrorRates,
       ppqQuestions: extras.ppqQuestions ?? [],
       studentGroups: extras.studentGroups ?? { buildingUnderstanding: [], understoodConcept: [] },
@@ -1134,15 +1137,48 @@ async function processClassroom(
     correctAnswer: q.correctAnswer ?? null,
     classPercentCorrect: q.classPercentCorrect ?? null,
   }));
+  // Student counts per wrong option, so the most-chosen one can be named as the
+  // misconception's headline evidence.
+  const optionCounts = new Map<string, number>();
+  for (const q of ppq?.questions ?? []) {
+    for (const o of q.answerChoices ?? []) {
+      if (!o?.isCorrect) optionCounts.set(`Q${q.questionNumber}${o.letter}`, o.studentCount ?? 0);
+    }
+  }
+
   const misconceptionExtras = misconceptions.map((m: any) => {
     // The linked wrong answers say which questions surface this misconception.
     const qNums = [...new Set<number>((m.wrongAnswers ?? []).map((w: any) => w.questionNumber))].sort((a, b) => a - b);
+
+    // GenMisconception now returns an explanation per linked option, which is the
+    // shape `wrongAnswerExplanations` has always declared (and validate.ts has always
+    // asserted) but nothing filled. Options whose explanation came back empty are
+    // left out rather than carried as blank rows.
+    const wrongAnswerExplanations = (m.wrongAnswers ?? [])
+      .filter((w: any) => String(w?.explanation ?? '').trim())
+      .map((w: any) => ({
+        answer: `Q${w.questionNumber}${w.letter}`,
+        explanation: String(w.explanation).trim(),
+      }));
+
+    // `evidence.mostCommonError` is asserted by validate.ts and has been null on every
+    // generated misconception. The most-chosen linked option is the natural answer:
+    // it is the error the largest number of these students actually made.
+    const ranked = [...(m.wrongAnswers ?? [])]
+      .map((w: any) => ({ ref: `Q${w.questionNumber}${w.letter}`, explanation: String(w?.explanation ?? '').trim() }))
+      .filter((w) => w.explanation)
+      .sort((a, b) => (optionCounts.get(b.ref) ?? 0) - (optionCounts.get(a.ref) ?? 0));
+    const evidence = ranked.length
+      ? { ...(m.evidence ?? {}), mostCommonError: ranked[0].explanation }
+      : m.evidence ?? null;
+
     return {
       ppqQuestions: ppqQs,
       studentGroups: getStudentGroups(studentResponses, qNums, studentNameMap),
       studentData: getStudentPerformanceData(studentResponses, qNums, studentNameMap),
-      wrongAnswerExplanations: m.wrongAnswerExplanations ?? [],
+      wrongAnswerExplanations,
       correctAnswerSolution: m.correctAnswerSolution ?? [],
+      evidence,
     };
   });
 

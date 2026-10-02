@@ -13,9 +13,12 @@
     "styleExamples": [
       "Added exponents when multiplying powers with different bases",
       "Found perimeter instead of area",
-      "Treated 15% off as subtracting 15 from the price",
       "Reported the median as the middle of the unsorted list",
-      "Applied the negative sign to only the first term in the parentheses"
-    ]
+      "Applied the negative sign to only the first term in the parentheses",
+      "Read the 3 in y = 3x as the starting value instead of the rate"
+    ],
+    "styleExamplesNote": "Register only, for the per-option `text` field. Deliberately off-domain: these were in-domain teacher notes from the pilot Algebra document until 2026-09-16, and that document is the same assessment the fixtures use, so in-domain examples risk being copied onto the very questions being analysed. Each names a reasoning step that determines a specific wrong value — the property the prompt's part (a) asks for — rather than a bare slip.",
+    "enforceAdmission": false,
+    "enforceAdmissionNote": "false keeps validateOutput's well-formedness checks report-only: hits land in `admissionFlags` and nothing is dropped. The rejection channel has never fired in 16 recorded runs, so it gets a report-only pass before it is allowed to remove a misconception. Set true once the flags have been reviewed against a replay."
   }
 }
