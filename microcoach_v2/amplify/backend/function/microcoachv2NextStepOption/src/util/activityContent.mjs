@@ -168,6 +168,38 @@ const BY_TYPE = {
 
 export const CONTENT_TYPES = Object.keys(BY_TYPE);
 
+/**
+ * Where each layout keeps the one problem students are put in front of.
+ *
+ * The math-accuracy reviewer in index.mjs is generic over a single string, so it
+ * needs to be told which field that is per content type. INCORRECT_WORKED_EXAMPLES
+ * is absent on purpose: its problem lives per example in `examples[].prompt` and
+ * is reviewed by validateWorkedExamples, together with the work attempting it.
+ */
+const PROBLEM_FIELD = {
+  FAVORITE_NO: ['boardPrompt', 'problem'],
+  COMPARE_THE_THINKING: ['problem'],
+  MULTIPLE_REPRESENTATIONS: ['studentTask'],
+  MATH_DETECTIVE: ['problem'],
+  MAKE_YOUR_CASE: ['claim', 'text'],
+};
+
+/** The activity's central problem string, or null if this layout has no single one. */
+export function readActivityProblem(content) {
+  const path = PROBLEM_FIELD[content?.type];
+  if (!path) return null;
+  const value = path.reduce((node, key) => node?.[key], content);
+  return typeof value === 'string' && value.trim() ? value : null;
+}
+
+/** Writes a reviewed problem back in place. No-op for a layout with no single problem. */
+export function writeActivityProblem(content, problem) {
+  const path = PROBLEM_FIELD[content?.type];
+  if (!path) return;
+  const parent = path.slice(0, -1).reduce((node, key) => node?.[key], content);
+  if (parent) parent[path[path.length - 1]] = problem;
+}
+
 /** The content schema for one `contentType`, or null if there is no layout for it. */
 export function contentSchemaFor(contentType) {
   return BY_TYPE[contentType] ?? null;
@@ -182,19 +214,59 @@ const PhaseStep = z.object({
 });
 
 /**
+ * The groups the class is split into for the activity, matching
+ * IActivityPhases['beforeClass']['groupFormation'] and rendered in full by
+ * BeforeClassPhase.
+ *
+ * `students` is deliberately absent. The seed assigns students by score rank
+ * after generation (injectStudentsIntoGroups in seed/cli/generate.ts), so asking
+ * the model for names would only invite invented ones. The consequence is that
+ * injection is not optional: a path that skipped it would emit groups with no
+ * students, which is not what IActivityGroup declares.
+ *
+ * Group order is load-bearing — weakest first. post-analyze.ts takes every group
+ * but the last as its "needs help" cohort, so a model that labelled its groups
+ * strongest-first would silently invert that with no other symptom.
+ *
+ * `label` and `description` stay split rather than fused into one
+ * "Group A: Needs Concrete Support" string (which is what the Wave 1 tabs schema
+ * asked for): BeforeClassPhase renders the label in a headingSm above the
+ * description, so the two are separate slots in the layout.
+ */
+function groupFormationSchema(groupsMin, groupsMax) {
+  return z.object({
+    title: z.string(),
+    guidance: z.string().describe('High-level teacher guidance on grouping strategy — how to use the formative check to place students'),
+    groups: z
+      .array(
+        z.object({
+          label: z.string().describe('Short label only, e.g. "Group A". The descriptor belongs in `description`.'),
+          description: z.string().describe('Who belongs in this group and what they focus on'),
+        }),
+      )
+      .min(groupsMin)
+      .max(groupsMax)
+      .describe('Ordered weakest first: the first group needs the most support, the last the least.'),
+  });
+}
+
+/**
  * Matches IActivityPhases. `beforeClass` and `discussion` are nullable in the
  * interface, but asked for here — the template's classroomFlow supplies the prep
  * steps and its facilitation prompts supply the questions, so there is no reason
  * for either to come back empty.
+ *
+ * The group bounds are passed in rather than read from config here: they live on
+ * `nso.studentGroups` and index.mjs, the only caller, already holds them.
  */
-export function phasesSchemaFor(contentType) {
+export function phasesSchemaFor(contentType, { groupsMin = 2, groupsMax = 3 } = {}) {
   const content = contentSchemaFor(contentType);
   if (!content) return null;
   return z.object({
     beforeClass: z.object({
       title: z.string(),
-      checklist: z.array(PhaseStep).describe('What the teacher prepares. Keep it to what the 15-minute budget allows.'),
-      groupFormation: z.null().describe('Always null — grouping is carried separately'),
+      checklist: z.array(PhaseStep).describe('What the teacher prepares, including anything that must be printed or laid out. Keep it to what the 15-minute budget allows.'),
+      groupFormation: groupFormationSchema(groupsMin, groupsMax),
     }),
     activity: content,
     facilitation: z.object({

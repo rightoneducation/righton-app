@@ -45,15 +45,31 @@ export default function BeforeClassPhase({ beforeClass }: Props) {
       {beforeClass.checklist.map((item) => (
         <Stack key={item.order} direction="row" spacing={2}>
           <NumberBadge>{item.order}</NumberBadge>
-          <MathTypography
-            variant="rubikBody"
-            sx={{
-              flex: 1,
-              minWidth: 0,
-              color: 'designSystem.surface.atlanticNavy',
-            }}
-            text={item.title}
-          />
+          {/* Same title/body treatment StepListPhase gives facilitation and
+              discussion. The generator splits a prep step into a short label
+              plus the instruction; the mock writes the whole instruction into
+              `title` and carries no body, so the title is only weighted when
+              there is a body under it to be a label for. */}
+          <Stack
+            spacing={`${theme.sizing.space0}px`}
+            sx={{ flex: 1, minWidth: 0 }}
+          >
+            <MathTypography
+              variant="rubikBody"
+              sx={{
+                fontWeight: item.body ? 500 : undefined,
+                color: 'designSystem.surface.atlanticNavy',
+              }}
+              text={item.title}
+            />
+            {item.body && (
+              <MathTypography
+                variant="rubikBody"
+                sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                text={item.body}
+              />
+            )}
+          </Stack>
         </Stack>
       ))}
 
