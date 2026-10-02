@@ -31,7 +31,8 @@ const TEMPLATE_NAMES: Record<ActivityType, string> = {
   FAVORITE_NO: 'My Favorite No',
   COMPARE_THE_THINKING: 'Compare the Thinking',
   MULTIPLE_REPRESENTATIONS: 'Make the Connections',
-  MATH_HOSPITAL: 'Math Hospital',
+  MATH_DETECTIVE: 'Math Detective',
+  MAKE_YOUR_CASE: 'Make Your Case',
 };
 
 // Mirrors NeedHelpButton's floating treatment, but anchored bottom-left so the

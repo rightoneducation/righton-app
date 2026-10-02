@@ -14,6 +14,8 @@ import {
 } from './shared';
 import { FORMULAE } from './formulae';
 import MathText from '../../components/MathText';
+import ActivityPhase from '../../components/phases/ActivityPhase';
+import { IActivityContent } from '../../lib/PipelineModels';
 import { STAGES, GROUPS, Stage, Who, Origin } from './pipeline';
 
 /**
@@ -527,6 +529,74 @@ function Considered({ sel }: { sel: Rec }) {
   );
 }
 
+// Which content type each template generates into. Hand-copied from
+// activityLibrary.json's `contentType`, like the other constants on this page —
+// CRA cannot import from amplify/. Used to pair a pick with its activity, since
+// the two are matched by content type rather than by position.
+const TEMPLATE_CONTENT_TYPE: Record<string, string> = {
+  'spot-the-slip': 'INCORRECT_WORKED_EXAMPLES',
+  'my-favorite-no': 'FAVORITE_NO',
+  'compare-the-thinking': 'COMPARE_THE_THINKING',
+  'math-detective': 'MATH_DETECTIVE',
+  'make-your-case': 'MAKE_YOUR_CASE',
+};
+
+const KNOWN_CONTENT_TYPES = [
+  'INCORRECT_WORKED_EXAMPLES',
+  'FAVORITE_NO',
+  'COMPARE_THE_THINKING',
+  'MULTIPLE_REPRESENTATIONS',
+  'MATH_DETECTIVE',
+  'MAKE_YOUR_CASE',
+];
+
+/**
+ * The generated activity for one pick, rendered through the real component the
+ * app uses rather than a preview-only imitation — if it renders here it renders
+ * there.
+ *
+ * The run is read through loose `Rec` types on purpose, so the cast into
+ * `IActivityContent` happens here and only after `type` is checked against the
+ * known set. An unrecognised type means the generator produced something the UI
+ * has no case for, which is worth saying out loud rather than rendering blank.
+ */
+function GeneratedActivity({ activity, templateId, time }: { activity: Rec | null; templateId: string; time: string }) {
+  const type = asStr(activity?.type ?? null);
+  const known = activity != null && KNOWN_CONTENT_TYPES.includes(type);
+  return (
+    <section className="p2-activity-row">
+      <div className="p2-activity-head">
+        <span className="p2-block-label">Activity</span>
+        <span className="p2-activity-title">
+          {asStr(activity?.title ?? null) === '' ? (
+            '(untitled)'
+          ) : (
+            <MathText text={asStr(activity?.title ?? null)} inline />
+          )}
+        </span>
+        <span className="p2-pick-id">{templateId}</span>
+        {type !== '' && <span className="p2-mono p2-activity-type">{type}</span>}
+        {time !== '' && <span className="p2-meta">{time}</span>}
+      </div>
+      {known ? (
+        /* ActivityPhase brings its own teacher/student toggle for the types that
+           support one, so this wrapper adds no controls of its own. */
+        <div className="p2-activity-body">
+          <ActivityPhase content={activity as unknown as IActivityContent} />
+        </div>
+      ) : (
+        <p className="p2-text">
+          <span className="p2-nofit">
+            {activity == null
+              ? 'No activity was generated for this template.'
+              : `Unrecognised activity type ${type === '' ? '(missing)' : `"${type}"`} — nothing in the app renders this.`}
+          </span>
+        </p>
+      )}
+    </section>
+  );
+}
+
 function TemplateBlock({ item }: { item: Rec }) {
   const sel = asRec(item.selectedTemplates);
   const picks = sel ? asArray(sel.picks) : [];
@@ -619,6 +689,29 @@ function MisconceptionCard({
         <RubricBlock item={item} tie={tie} />
         <NeedBlock item={item} />
         <TemplateBlock item={item} />
+        {/* One full-width row per generated activity, after the reasoning blocks.
+            Paired to its pick by content type rather than by position: activities
+            are generated one per pick, so a single failed call would otherwise
+            shift every pairing after it. */}
+        {asArray(asRec(item.selectedTemplates)?.picks ?? null).map((pick) => {
+          const templateId = asStr(pick.templateId);
+          const want = TEMPLATE_CONTENT_TYPE[templateId];
+          const activityOf = (mo: Rec): Rec | null => {
+            const phases = asRec(mo.phases);
+            return phases ? asRec(phases.activity ?? null) : null;
+          };
+          const hit = want
+            ? asArray(item.moveOptions).find((mo) => asStr(activityOf(mo)?.type ?? null) === want)
+            : undefined;
+          return (
+            <GeneratedActivity
+              key={templateId}
+              templateId={templateId}
+              activity={hit ? activityOf(hit) : null}
+              time={hit ? asStr(hit.time) : ''}
+            />
+          );
+        })}
       </div>
     </details>
   );
@@ -880,6 +973,15 @@ const STYLES = `
 .p2-rubric-of { font-weight: 400; color: #8b939c; font-size: 11px; }
 .p2-rubric-total { color: #2f6df6; }
 .p2-rubric-from { color: #8b939c; font-size: 11px; }
+/* Activities get a row of their own rather than a column: the real components are
+   built for the app's full content width and read badly in a 340px grid cell. */
+.p2-activity-row { grid-column: 1 / -1; background: #fff; border: 1px solid #dfe3e8;
+  border-radius: 8px; padding: 12px 14px; min-width: 0; }
+.p2-activity-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+  margin: 0 -14px 12px; padding: 0 14px 8px; border-bottom: 1px solid #e6e9ed; }
+.p2-activity-title { font-size: 13px; font-weight: 700; color: #2c3238; }
+.p2-activity-type { font-size: 10px; color: #8b939c; }
+.p2-activity-body { min-width: 0; }
 .p2-considered { margin-top: 8px; }
 .p2-considered > summary { font-size: 11px; color: #6b7280; cursor: pointer; list-style: none; }
 .p2-considered > summary::-webkit-details-marker { display: none; }

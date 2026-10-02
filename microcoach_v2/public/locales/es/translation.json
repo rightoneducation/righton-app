@@ -36,7 +36,8 @@
     "stepNumber": "Paso {{number}}",
     "stepCorrect": "(Correcto)",
     "stepError": "← (Error: {{note}})",
-    "stepErrorBare": "← (Error)"
+    "stepErrorBare": "← (Error)",
+    "makeYourCasePositions": "Argumentos previstos"
   },
   "chooseActivity": {
     "back": "Volver a los conceptos erróneos",

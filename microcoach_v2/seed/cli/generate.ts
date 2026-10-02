@@ -537,6 +537,9 @@ function buildNextSteps(
         summary: activity.summary,
         targets: activity.targets ?? null,
         mathematicalTakeaway: activity.mathematicalTakeaway ?? null,
+        // The typed activity content the frontend renders, keyed by
+        // phases.activity.type. Null when the template had no content type.
+        phases: activity.phases ?? null,
         instructionalMove: activity.instructionalMove ?? null,
         strategyTag: activity.strategyTag ?? null,
         aiReasoning: activity.aiReasoning,
@@ -1040,48 +1043,29 @@ async function processClassroom(
   // `grade` is deliberately excluded — see microcoachv2LLMGenInstrNeed. The CCSS codes
   // carry grade already, and the classroom field was unvalidated free text.
   const classroomContext = { subject: classroom.subject, cohortSize: classroom.cohortSize };
-  const NEXT_STEP_FORMATS = ['whole_class', 'split_class'];
 
-  // 6a. Planning call — one cheap LLM call assigns diverse structures across all
-  //     misconceptions before parallel generation begins.
-  type StructurePlan = { misconceptionTitle: string; whole_class: string; split_class: string };
-  let structurePlan: StructurePlan[] = [];
-  if (ANALYSIS_ONLY) {
-    console.log('  --analysis-only: skipping instructional needs, planner and activity generation');
-  } else try {
-    process.stdout.write(`  Planning activity structures for ${misconceptions.length} misconceptions...`);
-    const plannerInput = {
-      planStructures: true,
-      misconceptions: JSON.stringify(misconceptions.map((m: any) => ({ title: m.title, description: m.description, ccssStandard: m.ccssStandard }))),
-      classroomContext: JSON.stringify(classroomContext),
-      trace: WANT_TRACE,
-    };
-    const raw = await invokeLambda(`microcoachv2NextStepOption-${AMPLIFY_ENV}`, { input: plannerInput });
-    // The planner used to return a bare array; it now returns an envelope carrying
-    // `_trace` so its tokens land in the manifest. Accept both, because the deployed
-    // Lambda may still be on the old contract.
-    const parsed = parseJson(raw);
-    const plannerResult = Array.isArray(parsed) ? { ok: true, assignments: parsed } : (parsed ?? { ok: false, assignments: [] });
-    structurePlan = plannerResult.assignments ?? [];
-    // Record the envelope, not the array — capture reads `_trace` off the output.
-    capture.recordCall('planner', plannerInput, plannerResult);
-    if (plannerResult.ok === false) {
-      console.log(` ✗ planner failed (${plannerResult.error ?? 'unknown'}) — activities will generate without suggested structures`);
-    }
-    console.log(` ✓  ${structurePlan.length} assignments`);
-  } catch (err) {
-    console.warn(`\n  ⚠ Structure planning failed, generating without suggestions: ${err}`);
-  }
-
-  // Helper to look up a misconception's suggested structure for a given format
-  const getSuggestedStructure = (title: string, fmt: string): string | null => {
-    const plan = structurePlan.find(p => p.misconceptionTitle === title);
-    return plan ? (plan as any)[fmt] ?? null : null;
-  };
-
-  // 6b. Generate activities — misconceptions in parallel, formats sequential within each
+  // 6. Generate activities — one per selected template.
+  //
+  // Wave 1 generated two activities per misconception by FORMAT (whole class, split
+  // class) and invented a structure for each, with a planning call beforehand to keep
+  // those structures varied. Wave 2 inverts that: the template is chosen upstream on
+  // instructional fit, and generation infills it. So variety comes from the templates
+  // and the loop runs over the picks, not over formats — which is also what the doc
+  // asks for, two activity options per misconception using different templates where
+  // the fit allows.
+  //
+  // A misconception whose templates all missed the fit threshold gets no activities.
+  // That is the intended outcome of the no-strong-fit rule, not a failure, so it is
+  // counted rather than hidden.
+  let misconceptionsWithoutActivities = 0;
   const activitiesPerGroup: any[][] = ANALYSIS_ONLY ? misconceptions.map(() => []) : await Promise.all(
     misconceptions.map(async (m: any, i: number) => {
+      const picks: any[] = m.selectedTemplates?.picks ?? [];
+      if (!picks.length) {
+        misconceptionsWithoutActivities += 1;
+        console.log(`  Next steps [${i + 1}/${misconceptions.length}]: ${m.title}... — no template cleared the fit threshold, no activities`);
+        return [];
+      }
       process.stdout.write(`  Next steps [${i + 1}/${misconceptions.length}]: ${m.title}...`);
       const relevant = nextStepExamples.filter(
         (ex: any) =>
@@ -1099,32 +1083,21 @@ async function processClassroom(
       const sd = misconceptionExtras[i]?.studentData ?? [];
       const resultList: any[] = [];
 
-      // Sequential within misconception so each format sees what was already generated
-      for (const fmt of NEXT_STEP_FORMATS) {
-        const existingActivities = resultList.map(a => ({
-          title: a.title,
-          format: a.format,
-          activityStructure: a.activityStructure,
-          strategyTag: a.strategyTag,
-          summary: a.summary,
-          instructionalMove: a.instructionalMove,
-          targets: a.targets,
-        }));
-        const suggestedStructure = getSuggestedStructure(m.title, fmt);
+      // Sequential rather than parallel within a misconception: cheap to keep, and
+      // the calls share a prompt prefix so the second benefits from the cache.
+      for (const pick of picks) {
         try {
           const activityInput = {
             ...baseInput,
-            preferredFormat: fmt,
+            selectedTemplate: JSON.stringify(pick),
             trace: WANT_TRACE,
-            ...(suggestedStructure && { suggestedStructure }),
-            ...(existingActivities.length > 0 && { existingActivities: JSON.stringify(existingActivities) }),
           };
           const raw = await invokeLambda(`microcoachv2NextStepOption-${AMPLIFY_ENV}`, { input: activityInput });
           const parsed = parseJson(raw);
-          capture.recordCall(`activity-${i + 1}-${fmt}`, activityInput, parsed);
+          capture.recordCall(`activity-${i + 1}-${pick.templateId}`, activityInput, parsed);
           resultList.push(injectStudentsIntoGroups(parsed, sd));
         } catch (err) {
-          console.error(`\n    ✗ format=${fmt}: ${err}`);
+          console.error(`\n    ✗ ${pick.templateId}: ${err}`);
         }
       }
 
@@ -1249,6 +1222,8 @@ async function processClassroom(
     // No longer 2 × templatesSelected: a selection returns up to two picks, and
     // fewer when fewer clear the instructional-fit gate.
     templatePicks: misconceptions.reduce((n: number, m: any) => n + (m.selectedTemplates?.picks?.length ?? 0), 0),
+    // Misconceptions that reached activity generation with no template to enact.
+    misconceptionsWithoutActivities,
     // How often the pipeline declined to force a template. Non-zero is a valid
     // outcome, not a failure — the doc says not to pick a weak template to fill a slot.
     selectionsWithOnePick: misconceptions.filter((m: any) => m.selectedTemplates?.picks?.length === 1).length,

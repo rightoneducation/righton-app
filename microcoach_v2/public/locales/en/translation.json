@@ -36,7 +36,8 @@
     "stepNumber": "Step {{number}}",
     "stepCorrect": "(Correct)",
     "stepError": "← (Error: {{note}})",
-    "stepErrorBare": "← (Error)"
+    "stepErrorBare": "← (Error)",
+    "makeYourCasePositions": "Anticipated arguments"
   },
   "chooseActivity": {
     "back": "Back to misconceptions",
