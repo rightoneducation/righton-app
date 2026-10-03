@@ -24,6 +24,17 @@ const DEFAULT_DURATION        = nso.targetDurationMinutes ?? 30;
 const DISALLOWED_METHODS      = nso.disallowedTeachingMethods ?? [];
 const GROUPS_MIN              = nso.studentGroups?.min ?? 2;
 const GROUPS_MAX              = nso.studentGroups?.max ?? 3;
+// Phase cardinality. These four config keys were written when the phases were
+// designed and then read by nothing, so every count drifted above its ceiling —
+// the checklist ran to 4 against a max of 3, facilitation to 8 against 6. They are
+// schema bounds now rather than prose, because a bound is the only form the model
+// reliably honours.
+const CHECKLIST_MIN           = nso.setupSteps?.min ?? 2;
+const CHECKLIST_MAX           = nso.setupSteps?.max ?? 3;
+const FACILITATION_MIN        = nso.activitySteps?.min ?? 4;
+const FACILITATION_MAX        = nso.activitySteps?.max ?? 6;
+const DISCUSSION_MIN          = nso.discussionQuestions?.min ?? 2;
+const DISCUSSION_MAX          = nso.discussionQuestions?.max ?? 3;
 const STRATEGY_TAGS           = nso.strategyTags ?? [];
 // How many LVN strategies per factor get a full description in the prompt.
 // Defaults to all of them: a field that is not in the prompt cannot be ablated,
@@ -31,7 +42,11 @@ const STRATEGY_TAGS           = nso.strategyTags ?? [];
 // `nextStepOption.maxLvnStrategyDetail` in prompt-config.json to cap it later.
 const MAX_LVN_STRATEGY_DETAIL = nso.maxLvnStrategyDetail ?? Infinity;
 const ALLOWED_DURATION_BUCKETS = nso.allowedDurationBuckets ?? [];
-const INCORRECT_EXAMPLES_COUNT     = nso.incorrectWorkedExamplesCount ?? 3;
+const INCORRECT_EXAMPLES_COUNT     = nso.incorrectWorkedExamplesCount ?? 2;
+// How much longer than the original a reviewed problem may be before the review is
+// treated as having produced something other than a problem. See
+// validateActivityProblem.
+const PROBLEM_GROWTH_LIMIT         = nso.problemGrowthLimit ?? 1.5;
 const INCORRECT_EXAMPLE_RULES      = nso.incorrectWorkedExampleRules ?? [];
 const INCORRECT_EXAMPLE_FEW_SHOT   = nso.incorrectWorkedExampleFewShot ?? [];
 const DESIGN_PRINCIPLES            = nso.designPrinciples ?? [];
@@ -84,6 +99,35 @@ const NextStepActivity = z.object({
   aiReasoning: z.string().describe('Why this specific activity design targets this specific misconception'),
   aiGenerated: z.literal(true),
 });
+
+/**
+ * Strip control characters from every string in the generated activity.
+ *
+ * The model reaches for them as invisible separators when a field asks for an
+ * "inline sequence" — v25 came back with U+0003 between each step of
+ * `problemChecklist` and its ✓/✗ mark. Nothing renders them, so the page looks
+ * right while the bytes travel on into the PDF and the database. Wave 1 had the
+ * same class of problem with a literal CRLF inside `activityStructure`.
+ *
+ * Tabs and newlines are kept: `problem` legitimately carries paragraph breaks.
+ * Everything else below U+0020, plus the C1 range and the zero-width/BOM
+ * characters, goes. Runs over the whole structure rather than the one field,
+ * because the next field to ask for a separator will not be this one.
+ */
+const CONTROL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F\u200B-\u200D\uFEFF]/g;
+
+function sanitizeStrings(value) {
+  // Collapse the double space a removed separator leaves behind ("dashed)  ✓").
+  // Spaces only — a tab or a newline may be carrying structure.
+  if (typeof value === 'string') {
+    return value.replace(CONTROL_CHARS, '').replace(/ {2,}/g, ' ').trim();
+  }
+  if (Array.isArray(value)) return value.map(sanitizeStrings);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, sanitizeStrings(v)]));
+  }
+  return value;
+}
 
 // ── Handler ───────────────────────────────────────────────────────────────────
 
@@ -142,7 +186,13 @@ export const handler = async (event) => {
   const template     = selectedTemplate?.templateId ? templateById(selectedTemplate.templateId) : null;
   const contentType  = template?.contentType ?? null;
   const phasesSchema = contentType
-    ? phasesSchemaFor(contentType, { groupsMin: GROUPS_MIN, groupsMax: GROUPS_MAX })
+    ? phasesSchemaFor(contentType, {
+      groupsMin: GROUPS_MIN, groupsMax: GROUPS_MAX,
+      checklistMin: CHECKLIST_MIN, checklistMax: CHECKLIST_MAX,
+      facilitationMin: FACILITATION_MIN, facilitationMax: FACILITATION_MAX,
+      discussionMin: DISCUSSION_MIN, discussionMax: DISCUSSION_MAX,
+      exampleCount: INCORRECT_EXAMPLES_COUNT,
+    })
     : null;
   if (selectedTemplate?.templateId && !template) {
     console.warn(`[microcoachNextStepOption] unknown templateId "${selectedTemplate.templateId}" — generating prose only`);
@@ -592,14 +642,28 @@ ${JSON.stringify(examples.map(e => ({ prompt: e.prompt, steps: e.steps, finalOut
       });
       const raw = completion.choices[0]?.message?.content ?? '{}';
       const result = JSON.parse(raw).problem;
-      if (typeof result === 'string' && result.trim()) {
-        recordSubCall('validate-activity-problem', VALIDATOR_MODEL, completion, { fellBack: false });
-        return result;
+      if (typeof result !== 'string' || !result.trim()) {
+        recordSubCall('validate-activity-problem', VALIDATOR_MODEL, completion, {
+          fellBack: true, reason: 'empty or non-string problem',
+        });
+        return problem;
       }
-      recordSubCall('validate-activity-problem', VALIDATOR_MODEL, completion, {
-        fellBack: true, reason: 'empty or non-string problem',
-      });
-      return problem;
+      // A correction should be about the size of what it corrects. On one run the
+      // reviewer turned a ~520-character problem into 2,135 characters of lesson —
+      // bracketed answers, a bullet list of corrections, and a closing sentence
+      // describing its own edit — and all of it was written back as the problem.
+      // For MATH_DETECTIVE that is fatal: the answers are the thing students are
+      // supposed to work out. Growth past half again is treated as the reviewer
+      // having written something other than a problem, and the original is kept.
+      if (result.length > problem.length * PROBLEM_GROWTH_LIMIT) {
+        recordSubCall('validate-activity-problem', VALIDATOR_MODEL, completion, {
+          fellBack: true,
+          reason: `reviewer expanded the problem ${problem.length}→${result.length} chars`,
+        });
+        return problem;
+      }
+      recordSubCall('validate-activity-problem', VALIDATOR_MODEL, completion, { fellBack: false });
+      return result;
     } catch (err) {
       console.warn('[microcoachNextStepOption] validateActivityProblem failed:', err?.message);
       recordSubCall('validate-activity-problem', VALIDATOR_MODEL, null, {
@@ -627,7 +691,7 @@ ${JSON.stringify(examples.map(e => ({ prompt: e.prompt, steps: e.steps, finalOut
 
     recordSubCall('generate-activity', MODEL, completion, { fellBack: false });
 
-    const structured = ActivitySchema.parse(JSON.parse(raw));
+    const structured = sanitizeStrings(ActivitySchema.parse(JSON.parse(raw)));
 
     // ── Math accuracy review ───────────────────────────────────────────────
     // Both reviewers used to run over tabs.activitySteps, whose output nothing

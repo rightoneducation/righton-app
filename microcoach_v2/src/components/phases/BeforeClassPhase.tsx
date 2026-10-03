@@ -106,7 +106,10 @@ export default function BeforeClassPhase({ beforeClass }: Props) {
                   text={group.description}
                 />
                 <NamePillGroup>
-                  {group.students.map((name) => (
+                  {/* Students are assigned after generation, by
+                      injectStudentsIntoGroups in seed/cli/generate.ts. A path that
+                      skips injection should render an empty group rather than throw. */}
+                  {(group.students ?? []).map((name) => (
                     <StudentNamePill key={name} tone="understood">
                       {name}
                     </StudentNamePill>
