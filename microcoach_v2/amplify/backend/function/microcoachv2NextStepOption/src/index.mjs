@@ -52,6 +52,17 @@ const INCORRECT_EXAMPLE_FEW_SHOT   = nso.incorrectWorkedExampleFewShot ?? [];
 const DESIGN_PRINCIPLES            = nso.designPrinciples ?? [];
 const CLASSROOM_FEASIBILITY        = nso.classroomFeasibility ?? [];
 const UDL_REQUIREMENTS             = nso.udlRequirements ?? [];
+
+/*
+ * The worked-example count lives once, in incorrectWorkedExamplesCount, and is
+ * enforced as a .length() on the schema. Prose that mentions the count reads it
+ * from there too: a hard-coded "2–3" beside a schema pinned to 2 let the summary
+ * and prep checklist promise three examples the activity did not contain (v27).
+ */
+const withExampleCount = (text) =>
+  text.replaceAll('{incorrectWorkedExamplesCount}', String(INCORRECT_EXAMPLES_COUNT));
+const exampleLabels = () =>
+  Array.from({ length: INCORRECT_EXAMPLES_COUNT }, (_, i) => `"Example ${i + 1}"`).join(', ');
 const FORMAT_CONSTRAINTS           = nso.formatConstraints ?? {};
 const WHOLE_CLASS_DESC             = FORMAT_CONSTRAINTS.wholeClass?.description ?? '';
 const SPLIT_CLASS_DESC             = FORMAT_CONSTRAINTS.splitClass?.description ?? '';
@@ -441,6 +452,10 @@ Each example must show a complete problem and the full incorrect work step by st
 not just the wrong answer — reflect this specific error pattern rather than a random
 mistake, and be self-contained enough to put on a board with no further prep. Annotate
 the FIRST invalid step with kind ERROR; the steps after it are consequences, not the error.
+
+There are exactly ${INCORRECT_EXAMPLES_COUNT} examples, labelled ${exampleLabels()}. The summary, the
+beforeClass checklist and the facilitation steps must refer to exactly that many, by those
+labels — never to a further example, and never by letters (A, B, C).
 ${INCORRECT_EXAMPLE_FEW_SHOT.length ? `
 **Few-shot examples** — study the difference between CORRECT and INCORRECT example design:
 ${INCORRECT_EXAMPLE_FEW_SHOT.map(ex => `
@@ -474,7 +489,7 @@ ${CLASSROOM_FEASIBILITY.map(r => `- ${r}`).join('\n')}
 
 ## UDL-Informed Instruction
 Provide multiple entry points for participation:
-${UDL_REQUIREMENTS.map(r => `- ${r}`).join('\n')}
+${UDL_REQUIREMENTS.map(r => `- ${withExampleCount(r)}`).join('\n')}
 ${contentSection}
 ## Math Formatting Requirements
 Always use LaTeX for mathematical expressions. Never use Unicode math symbols or caret/underscore ASCII notation outside of LaTeX delimiters. Wrap ALL math in LaTeX delimiters:
