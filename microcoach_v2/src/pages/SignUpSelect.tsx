@@ -19,8 +19,15 @@ import {
   TeacherSelectField,
 } from '../lib/styledcomponents/SignUpStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
+import { newClassroom } from '../hooks/useClassrooms';
 
-export default function SignUpSelect({ screenSize, state, user }: SignUpStepProps) {
+export default function SignUpSelect({
+  apiClients,
+  screenSize,
+  state,
+  user,
+  classrooms,
+}: SignUpStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -35,28 +42,63 @@ export default function SignUpSelect({ screenSize, state, user }: SignUpStepProp
     classes[0] ?? null,
   );
 
+  // Class name -> created row id, so the class picked here is the one the
+  // dashboard opens on.
+  const [classIdsByName, setClassIdsByName] = React.useState<
+    Record<string, string>
+  >({});
+  const [isCommitting, setIsCommitting] = React.useState(true);
+  // StrictMode double-invokes effects in dev; a second pass would create every
+  // class twice.
+  const hasCommitted = React.useRef(false);
+
   /*
    * The wizard's output becomes the app's identity here, rather than at each
    * step: this is the first screen that presents the user as signed in, and
-   * it is what makes the header swap to its identity pill. Runs once — the
-   * dependency list is the committed values, not the whole wizard state.
+   * it is what makes the header swap to its identity pill.
    *
-   * The class names are held in app state only. `classes` is a @hasMany
-   * relation on the User model, not a field on it, so there is nothing to write
-   * them to — persisting them means creating Class rows keyed by userId, which
-   * is its own piece of work. The wizard still collects and displays them.
+   * The classes are written as MicroCoachClassroom rows first, keyed by the
+   * User row id SignUpVerify stored on the profile. Order matters twice:
+   * - before setSignedInUser, because LOGGEDIN is what triggers useClassrooms'
+   *   load — signing in first can fetch an empty list ahead of the writes;
+   * - one at a time, because the dashboard lists classes by createdAt, so this
+   *   keeps the order they were typed in.
+   * A class that fails to save is logged and skipped rather than blocking the
+   * account; it can be re-added from the dashboard.
    */
   React.useEffect(() => {
-    if (!state.isVerified) return;
+    if (!state.isVerified || hasCommitted.current) return;
+    hasCommitted.current = true;
 
-    setSignedInUser({
-      ...(userProfile ?? {}),
-      email: state.email,
-      firstName: state.firstName,
-      lastName: state.lastName,
-      role: state.role === 'ADMIN' ? UserRole.ADMIN : UserRole.TEACHER,
-      classes,
-    });
+    const commit = async () => {
+      const userId = userProfile?.id;
+      const ids: Record<string, string> = {};
+      if (userId) {
+        await classes.reduce(async (previous, name) => {
+          await previous;
+          try {
+            const created = await apiClients.classroom.createClassroom(
+              newClassroom(userId, name),
+            );
+            if (created) ids[name] = created.id;
+          } catch (error) {
+            console.error(`Could not save class "${name}"`, error);
+          }
+        }, Promise.resolve());
+      } else {
+        console.error('Signup reached class save with no User row id');
+      }
+      setClassIdsByName(ids);
+      setSignedInUser({
+        ...(userProfile ?? {}),
+        email: state.email,
+        firstName: state.firstName,
+        lastName: state.lastName,
+        role: state.role === 'ADMIN' ? UserRole.ADMIN : UserRole.TEACHER,
+      });
+      setIsCommitting(false);
+    };
+    commit();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.isVerified]);
 
@@ -64,6 +106,10 @@ export default function SignUpSelect({ screenSize, state, user }: SignUpStepProp
   if (!isReady) return null;
 
   const handleUpload = () => {
+    // Selecting by id survives useClassrooms' load landing after this: the
+    // load keeps a selection that is present in what it fetched.
+    const selectedId = selectedClass ? classIdsByName[selectedClass] : undefined;
+    if (selectedId) classrooms.selectClass(selectedId);
     // The upload screen is a later flow; the prototype hands off to the app.
     // No reset needed: leaving /signup unmounts the wizard and its state.
     navigate('/dashboard');
@@ -127,7 +173,7 @@ export default function SignUpSelect({ screenSize, state, user }: SignUpStepProp
               teacher's. */}
           <SignUpCtaWide
             disableElevation
-            disabled={!selectedClass}
+            disabled={!selectedClass || isCommitting}
             onClick={handleUpload}
             sx={{ maxWidth: isAdmin ? 384 : 303 }}
           >

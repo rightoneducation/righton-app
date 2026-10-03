@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
@@ -56,9 +57,25 @@ export default function Login({ apiClients, screenSize, user }: LoginProps) {
    * fabricates profile fields. Navigation waits on it — it used to fire
    * unconditionally, so a rejected password still landed on the dashboard.
    */
-  const handleSignIn = async () => {
-    const profile = await signIn({ email: email.trim(), password });
-    if (profile) navigate('/dashboard');
+  // Which of the two sign-in buttons is waiting, so the spinner shows in the
+  // one that was pressed. null when idle.
+  const [submittingFrom, setSubmittingFrom] = React.useState<
+    'pill' | 'cta' | null
+  >(null);
+  const isSubmitting = submittingFrom !== null;
+
+  const handleSignIn = async (source: 'pill' | 'cta') => {
+    // Guards a second click landing before the disabled re-render.
+    if (isSubmitting) return;
+    setSubmittingFrom(source);
+    try {
+      const profile = await signIn({ email: email.trim(), password });
+      if (profile) navigate('/dashboard');
+    } finally {
+      // signIn reports a bad password by resolving null, not throwing, so the
+      // reset has to cover every path.
+      setSubmittingFrom(null);
+    }
   };
 
   const googleLogin = useGoogleLogin({
@@ -181,8 +198,20 @@ export default function Login({ apiClients, screenSize, user }: LoginProps) {
           </Typography>
         )}
 
-        <SignUpPill disableElevation onClick={handleSignIn}>
-          {t('signup.login')}
+        {/* Spinner replaces the label, as on SignUpVerify. SignUpPill has no
+            Mui-disabled rule, so the colour is held here or MUI greys it out;
+            the spinner inherits it. */}
+        <SignUpPill
+          disableElevation
+          disabled={isSubmitting}
+          onClick={() => handleSignIn('pill')}
+          sx={{ '&.Mui-disabled': { color: 'designSystem.surface.white' } }}
+        >
+          {submittingFrom === 'pill' ? (
+            <CircularProgress size={20} color="inherit" aria-label={t('signup.login')} />
+          ) : (
+            t('signup.login')
+          )}
         </SignUpPill>
 
         <Box
@@ -206,12 +235,20 @@ export default function Login({ apiClients, screenSize, user }: LoginProps) {
           </SignUpPillMuted>
         </Box>
 
+        {/* color="inherit": the spinner takes SignUpCta's disabled label
+            colour, which reads on its grey disabled fill where white would
+            vanish. */}
         <SignUpCta
           disableElevation
-          onClick={handleSignIn}
+          disabled={isSubmitting}
+          onClick={() => handleSignIn('cta')}
           sx={{ mt: `${theme.sizing.space5}px` }}
         >
-          {t('signup.continue')}
+          {submittingFrom === 'cta' ? (
+            <CircularProgress size={24} color="inherit" aria-label={t('signup.continue')} />
+          ) : (
+            t('signup.continue')
+          )}
         </SignUpCta>
       </SignUpColumn>
     </AppContentRow>

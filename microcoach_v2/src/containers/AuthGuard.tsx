@@ -94,13 +94,17 @@ export default function AuthGuard({
       if (!requiresAuth) return children;
       return isLandingPage ? <LandingSkeleton screenSize={screenSize} /> : null;
     case UserStatusType.LOGGEDOUT:
-      // No protected app screens yet; allow auth pages + landing through.
+      // In-app screens need an account; send the visitor to the landing page.
+      // `/` is public, so this redirect cannot loop, and `replace` keeps Back
+      // from returning to the protected URL. Auth pages + landing pass through.
+      if (requiresAuth) return <Navigate to="/" replace />;
       return children;
     case UserStatusType.LOGGEDIN:
     default:
-      // Signed in → keep users off the auth pages.
+      // Signed in → keep users off the auth pages, into the app. /dashboard
+      // matches none of these, so the redirect cannot loop.
       return isAuthPage || isLoginPage || isSignupPage ? (
-        <Navigate to="/" replace />
+        <Navigate to="/dashboard" replace />
       ) : (
         children
       );

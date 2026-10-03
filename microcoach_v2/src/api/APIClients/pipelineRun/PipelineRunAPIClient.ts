@@ -45,10 +45,9 @@ interface ListPipelineRunSummariesQuery {
 }
 
 export class PipelineRunAPIClient extends BaseAPIClient implements IPipelineRunAPIClient {
-  // BaseAPIClient.callGraphQL picks userPool | iam from the session, and this
-  // API has no IAM provider — a signed-out /preview would fail. The model
-  // carries an apiKey rule for exactly this, so go to the shared client with
-  // apiKey explicitly and leave BaseAPIClient untouched.
+  // BaseAPIClient.callGraphQL always sends userPool, so a signed-out /preview
+  // would fail. The model carries an apiKey rule for exactly this, so go to the
+  // shared client with apiKey explicitly.
   private apiKeyQuery<T>(query: string, variables: Record<string, unknown>): Promise<GraphQLResult<T>> {
     const response = client.graphql({
       query,

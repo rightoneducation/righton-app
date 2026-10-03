@@ -2,6 +2,7 @@ import { useOutletContext } from 'react-router-dom';
 import { APIClients } from '../api';
 import { IUserState } from './useUserState';
 import { IPlanItemsState } from './usePlanItems';
+import { IClassroomsState } from './useClassrooms';
 
 // The single shared-state read in the app. RootLayout owns the user state and
 // hands it (with the API clients) through the router's Outlet; AppSwitch reads
@@ -12,6 +13,7 @@ export interface IAppOutletContext {
   apiClients: APIClients;
   user: IUserState;
   plan: IPlanItemsState;
+  classrooms: IClassroomsState;
 }
 
 // eslint-disable-next-line import/prefer-default-export
