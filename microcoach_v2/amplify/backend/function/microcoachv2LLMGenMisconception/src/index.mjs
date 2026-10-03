@@ -241,18 +241,26 @@ const ADMISSION_ENFORCED = gc.enforceAdmission === true;
 
 // Only the title is checked for disjunction. `writingStyle.titles` already forbids
 // parentheticals there, and a plain noun phrase naming one error has no reason to
-// contain "or" — so false positives are unlikely. Descriptions are left alone except
-// for the explicit "(or ...)" form: a description can legitimately join two nouns
-// with "or" ("which half-plane satisfies the inequality or system" is output we want
-// to keep), and telling that apart from two fused errors needs more than a regex.
+// contain "or", so a hit is nearly always two misconceptions fused into one —
+// "Wrong substitution or omitted y" is the shape being caught.
+//
 // Case-sensitive on lowercase `or`. Upper-case OR is the logical operator and names
 // the misconception rather than hedging between two of them — "Treated system as OR"
 // and "Used OR instead of AND" are both real titles from past runs, and both are
-// output we want. "Incorrect or missing substitution" is the shape being caught.
+// output we want.
+//
+// Descriptions are deliberately NOT checked. A `description: /\(\s*or\b/` rule was
+// tried and removed on 2026-10-03: it fired on three of the four hits recorded, and
+// on the v22 run it dropped "Took coefficient as slope" — grounded, present in every
+// run from v12 to v21, and one of the stable clusters worth keeping — because its
+// description carried a clarifying "(or reads -6 as the slope)". The rule could not
+// tell that from the hedge it was written for, "sets one variable to zero (or another
+// arbitrary value)", where the alternative broadens the claim until it says nothing.
+// A title is a short noun phrase; a description is prose, and prose uses parentheses.
+// Distinguishing a hedge from a clarification there needs more than a regex.
 const DISJUNCTIVE = [
   { label: 'title "or"', field: 'title', re: /\bor\b/ },
   { label: 'title parenthetical', field: 'title', re: /\(/ },
-  { label: 'description "(or ...)"', field: 'description', re: /\(\s*or\b/i },
 ];
 
 // Longer option content is prose that describes the error itself — the graph questions
@@ -284,19 +292,33 @@ function accountsForValue(explanation, optionContent) {
   return [...want].every((n) => have.has(n));
 }
 
-/** Labelled reasons this misconception is not well formed. Empty means admissible. */
-export function checkAdmission(m, optionFor) {
-  const hits = [];
-  for (const { label, field, re } of DISJUNCTIVE) {
-    if (re.test(String(m[field] ?? ''))) hits.push(label);
-  }
-  for (const w of m.wrongAnswers ?? []) {
-    const ref = `Q${w.questionNumber}${String(w.letter ?? '').trim().toUpperCase()}`;
-    if (!String(w.explanation ?? '').trim()) { hits.push(`missingExplanation ${ref}`); continue; }
-    const option = optionFor(w);
-    if (!accountsForValue(w.explanation, option?.content)) hits.push(`unexplainedOption ${ref}`);
-  }
-  return hits;
+/**
+ * Faults in the misconception itself, which no amount of editing its option list
+ * would fix. These justify discarding the whole thing.
+ */
+export function checkMisconceptionAdmission(m) {
+  return DISJUNCTIVE
+    .filter(({ field, re }) => re.test(String(m[field] ?? '')))
+    .map(({ label }) => label);
+}
+
+/**
+ * A fault in one option's explanation, or null when it is fine.
+ *
+ * Deliberately separate from the misconception-level check, because the remedy is
+ * different. A weak explanation on one option says nothing about the options the same
+ * misconception explained well, so dropping all of them is disproportionate — on the
+ * v23 run that discarded "Incorrect substitution for y", which was the correct reading
+ * of Q6D `(-32,-58)` (right x, wrong y) and the only thing accounting for those three
+ * students. `validateOutput` already handles every other per-option problem this way:
+ * `unknownRef` and `markedCorrect` drop the reference and leave the misconception
+ * standing, and only a misconception left with nothing at all falls to `noValidRefs`.
+ * These checks now follow that.
+ */
+export function checkOptionAdmission(explanation, optionContent) {
+  if (!String(explanation ?? '').trim()) return 'missingExplanation';
+  if (!accountsForValue(explanation, optionContent)) return 'unexplainedOption';
+  return null;
 }
 
 export function validateOutput(structured, questions) {
@@ -307,28 +329,43 @@ export function validateOutput(structured, questions) {
   // Well-formedness flags, kept separate from `rejected` so that array keeps meaning
   // "dropped". While ADMISSION_ENFORCED is false these are recorded and nothing else.
   const admissionFlags = [];
-  const optionFor = (w) => valid.get(w.questionNumber)?.get(String(w.letter ?? '').trim().toUpperCase());
 
   // Step 1 — misconception refs. Same posture as the per-option check below.
   const misconceptions = [];
   for (const m of structured.misconceptions ?? []) {
     const kept = [];
+    const hits = [];
     for (const w of m.wrongAnswers ?? []) {
       const letter = String(w.letter ?? '').trim().toUpperCase();
       const option = valid.get(w.questionNumber)?.get(letter);
       if (!option) { rejected.push({ misconception: m.title, questionNumber: w.questionNumber, letter, reason: 'unknownRef' }); continue; }
       if (option.isCorrect) { rejected.push({ misconception: m.title, questionNumber: w.questionNumber, letter, reason: 'markedCorrect' }); continue; }
-      kept.push({ questionNumber: w.questionNumber, letter, explanation: String(w.explanation ?? '').trim() });
-    }
-    if (!kept.length) { rejected.push({ misconception: m.title, reason: 'noValidRefs' }); continue; }
 
-    const hits = checkAdmission({ ...m, wrongAnswers: kept }, optionFor);
-    if (hits.length) {
-      admissionFlags.push({ misconception: m.title, hits });
-      if (ADMISSION_ENFORCED) {
-        rejected.push({ misconception: m.title, reason: 'notAdmissible', hits });
-        continue;
+      const explanation = String(w.explanation ?? '').trim();
+      // Option-level fault, option-level remedy: drop this reference and leave the
+      // rest of the misconception standing, exactly as unknownRef and markedCorrect
+      // do above. A misconception left with no references at all then falls to
+      // noValidRefs below, so nothing is kept that explains nothing.
+      const fault = checkOptionAdmission(explanation, option.content);
+      if (fault) {
+        hits.push(`${fault} Q${w.questionNumber}${letter}`);
+        if (ADMISSION_ENFORCED) {
+          rejected.push({ misconception: m.title, questionNumber: w.questionNumber, letter, reason: 'notAdmissible', hits: [fault] });
+          continue;
+        }
       }
+      kept.push({ questionNumber: w.questionNumber, letter, explanation });
+    }
+
+    const titleHits = checkMisconceptionAdmission(m);
+    hits.push(...titleHits);
+    if (hits.length) admissionFlags.push({ misconception: m.title, hits });
+
+    if (!kept.length) { rejected.push({ misconception: m.title, reason: 'noValidRefs' }); continue; }
+    // Misconception-level fault: no edit to the option list would fix it.
+    if (titleHits.length && ADMISSION_ENFORCED) {
+      rejected.push({ misconception: m.title, reason: 'notAdmissible', hits: titleHits });
+      continue;
     }
 
     misconceptions.push({

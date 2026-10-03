@@ -476,6 +476,11 @@ interface LlmCheckResult {
   worked_examples_math_valid_details: string;
   worked_examples_not_accidentally_correct: boolean;
   worked_examples_not_accidentally_correct_details: string;
+  // Checks the Lambda did not ask about, because the activity has nothing to ask
+  // about — the worked-example checks only apply to INCORRECT_WORKED_EXAMPLES. Their
+  // keys are absent from the response, so they must be omitted rather than read as
+  // false. Older responses have no such field; `?? []` keeps them working.
+  skippedChecks?: string[];
 }
 
 function llmResultsToTestResults(
@@ -492,11 +497,15 @@ function llmResultsToTestResults(
     ['worked_examples_not_accidentally_correct', 'math: incorrect worked examples are not accidentally correct'],
   ];
 
-  return checks.map(([key, checkName]) => {
-    const raw = llmResult[`${key}_details` as keyof LlmCheckResult];
-    const detail = typeof raw === 'string' ? raw || undefined : raw ? JSON.stringify(raw) : undefined;
-    return { ...base, check: checkName, pass: llmResult[key] as boolean, detail };
-  });
+  const skipped = new Set(llmResult.skippedChecks ?? []);
+
+  return checks
+    .filter(([key]) => !skipped.has(key as string))
+    .map(([key, checkName]) => {
+      const raw = llmResult[`${key}_details` as keyof LlmCheckResult];
+      const detail = typeof raw === 'string' ? raw || undefined : raw ? JSON.stringify(raw) : undefined;
+      return { ...base, check: checkName, pass: llmResult[key] as boolean, detail };
+    });
 }
 
 // ── Report printer ────────────────────────────────────────────────────────────

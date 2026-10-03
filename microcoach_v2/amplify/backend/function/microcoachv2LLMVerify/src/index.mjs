@@ -8,26 +8,54 @@ const DESIGN_PRINCIPLES = nso.designPrinciples ?? [];
 const DESIGN_MODEL = lvo.designModel ?? 'gpt-4o-mini';
 const MATH_MODEL   = lvo.mathModel   ?? 'o3-mini';
 
+// ── Activity shape ────────────────────────────────────────────────────────────
+
+/**
+ * Where each layout keeps the one problem students are put in front of.
+ *
+ * Byte-identical to PROBLEM_FIELD in microcoachv2NextStepOption/src/util/
+ * activityContent.mjs — each Lambda bundles its own src, so shared tables are
+ * duplicated the same way loadsecrets.mjs is. Change them together.
+ *
+ * INCORRECT_WORKED_EXAMPLES is absent on purpose: its problem lives per example in
+ * `examples[].prompt` and is reviewed alongside the work attempting it.
+ */
+const PROBLEM_FIELD = {
+  FAVORITE_NO: ['boardPrompt', 'problem'],
+  COMPARE_THE_THINKING: ['problem'],
+  MULTIPLE_REPRESENTATIONS: ['studentTask'],
+  MATH_DETECTIVE: ['problem'],
+  MAKE_YOUR_CASE: ['claim', 'text'],
+};
+
+function readActivityProblem(content) {
+  const path = PROBLEM_FIELD[content?.type];
+  if (!path) return null;
+  const value = path.reduce((node, key) => node?.[key], content);
+  return typeof value === 'string' && value.trim() ? value : null;
+}
+
+/** `{order, title, body}` rows — the shape beforeClass, facilitation and discussion share. */
+const formatSteps = (rows) => (rows ?? [])
+  .map((s, i) => `  ${s?.order ?? i + 1}. ${s?.title ?? ''}${s?.body ? ` — ${s.body}` : ''}`)
+  .join('\n');
+
 // ── Prompt builders ───────────────────────────────────────────────────────────
 
-function buildDesignPrompt(misconception, activity) {
-  const tabs = activity.tabs ?? {};
-  const actSteps = tabs.activitySteps ?? {};
+export function buildDesignPrompt(misconception, activity) {
+  const phases = activity.phases ?? {};
+  const content = phases.activity ?? {};
 
   const principlesText = DESIGN_PRINCIPLES
     .map((p, i) => `${i + 1}. **${p.split(':')[0]}**: ${p.split(':').slice(1).join(':').trim()}`)
     .join('\n');
 
-  const stepsText = (actSteps.coreActivity ?? [])
-    .map((s, i) => `  ${i + 1}. ${s}`)
+  // The per-option explanations replace the old `evidence.aiThinkingPattern`, which
+  // was a Wave 1 field nothing ever filled. They are the actual student evidence:
+  // one line per wrong option saying what that option's value shows.
+  const evidenceText = (misconception.wrongAnswerExplanations ?? [])
+    .map((w) => `  • ${w.answer}: ${w.explanation}`)
     .join('\n');
-
-  const overviewText = [
-    'What students do:',
-    ...(tabs.overview?.whatStudentsDo ?? []).map((b) => `  • ${b.label}: ${b.detail}`),
-    'What teacher does:',
-    ...(tabs.overview?.whatYouDo ?? []).map((b) => `  • ${b.label}: ${b.detail}`),
-  ].join('\n');
 
   return `
 ## Design Principles to Evaluate Against
@@ -39,17 +67,25 @@ ${principlesText}
 Title: ${misconception.title}
 Description: ${misconception.misconceptionSummary ?? ''}
 Most common error: ${misconception.evidence?.mostCommonError ?? '(none)'}
-Student thinking pattern: ${misconception.evidence?.aiThinkingPattern ?? '(none)'}
+Per-option evidence from the class:
+${evidenceText || '  (none)'}
 
 ## Activity
 
 Title: ${activity.title}
+Routine: ${activity.routine?.name ?? '(none)'} — ${activity.routine?.subtitle ?? ''}
+Activity type: ${content.type ?? '(none)'}
+Activity title: ${content.title ?? ''}
+${content.subtitle ? `Activity subtitle: ${content.subtitle}` : ''}
 
-Core activity steps:
-${stepsText}
+Before class (teacher prep):
+${formatSteps(phases.beforeClass?.checklist) || '  (none)'}
 
-Overview:
-${overviewText}
+Facilitation steps:
+${formatSteps(phases.facilitation?.steps) || '  (none)'}
+
+Closing discussion questions:
+${formatSteps(phases.discussion?.questions) || '  (none)'}
 
 ---
 
@@ -70,42 +106,85 @@ Rules:
 `.trim();
 }
 
-function buildMathPrompt(activity) {
-  const tabs = activity.tabs ?? {};
-  const actSteps = tabs.activitySteps ?? {};
+/**
+ * The worked-example checks only mean something for INCORRECT_WORKED_EXAMPLES; the
+ * other five layouts carry no worked examples at all. Asking about them anyway got a
+ * `true` back for an empty list, which is a pass that was never tested — the same
+ * failure mode as reading a field that no longer exists. These three checks are now
+ * asked for only when there is something to ask about, and reported as skipped
+ * otherwise.
+ */
+const WORKED_EXAMPLE_CHECKS = [
+  'worked_examples_show_misconception',
+  'worked_examples_math_valid',
+  'worked_examples_not_accidentally_correct',
+];
 
-  const iweText = (actSteps.incorrectWorkedExamples ?? [])
-    .map((e, i) => `  Example ${i + 1}: ${e.problem}\n    Incorrect work: ${e.incorrectWork}`)
-    .join('\n');
+export function workedExamplesOf(activity) {
+  const content = activity.phases?.activity;
+  if (content?.type !== 'INCORRECT_WORKED_EXAMPLES') return null;
+  return Array.isArray(content.examples) && content.examples.length ? content.examples : null;
+}
 
-  return `
-## Activity
+export function buildMathPrompt(activity) {
+  const content = activity.phases?.activity ?? {};
+  const examples = workedExamplesOf(activity);
 
-Title: ${activity.title}
-Central problem: ${actSteps.problem ?? ''}
+  // Wave 2 annotates the intentional error structurally, on the step that carries it,
+  // instead of leaving the reviewer to infer which step was meant to be wrong.
+  const iweText = (examples ?? []).map((e, i) => {
+    const steps = (e.steps ?? [])
+      .map((st, j) => {
+        const mark = st?.annotation?.kind ? ` [${st.annotation.kind}${st.annotation.text ? `: ${st.annotation.text}` : ''}]` : '';
+        return `      ${st?.step ?? j + 1}. ${st?.text ?? ''}${mark}`;
+      })
+      .join('\n');
+    return `  Example ${i + 1}${e.label ? ` (${e.label})` : ''}: ${e.prompt ?? ''}\n    Steps:\n${steps}\n    Arrives at: ${e.finalOutcome ?? ''}`;
+  }).join('\n\n');
 
+  const problem = readActivityProblem(content);
+
+  const workedExampleSection = examples
+    ? `
 Incorrect worked examples:
 ${iweText}
+`
+    : '';
 
----
-
-Return a JSON object with exactly these keys:
-{
-  "problem_math_correct": true|false,
-  "problem_math_correct_details": "explain only if false, show the error",
+  const workedExampleKeys = examples
+    ? `,
   "worked_examples_show_misconception": true|false,
   "worked_examples_show_misconception_details": "explain only if false",
   "worked_examples_math_valid": true|false,
   "worked_examples_math_valid_details": "explain only if false, show each error",
   "worked_examples_not_accidentally_correct": true|false,
-  "worked_examples_not_accidentally_correct_details": "for each failing example: state the problem, the correct final answer, and the incorrect path's final answer"
+  "worked_examples_not_accidentally_correct_details": "for each failing example: state the problem, the correct final answer, and the incorrect path's final answer"`
+    : '';
+
+  const workedExampleRules = examples
+    ? `
+- worked_examples_show_misconception: Do the incorrect worked examples demonstrate the target misconception error?
+- worked_examples_math_valid: Each incorrect worked example is DESIGNED to contain exactly one intentional error — the step annotated ERROR. That intentional error is expected and correct by design. Return true unless you find UNINTENTIONAL arithmetic mistakes in the OTHER steps (wrong multiplication, wrong simplification, wrong sign in a step that is not the annotated one). The presence of the intentional misconception error must NOT cause a false failure here.
+- worked_examples_not_accidentally_correct: For each example, solve its prompt correctly to find the true final answer, then trace its steps to the stated outcome. Return false if ANY example's incorrect path arrives at the SAME final answer as the correct solution — that makes the error appear consequence-free and defeats the activity's purpose. Return true only when every example's path leads to a clearly wrong answer.`
+    : '';
+
+  return `
+## Activity
+
+Title: ${activity.title}
+Activity type: ${content.type ?? '(none)'}
+Central problem: ${problem ?? '(this layout has no single central problem)'}
+${workedExampleSection}
+---
+
+Return a JSON object with exactly these keys:
+{
+  "problem_math_correct": true|false,
+  "problem_math_correct_details": "explain only if false, show the error"${workedExampleKeys}
 }
 
 Rules:
-- problem_math_correct: Is the central problem mathematically correct?
-- worked_examples_show_misconception: Do the incorrect worked examples demonstrate the target misconception error?
-- worked_examples_math_valid: Each incorrect worked example is DESIGNED to contain exactly one intentional error — the misconception step. That intentional error is expected and correct by design. Return true unless you find UNINTENTIONAL arithmetic mistakes in the surrounding steps (wrong multiplication, wrong simplification, wrong sign in a step that is not the misconception itself). The presence of intentional misconception errors must NOT cause a false failure here.
-- worked_examples_not_accidentally_correct: For each incorrect worked example, solve the problem correctly to find the true final answer, then trace the incorrectWork path step-by-step to find its final answer. Return false if ANY example's incorrect path arrives at the SAME final answer as the correct solution — this makes the error appear consequence-free and defeats the activity's pedagogical purpose. Return true only when every example's incorrect path leads to a clearly wrong answer.
+- problem_math_correct: Is the central problem mathematically correct? If there is no central problem, return true and say so in the details.${workedExampleRules}
 `.trim();
 }
 
@@ -154,7 +233,10 @@ export const handler = async (event) => {
       }).then(r => JSON.parse(r.choices[0].message.content)),
     ]);
 
-    return { ...designResult, ...mathResult };
+    // Checks that were not asked about, so the caller can omit them instead of
+    // reading a missing key as a failure.
+    const skippedChecks = workedExamplesOf(activity) ? [] : WORKED_EXAMPLE_CHECKS;
+    return { ...designResult, ...mathResult, skippedChecks };
   } catch (error) {
     console.error('[microcoachLLMVerify] Error', {
       timestamp: new Date().toISOString(),

@@ -18,7 +18,7 @@
       "Read the 3 in y = 3x as the starting value instead of the rate"
     ],
     "styleExamplesNote": "Register only, for the per-option `text` field. Deliberately off-domain: these were in-domain teacher notes from the pilot Algebra document until 2026-09-16, and that document is the same assessment the fixtures use, so in-domain examples risk being copied onto the very questions being analysed. Each names a reasoning step that determines a specific wrong value — the property the prompt's part (a) asks for — rather than a bare slip.",
-    "enforceAdmission": false,
-    "enforceAdmissionNote": "false keeps validateOutput's well-formedness checks report-only: hits land in `admissionFlags` and nothing is dropped. The rejection channel has never fired in 16 recorded runs, so it gets a report-only pass before it is allowed to remove a misconception. Set true once the flags have been reviewed against a replay."
+    "enforceAdmission": true,
+    "enforceAdmissionNote": "true makes validateOutput's well-formedness checks act rather than just report. The remedy matches the level of the fault: a bad option explanation drops that reference only (like `unknownRef` and `markedCorrect` already do), and a misconception left with no references then falls to `noValidRefs`; a disjunctive title drops the whole misconception, because no edit to its option list would fix it. Every hit is listed in `admissionFlags` whether or not it caused a drop, so nothing is silent. Enabled 2026-10-03; the level split came after two runs where a whole-misconception drop cost more than the fault did (v22 lost \"Took coefficient as slope\", v23 lost \"Incorrect substitution for y\"). Watch `admissionFlags` each eval: losing something from the stable clusters means a rule is wrong, not the model."
   }
 }
