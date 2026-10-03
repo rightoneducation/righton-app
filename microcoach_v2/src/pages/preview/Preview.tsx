@@ -221,26 +221,19 @@ function Row({ k, v }: { k: string; v: React.ReactNode }) {
 }
 
 /**
- * One pipeline step under a misconception, collapsed until opened.
- *
- * Closed by default and deliberately not driven by the card's Expand all, which
- * opens the cards only: a run has 9-13 misconceptions, each with four of these plus
- * two activities, so cascading would land back on the wall of text this replaced.
- * Cards remount on `generation`, so these reset to closed whenever Expand/Collapse
- * all is used — which is the behaviour wanted, not an accident of the remount.
+ * One pipeline step under a misconception. Always shown in full: once a card is
+ * open, its four steps are what the reader came for, so they no longer collapse.
+ * The card itself still does, under Expand/Collapse all.
  */
 function Block({ label, hint, children }: { label: string; hint: string; children: React.ReactNode }) {
   return (
-    <details className="p2-block">
-      <summary className="p2-block-head">
-        <span className="p2-chevron" aria-hidden="true">
-          ▸
-        </span>
+    <section className="p2-block">
+      <div className="p2-block-head">
         <span className="p2-block-label">{label}</span>
         <span className="p2-block-hint">{hint}</span>
-      </summary>
+      </div>
       {children}
-    </details>
+    </section>
   );
 }
 
@@ -848,7 +841,7 @@ function flowLine(manifest: Rec, misconceptionCount: number): string {
 }
 
 // Where reviewers leave feedback on what this page shows.
-const COMMENTS_DOC = 'https://docs.google.com/document/d/1EYX660oFYXbRket8Zg4jQnqSckBGD4TnKJFhV31HWGE/edit?usp=sharing';
+const COMMENTS_DOC = 'https://docs.google.com/document/d/1d4oYPquSkR8XVKbzVMil-Ux_PiyGELHIHyTgooFv5rc/edit?usp=drive_link';
 
 function RunBar({
   runs,
@@ -1044,15 +1037,9 @@ const STYLES = `
 .p2-card-body { border-top: 1px solid #dfe3e8; padding: 12px; background: #f4f5f7; display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px; }
 .p2-block { background: #fff; border: 1px solid #dfe3e8; border-radius: 8px; padding: 12px 14px; min-width: 0; }
-/* The step blocks are <details>; the head is the summary. Margin-bottom only when
-   open, so a closed block is a single tidy row rather than a row plus a gap. */
-.p2-block-head { display: flex; align-items: baseline; gap: 8px; cursor: pointer;
-  margin: 0 -14px; padding: 0 14px 8px; border-bottom: 1px solid #eef0f3;
-  list-style: none; }
-.p2-block-head::-webkit-details-marker { display: none; }
-.p2-block-head:hover .p2-block-label { color: #0f62fe; }
-.p2-block[open] > .p2-block-head { margin-bottom: 10px; }
-.p2-block[open] > .p2-block-head > .p2-chevron { transform: rotate(90deg); }
+/* The step blocks are always open: a plain header rule above the content. */
+.p2-block-head { display: flex; align-items: baseline; gap: 8px;
+  margin: 0 -14px 10px; padding: 0 14px 8px; border-bottom: 1px solid #eef0f3; }
 .p2-block-label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #2c3238; font-weight: 700; }
 .p2-block-hint { font-size: 11px; color: #8b939c; }
 .p2-text { margin: 0 0 8px; font-size: 13px; }
