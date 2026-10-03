@@ -120,7 +120,7 @@
       "Visual representations: specify exactly what the teacher should draw or write on the board.",
       "Discussion prompts: include 2–3 example questions the teacher can ask to surface student reasoning.",
       "Comparison of strategies: include 2–3 solution strategies or reasoning approaches students can compare.",
-      "Incorrect solution analysis: activities should include 2–3 incorrect worked examples that illustrate the misconception."
+      "Incorrect solution analysis: activities should include {incorrectWorkedExamplesCount} incorrect worked examples that illustrate the misconception."
     ],
     "incorrectWorkedExamplesCount": 2,
     "incorrectWorkedExampleRules": [
