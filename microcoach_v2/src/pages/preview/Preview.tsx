@@ -15,7 +15,9 @@ import {
 import { FORMULAE } from './formulae';
 import MathText from '../../components/MathText';
 import ActivityPhase from '../../components/phases/ActivityPhase';
-import { IActivityContent } from '../../lib/PipelineModels';
+import BeforeClassPhase from '../../components/phases/BeforeClassPhase';
+import StepListPhase from '../../components/phases/StepListPhase';
+import { IActivityContent, IActivityPhases, IPhaseStep } from '../../lib/PipelineModels';
 import { STAGES, GROUPS, Stage, Who, Origin } from './pipeline';
 
 /**
@@ -218,15 +220,27 @@ function Row({ k, v }: { k: string; v: React.ReactNode }) {
   );
 }
 
+/**
+ * One pipeline step under a misconception, collapsed until opened.
+ *
+ * Closed by default and deliberately not driven by the card's Expand all, which
+ * opens the cards only: a run has 9-13 misconceptions, each with four of these plus
+ * two activities, so cascading would land back on the wall of text this replaced.
+ * Cards remount on `generation`, so these reset to closed whenever Expand/Collapse
+ * all is used — which is the behaviour wanted, not an accident of the remount.
+ */
 function Block({ label, hint, children }: { label: string; hint: string; children: React.ReactNode }) {
   return (
-    <div className="p2-block">
-      <div className="p2-block-head">
+    <details className="p2-block">
+      <summary className="p2-block-head">
+        <span className="p2-chevron" aria-hidden="true">
+          ▸
+        </span>
         <span className="p2-block-label">{label}</span>
         <span className="p2-block-hint">{hint}</span>
-      </div>
+      </summary>
       {children}
-    </div>
+    </details>
   );
 }
 
@@ -560,12 +574,45 @@ const KNOWN_CONTENT_TYPES = [
  * known set. An unrecognised type means the generator produced something the UI
  * has no case for, which is worth saying out loud rather than rendering blank.
  */
-function GeneratedActivity({ activity, templateId, time }: { activity: Rec | null; templateId: string; time: string }) {
+/**
+ * One generated activity, all four phases.
+ *
+ * Takes the whole `phases` object rather than just `phases.activity`, which is what
+ * it used to receive: the before-class checklist, the facilitation steps, the closing
+ * questions and the group cards were all generated and none of them reached this
+ * page, so an activity read as a quarter of itself and generation looked gappy when
+ * it was not.
+ *
+ * Renders through the same components ActivityDetail uses, so what shows here is what
+ * the app shows — a second implementation would drift, and not drifting is the whole
+ * point of this page. The order differs from the app and the PDF on purpose: those
+ * run before-class first, and here the activity body leads because it is the thing
+ * under review.
+ *
+ * Every phase is gated on presence. Runs before v20 have `beforeClass` and the rest
+ * as null, and those runs still need to be readable.
+ */
+function GeneratedActivity({ phases, templateId, time }: { phases: Rec | null; templateId: string; time: string }) {
+  const activity = asRec(phases?.activity ?? null);
   const type = asStr(activity?.type ?? null);
   const known = activity != null && KNOWN_CONTENT_TYPES.includes(type);
+
+  const beforeClass = asRec(phases?.beforeClass ?? null);
+  const facilitation = asRec(phases?.facilitation ?? null);
+  const discussion = asRec(phases?.discussion ?? null);
+  const steps = (rec: Rec | null, key: string) => {
+    const rows = rec ? asArray(rec[key]) : [];
+    return rows.length ? (rows as unknown as IPhaseStep[]) : null;
+  };
+  const facilitationSteps = steps(facilitation, 'steps');
+  const discussionQuestions = steps(discussion, 'questions');
+
   return (
-    <section className="p2-activity-row">
-      <div className="p2-activity-head">
+    <details className="p2-activity-row">
+      <summary className="p2-activity-head">
+        <span className="p2-chevron" aria-hidden="true">
+          ▸
+        </span>
         <span className="p2-block-label">Activity</span>
         <span className="p2-activity-title">
           {asStr(activity?.title ?? null) === '' ? (
@@ -577,23 +624,82 @@ function GeneratedActivity({ activity, templateId, time }: { activity: Rec | nul
         <span className="p2-pick-id">{templateId}</span>
         {type !== '' && <span className="p2-mono p2-activity-type">{type}</span>}
         {time !== '' && <span className="p2-meta">{time}</span>}
-      </div>
-      {known ? (
-        /* ActivityPhase brings its own teacher/student toggle for the types that
-           support one, so this wrapper adds no controls of its own. */
-        <div className="p2-activity-body">
-          <ActivityPhase content={activity as unknown as IActivityContent} />
-        </div>
-      ) : (
-        <p className="p2-text">
-          <span className="p2-nofit">
-            {activity == null
-              ? 'No activity was generated for this template.'
-              : `Unrecognised activity type ${type === '' ? '(missing)' : `"${type}"`} — nothing in the app renders this.`}
-          </span>
-        </p>
+      </summary>
+
+      {/* Phases in the order a teacher meets them, matching ActivityDetail and the
+          PDF. The casts are this page's usual ones: it reads an arbitrary archived
+          run as Rec, and the components take the typed shapes. */}
+      {beforeClass && (
+        <details className="p2-activity-phase">
+          <summary className="p2-phase-head">
+            <span className="p2-chevron" aria-hidden="true">
+              ▸
+            </span>
+            <span className="p2-block-label">Before class</span>
+          </summary>
+          <div className="p2-activity-body">
+            <BeforeClassPhase
+              beforeClass={beforeClass as unknown as IActivityPhases['beforeClass']}
+            />
+          </div>
+        </details>
       )}
-    </section>
+
+      <details className="p2-activity-phase">
+        <summary className="p2-phase-head">
+          <span className="p2-chevron" aria-hidden="true">
+            ▸
+          </span>
+          <span className="p2-block-label">Activity</span>
+          {!known && <span className="p2-nofit">not renderable</span>}
+        </summary>
+        {known ? (
+          /* ActivityPhase brings its own teacher/student toggle for the types that
+             support one, so this wrapper adds no controls of its own. */
+          <div className="p2-activity-body">
+            <ActivityPhase content={activity as unknown as IActivityContent} />
+          </div>
+        ) : (
+          <p className="p2-text">
+            <span className="p2-nofit">
+              {activity == null
+                ? 'No activity was generated for this template.'
+                : `Unrecognised activity type ${type === '' ? '(missing)' : `"${type}"`} — nothing in the app renders this.`}
+            </span>
+          </p>
+        )}
+      </details>
+
+      {facilitationSteps && (
+        <details className="p2-activity-phase">
+          <summary className="p2-phase-head">
+            <span className="p2-chevron" aria-hidden="true">
+              ▸
+            </span>
+            <span className="p2-block-label">Facilitation</span>
+          </summary>
+          <div className="p2-activity-body">
+            <StepListPhase title={asStr(facilitation?.title ?? null)} steps={facilitationSteps} />
+          </div>
+        </details>
+      )}
+
+      {/* `asColumns` is deliberately not passed: three questions across read fine at
+          the app's content width and are cramped in this page's column. */}
+      {discussionQuestions && (
+        <details className="p2-activity-phase">
+          <summary className="p2-phase-head">
+            <span className="p2-chevron" aria-hidden="true">
+              ▸
+            </span>
+            <span className="p2-block-label">Discussion</span>
+          </summary>
+          <div className="p2-activity-body">
+            <StepListPhase title={asStr(discussion?.title ?? null)} steps={discussionQuestions} />
+          </div>
+        </details>
+      )}
+    </details>
   );
 }
 
@@ -707,7 +813,7 @@ function MisconceptionCard({
             <GeneratedActivity
               key={templateId}
               templateId={templateId}
-              activity={hit ? activityOf(hit) : null}
+              phases={hit ? asRec(hit.phases) : null}
               time={hit ? asStr(hit.time) : ''}
             />
           );
@@ -938,8 +1044,15 @@ const STYLES = `
 .p2-card-body { border-top: 1px solid #dfe3e8; padding: 12px; background: #f4f5f7; display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px; }
 .p2-block { background: #fff; border: 1px solid #dfe3e8; border-radius: 8px; padding: 12px 14px; min-width: 0; }
-.p2-block-head { display: flex; align-items: baseline; gap: 8px; margin: 0 -14px 10px; padding: 0 14px 8px;
-  border-bottom: 1px solid #eef0f3; }
+/* The step blocks are <details>; the head is the summary. Margin-bottom only when
+   open, so a closed block is a single tidy row rather than a row plus a gap. */
+.p2-block-head { display: flex; align-items: baseline; gap: 8px; cursor: pointer;
+  margin: 0 -14px; padding: 0 14px 8px; border-bottom: 1px solid #eef0f3;
+  list-style: none; }
+.p2-block-head::-webkit-details-marker { display: none; }
+.p2-block-head:hover .p2-block-label { color: #0f62fe; }
+.p2-block[open] > .p2-block-head { margin-bottom: 10px; }
+.p2-block[open] > .p2-block-head > .p2-chevron { transform: rotate(90deg); }
 .p2-block-label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #2c3238; font-weight: 700; }
 .p2-block-hint { font-size: 11px; color: #8b939c; }
 .p2-text { margin: 0 0 8px; font-size: 13px; }
@@ -978,10 +1091,25 @@ const STYLES = `
 .p2-activity-row { grid-column: 1 / -1; background: #fff; border: 1px solid #dfe3e8;
   border-radius: 8px; padding: 12px 14px; min-width: 0; }
 .p2-activity-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
-  margin: 0 -14px 12px; padding: 0 14px 8px; border-bottom: 1px solid #e6e9ed; }
+  cursor: pointer; margin: 0 -14px; padding: 0 14px 8px;
+  border-bottom: 1px solid #e6e9ed; list-style: none; }
+.p2-activity-head::-webkit-details-marker { display: none; }
+.p2-activity-head:hover .p2-activity-title { color: #0f62fe; }
+.p2-activity-row[open] > .p2-activity-head { margin-bottom: 12px; }
+.p2-activity-row[open] > .p2-activity-head > .p2-chevron { transform: rotate(90deg); }
 .p2-activity-title { font-size: 13px; font-weight: 700; color: #2c3238; }
 .p2-activity-type { font-size: 10px; color: #8b939c; }
 .p2-activity-body { min-width: 0; }
+/* Each phase is its own <details>. The rule separates them without a heavier box:
+   they are one activity read top to bottom, not four cards. */
+.p2-activity-phase { min-width: 0; border-top: 1px solid #e6e9ed; }
+.p2-activity-phase + .p2-activity-phase { margin-top: 0; }
+.p2-phase-head { display: flex; align-items: baseline; gap: 8px; cursor: pointer;
+  padding: 10px 0; list-style: none; }
+.p2-phase-head::-webkit-details-marker { display: none; }
+.p2-phase-head:hover .p2-block-label { color: #0f62fe; }
+.p2-activity-phase[open] > .p2-phase-head > .p2-chevron { transform: rotate(90deg); }
+.p2-activity-phase[open] > .p2-activity-body { padding-bottom: 12px; }
 .p2-considered { margin-top: 8px; }
 .p2-considered > summary { font-size: 11px; color: #6b7280; cursor: pointer; list-style: none; }
 .p2-considered > summary::-webkit-details-marker { display: none; }

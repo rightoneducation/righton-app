@@ -1,7 +1,12 @@
 import { loadSecret } from './util/loadsecrets.mjs';
 import { templateById, formatForInfill } from './util/activityLibrary.mjs';
 import { matchStandard } from './util/ccssCode.mjs';
-import { phasesSchemaFor, CONTENT_TYPES } from './util/activityContent.mjs';
+import {
+  phasesSchemaFor,
+  CONTENT_TYPES,
+  readActivityProblem,
+  writeActivityProblem,
+} from './util/activityContent.mjs';
 import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
@@ -17,14 +22,19 @@ const VALIDATOR_PROBLEM_INSTRUCTIONS = vco.problemReviewInstructions ?? 'Is the 
 const MAX_DURATION            = nso.maxDurationMinutes ?? 30;
 const DEFAULT_DURATION        = nso.targetDurationMinutes ?? 30;
 const DISALLOWED_METHODS      = nso.disallowedTeachingMethods ?? [];
-const ACTIVITY_STEPS_MIN      = nso.activitySteps?.min ?? 4;
-const ACTIVITY_STEPS_MAX      = nso.activitySteps?.max ?? 6;
-const SETUP_STEPS_MIN         = nso.setupSteps?.min ?? 2;
-const SETUP_STEPS_MAX         = nso.setupSteps?.max ?? 3;
-const DISCUSSION_Q_MIN        = nso.discussionQuestions?.min ?? 2;
-const DISCUSSION_Q_MAX        = nso.discussionQuestions?.max ?? 3;
 const GROUPS_MIN              = nso.studentGroups?.min ?? 2;
 const GROUPS_MAX              = nso.studentGroups?.max ?? 3;
+// Phase cardinality. These four config keys were written when the phases were
+// designed and then read by nothing, so every count drifted above its ceiling —
+// the checklist ran to 4 against a max of 3, facilitation to 8 against 6. They are
+// schema bounds now rather than prose, because a bound is the only form the model
+// reliably honours.
+const CHECKLIST_MIN           = nso.setupSteps?.min ?? 2;
+const CHECKLIST_MAX           = nso.setupSteps?.max ?? 3;
+const FACILITATION_MIN        = nso.activitySteps?.min ?? 4;
+const FACILITATION_MAX        = nso.activitySteps?.max ?? 6;
+const DISCUSSION_MIN          = nso.discussionQuestions?.min ?? 2;
+const DISCUSSION_MAX          = nso.discussionQuestions?.max ?? 3;
 const STRATEGY_TAGS           = nso.strategyTags ?? [];
 // How many LVN strategies per factor get a full description in the prompt.
 // Defaults to all of them: a field that is not in the prompt cannot be ablated,
@@ -32,9 +42,11 @@ const STRATEGY_TAGS           = nso.strategyTags ?? [];
 // `nextStepOption.maxLvnStrategyDetail` in prompt-config.json to cap it later.
 const MAX_LVN_STRATEGY_DETAIL = nso.maxLvnStrategyDetail ?? Infinity;
 const ALLOWED_DURATION_BUCKETS = nso.allowedDurationBuckets ?? [];
-const OVERVIEW_BULLETS_MIN    = nso.overviewBullets?.min ?? 2;
-const OVERVIEW_BULLETS_MAX    = nso.overviewBullets?.max ?? 4;
-const INCORRECT_EXAMPLES_COUNT     = nso.incorrectWorkedExamplesCount ?? 3;
+const INCORRECT_EXAMPLES_COUNT     = nso.incorrectWorkedExamplesCount ?? 2;
+// How much longer than the original a reviewed problem may be before the review is
+// treated as having produced something other than a problem. See
+// validateActivityProblem.
+const PROBLEM_GROWTH_LIMIT         = nso.problemGrowthLimit ?? 1.5;
 const INCORRECT_EXAMPLE_RULES      = nso.incorrectWorkedExampleRules ?? [];
 const INCORRECT_EXAMPLE_FEW_SHOT   = nso.incorrectWorkedExampleFewShot ?? [];
 const DESIGN_PRINCIPLES            = nso.designPrinciples ?? [];
@@ -54,55 +66,6 @@ const SPLIT_CLASS_AVOID            = FORMAT_CONSTRAINTS.splitClass?.avoid ?? [];
 const strategyTagSchema = STRATEGY_TAGS.length >= 2
   ? z.enum(STRATEGY_TAGS.map(t => t.name))
   : z.string();
-
-const OverviewBullet = z.object({
-  label: z.string().describe('Short bolded action phrase (e.g. "Think", "Discuss", "Compare")'),
-  detail: z.string().describe('1-2 sentences describing the action'),
-});
-
-const Overview = z.object({
-  whatStudentsDo: z.array(OverviewBullet).describe(`${OVERVIEW_BULLETS_MIN}-${OVERVIEW_BULLETS_MAX} bullets describing what students do`),
-  whatYouDo: z.array(OverviewBullet).describe(`${OVERVIEW_BULLETS_MIN}-${OVERVIEW_BULLETS_MAX} bullets describing what the teacher does`),
-  importance: z.string().describe('Why this activity directly addresses this misconception'),
-});
-
-const IncorrectWorkedExample = z.object({
-  problem: z.string().describe('The math problem statement'),
-  incorrectWork: z.string().describe('Student incorrect work showing the misconception reasoning step-by-step'),
-});
-
-const ActivitySteps = z.object({
-  setup: z.array(z.string()).describe('Teacher preparation steps before the activity begins'),
-  problem: z.string().describe('The central problem or prompt students work on'),
-  incorrectWorkedExample1: IncorrectWorkedExample.describe('First incorrect worked example showing the misconception step-by-step'),
-  incorrectWorkedExample2: IncorrectWorkedExample.describe('Second incorrect worked example showing the misconception step-by-step'),
-  incorrectWorkedExample3: IncorrectWorkedExample.describe('Third incorrect worked example showing the misconception step-by-step'),
-  coreActivity: z.array(z.string()).describe('Step-by-step activity instructions (4-6 steps)'),
-  discussionQuestions: z.array(z.string()).describe('2-3 questions for debrief / whole-class discussion'),
-});
-
-const Materials = z.object({
-  required: z.array(z.string()).describe('Materials that must be available'),
-  optional: z.array(z.string()).optional().describe('Nice-to-have materials'),
-});
-
-const StudentGroup = z.object({
-  name: z.string().describe('Group label — e.g. "Group A: Needs Concrete Support"'),
-  description: z.string().describe('Who belongs in this group and what they focus on'),
-  students: z.array(z.string()).optional().describe('Student names — populated post-generation'),
-});
-
-const StudentGroupings = z.object({
-  groups: z.array(StudentGroup).describe('2-3 differentiated groups based on performance'),
-  aiRecommendation: z.string().describe('High-level teacher guidance on grouping strategy'),
-});
-
-const Tabs = z.object({
-  overview: Overview,
-  activitySteps: ActivitySteps,
-  materials: Materials,
-  studentGroupings: StudentGroupings,
-});
 
 const NextStepActivity = z.object({
   type: z.literal('NEXT_STEP'),
@@ -133,11 +96,38 @@ const NextStepActivity = z.object({
     ALLOWED_DURATION_BUCKETS.map(b => b.label).join(', ')
   ),
   format: z.enum(['whole_class', 'split_class']),
-  activityStructure: z.string().describe('The title of the activity template this activity enacts, copied exactly as given. Not an invented name.'),
   aiReasoning: z.string().describe('Why this specific activity design targets this specific misconception'),
   aiGenerated: z.literal(true),
-  tabs: Tabs.describe('Full structured activity content'),
 });
+
+/**
+ * Strip control characters from every string in the generated activity.
+ *
+ * The model reaches for them as invisible separators when a field asks for an
+ * "inline sequence" — v25 came back with U+0003 between each step of
+ * `problemChecklist` and its ✓/✗ mark. Nothing renders them, so the page looks
+ * right while the bytes travel on into the PDF and the database. Wave 1 had the
+ * same class of problem with a literal CRLF inside `activityStructure`.
+ *
+ * Tabs and newlines are kept: `problem` legitimately carries paragraph breaks.
+ * Everything else below U+0020, plus the C1 range and the zero-width/BOM
+ * characters, goes. Runs over the whole structure rather than the one field,
+ * because the next field to ask for a separator will not be this one.
+ */
+const CONTROL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F\u200B-\u200D\uFEFF]/g;
+
+function sanitizeStrings(value) {
+  // Collapse the double space a removed separator leaves behind ("dashed)  ✓").
+  // Spaces only — a tab or a newline may be carrying structure.
+  if (typeof value === 'string') {
+    return value.replace(CONTROL_CHARS, '').replace(/ {2,}/g, ' ').trim();
+  }
+  if (Array.isArray(value)) return value.map(sanitizeStrings);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, sanitizeStrings(v)]));
+  }
+  return value;
+}
 
 // ── Handler ───────────────────────────────────────────────────────────────────
 
@@ -195,7 +185,15 @@ export const handler = async (event) => {
   // to prose, as does a caller that passed no template at all.
   const template     = selectedTemplate?.templateId ? templateById(selectedTemplate.templateId) : null;
   const contentType  = template?.contentType ?? null;
-  const phasesSchema = contentType ? phasesSchemaFor(contentType) : null;
+  const phasesSchema = contentType
+    ? phasesSchemaFor(contentType, {
+      groupsMin: GROUPS_MIN, groupsMax: GROUPS_MAX,
+      checklistMin: CHECKLIST_MIN, checklistMax: CHECKLIST_MAX,
+      facilitationMin: FACILITATION_MIN, facilitationMax: FACILITATION_MAX,
+      discussionMin: DISCUSSION_MIN, discussionMax: DISCUSSION_MAX,
+      exampleCount: INCORRECT_EXAMPLES_COUNT,
+    })
+    : null;
   if (selectedTemplate?.templateId && !template) {
     console.warn(`[microcoachNextStepOption] unknown templateId "${selectedTemplate.templateId}" — generating prose only`);
   }
@@ -427,13 +425,33 @@ Fill \`phases\` as well as the fields above. \`phases.activity.type\` must be ex
 "${contentType}" — it selects the layout this activity renders in, so no other value
 will display.
 
-- \`beforeClass.checklist\`: what the teacher prepares beforehand. Keep it to what fits the time budget.
+- \`beforeClass.checklist\`: what the teacher prepares beforehand, including anything that must be printed or laid out. Keep it to what fits the time budget.
+- \`beforeClass.groupFormation\`: ${GROUPS_MIN}-${GROUPS_MAX} groups differentiated by how severely each cohort holds this misconception, plus guidance on how to place students from a quick formative check. **Order the groups weakest first** — the first group needs the most support, the last the least. Give each a short \`label\` ("Group A") and put the descriptor in \`description\`. Do not list student names; they are assigned from the response data after you answer. Group formation happens inside the same ${MAX_DURATION}-minute budget, so keep the placement move to something that costs a minute or two.
 - \`activity\`: the activity itself, in the shape the schema gives for ${contentType}. This is what students see, so the mathematics must be correct and complete — real problems, real steps, real numbers drawn from the student evidence above, never placeholders.
 - \`facilitation.steps\`: how to run it, following the template's classroom flow.
 - \`discussion.questions\`: the closing questions, drawn from the template's facilitation prompts.
 
 Where the schema marks a field teacher-only, it must not give away what students are
 meant to work out — the template's Views section says what each view may show.
+${contentType === 'INCORRECT_WORKED_EXAMPLES' ? `
+**Critical rules for the incorrect worked examples in \`activity.examples\`** (these are the most common failure mode):
+${INCORRECT_EXAMPLE_RULES.map((r, i) => `  ${i + 1}. ${r}`).join('\n')}
+
+Each example must show a complete problem and the full incorrect work step by step —
+not just the wrong answer — reflect this specific error pattern rather than a random
+mistake, and be self-contained enough to put on a board with no further prep. Annotate
+the FIRST invalid step with kind ERROR; the steps after it are consequences, not the error.
+${INCORRECT_EXAMPLE_FEW_SHOT.length ? `
+**Few-shot examples** — study the difference between CORRECT and INCORRECT example design:
+${INCORRECT_EXAMPLE_FEW_SHOT.map(ex => `
+Misconception: ${ex.misconception}
+\u2713 ${ex.good.label}
+  Problem: ${ex.good.problem}
+  Incorrect work: ${ex.good.incorrectWork}
+\u2717 ${ex.bad.label}
+  Problem: ${ex.bad.problem}
+  Incorrect work: ${ex.bad.incorrectWork}
+`).join('\n')}` : ''}` : ''}
 ` : '';
 
   const userContent = `
@@ -510,7 +528,6 @@ ${DISALLOWED_METHODS.length ? `- NOT use these teaching methods: ${DISALLOWED_ME
 
 Requirements for each field:
 - **title**: Short, action-oriented title only (e.g. "Keep-Change-Flip Error Analysis"). Do NOT append the format name, a parenthetical, or any other label — just the title.
-- **activityStructure**: The title of the template you are enacting, copied exactly from the Template section above. Do not invent a name or substitute a different structure.
 - **summary**: 1-2 sentences; what the activity is and why it targets this error
 - **targets**: The specific skill this activity builds, in plain skill language (not ontology IDs)
 - **mathematicalTakeaway**: One sentence stating what students should leave understanding. Three different things, do not blur them: the misconception is what mathematical thinking is getting in the way, the instructional need is what students need to understand, and the takeaway is what they should leave understanding. Write the mathematics, not the lesson.
@@ -520,51 +537,45 @@ Requirements for each field:
 - **strategyTag**: Must be exactly one of: ${STRATEGY_TAGS.map(t => `"${t.name}"`).join(', ')}${lvnFactors.length ? '. Use the LVN factors above to select the best fit.' : ''}
 - **durationMinutes**: Choose a value within one of these buckets: ${ALLOWED_DURATION_BUCKETS.map(b => b.label).join(', ')}
 - **aiReasoning**: Explain specifically WHY this activity structure and format targets this cognitive error
-- **tabs.overview.whatStudentsDo**: ${OVERVIEW_BULLETS_MIN}-${OVERVIEW_BULLETS_MAX} bullets. Each bullet: a short bold action label (e.g. "Think", "Discuss", "Compare") + 1-2 sentences. ${ws.overviewBullets ?? ''}
-- **tabs.overview.whatYouDo**: ${OVERVIEW_BULLETS_MIN}-${OVERVIEW_BULLETS_MAX} bullets. Each bullet: a short bold action label (e.g. "Present", "Facilitate", "Highlight") + 1-2 sentences. ${ws.overviewBullets ?? ''}
-- **tabs.overview.importance**: Why this specific activity addresses this specific misconception
-- **tabs.activitySteps**: setup (${SETUP_STEPS_MIN}-${SETUP_STEPS_MAX} steps), concrete math problem, ${ACTIVITY_STEPS_MIN}-${ACTIVITY_STEPS_MAX} core activity steps, ${DISCUSSION_Q_MIN}-${DISCUSSION_Q_MAX} discussion questions that surface and resolve the error
-- **tabs.activitySteps.incorrectWorkedExample1**, **incorrectWorkedExample2**, **incorrectWorkedExample3**: Three separate required fields, one incorrect worked example each. Every field must be populated. Each must:
-  - Show a complete problem and the full incorrect student work step-by-step (not just the wrong answer)
-  - Reflect the specific misconception error pattern (not a random mistake)
-  - Use language appropriate to the standard being addressed
-  - Be self-contained — immediately usable on a board or slide with no additional prep
-
-**Critical rules for incorrect worked examples** (these are the most common failure mode):
-${INCORRECT_EXAMPLE_RULES.map((r, i) => `  ${i + 1}. ${r}`).join('\n')}
-${INCORRECT_EXAMPLE_FEW_SHOT.length ? `
-**Few-shot examples** — study the difference between CORRECT and INCORRECT example design:
-${INCORRECT_EXAMPLE_FEW_SHOT.map(ex => `
-Misconception: ${ex.misconception}
-✓ ${ex.good.label}
-  Problem: ${ex.good.problem}
-  Incorrect work: ${ex.good.incorrectWork}
-✗ ${ex.bad.label}
-  Problem: ${ex.bad.problem}
-  Incorrect work: ${ex.bad.incorrectWork}
-`).join('\n')}` : ''}
-- **tabs.materials**: what must be prepared or printed
-- **tabs.studentGroupings**: ${GROUPS_MIN}-${GROUPS_MAX} groups differentiated by misconception severity + grouping strategy guidance
 
 Return JSON matching the schema.
 `.trim();
 
+  /**
+   * Reviews the worked examples in `phases.activity.examples` for arithmetic
+   * accuracy. INCORRECT_WORKED_EXAMPLES only — it is the one content type that
+   * carries examples, and its `prompt` is reviewed here rather than through
+   * validateActivityProblem so the problem and the work attempting it are
+   * judged together.
+   *
+   * Annotations are structural, not prose: `steps[].annotation.kind === 'ERROR'`
+   * is what the UI keys the error row off, so an annotation is carried over from
+   * the original by index unless the reviewer returns a well-formed one of its
+   * own, and a result with no ERROR step at all is discarded in favour of the
+   * original. Without that, a reviewer that "cleaned up" the intentional error
+   * would produce an example with nothing wrong in it.
+   */
   const validateWorkedExamples = async (examples, misconceptionTitle, ccssStandard) => {
     if (!examples?.length) return examples;
     const prompt = `You are a K-12 math accuracy reviewer checking incorrect worked examples for a ${ccssStandard} intervention on "${misconceptionTitle}".
 
-Each example is INTENTIONALLY wrong at exactly one step — the misconception step. Your job is to fix any UNINTENTIONAL arithmetic errors in the surrounding steps while preserving the intentional misconception error.
+Each example is INTENTIONALLY wrong at exactly one step — the step whose \`annotation.kind\` is "ERROR". Your job is to fix any UNINTENTIONAL arithmetic errors in the surrounding steps while preserving the intentional misconception error.
 
 Rules:
-- Do NOT fix or remove the misconception error (the one step that shows the wrong conceptual move)
-- DO fix any arithmetic slippage in other steps (wrong multiplication, wrong simplification, wrong sign, wrong intermediate result)
+- Do NOT fix or remove the step annotated ERROR (the one step that shows the wrong conceptual move), and do not move the annotation to a different step
+- DO fix any arithmetic slippage in the other steps (wrong multiplication, wrong simplification, wrong sign, wrong intermediate result)
+- Steps AFTER the ERROR step are consequences of it: they should follow correctly from the wrong value, not be silently repaired back to the right one
 - If an example is already correct (one error only, no arithmetic slippage), return it unchanged
-- CRITICAL: For each example, solve the problem correctly to find the true correct answer. Then trace the incorrect path shown in incorrectWork to find the STATED answer (the value the student writes as their solution — not their final conclusion about whether it is right or wrong). If the stated answer matches the correct solution, the example fails — the misconception error is inconsequential. Replace the ENTIRE example (both "problem" and "incorrectWork") with a new problem of the same misconception type where the misconception error causes the student to state a clearly wrong final answer. Note: an error that only appears in a checking/verification step but not in the solve step also fails this test, because the student's stated solution is still correct.
+- CRITICAL: For each example, solve the problem correctly to find the true correct answer. Then trace the incorrect path through the steps to find the STATED answer in \`finalOutcome\` (the value the student arrives at — not their conclusion about whether it is right). If the stated answer matches the correct solution, the example fails — the misconception error is inconsequential. Replace the ENTIRE example (\`prompt\`, \`steps\` and \`finalOutcome\`) with a new problem of the same misconception type where the error causes a clearly wrong final answer. An error that appears only in a checking step and not in the solve step also fails this test, because the stated solution is still correct.
 - Use LaTeX for all mathematical expressions ($...$ for inline, $$...$$ for display). Never use Unicode math symbols or plain ASCII math notation.
-- Return a JSON array with the same length as the input, each item: { "problem": "...", "incorrectWork": "..." }
+- Return a JSON array with the same length as the input. Each item: { "prompt": "...", "steps": [{ "step": 1, "text": "...", "annotation": { "kind": "ERROR", "text": "..." } | null }], "finalOutcome": "..." }
 
 Examples to review:
-${JSON.stringify(examples, null, 2)}`;
+${JSON.stringify(examples.map(e => ({ prompt: e.prompt, steps: e.steps, finalOutcome: e.finalOutcome })), null, 2)}`;
+
+    const isAnnotation = (a) =>
+      a && typeof a === 'object' && (a.kind === 'ERROR' || a.kind === 'CORRECT');
+    const str = (v) => (typeof v === 'string' && v.trim() ? v : null);
 
     try {
       const completion = await openai.chat.completions.create({
@@ -583,10 +594,31 @@ ${JSON.stringify(examples, null, 2)}`;
         return examples;
       }
       recordSubCall('validate-worked-examples', VALIDATOR_MODEL, completion, { fellBack: false });
-      return parsed.map((v, i) => ({
-        problem:       (typeof v?.problem      === 'string' && v.problem.trim())      ? v.problem      : examples[i].problem,
-        incorrectWork: (typeof v?.incorrectWork === 'string' && v.incorrectWork.trim()) ? v.incorrectWork : examples[i].incorrectWork,
-      }));
+
+      return parsed.map((v, i) => {
+        const original = examples[i];
+        if (!Array.isArray(v?.steps) || v.steps.length === 0) return original;
+
+        const steps = v.steps.map((st, j) => ({
+          step: Number.isInteger(st?.step) ? st.step : j + 1,
+          text: str(st?.text) ?? original.steps[j]?.text ?? '',
+          annotation: isAnnotation(st?.annotation)
+            ? { kind: st.annotation.kind, text: str(st.annotation.text) }
+            : original.steps[j]?.annotation ?? null,
+        }));
+
+        // An example with nothing marked wrong teaches nothing and renders with
+        // no error row, so the original is the safer answer.
+        if (!steps.some((st) => st.annotation?.kind === 'ERROR')) return original;
+        if (steps.some((st) => st.text === '')) return original;
+
+        return {
+          ...original,
+          prompt: str(v?.prompt) ?? original.prompt,
+          steps,
+          finalOutcome: str(v?.finalOutcome) ?? original.finalOutcome,
+        };
+      });
     } catch (err) {
       console.warn('[microcoachNextStepOption] validateWorkedExamples failed:', err?.message);
       recordSubCall('validate-worked-examples', VALIDATOR_MODEL, null, {
@@ -610,14 +642,28 @@ ${JSON.stringify(examples, null, 2)}`;
       });
       const raw = completion.choices[0]?.message?.content ?? '{}';
       const result = JSON.parse(raw).problem;
-      if (typeof result === 'string' && result.trim()) {
-        recordSubCall('validate-activity-problem', VALIDATOR_MODEL, completion, { fellBack: false });
-        return result;
+      if (typeof result !== 'string' || !result.trim()) {
+        recordSubCall('validate-activity-problem', VALIDATOR_MODEL, completion, {
+          fellBack: true, reason: 'empty or non-string problem',
+        });
+        return problem;
       }
-      recordSubCall('validate-activity-problem', VALIDATOR_MODEL, completion, {
-        fellBack: true, reason: 'empty or non-string problem',
-      });
-      return problem;
+      // A correction should be about the size of what it corrects. On one run the
+      // reviewer turned a ~520-character problem into 2,135 characters of lesson —
+      // bracketed answers, a bullet list of corrections, and a closing sentence
+      // describing its own edit — and all of it was written back as the problem.
+      // For MATH_DETECTIVE that is fatal: the answers are the thing students are
+      // supposed to work out. Growth past half again is treated as the reviewer
+      // having written something other than a problem, and the original is kept.
+      if (result.length > problem.length * PROBLEM_GROWTH_LIMIT) {
+        recordSubCall('validate-activity-problem', VALIDATOR_MODEL, completion, {
+          fellBack: true,
+          reason: `reviewer expanded the problem ${problem.length}→${result.length} chars`,
+        });
+        return problem;
+      }
+      recordSubCall('validate-activity-problem', VALIDATOR_MODEL, completion, { fellBack: false });
+      return result;
     } catch (err) {
       console.warn('[microcoachNextStepOption] validateActivityProblem failed:', err?.message);
       recordSubCall('validate-activity-problem', VALIDATOR_MODEL, null, {
@@ -645,30 +691,32 @@ ${JSON.stringify(examples, null, 2)}`;
 
     recordSubCall('generate-activity', MODEL, completion, { fellBack: false });
 
-    const structured = ActivitySchema.parse(JSON.parse(raw));
+    const structured = sanitizeStrings(ActivitySchema.parse(JSON.parse(raw)));
 
-    // Merge named example properties into the array the frontend expects
-    const rawSteps = structured.tabs.activitySteps;
-    rawSteps.incorrectWorkedExamples = [
-      rawSteps.incorrectWorkedExample1,
-      rawSteps.incorrectWorkedExample2,
-      rawSteps.incorrectWorkedExample3,
-    ].filter(Boolean);
+    // ── Math accuracy review ───────────────────────────────────────────────
+    // Both reviewers used to run over tabs.activitySteps, whose output nothing
+    // read. They now run over the typed content the frontend actually renders.
+    // A prose-only generation (no template, or a template with no content type)
+    // has no activity to review, so both are skipped.
+    const activityContent = structured.phases?.activity ?? null;
 
-    // Validate the central student-facing math problem
-    structured.tabs.activitySteps.problem = await validateActivityProblem(
-      structured.tabs.activitySteps.problem,
-      misconception.title,
-      misconception.ccssStandard
-    );
-
-    // Validate incorrect worked examples — fix unintentional arithmetic errors
-    // while preserving the intentional misconception error in each example
-    structured.tabs.activitySteps.incorrectWorkedExamples = await validateWorkedExamples(
-      structured.tabs.activitySteps.incorrectWorkedExamples,
-      misconception.title,
-      misconception.ccssStandard
-    );
+    if (activityContent?.type === 'INCORRECT_WORKED_EXAMPLES') {
+      // The examples carry their own problem in `prompt`, reviewed alongside the
+      // work attempting it rather than separately.
+      activityContent.examples = await validateWorkedExamples(
+        activityContent.examples,
+        misconception.title,
+        misconception.ccssStandard
+      );
+    } else if (activityContent) {
+      const problem = readActivityProblem(activityContent);
+      if (problem) {
+        writeActivityProblem(
+          activityContent,
+          await validateActivityProblem(problem, misconception.title, misconception.ccssStandard)
+        );
+      }
+    }
 
     if (wantTrace) {
       return JSON.stringify({

@@ -411,6 +411,79 @@ function getStudentGroups(
 
 // ── Next step builder ─────────────────────────────────────────────────────────
 
+/**
+ * The activity templates' identity fields, for IMicroCoachActivity.routine.
+ *
+ * source: amplify/backend/function/microcoachv2LLMSelectTemplate/src/util/activityLibrary.json
+ * (`id`, `title`, `primaryMoveLong`, `description` per template). Hand-copied
+ * because seed/ cannot import from amplify/ — same reason TEMPLATE_CONTENT_TYPE
+ * is duplicated in Preview.tsx. The mock confirms the mapping: spot-the-slip's
+ * routine.subtitle in mockPipelineOutput.json is "Incorrect Worked Example
+ * Analysis", which is exactly its primaryMoveLong.
+ */
+const ROUTINES: Record<string, { name: string; subtitle: string; description: string }> = {
+  'spot-the-slip': {
+    name: 'Spot the Slip',
+    subtitle: 'Incorrect Worked Example Analysis',
+    description:
+      'Students examine a worked solution, identify the first step where the reasoning goes off track, explain why the step is invalid, and work together to correct the error.',
+  },
+  'my-favorite-no': {
+    name: 'My Favorite No',
+    subtitle: 'Student Thinking Analysis',
+    description:
+      'The teacher selects one incorrect response that contains sound reasoning alongside the error, and the class works out what is right in it before naming what went wrong.',
+  },
+  'compare-the-thinking': {
+    name: 'Compare the Thinking',
+    subtitle: 'Compare Strategies & Representations',
+    description:
+      'Students compare two different approaches to the same problem and decide which reasoning holds up, surfacing what each approach assumes.',
+  },
+  'math-detective': {
+    name: 'Math Detective',
+    subtitle: 'Investigate & Solve',
+    description:
+      'Students work through a sequence of diagnostic questions to locate the source of an error, treating the wrong answer as evidence to investigate.',
+  },
+  'make-your-case': {
+    name: 'Make Your Case',
+    subtitle: 'Mathematical Justification',
+    description:
+      'Students take a position on a mathematical claim, build an argument from evidence, then revisit the claim and name what settles it.',
+  },
+  righton: {
+    name: 'RightOn!',
+    subtitle: 'Interactive Student Thinking & Discussion',
+    description:
+      'Students play through the RightOn game, answering and then discussing the reasoning behind their peers\' answers.',
+  },
+};
+
+/**
+ * Title case for IMicroCoachActivity.titleCased, matching the mock\'s own
+ * convention: every word capitalised except short joining words, which stay
+ * lowercase unless they lead ("Analyze Wrong Shadings from Incorrect Reasoning").
+ */
+const TITLE_CASE_STOPWORDS = new Set([
+  'a', 'an', 'and', 'as', 'at', 'but', 'by', 'for', 'from', 'in', 'nor', 'of',
+  'on', 'or', 'the', 'to', 'up', 'via', 'with',
+]);
+
+function titleCase(value: string): string {
+  return value
+    .split(/(\s+)/)
+    .map((word, i) => {
+      if (/^\s+$/.test(word)) return word;
+      const lower = word.toLowerCase();
+      if (i > 0 && TITLE_CASE_STOPWORDS.has(lower)) return lower;
+      // Leave an already-capitalised or mid-word-capitalised token alone, so
+      // "Keep-Change-Flip" and "LaTeX" survive.
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join('');
+}
+
 function formatLabel(f: string): string {
   return (
     ({ whole_class: 'Whole class', split_class: 'Split class' } as Record<string, string>)[f] ?? f
@@ -427,6 +500,7 @@ function buildNextSteps(
     studentGroups: { buildingUnderstanding: string[]; understoodConcept: string[] };
     wrongAnswerExplanations: Array<{ answer: string; explanation: string }>;
     correctAnswerSolution: string[];
+    evidence?: any;
   }> = [],
   studentResponses: any[] = [],
 ): any[] {
@@ -522,45 +596,78 @@ function buildNextSteps(
         impactedObjectives,
         prerequisiteGaps,
       },
-      evidence: m.evidence ?? null,
+      // extras.evidence carries mostCommonError, derived from the most-chosen linked
+      // option; fall back to whatever the misconception itself had.
+      evidence: extras.evidence ?? m.evidence ?? null,
       questionErrorRates,
       ppqQuestions: extras.ppqQuestions ?? [],
       studentGroups: extras.studentGroups ?? { buildingUnderstanding: [], understoodConcept: [] },
       wrongAnswerExplanations: extras.wrongAnswerExplanations ?? [],
       correctAnswerSolution: extras.correctAnswerSolution ?? [],
-      moveOptions: activityList.map((activity, j) => ({
-        id: `nextstep-move-ai-${i + 1}-${j + 1}`,
-        title: activity.title,
-        time: `${activity.durationMinutes} min`,
-        format: formatLabel(activity.format),
-        activityStructure: activity.activityStructure ?? null,
-        summary: activity.summary,
-        targets: activity.targets ?? null,
-        mathematicalTakeaway: activity.mathematicalTakeaway ?? null,
-        // The typed activity content the frontend renders, keyed by
-        // phases.activity.type. Null when the template had no content type.
-        phases: activity.phases ?? null,
-        instructionalMove: activity.instructionalMove ?? null,
-        strategyTag: activity.strategyTag ?? null,
-        aiReasoning: activity.aiReasoning,
-        tabs: activity.tabs ?? null,
-      })),
+      moveOptions: activityList.map((activity, j) => {
+        const routine = ROUTINES[activity.templateId];
+        const contentType = activity.phases?.activity?.type ?? null;
+
+        return {
+          id: `nextstep-move-ai-${i + 1}-${j + 1}`,
+          title: activity.title,
+          titleCased: activity.title ? titleCase(activity.title) : null,
+          // `time` and `format` stay: validate.ts parses the one and checks the
+          // other against VALID_FORMATS, and Preview.tsx reads `time`. The
+          // IMicroCoachActivity fields below are additive, not replacements.
+          time: `${activity.durationMinutes} min`,
+          format: formatLabel(activity.format),
+          durationMinutes: activity.durationMinutes ?? null,
+          durationLabel: `${activity.durationMinutes} min`,
+          // The template's own identity, looked up rather than asked for. The
+          // model used to echo it back as `activityStructure`, which is how a
+          // literal CRLF ended up inside a template name in v19.
+          routine: routine
+            ? { id: `routine-${activity.templateId}`, ...routine }
+            : null,
+          grouping: activity.format
+            ? { level: String(activity.format).toUpperCase(), label: formatLabel(activity.format).toLowerCase() }
+            : null,
+          activityType: contentType,
+          // COMPLETE only when there is typed content for the UI to render; a
+          // prose-only generation (RightOn!, or no template) is PARTIAL.
+          detailStatus: contentType ? 'COMPLETE' : 'PARTIAL',
+          // Selection is the teacher's, made in the UI; nothing here picks for them.
+          isSelected: false,
+          selectLabel: 'Selected activity',
+          summary: activity.summary,
+          targets: activity.targets ?? null,
+          mathematicalTakeaway: activity.mathematicalTakeaway ?? null,
+          // The typed activity content the frontend renders, keyed by
+          // phases.activity.type. Null when the template had no content type.
+          phases: activity.phases ?? null,
+          instructionalMove: activity.instructionalMove ?? null,
+          strategyTag: activity.strategyTag ?? null,
+          aiReasoning: activity.aiReasoning,
+        };
+      }),
     };
   });
 }
 
 /**
- * Inject real student names into the AI-generated studentGroupings.
- * The AI generates group criteria (name + description); we assign students
+ * Inject real student names into phases.beforeClass.groupFormation.
+ * The model generates group criteria (label + description); we assign students
  * deterministically by score rank so every student appears in exactly one group.
  * Groups are assumed to be ordered from lowest to highest performance
- * (Group A = weakest, last group = strongest).
+ * (Group A = weakest, last group = strongest) — post-analyze.ts takes every
+ * group but the last as its "needs help" cohort, so that order is load-bearing.
+ *
+ * This used to write to tabs.studentGroupings, which nothing in src/ read, while
+ * groupFormation — the path BeforeClassPhase actually renders — was hardcoded
+ * null. Same sort and split; only the destination changed.
  */
 function injectStudentsIntoGroups(
   activity: any,
   studentData: Array<{ name: string; score: number }>,
 ): any {
-  const groups: any[] = activity?.tabs?.studentGroupings?.groups;
+  const groupFormation = activity?.phases?.beforeClass?.groupFormation;
+  const groups: any[] = groupFormation?.groups;
   if (!groups?.length || !studentData.length) return activity;
 
   // Sort students lowest score → highest score
@@ -580,11 +687,14 @@ function injectStudentsIntoGroups(
 
   return {
     ...activity,
-    tabs: {
-      ...activity.tabs,
-      studentGroupings: {
-        ...activity.tabs.studentGroupings,
-        groups: groups.map((g: any, i: number) => ({ ...g, students: assigned[i] ?? [] })),
+    phases: {
+      ...activity.phases,
+      beforeClass: {
+        ...activity.phases.beforeClass,
+        groupFormation: {
+          ...groupFormation,
+          groups: groups.map((g: any, i: number) => ({ ...g, students: assigned[i] ?? [] })),
+        },
       },
     },
   };
@@ -1027,15 +1137,48 @@ async function processClassroom(
     correctAnswer: q.correctAnswer ?? null,
     classPercentCorrect: q.classPercentCorrect ?? null,
   }));
+  // Student counts per wrong option, so the most-chosen one can be named as the
+  // misconception's headline evidence.
+  const optionCounts = new Map<string, number>();
+  for (const q of ppq?.questions ?? []) {
+    for (const o of q.answerChoices ?? []) {
+      if (!o?.isCorrect) optionCounts.set(`Q${q.questionNumber}${o.letter}`, o.studentCount ?? 0);
+    }
+  }
+
   const misconceptionExtras = misconceptions.map((m: any) => {
     // The linked wrong answers say which questions surface this misconception.
     const qNums = [...new Set<number>((m.wrongAnswers ?? []).map((w: any) => w.questionNumber))].sort((a, b) => a - b);
+
+    // GenMisconception now returns an explanation per linked option, which is the
+    // shape `wrongAnswerExplanations` has always declared (and validate.ts has always
+    // asserted) but nothing filled. Options whose explanation came back empty are
+    // left out rather than carried as blank rows.
+    const wrongAnswerExplanations = (m.wrongAnswers ?? [])
+      .filter((w: any) => String(w?.explanation ?? '').trim())
+      .map((w: any) => ({
+        answer: `Q${w.questionNumber}${w.letter}`,
+        explanation: String(w.explanation).trim(),
+      }));
+
+    // `evidence.mostCommonError` is asserted by validate.ts and has been null on every
+    // generated misconception. The most-chosen linked option is the natural answer:
+    // it is the error the largest number of these students actually made.
+    const ranked = [...(m.wrongAnswers ?? [])]
+      .map((w: any) => ({ ref: `Q${w.questionNumber}${w.letter}`, explanation: String(w?.explanation ?? '').trim() }))
+      .filter((w) => w.explanation)
+      .sort((a, b) => (optionCounts.get(b.ref) ?? 0) - (optionCounts.get(a.ref) ?? 0));
+    const evidence = ranked.length
+      ? { ...(m.evidence ?? {}), mostCommonError: ranked[0].explanation }
+      : m.evidence ?? null;
+
     return {
       ppqQuestions: ppqQs,
       studentGroups: getStudentGroups(studentResponses, qNums, studentNameMap),
       studentData: getStudentPerformanceData(studentResponses, qNums, studentNameMap),
-      wrongAnswerExplanations: m.wrongAnswerExplanations ?? [],
+      wrongAnswerExplanations,
       correctAnswerSolution: m.correctAnswerSolution ?? [],
+      evidence,
     };
   });
 
@@ -1095,7 +1238,10 @@ async function processClassroom(
           const raw = await invokeLambda(`microcoachv2NextStepOption-${AMPLIFY_ENV}`, { input: activityInput });
           const parsed = parseJson(raw);
           capture.recordCall(`activity-${i + 1}-${pick.templateId}`, activityInput, parsed);
-          resultList.push(injectStudentsIntoGroups(parsed, sd));
+          resultList.push({
+            ...injectStudentsIntoGroups(parsed, sd),
+            templateId: pick.templateId,
+          });
         } catch (err) {
           console.error(`\n    ✗ ${pick.templateId}: ${err}`);
         }
