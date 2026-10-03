@@ -99,7 +99,7 @@ interface AppSwitchProps {
 }
 
 export default function AppSwitch({ currentScreen }: AppSwitchProps) {
-  const { apiClients, user, plan } = useAppOutletContext();
+  const { apiClients, user, plan, classrooms } = useAppOutletContext();
   const screenSize = useScreenSize();
   const { handleLogOut } = useLogOut(apiClients, user);
   const navigate = useNavigate();
@@ -127,7 +127,14 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       );
       break;
     case ScreenType.SIGNUP:
-      screenComponent = <SignUpWizard apiClients={apiClients} screenSize={screenSize} user={user} />;
+      screenComponent = (
+        <SignUpWizard
+          apiClients={apiClients}
+          screenSize={screenSize}
+          user={user}
+          classrooms={classrooms}
+        />
+      );
       break;
     case ScreenType.AUTH:
       screenComponent = (
@@ -147,7 +154,14 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       screenComponent = <ResetPassword screenSize={screenSize} isInSession />;
       break;
     case ScreenType.DASHBOARD:
-      screenComponent = <Dashboard screenSize={screenSize} />;
+      screenComponent = (
+        <Dashboard
+          apiClients={apiClients}
+          screenSize={screenSize}
+          user={user}
+          classrooms={classrooms}
+        />
+      );
       break;
     case ScreenType.REVIEW:
       screenComponent = <Review screenSize={screenSize} />;
@@ -159,7 +173,13 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       screenComponent = <ActivityDetail screenSize={screenSize} />;
       break;
     case ScreenType.UPLOAD_RTD:
-      screenComponent = <UploadFlow screenSize={screenSize} user={user} />;
+      screenComponent = (
+        <UploadFlow
+          screenSize={screenSize}
+          user={user}
+          classrooms={classrooms}
+        />
+      );
       break;
     case ScreenType.REFLECT:
       screenComponent = <Reflect screenSize={screenSize} />;
@@ -189,6 +209,7 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
     <AppContainer
       headerVariant={headerVariant}
       user={user}
+      classrooms={classrooms}
       onLogOut={handleHeaderLogOut}
       // The sign-up frames carry no footer either.
       showFooter={!usesAppChrome && !isSignUp}

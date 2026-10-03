@@ -98,9 +98,10 @@ export default function AuthGuard({
       return children;
     case UserStatusType.LOGGEDIN:
     default:
-      // Signed in → keep users off the auth pages.
+      // Signed in → keep users off the auth pages, into the app. /dashboard
+      // matches none of these, so the redirect cannot loop.
       return isAuthPage || isLoginPage || isSignupPage ? (
-        <Navigate to="/" replace />
+        <Navigate to="/dashboard" replace />
       ) : (
         children
       );

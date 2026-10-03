@@ -18,6 +18,7 @@ import { useAPIClients } from './hooks/useAPIClients';
 import { useAuthResolver } from './hooks/useAuthActions';
 import { useUserState } from './hooks/useUserState';
 import { usePlanItems } from './hooks/usePlanItems';
+import { useClassrooms } from './hooks/useClassrooms';
 import AppSwitch from './switches/AppSwitch';
 import Preview from './pages/preview/Preview';
 
@@ -42,10 +43,11 @@ Modal.setAppElement('#root');
 function RootLayout({ apiClients }: { apiClients: APIClients }) {
   const user = useUserState(apiClients);
   const plan = usePlanItems();
+  const classrooms = useClassrooms(apiClients, user);
   useAuthResolver(apiClients, user);
   const outletContext = useMemo(
-    () => ({ apiClients, user, plan }),
-    [apiClients, user, plan],
+    () => ({ apiClients, user, plan, classrooms }),
+    [apiClients, user, plan, classrooms],
   );
   return (
     <>

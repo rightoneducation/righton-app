@@ -1,5 +1,6 @@
 import { ScreenSize } from './MicroCoachModels';
 import { IUserState } from '../hooks/useUserState';
+import { IClassroomsState } from '../hooks/useClassrooms';
 import { IAPIClients } from '../api';
 import {UserRole} from '../api/Models/IUser';
 
@@ -56,6 +57,7 @@ export interface SignUpStepProps {
   state: ISignUpState;
   actions: ISignUpActions;
   user: IUserState;
+  classrooms: IClassroomsState;
 }
 
 /** Class names the teacher actually typed, ignoring untouched empty rows. */

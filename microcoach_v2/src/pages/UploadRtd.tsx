@@ -3,15 +3,16 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import AppContentRow from '../components/AppContentRow';
-import { ScreenSize } from '../lib/MicroCoachModels';
+import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import { UploadStepProps } from '../lib/UploadModels';
-import { useMisconceptions } from '../hooks/useMisconceptions';
+import { formatWeekLabel, recentWeeks } from '../lib/weeks';
 import { PromptIconTile } from '../lib/styledcomponents/ActivityDetailStyledComponents';
 import { SignUpCta } from '../lib/styledcomponents/SignUpStyledComponents';
 import {
@@ -19,6 +20,7 @@ import {
   DropzoneRow,
   FormatHint,
   SetupRow,
+  SetupSelect,
   SetupValue,
   UploadCard,
   UploadHintChip,
@@ -38,24 +40,40 @@ import { useAllReady, useI18nReady } from '../hooks/readiness';
  * "Upload file" marks a slot complete and "Replace file" clears it. The error
  * state is reachable through the second slot so it can be demonstrated.
  */
-export default function UploadRtd({ screenSize, upload, actions, user }: UploadStepProps) {
-  const { t } = useTranslation();
+export default function UploadRtd({
+  screenSize,
+  upload,
+  actions,
+  user,
+  classrooms,
+}: UploadStepProps) {
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { session } = useMisconceptions();
-  const { userProfile } = user;
+  const { userProfile, userStatus } = user;
+  const { classrooms: classList, selectedClassId } = classrooms;
 
-  const isReady = useAllReady(useI18nReady());
+  // Waits on auth and the class list: this screen renders during LOADING (it
+  // is in PUBLIC_SCREENS), and painting before they settle flashed an empty
+  // name and class in.
+  const isReady = useAllReady(
+    useI18nReady(),
+    userStatus !== UserStatusType.LOADING,
+    classrooms.isLoaded,
+  );
 
   if (!isReady) return null;
 
-  const teacherName =
-    [userProfile?.firstName, userProfile?.lastName].filter(Boolean).join(' ') ||
-    session.teacher.displayName;
-  const teacherEmail = userProfile?.email ?? session.teacher.email;
+  const teacherName = [userProfile?.firstName, userProfile?.lastName]
+    .filter(Boolean)
+    .join(' ');
+  const teacherEmail = userProfile?.email ?? '';
+  // Read from the shared selection, so switching class in the header mid-upload
+  // updates this card rather than leaving it pointing at the old class.
   const className =
-    session.classes.find((option) => option.id === session.selectedClassId)
-      ?.name ?? session.classes[0]?.name;
+    classList.find((classroom) => classroom.id === selectedClassId)?.name ?? '';
+  const hasClass = !!className;
+  const weekOptions = recentWeeks();
 
   const slots = [
     {
@@ -98,18 +116,15 @@ export default function UploadRtd({ screenSize, upload, actions, user }: UploadS
         <SetupRow screenSize={screenSize}>
           {[
             // Teacher and Class are outlined at 50% in the frames, Week at 70%:
-            // the first two are fixed for this upload, the third is the
-            // teacher's to change.
+            // the first two are fixed for this upload; Week is the teacher's
+            // to change, so it is the SetupSelect after these.
             {
               label: t('upload.teacher'),
-              value: `${teacherName} · ${teacherEmail}`,
-              isLocked: true,
+              value: [teacherName, teacherEmail].filter(Boolean).join(' · '),
             },
-            { label: t('upload.class'), value: className, isLocked: true },
             {
-              label: t('upload.week'),
-              value: session.selectedWeek,
-              isLocked: false,
+              label: t('upload.class'),
+              value: className || t('upload.noClass'),
             },
           ].map((field) => (
             <Box key={field.label}>
@@ -123,9 +138,32 @@ export default function UploadRtd({ screenSize, upload, actions, user }: UploadS
               >
                 {field.label}
               </Typography>
-              <SetupValue isLocked={field.isLocked}>{field.value}</SetupValue>
+              <SetupValue isLocked>{field.value}</SetupValue>
             </Box>
           ))}
+          <Box>
+            <Typography
+              variant="smallTitle"
+              sx={{
+                display: 'block',
+                mb: `${theme.sizing.space1}px`,
+                color: 'designSystem.surface.atlanticNavy',
+              }}
+            >
+              {t('upload.week')}
+            </Typography>
+            <SetupSelect
+              value={upload.weekStart}
+              onChange={(event) => actions.setWeek(event.target.value)}
+              inputProps={{ 'aria-label': t('upload.week') }}
+            >
+              {weekOptions.map((week) => (
+                <MenuItem key={week} value={week}>
+                  {formatWeekLabel(week, t, i18n.language)}
+                </MenuItem>
+              ))}
+            </SetupSelect>
+          </Box>
         </SetupRow>
       </UploadCard>
 
@@ -236,7 +274,8 @@ export default function UploadRtd({ screenSize, upload, actions, user }: UploadS
         })}
       </DropzoneRow>
 
-      {!bothComplete && (
+      {!hasClass && <UploadHintChip>{t('upload.addClassHint')}</UploadHintChip>}
+      {hasClass && !bothComplete && (
         <UploadHintChip>{t('upload.bothToContinue')}</UploadHintChip>
       )}
 
@@ -255,7 +294,7 @@ export default function UploadRtd({ screenSize, upload, actions, user }: UploadS
             teacher the step exists. */}
         <SignUpCta
           disableElevation
-          disabled={!bothComplete}
+          disabled={!bothComplete || !hasClass}
           onClick={() => navigate('/upload-rtd/review')}
         >
           {t('upload.continue')}

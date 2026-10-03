@@ -124,7 +124,29 @@
     "classPrompt": "Which class are you working with today?",
     "moreClasses": "More",
     "weekLabel": "Week",
-    "cta": "Review misconception patterns"
+    "cta": {
+      "ASSESS": "Upload student results",
+      "UNDERSTAND": "Review misconception patterns",
+      "REASSESS": "Upload reassessment results",
+      "REFLECT": "Reflect on impact"
+    },
+    "steps": {
+      "ASSESS": "Assess",
+      "UNDERSTAND": "Understand",
+      "CHOOSE": "Choose activity",
+      "REASSESS": "Reassess",
+      "REFLECT": "Reflect on impact"
+    },
+    "noClassesTitle": "Add your first class to get started",
+    "addClassPlaceholder": "Class name",
+    "addClass": "Add class",
+    "addClassError": "That class could not be saved. Please try again.",
+    "sidebar": {
+      "home": "Home",
+      "thisWeek": "This Week",
+      "pastInsights": "Past Insights"
+    },
+    "weekNumber": "Week {{number}}"
   },
   "signup": {
     "welcome": "Welcome to MicroCoach",
@@ -225,7 +247,10 @@
     "ppqExemplar": "PPQ Exemplar",
     "ppqResponses": "PPQ Responses",
     "backToUpload": "Back to upload",
-    "submit": "Submit files for analysis"
+    "submit": "Submit files for analysis",
+    "weekOf": "Week of {{date}}",
+    "noClass": "No class selected",
+    "addClassHint": "Add a class on the dashboard to start an upload."
   },
   "reflect": {
     "title": "Next Steps You Implemented",

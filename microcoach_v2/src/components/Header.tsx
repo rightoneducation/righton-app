@@ -15,6 +15,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import ContentRow from './ContentRow';
 import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import { IUserState } from '../hooks/useUserState';
+import { IClassroomsState } from '../hooks/useClassrooms';
 import { avatarIcons, DEFAULT_AVATAR_INDEX } from '../images/avatars';
 
 /**
@@ -34,6 +35,7 @@ export type HeaderVariant = 'public' | 'signup' | 'app' | 'profile';
 interface HeaderProps {
   screenSize: ScreenSize;
   user: IUserState;
+  classrooms: IClassroomsState;
   variant?: HeaderVariant;
   onLogOut?: () => void;
 }
@@ -207,6 +209,7 @@ const authSkeletonSx = { bgcolor: 'designSystem.background.fadedWhiteVeil' };
 export default function Header({
   screenSize,
   user,
+  classrooms: classroomState,
   variant = 'public',
   onLogOut,
 }: HeaderProps) {
@@ -225,11 +228,10 @@ export default function Header({
     .join(' ');
   const teacherEmail = userProfile?.email || '';
 
-  // Classes are a @hasMany relation and nothing creates Class rows yet, so this
-  // is empty for every real user. Rendered disabled rather than hidden so the
-  // header does not reflow once they exist.
-  const classes = userProfile?.classes ?? [];
-  const [selectedClassId, setSelectedClassId] = React.useState('');
+  // Same selection as the dashboard's class chips (useClassrooms). Rendered
+  // disabled rather than hidden while empty so the header does not reflow once
+  // the first class is added.
+  const { classrooms, selectedClassId, selectClass } = classroomState;
 
   // Both app variants share the nav block; only its contents differ.
   const isProfileChrome = variant === 'profile';
@@ -333,17 +335,18 @@ export default function Header({
                     screenSize={screenSize}
                     value={selectedClassId}
                     displayEmpty
-                    disabled={classes.length === 0}
+                    disabled={classrooms.length === 0}
                     renderValue={(value) =>
-                      (value as string) || t('header.noClasses')
+                      classrooms.find((c) => c.id === value)?.name ||
+                      t('header.noClasses')
                     }
                     IconComponent={KeyboardArrowDownIcon}
-                    onChange={(event) => setSelectedClassId(event.target.value)}
+                    onChange={(event) => selectClass(event.target.value)}
                     inputProps={{ 'aria-label': t('header.classSwitcher') }}
                   >
-                    {classes.map((className) => (
-                      <MenuItem key={className} value={className}>
-                        {className}
+                    {classrooms.map((classroom) => (
+                      <MenuItem key={classroom.id} value={classroom.id}>
+                        {classroom.name}
                       </MenuItem>
                     ))}
                   </ClassSelect>
