@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -72,6 +73,7 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
 
   const [isFormErrored, setIsFormErrored] = React.useState(false);
   const [isShowPassword, setIsShowPassword] = React.useState(false);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const handleClickShowPassword = () => setIsShowPassword((show) => !show);
   const suppressDefault = (event: React.MouseEvent<HTMLButtonElement>) =>
     event.preventDefault();
@@ -141,11 +143,15 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
   };
 
   const handleContinue = async () => {
+    // Guards a second click landing before the disabled re-render.
+    if (isSubmitting) return;
+    // Validate before the flag, so an invalid click doesn't flash the spinner.
     if (!isFormValid) {
       setIsFormErrored(true);
       return;
     }
     setIsFormErrored(false);
+    setIsSubmitting(true);
     try{
       await apiClients.user.signUpSendConfirmationCode(
         state
@@ -153,6 +159,8 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
       navigate('/signup/verify');
     } catch {
       console.error('Sign Up Error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -311,12 +319,20 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
             {t('signup.login')}
           </SignUpPill>
         </Box>
+        {/* color="inherit": the spinner takes SignUpCta's disabled label
+            colour, which reads on its grey disabled fill where white would
+            vanish. */}
         <SignUpCta
           disableElevation
+          disabled={isSubmitting}
           onClick={handleContinue}
           sx={{ mt: `${theme.sizing.space3}px` }}
         >
-          {t('signup.continue')}
+          {isSubmitting ? (
+            <CircularProgress size={24} color="inherit" aria-label={t('signup.continue')} />
+          ) : (
+            t('signup.continue')
+          )}
         </SignUpCta>
       </SignUpColumn>
     </AppContentRow>
