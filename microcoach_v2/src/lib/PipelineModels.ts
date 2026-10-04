@@ -333,6 +333,10 @@ export interface IFlowStep {
   order: number;
   label: string;
   state: 'COMPLETE' | 'CURRENT' | 'UPCOMING';
+  /** Where the step links to, when it is clickable. */
+  path?: string;
+  /** Completed steps, plus Assess in any state (it is always where to start). */
+  isClickable?: boolean;
 }
 
 export interface ISidebarItem {

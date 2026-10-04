@@ -50,6 +50,21 @@ export function deriveCurrentStep(
   return FlowStep.UNDERSTAND;
 }
 
+/*
+ * Where each step lives once it is done. Not stepCta: that answers "what next"
+ * for the current step, so CHOOSE there means go and choose (/review), while a
+ * completed CHOOSE means look at what was chosen (/myplan). Its own page,
+ * /review/:misconceptionId/activities, needs a misconception the stepper does
+ * not have.
+ */
+const STEP_PATH: Record<Exclude<FlowStep, FlowStep.DONE>, string> = {
+  [FlowStep.ASSESS]: '/upload-rtd',
+  [FlowStep.UNDERSTAND]: '/review',
+  [FlowStep.CHOOSE]: '/myplan',
+  [FlowStep.REASSESS]: '/upload-rtd',
+  [FlowStep.REFLECT]: '/reflect',
+};
+
 export function buildFlowSteps(current: FlowStep, t: Translate): IFlowStep[] {
   const currentIndex =
     current === FlowStep.DONE ? ORDER.length : ORDER.indexOf(current);
@@ -61,6 +76,10 @@ export function buildFlowSteps(current: FlowStep, t: Translate): IFlowStep[] {
       order: index + 1,
       label: t(`home.steps.${step}`),
       state,
+      path: STEP_PATH[step as Exclude<FlowStep, FlowStep.DONE>],
+      // Assess is also clickable while current: it is the way into the flow
+      // for a class with no data yet, so it should not wait to be completed.
+      isClickable: state === 'COMPLETE' || step === FlowStep.ASSESS,
     };
   });
 }

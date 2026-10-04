@@ -74,6 +74,10 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
   const [isFormErrored, setIsFormErrored] = React.useState(false);
   const [isShowPassword, setIsShowPassword] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  // Why Cognito or the PreSignUp trigger refused the signup, e.g. the email is
+  // already registered with Google. awsSignUp has already reduced it to the
+  // human-readable half of `CODE|message`.
+  const [signUpError, setSignUpError] = React.useState('');
   const handleClickShowPassword = () => setIsShowPassword((show) => !show);
   const suppressDefault = (event: React.MouseEvent<HTMLButtonElement>) =>
     event.preventDefault();
@@ -151,14 +155,16 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
       return;
     }
     setIsFormErrored(false);
+    setSignUpError('');
     setIsSubmitting(true);
     try{
       await apiClients.user.signUpSendConfirmationCode(
         state
       );
       navigate('/signup/verify');
-    } catch {
-      console.error('Sign Up Error');
+    } catch (error) {
+      console.error('Sign Up Error', error);
+      setSignUpError((error as Error).message);
     } finally {
       setIsSubmitting(false);
     }
@@ -319,6 +325,19 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
             {t('signup.login')}
           </SignUpPill>
         </Box>
+        {/* Same treatment as Login's sign-in error. */}
+        {signUpError && (
+          <Typography
+            variant="rubikLabel"
+            role="alert"
+            sx={{
+              color: 'designSystem.foreground.accentBlue',
+              textAlign: 'center',
+            }}
+          >
+            {signUpError}
+          </Typography>
+        )}
         {/* color="inherit": the spinner takes SignUpCta's disabled label
             colour, which reads on its grey disabled fill where white would
             vanish. */}

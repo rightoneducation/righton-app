@@ -70,12 +70,24 @@
           "Arn",
           "Name"
         ]
+      },
+      {
+        "category": "function",
+        "resourceName": "microcoachv2bb9ce5a2PreSignup",
+        "triggerProvider": "Cognito",
+        "attributes": [
+          "Arn",
+          "Name"
+        ]
       }
     ],
     "userPoolGroups": true,
     "adminQueries": false,
     "triggers": {
       "PostAuthentication": [
+        "custom"
+      ],
+      "PreSignup": [
         "custom"
       ]
     },
@@ -88,7 +100,7 @@
     "parentStack": {
       "Ref": "AWS::StackId"
     },
-    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostAuthentication\",\n    \"lambdaFunctionName\": \"microcoachv2bb9ce5a2PostAuthentication\"\n  }\n]",
+    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostAuthentication\",\n    \"lambdaFunctionName\": \"microcoachv2bb9ce5a2PostAuthentication\"\n  },\n  {\n    \"triggerType\": \"PreSignUp\",\n    \"lambdaFunctionName\": \"microcoachv2bb9ce5a2PreSignup\"\n  }\n]",
     "permissions": [],
     "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"profile\"],\"CallbackURLs\":[\"http://localhost:3000/auth/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}",
     "authProviders": []

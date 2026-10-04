@@ -46,6 +46,15 @@
           "category": "function",
           "resourceName": "microcoachv2bb9ce5a2PostAuthentication",
           "triggerProvider": "Cognito"
+        },
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "microcoachv2bb9ce5a2PreSignup",
+          "triggerProvider": "Cognito"
         }
       ],
       "frontendAuthConfig": {
@@ -160,6 +169,11 @@
       "service": "Lambda"
     },
     "microcoachv2bb9ce5a2PostAuthentication": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachv2bb9ce5a2PreSignup": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -371,6 +385,22 @@
         {
           "category": "function",
           "resourceName": "microcoachv2bb9ce5a2PostAuthentication"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2bb9ce5a2PreSignup_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2bb9ce5a2PreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2bb9ce5a2PreSignup_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2bb9ce5a2PreSignup"
         }
       ]
     }
