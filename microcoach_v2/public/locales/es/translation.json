@@ -36,7 +36,8 @@
     "stepNumber": "Paso {{number}}",
     "stepCorrect": "(Correcto)",
     "stepError": "← (Error: {{note}})",
-    "stepErrorBare": "← (Error)"
+    "stepErrorBare": "← (Error)",
+    "makeYourCasePositions": "Argumentos previstos"
   },
   "chooseActivity": {
     "back": "Volver a los conceptos erróneos",
@@ -123,7 +124,29 @@
     "classPrompt": "¿Con qué clase trabajas hoy?",
     "moreClasses": "Más",
     "weekLabel": "Semana",
-    "cta": "Revisar patrones de conceptos erróneos"
+    "cta": {
+      "ASSESS": "Subir resultados de los estudiantes",
+      "UNDERSTAND": "Revisar patrones de conceptos erróneos",
+      "REASSESS": "Subir resultados de la reevaluación",
+      "REFLECT": "Reflexionar sobre el impacto"
+    },
+    "steps": {
+      "ASSESS": "Evaluar",
+      "UNDERSTAND": "Comprender",
+      "CHOOSE": "Elegir actividad",
+      "REASSESS": "Reevaluar",
+      "REFLECT": "Reflexionar sobre el impacto"
+    },
+    "noClassesTitle": "Agrega tu primera clase para comenzar",
+    "addClassPlaceholder": "Nombre de la clase",
+    "addClass": "Agregar clase",
+    "addClassError": "No se pudo guardar la clase. Inténtalo de nuevo.",
+    "sidebar": {
+      "home": "Inicio",
+      "thisWeek": "Esta semana",
+      "pastInsights": "Información anterior"
+    },
+    "weekNumber": "Semana {{number}}"
   },
   "signup": {
     "welcome": "Bienvenido a MicroCoach",
@@ -224,7 +247,10 @@
     "ppqExemplar": "Ejemplar PPQ",
     "ppqResponses": "Respuestas PPQ",
     "backToUpload": "Volver a subir",
-    "submit": "Enviar archivos para análisis"
+    "submit": "Enviar archivos para análisis",
+    "weekOf": "Semana del {{date}}",
+    "noClass": "Ninguna clase seleccionada",
+    "addClassHint": "Agrega una clase en el panel para comenzar a subir archivos."
   },
   "reflect": {
     "title": "Próximos pasos que implementó",

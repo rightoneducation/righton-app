@@ -20,6 +20,8 @@ import { maskQuery } from '../eval/scripts/util/maskQuery';
 import { dedupeGraph } from '../eval/scripts/util/dedupeGraph';
 import { MaskOptionEnum, KgQueryType } from '../eval/types';
 import { computeMisconceptionReach } from '../eval/scripts/util/computeReach';
+import { checkNeedSeparation } from '../eval/scripts/util/checkNeedSeparation';
+import { matchStandard } from '../eval/scripts/util/ccssCode';
 
 const AMPLIFY_ENV = process.env.AMPLIFY_ENV ?? 'dev';
 
@@ -81,7 +83,7 @@ const GRAPH_SOURCE: 'fixture' | 'live' = (() => {
 // `--analysis-only` stops after the misconception analysis: no instructional
 // needs, no planner, no activity generation. output.json still carries every
 // misconception-level field (reach counts, prerequisite gaps) with empty
-// moveOptions, so /preview and scoreMisconception work unchanged. Recorded in
+// moveOptions, so /preview reads it unchanged. Recorded in
 // the manifest as `stoppedAfter` so a truncated run cannot be compared blind
 // against a full one.
 const ANALYSIS_ONLY = process.argv.includes('--analysis-only');
@@ -409,6 +411,79 @@ function getStudentGroups(
 
 // ── Next step builder ─────────────────────────────────────────────────────────
 
+/**
+ * The activity templates' identity fields, for IMicroCoachActivity.routine.
+ *
+ * source: amplify/backend/function/microcoachv2LLMSelectTemplate/src/util/activityLibrary.json
+ * (`id`, `title`, `primaryMoveLong`, `description` per template). Hand-copied
+ * because seed/ cannot import from amplify/ — same reason TEMPLATE_CONTENT_TYPE
+ * is duplicated in Preview.tsx. The mock confirms the mapping: spot-the-slip's
+ * routine.subtitle in mockPipelineOutput.json is "Incorrect Worked Example
+ * Analysis", which is exactly its primaryMoveLong.
+ */
+const ROUTINES: Record<string, { name: string; subtitle: string; description: string }> = {
+  'spot-the-slip': {
+    name: 'Spot the Slip',
+    subtitle: 'Incorrect Worked Example Analysis',
+    description:
+      'Students examine a worked solution, identify the first step where the reasoning goes off track, explain why the step is invalid, and work together to correct the error.',
+  },
+  'my-favorite-no': {
+    name: 'My Favorite No',
+    subtitle: 'Student Thinking Analysis',
+    description:
+      'The teacher selects one incorrect response that contains sound reasoning alongside the error, and the class works out what is right in it before naming what went wrong.',
+  },
+  'compare-the-thinking': {
+    name: 'Compare the Thinking',
+    subtitle: 'Compare Strategies & Representations',
+    description:
+      'Students compare two different approaches to the same problem and decide which reasoning holds up, surfacing what each approach assumes.',
+  },
+  'math-detective': {
+    name: 'Math Detective',
+    subtitle: 'Investigate & Solve',
+    description:
+      'Students work through a sequence of diagnostic questions to locate the source of an error, treating the wrong answer as evidence to investigate.',
+  },
+  'make-your-case': {
+    name: 'Make Your Case',
+    subtitle: 'Mathematical Justification',
+    description:
+      'Students take a position on a mathematical claim, build an argument from evidence, then revisit the claim and name what settles it.',
+  },
+  righton: {
+    name: 'RightOn!',
+    subtitle: 'Interactive Student Thinking & Discussion',
+    description:
+      'Students play through the RightOn game, answering and then discussing the reasoning behind their peers\' answers.',
+  },
+};
+
+/**
+ * Title case for IMicroCoachActivity.titleCased, matching the mock\'s own
+ * convention: every word capitalised except short joining words, which stay
+ * lowercase unless they lead ("Analyze Wrong Shadings from Incorrect Reasoning").
+ */
+const TITLE_CASE_STOPWORDS = new Set([
+  'a', 'an', 'and', 'as', 'at', 'but', 'by', 'for', 'from', 'in', 'nor', 'of',
+  'on', 'or', 'the', 'to', 'up', 'via', 'with',
+]);
+
+function titleCase(value: string): string {
+  return value
+    .split(/(\s+)/)
+    .map((word, i) => {
+      if (/^\s+$/.test(word)) return word;
+      const lower = word.toLowerCase();
+      if (i > 0 && TITLE_CASE_STOPWORDS.has(lower)) return lower;
+      // Leave an already-capitalised or mid-word-capitalised token alone, so
+      // "Keep-Change-Flip" and "LaTeX" survive.
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join('');
+}
+
 function formatLabel(f: string): string {
   return (
     ({ whole_class: 'Whole class', split_class: 'Split class' } as Record<string, string>)[f] ?? f
@@ -425,6 +500,7 @@ function buildNextSteps(
     studentGroups: { buildingUnderstanding: string[]; understoodConcept: string[] };
     wrongAnswerExplanations: Array<{ answer: string; explanation: string }>;
     correctAnswerSolution: string[];
+    evidence?: any;
   }> = [],
   studentResponses: any[] = [],
 ): any[] {
@@ -437,7 +513,6 @@ function buildNextSteps(
     }));
 
   const frameworkItems: any[] = learningScienceData?.standards ?? [];
-  const normalize = (s: string) => s?.replace(/\s/g, '').toLowerCase() ?? '';
 
   const standardsDescMap = new Map<string, string>();
   for (const item of frameworkItems) {
@@ -450,9 +525,9 @@ function buildNextSteps(
   return misconceptions.map((m: any, i: number) => {
     const extras = misconceptionExtras[i] ?? {};
     const activityList: any[] = (activitiesPerGroup[i] ?? []).filter(Boolean);
-    const frameworkItem = frameworkItems.find(
-      (item: any) => normalize(item.code) === normalize(m.ccssStandard)
-    );
+    // Questions spell the code one way and the graph another, so an exact string
+    // match drops the standard description and both fallback lists.
+    const frameworkItem = matchStandard(m.ccssStandard, frameworkItems).standard;
 
     // The need stage selects the specific prerequisite / downstream codes in its
     // rationale; the graph's full lists are the fallback when it names none.
@@ -483,13 +558,31 @@ function buildNextSteps(
       // null (not 0) when there were no refs to count from.
       studentCount: reach.studentCount,
       studentPercent: reach.studentPercent,
+      meanConfidence: reach.meanConfidence,
+      // Unique students and linked responses are reported apart: a response is
+      // what was observed, the misconception behind it is inferred, and one
+      // student can contribute several responses.
+      linkedResponses: reach.linkedResponses,
       wrongAnswers: m.wrongAnswers ?? [],
       linkStatus: reach.linkStatus,
       isCore: m.isCore ?? false,
+      // From the rubric stage (step 4d): the Wave 2 Misconception Rubric scores, the
+      // rank they produce, and whether this one survived the cap.
+      rubric: m.rubric ?? null,
+      priorityRank: m.priorityRank ?? null,
+      isRecommendedFocus: m.isRecommendedFocus === true,
+      retained: m.retained !== false,
       occurrence: m.occurrence ?? m.rationale?.recurrence ?? null,
       example: m.example ?? null,
       misconceptionSummary: m.description,
       learningScienceConnection: m.learningScienceConnection ?? null,
+      // Whether the misconception is read directly off the option content or is the
+      // most plausible of several explanations that fit the same responses.
+      evidenceBasis: m.evidenceBasis ?? null,
+      // 'question' when the linked questions carried CCSS codes, 'model' when
+      // GenMisconception chose from the session's list, 'fallback' when neither —
+      // and a run of all 'fallback' means the progression score cannot vary.
+      standardSource: m.standardSource ?? null,
       aiReasoning: m.aiReasoning ?? null,
       // From the need stage (step 5): the need itself and the analysis behind it.
       instructionalNeed: m.instructionalNeed ?? null,
@@ -497,48 +590,84 @@ function buildNextSteps(
       // From the template-selection stage (step 5d): top two activity templates
       // for the need, with rationale.
       selectedTemplates: m.selectedTemplates ?? null,
-      priorityRank: m.rationale?.priorityRank ?? null,
       successIndicators: m.successIndicators ?? [],
       ccssStandards: {
         targetObjective: { standard: m.ccssStandard, description: standardsDescMap.get(m.ccssStandard) ?? frameworkItem?.description ?? '', learningComponents: (frameworkItem?.learningComponents ?? []).map((c: any) => c.description).filter(Boolean) },
         impactedObjectives,
         prerequisiteGaps,
       },
-      evidence: m.evidence ?? null,
+      // extras.evidence carries mostCommonError, derived from the most-chosen linked
+      // option; fall back to whatever the misconception itself had.
+      evidence: extras.evidence ?? m.evidence ?? null,
       questionErrorRates,
       ppqQuestions: extras.ppqQuestions ?? [],
       studentGroups: extras.studentGroups ?? { buildingUnderstanding: [], understoodConcept: [] },
       wrongAnswerExplanations: extras.wrongAnswerExplanations ?? [],
       correctAnswerSolution: extras.correctAnswerSolution ?? [],
-      moveOptions: activityList.map((activity, j) => ({
-        id: `nextstep-move-ai-${i + 1}-${j + 1}`,
-        title: activity.title,
-        time: `${activity.durationMinutes} min`,
-        format: formatLabel(activity.format),
-        activityStructure: activity.activityStructure ?? null,
-        summary: activity.summary,
-        targets: activity.targets ?? null,
-        instructionalMove: activity.instructionalMove ?? null,
-        strategyTag: activity.strategyTag ?? null,
-        aiReasoning: activity.aiReasoning,
-        tabs: activity.tabs ?? null,
-      })),
+      moveOptions: activityList.map((activity, j) => {
+        const routine = ROUTINES[activity.templateId];
+        const contentType = activity.phases?.activity?.type ?? null;
+
+        return {
+          id: `nextstep-move-ai-${i + 1}-${j + 1}`,
+          title: activity.title,
+          titleCased: activity.title ? titleCase(activity.title) : null,
+          // `time` and `format` stay: validate.ts parses the one and checks the
+          // other against VALID_FORMATS, and Preview.tsx reads `time`. The
+          // IMicroCoachActivity fields below are additive, not replacements.
+          time: `${activity.durationMinutes} min`,
+          format: formatLabel(activity.format),
+          durationMinutes: activity.durationMinutes ?? null,
+          durationLabel: `${activity.durationMinutes} min`,
+          // The template's own identity, looked up rather than asked for. The
+          // model used to echo it back as `activityStructure`, which is how a
+          // literal CRLF ended up inside a template name in v19.
+          routine: routine
+            ? { id: `routine-${activity.templateId}`, ...routine }
+            : null,
+          grouping: activity.format
+            ? { level: String(activity.format).toUpperCase(), label: formatLabel(activity.format).toLowerCase() }
+            : null,
+          activityType: contentType,
+          // COMPLETE only when there is typed content for the UI to render; a
+          // prose-only generation (RightOn!, or no template) is PARTIAL.
+          detailStatus: contentType ? 'COMPLETE' : 'PARTIAL',
+          // Selection is the teacher's, made in the UI; nothing here picks for them.
+          isSelected: false,
+          selectLabel: 'Selected activity',
+          summary: activity.summary,
+          targets: activity.targets ?? null,
+          mathematicalTakeaway: activity.mathematicalTakeaway ?? null,
+          // The typed activity content the frontend renders, keyed by
+          // phases.activity.type. Null when the template had no content type.
+          phases: activity.phases ?? null,
+          instructionalMove: activity.instructionalMove ?? null,
+          strategyTag: activity.strategyTag ?? null,
+          aiReasoning: activity.aiReasoning,
+        };
+      }),
     };
   });
 }
 
 /**
- * Inject real student names into the AI-generated studentGroupings.
- * The AI generates group criteria (name + description); we assign students
+ * Inject real student names into phases.beforeClass.groupFormation.
+ * The model generates group criteria (label + description); we assign students
  * deterministically by score rank so every student appears in exactly one group.
  * Groups are assumed to be ordered from lowest to highest performance
- * (Group A = weakest, last group = strongest).
+ * (Group A = weakest, last group = strongest) — post-analyze.ts takes every
+ * group but the last as its "needs help" cohort, so that order is load-bearing.
+ *
+ * This used to write to tabs.studentGroupings, which nothing in src/ read, while
+ * groupFormation — the path BeforeClassPhase actually renders — was hardcoded
+ * null. Same sort and split; only the destination changed.
  */
 function injectStudentsIntoGroups(
   activity: any,
   studentData: Array<{ name: string; score: number }>,
 ): any {
-  const groups: any[] = activity?.tabs?.studentGroupings?.groups;
+  const groupFormation = activity?.phases?.beforeClass?.groupFormation;
+  const groups: any[] = groupFormation?.groups;
   if (!groups?.length || !studentData.length) return activity;
 
   // Sort students lowest score → highest score
@@ -558,11 +687,14 @@ function injectStudentsIntoGroups(
 
   return {
     ...activity,
-    tabs: {
-      ...activity.tabs,
-      studentGroupings: {
-        ...activity.tabs.studentGroupings,
-        groups: groups.map((g: any, i: number) => ({ ...g, students: assigned[i] ?? [] })),
+    phases: {
+      ...activity.phases,
+      beforeClass: {
+        ...activity.phases.beforeClass,
+        groupFormation: {
+          ...groupFormation,
+          groups: groups.map((g: any, i: number) => ({ ...g, students: assigned[i] ?? [] })),
+        },
       },
     },
   };
@@ -801,10 +933,15 @@ async function processClassroom(
   }
 
   // Reach is counted here from the response rows, not estimated by a model, and
-  // handed to the need stage as a given. `ccssStandard` is derived from the linked
-  // questions so GenMisconception's schema stays clean: the most frequent per-
-  // question code, falling back to the session's codes where those are blank (as
-  // they are in the pilot fixtures).
+  // handed to the need stage as a given.
+  //
+  // `ccssStandard` decides the misconception's progression score, so where it comes
+  // from matters and is recorded. Preference order: the most frequent code across
+  // the misconception's linked questions; then the standard GenMisconception chose
+  // from the session's list; then the first session code. Assessment Matrix uploads
+  // carry no per-question codes (upload.ts leaves them blank), which is why the
+  // second source exists — without it every misconception inherited the same
+  // standard and the progression criterion scored identically for all of them.
   const questionStandard = new Map<number, string>(
     (ppq?.questions ?? []).map((q: any) => [q.questionNumber, q.ccssStandard || '']),
   );
@@ -817,14 +954,96 @@ async function processClassroom(
     }
     const ranked = [...votes.entries()].sort((a, b) => b[1] - a[1]);
     if (ranked.length > 1) console.log(`  [4c] "${m.title}" spans ${ranked.map(([c, n]) => `${c}×${n}`).join(', ')} — using ${ranked[0][0]}`);
-    const ccssStandard = ranked[0]?.[0] ?? allCcss[0] ?? null;
-    return { ...m, ccssStandard, studentCount: reach.studentCount, studentPercent: reach.studentPercent };
+
+    let ccssStandard: string | null;
+    let standardSource: 'question' | 'model' | 'fallback';
+    if (ranked.length) {
+      ccssStandard = ranked[0][0];
+      standardSource = 'question';
+    } else if (m.ccssStandard) {
+      ccssStandard = m.ccssStandard;
+      standardSource = 'model';
+    } else {
+      ccssStandard = allCcss[0] ?? null;
+      standardSource = 'fallback';
+    }
+    return {
+      ...m, ccssStandard, standardSource,
+      studentCount: reach.studentCount,
+      studentPercent: reach.studentPercent,
+      meanConfidence: reach.meanConfidence,
+      linkedResponses: reach.linkedResponses,
+    };
   });
 
-  // 5. Instructional need — one call over the misconceptions from 4c. The analysis
-  //    the former microcoachv2LLMAnalysis did (prevalence, confidence, severity,
-  //    prerequisite gaps, forward impact, recurrence) is still done here, as the
-  //    rationale for each need; only the need and its rationale come back.
+  // 4d. Score and rank on the Wave 2 Misconception Rubric (microcoachv2ScoresCalc —
+  //     misconceptionRubric.json is the rubric). Frequency, confidence and reach are
+  //     the measured inputs from above; the lambda judges Conceptual Depth, bands,
+  //     sums and ranks. Rank 1 is the Recommended Focus; only the `retained` set
+  //     (rubric cap) goes on to needs, templates and activities. Dropped ones keep
+  //     their scores and rejoin the output at the end with no need or activities.
+  let rubricVersion: string | null = null;
+  let droppedMisconceptions: any[] = [];
+  if (genMisconceptions.length) {
+    const scoreInput = {
+      misconceptions: JSON.stringify(genMisconceptions.map((m: any) => ({
+        title: m.title,
+        description: m.description ?? null,
+        learningScienceConnection: m.learningScienceConnection ?? null,
+        ccssStandard: m.ccssStandard ?? null,
+        studentPercent: m.studentPercent ?? null,
+        meanConfidence: m.meanConfidence ?? null,
+      }))),
+      learningScienceData: JSON.stringify(injected),
+      trace: WANT_TRACE,
+    };
+    process.stdout.write(`  Rubric scoring for ${genMisconceptions.length} misconception(s)...`);
+    const scoreRaw = await invokeLambda(`microcoachv2ScoresCalc-${AMPLIFY_ENV}`, { input: scoreInput });
+    const scoreOut = parseJson(scoreRaw);
+    capture.recordCall('rubric-score', scoreInput, scoreOut);
+    if (scoreOut?.ok === false) {
+      throw new Error(`Rubric scoring failed: ${scoreOut?.error?.message ?? 'unknown error'}`);
+    }
+    rubricVersion = scoreOut?.rubricVersion ?? null;
+    const scoredByTitle = new Map<string, any>((scoreOut?.scored ?? []).map((x: any) => [String(x.title ?? '').trim(), x]));
+    genMisconceptions = genMisconceptions.map((m: any) => {
+      const sc = scoredByTitle.get(String(m.title ?? '').trim());
+      if (!sc) return { ...m, rubric: null, priorityRank: null, isRecommendedFocus: false, retained: false };
+      return {
+        ...m,
+        rubric: {
+          version: rubricVersion,
+          scores: sc.scores,
+          // Each metric's contribution after its weight, so a reader can reconcile
+          // the 0–3 scores against the weighted total without knowing the weights.
+          weighted: sc.weighted ?? null,
+          total: sc.total,
+          maxPossible: sc.maxPossible,
+          normalized: sc.normalized,
+          missing: sc.missing ?? [],
+          inputs: sc.inputs ?? null,
+          conceptualDepthWhy: sc.conceptualDepthWhy ?? null,
+        },
+        priorityRank: sc.priorityRank,
+        isRecommendedFocus: sc.isRecommendedFocus === true,
+        retained: sc.retained === true,
+      };
+    });
+    genMisconceptions.sort((a: any, b: any) => (a.priorityRank ?? Infinity) - (b.priorityRank ?? Infinity));
+    droppedMisconceptions = genMisconceptions.filter((m: any) => !m.retained);
+    genMisconceptions = genMisconceptions.filter((m: any) => m.retained);
+    const focus = genMisconceptions.find((m: any) => m.isRecommendedFocus);
+    console.log(` ✓  ${genMisconceptions.length} retained, ${droppedMisconceptions.length} dropped · focus: ${focus?.title ?? '—'}`);
+    for (const m of [...genMisconceptions, ...droppedMisconceptions]) {
+      const r = m.rubric;
+      const cells = r ? Object.entries(r.scores).map(([k, v]) => `${k.replace(/[a-z]/g, '')}${v ?? '–'}`).join(' ') : 'unscored';
+      console.log(`    #${m.priorityRank ?? '?'} ${m.title} — ${r ? `${r.total}/${r.maxPossible}` : ''} (${cells})${m.isRecommendedFocus ? ' ★' : ''}${m.retained ? '' : ' (dropped)'}`);
+    }
+  }
+
+  // 5. Instructional need — one call over the retained misconceptions from 4d.
+  //    Rank and Conceptual Depth arrive as givens; the call writes the need and the
+  //    rationale prose behind it.
   let misconceptions: any[] = [];
   // Misconceptions the need model returned nothing for — recorded in the manifest
   // because such an item reaches the output with no rank and no templates.
@@ -865,6 +1084,15 @@ async function processClassroom(
   }
   }
   const instructionalNeedsGenerated = misconceptions.filter((m: any) => m.instructionalNeed?.text?.trim()).length;
+
+  // The need must say what students need to understand, not what the teacher or
+  // students do — that is decided at template selection and activity generation.
+  // Flagged per run rather than reviewed by eye, so a regression here is visible.
+  const needSeparation = checkNeedSeparation(misconceptions);
+  if (needSeparation.flagged.length) {
+    console.warn(`  ⚠ ${needSeparation.flagged.length}/${needSeparation.checked} instructional need(s) prescribe an activity:`);
+    for (const f of needSeparation.flagged) console.warn(`      ${f.title} → ${f.hits.join(', ')}`);
+  }
 
   // 5d. Template selection — one call over every need, top two activity templates
   //     each. The library render sits first in that prompt so it is cache-eligible;
@@ -909,15 +1137,48 @@ async function processClassroom(
     correctAnswer: q.correctAnswer ?? null,
     classPercentCorrect: q.classPercentCorrect ?? null,
   }));
+  // Student counts per wrong option, so the most-chosen one can be named as the
+  // misconception's headline evidence.
+  const optionCounts = new Map<string, number>();
+  for (const q of ppq?.questions ?? []) {
+    for (const o of q.answerChoices ?? []) {
+      if (!o?.isCorrect) optionCounts.set(`Q${q.questionNumber}${o.letter}`, o.studentCount ?? 0);
+    }
+  }
+
   const misconceptionExtras = misconceptions.map((m: any) => {
     // The linked wrong answers say which questions surface this misconception.
     const qNums = [...new Set<number>((m.wrongAnswers ?? []).map((w: any) => w.questionNumber))].sort((a, b) => a - b);
+
+    // GenMisconception now returns an explanation per linked option, which is the
+    // shape `wrongAnswerExplanations` has always declared (and validate.ts has always
+    // asserted) but nothing filled. Options whose explanation came back empty are
+    // left out rather than carried as blank rows.
+    const wrongAnswerExplanations = (m.wrongAnswers ?? [])
+      .filter((w: any) => String(w?.explanation ?? '').trim())
+      .map((w: any) => ({
+        answer: `Q${w.questionNumber}${w.letter}`,
+        explanation: String(w.explanation).trim(),
+      }));
+
+    // `evidence.mostCommonError` is asserted by validate.ts and has been null on every
+    // generated misconception. The most-chosen linked option is the natural answer:
+    // it is the error the largest number of these students actually made.
+    const ranked = [...(m.wrongAnswers ?? [])]
+      .map((w: any) => ({ ref: `Q${w.questionNumber}${w.letter}`, explanation: String(w?.explanation ?? '').trim() }))
+      .filter((w) => w.explanation)
+      .sort((a, b) => (optionCounts.get(b.ref) ?? 0) - (optionCounts.get(a.ref) ?? 0));
+    const evidence = ranked.length
+      ? { ...(m.evidence ?? {}), mostCommonError: ranked[0].explanation }
+      : m.evidence ?? null;
+
     return {
       ppqQuestions: ppqQs,
       studentGroups: getStudentGroups(studentResponses, qNums, studentNameMap),
       studentData: getStudentPerformanceData(studentResponses, qNums, studentNameMap),
-      wrongAnswerExplanations: m.wrongAnswerExplanations ?? [],
+      wrongAnswerExplanations,
       correctAnswerSolution: m.correctAnswerSolution ?? [],
+      evidence,
     };
   });
 
@@ -925,48 +1186,29 @@ async function processClassroom(
   // `grade` is deliberately excluded — see microcoachv2LLMGenInstrNeed. The CCSS codes
   // carry grade already, and the classroom field was unvalidated free text.
   const classroomContext = { subject: classroom.subject, cohortSize: classroom.cohortSize };
-  const NEXT_STEP_FORMATS = ['whole_class', 'split_class'];
 
-  // 6a. Planning call — one cheap LLM call assigns diverse structures across all
-  //     misconceptions before parallel generation begins.
-  type StructurePlan = { misconceptionTitle: string; whole_class: string; split_class: string };
-  let structurePlan: StructurePlan[] = [];
-  if (ANALYSIS_ONLY) {
-    console.log('  --analysis-only: skipping instructional needs, planner and activity generation');
-  } else try {
-    process.stdout.write(`  Planning activity structures for ${misconceptions.length} misconceptions...`);
-    const plannerInput = {
-      planStructures: true,
-      misconceptions: JSON.stringify(misconceptions.map((m: any) => ({ title: m.title, description: m.description, ccssStandard: m.ccssStandard }))),
-      classroomContext: JSON.stringify(classroomContext),
-      trace: WANT_TRACE,
-    };
-    const raw = await invokeLambda(`microcoachv2NextStepOption-${AMPLIFY_ENV}`, { input: plannerInput });
-    // The planner used to return a bare array; it now returns an envelope carrying
-    // `_trace` so its tokens land in the manifest. Accept both, because the deployed
-    // Lambda may still be on the old contract.
-    const parsed = parseJson(raw);
-    const plannerResult = Array.isArray(parsed) ? { ok: true, assignments: parsed } : (parsed ?? { ok: false, assignments: [] });
-    structurePlan = plannerResult.assignments ?? [];
-    // Record the envelope, not the array — capture reads `_trace` off the output.
-    capture.recordCall('planner', plannerInput, plannerResult);
-    if (plannerResult.ok === false) {
-      console.log(` ✗ planner failed (${plannerResult.error ?? 'unknown'}) — activities will generate without suggested structures`);
-    }
-    console.log(` ✓  ${structurePlan.length} assignments`);
-  } catch (err) {
-    console.warn(`\n  ⚠ Structure planning failed, generating without suggestions: ${err}`);
-  }
-
-  // Helper to look up a misconception's suggested structure for a given format
-  const getSuggestedStructure = (title: string, fmt: string): string | null => {
-    const plan = structurePlan.find(p => p.misconceptionTitle === title);
-    return plan ? (plan as any)[fmt] ?? null : null;
-  };
-
-  // 6b. Generate activities — misconceptions in parallel, formats sequential within each
+  // 6. Generate activities — one per selected template.
+  //
+  // Wave 1 generated two activities per misconception by FORMAT (whole class, split
+  // class) and invented a structure for each, with a planning call beforehand to keep
+  // those structures varied. Wave 2 inverts that: the template is chosen upstream on
+  // instructional fit, and generation infills it. So variety comes from the templates
+  // and the loop runs over the picks, not over formats — which is also what the doc
+  // asks for, two activity options per misconception using different templates where
+  // the fit allows.
+  //
+  // A misconception whose templates all missed the fit threshold gets no activities.
+  // That is the intended outcome of the no-strong-fit rule, not a failure, so it is
+  // counted rather than hidden.
+  let misconceptionsWithoutActivities = 0;
   const activitiesPerGroup: any[][] = ANALYSIS_ONLY ? misconceptions.map(() => []) : await Promise.all(
     misconceptions.map(async (m: any, i: number) => {
+      const picks: any[] = m.selectedTemplates?.picks ?? [];
+      if (!picks.length) {
+        misconceptionsWithoutActivities += 1;
+        console.log(`  Next steps [${i + 1}/${misconceptions.length}]: ${m.title}... — no template cleared the fit threshold, no activities`);
+        return [];
+      }
       process.stdout.write(`  Next steps [${i + 1}/${misconceptions.length}]: ${m.title}...`);
       const relevant = nextStepExamples.filter(
         (ex: any) =>
@@ -984,32 +1226,24 @@ async function processClassroom(
       const sd = misconceptionExtras[i]?.studentData ?? [];
       const resultList: any[] = [];
 
-      // Sequential within misconception so each format sees what was already generated
-      for (const fmt of NEXT_STEP_FORMATS) {
-        const existingActivities = resultList.map(a => ({
-          title: a.title,
-          format: a.format,
-          activityStructure: a.activityStructure,
-          strategyTag: a.strategyTag,
-          summary: a.summary,
-          instructionalMove: a.instructionalMove,
-          targets: a.targets,
-        }));
-        const suggestedStructure = getSuggestedStructure(m.title, fmt);
+      // Sequential rather than parallel within a misconception: cheap to keep, and
+      // the calls share a prompt prefix so the second benefits from the cache.
+      for (const pick of picks) {
         try {
           const activityInput = {
             ...baseInput,
-            preferredFormat: fmt,
+            selectedTemplate: JSON.stringify(pick),
             trace: WANT_TRACE,
-            ...(suggestedStructure && { suggestedStructure }),
-            ...(existingActivities.length > 0 && { existingActivities: JSON.stringify(existingActivities) }),
           };
           const raw = await invokeLambda(`microcoachv2NextStepOption-${AMPLIFY_ENV}`, { input: activityInput });
           const parsed = parseJson(raw);
-          capture.recordCall(`activity-${i + 1}-${fmt}`, activityInput, parsed);
-          resultList.push(injectStudentsIntoGroups(parsed, sd));
+          capture.recordCall(`activity-${i + 1}-${pick.templateId}`, activityInput, parsed);
+          resultList.push({
+            ...injectStudentsIntoGroups(parsed, sd),
+            templateId: pick.templateId,
+          });
         } catch (err) {
-          console.error(`\n    ✗ format=${fmt}: ${err}`);
+          console.error(`\n    ✗ ${pick.templateId}: ${err}`);
         }
       }
 
@@ -1022,6 +1256,10 @@ async function processClassroom(
   // `injected`, not the snapshot: output.json is the artifact under test and must
   // reflect what the pipeline actually had. Scoring reads ground truth from
   // kg-snapshot.json separately.
+  // Misconceptions the rubric cap dropped rejoin here, after the retained set, so
+  // they land in output.json with their scores and rank but no need, templates or
+  // activities (buildNextSteps defaults the positional extras/activities to empty).
+  misconceptions = [...misconceptions, ...droppedMisconceptions];
   const nextSteps = buildNextSteps(misconceptions, activitiesPerGroup, ppq?.questions, injected, misconceptionExtras, studentResponses);
   if (fixture) {
     // Fixture runs never write session data. The pilot sessions are a measurement substrate, and
@@ -1076,25 +1314,68 @@ async function processClassroom(
     // What dedupeGraph collapsed before masking. A run whose prompts carried the
     // repeated LVN blocks is not comparable to one whose prompts carried stubs.
     graphDedup,
+    // Scale of the analysis, so a reader can weigh the output counts against the input.
+    questionCount: (ppq?.questions ?? []).length,
+    distractorCount: (ppq?.questions ?? []).reduce(
+      (n: number, q: any) => n + (q.answerChoices ?? []).filter((o: any) => !o.isCorrect).length, 0,
+    ),
+    distractorsLinked: new Set(
+      misconceptions.flatMap((m: any) => (m.wrongAnswers ?? []).map((w: any) => `${w.questionNumber}:${String(w.letter).toUpperCase()}`)),
+    ).size,
+    studentCount: studentResponses.length,
     misconceptionCount: misconceptions.length,
     activityCount: activitiesPerGroup.reduce((n: number, g: any[]) => n + g.length, 0),
     instructionalNeedsGenerated,
     instructionalNeedsMissing,
+    // Needs that read like an activity recommendation. Surface pattern, so this is
+    // a review flag, not proof; 0 is the intended state.
+    needSeparationFlags: needSeparation.flagged,
+    needSeparationChecked: needSeparation.checked,
     stoppedAfter: ANALYSIS_ONLY ? 'analysis' : null,
     // Diagnostic, not a correction: when the analysis stage emits a code the graph
     // does not carry, the generation stage silently loses all graph context.
-    targetStandardMatched: misconceptions.filter((m: any) =>
-      learningScienceData.standards.some(
-        (s: any) => (s.code ?? '').replace(/\s/g, '').toLowerCase()
-                 === (m.ccssStandard ?? '').replace(/\s/g, '').toLowerCase()
-      )
+    targetStandardMatched: misconceptions.filter(
+      (m: any) => matchStandard(m.ccssStandard, learningScienceData.standards).standard != null,
+    ).length,
+    // How many of those matched only on the spelling-independent key. Non-zero is
+    // fine — it means the assessment and the graph disagree on how to write a code —
+    // but it is worth seeing, because an exact-only match silently scored zero here.
+    targetStandardMatchedByCanonical: misconceptions.filter(
+      (m: any) => matchStandard(m.ccssStandard, learningScienceData.standards).matchedBy === 'canonical',
     ).length,
     // Misconceptions now originate in GenMisconception (4c); how many of them got
     // a need back from 5 is the join-health counter.
-    misconceptionsFromGen: genMisconceptions.length,
+    misconceptionsFromGen: genMisconceptions.length + droppedMisconceptions.length,
+    // Where each misconception's standard came from. `fallback` means every
+    // misconception inherited the same code, which makes the progression criterion
+    // score identically for all of them — worth seeing rather than inferring.
+    standardSourceCounts: [...genMisconceptions, ...droppedMisconceptions].reduce(
+      (acc: Record<string, number>, m: any) => {
+        const k = m.standardSource ?? 'unknown';
+        acc[k] = (acc[k] ?? 0) + 1;
+        return acc;
+      },
+      {},
+    ),
+    // Rubric stage (4d): which rubric ran, what it picked, and how many it dropped.
+    rubricVersion,
+    recommendedFocus: nextSteps.find((n: any) => n.isRecommendedFocus)?.title ?? null,
+    misconceptionsRetained: genMisconceptions.length,
+    misconceptionsDropped: droppedMisconceptions.length,
     // Template selection health: how many needs got two picks, and whether the
     // static library prefix was served from the prompt cache.
     templatesSelected,
+    // No longer 2 × templatesSelected: a selection returns up to two picks, and
+    // fewer when fewer clear the instructional-fit gate.
+    templatePicks: misconceptions.reduce((n: number, m: any) => n + (m.selectedTemplates?.picks?.length ?? 0), 0),
+    // Misconceptions that reached activity generation with no template to enact.
+    misconceptionsWithoutActivities,
+    // How often the pipeline declined to force a template. Non-zero is a valid
+    // outcome, not a failure — the doc says not to pick a weak template to fill a slot.
+    selectionsWithOnePick: misconceptions.filter((m: any) => m.selectedTemplates?.picks?.length === 1).length,
+    selectionsWithNoFit: misconceptions.filter(
+      (m: any) => m.selectedTemplates != null && m.selectedTemplates.picks?.length === 0,
+    ).length,
     selectCachedPromptTokens,
     // A run where the wrong-answer refs never arrived is not comparable to one
     // where they did, so the counting chain's health goes in the manifest rather
@@ -1111,6 +1392,7 @@ async function processClassroom(
     console.log(`  Captured → eval/runs/${manifest.runId}`);
     console.log(`    ${manifest.modelCalls} calls · ${t.total.toLocaleString()} tokens · models: ${manifest.models.join(', ')}`);
     console.log(`    targetStandard matched on ${manifest.targetStandardMatched}/${manifest.misconceptionCount} misconceptions`);
+    console.log(`    rubric ${manifest.rubricVersion ?? '—'} · focus: ${manifest.recommendedFocus ?? '—'} · ${manifest.misconceptionsRetained} retained / ${manifest.misconceptionsDropped} dropped`);
     console.log(`    instructional need on ${manifest.instructionalNeedsGenerated}/${manifest.misconceptionCount} (${manifest.misconceptionsFromGen} from GenMisconception)`);
     console.log(`    wrong-answer refs on ${manifest.wrongAnswerLinked}/${manifest.misconceptionCount} (${manifest.wrongAnswerRefs} option refs)`);
     for (const s of manifest.studentCountTotals) {

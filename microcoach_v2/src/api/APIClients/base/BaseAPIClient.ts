@@ -40,13 +40,19 @@ export abstract class BaseAPIClient {
     this.auth = auth;
   }
 
+  // Every model a signed-in teacher touches is Cognito-authed, and this API has
+  // no IAM provider, so there is no signed-out mode to fall back to: a call made
+  // without a session fails with Amplify's NoValidAuthTokens. apiKey stays an
+  // explicit opt-in at the call site (see PipelineRunAPIClient).
+  protected authMode(): GraphQLAuthMode {
+    return 'userPool';
+  }
+
   protected async callGraphQL<T>(
     query: any,
     options?: GraphQLOptions
   ): Promise<GraphQLResult<T>> {
-    const authMode = await this.auth.verifyAuth() ? "userPool" : "apiKey";
-    const response = client.graphql({query: query, variables: options, authMode: authMode as GraphQLAuthMode}) as unknown;
-    console.log(response);
+    const response = client.graphql({query: query, variables: options, authMode: this.authMode()}) as unknown;
     return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
   }
 
@@ -58,8 +64,7 @@ export abstract class BaseAPIClient {
     mutation: any,
     options?: GraphQLOptions
   ): Promise<GraphQLResult<T>> {
-    const authMode = await this.auth.verifyAuth() ? "userPool" : "apiKey";
-    const response = client.graphql({query: mutation, variables: options, authMode: authMode as GraphQLAuthMode}) as unknown;
+    const response = client.graphql({query: mutation, variables: options, authMode: this.authMode()}) as unknown;
     return response as GraphQLResponseV6<T> as Promise<GraphQLResult<T>>;
   }
 
@@ -67,12 +72,10 @@ export abstract class BaseAPIClient {
     subscription: any,
     callback: (value: T) => void
   ) {
-    //@ts-ignore
-    const authMode = await this.auth.verifyAuth() ? "userPool" : "apiKey";
     const result = client.graphql({
       query: subscription.query,
       variables: subscription.variables,
-      authMode: authMode as GraphQLAuthMode
+      authMode: this.authMode()
     });
     
     if (this.isSubscription<T>(result)) {

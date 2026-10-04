@@ -8,10 +8,13 @@ type MicroCoachUser
   @auth(
     rules: [
       # each teacher owns (creates/reads/updates/deletes) their own record,
-      # keyed by their Cognito sub stored in `cognitoId`
+      # keyed by their Cognito sub stored in `cognitoId`. identityClaim "sub" is
+      # required: the default owner identity is the username, which for Google
+      # users is `Google_<id>`, not the sub, so their createUser would be denied.
       {
-        allow: public
+        allow: owner
         ownerField: "cognitoId"
+        identityClaim: "sub"
         operations: [create, read, update, delete]
       }
       # members of the Cognito "Admins" group can read/list all users

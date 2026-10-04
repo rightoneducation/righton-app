@@ -2,6 +2,222 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateMicroCoachUser = /* GraphQL */ `
+  subscription OnCreateMicroCoachUser(
+    $filter: ModelSubscriptionMicroCoachUserFilterInput
+    $cognitoId: String
+  ) {
+    onCreateMicroCoachUser(filter: $filter, cognitoId: $cognitoId) {
+      id
+      cognitoId
+      email
+      firstName
+      lastName
+      classes {
+        items {
+          id
+          userId
+          sessions {
+            items {
+              id
+              classId
+              sessionLabel
+              weekLabel
+              weekNumber
+              topic
+              ccssStandards
+              status
+              publishStatus
+              studentWorksAnalyzed
+              studentsWithStrongUnderstanding
+              studentsWithStrongUnderstandingIds
+              studentIdsNeedingSupport
+              ppqAssessmentId
+              postPpqAssessmentId
+              pregeneratedNextSteps
+              evaluationResults
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          students {
+            items {
+              id
+              classId
+              name
+              externalId
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          name
+          grade
+          state
+          schoolYear
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateMicroCoachUser = /* GraphQL */ `
+  subscription OnUpdateMicroCoachUser(
+    $filter: ModelSubscriptionMicroCoachUserFilterInput
+    $cognitoId: String
+  ) {
+    onUpdateMicroCoachUser(filter: $filter, cognitoId: $cognitoId) {
+      id
+      cognitoId
+      email
+      firstName
+      lastName
+      classes {
+        items {
+          id
+          userId
+          sessions {
+            items {
+              id
+              classId
+              sessionLabel
+              weekLabel
+              weekNumber
+              topic
+              ccssStandards
+              status
+              publishStatus
+              studentWorksAnalyzed
+              studentsWithStrongUnderstanding
+              studentsWithStrongUnderstandingIds
+              studentIdsNeedingSupport
+              ppqAssessmentId
+              postPpqAssessmentId
+              pregeneratedNextSteps
+              evaluationResults
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          students {
+            items {
+              id
+              classId
+              name
+              externalId
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          name
+          grade
+          state
+          schoolYear
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteMicroCoachUser = /* GraphQL */ `
+  subscription OnDeleteMicroCoachUser(
+    $filter: ModelSubscriptionMicroCoachUserFilterInput
+    $cognitoId: String
+  ) {
+    onDeleteMicroCoachUser(filter: $filter, cognitoId: $cognitoId) {
+      id
+      cognitoId
+      email
+      firstName
+      lastName
+      classes {
+        items {
+          id
+          userId
+          sessions {
+            items {
+              id
+              classId
+              sessionLabel
+              weekLabel
+              weekNumber
+              topic
+              ccssStandards
+              status
+              publishStatus
+              studentWorksAnalyzed
+              studentsWithStrongUnderstanding
+              studentsWithStrongUnderstandingIds
+              studentIdsNeedingSupport
+              ppqAssessmentId
+              postPpqAssessmentId
+              pregeneratedNextSteps
+              evaluationResults
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          students {
+            items {
+              id
+              classId
+              name
+              externalId
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          name
+          grade
+          state
+          schoolYear
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      role
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateMicroCoachClassroom = /* GraphQL */ `
   subscription OnCreateMicroCoachClassroom(
     $filter: ModelSubscriptionMicroCoachClassroomFilterInput
@@ -734,219 +950,6 @@ export const onDeleteMicroCoachSavedPlan = /* GraphQL */ `
         status
         __typename
       }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onCreateMicroCoachUser = /* GraphQL */ `
-  subscription OnCreateMicroCoachUser(
-    $filter: ModelSubscriptionMicroCoachUserFilterInput
-  ) {
-    onCreateMicroCoachUser(filter: $filter) {
-      id
-      cognitoId
-      email
-      firstName
-      lastName
-      classes {
-        items {
-          id
-          userId
-          sessions {
-            items {
-              id
-              classId
-              sessionLabel
-              weekLabel
-              weekNumber
-              topic
-              ccssStandards
-              status
-              publishStatus
-              studentWorksAnalyzed
-              studentsWithStrongUnderstanding
-              studentsWithStrongUnderstandingIds
-              studentIdsNeedingSupport
-              ppqAssessmentId
-              postPpqAssessmentId
-              pregeneratedNextSteps
-              evaluationResults
-              createdAt
-              updatedAt
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          students {
-            items {
-              id
-              classId
-              name
-              externalId
-              createdAt
-              updatedAt
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          name
-          grade
-          state
-          schoolYear
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      role
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onUpdateMicroCoachUser = /* GraphQL */ `
-  subscription OnUpdateMicroCoachUser(
-    $filter: ModelSubscriptionMicroCoachUserFilterInput
-  ) {
-    onUpdateMicroCoachUser(filter: $filter) {
-      id
-      cognitoId
-      email
-      firstName
-      lastName
-      classes {
-        items {
-          id
-          userId
-          sessions {
-            items {
-              id
-              classId
-              sessionLabel
-              weekLabel
-              weekNumber
-              topic
-              ccssStandards
-              status
-              publishStatus
-              studentWorksAnalyzed
-              studentsWithStrongUnderstanding
-              studentsWithStrongUnderstandingIds
-              studentIdsNeedingSupport
-              ppqAssessmentId
-              postPpqAssessmentId
-              pregeneratedNextSteps
-              evaluationResults
-              createdAt
-              updatedAt
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          students {
-            items {
-              id
-              classId
-              name
-              externalId
-              createdAt
-              updatedAt
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          name
-          grade
-          state
-          schoolYear
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      role
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onDeleteMicroCoachUser = /* GraphQL */ `
-  subscription OnDeleteMicroCoachUser(
-    $filter: ModelSubscriptionMicroCoachUserFilterInput
-  ) {
-    onDeleteMicroCoachUser(filter: $filter) {
-      id
-      cognitoId
-      email
-      firstName
-      lastName
-      classes {
-        items {
-          id
-          userId
-          sessions {
-            items {
-              id
-              classId
-              sessionLabel
-              weekLabel
-              weekNumber
-              topic
-              ccssStandards
-              status
-              publishStatus
-              studentWorksAnalyzed
-              studentsWithStrongUnderstanding
-              studentsWithStrongUnderstandingIds
-              studentIdsNeedingSupport
-              ppqAssessmentId
-              postPpqAssessmentId
-              pregeneratedNextSteps
-              evaluationResults
-              createdAt
-              updatedAt
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          students {
-            items {
-              id
-              classId
-              name
-              externalId
-              createdAt
-              updatedAt
-              __typename
-            }
-            nextToken
-            __typename
-          }
-          name
-          grade
-          state
-          schoolYear
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      role
       createdAt
       updatedAt
       __typename

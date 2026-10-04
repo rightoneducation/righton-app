@@ -57,10 +57,15 @@ Each condition deletes one part of the graph payload before it reaches the promp
 | `NO_RELATED` | related standards |
 | `NO_LC` | learning components |
 | `NO_LVN_FULL` | all learning-variability factors |
-| `NO_LVN_STRATEGY` | LVN strategies only |
+| `NO_LVN_STRATEGY` | LVN strategies only — see the note below |
 | `NO_LVN_LEARNERMODELS` | LVN learner models only |
 | `NO_LVN_INTERACTSWITH` | LVN interacts-with only |
 | `FULL` | everything — no graph data at all |
+
+`NO_LVN_STRATEGY` now only varies **activity generation**. As of 2026-09-25 the
+misconception and instructional-need prompts no longer render LVN strategies at all
+(see `formatLearningScience.mjs`), so masking them changes nothing at those two
+stages. Runs before that date are not comparable to later ones on this condition.
 
 `--live-graph` is off by default deliberately: replaying the archived response keeps the
 input identical across every run, so a score difference can be attributed to the
@@ -131,9 +136,12 @@ seed/eval/
       importEvalFixtures.ts    loads a fixture from disk
       exportEvalOutputs.ts     writes the run directory
       maskQuery.ts             applies a condition to the graph payload
-      computeReach.ts          student counts from response data
+      computeReach.ts          student counts + mean confidence from response data
       print-prompt.mjs         offline prompt inspector
-    scoring/
-      scoreMisconception.ts    misconception rubric
-      scoreNextStep.ts         activity rubric
 ```
+
+The rubrics themselves live with the lambda that applies them:
+`amplify/backend/function/microcoachv2ScoresCalc/src/{misconceptionRubric,activityRubric}.json`.
+Every run's `output.json` carries the misconception rubric scores per item and
+`calls/NN-rubric-score.json` echoes the rubric that was applied, so scoring a run
+again is a matter of invoking that lambda on the output.

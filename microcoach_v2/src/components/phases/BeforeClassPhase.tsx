@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
+import MathTypography from '../MathTypography';
 import { IActivityPhases } from '../../lib/PipelineModels';
 import {
   ContentPanel,
@@ -35,43 +36,55 @@ export default function BeforeClassPhase({ beforeClass }: Props) {
 
   return (
     <Stack spacing={`${theme.sizing.space4}px`}>
-      <Typography
+      <MathTypography
         variant="headingMd"
         sx={{ color: 'designSystem.surface.atlanticNavy' }}
-      >
-        {beforeClass.title}
-      </Typography>
+        text={beforeClass.title}
+      />
 
       {beforeClass.checklist.map((item) => (
         <Stack key={item.order} direction="row" spacing={2}>
           <NumberBadge>{item.order}</NumberBadge>
-          <Typography
-            variant="rubikBody"
-            sx={{
-              flex: 1,
-              minWidth: 0,
-              color: 'designSystem.surface.atlanticNavy',
-            }}
+          {/* Same title/body treatment StepListPhase gives facilitation and
+              discussion. The generator splits a prep step into a short label
+              plus the instruction; the mock writes the whole instruction into
+              `title` and carries no body, so the title is only weighted when
+              there is a body under it to be a label for. */}
+          <Stack
+            spacing={`${theme.sizing.space0}px`}
+            sx={{ flex: 1, minWidth: 0 }}
           >
-            {item.title}
-          </Typography>
+            <MathTypography
+              variant="rubikBody"
+              sx={{
+                fontWeight: item.body ? 500 : undefined,
+                color: 'designSystem.surface.atlanticNavy',
+              }}
+              text={item.title}
+            />
+            {item.body && (
+              <MathTypography
+                variant="rubikBody"
+                sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                text={item.body}
+              />
+            )}
+          </Stack>
         </Stack>
       ))}
 
       {beforeClass.groupFormation && (
         <>
-          <Typography
+          <MathTypography
             variant="headingMd"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {beforeClass.groupFormation.title}
-          </Typography>
-          <Typography
+            text={beforeClass.groupFormation.title}
+          />
+          <MathTypography
             variant="smallBodyText"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {beforeClass.groupFormation.guidance}
-          </Typography>
+            text={beforeClass.groupFormation.guidance}
+          />
 
           <Box
             sx={{
@@ -82,20 +95,21 @@ export default function BeforeClassPhase({ beforeClass }: Props) {
           >
             {beforeClass.groupFormation.groups.map((group) => (
               <ContentPanel key={group.label}>
-                <Typography
+                <MathTypography
                   variant="headingSm"
                   sx={{ color: 'designSystem.surface.atlanticNavy' }}
-                >
-                  {group.label}
-                </Typography>
-                <Typography
+                  text={group.label}
+                />
+                <MathTypography
                   variant="microLabel"
                   sx={{ color: 'designSystem.surface.atlanticNavy' }}
-                >
-                  {group.description}
-                </Typography>
+                  text={group.description}
+                />
                 <NamePillGroup>
-                  {group.students.map((name) => (
+                  {/* Students are assigned after generation, by
+                      injectStudentsIntoGroups in seed/cli/generate.ts. A path that
+                      skips injection should render an empty group rather than throw. */}
+                  {(group.students ?? []).map((name) => (
                     <StudentNamePill key={name} tone="understood">
                       {name}
                     </StudentNamePill>

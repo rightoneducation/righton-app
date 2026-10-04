@@ -1032,7 +1032,7 @@
             "beforeClass": null,
             "activity": {
               "type": "MATH_DETECTIVE",
-              "title": "Math Hospital — Diagnose & Repair",
+              "title": "Math Detective — Diagnose & Repair",
               "supportsViewToggle": false,
               "problem": "Graph the solution set for y < −½x + 3",
               "problemChecklist": "Plot line ✓ Dashed ✓ Slope = −½ ✓ y < → shade above ✗",

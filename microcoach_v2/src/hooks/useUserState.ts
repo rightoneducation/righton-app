@@ -79,7 +79,12 @@ export function useUserState(apiClients: IAPIClients): IUserState {
       } catch (e) {
         console.error('Sign in call failed with:');
         console.error(e);
-        setUserErrorString('That email or password was not recognised.');
+        // Same text whether or not the account exists, so it names no one; the
+        // Google hint covers a teacher whose email is registered there instead
+        // (the PreSignUp trigger allows one sign-in method per email).
+        setUserErrorString(
+          'That email or password was not recognised. If you signed up with Google, use Continue with Google.',
+        );
       }
       return null;
     },

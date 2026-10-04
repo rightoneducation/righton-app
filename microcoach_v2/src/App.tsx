@@ -45,7 +45,9 @@ Modal.setAppElement('#root');
 
 function RootLayout({ apiClients }: { apiClients: APIClients }) {
   const user = useUserState(apiClients);
-  // useAuthResolver(apiClients, user);
+  // On-load session restore: without it a refresh comes up signed out and the
+  // Google signup leg (/auth → AuthCallback) never resolves.
+  useAuthResolver(apiClients, user);
   const classrooms = useClassrooms(apiClients, user.userProfile?.id ?? null);
   const sessions = useSessions(apiClients, classrooms.selectedClassroomId);
 

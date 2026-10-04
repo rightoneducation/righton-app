@@ -8,6 +8,7 @@ import {
   UploadStepProps,
   initialUploadState,
 } from '../lib/UploadModels';
+import { recentWeeks } from '../lib/weeks';
 import UploadRtd from '../pages/UploadRtd';
 import UploadRtdReview from '../pages/UploadRtdReview';
 
@@ -28,7 +29,10 @@ interface UploadFlowProps {
 }
 
 export default function UploadFlow({ screenSize }: UploadFlowProps) {
-  const [upload, setUpload] = useState<IUploadState>(initialUploadState);
+  const [upload, setUpload] = useState<IUploadState>(() => ({
+    ...initialUploadState,
+    weekStart: recentWeeks(1)[0],
+  }));
   const step = useParams()['*'] ?? '';
 
   const actions: IUploadActions = {
@@ -43,6 +47,7 @@ export default function UploadFlow({ screenSize }: UploadFlowProps) {
         [slot]: { name: MOCK_FILE_NAMES[slot], status: 'ERROR' },
       })),
     clearFile: (slot) => setUpload((s) => ({ ...s, [slot]: null })),
+    setWeek: (weekStart) => setUpload((s) => ({ ...s, weekStart })),
     submit: () => setUpload((s) => ({ ...s, isSubmitted: true })),
   };
 

@@ -46,13 +46,6 @@ const configPath = path.resolve(
 const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 const nso = config?.nextStepOption ?? {};
 
-const OVERVIEW_BULLETS_MIN    = nso.overviewBullets?.min ?? 2;
-const OVERVIEW_BULLETS_MAX    = nso.overviewBullets?.max ?? 4;
-const INCORRECT_EXAMPLES_COUNT = nso.incorrectWorkedExamplesCount ?? 3;
-const ACTIVITY_STEPS_MIN      = nso.activitySteps?.min ?? 4;
-const ACTIVITY_STEPS_MAX      = nso.activitySteps?.max ?? 6;
-const SETUP_STEPS_MIN         = nso.setupSteps?.min ?? 2;
-const SETUP_STEPS_MAX         = nso.setupSteps?.max ?? 3;
 const DISCUSSION_Q_MIN        = nso.discussionQuestions?.min ?? 2;
 const DISCUSSION_Q_MAX        = nso.discussionQuestions?.max ?? 3;
 const GROUPS_MIN              = nso.studentGroups?.min ?? 2;
@@ -61,6 +54,18 @@ const ALLOWED_DURATION_BUCKETS: Array<{ label: string; min: number; max: number 
   nso.allowedDurationBuckets ?? [];
 const DESIGN_PRINCIPLES: string[] = nso.designPrinciples ?? [];
 const VALID_FORMATS = ['Whole class', 'Split class'];
+
+// source: amplify/backend/function/microcoachv2NextStepOption/src/util/activityContent.mjs
+// (CONTENT_TYPES). seed/ cannot import from amplify/, so this is hand-copied —
+// same duplication as TEMPLATE_CONTENT_TYPE in Preview.tsx.
+const KNOWN_CONTENT_TYPES = [
+  'INCORRECT_WORKED_EXAMPLES',
+  'FAVORITE_NO',
+  'COMPARE_THE_THINKING',
+  'MULTIPLE_REPRESENTATIONS',
+  'MATH_DETECTIVE',
+  'MAKE_YOUR_CASE',
+];
 
 // ── CLI args ──────────────────────────────────────────────────────────────────
 
@@ -264,76 +269,66 @@ function runStructuralChecks(
     results.push({ ...base, check: checkName, pass, detail });
   }
 
-  const tabs = activity.tabs ?? {};
-  const overview = tabs.overview ?? {};
-  const actSteps = tabs.activitySteps ?? {};
-  const groupings = tabs.studentGroupings ?? {};
-  const groups: any[] = groupings.groups ?? [];
+  // The four rendered phases. `tabs` used to be checked here instead; nothing in
+  // src/ ever read it, and it is no longer generated.
+  const phases = activity.phases ?? {};
+  const beforeClass = phases.beforeClass ?? {};
+  const groupFormation = beforeClass.groupFormation ?? {};
+  const groups: any[] = groupFormation.groups ?? [];
+  const content = phases.activity ?? null;
 
-  // Overview: whatStudentsDo
-  const wsd: any[] = overview.whatStudentsDo ?? [];
-  const wsdIsArray = Array.isArray(wsd);
-  const wsdLen = wsdIsArray ? wsd.length : 0;
-  check(
-    'overview.whatStudentsDo is a bullet array (2-4 items)',
-    wsdIsArray && wsdLen >= OVERVIEW_BULLETS_MIN && wsdLen <= OVERVIEW_BULLETS_MAX,
-    !wsdIsArray ? 'not an array' : `got ${wsdLen} item(s)`,
-  );
-  if (wsdIsArray) {
-    const badLabels = wsd.filter((b: any) => !b?.label || !b?.detail);
-    check('overview.whatStudentsDo bullets have {label, detail}', badLabels.length === 0, badLabels.length ? `${badLabels.length} bullet(s) missing label or detail` : undefined);
-    const longLabels = wsd.filter((b: any) => b?.label && b.label.trim().split(/\s+/).length > 5);
-    check('overview.whatStudentsDo label ≤ 5 words', longLabels.length === 0, longLabels.length ? `"${longLabels[0].label}" is too long` : undefined);
+  const checklist: any[] = beforeClass.checklist ?? [];
+  check('beforeClass.checklist is a non-empty array', Array.isArray(checklist) && checklist.length > 0, `got ${checklist.length} item(s)`);
+  const badChecklist = checklist.filter((c: any) => !Number.isInteger(c?.order) || !c?.title);
+  check('beforeClass.checklist items have {order, title}', badChecklist.length === 0, badChecklist.length ? `${badChecklist.length} item(s) missing fields` : undefined);
+
+  check('phases.activity present', content != null, content ? undefined : 'no typed activity content');
+  if (content) {
+    check(
+      'phases.activity.type is a known content type',
+      KNOWN_CONTENT_TYPES.includes(content.type),
+      `got "${content.type}"`,
+    );
+    check(
+      'phases.activity.type matches the activity\'s activityType',
+      content.type === activity.activityType,
+      `content "${content.type}" vs activityType "${activity.activityType}"`,
+    );
   }
 
-  // Overview: whatYouDo
-  const wyd: any[] = overview.whatYouDo ?? [];
-  const wydIsArray = Array.isArray(wyd);
-  const wydLen = wydIsArray ? wyd.length : 0;
-  check(
-    'overview.whatYouDo is a bullet array (2-4 items)',
-    wydIsArray && wydLen >= OVERVIEW_BULLETS_MIN && wydLen <= OVERVIEW_BULLETS_MAX,
-    !wydIsArray ? 'not an array' : `got ${wydLen} item(s)`,
-  );
-  if (wydIsArray) {
-    const badLabels = wyd.filter((b: any) => !b?.label || !b?.detail);
-    check('overview.whatYouDo bullets have {label, detail}', badLabels.length === 0, badLabels.length ? `${badLabels.length} bullet(s) missing label or detail` : undefined);
-    const longLabels = wyd.filter((b: any) => b?.label && b.label.trim().split(/\s+/).length > 5);
-    check('overview.whatYouDo label ≤ 5 words', longLabels.length === 0, longLabels.length ? `"${longLabels[0].label}" is too long` : undefined);
-  }
-
-  // Incorrect worked examples
-  const iwe: any[] = actSteps.incorrectWorkedExamples ?? [];
-  check(
-    `${INCORRECT_EXAMPLES_COUNT} incorrect worked examples present`,
-    iwe.length === INCORRECT_EXAMPLES_COUNT,
-    `got ${iwe.length}`,
-  );
-  const badIwe = iwe.filter((e: any) => !e?.problem || !e?.incorrectWork);
-  check('incorrect worked examples have {problem, incorrectWork}', badIwe.length === 0, badIwe.length ? `${badIwe.length} example(s) missing fields` : undefined);
-
-  // Core activity steps
-  const core: string[] = actSteps.coreActivity ?? [];
-  check(
-    `core activity steps (${ACTIVITY_STEPS_MIN}-${ACTIVITY_STEPS_MAX})`,
-    core.length >= ACTIVITY_STEPS_MIN && core.length <= ACTIVITY_STEPS_MAX,
-    `got ${core.length}`,
-  );
-
-  // Setup steps
-  const setup: string[] = actSteps.setup ?? [];
-  check(
-    `setup steps (${SETUP_STEPS_MIN}-${SETUP_STEPS_MAX})`,
-    setup.length >= SETUP_STEPS_MIN && setup.length <= SETUP_STEPS_MAX,
-    `got ${setup.length}`,
-  );
-
-  // Discussion questions
-  const dq: string[] = actSteps.discussionQuestions ?? [];
+  const facSteps: any[] = phases.facilitation?.steps ?? [];
+  check('facilitation.steps is a non-empty array', facSteps.length > 0, `got ${facSteps.length} step(s)`);
+  const discQs: any[] = phases.discussion?.questions ?? [];
   check(
     `discussion questions (${DISCUSSION_Q_MIN}-${DISCUSSION_Q_MAX})`,
-    dq.length >= DISCUSSION_Q_MIN && dq.length <= DISCUSSION_Q_MAX,
-    `got ${dq.length}`,
+    discQs.length >= DISCUSSION_Q_MIN && discQs.length <= DISCUSSION_Q_MAX,
+    `got ${discQs.length}`,
+  );
+
+  // Worked examples, for the one content type that carries them. Exactly one
+  // step per example should be annotated ERROR: that marker is what the UI keys
+  // the error row off, and it is also what the accuracy reviewer must preserve.
+  if (content?.type === 'INCORRECT_WORKED_EXAMPLES') {
+    const examples: any[] = content.examples ?? [];
+    check('worked examples present', examples.length > 0, `got ${examples.length}`);
+    const badShape = examples.filter(
+      (e: any) => !e?.prompt || !Array.isArray(e?.steps) || e.steps.length === 0 || !e?.finalOutcome,
+    );
+    check('worked examples have {prompt, steps, finalOutcome}', badShape.length === 0, badShape.length ? `${badShape.length} example(s) missing fields` : undefined);
+    const badErrorCount = examples.filter(
+      (e: any) => (e?.steps ?? []).filter((st: any) => st?.annotation?.kind === 'ERROR').length !== 1,
+    );
+    check('each worked example has exactly one ERROR step', badErrorCount.length === 0, badErrorCount.length ? `${badErrorCount.length} example(s) with 0 or >1 ERROR steps` : undefined);
+  }
+
+  // The IMicroCoachActivity fields the UI reads around the phases.
+  check('routine present', activity.routine?.name != null, activity.routine ? undefined : 'no routine — unknown templateId?');
+  check('grouping present', activity.grouping?.level != null, activity.grouping ? undefined : 'no grouping');
+  check('durationMinutes present', Number.isInteger(activity.durationMinutes), `got ${activity.durationMinutes}`);
+  check(
+    'detailStatus matches content presence',
+    activity.detailStatus === (content ? 'COMPLETE' : 'PARTIAL'),
+    `got "${activity.detailStatus}"`,
   );
 
   // Student groups count
@@ -394,7 +389,7 @@ function runStudentSortingCheck(
   label: string,
 ): TestResult {
   const base = { classroom: label, misconception: '', activity: activity.title ?? '(untitled)' };
-  const groups: any[] = activity?.tabs?.studentGroupings?.groups ?? [];
+  const groups: any[] = activity?.phases?.beforeClass?.groupFormation?.groups ?? [];
 
   if (!studentData.length) {
     return { ...base, check: 'student sorting', pass: true, detail: 'no student data — skipped' };
@@ -423,6 +418,47 @@ function runStudentSortingCheck(
   };
 }
 
+/**
+ * Asserts the weakest-first group order the whole pipeline assumes.
+ *
+ * injectStudentsIntoGroups fills the groups by ascending score, and
+ * post-analyze.ts takes every group but the last as its "needs help" cohort. If
+ * the model labelled its groups strongest-first, the names land in the right
+ * slots but every label and description is attached to the wrong cohort — and
+ * nothing else in the run would show it.
+ */
+function runGroupOrderingCheck(
+  activity: any,
+  studentData: Array<{ name: string; score: number }>,
+  label: string,
+): TestResult {
+  const base = { classroom: label, misconception: '', activity: activity.title ?? '(untitled)' };
+  const groups: any[] = activity?.phases?.beforeClass?.groupFormation?.groups ?? [];
+
+  if (!studentData.length || groups.length < 2) {
+    return { ...base, check: 'group ordering', pass: true, detail: 'not enough data — skipped' };
+  }
+
+  const scoreOf = new Map(studentData.map(s => [s.name, s.score]));
+  const means = groups.map((g: any) => {
+    const scores = (g.students ?? []).map((n: string) => scoreOf.get(n)).filter((v: unknown) => typeof v === 'number');
+    return scores.length ? scores.reduce((a: number, b: number) => a + b, 0) / scores.length : null;
+  });
+
+  const scored = means.filter((m): m is number => m !== null);
+  if (scored.length !== means.length) {
+    return { ...base, check: 'group ordering', pass: true, detail: 'a group has no scored students — skipped' };
+  }
+
+  const ordered = scored.every((m, i) => i === 0 || m >= scored[i - 1]);
+  return {
+    ...base,
+    check: 'group ordering (weakest first)',
+    pass: ordered,
+    detail: ordered ? undefined : `group means: ${scored.map(m => m.toFixed(2)).join(' → ')}`,
+  };
+}
+
 // ── LLM checks ────────────────────────────────────────────────────────────────
 
 interface LlmCheckResult {
@@ -440,6 +476,11 @@ interface LlmCheckResult {
   worked_examples_math_valid_details: string;
   worked_examples_not_accidentally_correct: boolean;
   worked_examples_not_accidentally_correct_details: string;
+  // Checks the Lambda did not ask about, because the activity has nothing to ask
+  // about — the worked-example checks only apply to INCORRECT_WORKED_EXAMPLES. Their
+  // keys are absent from the response, so they must be omitted rather than read as
+  // false. Older responses have no such field; `?? []` keeps them working.
+  skippedChecks?: string[];
 }
 
 function llmResultsToTestResults(
@@ -456,11 +497,15 @@ function llmResultsToTestResults(
     ['worked_examples_not_accidentally_correct', 'math: incorrect worked examples are not accidentally correct'],
   ];
 
-  return checks.map(([key, checkName]) => {
-    const raw = llmResult[`${key}_details` as keyof LlmCheckResult];
-    const detail = typeof raw === 'string' ? raw || undefined : raw ? JSON.stringify(raw) : undefined;
-    return { ...base, check: checkName, pass: llmResult[key] as boolean, detail };
-  });
+  const skipped = new Set(llmResult.skippedChecks ?? []);
+
+  return checks
+    .filter(([key]) => !skipped.has(key as string))
+    .map(([key, checkName]) => {
+      const raw = llmResult[`${key}_details` as keyof LlmCheckResult];
+      const detail = typeof raw === 'string' ? raw || undefined : raw ? JSON.stringify(raw) : undefined;
+      return { ...base, check: checkName, pass: llmResult[key] as boolean, detail };
+    });
 }
 
 // ── Report printer ────────────────────────────────────────────────────────────
@@ -662,6 +707,10 @@ async function main(): Promise<void> {
             const sortResult = runStudentSortingCheck(activity, studentData, sessionLabel);
             sortResult.misconception = resultBase.misconception;
             allResults.push(sortResult);
+
+            const orderResult = runGroupOrderingCheck(activity, studentData, sessionLabel);
+            orderResult.misconception = resultBase.misconception;
+            allResults.push(orderResult);
           }
 
           // Queue LLM check
