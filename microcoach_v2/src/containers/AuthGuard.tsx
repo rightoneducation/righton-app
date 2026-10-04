@@ -66,7 +66,9 @@ export default function AuthGuard({
     if (userStatus === UserStatusType.INCOMPLETE) handleLogOut();
   }, [userStatus, handleLogOut]);
 
-  if (errorDescription) return <Navigate to="/signup" replace />;
+  // To /login, not /signup: it is the screen that renders userErrorString, and
+  // the PreSignUp trigger's Google rejection tells them to log in with email.
+  if (errorDescription) return <Navigate to="/login" replace />;
 
   switch (userStatus) {
     // Render in place rather than redirect, matching central_v2's

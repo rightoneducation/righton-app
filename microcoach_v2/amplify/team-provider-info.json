@@ -81,6 +81,10 @@
         "microcoachv2ScoresCalc": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
           "s3Key": "amplify-builds/microcoachv2ScoresCalc-4a32504f342b46305275-build.zip"
+        },
+        "microcoachv2bb9ce5a2PreSignup": {
+          "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
+          "s3Key": "amplify-builds/microcoachv2bb9ce5a2PreSignup-6661537779502b436c38-build.zip"
         }
       },
       "storage": {

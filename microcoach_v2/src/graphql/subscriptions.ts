@@ -582,7 +582,7 @@ export const onCreateMicroCoachSession = /* GraphQL */ `
           id
           sessionId
           classId
-          activities {
+          activity {
             items {
               id
               misconceptionId
@@ -684,7 +684,7 @@ export const onUpdateMicroCoachSession = /* GraphQL */ `
           id
           sessionId
           classId
-          activities {
+          activity {
             items {
               id
               misconceptionId
@@ -786,7 +786,7 @@ export const onDeleteMicroCoachSession = /* GraphQL */ `
           id
           sessionId
           classId
-          activities {
+          activity {
             items {
               id
               misconceptionId
@@ -899,6 +899,63 @@ export const onDeleteMicroCoachAssessment = /* GraphQL */ `
     }
   }
 `;
+export const onCreateMicroCoachSavedPlan = /* GraphQL */ `
+  subscription OnCreateMicroCoachSavedPlan(
+    $filter: ModelSubscriptionMicroCoachSavedPlanFilterInput
+  ) {
+    onCreateMicroCoachSavedPlan(filter: $filter) {
+      id
+      classId
+      sessionId
+      items {
+        id
+        status
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateMicroCoachSavedPlan = /* GraphQL */ `
+  subscription OnUpdateMicroCoachSavedPlan(
+    $filter: ModelSubscriptionMicroCoachSavedPlanFilterInput
+  ) {
+    onUpdateMicroCoachSavedPlan(filter: $filter) {
+      id
+      classId
+      sessionId
+      items {
+        id
+        status
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteMicroCoachSavedPlan = /* GraphQL */ `
+  subscription OnDeleteMicroCoachSavedPlan(
+    $filter: ModelSubscriptionMicroCoachSavedPlanFilterInput
+  ) {
+    onDeleteMicroCoachSavedPlan(filter: $filter) {
+      id
+      classId
+      sessionId
+      items {
+        id
+        status
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateMicroCoachMisconception = /* GraphQL */ `
   subscription OnCreateMicroCoachMisconception(
     $filter: ModelSubscriptionMicroCoachMisconceptionFilterInput
@@ -907,7 +964,7 @@ export const onCreateMicroCoachMisconception = /* GraphQL */ `
       id
       sessionId
       classId
-      activities {
+      activity {
         items {
           id
           misconceptionId
@@ -973,7 +1030,7 @@ export const onUpdateMicroCoachMisconception = /* GraphQL */ `
       id
       sessionId
       classId
-      activities {
+      activity {
         items {
           id
           misconceptionId
@@ -1039,7 +1096,7 @@ export const onDeleteMicroCoachMisconception = /* GraphQL */ `
       id
       sessionId
       classId
-      activities {
+      activity {
         items {
           id
           misconceptionId
@@ -1187,63 +1244,6 @@ export const onDeleteMicroCoachActivity = /* GraphQL */ `
       instructionalMove
       strategyTag
       phases
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onCreateMicroCoachSavedPlan = /* GraphQL */ `
-  subscription OnCreateMicroCoachSavedPlan(
-    $filter: ModelSubscriptionMicroCoachSavedPlanFilterInput
-  ) {
-    onCreateMicroCoachSavedPlan(filter: $filter) {
-      id
-      classId
-      sessionId
-      items {
-        id
-        status
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onUpdateMicroCoachSavedPlan = /* GraphQL */ `
-  subscription OnUpdateMicroCoachSavedPlan(
-    $filter: ModelSubscriptionMicroCoachSavedPlanFilterInput
-  ) {
-    onUpdateMicroCoachSavedPlan(filter: $filter) {
-      id
-      classId
-      sessionId
-      items {
-        id
-        status
-        __typename
-      }
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onDeleteMicroCoachSavedPlan = /* GraphQL */ `
-  subscription OnDeleteMicroCoachSavedPlan(
-    $filter: ModelSubscriptionMicroCoachSavedPlanFilterInput
-  ) {
-    onDeleteMicroCoachSavedPlan(filter: $filter) {
-      id
-      classId
-      sessionId
-      items {
-        id
-        status
-        __typename
-      }
       createdAt
       updatedAt
       __typename

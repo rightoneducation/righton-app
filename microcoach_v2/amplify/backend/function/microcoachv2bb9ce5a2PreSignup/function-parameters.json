@@ -1,0 +1,16 @@
+{
+  "trigger": true,
+  "modules": [
+    "custom"
+  ],
+  "parentResource": "microcoachv2bb9ce5a2",
+  "functionName": "microcoachv2bb9ce5a2PreSignup",
+  "resourceName": "microcoachv2bb9ce5a2PreSignup",
+  "parentStack": "auth",
+  "triggerEnvs": "[]",
+  "triggerDir": "/snapshot/repo/build/node_modules/@aws-amplify/amplify-category-auth/provider-utils/awscloudformation/triggers/PreSignup",
+  "triggerTemplate": "PreSignup.json.ejs",
+  "triggerEventPath": "PreSignup.event.json",
+  "roleName": "microcoachv2bb9ce5a2PreSignup",
+  "skipEdit": true
+}
