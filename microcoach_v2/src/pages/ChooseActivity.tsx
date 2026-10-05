@@ -56,7 +56,7 @@ function ChooseActivityView({
 
   const handleSelect = (activity: IMicroCoachActivity) => {
     saveActivity({
-      id: `plan-${misconception.id}-${activity.id}`,
+      id: activity.id,
       status: 'SAVED',
       activityId: activity.id,
       activityTitle: activity.routine.name,
