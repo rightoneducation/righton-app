@@ -46,14 +46,8 @@ export function useSessions(
 
     async function loadSessions() {
       try {
-        // eslint-disable-next-line no-console
-        console.log('[useSessions] Fetching sessions', {
-          classId: activeClassId,
-        });
         const fetchedSessions =
           await apiClients.session.getSessionsByClassId(activeClassId);
-        // eslint-disable-next-line no-console
-        console.log('[useSessions] Fetched sessions', fetchedSessions);
         if (cancelled) return;
 
         const sortedSessions = sortSessionsLatestFirst(fetchedSessions);
@@ -66,8 +60,6 @@ export function useSessions(
       } catch (error) {
         if (cancelled) return;
 
-        // eslint-disable-next-line no-console
-        console.error('[useSessions] Fetch failed', error);
         dispatch({
           type: 'SET_SESSIONS_ERROR',
           payload:
@@ -85,15 +77,6 @@ export function useSessions(
       cancelled = true;
     };
   }, [apiClients, classId, dispatch]);
-
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('[useSessions] State updated', {
-      status: sessionsStatus,
-      selectedSessionId,
-      sessions,
-    });
-  }, [selectedSessionId, sessions, sessionsStatus]);
 
   const selectSession = useCallback(
     (sessionId: string) => {

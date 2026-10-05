@@ -45,14 +45,8 @@ export function useClassrooms(
 
     async function loadClassrooms() {
       try {
-        // eslint-disable-next-line no-console
-        console.log('[useClassrooms] Fetching classrooms', {
-          userId: activeUserId,
-        });
         const fetchedClassrooms =
           await apiClients.classroom.getClassroomsByUserId(activeUserId);
-        // eslint-disable-next-line no-console
-        console.log('[useClassrooms] Fetched classrooms', fetchedClassrooms);
         if (cancelled) return;
 
         dispatch({ type: 'SET_CLASSROOMS', payload: fetchedClassrooms });
@@ -60,8 +54,6 @@ export function useClassrooms(
       } catch (error) {
         if (cancelled) return;
 
-        // eslint-disable-next-line no-console
-        console.error('[useClassrooms] Fetch failed', error);
         dispatch({
           type: 'SET_CLASSROOMS_ERROR',
           payload:
@@ -79,15 +71,6 @@ export function useClassrooms(
       cancelled = true;
     };
   }, [apiClients, dispatch, userId]);
-
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('[useClassrooms] State updated', {
-      status: classroomsStatus,
-      selectedClassroomId,
-      classrooms,
-    });
-  }, [classrooms, classroomsStatus, selectedClassroomId]);
 
   const selectClassroom = useCallback(
     (classroomId: string) => {

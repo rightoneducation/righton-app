@@ -10,8 +10,7 @@ import { ActivityType } from '../lib/PipelineModels';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 
 /**
- * Review scaffolding: jumps straight to any activity template while the
- * prototype is still running on mock data.
+ * Review scaffolding: jumps straight to any fetched activity template.
  *
  * Deliberately not translated. Every other visible string in the app goes
  * through the catalogue, but this is a reviewer affordance rather than product
@@ -60,7 +59,7 @@ export default function TemplateDebugMenu() {
   const { misconceptions } = useMicroCoachDataState();
   const navigate = useNavigate();
 
-  // Derived rather than listed, so the menu keeps up with the mock.
+  // Derived rather than listed, so the menu keeps up with fetched activities.
   const templates = React.useMemo(
     () =>
       misconceptions.flatMap((misconception) =>
