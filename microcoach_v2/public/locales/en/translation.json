@@ -86,8 +86,10 @@
     "title": "Understand Your Students' Thinking",
     "subtitle": "Insights and misconception patterns from your classroom data",
     "worksAnalyzed": "{{count}} student works analyzed",
+    "worksAnalyzedUnavailable": "Student works analyzed: Not available",
     "viewDetails": "View details",
-    "strongUnderstanding": "{{count}} Students showed strong understanding"
+    "strongUnderstanding": "{{count}} Students showed strong understanding",
+    "strongUnderstandingUnavailable": "Students showing strong understanding: Not available"
   },
   "hero": {
     "title": "See how your whole class is thinking.",

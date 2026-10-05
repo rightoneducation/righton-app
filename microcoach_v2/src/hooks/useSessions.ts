@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { IAPIClients } from '../api';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
+import { sortSessionsLatestFirst } from '../lib/flowProgress';
 import {
   useMicroCoachDataDispatch,
   useMicroCoachDataState,
@@ -45,15 +46,28 @@ export function useSessions(
 
     async function loadSessions() {
       try {
+        // eslint-disable-next-line no-console
+        console.log('[useSessions] Fetching sessions', {
+          classId: activeClassId,
+        });
         const fetchedSessions =
           await apiClients.session.getSessionsByClassId(activeClassId);
+        // eslint-disable-next-line no-console
+        console.log('[useSessions] Fetched sessions', fetchedSessions);
         if (cancelled) return;
 
-        dispatch({ type: 'SET_SESSIONS', payload: fetchedSessions });
+        const sortedSessions = sortSessionsLatestFirst(fetchedSessions);
+        dispatch({ type: 'SET_SESSIONS', payload: sortedSessions });
+        dispatch({
+          type: 'SET_SELECTED_SESSION_ID',
+          payload: sortedSessions[0]?.id ?? null,
+        });
         dispatch({ type: 'SET_SESSIONS_STATUS', payload: 'ready' });
       } catch (error) {
         if (cancelled) return;
 
+        // eslint-disable-next-line no-console
+        console.error('[useSessions] Fetch failed', error);
         dispatch({
           type: 'SET_SESSIONS_ERROR',
           payload:
@@ -71,6 +85,15 @@ export function useSessions(
       cancelled = true;
     };
   }, [apiClients, classId, dispatch]);
+
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log('[useSessions] State updated', {
+      status: sessionsStatus,
+      selectedSessionId,
+      sessions,
+    });
+  }, [selectedSessionId, sessions, sessionsStatus]);
 
   const selectSession = useCallback(
     (sessionId: string) => {

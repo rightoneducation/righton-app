@@ -26,10 +26,19 @@ export function useMisconceptions(
 
     async function loadMisconceptions() {
       try {
+        // eslint-disable-next-line no-console
+        console.log('[useMisconceptions] Fetching misconceptions', {
+          sessionId: activeSessionId,
+        });
         const fetchedMisconceptions =
           await apiClients.misconception.getMisconceptionsBySessionId(
             activeSessionId,
           );
+        // eslint-disable-next-line no-console
+        console.log(
+          '[useMisconceptions] Fetched misconceptions',
+          fetchedMisconceptions,
+        );
 
         const misconceptionsWithActivities = await Promise.all(
           fetchedMisconceptions.map(async (misconception) => ({
@@ -39,6 +48,11 @@ export function useMisconceptions(
                 misconception.id,
               ),
           })),
+        );
+        // eslint-disable-next-line no-console
+        console.log(
+          '[useMisconceptions] Fetched misconceptions with activities',
+          misconceptionsWithActivities,
         );
         if (cancelled) return;
 
@@ -50,6 +64,8 @@ export function useMisconceptions(
       } catch (error) {
         if (cancelled) return;
 
+        // eslint-disable-next-line no-console
+        console.error('[useMisconceptions] Fetch failed', error);
         dispatch({
           type: 'SET_MISCONCEPTIONS_ERROR',
           payload:

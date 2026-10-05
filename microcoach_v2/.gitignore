@@ -56,7 +56,3 @@ seed/eval/runs/
 
 # seed CLI fixtures (local only, mirrors microcoach/.gitignore)
 Data/
-
-planning references
-src/lib/mocks/allInterfaces.ts
-src/lib/mocks/newTempOutput.json

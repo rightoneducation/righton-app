@@ -51,7 +51,7 @@ function RootLayout({ apiClients }: { apiClients: APIClients }) {
   const classrooms = useClassrooms(apiClients, user.userProfile?.id ?? null);
   const sessions = useSessions(apiClients, classrooms.selectedClassroomId);
 
-  useMisconceptions(apiClients, 'ef3872a1-eb21-4eb3-8ade-56d2537b0898');
+  useMisconceptions(apiClients, sessions.selectedSessionId);
 
   let planScope: PlanItemsScope = null;
   if (sessions.selectedSessionId) {

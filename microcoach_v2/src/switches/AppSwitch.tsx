@@ -165,7 +165,7 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       );
       break;
     case ScreenType.REVIEW:
-      screenComponent = <Review screenSize={screenSize} />;
+      screenComponent = <Review screenSize={screenSize} sessions={sessions} />;
       break;
     case ScreenType.CHOOSE_ACTIVITY:
       screenComponent = (
@@ -179,7 +179,7 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       screenComponent = <UploadFlow screenSize={screenSize} />;
       break;
     case ScreenType.REFLECT:
-      screenComponent = <Reflect screenSize={screenSize} />;
+      screenComponent = <Reflect screenSize={screenSize} sessions={sessions} />;
       break;
     case ScreenType.PROFILE:
       screenComponent = (
