@@ -113,6 +113,16 @@
       "label": "Step 3",
       "title": "Plan your next move",
       "body": "For each misconception, MicroCoach suggests targeted next steps. Pick what fits your class and get back to teaching"
+    },
+    "step4": {
+      "label": "Step 4",
+      "title": "Reassess",
+      "body": "After you've taught the activity, upload the second Mix It Up so MicroCoach can see how your students responded."
+    },
+    "step5": {
+      "label": "Step 5",
+      "title": "Reflect on what changed",
+      "body": "Compare before and after to see which students moved forward and who still needs support."
     }
   },
   "footer": {

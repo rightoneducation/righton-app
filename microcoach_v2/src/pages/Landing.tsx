@@ -13,7 +13,10 @@ import ImageWithSkeleton from '../components/ImageWithSkeleton';
 import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import {
   StepPanel,
+  StepGrid,
+  StepColumn,
   StepCard,
+  StepCardText,
   heroAspectRatio,
   noScreenSize,
   ScreenSizeProps,
@@ -26,6 +29,7 @@ import landingPagePatternDetail from '../images/landingPagePatternDetail.svg';
 import stepCard1 from '../images/landingPageStepCard1.png';
 import stepCard2 from '../images/landingPageStepCard2.png';
 import stepCard3 from '../images/landingPageStepCard3.png';
+import stepCard5 from '../images/landingPageStepCard5.svg';
 
 const HeaderPattern = styled('img', {
   shouldForwardProp: noScreenSize,
@@ -66,11 +70,11 @@ const GetStartedButton = styled(Button, {
 
 // Wrapper rather than the <img> itself — ImageWithSkeleton supplies the
 // element, this just positions it at the foot of the card.
-const StepIllustration = styled(Box)(({ theme }) => ({
+// Sits at the bottom of its card; the card's gap keeps it clear of the text.
+const StepIllustration = styled(Box)({
   marginTop: 'auto',
-  paddingTop: theme.sizing.space6,
   width: '100%',
-}));
+});
 
 const PatternDetail = styled('img')({
   position: 'absolute',
@@ -84,6 +88,9 @@ const STEPS = [
   { key: 'step1', image: stepCard1 },
   { key: 'step2', image: stepCard2 },
   { key: 'step3', image: stepCard3 },
+  // Figma reuses step 1's papers for the second Mix It Up upload.
+  { key: 'step4', image: stepCard1 },
+  { key: 'step5', image: stepCard5 },
 ] as const;
 
 export default function Landing({ screenSize }: ScreenSizeProps) {
@@ -205,6 +212,9 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
           narrow
           screenSize={screenSize}
           sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: `${isLarge ? theme.sizing.space6 : theme.sizing.space5}px`,
             // Figma y-offset for the section; no near token on the scale.
             pt: isLarge ? '330px' : `${theme.sizing.space12}px`,
             pb: isLarge
@@ -214,10 +224,7 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
         >
           <Typography
             variant="h1"
-            sx={{
-              color: 'designSystem.surface.atlanticNavy',
-              mb: `${theme.sizing.space5}px`,
-            }}
+            sx={{ color: 'designSystem.surface.atlanticNavy' }}
           >
             {t('howItWorks.title')}
           </Typography>
@@ -233,55 +240,31 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
                 sx={{ bottom: -80, left: -61, transform: 'scaleX(-1)' }}
               />
             )}
-            <Stack
-              direction={isLarge ? 'row' : 'column'}
-              // Row: gutter between the three cards. Column: the gap between one
-              // card's bottom and the next "Step N" label.
-              spacing={
-                isLarge
-                  ? `${theme.sizing.space5}px`
-                  : `${theme.sizing.space4}px`
-              }
-              alignItems="stretch"
-            >
+            <StepGrid screenSize={screenSize}>
               {STEPS.map(({ key: stepKey, image }) => (
-                <Box
-                  key={stepKey}
-                  sx={{
-                    flex: '1 1 0',
-                    minWidth: 0,
-                    display: 'flex',
-                    flexDirection: 'column',
-                  }}
-                >
+                <StepColumn key={stepKey} screenSize={screenSize}>
                   <Typography
                     variant="h3"
-                    sx={{
-                      color: 'designSystem.surface.white',
-                      mb: `${theme.sizing.space7}px`,
-                    }}
+                    sx={{ color: 'designSystem.surface.white' }}
                   >
                     {t(`howItWorks.${stepKey}.label`)}
                   </Typography>
                   <StepCard screenSize={screenSize}>
-                    {/* Figma card titles are 32px in a 36px line box (h2). */}
-                    <Typography
-                      variant="h2"
-                      sx={{
-                        color: 'designSystem.surface.black',
-                        mb: `${theme.sizing.space4}px`,
-                      }}
-                    >
-                      {t(`howItWorks.${stepKey}.title`)}
-                    </Typography>
-                    <Typography
-                      variant="paragraph2"
-                      sx={{
-                        color: 'designSystem.surface.black',
-                      }}
-                    >
-                      {t(`howItWorks.${stepKey}.body`)}
-                    </Typography>
+                    <StepCardText>
+                      {/* Figma card titles are 32px in a 36px line box (h2). */}
+                      <Typography
+                        variant="h2"
+                        sx={{ color: 'designSystem.surface.black' }}
+                      >
+                        {t(`howItWorks.${stepKey}.title`)}
+                      </Typography>
+                      <Typography
+                        variant="paragraph2"
+                        sx={{ color: 'designSystem.surface.black' }}
+                      >
+                        {t(`howItWorks.${stepKey}.body`)}
+                      </Typography>
+                    </StepCardText>
                     <StepIllustration>
                       <ImageWithSkeleton
                         src={image}
@@ -291,9 +274,9 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
                       />
                     </StepIllustration>
                   </StepCard>
-                </Box>
+                </StepColumn>
               ))}
-            </Stack>
+            </StepGrid>
           </StepPanel>
         </ContentRow>
       </Box>

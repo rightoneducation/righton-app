@@ -113,6 +113,16 @@
       "label": "Paso 3",
       "title": "Planifique su siguiente paso",
       "body": "Para cada concepto erróneo, MicroCoach sugiere próximos pasos específicos. Elija lo que mejor se adapte a su clase y vuelva a enseñar"
+    },
+    "step4": {
+      "label": "Paso 4",
+      "title": "Reevalúa",
+      "body": "Después de enseñar la actividad, sube el segundo Mix It Up para que MicroCoach vea cómo respondieron tus estudiantes."
+    },
+    "step5": {
+      "label": "Paso 5",
+      "title": "Reflexiona sobre lo que cambió",
+      "body": "Compara el antes y el después para ver qué estudiantes avanzaron y quiénes aún necesitan apoyo."
     }
   },
   "footer": {
