@@ -33,14 +33,11 @@ interface ActiveProps {
 // (x -1, 600, 1201), and repeat-x lays copies edge to edge at the image width.
 const patternBandTop = 383;
 
-export const SidebarLayout = styled(Box, {
-  shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => ({
-  display: 'flex',
-  flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
-  alignItems: 'stretch',
-  width: '100%',
-  flexGrow: 1,
+/**
+ * The cool-white page with the tiled pattern band, shared by the sidebar
+ * screens and the MIU upload flow (their frames draw the same band).
+ */
+export const patternPageBackground = (theme: Theme, screenSize: ScreenSize) => ({
   backgroundColor: theme.palette.designSystem.background.coolWhite,
   // The band is decoration sized for the desktop frame; below LARGE the
   // content stacks and would sit across it at arbitrary points.
@@ -49,6 +46,17 @@ export const SidebarLayout = styled(Box, {
     backgroundRepeat: 'repeat-x',
     backgroundPosition: `left 0 top ${patternBandTop}px`,
   }),
+});
+
+export const SidebarLayout = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => ({
+  display: 'flex',
+  flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
+  alignItems: 'stretch',
+  width: '100%',
+  flexGrow: 1,
+  ...patternPageBackground(theme, screenSize),
 }));
 
 // Sits below the header rather than beside it, on the three sidebar screens

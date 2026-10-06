@@ -1,6 +1,8 @@
 {
   "version": "1",
   "cognitoConfig": {
+    "identityPoolName": "microcoachv23c00b961_identitypool_3c00b961",
+    "allowUnauthenticatedIdentities": false,
     "resourceNameTruncated": "microcbb9ce5a2",
     "userPoolName": "microcoachv2bb9ce5a2_userpool_bb9ce5a2",
     "autoVerifiedAttributes": [
@@ -37,7 +39,7 @@
     "userpoolClientSetAttributes": true,
     "sharedId": "bb9ce5a2",
     "resourceName": "microcoachv2bb9ce5a2",
-    "authSelections": "userPoolOnly",
+    "authSelections": "identityPoolAndUserPool",
     "useDefault": "manual",
     "usernameAttributes": [
       "email"
@@ -102,7 +104,8 @@
     },
     "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostAuthentication\",\n    \"lambdaFunctionName\": \"microcoachv2bb9ce5a2PostAuthentication\"\n  },\n  {\n    \"triggerType\": \"PreSignUp\",\n    \"lambdaFunctionName\": \"microcoachv2bb9ce5a2PreSignup\"\n  }\n]",
     "permissions": [],
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"profile\"],\"CallbackURLs\":[\"http://localhost:3000/auth/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}",
-    "authProviders": []
+    "authProviders": [],
+    "thirdPartyAuth": false,
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"profile\"],\"CallbackURLs\":[\"http://localhost:3000/auth/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}"
   }
 }

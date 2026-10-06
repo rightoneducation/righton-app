@@ -227,7 +227,7 @@ export default function MyPlan({
 
             <SignUpCta
               disableElevation
-              onClick={() => navigate('/upload-rtd')}
+              onClick={() => navigate('/upload-miu')}
               sx={{ backgroundColor: 'designSystem.surface.atlanticNavy' }}
             >
               {t('myPlan.promptCta')}

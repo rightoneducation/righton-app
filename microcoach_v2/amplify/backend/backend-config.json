@@ -88,7 +88,8 @@
           "attributes": [
             "UserPoolId",
             "AppClientIDWeb",
-            "AppClientID"
+            "AppClientID",
+            "IdentityPoolId"
           ],
           "category": "auth",
           "resourceName": "microcoachv2bb9ce5a2"

@@ -56,10 +56,10 @@ export function deriveCurrentStep(
  * not have.
  */
 const STEP_PATH: Record<Exclude<FlowStep, FlowStep.DONE>, string> = {
-  [FlowStep.ASSESS]: '/upload-rtd',
+  [FlowStep.ASSESS]: '/upload-miu',
   [FlowStep.UNDERSTAND]: '/review',
   [FlowStep.CHOOSE]: '/myplan',
-  [FlowStep.REASSESS]: '/upload-rtd',
+  [FlowStep.REASSESS]: '/upload-miu',
   [FlowStep.REFLECT]: '/reflect',
 };
 
@@ -101,13 +101,13 @@ export function stepCta(current: FlowStep): { labelKey: string; path: string } {
     case FlowStep.CHOOSE:
       return { labelKey: 'dashboard.cta.UNDERSTAND', path: '/review' };
     case FlowStep.REASSESS:
-      return { labelKey: 'dashboard.cta.REASSESS', path: '/upload-rtd' };
+      return { labelKey: 'dashboard.cta.REASSESS', path: '/upload-miu' };
     case FlowStep.REFLECT:
       return { labelKey: 'dashboard.cta.REFLECT', path: '/reflect' };
     case FlowStep.ASSESS:
     case FlowStep.DONE:
     default:
-      return { labelKey: 'dashboard.cta.ASSESS', path: '/upload-rtd' };
+      return { labelKey: 'dashboard.cta.ASSESS', path: '/upload-miu' };
   }
 }
 

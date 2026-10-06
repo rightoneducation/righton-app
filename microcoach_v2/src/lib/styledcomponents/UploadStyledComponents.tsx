@@ -1,16 +1,21 @@
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import { ScreenSize } from '../MicroCoachModels';
 import { noScreenSize, ScreenSizeProps } from './LandingStyledComponents';
+import {
+  dashboardCardShadow,
+  patternPageBackground,
+} from './DashboardStyledComponents';
 
 /*
- * RTD upload and its review step, read off the finalflows frames. The upload
- * page is one screen in four states (empty, one errored, one done, both done);
- * the states differ only inside the dropzone, so they are props here rather
- * than separate components.
+ * MIU upload, review and submitted steps (microcoach-assets/Upload frames). The
+ * upload page is one screen in four states (empty, one errored, one done, both
+ * done); the states differ only inside the file cards, so they are props here
+ * rather than separate components.
  */
 
 const cardRadius = 32;
@@ -32,83 +37,77 @@ const dashedEdge = (color: string) => {
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 };
 
+/** The page: the dashboard's cool white and tiled band, without its sidebar. */
+export const UploadLayout = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'stretch',
+  width: '100%',
+  flexGrow: 1,
+  ...patternPageBackground(theme, screenSize),
+}));
+
 /**
- * Figma: 1368x147 and 659x450, both rx 32, a navy hairline and — deliberately —
- * no fill. These cards sit straight on the cream page; a white fill would read
- * as a second surface the frames never draw.
+ * Figma: 1360x148 (setup) and 660x451 (files), rx 32, white on a navy hairline
+ * with the dashboard card's soft shadow.
  */
 export const UploadCard = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.sizing.space4,
+  gap: theme.sizing.space5,
   width: '100%',
-  padding: theme.sizing.space5,
+  padding: `${theme.sizing.space6}px ${theme.sizing.space7}px`,
   borderRadius: cardRadius,
+  backgroundColor: theme.palette.designSystem.surface.white,
   border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.navyBlue}`,
+  boxShadow: dashboardCardShadow,
   boxSizing: 'border-box',
 }));
 
-/** The Teacher / Class / Week row, which stacks below LARGE. */
+/** Class and Week side by side, stacking below LARGE. */
 export const SetupRow = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => ({
-  display: 'grid',
-  gridTemplateColumns:
-    screenSize === ScreenSize.LARGE ? 'repeat(3, 1fr)' : '1fr',
-  gap: theme.sizing.space5,
+  display: 'flex',
+  flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
+  gap: screenSize === ScreenSize.LARGE ? theme.sizing.space7 : theme.sizing.space5,
   width: '100%',
 }));
 
-interface SetupValueProps {
-  isLocked?: boolean;
-}
-
-/**
- * Figma: 405x42 rx 9, sky blue behind a 2px selectedNavy outline — the same
- * "already holds a value" treatment the profile fields use.
- *
- * The three setup fields are not one control. Teacher and Class are outlined at
- * 50% and Week at 70%, which is the frames' way of saying the first two are
- * locked and the third is the teacher's to change. Collapsing them to one
- * strength loses that, so the alpha is a prop.
- */
-export const SetupValue = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isLocked',
-})<SetupValueProps>(({ theme, isLocked }) => ({
+/** A field's label over its select (Figma: ~12 between). */
+export const SetupField = styled(Box)(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center',
-  minHeight: 42,
-  padding: `0 ${theme.sizing.space2}px`,
-  // Figma: rx 9, a shade rounder than the space1 (8) used elsewhere.
-  borderRadius: 9,
-  backgroundColor: theme.palette.designSystem.surface.skyBlue,
-  border: `2px solid ${
-    isLocked
-      ? theme.palette.designSystem.foreground.lockedNavy
-      : theme.palette.designSystem.foreground.fadedSelectedNavy
-  }`,
-  color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.placeholderLabel,
-  boxSizing: 'border-box',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
+  flexDirection: 'column',
+  gap: theme.sizing.space2,
+  flex: '1 1 0',
+  minWidth: 0,
 }));
 
 /**
- * SetupValue's editable sibling: the Week field is the one the teacher can
- * change, so it is a real Select drawn in the unlocked SetupValue treatment.
+ * Figma: 614x42 rx 9. Empty it is unfilled on a 70% darkBlue outline; holding a
+ * value it turns sky blue on a 70% selectedNavy outline.
  */
-export const SetupSelect = styled(Select<string>)(({ theme }) => ({
+export const SetupSelect = styled(Select<string>, {
+  shouldForwardProp: (prop) => prop !== 'isEmpty',
+})<{ isEmpty: boolean }>(({ theme, isEmpty }) => ({
   width: '100%',
   height: 42,
+  // Figma: rx 9, a shade rounder than the space1 (8) used elsewhere.
   borderRadius: 9,
-  backgroundColor: theme.palette.designSystem.surface.skyBlue,
-  color: theme.palette.designSystem.surface.atlanticNavy,
+  backgroundColor: isEmpty
+    ? theme.palette.designSystem.surface.white
+    : theme.palette.designSystem.surface.skyBlue,
+  color: isEmpty
+    ? theme.palette.designSystem.surface.placeholderGrey
+    : theme.palette.designSystem.surface.atlanticNavy,
   ...theme.typography.placeholderLabel,
   '& .MuiOutlinedInput-notchedOutline': {
     borderWidth: 2,
-    borderColor: theme.palette.designSystem.foreground.fadedSelectedNavy,
+    borderColor: isEmpty
+      ? theme.palette.designSystem.foreground.fadedDarkBlue
+      : theme.palette.designSystem.foreground.fadedSelectedNavy,
   },
   '&:hover .MuiOutlinedInput-notchedOutline, &.Mui-focused .MuiOutlinedInput-notchedOutline':
     {
@@ -120,15 +119,15 @@ export const SetupSelect = styled(Select<string>)(({ theme }) => ({
   },
 }));
 
-/** The two upload cards sit side by side at LARGE and stack below it. */
+/** The two file cards, ~51 apart (Figma), side by side at LARGE. */
 export const DropzoneRow = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => ({
-  display: 'grid',
-  gridTemplateColumns:
-    screenSize === ScreenSize.LARGE ? 'repeat(2, 1fr)' : '1fr',
-  gap: theme.sizing.space5,
+  display: 'flex',
+  flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
+  gap: theme.sizing.space9,
   width: '100%',
+  '& > *': { flex: '1 1 0', minWidth: 0 },
 }));
 
 interface DropzoneProps {
@@ -236,24 +235,26 @@ export const FormatHint = styled(Typography)(({ theme }) => ({
   fontWeight: 400,
 }));
 
-/**
- * Figma: 306x52 rx 12 filled accentBlue — "Upload both files to continue" is a
- * chip, not a caption. It sits directly above the disabled CTA and carries the
- * same weight as the control it explains.
- */
-export const UploadHintChip = styled(Typography)(({ theme }) => ({
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  alignSelf: 'center',
-  minHeight: 52,
-  padding: `0 ${theme.sizing.space3}px`,
-  borderRadius: theme.sizing.space2,
-  backgroundColor: theme.palette.designSystem.foreground.accentBlue,
-  color: theme.palette.designSystem.surface.white,
-  ...theme.typography.uploadLabel,
-  textAlign: 'center',
-  boxSizing: 'border-box',
+// Figma (Upload2 hover): a 262x52 rx 12 black bubble, Rubik 16 white, its
+// arrow pointing down at the disabled Continue.
+export const continueTooltipSx = {
+  tooltip: {
+    sx: {
+      bgcolor: 'designSystem.surface.black',
+      color: 'designSystem.surface.white',
+      typography: 'rubikBody',
+      borderRadius: '12px',
+      px: 2,
+      py: 1.75,
+    },
+  },
+  arrow: { sx: { color: 'designSystem.surface.black' } },
+};
+
+/** The × that removes a picked file (Figma: a grey circled cross). */
+export const RemoveFileButton = styled(IconButton)(({ theme }) => ({
+  padding: theme.sizing.space0,
+  color: theme.palette.designSystem.foreground.mutedGrey,
 }));
 
 /**
@@ -290,6 +291,7 @@ export const SummaryCard = styled(Box)(({ theme }) => ({
   overflow: 'hidden',
   backgroundColor: theme.palette.designSystem.surface.white,
   border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.surface.atlanticNavy}`,
+  boxShadow: dashboardCardShadow,
   boxSizing: 'border-box',
 }));
 
@@ -303,11 +305,12 @@ export const SummaryCardHeader = styled(Box)(({ theme }) => ({
   color: theme.palette.designSystem.surface.white,
 }));
 
+// The rows carry their own vertical rhythm, so the body only insets them
+// sideways (Figma: dividers run 24 in from the card edge).
 export const SummaryCardBody = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.sizing.space4,
-  padding: theme.sizing.space5,
+  padding: `${theme.sizing.space1}px ${theme.sizing.space5}px`,
 }));
 
 /** The review step's summary rows: label left, value right. */
@@ -320,10 +323,12 @@ export const SummaryRow = styled(Box, {
   justifyContent: 'space-between',
   gap: theme.sizing.space2,
   width: '100%',
-  paddingBottom: theme.sizing.space3,
-  borderBottom: theme.borders.subtle,
+  // Figma (Upload4_new): ~80 between dividers, the text ~16 in from their ends.
+  padding: `${theme.sizing.space5}px ${theme.sizing.space3}px`,
+  // Figma: 0.5 #A3A3A3 (7 off disabledStroke, so it reuses it).
+  borderBottom: `0.5px solid ${theme.palette.designSystem.foreground.disabledStroke}`,
+  boxSizing: 'border-box',
   '&:last-of-type': {
-    paddingBottom: 0,
     borderBottom: 'none',
   },
 }));

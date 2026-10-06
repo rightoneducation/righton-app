@@ -37,10 +37,10 @@ import {
 // Where each step's action goes. The upload covers both the first upload and
 // the reassessment; a finished week opens its results.
 const STEP_PATH: Record<FlowStep, string> = {
-  [FlowStep.ASSESS]: '/upload-rtd',
+  [FlowStep.ASSESS]: '/upload-miu',
   [FlowStep.UNDERSTAND]: '/review',
   [FlowStep.CHOOSE]: '/review',
-  [FlowStep.REASSESS]: '/upload-rtd',
+  [FlowStep.REASSESS]: '/upload-miu',
   [FlowStep.REFLECT]: '/reflect',
   [FlowStep.DONE]: '/reflect',
 };
@@ -145,7 +145,7 @@ export default function ThisWeek({
                             path: STEP_PATH[row.step],
                             // The upload pre-fills the week it is for.
                             state:
-                              STEP_PATH[row.step] === '/upload-rtd'
+                              STEP_PATH[row.step] === '/upload-miu'
                                 ? { weekStart }
                                 : undefined,
                           })
