@@ -33,9 +33,10 @@ import Reflect from '../pages/Reflect';
  * the auth check is still in flight, so their own copy and imagery start
  * loading immediately rather than queueing behind it.
  *
- * The rest are mid-auth-flow screens — the auth state *is* their content, so
- * they wait. AuthGuard still redirects on every screen once the status
- * resolves; this only governs what happens during LOADING.
+ * Everything else requires a signed-in user: AuthGuard holds it during
+ * LOADING (its content is the user's own data) and redirects a signed-out
+ * visitor to the landing page. AuthGuard's other status redirects apply to
+ * every screen either way.
  */
 const PUBLIC_SCREENS = new Set<ScreenType>([
   ScreenType.LANDING,
@@ -47,17 +48,8 @@ const PUBLIC_SCREENS = new Set<ScreenType>([
   // behind the auth check just showed a blank screen for the length of
   // validateUser before the message appeared.
   ScreenType.AUTH,
-  // TODO(auth): move UNDERSTAND behind the guard once sign-in is wired; also
-  // needs AuthGuard's LOGGEDOUT case to redirect.
-  ScreenType.DASHBOARD,
-  ScreenType.REVIEW,
-  ScreenType.CHOOSE_ACTIVITY,
-  ScreenType.MY_PLAN,
-  ScreenType.ACTIVITY_DETAIL,
-  ScreenType.PROFILE,
-  ScreenType.CHANGE_PASSWORD,
-  ScreenType.UPLOAD_RTD,
-  ScreenType.REFLECT,
+  // Every in-app screen is deliberately absent: they need a signed-in user, so
+  // AuthGuard holds them during LOADING and sends a signed-out visitor to /.
 ]);
 
 // The wizard's own chrome: brand only, no auth links to a flow you are in.
@@ -99,7 +91,10 @@ interface AppSwitchProps {
 }
 
 export default function AppSwitch({ currentScreen }: AppSwitchProps) {
-  const { apiClients, user, plan } = useAppOutletContext();
+  const { apiClients, user, classrooms, sessions, plan } =
+    useAppOutletContext();
+  const { saveActivity, markPlanItemDone, removePlanItem } = plan;
+
   const screenSize = useScreenSize();
   const { handleLogOut } = useLogOut(apiClients, user);
   const navigate = useNavigate();
@@ -123,18 +118,30 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
   switch (currentScreen) {
     case ScreenType.LOGIN:
       screenComponent = (
-        <Login apiClients={apiClients} screenSize={screenSize} user={user} />
+        <Login
+          apiClients={apiClients}
+          screenSize={screenSize}
+          signIn={user.signIn}
+        />
       );
       break;
     case ScreenType.SIGNUP:
-      screenComponent = <SignUpWizard apiClients={apiClients} screenSize={screenSize} user={user} />;
+      screenComponent = (
+        <SignUpWizard
+          apiClients={apiClients}
+          screenSize={screenSize}
+          setSignedInUser={user.setSignedInUser}
+          updateUserProfile={user.updateUserProfile}
+        />
+      );
       break;
     case ScreenType.AUTH:
       screenComponent = (
         <AuthCallback
           apiClients={apiClients}
           screenSize={screenSize}
-          user={user}
+          setSignedInUser={user.setSignedInUser}
+          signOut={user.signOut}
         />
       );
       break;
@@ -147,34 +154,56 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       screenComponent = <ResetPassword screenSize={screenSize} isInSession />;
       break;
     case ScreenType.DASHBOARD:
-      screenComponent = <Dashboard screenSize={screenSize} />;
+      screenComponent = (
+        <Dashboard
+          apiClients={apiClients}
+          screenSize={screenSize}
+          classrooms={classrooms}
+          sessions={sessions}
+          plan={plan}
+        />
+      );
       break;
     case ScreenType.REVIEW:
-      screenComponent = <Review screenSize={screenSize} />;
+      screenComponent = <Review screenSize={screenSize} sessions={sessions} />;
       break;
     case ScreenType.CHOOSE_ACTIVITY:
-      screenComponent = <ChooseActivity screenSize={screenSize} plan={plan} />;
+      screenComponent = (
+        <ChooseActivity screenSize={screenSize} saveActivity={saveActivity} />
+      );
       break;
     case ScreenType.ACTIVITY_DETAIL:
       screenComponent = <ActivityDetail screenSize={screenSize} />;
       break;
     case ScreenType.UPLOAD_RTD:
-      screenComponent = <UploadFlow screenSize={screenSize} user={user} />;
+      screenComponent = <UploadFlow screenSize={screenSize} />;
       break;
     case ScreenType.REFLECT:
-      screenComponent = <Reflect screenSize={screenSize} />;
+      screenComponent = <Reflect screenSize={screenSize} sessions={sessions} />;
       break;
     case ScreenType.PROFILE:
       screenComponent = (
-        <Profile apiClients={apiClients} screenSize={screenSize} user={user} />
+        <Profile
+          apiClients={apiClients}
+          screenSize={screenSize}
+          updateUserProfile={user.updateUserProfile}
+        />
       );
       break;
     case ScreenType.MY_PLAN:
-      screenComponent = <MyPlan screenSize={screenSize} plan={plan} />;
+      screenComponent = (
+        <MyPlan
+          screenSize={screenSize}
+          markPlanItemDone={markPlanItemDone}
+          removePlanItem={removePlanItem}
+        />
+      );
       break;
     case ScreenType.LANDING:
     default:
-      screenComponent = <Landing screenSize={screenSize} user={user} />;
+      screenComponent = (
+        <Landing screenSize={screenSize} />
+      );
   }
 
   const usesAppChrome = APP_CHROME_SCREENS.has(currentScreen);
@@ -188,14 +217,17 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
   return (
     <AppContainer
       headerVariant={headerVariant}
-      user={user}
       onLogOut={handleHeaderLogOut}
+      classrooms={classrooms.classrooms}
+      selectedClassroomId={classrooms.selectedClassroomId}
+      onSelectClassroom={classrooms.selectClassroom}
       // The sign-up frames carry no footer either.
       showFooter={!usesAppChrome && !isSignUp}
     >
       <AuthGuard
         handleLogOut={handleLogOut}
-        user={user}
+        setUserStatus={user.setUserStatus}
+        setUserErrorString={user.setUserErrorString}
         screenSize={screenSize}
         requiresAuth={!PUBLIC_SCREENS.has(currentScreen)}
       >

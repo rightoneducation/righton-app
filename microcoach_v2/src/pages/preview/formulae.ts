@@ -1,4 +1,4 @@
-import { Who, Origin, COORDINATION_DOC } from './pipeline';
+import { Who, Origin, WAVE2_DOC } from './pipeline';
 
 /**
  * Every computation the pipeline performs on its way from student responses to
@@ -11,9 +11,10 @@ import { Who, Origin, COORDINATION_DOC } from './pipeline';
  * words (rendered with KaTeX). No set notation, sums, or symbols.
  *
  * Constants are copied here by hand: CRA cannot import from amplify/backend
- * (outside src/), and the run manifest does not pin prompt config
- * (seed/cli/generate.ts — "does NOT pin prompt config"). Each entry names the
- * file it was read from so drift can be checked with a grep.
+ * (outside src/). The rubric's bands live in
+ * microcoachv2ScoresCalc/src/misconceptionRubric.json and the run's
+ * calls/NN-rubric-score.json echoes the rubric actually applied. Each entry names
+ * the file it was read from so drift can be checked with a grep.
  */
 
 export interface FormulaStep {
@@ -59,7 +60,6 @@ export const FORMULAE: Formula[] = [
     title: 'Confidence stats per question',
     who: 'code',
     source: 'seed/cli/generate.ts — Confidence stats aggregator',
-    origin: COORDINATION_DOC,
     steps: [
       {
         text: 'Every answer comes with a self-rated confidence from 1 to 5. A rating of 4 or 5 counts as highly confident.',
@@ -78,7 +78,7 @@ export const FORMULAE: Formula[] = [
         tex: `\\text{avg confidence, wrong} = ${frac('sum of their ratings', 'students who got it wrong')}`,
       },
     ],
-    notes: ['These three numbers are handed to steps 6 and 7 as evidence.'],
+    notes: ['These four numbers (the overall average is the fourth) are handed to steps 7 and 8 as evidence for the written rationale. They do not enter the rubric; step 6 uses its own confidence measure, below.'],
   },
   {
     id: 'reach',
@@ -96,40 +96,55 @@ export const FORMULAE: Formula[] = [
         text: 'Turn that into a share of the class.',
         tex: `\\text{share of class} = ${frac('students affected', 'students who took the quiz')}`,
       },
+      {
+        text: 'Average the confidence ratings those students gave on the linked picks. This is the confidence input to the rubric in step 6.',
+        tex: `\\text{mean confidence} = ${frac('sum of ratings on linked picks', 'linked picks with a rating')}`,
+      },
     ],
     notes: [
       'A double-marked response ("BC") counts as picking both options.',
       'If a misconception has no linked options the count is left blank, which is different from 0.',
+      'A student wrong on two linked questions contributes two ratings to the mean but is counted once.',
     ],
   },
   {
-    id: 'priority',
-    stageId: 'need',
-    title: 'Priority score',
-    who: 'llm',
-    source: 'LLMGenInstrNeed/src/index.mjs (prompt) · weights: src/util/config.json → analysis.misconceptionScoring',
-    origin: COORDINATION_DOC,
+    id: 'rubric',
+    stageId: 'rubric',
+    title: 'Misconception rubric',
+    who: 'code',
+    source: 'microcoachv2ScoresCalc/src/misconceptionRubric.json · engine: scoreRubric.mjs',
+    origin: WAVE2_DOC,
     steps: [
       {
-        text: 'Each misconception gets four ingredients, each between 0 and 1. Prevalence is the share of class from step 5. The other three are the model\'s judgment.',
-        tex: '\\text{severity} = 1.0 \\text{ (structural)}, \\ 0.6 \\text{ (mixed)}, \\ 0.3 \\text{ (procedural slip)}',
+        text: 'Frequency: the share of class from step 5, banded 0 to 3.',
+        tex: '\\text{frequency} = 0 \\ (0\\text{–}10\\%), \\ 1 \\ (>10\\text{–}25\\%), \\ 2 \\ (>25\\text{–}50\\%), \\ 3 \\ (>50\\%)',
       },
       {
-        text: 'Combine them with fixed weights. Prevalence counts most.',
-        tex: '\\begin{aligned} \\text{score} = {} & 0.40 \\times \\text{prevalence} \\\\ & + 0.30 \\times \\text{severity} \\\\ & + 0.15 \\times \\text{prerequisite gap} \\\\ & + 0.15 \\times \\text{forward impact} \\end{aligned}',
+        text: 'Learning progression influence: how many standards the misconception\'s standard builds towards in the knowledge graph, banded 0 to 3.',
+        tex: '\\text{progression} = \\min(3, \\text{number of standards it builds towards})',
       },
       {
-        text: 'Two adjustments from the confidence stats: if 25% or more of confident students got a linked question wrong, push severity up toward 1.0. If the students who got it right averaged under 2.5 confidence, treat the correct rate as inflated by guessing.',
+        text: 'Student confidence: the mean confidence from step 5, banded 0 to 3.',
+        tex: '\\text{confidence} = 0 \\ (<2), \\ 1 \\ (2\\text{–}3), \\ 2 \\ (3\\text{–}4), \\ 3 \\ (\\geq 4)',
       },
       {
-        text: 'Highest score is ranked #1. Ties go to the more conceptual error, then the one with more forward impact, then the one with more confident-but-wrong students.',
-        tex: '\\text{rank} = \\text{position when sorted by score, highest first}',
+        text: 'Conceptual depth: the one judged metric. The model reads each misconception against a four-level scale, from a procedural slip (0) to a fundamentally wrong mental model (3), and returns the level with one sentence of justification.',
+        tex: '\\text{depth} \\in \\{0, 1, 2, 3\\}',
+      },
+      {
+        text: 'Add the four. A metric that could not be measured is left out and the maximum shrinks to match, so a misconception whose standard was not in the graph is not penalised against the others.',
+        tex: '\\text{total} = \\text{frequency} + \\text{progression} + \\text{confidence} + \\text{depth}, \\quad \\text{normalized} = \\dfrac{\\text{total}}{3 \\times \\text{metrics scored}}',
+      },
+      {
+        text: 'Highest normalized score is ranked #1 and is the Recommended Focus. Ties go to the deeper misconception, then the larger share of class, then the higher mean confidence, then the order the model listed them. The top three continue; the rest are kept in the run output with their scores but get no need, templates or activities.',
+        tex: '\\text{rank} = \\text{position when sorted by normalized score, highest first}',
       },
     ],
     notes: [
-      'The steps above are written into the prompt as instructions; the model does the arithmetic and returns the rank.',
-      'Nothing is filtered out — every misconception gets a rank.',
-      'Code checks the ranks are unique whole numbers; otherwise it reassigns them in the order returned.',
+      'Every band, level description, the cap of three and the tiebreak are read from misconceptionRubric.json; the engine does no arithmetic of its own.',
+      'The doc\'s fifth metric, the Learning Commons Misconception Evaluator score, is a reserved slot (enabled: false) — no integration exists yet — so the maximum today is 12, not 15.',
+      'Progression influence is a pilot proxy: the doc counts learning components the standard builds towards; the graph query returns that edge at the standard level only.',
+      'The rubric is both the selector here and, per the doc, an evaluation measure. Using it to select means it cannot also serve as an independent judge of misconception quality (doc §2b).',
     ],
   },
   {
@@ -138,16 +153,22 @@ export const FORMULAE: Formula[] = [
     title: 'Template fit',
     who: 'llm',
     source: 'LLMSelectTemplate/src/index.mjs (prompt) · library: src/util/activityLibrary.json',
+    origin: WAVE2_DOC,
     steps: [
-      { text: 'For each need, the model picks the two activity templates whose main instructional move best fits it, strongest first.' },
+      { text: 'For each need, the model picks the two activity templates whose main instructional move best fits it, highest fit first.' },
       {
-        text: 'Each pick is labelled by how well it fits.',
-        tex: '\\text{fit} = \\text{strong (the move is the need)} \\ \\text{or} \\ \\text{moderate (fits, but another move is closer)}',
+        text: 'Each pick is scored on the doc\'s Instructional Fit scale: does the template address what students most need to do next, not just the topic?',
+        tex: '\\text{instructional fit} = 0 \\ (\\text{poor}), \\ 1 \\ (\\text{partial}), \\ 2 \\ (\\text{strong}), \\ 3 \\ (\\text{exceptional})',
+      },
+      {
+        text: 'A pick under 2 is flagged. Nothing is regenerated on a flag in this pass; it is recorded for the evaluation harness.',
+        tex: '\\text{below threshold} = \\text{instructional fit} < 2',
       },
       { text: 'Prefer two different templates when both fit strongly. Use the same template twice only when it is clearly better than every alternative, and then say how the two activities would differ. Never pick a weak template just for variety.' },
     ],
     notes: [
-      'There is no numeric score here. The model also explains why each template it passed over was weaker.',
+      'A need\'s rank is its misconception\'s rank from step 6; the doc has no separate rubric for needs. Instructional Fit is the doc\'s one metric evaluated at template selection; the rest of its activity rubric is scored on the generated activity, after this.',
+      'The model also explains why each template it passed over was weaker.',
       'RightOn! is only selectable when a game catalog is supplied.',
     ],
   },

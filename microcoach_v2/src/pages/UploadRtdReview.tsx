@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import ContentRow from '../components/ContentRow';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import { UploadStepProps } from '../lib/UploadModels';
-import { useMisconceptions } from '../hooks/useMisconceptions';
+import { formatWeekLabel } from '../lib/weeks';
 import { SignUpCta } from '../lib/styledcomponents/SignUpStyledComponents';
 import {
   GhostAction,
@@ -17,14 +17,19 @@ import {
   SummaryRow,
 } from '../lib/styledcomponents/UploadStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 
 /** The confirmation step: what is about to be submitted, and for whom. */
-export default function UploadRtdReview({ screenSize, upload, actions, user }: UploadStepProps) {
-  const { t } = useTranslation();
+export default function UploadRtdReview({
+  screenSize,
+  upload,
+  actions,
+}: UploadStepProps) {
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { session } = useMisconceptions();
-  const { userProfile } = user;
+  const { userProfile, classrooms, selectedClassroomId } =
+    useMicroCoachDataState();
 
   const isReady = useAllReady(useI18nReady());
 
@@ -35,22 +40,22 @@ export default function UploadRtdReview({ screenSize, upload, actions, user }: U
   if (!isReady) return null;
 
   const className =
-    session.classes.find((option) => option.id === session.selectedClassId)
-      ?.name ?? session.classes[0]?.name;
+    classrooms.find((c) => c.id === selectedClassroomId)?.name ??
+    t('upload.noClass');
+  const teacherName = [userProfile?.firstName, userProfile?.lastName]
+    .filter(Boolean)
+    .join(' ');
 
   const rows = [
     {
       label: t('upload.teacher'),
-      value: `${
-        [userProfile?.firstName, userProfile?.lastName]
-          .filter(Boolean)
-          .join(' ') || session.teacher.displayName
-      } · ${
-        userProfile?.email ?? session.teacher.email
-      }`,
+      value: [teacherName, userProfile?.email].filter(Boolean).join(' · '),
     },
     { label: t('upload.class'), value: className },
-    { label: t('upload.week'), value: session.selectedWeek },
+    {
+      label: t('upload.week'),
+      value: formatWeekLabel(upload.weekStart, t, i18n.language),
+    },
     { label: t('upload.ppqExemplar'), value: upload.exemplar.name },
     { label: t('upload.ppqResponses'), value: upload.responses.name },
   ];

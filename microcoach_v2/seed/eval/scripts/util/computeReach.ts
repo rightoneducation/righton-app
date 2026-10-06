@@ -6,6 +6,14 @@ export interface WrongAnswerRef {
 export interface MisconceptionReach {
   studentCount: number | null;
   studentPercent: number | null;
+  // Mean of the 1–5 confidence ratings on the linked wrong picks — the Student
+  // Confidence input to the misconception rubric. null when no linked pick
+  // carried a rating (a session without confidence data), distinct from 0.
+  meanConfidence: number | null;
+  // Response-level total: how many responses were linked, as against how many
+  // distinct students. Higher than studentCount when a student chose linked
+  // options on more than one question, which is why the two are reported apart.
+  linkedResponses: number | null;
   linkStatus: 'linked' | 'unlinked';
 }
 
@@ -32,7 +40,10 @@ export function computeMisconceptionReach(
   studentResponses: any[],
 ): MisconceptionReach {
   if (!wrongAnswers?.length) {
-    return { studentCount: null, studentPercent: null, linkStatus: 'unlinked' };
+    return {
+      studentCount: null, studentPercent: null, meanConfidence: null,
+      linkedResponses: null, linkStatus: 'unlinked',
+    };
   }
 
   const targets = new Set(
@@ -41,6 +52,9 @@ export function computeMisconceptionReach(
 
   const affected = new Set<string>();
   const respondents = new Set<string>();
+  let confSum = 0;
+  let confN = 0;
+  let linkedResponses = 0;
 
   for (const sr of studentResponses ?? []) {
     const sid = sr.studentId ?? sr.student;
@@ -53,6 +67,13 @@ export function computeMisconceptionReach(
       for (const letter of chosen) {
         if (targets.has(`${qr.questionNumber}:${letter}`)) {
           affected.add(sid);
+          // Counted once per RESPONSE, not once per matching letter — the `break`
+          // below is what makes that true, so a double-marked "BC" with both
+          // letters linked still counts as the single response it was.
+          linkedResponses += 1;
+          // One rating per linked pick: a student wrong on two linked questions
+          // contributes twice to the mean, once to the count.
+          if (qr.confidence != null) { confSum += qr.confidence; confN += 1; }
           break;
         }
       }
@@ -65,6 +86,8 @@ export function computeMisconceptionReach(
   return {
     studentCount: affected.size,
     studentPercent: total ? Math.round((affected.size / total) * 1000) / 1000 : null,
+    meanConfidence: confN ? Math.round((confSum / confN) * 100) / 100 : null,
+    linkedResponses,
     linkStatus: 'linked',
   };
 }

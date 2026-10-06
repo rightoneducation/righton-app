@@ -114,10 +114,12 @@ export class AuthAPIClient implements IAuthAPIClient {
         },
       });
     } catch (e: any) {
-      // AWS sets generic error messages; we encode our own `CODE|message`.
+      // AWS sets generic error messages; we encode our own `CODE|message` (the
+      // PreSignUp trigger). Cognito's own errors carry no `|`, so fall back to
+      // the whole message rather than throwing "undefined".
       console.log(e);
       const [, msg] = e.message.split('|', 2);
-      throw new Error(`${msg}`);
+      throw new Error(msg ?? e.message);
     }
   }
 

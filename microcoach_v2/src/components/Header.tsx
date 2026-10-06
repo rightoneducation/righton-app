@@ -12,9 +12,10 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import ContentRow from './ContentRow';
 import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
-import { IUserState } from '../hooks/useUserState';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { avatarIcons, DEFAULT_AVATAR_INDEX } from '../images/avatars';
 
 /**
@@ -33,9 +34,11 @@ export type HeaderVariant = 'public' | 'signup' | 'app' | 'profile';
 
 interface HeaderProps {
   screenSize: ScreenSize;
-  user: IUserState;
   variant?: HeaderVariant;
   onLogOut?: () => void;
+  classrooms?: IMicroCoachClassroom[];
+  selectedClassroomId?: string | null;
+  onSelectClassroom?: (classroomId: string) => void;
 }
 
 // styled() erases MUI's polymorphic `component` prop, so re-declare it here to
@@ -206,12 +209,14 @@ const authSkeletonSx = { bgcolor: 'designSystem.background.fadedWhiteVeil' };
 
 export default function Header({
   screenSize,
-  user,
   variant = 'public',
   onLogOut,
+  classrooms = [],
+  selectedClassroomId = null,
+  onSelectClassroom,
 }: HeaderProps) {
   const { t } = useTranslation();
-  const { userStatus, userProfile } = user;
+  const { userStatus, userProfile } = useMicroCoachDataState();
   const isResolvingAuth = userStatus === UserStatusType.LOADING;
 
   /*
@@ -224,12 +229,6 @@ export default function Header({
     .filter(Boolean)
     .join(' ');
   const teacherEmail = userProfile?.email || '';
-
-  // Classes are a @hasMany relation and nothing creates Class rows yet, so this
-  // is empty for every real user. Rendered disabled rather than hidden so the
-  // header does not reflow once they exist.
-  const classes = userProfile?.classes ?? [];
-  const [selectedClassId, setSelectedClassId] = React.useState('');
 
   // Both app variants share the nav block; only its contents differ.
   const isProfileChrome = variant === 'profile';
@@ -331,19 +330,23 @@ export default function Header({
                 {!isProfileChrome && (
                   <ClassSelect
                     screenSize={screenSize}
-                    value={selectedClassId}
+                    value={selectedClassroomId ?? ''}
                     displayEmpty
-                    disabled={classes.length === 0}
-                    renderValue={(value) =>
-                      (value as string) || t('header.noClasses')
+                    disabled={classrooms.length === 0 || !onSelectClassroom}
+                    renderValue={(classroomId) =>
+                      classrooms.find(
+                        (classroom) => classroom.id === classroomId,
+                      )?.name ?? t('header.noClasses')
                     }
                     IconComponent={KeyboardArrowDownIcon}
-                    onChange={(event) => setSelectedClassId(event.target.value)}
+                    onChange={(event) =>
+                      onSelectClassroom?.(event.target.value)
+                    }
                     inputProps={{ 'aria-label': t('header.classSwitcher') }}
                   >
-                    {classes.map((className) => (
-                      <MenuItem key={className} value={className}>
-                        {className}
+                    {classrooms.map((classroom) => (
+                      <MenuItem key={classroom.id} value={classroom.id}>
+                        {classroom.name}
                       </MenuItem>
                     ))}
                   </ClassSelect>

@@ -10,16 +10,13 @@
   "nextStepOption": {
     "description": "microcoachNextStepOption — generates one classroom activity per format per misconception",
     "model": "gpt-5-mini",
-
     "formatsToGenerate": [
       "whole_class",
       "split_class"
     ],
-
-    "maxDurationMinutes": 30,
-    "targetDurationMinutes": 30,
+    "maxDurationMinutes": 15,
+    "targetDurationMinutes": 12,
     "disallowedTeachingMethods": [],
-
     "activitySteps": {
       "min": 4,
       "max": 6
@@ -36,20 +33,23 @@
       "min": 2,
       "max": 3
     },
-
     "allowedDurationBuckets": [
-      { "label": "10–15 min", "min": 10, "max": 15 },
-      { "label": "15–20 min", "min": 15, "max": 20 },
-      { "label": "20–25 min", "min": 20, "max": 25 },
-      { "label": "25–30 min", "min": 25, "max": 30 }
+      {
+        "label": "5–10 min",
+        "min": 5,
+        "max": 10
+      },
+      {
+        "label": "10–15 min",
+        "min": 10,
+        "max": 15
+      }
     ],
-
     "designPrinciples": [
       "Misconception-driven: The activity must directly address the identified cognitive error — not provide generic practice on the standard.",
       "Error-first instruction: Students must encounter and analyze incorrect reasoning before seeing the correct method.",
       "Connection to student responses: The activity must reference or build on the specific error patterns observed in the class data (e.g. the core misconception, or a 'Favorite No' the teacher could highlight)."
     ],
-
     "activityStructures": {
       "description": "Each activity must have a clearly named structure. The following are examples of strong structures — use them or invent other distinct structures that fit the misconception and format. The structure must be meaningfully different from any other activity generated for the same misconception.",
       "structures": [
@@ -66,7 +66,7 @@
           "description": "Analyze a real or hypothetical student error (anonymous): identify what the student understood, name the misconception, and explain the correct reasoning."
         },
         {
-          "name": "Math Hospital / Diagnose & Repair",
+          "name": "Math Detective / Investigate & Solve",
           "description": "Students 'treat' an incorrect solution: identify the error, propose a correction, and explain why it works. Can be framed as a cartoon character's incorrect solution to highlight reasoning errors."
         },
         {
@@ -83,21 +83,18 @@
         }
       ]
     },
-
     "distinctnessRules": [
       "Each activity generated for a misconception must use a different activityStructure.",
       "Activities must differ meaningfully in at least one of: instructional approach, activity structure, strategy tag, or representation/explanation strategy.",
       "Do not rephrase the same activity with minor wording changes (e.g. 'Clear Denominators First' vs 'Clear the Denominators First' is not distinct).",
       "Do not generate the same structure in two different formats (e.g. Incorrect Worked Example Analysis | Whole Class and Incorrect Worked Example Analysis | Split Class is not distinct enough)."
     ],
-
     "classroomFeasibility": [
       "Require minimal setup — activity should be implementable within 30–60 seconds of classroom transition.",
       "Use simple, familiar instructional routines that early-career teachers can execute without extensive prep.",
       "Avoid complex classroom logistics: no multiple rounds of regrouping, no complicated grouping structures, no detailed classroom management procedures.",
       "Focus on instructional moves rather than logistics — describe what the teacher says and does, not how to move furniture."
     ],
-
     "formatConstraints": {
       "description": "Only two formats are allowed. Do not generate Small Groups.",
       "wholeClass": {
@@ -119,15 +116,13 @@
         ]
       }
     },
-
     "udlRequirements": [
       "Visual representations: specify exactly what the teacher should draw or write on the board.",
       "Discussion prompts: include 2–3 example questions the teacher can ask to surface student reasoning.",
       "Comparison of strategies: include 2–3 solution strategies or reasoning approaches students can compare.",
-      "Incorrect solution analysis: activities should include 2–3 incorrect worked examples that illustrate the misconception."
+      "Incorrect solution analysis: activities should include {incorrectWorkedExamplesCount} incorrect worked examples that illustrate the misconception."
     ],
-
-    "incorrectWorkedExamplesCount": 3,
+    "incorrectWorkedExamplesCount": 2,
     "incorrectWorkedExampleRules": [
       "Each example contains exactly ONE intentional error: the specific misconception step. All other arithmetic and setup must be mathematically correct.",
       "Trace the incorrect reasoning honestly: after the misconception step, continue computing correctly from that wrong intermediate value.",
@@ -163,9 +158,10 @@
         }
       }
     ],
-
-    "overviewBullets": { "min": 2, "max": 4 },
-
+    "overviewBullets": {
+      "min": 2,
+      "max": 4
+    },
     "strategyTags": [
       {
         "name": "Make Structure Visible",
@@ -196,14 +192,18 @@
         "whenToUse": "Whole-class misunderstanding — reteach from a different angle for the full class"
       }
     ],
-
     "planner": {
       "model": "gpt-4o-mini",
       "description": "Cheap planning call that assigns diverse activity structures across all misconceptions before parallel generation begins"
     },
     "validator": {
       "model": "o3-mini",
-      "systemPrompt": "You are a math accuracy reviewer. Output only valid JSON."
-    }
+      "systemPrompt": "You are a math accuracy reviewer. Output only valid JSON.",
+      "problemReviewInstructions": "Return ONLY the problem itself, as a student would see it written on the board. If the mathematics is wrong, return the corrected problem; if it is already correct, return it unchanged, byte for byte. Do not add the answer, the diagnosis, a list of corrections, bracketed notes, teaching guidance, or any sentence describing what you changed — several of these activities ask students to find the error themselves, and including it destroys the activity. Keep the length close to the original. Return JSON: { \"problem\": \"<corrected or original problem>\" }"
+    },
+    "durationNote": "Educators have at most 15 minutes to run an activity, so 15 is a hard ceiling covering the WHOLE activity — setup, the activity itself and the closing discussion. The target sits below the ceiling so there is classroom slack. Applies to every template.",
+    "incorrectWorkedExamplesCountNote": "Two, matching the activity design. Was 3 and read by nothing, so the count drifted; it is now a .length() on the examples array in activityContent.mjs, which is the only form of guidance the model reliably honours.",
+    "problemGrowthLimit": 1.5,
+    "problemGrowthLimitNote": "Ceiling on how much longer the math reviewer's corrected problem may be than the original before the result is discarded and the original kept. The reviewer once returned 2,135 characters of lesson, bracketed answers and commentary about its own edit in place of a ~520-character problem. Falls back loudly: the reason lands in the run's sub-call record."
   }
 }

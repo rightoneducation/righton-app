@@ -1,15 +1,18 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { IAPIClients } from '../api';
 import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
-
-export type ClassroomsStatus = 'idle' | 'loading' | 'ready' | 'error';
+import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
+import {
+  useMicroCoachDataDispatch,
+  useMicroCoachDataState,
+} from './context/useMicroCoachDataContext';
 
 export interface UseClassroomsResult {
   classrooms: IMicroCoachClassroom[];
   selectedClassroomId: string | null;
   selectedClassroom: IMicroCoachClassroom | null;
   selectClassroom: (classroomId: string) => void;
-  status: ClassroomsStatus;
+  status: MicroCoachDataStatus;
   error: Error | null;
 }
 
@@ -17,30 +20,32 @@ export function useClassrooms(
   apiClients: IAPIClients,
   userId: string | null,
 ): UseClassroomsResult {
-  const [classrooms, setClassrooms] = useState<IMicroCoachClassroom[]>([]);
-  const [selectedClassroomId, setSelectedClassroomId] = useState<string | null>(
-    null,
-  );
-  const [classroomsStatus, setClassroomsStatus] =
-    useState<ClassroomsStatus>('idle');
-  const [classroomsError, setClassroomsError] = useState<Error | null>(null);
+  const { classrooms, selectedClassroomId, classroomsStatus, classroomsError } =
+    useMicroCoachDataState();
+  const dispatch = useMicroCoachDataDispatch();
 
   useEffect(() => {
     let cancelled = false;
 
     if (!userId) {
-      setClassrooms([]);
-      setSelectedClassroomId(null);
-      setClassroomsStatus('idle');
-      setClassroomsError(null);
+      dispatch({ type: 'SET_CLASSROOMS', payload: [] });
+      dispatch({ type: 'SET_SELECTED_CLASSROOM_ID', payload: null });
+      dispatch({
+        type: 'SET_CLASSROOMS_STATUS',
+        payload: MicroCoachDataStatus.IDLE,
+      });
+      dispatch({ type: 'SET_CLASSROOMS_ERROR', payload: null });
       return undefined;
     }
 
     const activeUserId = userId;
-    setClassrooms([]);
-    setSelectedClassroomId(null);
-    setClassroomsStatus('loading');
-    setClassroomsError(null);
+    dispatch({ type: 'SET_CLASSROOMS', payload: [] });
+    dispatch({ type: 'SET_SELECTED_CLASSROOM_ID', payload: null });
+    dispatch({
+      type: 'SET_CLASSROOMS_STATUS',
+      payload: MicroCoachDataStatus.LOADING,
+    });
+    dispatch({ type: 'SET_CLASSROOMS_ERROR', payload: null });
 
     async function loadClassrooms() {
       try {
@@ -48,17 +53,25 @@ export function useClassrooms(
           await apiClients.classroom.getClassroomsByUserId(activeUserId);
         if (cancelled) return;
 
-        setClassrooms(fetchedClassrooms);
-        setClassroomsStatus('ready');
+        dispatch({ type: 'SET_CLASSROOMS', payload: fetchedClassrooms });
+        dispatch({
+          type: 'SET_CLASSROOMS_STATUS',
+          payload: MicroCoachDataStatus.READY,
+        });
       } catch (error) {
         if (cancelled) return;
 
-        setClassroomsError(
-          error instanceof Error
-            ? error
-            : new Error('Failed to load classrooms'),
-        );
-        setClassroomsStatus('error');
+        dispatch({
+          type: 'SET_CLASSROOMS_ERROR',
+          payload:
+            error instanceof Error
+              ? error
+              : new Error('Failed to load classrooms'),
+        });
+        dispatch({
+          type: 'SET_CLASSROOMS_STATUS',
+          payload: MicroCoachDataStatus.ERROR,
+        });
       }
     }
 
@@ -67,34 +80,33 @@ export function useClassrooms(
     return () => {
       cancelled = true;
     };
-  }, [apiClients, userId]);
+  }, [apiClients, dispatch, userId]);
 
-  const selectClassroom = useCallback((classroomId: string) => {
-    setSelectedClassroomId(classroomId);
-  }, []);
-
-  return useMemo(
-    () => {
-      const selectedClassroom =
-        classrooms.find(
-          (classroom) => classroom.id === selectedClassroomId,
-        ) ?? null;
-
-      return {
-        classrooms,
-        selectedClassroomId,
-        selectedClassroom,
-        selectClassroom,
-        status: classroomsStatus,
-        error: classroomsError,
-      };
+  const selectClassroom = useCallback(
+    (classroomId: string) => {
+      dispatch({ type: 'SET_SELECTED_CLASSROOM_ID', payload: classroomId });
     },
-    [
-      classrooms,
-      classroomsError,
-      classroomsStatus,
-      selectClassroom,
-      selectedClassroomId,
-    ],
+    [dispatch],
   );
+
+  return useMemo(() => {
+    const selectedClassroom =
+      classrooms.find((classroom) => classroom.id === selectedClassroomId) ??
+      null;
+
+    return {
+      classrooms,
+      selectedClassroomId,
+      selectedClassroom,
+      selectClassroom,
+      status: classroomsStatus,
+      error: classroomsError,
+    };
+  }, [
+    classrooms,
+    classroomsError,
+    classroomsStatus,
+    selectClassroom,
+    selectedClassroomId,
+  ]);
 }

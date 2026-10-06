@@ -7,14 +7,16 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import AppContentRow from '../components/AppContentRow';
 import FlowNav, { FlowTabId } from '../components/FlowNav';
-import { ScreenSize } from '../lib/MicroCoachModels';
-import { useMisconceptions } from '../hooks/useMisconceptions';
+import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { ContentPanel } from '../lib/styledcomponents/ActivityDetailStyledComponents';
 import {
   CountChip,
   ScreenSizeProps,
 } from '../lib/styledcomponents/ReviewStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
+import { UseSessionsResult } from '../hooks/useSessions';
+import buildReflectionResults from '../lib/reflectionResults';
 
 /**
  * Reflect — the impact of the next steps the teacher actually ran.
@@ -24,11 +26,22 @@ import { useAllReady, useI18nReady } from '../hooks/readiness';
  * rather than 32), so their content is the source of truth but their
  * dimensions are not.
  */
-export default function Reflect({ screenSize }: ScreenSizeProps) {
+interface ReflectProps extends ScreenSizeProps {
+  sessions: UseSessionsResult;
+}
+
+export default function Reflect({ screenSize, sessions }: ReflectProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { reflect, isReady: dataReady } = useMisconceptions();
+  const { misconceptions, misconceptionsStatus } = useMicroCoachDataState();
+  const reflect = buildReflectionResults(
+    sessions.selectedSession,
+    misconceptions,
+  );
+  const dataReady =
+    sessions.status === MicroCoachDataStatus.READY &&
+    misconceptionsStatus === MicroCoachDataStatus.READY;
   const isReady = useAllReady(useI18nReady(), dataReady);
 
   if (!isReady) return null;

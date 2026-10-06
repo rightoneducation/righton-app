@@ -10,7 +10,7 @@ import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import ContentRow from '../components/ContentRow';
 import LandingSkeleton from '../components/LandingSkeleton';
 import ImageWithSkeleton from '../components/ImageWithSkeleton';
-import { ScreenSize } from '../lib/MicroCoachModels';
+import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import {
   StepPanel,
   StepCard,
@@ -19,7 +19,7 @@ import {
   ScreenSizeProps,
 } from '../lib/styledcomponents/LandingStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
-import { UserProps } from '../hooks/useUserState';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import heroClassroom from '../images/heroClassroom.jpg';
 import landingPagePattern from '../images/landingPagePattern.svg';
 import landingPagePatternDetail from '../images/landingPagePatternDetail.svg';
@@ -86,23 +86,22 @@ const STEPS = [
   { key: 'step3', image: stepCard3 },
 ] as const;
 
-export default function Landing({ screenSize, user }: ScreenSizeProps & UserProps) {
+export default function Landing({ screenSize }: ScreenSizeProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { signOut } = user;
+  const { userStatus } = useMicroCoachDataState();
   const isLarge = screenSize === ScreenSize.LARGE;
 
   /*
-   * Starting over, not resuming. The wizard's last step commits a profile and
-   * flips userStatus to LOGGEDIN, and AuthGuard quite correctly keeps a
-   * signed-in user off /signup — so without signing out, a second run of the
-   * flow bounces straight back here and the button looks dead. The wizard's own
-   * state needs no reset: it is local to SignUpWizard, which unmounts on exit.
+   * A signed-in teacher already has an account, so "Get started" means the app.
+   * This used to call the local-state signOut first, a leftover from the mocked
+   * wizard's demo loop. That cleared the header but left the Cognito session
+   * alive, so the user looked logged out until the next refresh restored them —
+   * and a fresh signup on top of the live session fails at awsSignIn.
    */
   const handleGetStarted = () => {
-    signOut();
-    navigate('/signup');
+    navigate(userStatus === UserStatusType.LOGGEDIN ? '/dashboard' : '/signup');
   };
 
   // Page-level readiness covers things the whole layout depends on — currently

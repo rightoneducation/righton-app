@@ -12,7 +12,7 @@ import FlowNav, { FlowTabId } from '../components/FlowNav';
 import MisconceptionCard from '../components/MisconceptionCard';
 import MisconceptionDetailModal from '../components/MisconceptionDetailModal';
 import ReviewSkeleton from '../components/ReviewSkeleton';
-import { ScreenSize } from '../lib/MicroCoachModels';
+import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import {
   ResultsBanner,
   CountChip,
@@ -20,15 +20,22 @@ import {
   ScreenSizeProps,
 } from '../lib/styledcomponents/ReviewStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
-import { useMisconceptions } from '../hooks/useMisconceptions';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import { UseSessionsResult } from '../hooks/useSessions';
 
-export default function Review({ screenSize }: ScreenSizeProps) {
+interface ReviewProps extends ScreenSizeProps {
+  sessions: UseSessionsResult;
+}
+
+export default function Review({ screenSize, sessions }: ReviewProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
   const isLarge = screenSize === ScreenSize.LARGE;
 
-  const { session, misconceptions, isReady: dataReady } = useMisconceptions();
+  const { misconceptions, misconceptionsStatus } = useMicroCoachDataState();
+  const session = sessions.selectedSession;
+  const dataReady = misconceptionsStatus === MicroCoachDataStatus.READY;
   const isReady = useAllReady(useI18nReady(), dataReady);
 
   const [isBannerOpen, setIsBannerOpen] = React.useState(true);
@@ -124,9 +131,11 @@ export default function Review({ screenSize }: ScreenSizeProps) {
             {t('review.subtitle')}
           </Typography>
           <CountChip>
-            {t('review.worksAnalyzed', {
-              count: session.studentWorksAnalyzed,
-            })}
+            {session?.studentWorksAnalyzed == null
+              ? t('review.worksAnalyzedUnavailable')
+              : t('review.worksAnalyzed', {
+                  count: session.studentWorksAnalyzed,
+                })}
           </CountChip>
         </Stack>
       </Box>
@@ -162,9 +171,11 @@ export default function Review({ screenSize }: ScreenSizeProps) {
           variant="headingMd"
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
         >
-          {t('review.strongUnderstanding', {
-            count: session.studentsWithStrongUnderstanding,
-          })}
+          {session?.studentsWithStrongUnderstanding == null
+            ? t('review.strongUnderstandingUnavailable')
+            : t('review.strongUnderstanding', {
+                count: session.studentsWithStrongUnderstanding,
+              })}
         </Typography>
       </StrongUnderstandingBar>
 

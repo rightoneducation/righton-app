@@ -16,10 +16,14 @@ import Theme from './lib/Theme';
 import { GOOGLE_OAUTH_CLIENT_ID, ScreenType } from './lib/MicroCoachModels';
 import { useAPIClients } from './hooks/useAPIClients';
 import { useAuthResolver } from './hooks/useAuthActions';
+import { useClassrooms } from './hooks/useClassrooms';
+import { useMisconceptions } from './hooks/useMisconceptions';
+import { PlanItemsScope, usePlanItems } from './hooks/usePlanItems';
+import { useSessions } from './hooks/useSessions';
 import { useUserState } from './hooks/useUserState';
-import { usePlanItems } from './hooks/usePlanItems';
 import AppSwitch from './switches/AppSwitch';
 import Preview from './pages/preview/Preview';
+import { MicroCoachDataProvider } from './lib/context/MicroCoachDataContext';
 
 /**
  * Parent layout route. React Router keeps this element mounted across child
@@ -41,11 +45,31 @@ Modal.setAppElement('#root');
 
 function RootLayout({ apiClients }: { apiClients: APIClients }) {
   const user = useUserState(apiClients);
-  const plan = usePlanItems();
+  // On-load session restore: without it a refresh comes up signed out and the
+  // Google signup leg (/auth → AuthCallback) never resolves.
   useAuthResolver(apiClients, user);
+  const classrooms = useClassrooms(apiClients, user.userProfile?.id ?? null);
+  const sessions = useSessions(apiClients, classrooms.selectedClassroomId);
+
+  useMisconceptions(apiClients, sessions.selectedSessionId);
+
+  let planScope: PlanItemsScope = null;
+  if (sessions.selectedSessionId) {
+    planScope = {
+      type: 'session',
+      sessionId: sessions.selectedSessionId,
+    };
+  } else if (classrooms.selectedClassroomId) {
+    planScope = {
+      type: 'class',
+      classId: classrooms.selectedClassroomId,
+    };
+  }
+  const plan = usePlanItems(apiClients, planScope);
+
   const outletContext = useMemo(
-    () => ({ apiClients, user, plan }),
-    [apiClients, user, plan],
+    () => ({ apiClients, user, classrooms, sessions, plan }),
+    [apiClients, classrooms, plan, sessions, user],
   );
   return (
     <>
@@ -159,9 +183,9 @@ function App() {
             does no I/O, so the null branch lasts a single frame; rendering
             nothing there beats a spinner that flashes for one paint.
           */}
-          {router && (
-            <RouterProvider router={router} />
-          )}
+          <MicroCoachDataProvider>
+            {router && <RouterProvider router={router} />}
+          </MicroCoachDataProvider>
         </ThemeProvider>
       </StyledEngineProvider>
     </GoogleOAuthProvider>
