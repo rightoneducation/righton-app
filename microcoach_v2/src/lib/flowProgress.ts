@@ -16,7 +16,7 @@ export enum FlowStep {
   DONE = 'DONE',
 }
 
-const ORDER: FlowStep[] = [
+export const FLOW_ORDER: FlowStep[] = [
   FlowStep.ASSESS,
   FlowStep.UNDERSTAND,
   FlowStep.CHOOSE,
@@ -65,14 +65,14 @@ const STEP_PATH: Record<Exclude<FlowStep, FlowStep.DONE>, string> = {
 
 export function buildFlowSteps(current: FlowStep, t: Translate): IFlowStep[] {
   const currentIndex =
-    current === FlowStep.DONE ? ORDER.length : ORDER.indexOf(current);
-  return ORDER.map((step, index) => {
+    current === FlowStep.DONE ? FLOW_ORDER.length : FLOW_ORDER.indexOf(current);
+  return FLOW_ORDER.map((step, index) => {
     let state: IFlowStep['state'] = 'UPCOMING';
     if (index < currentIndex) state = 'COMPLETE';
     else if (index === currentIndex) state = 'CURRENT';
     return {
       order: index + 1,
-      label: t(`home.steps.${step}`),
+      label: t(`dashboard.steps.${step}`),
       state,
       path: STEP_PATH[step as Exclude<FlowStep, FlowStep.DONE>],
       // Assess is also clickable while current: it is the way into the flow
@@ -82,21 +82,32 @@ export function buildFlowSteps(current: FlowStep, t: Translate): IFlowStep[] {
   });
 }
 
+// The breadcrumb before the class's sessions are known: every label, none
+// marked current and none linked, so it renders at once and is corrected when
+// the query answers rather than guessing a step that may jump.
+export function buildPendingFlowSteps(t: Translate): IFlowStep[] {
+  return buildFlowSteps(FlowStep.ASSESS, t).map((step) => ({
+    ...step,
+    state: 'UPCOMING',
+    isClickable: false,
+  }));
+}
+
 // The dashboard's one call to action follows the current step. REASSESS is
 // another upload (the post-PPQ); DONE starts the next cycle the same way.
 export function stepCta(current: FlowStep): { labelKey: string; path: string } {
   switch (current) {
     case FlowStep.UNDERSTAND:
     case FlowStep.CHOOSE:
-      return { labelKey: 'home.cta.UNDERSTAND', path: '/review' };
+      return { labelKey: 'dashboard.cta.UNDERSTAND', path: '/review' };
     case FlowStep.REASSESS:
-      return { labelKey: 'home.cta.REASSESS', path: '/upload-rtd' };
+      return { labelKey: 'dashboard.cta.REASSESS', path: '/upload-rtd' };
     case FlowStep.REFLECT:
-      return { labelKey: 'home.cta.REFLECT', path: '/reflect' };
+      return { labelKey: 'dashboard.cta.REFLECT', path: '/reflect' };
     case FlowStep.ASSESS:
     case FlowStep.DONE:
     default:
-      return { labelKey: 'home.cta.ASSESS', path: '/upload-rtd' };
+      return { labelKey: 'dashboard.cta.ASSESS', path: '/upload-rtd' };
   }
 }
 

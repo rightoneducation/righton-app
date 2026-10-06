@@ -129,6 +129,14 @@ function App() {
               element={<AppSwitch currentScreen={ScreenType.DASHBOARD} />}
             />
             <Route
+              path="this-week"
+              element={<AppSwitch currentScreen={ScreenType.THIS_WEEK} />}
+            />
+            <Route
+              path="past-activities"
+              element={<AppSwitch currentScreen={ScreenType.PAST_ACTIVITIES} />}
+            />
+            <Route
               path="review"
               element={<AppSwitch currentScreen={ScreenType.REVIEW} />}
             />

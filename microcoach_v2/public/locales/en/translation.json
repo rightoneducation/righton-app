@@ -5,7 +5,8 @@
     "signup": "Sign Up",
     "login": "Login",
     "classSwitcher": "Select a class",
-    "noClasses": "No classes yet"
+    "noClasses": "No classes yet",
+    "accountMenu": "Account menu"
   },
   "common": {
     "needHelp": "Need help"
@@ -112,22 +113,31 @@
       "label": "Step 3",
       "title": "Plan your next move",
       "body": "For each misconception, MicroCoach suggests targeted next steps. Pick what fits your class and get back to teaching"
+    },
+    "step4": {
+      "label": "Step 4",
+      "title": "Reassess",
+      "body": "After you've taught the activity, upload the second Mix It Up so MicroCoach can see how your students responded."
+    },
+    "step5": {
+      "label": "Step 5",
+      "title": "Reflect on what changed",
+      "body": "Compare before and after to see which students moved forward and who still needs support."
     }
   },
   "footer": {
     "copyright": "Copyright © 2026 RightOn Education. All rights reserved.",
     "privacypolicy": "Privacy Policy"
   },
-  "home": {
-    "banner": "Your class results are in — review misconception patterns and recommended activities",
-    "dismissBanner": "Dismiss",
-    "title": "Welcome back to MicroCoach",
-    "subtitle": "Review misconception patterns in your students’ thinking\nto identify opportunities to strengthen understanding.",
+  "dashboard": {
+    "title": "Welcome to MicroCoach",
+    "titleReturning": "Welcome back to MicroCoach",
+    "subtitle": "Upload your Monday MIU files to better understand\nstudent thinking and receive recommended next steps.",
     "classPrompt": "Which class are you working with today?",
     "moreClasses": "More",
     "weekLabel": "Week",
     "cta": {
-      "ASSESS": "Upload student results",
+      "ASSESS": "Upload Monday MIU files for analysis",
       "UNDERSTAND": "Review misconception patterns",
       "REASSESS": "Upload reassessment results",
       "REFLECT": "Reflect on impact"
@@ -135,20 +145,60 @@
     "steps": {
       "ASSESS": "Assess",
       "UNDERSTAND": "Understand",
-      "CHOOSE": "Choose activity",
+      "CHOOSE": "Select Activity",
       "REASSESS": "Reassess",
-      "REFLECT": "Reflect on impact"
+      "REFLECT": "Reflect"
     },
-    "noClassesTitle": "Add your first class to get started",
-    "addClassPlaceholder": "Class name",
-    "addClass": "Add class",
-    "addClassError": "That class could not be saved. Please try again.",
+    "noClassesTitle": "Add your classes to get started",
     "sidebar": {
-      "home": "Home",
+      "dashboard": "Home",
       "thisWeek": "This Week",
-      "pastInsights": "Past Insights"
+      "pastActivities": "Past Activities"
     },
-    "weekNumber": "Week {{number}}"
+    "myActivity": "My activity",
+    "noClassesHint": "Classes are added in Account Settings.",
+    "accountSettingsLink": "Go to Account Settings",
+    "weekOption": "Week {{number}} ({{range}})",
+    "classesError": "We couldn't load your classes. Refresh the page to try again.",
+    "loadingClasses": "Loading your classes",
+    "loadingNextStep": "Loading your next step"
+  },
+  "thisWeek": {
+    "title": "Weekly Activity Progress",
+    "weekHeading": "Week {{number}}: {{range}}",
+    "students": "{{count}} students",
+    "waiting": "Waiting on MicroCoach...",
+    "status": {
+      "ASSESS": "Upload your Monday MIU files to get started",
+      "AWAITING": "Analyzing your MIU files, results coming soon",
+      "UNDERSTAND": "Understand misconceptions before choosing an activity",
+      "CHOOSE": "Select your next activity",
+      "REASSESS": "Compare your MIU results to understand class growth",
+      "REFLECT": "Reflect on how your class has grown",
+      "DONE": "This week's activity is complete"
+    },
+    "action": {
+      "ASSESS": "Upload MIU files",
+      "UNDERSTAND": "Review misconceptions",
+      "CHOOSE": "View activities",
+      "REASSESS": "Reassess results",
+      "REFLECT": "Reflect",
+      "DONE": "View data"
+    },
+    "empty": "No classes yet. Add your classes in Account Settings."
+  },
+  "pastActivities": {
+    "title": "Past Activities",
+    "weekHeading": "Week {{number}}: {{range}}",
+    "students": "{{count}} students",
+    "completed": "Completed {{date}}",
+    "reviewResults": "Review class results",
+    "viewData": "View data",
+    "sort": "Sort",
+    "sortLabel": "Sort activities",
+    "sortClass": "By class",
+    "empty": "No completed activities yet.",
+    "untitled": "Activity"
   },
   "signup": {
     "welcome": "Welcome to MicroCoach",
@@ -180,7 +230,7 @@
     "removeClass": "Remove class",
     "selectTitle": "Select your teacher name and class to get started",
     "more": "More",
-    "upload": "Upload PPQ files for analysis",
+    "upload": "Upload MIU files for analysis",
     "showPassword": "Show password",
     "hidePassword": "Hide password",
     "codeError": "That code isn't right. Check your email and try again.",
@@ -246,11 +296,10 @@
     "reviewTitle": "Review and submit",
     "reviewBody": "Please confirm you’ve uploaded the correct RTD Exemplar and Responses files for the intended class and week. Once submitted, MicroCoach will begin analyzing your files.",
     "uploaded": "UPLOADED",
-    "ppqExemplar": "PPQ Exemplar",
-    "ppqResponses": "PPQ Responses",
+    "ppqExemplar": "MIU Exemplar",
+    "ppqResponses": "MIU Responses",
     "backToUpload": "Back to upload",
     "submit": "Submit files for analysis",
-    "weekOf": "Week of {{date}}",
     "noClass": "No class selected",
     "addClassHint": "Add a class on the dashboard to start an upload."
   },
@@ -260,5 +309,14 @@
     "mastery": "Class mastery improvement",
     "improved": "students showed improvement",
     "viewDetails": "View details"
+  },
+  "activityList": {
+    "loading": "Loading your classes' activity",
+    "loadError": "We couldn't load your classes' activity. Refresh the page to try again.",
+    "removeTitle": "Remove this session?",
+    "removeBody": "This deletes {{className}}'s session and its results. This can't be undone.",
+    "removeError": "That session couldn't be removed. Please try again.",
+    "remove": "Remove",
+    "cancel": "Cancel"
   }
 }

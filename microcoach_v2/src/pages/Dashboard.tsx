@@ -1,61 +1,60 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { useTheme } from '@mui/material/styles';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
+import CircularProgress from '@mui/material/CircularProgress';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AppSidebar from '../components/AppSidebar';
 import FlowStepper from '../components/FlowStepper';
+import LoadingSlot from '../components/LoadingSlot';
 import {
-  HomeLayout,
-  HomeContent,
-  HomeBand,
-  FloatingBanner,
+  SidebarLayout,
+  SidebarContent,
+  DashboardCard,
+  DashboardHeading,
+  DashboardForm,
+  StepperBand,
+  MyActivityButton,
   PickerRow,
   PickerColumn,
   PickerLabel,
+  PickerNote,
   ChipWrap,
   ClassChip,
   WeekSelect,
-  HomeCta,
-} from '../lib/styledcomponents/HomeStyledComponents';
-import {
-  AddClassChip,
-  SignUpField,
-} from '../lib/styledcomponents/SignUpStyledComponents';
-import {
-  ResultsBanner,
-  ScreenSizeProps,
-} from '../lib/styledcomponents/ReviewStyledComponents';
+  DashboardCta,
+} from '../lib/styledcomponents/DashboardStyledComponents';
+import { ScreenSizeProps } from '../lib/styledcomponents/ReviewStyledComponents';
 import { UseClassroomsResult } from '../hooks/useClassrooms';
 import { UseSessionsResult } from '../hooks/useSessions';
-import { useAllReady, useI18nReady } from '../hooks/readiness';
+import { useI18nReady } from '../hooks/readiness';
+import { useSidebarNav } from '../hooks/useSidebarNav';
+import { useHasUploads } from '../hooks/useHasUploads';
 import { IPlanItemsState } from '../hooks/usePlanItems';
-import {
-  useMicroCoachDataDispatch,
-  useMicroCoachDataState,
-} from '../hooks/context/useMicroCoachDataContext';
-import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { IAPIClients } from '../api';
-import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
-import { SessionStatus } from '../AWSAPI';
 import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
-import { ISidebarItem } from '../lib/PipelineModels';
 import {
+  FlowStep,
   buildFlowSteps,
+  buildPendingFlowSteps,
   deriveCurrentStep,
   sortSessionsLatestFirst,
   stepCta,
 } from '../lib/flowProgress';
+import {
+  currentSchoolWeek,
+  formatSchoolWeek,
+  schoolWeeks,
+} from '../lib/weeks';
 
 // Chips shown inline before the rest fold into "More".
 const VISIBLE_CLASS_COUNT = 4;
+// One row of class chips: what the loading spinner holds open.
+const CHIP_ROW_HEIGHT = 50;
 
 interface DashboardProps extends ScreenSizeProps {
   apiClients: IAPIClients;
@@ -71,40 +70,71 @@ export default function Dashboard({
   sessions,
   plan,
 }: DashboardProps) {
-  const { t } = useTranslation();
-  const theme = useTheme();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { userProfile } = useMicroCoachDataState();
-  const dispatch = useMicroCoachDataDispatch();
   const classList = classrooms.classrooms;
   const selectedClassId = classrooms.selectedClassroomId ?? '';
-  const classesLoaded = classrooms.status !== MicroCoachDataStatus.LOADING;
   const selectClass = classrooms.selectClassroom;
   const sessionList = sortSessionsLatestFirst(sessions.sessions);
-  const isReady = useAllReady(
-    useI18nReady(),
-    classesLoaded,
-    sessions.status !== MicroCoachDataStatus.LOADING,
+
+  /*
+   * Only translations hold the page back. Everything else renders at once and
+   * each query-backed part shows an optimistic or pending state, corrected when
+   * its query answers or fails:
+   *   - title: "Welcome to" until uploads are known (useHasUploads)
+   *   - class chips: a spinner in their slot
+   *   - stepper: every label, none current, until the sessions answer
+   *   - CTA: the button with a spinner in it, for the same wait
+   * IDLE does not count as an answer for classes: it is the state before the
+   * user's id reaches useClassrooms.
+   */
+  const isI18nReady = useI18nReady();
+  const classesKnown =
+    classrooms.status === MicroCoachDataStatus.READY ||
+    classrooms.status === MicroCoachDataStatus.ERROR;
+  const classesFailed = classrooms.status === MicroCoachDataStatus.ERROR;
+  const hasClasses = classList.length > 0;
+  // Sessions sit at IDLE when there is no class to load them for, which is an
+  // answer once the class list is in.
+  const sessionsKnown =
+    sessions.status === MicroCoachDataStatus.READY ||
+    sessions.status === MicroCoachDataStatus.ERROR ||
+    (classesKnown && !classrooms.selectedClassroomId);
+  const sessionsFailed = sessions.status === MicroCoachDataStatus.ERROR;
+  const hasUploads = useHasUploads(
+    apiClients,
+    userProfile?.id ?? null,
+    classesKnown ? classList.map((classroom) => classroom.id) : null,
+    sessionList.length > 0,
   );
 
-  const [isBannerOpen, setIsBannerOpen] = React.useState(true);
   const [moreAnchor, setMoreAnchor] = React.useState<HTMLElement | null>(null);
-  const [newClassName, setNewClassName] = React.useState('');
-  const [isAdding, setIsAdding] = React.useState(false);
-  const [addError, setAddError] = React.useState(false);
+  // The week this upload is for. It only pre-fills the upload flow: the
+  // stepper and CTA follow the class's latest session whatever week is picked.
+  const [weekStart, setWeekStart] = React.useState(() => currentSchoolWeek());
 
-  // The week picked in useSessions; until one is picked, the latest session.
+  // The step does not wait on the saved plan. The plan only separates
+  // UNDERSTAND from REASSESS, and usePlanItems holds it at LOADING until the
+  // misconceptions are READY, so a failed misconception fetch would leave the
+  // page waiting for good. The step reads UNDERSTAND and moves on if a plan
+  // arrives.
   const selectedSession = sessions.selectedSession ?? sessionList[0] ?? null;
   const currentStep = deriveCurrentStep(
     selectedSession,
     plan.planItems.length > 0,
   );
-  const flowSteps = buildFlowSteps(currentStep, t);
-  const cta = stepCta(currentStep);
-  const hasClasses = classList.length > 0;
-  const canAddClass = !!userProfile?.id;
-  const showBanner =
-    isBannerOpen && selectedSession?.status === SessionStatus.GENERATED;
+  const isStepKnown = sessionsKnown && !sessionsFailed;
+  const flowSteps = isStepKnown
+    ? buildFlowSteps(currentStep, t)
+    : buildPendingFlowSteps(t);
+  // A failed session fetch falls back to the upload, which is always a valid
+  // next action, rather than guessing a later step.
+  const cta = stepCta(isStepKnown ? currentStep : FlowStep.ASSESS);
+  const isCtaLoading = !sessionsKnown;
+  // Shown while classes load (a teacher normally has them); hidden only once
+  // the list is known to be empty or failed.
+  const showCta = !classesKnown || hasClasses;
 
   // The selected class always gets a chip, even when it sits past the fold
   // (picked from "More" or the header): it takes the last inline slot.
@@ -118,231 +148,177 @@ export default function Dashboard({
     (c) => !inlineClasses.some((shown) => shown.id === c.id),
   );
 
-  const sidebarItems: ISidebarItem[] = [
-    { id: 'home', label: t('home.sidebar.home'), isActive: true },
-    { id: 'this-week', label: t('home.sidebar.thisWeek'), isActive: false },
-    { id: 'past-insights', label: t('home.sidebar.pastInsights'), isActive: false },
-  ];
+  const sidebar = useSidebarNav();
 
-  const weekLabel = (session: IMicroCoachSession) =>
-    session.weekLabel ||
-    session.sessionLabel ||
-    (session.weekNumber != null
-      ? t('home.weekNumber', { number: session.weekNumber })
-      : new Date(session.createdAt).toLocaleDateString());
-
-  const handleSidebarSelect = (itemId: string) => {
-    if (itemId === 'home') return;
-    // eslint-disable-next-line no-console
-    console.log('sidebar destination not yet built', itemId);
-  };
-
-  // Creates the row, appends it to the classroom state and selects it.
-  const addClass = async (name: string) => {
-    const userId = userProfile?.id;
-    if (!userId) return null;
-    try {
-      const created = await apiClients.classroom.createClassroom({
-        userId,
-        name: name.trim(),
-        grade: null,
-        state: null,
-        schoolYear: null,
-      } as IMicroCoachClassroom);
-      if (!created) return null;
-      dispatch({ type: 'SET_CLASSROOMS', payload: [...classList, created] });
-      selectClass(created.id);
-      return created;
-    } catch (error) {
-      console.error('Could not create classroom', error);
-      return null;
+  const handleCta = () => {
+    if (cta.path === '/upload-rtd') {
+      navigate(cta.path, { state: { weekStart } });
+    } else {
+      navigate(cta.path);
     }
   };
 
-  const handleAddClass = async () => {
-    if (!newClassName.trim() || isAdding) return;
-    setIsAdding(true);
-    setAddError(false);
-    const created = await addClass(newClassName);
-    setIsAdding(false);
-    if (created) setNewClassName('');
-    else setAddError(true);
-  };
-
   return (
-    <HomeLayout screenSize={screenSize}>
+    <SidebarLayout screenSize={screenSize}>
       <AppSidebar
-        items={sidebarItems}
+        items={sidebar.items}
         screenSize={screenSize}
-        onSelect={handleSidebarSelect}
+        onSelect={sidebar.onSelect}
       />
 
-      <HomeContent screenSize={screenSize}>
-        {isReady && (
+      <SidebarContent screenSize={screenSize}>
+        {isI18nReady && (
           <>
-            {showBanner && (
-              <FloatingBanner screenSize={screenSize}>
-                <ResultsBanner elevation={3}>
-                  <Typography
-                    variant="rubikBodyBold"
-                    sx={{ color: 'designSystem.surface.atlanticNavy' }}
-                  >
-                    {t('home.banner')}
-                  </Typography>
-                  <IconButton
-                    size="small"
-                    aria-label={t('home.dismissBanner')}
-                    onClick={() => setIsBannerOpen(false)}
-                    sx={{ ml: 'auto', color: 'designSystem.surface.ashyGray' }}
-                  >
-                    <CloseIcon sx={{ fontSize: 18 }} />
-                  </IconButton>
-                </ResultsBanner>
-              </FloatingBanner>
-            )}
-
-            <HomeBand>
-              <Typography
-                variant="h1"
-                sx={{
-                  color: 'designSystem.surface.atlanticNavy',
-                  textAlign: 'center',
-                }}
-              >
-                {t('home.title')}
-              </Typography>
-            </HomeBand>
-
-            <HomeBand wide sx={{ mt: `${theme.sizing.space8}px` }}>
+            <StepperBand screenSize={screenSize}>
               <FlowStepper steps={flowSteps} screenSize={screenSize} />
-            </HomeBand>
-
-            <HomeBand sx={{ mt: `${theme.sizing.space8}px` }}>
-              <Typography
-                variant="smallTitle"
-                sx={{
-                  color: 'designSystem.surface.atlanticNavy',
-                  textAlign: 'center',
-                  whiteSpace: 'pre-line',
-                }}
+              <MyActivityButton
+                disableElevation
+                onClick={() => navigate('/past-activities')}
               >
-                {t('home.subtitle')}
-              </Typography>
-            </HomeBand>
+                {t('dashboard.myActivity')}
+              </MyActivityButton>
+            </StepperBand>
 
-            <PickerRow
-              screenSize={screenSize}
-              sx={{ mt: `${theme.sizing.space11}px` }}
-            >
-              <PickerColumn screenSize={screenSize} basis={357}>
-                <PickerLabel screenSize={screenSize}>
-                  {t(hasClasses ? 'home.classPrompt' : 'home.noClassesTitle')}
-                </PickerLabel>
-                {hasClasses && (
-                  <ChipWrap>
-                    {inlineClasses.map((classroom) => (
-                      <ClassChip
-                        key={classroom.id}
-                        isActive={classroom.id === selectedClassId}
-                        aria-pressed={classroom.id === selectedClassId}
-                        onClick={() => selectClass(classroom.id)}
-                      >
-                        {classroom.name}
-                      </ClassChip>
-                    ))}
-                    {overflowClasses.length > 0 && (
-                      <ClassChip
-                        isActive={false}
-                        isMore
-                        endIcon={<KeyboardArrowDownIcon />}
-                        aria-haspopup="menu"
-                        onClick={(event) => setMoreAnchor(event.currentTarget)}
-                      >
-                        {t('home.moreClasses')}
-                      </ClassChip>
-                    )}
-                    <Menu
-                      anchorEl={moreAnchor}
-                      open={!!moreAnchor}
-                      onClose={() => setMoreAnchor(null)}
+            <DashboardCard screenSize={screenSize}>
+              <DashboardHeading>
+                <Typography
+                  variant="h1"
+                  sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                >
+                  {t(hasUploads === true ? 'dashboard.titleReturning' : 'dashboard.title')}
+                </Typography>
+
+                <Typography
+                  variant="smallTitle"
+                  sx={{
+                    color: 'designSystem.surface.atlanticNavy',
+                    whiteSpace: 'pre-line',
+                  }}
+                >
+                  {t('dashboard.subtitle')}
+                </Typography>
+              </DashboardHeading>
+
+              <DashboardForm>
+                <PickerRow screenSize={screenSize}>
+                  <PickerColumn screenSize={screenSize}>
+                    <PickerLabel screenSize={screenSize}>
+                      {t(
+                        classesKnown && !classesFailed && !hasClasses
+                          ? 'dashboard.noClassesTitle'
+                          : 'dashboard.classPrompt',
+                      )}
+                    </PickerLabel>
+                    <LoadingSlot
+                      isLoading={!classesKnown}
+                      minHeight={CHIP_ROW_HEIGHT}
+                      label={t('dashboard.loadingClasses')}
                     >
-                      {overflowClasses.map((classroom) => (
-                        <MenuItem
-                          key={classroom.id}
-                          onClick={() => {
-                            selectClass(classroom.id);
-                            setMoreAnchor(null);
-                          }}
+                      {classesFailed && (
+                        <PickerNote
+                          role="alert"
+                          sx={{ color: 'designSystem.status.errorStroke' }}
                         >
-                          {classroom.name}
+                          {t('dashboard.classesError')}
+                        </PickerNote>
+                      )}
+                      {!classesFailed && hasClasses && (
+                        <ChipWrap>
+                          {inlineClasses.map((classroom) => (
+                            <ClassChip
+                              key={classroom.id}
+                              isActive={classroom.id === selectedClassId}
+                              aria-pressed={classroom.id === selectedClassId}
+                              onClick={() => selectClass(classroom.id)}
+                            >
+                              {classroom.name}
+                            </ClassChip>
+                          ))}
+                          {overflowClasses.length > 0 && (
+                            <ClassChip
+                              isActive={false}
+                              isMore
+                              endIcon={<KeyboardArrowDownIcon />}
+                              aria-haspopup="menu"
+                              onClick={(event) => setMoreAnchor(event.currentTarget)}
+                            >
+                              {t('dashboard.moreClasses')}
+                            </ClassChip>
+                          )}
+                          <Menu
+                            anchorEl={moreAnchor}
+                            open={!!moreAnchor}
+                            onClose={() => setMoreAnchor(null)}
+                          >
+                            {overflowClasses.map((classroom) => (
+                              <MenuItem
+                                key={classroom.id}
+                                onClick={() => {
+                                  selectClass(classroom.id);
+                                  setMoreAnchor(null);
+                                }}
+                              >
+                                {classroom.name}
+                              </MenuItem>
+                            ))}
+                          </Menu>
+                        </ChipWrap>
+                      )}
+                      {/* Classes are added in Account Settings now (design note,
+                          v2 Dashboard1), so the empty state points there. */}
+                      {!classesFailed && !hasClasses && (
+                        <PickerNote
+                          sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                        >
+                          {t('dashboard.noClassesHint')}{' '}
+                          <Link component={RouterLink} to="/profile">
+                            {t('dashboard.accountSettingsLink')}
+                          </Link>
+                        </PickerNote>
+                      )}
+                    </LoadingSlot>
+                  </PickerColumn>
+
+                  <PickerColumn screenSize={screenSize} grow>
+                    <PickerLabel screenSize={screenSize}>
+                      {t('dashboard.weekLabel')}
+                    </PickerLabel>
+                    <WeekSelect
+                      value={weekStart}
+                      onChange={(event) => setWeekStart(event.target.value)}
+                      inputProps={{ 'aria-label': t('dashboard.weekLabel') }}
+                    >
+                      {schoolWeeks().map((week) => (
+                        <MenuItem key={week} value={week}>
+                          {formatSchoolWeek(week, t, i18n.language)}
                         </MenuItem>
                       ))}
-                    </Menu>
-                  </ChipWrap>
-                )}
-                {!hasClasses && canAddClass && (
-                  <Stack spacing={`${theme.sizing.space2}px`}>
-                    <SignUpField
-                      placeholder={t('home.addClassPlaceholder')}
-                      inputProps={{ 'aria-label': t('home.addClassPlaceholder') }}
-                      value={newClassName}
-                      isError={addError}
-                      onChange={(event) => setNewClassName(event.target.value)}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter') handleAddClass();
-                      }}
-                    />
-                    {addError && (
-                      <Typography
-                        variant="rubikBody"
-                        sx={{ color: 'designSystem.status.errorStroke' }}
-                      >
-                        {t('home.addClassError')}
-                      </Typography>
-                    )}
-                    <AddClassChip
-                      disableElevation
-                      disabled={!newClassName.trim() || isAdding}
-                      startIcon={<AddIcon sx={{ fontSize: 16 }} />}
-                      onClick={handleAddClass}
-                    >
-                      {t('home.addClass')}
-                    </AddClassChip>
-                  </Stack>
-                )}
-              </PickerColumn>
+                    </WeekSelect>
+                  </PickerColumn>
+                </PickerRow>
 
-              {sessionList.length > 0 && (
-                <PickerColumn screenSize={screenSize} basis={403}>
-                  <PickerLabel screenSize={screenSize}>
-                    {t('home.weekLabel')}
-                  </PickerLabel>
-                  <WeekSelect
-                    value={selectedSession?.id ?? ''}
-                    onChange={(event) => sessions.selectSession(event.target.value)}
-                    inputProps={{ 'aria-label': t('home.weekLabel') }}
+                {showCta && (
+                  <DashboardCta
+                    onClick={handleCta}
+                    disabled={isCtaLoading}
+                    aria-busy={isCtaLoading}
                   >
-                    {sessionList.map((session) => (
-                      <MenuItem key={session.id} value={session.id}>
-                        {weekLabel(session)}
-                      </MenuItem>
-                    ))}
-                  </WeekSelect>
-                </PickerColumn>
-              )}
-            </PickerRow>
-
-            {hasClasses && (
-              <HomeCta
-                onClick={() => navigate(cta.path)}
-                sx={{ mt: `${theme.sizing.space12}px` }}
-              >
-                {t(cta.labelKey)}
-              </HomeCta>
-            )}
+                    {isCtaLoading ? (
+                      <CircularProgress
+                        size={24}
+                        color="inherit"
+                        aria-label={t('dashboard.loadingNextStep')}
+                      />
+                    ) : (
+                      t(cta.labelKey)
+                    )}
+                  </DashboardCta>
+                )}
+              </DashboardForm>
+            </DashboardCard>
           </>
         )}
-      </HomeContent>
-    </HomeLayout>
+      </SidebarContent>
+    </SidebarLayout>
   );
 }

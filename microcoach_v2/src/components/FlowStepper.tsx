@@ -1,74 +1,53 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTheme } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 import { IFlowStep } from '../lib/PipelineModels';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import {
   StepperRow,
   StepItem,
   StepButton,
-  StepCircle,
-  StepConnector,
-  stepColor,
-} from '../lib/styledcomponents/HomeStyledComponents';
+  StepSeparator,
+} from '../lib/styledcomponents/DashboardStyledComponents';
 
 interface FlowStepperProps {
   steps: IFlowStep[];
   screenSize: ScreenSize;
 }
 
-// Completed steps are dark blue, the current step accent blue, upcoming grey.
+// A breadcrumb: every step reads the same, the current one is underlined.
 // Completed steps link back to their page, and so does Assess in any state
 // (flowProgress decides via isClickable); otherwise the main button below
 // already leads to the current step.
 export default function FlowStepper({ steps, screenSize }: FlowStepperProps) {
-  const theme = useTheme();
   const navigate = useNavigate();
 
   return (
     <StepperRow screenSize={screenSize}>
       {steps.map((step, index) => {
-        const content = (
-          <>
-            <StepCircle stepState={step.state}>
-              <Typography variant="stepNumber" component="span">
-                {step.order}
-              </Typography>
-            </StepCircle>
-            <Typography
-              className="step-label"
-              variant="stepLabel"
-              sx={{
-                color: stepColor(theme, step.state),
-                textAlign: 'center',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {step.label}
-            </Typography>
-          </>
-        );
+        const label = <span className="step-label">{step.label}</span>;
         const { path } = step;
+        const ariaCurrent = step.state === 'CURRENT' ? 'step' : undefined;
 
         return (
           <React.Fragment key={step.order}>
-            {index > 0 && <StepConnector screenSize={screenSize} />}
+            {index > 0 && <StepSeparator aria-hidden>&gt;</StepSeparator>}
             {step.isClickable && path ? (
               <StepButton
                 screenSize={screenSize}
+                stepState={step.state}
                 onClick={() => navigate(path)}
                 aria-label={`${step.label} (${step.state === 'COMPLETE' ? 'completed' : 'current'})`}
-                aria-current={step.state === 'CURRENT' ? 'step' : undefined}
+                aria-current={ariaCurrent}
               >
-                {content}
+                {label}
               </StepButton>
             ) : (
               <StepItem
                 screenSize={screenSize}
-                aria-current={step.state === 'CURRENT' ? 'step' : undefined}
+                stepState={step.state}
+                aria-current={ariaCurrent}
               >
-                {content}
+                {label}
               </StepItem>
             )}
           </React.Fragment>

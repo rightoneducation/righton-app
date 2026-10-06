@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import {
   IUploadState,
@@ -8,7 +8,7 @@ import {
   UploadStepProps,
   initialUploadState,
 } from '../lib/UploadModels';
-import { recentWeeks } from '../lib/weeks';
+import { currentSchoolWeek, schoolWeeks } from '../lib/weeks';
 import UploadRtd from '../pages/UploadRtd';
 import UploadRtdReview from '../pages/UploadRtdReview';
 
@@ -29,10 +29,20 @@ interface UploadFlowProps {
 }
 
 export default function UploadFlow({ screenSize }: UploadFlowProps) {
-  const [upload, setUpload] = useState<IUploadState>(() => ({
-    ...initialUploadState,
-    weekStart: recentWeeks(1)[0],
-  }));
+  // The dashboard passes the week the teacher picked there; the class needs no hand-off,
+  // as both screens read the shared selected classroom.
+  const location = useLocation();
+  const [upload, setUpload] = useState<IUploadState>(() => {
+    const passedWeek = (location.state as { weekStart?: string } | null)
+      ?.weekStart;
+    return {
+      ...initialUploadState,
+      weekStart:
+        passedWeek && schoolWeeks().includes(passedWeek)
+          ? passedWeek
+          : currentSchoolWeek(),
+    };
+  });
   const step = useParams()['*'] ?? '';
 
   const actions: IUploadActions = {

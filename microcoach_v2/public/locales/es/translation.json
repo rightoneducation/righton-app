@@ -5,7 +5,8 @@
     "signup": "Registrarse",
     "login": "Iniciar sesión",
     "classSwitcher": "Seleccione una clase",
-    "noClasses": "Aún no hay clases"
+    "noClasses": "Aún no hay clases",
+    "accountMenu": "Menú de la cuenta"
   },
   "common": {
     "needHelp": "¿Necesita ayuda?"
@@ -112,22 +113,31 @@
       "label": "Paso 3",
       "title": "Planifique su siguiente paso",
       "body": "Para cada concepto erróneo, MicroCoach sugiere próximos pasos específicos. Elija lo que mejor se adapte a su clase y vuelva a enseñar"
+    },
+    "step4": {
+      "label": "Paso 4",
+      "title": "Reevalúa",
+      "body": "Después de enseñar la actividad, sube el segundo Mix It Up para que MicroCoach vea cómo respondieron tus estudiantes."
+    },
+    "step5": {
+      "label": "Paso 5",
+      "title": "Reflexiona sobre lo que cambió",
+      "body": "Compara el antes y el después para ver qué estudiantes avanzaron y quiénes aún necesitan apoyo."
     }
   },
   "footer": {
     "copyright": "Copyright © 2026 RightOn Education. Todos los derechos reservados.",
     "privacypolicy": "Política de Privacidad"
   },
-  "home": {
-    "banner": "Los resultados de tu clase están listos: revisa los patrones de conceptos erróneos y las actividades recomendadas",
-    "dismissBanner": "Descartar",
-    "title": "Bienvenido de nuevo a MicroCoach",
-    "subtitle": "Revisa los patrones de conceptos erróneos en el pensamiento de tus estudiantes\npara identificar oportunidades de fortalecer la comprensión.",
+  "dashboard": {
+    "title": "Bienvenido a MicroCoach",
+    "titleReturning": "Bienvenido de nuevo a MicroCoach",
+    "subtitle": "Sube tus archivos MIU del lunes para comprender mejor\nel pensamiento de tus estudiantes y recibir los próximos pasos recomendados.",
     "classPrompt": "¿Con qué clase trabajas hoy?",
     "moreClasses": "Más",
     "weekLabel": "Semana",
     "cta": {
-      "ASSESS": "Subir resultados de los estudiantes",
+      "ASSESS": "Sube los archivos MIU del lunes para analizar",
       "UNDERSTAND": "Revisar patrones de conceptos erróneos",
       "REASSESS": "Subir resultados de la reevaluación",
       "REFLECT": "Reflexionar sobre el impacto"
@@ -135,20 +145,60 @@
     "steps": {
       "ASSESS": "Evaluar",
       "UNDERSTAND": "Comprender",
-      "CHOOSE": "Elegir actividad",
+      "CHOOSE": "Seleccionar actividad",
       "REASSESS": "Reevaluar",
-      "REFLECT": "Reflexionar sobre el impacto"
+      "REFLECT": "Reflexionar"
     },
-    "noClassesTitle": "Agrega tu primera clase para comenzar",
-    "addClassPlaceholder": "Nombre de la clase",
-    "addClass": "Agregar clase",
-    "addClassError": "No se pudo guardar la clase. Inténtalo de nuevo.",
+    "noClassesTitle": "Agrega tus clases para comenzar",
     "sidebar": {
-      "home": "Inicio",
+      "dashboard": "Inicio",
       "thisWeek": "Esta semana",
-      "pastInsights": "Información anterior"
+      "pastActivities": "Actividades anteriores"
     },
-    "weekNumber": "Semana {{number}}"
+    "myActivity": "Mi actividad",
+    "noClassesHint": "Las clases se agregan en Configuración de la cuenta.",
+    "accountSettingsLink": "Ir a Configuración de la cuenta",
+    "weekOption": "Semana {{number}} ({{range}})",
+    "classesError": "No pudimos cargar tus clases. Actualiza la página para intentarlo de nuevo.",
+    "loadingClasses": "Cargando tus clases",
+    "loadingNextStep": "Cargando tu próximo paso"
+  },
+  "thisWeek": {
+    "title": "Progreso semanal de actividades",
+    "weekHeading": "Semana {{number}}: {{range}}",
+    "students": "{{count}} estudiantes",
+    "waiting": "Esperando a MicroCoach...",
+    "status": {
+      "ASSESS": "Sube tus archivos MIU del lunes para comenzar",
+      "AWAITING": "Analizando tus archivos MIU, los resultados llegarán pronto",
+      "UNDERSTAND": "Comprende los conceptos erróneos antes de elegir una actividad",
+      "CHOOSE": "Selecciona tu próxima actividad",
+      "REASSESS": "Compara tus resultados MIU para comprender el crecimiento de la clase",
+      "REFLECT": "Reflexiona sobre cómo ha crecido tu clase",
+      "DONE": "La actividad de esta semana está completa"
+    },
+    "action": {
+      "ASSESS": "Subir archivos MIU",
+      "UNDERSTAND": "Revisar conceptos erróneos",
+      "CHOOSE": "Ver actividades",
+      "REASSESS": "Resultados de reevaluación",
+      "REFLECT": "Reflexionar",
+      "DONE": "Ver datos"
+    },
+    "empty": "Aún no hay clases. Agrega tus clases en Configuración de la cuenta."
+  },
+  "pastActivities": {
+    "title": "Actividades anteriores",
+    "weekHeading": "Semana {{number}}: {{range}}",
+    "students": "{{count}} estudiantes",
+    "completed": "Completado el {{date}}",
+    "reviewResults": "Revisar resultados de la clase",
+    "viewData": "Ver datos",
+    "sort": "Ordenar",
+    "sortLabel": "Ordenar actividades",
+    "sortClass": "Por clase",
+    "empty": "Aún no hay actividades completadas.",
+    "untitled": "Actividad"
   },
   "signup": {
     "welcome": "Bienvenido a MicroCoach",
@@ -180,7 +230,7 @@
     "removeClass": "Quitar clase",
     "selectTitle": "Seleccione su nombre y su clase para comenzar",
     "more": "Más",
-    "upload": "Suba archivos PPQ para analizar",
+    "upload": "Suba archivos MIU para analizar",
     "showPassword": "Mostrar contraseña",
     "hidePassword": "Ocultar contraseña",
     "codeError": "Ese código no es correcto. Revise su correo e inténtelo de nuevo.",
@@ -246,11 +296,10 @@
     "reviewTitle": "Revisar y enviar",
     "reviewBody": "Confirme que subió los archivos correctos de Ejemplar y Respuestas RTD para la clase y la semana previstas. Una vez enviados, MicroCoach comenzará a analizarlos.",
     "uploaded": "SUBIDOS",
-    "ppqExemplar": "Ejemplar PPQ",
-    "ppqResponses": "Respuestas PPQ",
+    "ppqExemplar": "Ejemplar MIU",
+    "ppqResponses": "Respuestas MIU",
     "backToUpload": "Volver a subir",
     "submit": "Enviar archivos para análisis",
-    "weekOf": "Semana del {{date}}",
     "noClass": "Ninguna clase seleccionada",
     "addClassHint": "Agrega una clase en el panel para comenzar a subir archivos."
   },
@@ -260,5 +309,14 @@
     "mastery": "Mejora del dominio de la clase",
     "improved": "estudiantes mejoraron",
     "viewDetails": "Ver detalles"
+  },
+  "activityList": {
+    "loading": "Cargando la actividad de tus clases",
+    "loadError": "No pudimos cargar la actividad de tus clases. Actualiza la página para intentarlo de nuevo.",
+    "removeTitle": "¿Eliminar esta sesión?",
+    "removeBody": "Esto elimina la sesión de {{className}} y sus resultados. No se puede deshacer.",
+    "removeError": "No se pudo eliminar la sesión. Inténtalo de nuevo.",
+    "remove": "Eliminar",
+    "cancel": "Cancelar"
   }
 }

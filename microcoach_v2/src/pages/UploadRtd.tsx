@@ -16,7 +16,7 @@ import {
   UserStatusType,
 } from '../lib/MicroCoachModels';
 import { UploadStepProps } from '../lib/UploadModels';
-import { formatWeekLabel, recentWeeks } from '../lib/weeks';
+import { formatSchoolWeek, schoolWeeks } from '../lib/weeks';
 import { PromptIconTile } from '../lib/styledcomponents/ActivityDetailStyledComponents';
 import { SignUpCta } from '../lib/styledcomponents/SignUpStyledComponents';
 import {
@@ -82,7 +82,7 @@ export default function UploadRtd({
     classList.find((classroom) => classroom.id === selectedClassroomId)?.name ??
     '';
   const hasClass = !!className;
-  const weekOptions = recentWeeks();
+  const weekOptions = schoolWeeks();
 
   const slots = [
     {
@@ -168,7 +168,7 @@ export default function UploadRtd({
             >
               {weekOptions.map((week) => (
                 <MenuItem key={week} value={week}>
-                  {formatWeekLabel(week, t, i18n.language)}
+                  {formatSchoolWeek(week, t, i18n.language)}
                 </MenuItem>
               ))}
             </SetupSelect>

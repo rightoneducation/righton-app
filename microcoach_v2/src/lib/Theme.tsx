@@ -23,6 +23,19 @@ const designSystemColors = {
     fadedWhiteVeil: '#FFFFFF2E',
     // black at 50% — the modal backdrop.
     scrim: '#00000080',
+    // The sidebar screens' page (Dashboard, This Week, Past Activities). 5 off
+    // offWhite at its widest channel, but cool where offWhite is warm — the
+    // redesign's whole move away from cream — so it stays its own value.
+    coolWhite: '#FAFDFE',
+    // The sidebar. Earlier frames drew accentBlue at 80% over cream; the
+    // redesign flattens that composite into one solid.
+    sidebarBlue: '#6D8BB7',
+    // lightBlue at 20% — the active sidebar tab.
+    sidebarActive: '#CADDE833',
+    // The tiled background band behind the sidebar screens, drawn at 30%.
+    // 18 and 15 off accentBlue and periwinkle, so neither reuses them.
+    patternBlue: '#3878AC',
+    patternMist: '#B4D2E1',
   },
   foreground: {
     base: '#FFFFFF',
@@ -305,17 +318,13 @@ const designSystemTypography = {
     lineHeight: 'normal',
     letterSpacing: '-0.02em',
   },
+  // The dashboard's breadcrumb stepper (Dashboard1).
   stepLabel: {
     fontFamily: rubik,
-    fontWeight: 500,
-    fontSize: '20px',
+    fontWeight: 700,
+    fontSize: '18px',
     lineHeight: 'normal',
-  },
-  stepNumber: {
-    fontFamily: rubik,
-    fontWeight: 500,
-    fontSize: '26px',
-    lineHeight: 'normal',
+    letterSpacing: '-0.02em',
   },
   formLabel: {
     fontFamily: rubik,
@@ -474,11 +483,16 @@ const sizing = {
   // Review and submit runs narrower than the rest of the flow: Figma insets it
   // to x 502..1418, so the column is the card.
   reviewContentMaxWidth: 916,
-  // Home is its own column: Figma splits 858 into 357 chips + 98 + 403 select.
-  // The stepper and banner deliberately break out of that column.
-  homeContentMaxWidth: 858,
-  stepperMaxWidth: 1050,
-  bannerMaxWidth: 770,
+  // The dashboard is its own column: Figma splits 858 into 357 chips + 98 + 403 select.
+  // The stepper row and the card around it break out of that column: Figma
+  // (dashboard/v2 Dashboard1) runs both across x 383..1589.
+  dashboardContentMaxWidth: 858,
+  stepperMaxWidth: 1206,
+  // The white card holding title, pickers and CTA (v2 Dashboard1: 1206 wide).
+  dashboardCardMaxWidth: 1206,
+  // This Week and Past Activities: the card list, side tile included
+  // (v2 Dashboard2/3: 1172 card + 16 + 44 tile).
+  activityListMaxWidth: 1232,
   // Figma corner radii, shared by the step panel, step cards and video card.
   sectionRadius: 32,
   heroImageRadius: 37,
@@ -538,7 +552,6 @@ declare module '@mui/material/styles' {
     buttonLabelSm: CSSProperties;
     buttonLabelSmLight: CSSProperties;
     stepLabel: CSSProperties;
-    stepNumber: CSSProperties;
     formLabel: CSSProperties;
     ctaLabel: CSSProperties;
     planSubheading: CSSProperties;
@@ -585,7 +598,6 @@ declare module '@mui/material/styles' {
     buttonLabelSm?: CSSProperties;
     buttonLabelSmLight?: CSSProperties;
     stepLabel?: CSSProperties;
-    stepNumber?: CSSProperties;
     formLabel?: CSSProperties;
     ctaLabel?: CSSProperties;
     planSubheading?: CSSProperties;
@@ -633,7 +645,6 @@ declare module '@mui/material/Typography' {
     buttonLabelSm: true;
     buttonLabelSmLight: true;
     stepLabel: true;
-    stepNumber: true;
     formLabel: true;
     ctaLabel: true;
     planSubheading: true;
@@ -716,7 +727,6 @@ const Theme = createTheme({
           buttonLabelSm: 'p',
           buttonLabelSmLight: 'p',
           stepLabel: 'p',
-          stepNumber: 'p',
           formLabel: 'p',
           ctaLabel: 'p',
           planSubheading: 'p',
@@ -766,7 +776,6 @@ const Theme = createTheme({
     buttonLabelSm: { ...designSystemTypography.buttonLabelSm },
     buttonLabelSmLight: { ...designSystemTypography.buttonLabelSmLight },
     stepLabel: { ...designSystemTypography.stepLabel },
-    stepNumber: { ...designSystemTypography.stepNumber },
     formLabel: { ...designSystemTypography.formLabel },
     ctaLabel: { ...designSystemTypography.ctaLabel },
     planSubheading: { ...designSystemTypography.planSubheading },
