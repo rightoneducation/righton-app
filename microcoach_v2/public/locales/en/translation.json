@@ -158,22 +158,24 @@
     "weekHeading": "Week {{number}}: {{range}}",
     "students": "{{count}} students",
     "waiting": "Waiting on MicroCoach...",
-    "remove": "Remove",
     "status": {
       "ASSESS": "Upload your Monday MIU files to get started",
       "AWAITING": "Analyzing your MIU files, results coming soon",
       "UNDERSTAND": "Understand misconceptions before choosing an activity",
       "CHOOSE": "Select your next activity",
       "REASSESS": "Compare your MIU results to understand class growth",
-      "REFLECT": "Reflect on how your class has grown"
+      "REFLECT": "Reflect on how your class has grown",
+      "DONE": "This week's activity is complete"
     },
     "action": {
       "ASSESS": "Upload MIU files",
       "UNDERSTAND": "Review misconceptions",
       "CHOOSE": "View activities",
       "REASSESS": "Reassess results",
-      "REFLECT": "Reflect"
-    }
+      "REFLECT": "Reflect",
+      "DONE": "View data"
+    },
+    "empty": "No classes yet. Add your classes in Account Settings."
   },
   "pastActivities": {
     "title": "Past Activities",
@@ -182,10 +184,11 @@
     "completed": "Completed {{date}}",
     "reviewResults": "Review class results",
     "viewData": "View data",
-    "remove": "Remove",
     "sort": "Sort",
     "sortLabel": "Sort activities",
-    "sortClass": "By class"
+    "sortClass": "By class",
+    "empty": "No completed activities yet.",
+    "untitled": "Activity"
   },
   "signup": {
     "welcome": "Welcome to MicroCoach",
@@ -296,5 +299,14 @@
     "mastery": "Class mastery improvement",
     "improved": "students showed improvement",
     "viewDetails": "View details"
+  },
+  "activityList": {
+    "loading": "Loading your classes' activity",
+    "loadError": "We couldn't load your classes' activity. Refresh the page to try again.",
+    "removeTitle": "Remove this session?",
+    "removeBody": "This deletes {{className}}'s session and its results. This can't be undone.",
+    "removeError": "That session couldn't be removed. Please try again.",
+    "remove": "Remove",
+    "cancel": "Cancel"
   }
 }

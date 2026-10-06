@@ -1,27 +1,31 @@
 import { FlowStep } from './flowProgress';
 import { weekOf } from './weeks';
 
-// The rows behind This Week and Past Activities. Mocked for now
-// (lib/mocks/mockClassActivity.ts): both screens span every class, and the only
-// fetch today (useSessions) is per class.
+// The rows behind This Week and Past Activities, assembled across every class
+// by hooks/useClassActivity.ts.
 
 /** One class's place in this week's loop (dashboard/v2 Dashboard2). */
 export interface IWeeklyClassProgress {
-  id: string;
+  classId: string;
+  // This week's session, or null when the class has not uploaded yet.
+  sessionId: string | null;
   className: string;
   studentCount: number;
-  step: Exclude<FlowStep, FlowStep.DONE>;
+  step: FlowStep;
   // Files are in but the pipeline has not reported back yet.
   isAwaitingResults: boolean;
 }
 
-/** One completed class-week activity (v2 Dashboard3). */
+/** One completed session (v2 Dashboard3). */
 export interface IPastActivity {
+  // The session's id.
   id: string;
+  classId: string;
   className: string;
   studentCount: number;
-  activityName: string;
-  // YYYY-MM-DD.
+  // The saved plan's first activity; null when it has none or the lookup failed.
+  activityName: string | null;
+  // The session's updatedAt: nothing records completion itself.
   completedAt: string;
 }
 

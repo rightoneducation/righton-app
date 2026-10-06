@@ -176,10 +176,24 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       );
       break;
     case ScreenType.THIS_WEEK:
-      screenComponent = <ThisWeek screenSize={screenSize} />;
+      screenComponent = (
+        <ThisWeek
+          apiClients={apiClients}
+          screenSize={screenSize}
+          classrooms={classrooms}
+          sessions={sessions}
+        />
+      );
       break;
     case ScreenType.PAST_ACTIVITIES:
-      screenComponent = <PastActivities screenSize={screenSize} />;
+      screenComponent = (
+        <PastActivities
+          apiClients={apiClients}
+          screenSize={screenSize}
+          classrooms={classrooms}
+          sessions={sessions}
+        />
+      );
       break;
     case ScreenType.REVIEW:
       screenComponent = <Review screenSize={screenSize} sessions={sessions} />;

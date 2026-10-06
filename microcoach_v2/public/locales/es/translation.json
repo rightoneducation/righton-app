@@ -158,22 +158,24 @@
     "weekHeading": "Semana {{number}}: {{range}}",
     "students": "{{count}} estudiantes",
     "waiting": "Esperando a MicroCoach...",
-    "remove": "Eliminar",
     "status": {
       "ASSESS": "Sube tus archivos MIU del lunes para comenzar",
       "AWAITING": "Analizando tus archivos MIU, los resultados llegarán pronto",
       "UNDERSTAND": "Comprende los conceptos erróneos antes de elegir una actividad",
       "CHOOSE": "Selecciona tu próxima actividad",
       "REASSESS": "Compara tus resultados MIU para comprender el crecimiento de la clase",
-      "REFLECT": "Reflexiona sobre cómo ha crecido tu clase"
+      "REFLECT": "Reflexiona sobre cómo ha crecido tu clase",
+      "DONE": "La actividad de esta semana está completa"
     },
     "action": {
       "ASSESS": "Subir archivos MIU",
       "UNDERSTAND": "Revisar conceptos erróneos",
       "CHOOSE": "Ver actividades",
       "REASSESS": "Resultados de reevaluación",
-      "REFLECT": "Reflexionar"
-    }
+      "REFLECT": "Reflexionar",
+      "DONE": "Ver datos"
+    },
+    "empty": "Aún no hay clases. Agrega tus clases en Configuración de la cuenta."
   },
   "pastActivities": {
     "title": "Actividades anteriores",
@@ -182,10 +184,11 @@
     "completed": "Completado el {{date}}",
     "reviewResults": "Revisar resultados de la clase",
     "viewData": "Ver datos",
-    "remove": "Eliminar",
     "sort": "Ordenar",
     "sortLabel": "Ordenar actividades",
-    "sortClass": "Por clase"
+    "sortClass": "Por clase",
+    "empty": "Aún no hay actividades completadas.",
+    "untitled": "Actividad"
   },
   "signup": {
     "welcome": "Bienvenido a MicroCoach",
@@ -296,5 +299,14 @@
     "mastery": "Mejora del dominio de la clase",
     "improved": "estudiantes mejoraron",
     "viewDetails": "Ver detalles"
+  },
+  "activityList": {
+    "loading": "Cargando la actividad de tus clases",
+    "loadError": "No pudimos cargar la actividad de tus clases. Actualiza la página para intentarlo de nuevo.",
+    "removeTitle": "¿Eliminar esta sesión?",
+    "removeBody": "Esto elimina la sesión de {{className}} y sus resultados. No se puede deshacer.",
+    "removeError": "No se pudo eliminar la sesión. Inténtalo de nuevo.",
+    "remove": "Eliminar",
+    "cancel": "Cancelar"
   }
 }

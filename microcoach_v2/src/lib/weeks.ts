@@ -90,14 +90,23 @@ export function formatSchoolWeek(
   });
 }
 
-/** The Monday key of the week `isoDate` (YYYY-MM-DD…) falls in. */
-export function weekOf(isoDate: string): string {
-  return toKey(startOfWeek(fromKey(isoDate.slice(0, 10))));
+/**
+ * A local Date for a `YYYY-MM-DD` day or a full ISO timestamp. A bare day is
+ * built from parts (see the note at the top); a timestamp carries its own
+ * zone, so `new Date` reads it correctly and lands on the local day.
+ */
+function toLocalDate(value: string): Date {
+  return value.length > 10 ? new Date(value) : fromKey(value);
 }
 
-/** "Oct 22" for a `YYYY-MM-DD` day, read in local time like the weeks above. */
-export function formatShortDate(isoDate: string, language: string): string {
-  return fromKey(isoDate.slice(0, 10)).toLocaleDateString(language, {
+/** The Monday key of the week `value` (a day or a timestamp) falls in. */
+export function weekOf(value: string): string {
+  return toKey(startOfWeek(toLocalDate(value)));
+}
+
+/** "Oct 22" for a day or a timestamp, in local time. */
+export function formatShortDate(value: string, language: string): string {
+  return toLocalDate(value).toLocaleDateString(language, {
     month: 'short',
     day: 'numeric',
   });
