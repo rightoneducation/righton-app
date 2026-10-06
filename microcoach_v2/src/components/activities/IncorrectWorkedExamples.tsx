@@ -1,9 +1,9 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
+import MathTypography from '../MathTypography';
 import { IWorkedExamplesContent } from '../../lib/PipelineModels';
 import formatStepAnnotation from '../../lib/activityMarks';
 import {
@@ -28,18 +28,16 @@ export default function IncorrectWorkedExamples({
     <Stack spacing={`${theme.sizing.space5}px`}>
       {content.examples.map((example) => (
         <ContentPanel key={example.label}>
-          <Typography
+          <MathTypography
             variant="headingMdBold"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {example.label}
-          </Typography>
-          <Typography
+            text={example.label}
+          />
+          <MathTypography
             variant="rubikSubBold"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {example.prompt}
-          </Typography>
+            text={example.prompt}
+          />
 
           <Stack spacing={`${theme.sizing.space1}px`}>
             {example.steps.map((step) => {
@@ -61,12 +59,12 @@ export default function IncorrectWorkedExamples({
                     {t('activityDetail.stepNumber', { number: step.step })}
                   </StepChip>
                   <Box sx={{ flex: 1, minWidth: 0 }}>
-                    <Typography
+                    <MathTypography
                       variant="smallBodyText"
                       sx={{ color: 'designSystem.surface.atlanticNavy' }}
-                    >
-                      {annotation ? `${step.text} ${annotation}` : step.text}
-                    </Typography>
+                      text={step.text}
+                      suffix={annotation}
+                    />
                   </Box>
                 </StepRow>
               );
@@ -74,15 +72,14 @@ export default function IncorrectWorkedExamples({
           </Stack>
 
           {isTeacherView && (
-            <Typography
+            <MathTypography
               variant="outcomeLabel"
               sx={{
                 textTransform: 'uppercase',
                 color: 'designSystem.surface.atlanticNavy',
               }}
-            >
-              {`${example.finalOutcomeLabel} ${example.finalOutcome}`}
-            </Typography>
+              text={`${example.finalOutcomeLabel} ${example.finalOutcome}`}
+            />
           )}
         </ContentPanel>
       ))}

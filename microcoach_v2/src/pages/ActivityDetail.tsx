@@ -11,7 +11,7 @@ import PhaseTabBar, { PhaseId, PHASES } from '../components/PhaseTabBar';
 import ActivityPhase from '../components/phases/ActivityPhase';
 import BeforeClassPhase from '../components/phases/BeforeClassPhase';
 import StepListPhase from '../components/phases/StepListPhase';
-import { ScreenSize } from '../lib/MicroCoachModels';
+import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import { IMicroCoachActivity } from '../api/Models/IMicroCoachActivity';
 import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
 import { ContextBanner } from '../lib/styledcomponents/ChooseActivityStyledComponents';
@@ -239,7 +239,7 @@ function ActivityDetailView({
 export default function ActivityDetail({ screenSize }: ScreenSizeProps) {
   const { activityId } = useParams();
   const { misconceptions, misconceptionsStatus } = useMicroCoachDataState();
-  const dataReady = misconceptionsStatus === 'ready';
+  const dataReady = misconceptionsStatus === MicroCoachDataStatus.READY;
   const isReady = useAllReady(useI18nReady(), dataReady);
 
   if (!isReady) return null;

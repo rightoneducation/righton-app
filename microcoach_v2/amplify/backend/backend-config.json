@@ -46,6 +46,15 @@
           "category": "function",
           "resourceName": "microcoachv2bb9ce5a2PostAuthentication",
           "triggerProvider": "Cognito"
+        },
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "microcoachv2bb9ce5a2PreSignup",
+          "triggerProvider": "Cognito"
         }
       ],
       "frontendAuthConfig": {
@@ -135,6 +144,11 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "microcoachv2ScoresCalc": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "microcoachv2TeacherUpload": {
       "build": true,
       "dependsOn": [
@@ -155,6 +169,11 @@
       "service": "Lambda"
     },
     "microcoachv2bb9ce5a2PostAuthentication": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachv2bb9ce5a2PreSignup": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -305,6 +324,22 @@
         }
       ]
     },
+    "AMPLIFY_function_microcoachv2ScoresCalc_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2ScoresCalc"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2ScoresCalc_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2ScoresCalc"
+        }
+      ]
+    },
     "AMPLIFY_function_microcoachv2TeacherUploadGen_deploymentBucketName": {
       "usedBy": [
         {
@@ -350,6 +385,22 @@
         {
           "category": "function",
           "resourceName": "microcoachv2bb9ce5a2PostAuthentication"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2bb9ce5a2PreSignup_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2bb9ce5a2PreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2bb9ce5a2PreSignup_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2bb9ce5a2PreSignup"
         }
       ]
     }

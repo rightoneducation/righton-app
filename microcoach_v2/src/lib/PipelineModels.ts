@@ -83,7 +83,8 @@ export type ActivityType =
   | 'FAVORITE_NO'
   | 'COMPARE_THE_THINKING'
   | 'MULTIPLE_REPRESENTATIONS'
-  | 'MATH_HOSPITAL';
+  | 'MATH_DETECTIVE'
+  | 'MAKE_YOUR_CASE';
 
 export type WorkStatus = 'CORRECT' | 'INCORRECT' | 'NEUTRAL';
 
@@ -212,8 +213,8 @@ export interface IRepresentationsContent {
   teachingNotes: { order: number; title: string; body: string }[];
 }
 
-export interface IMathHospitalContent {
-  type: 'MATH_HOSPITAL';
+export interface IMathDetectiveContent {
+  type: 'MATH_DETECTIVE';
   title: string;
   problem: string;
   problemChecklist: string;
@@ -228,12 +229,48 @@ export interface IMathHospitalContent {
   footnote: string;
 }
 
+/**
+ * Make Your Case — students take a position on a mathematical claim, argue it with
+ * evidence, then revisit the claim. Shaped to the template's classroomFlow in
+ * activityLibrary.json: present the claim, initial vote, make your case, revisit,
+ * name the takeaway.
+ *
+ * `positions` and `resolution` are teacher-only, the same split the compare
+ * template makes with `verdict`/`annotation` — the template's `views.student`
+ * says to present the claim without revealing the resolution or which argument
+ * is strongest.
+ */
+export interface IMakeYourCasePosition {
+  label: string;
+  /** Which side of the claim this argument takes. */
+  stance: string;
+  argument: string;
+  isStrongest: boolean;
+}
+
+export interface IMakeYourCaseContent {
+  type: 'MAKE_YOUR_CASE';
+  title: string;
+  subtitle: string;
+  supportsViewToggle: boolean;
+  claim: { label: string; text: string };
+  /** Students commit before arguing, so the revisit step has something to move. */
+  initialVote: { label: string; options: string[] };
+  evidence: { label: string; prompts: string[] };
+  /** Teacher view only. */
+  positions: IMakeYourCasePosition[];
+  /** Teacher view only — the mathematical resolution of the claim. */
+  resolution: { label: string; text: string };
+  keyTakeaway: { label: string; text: string };
+}
+
 export type IActivityContent =
   | IWorkedExamplesContent
   | IFavoriteNoContent
   | ICompareContent
   | IRepresentationsContent
-  | IMathHospitalContent;
+  | IMathDetectiveContent
+  | IMakeYourCaseContent;
 
 export interface IPhaseStep {
   order: number;
@@ -296,6 +333,10 @@ export interface IFlowStep {
   order: number;
   label: string;
   state: 'COMPLETE' | 'CURRENT' | 'UPCOMING';
+  /** Where the step links to, when it is clickable. */
+  path?: string;
+  /** Completed steps, plus Assess in any state (it is always where to start). */
+  isClickable?: boolean;
 }
 
 export interface ISidebarItem {

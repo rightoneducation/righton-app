@@ -1,11 +1,11 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import LocalHospitalOutlinedIcon from '@mui/icons-material/LocalHospitalOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { IMathHospitalContent } from '../../lib/PipelineModels';
+import MathTypography from '../MathTypography';
+import { IMathDetectiveContent } from '../../lib/PipelineModels';
 import {
   ContentPanel,
   TonedPanel,
@@ -15,10 +15,10 @@ import {
 } from '../../lib/styledcomponents/ActivityDetailStyledComponents';
 
 interface Props {
-  content: IMathHospitalContent;
+  content: IMathDetectiveContent;
 }
 
-export default function MathHospital({ content }: Props) {
+export default function MathDetective({ content }: Props) {
   const theme = useTheme();
 
   return (
@@ -28,18 +28,16 @@ export default function MathHospital({ content }: Props) {
           <LocalHospitalOutlinedIcon />
         </PromptIconTile>
         <Box sx={{ minWidth: 0 }}>
-          <Typography
+          <MathTypography
             variant="headingMd"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {content.problem}
-          </Typography>
-          <Typography
+            text={content.problem}
+          />
+          <MathTypography
             variant="rubikBody"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {content.problemChecklist}
-          </Typography>
+            text={content.problemChecklist}
+          />
         </Box>
       </PromptBand>
 
@@ -47,42 +45,37 @@ export default function MathHospital({ content }: Props) {
         <ContentPanel key={step.step}>
           <Stack direction="row" alignItems="center" spacing={2}>
             <NumberBadge>{step.step}</NumberBadge>
-            <Typography
+            <MathTypography
               variant="headingSm"
               sx={{ color: 'designSystem.surface.atlanticNavy' }}
-            >
-              {step.title}
-            </Typography>
+              text={step.title}
+            />
           </Stack>
 
           <TonedPanel tone="grey">
-            <Typography
+            <MathTypography
               variant="headingSm"
               sx={{ color: 'designSystem.background.navyBlue' }}
-            >
-              {step.askLabel}
-            </Typography>
-            <Typography
+              text={step.askLabel}
+            />
+            <MathTypography
               variant="rubikBody"
               sx={{ color: 'designSystem.surface.atlanticNavy' }}
-            >
-              {`"${step.ask}"`}
-            </Typography>
+              text={`"${step.ask}"`}
+            />
           </TonedPanel>
 
           <TonedPanel tone="periwinkle">
-            <Typography
+            <MathTypography
               variant="headingSm"
               sx={{ color: 'designSystem.background.navyBlue' }}
-            >
-              {step.responseLabel}
-            </Typography>
-            <Typography
+              text={step.responseLabel}
+            />
+            <MathTypography
               variant="rubikBody"
               sx={{ color: 'designSystem.surface.atlanticNavy' }}
-            >
-              {step.response}
-            </Typography>
+              text={step.response}
+            />
           </TonedPanel>
         </ContentPanel>
       ))}
@@ -91,12 +84,11 @@ export default function MathHospital({ content }: Props) {
         <InfoOutlinedIcon
           sx={{ color: 'designSystem.surface.atlanticNavy', flexShrink: 0 }}
         />
-        <Typography
+        <MathTypography
           variant="rubikBody"
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {content.footnote}
-        </Typography>
+          text={content.footnote}
+        />
       </PromptBand>
     </Stack>
   );

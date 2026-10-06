@@ -3,12 +3,14 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
+import MathTypography from '../MathTypography';
 import { IActivityContent } from '../../lib/PipelineModels';
 import IncorrectWorkedExamples from '../activities/IncorrectWorkedExamples';
 import FavoriteNo from '../activities/FavoriteNo';
 import CompareTheThinking from '../activities/CompareTheThinking';
 import MultipleRepresentations from '../activities/MultipleRepresentations';
-import MathHospital from '../activities/MathHospital';
+import MathDetective from '../activities/MathDetective';
+import MakeYourCase from '../activities/MakeYourCase';
 import {
   PromptBand,
   ViewToggle,
@@ -37,7 +39,10 @@ export default function ActivityPhase({ content }: Props) {
 
   const supportsToggle =
     content.type === 'INCORRECT_WORKED_EXAMPLES' ||
-    content.type === 'COMPARE_THE_THINKING';
+    content.type === 'COMPARE_THE_THINKING' ||
+    // Make Your Case hides the worked positions and the resolution from
+    // students, so it needs the toggle for the same reason compare does.
+    content.type === 'MAKE_YOUR_CASE';
 
   // Closed set — every activity type the pipeline can emit has a component.
   const body = (() => {
@@ -57,8 +62,10 @@ export default function ActivityPhase({ content }: Props) {
         );
       case 'MULTIPLE_REPRESENTATIONS':
         return <MultipleRepresentations content={content} />;
-      case 'MATH_HOSPITAL':
-        return <MathHospital content={content} />;
+      case 'MATH_DETECTIVE':
+        return <MathDetective content={content} />;
+      case 'MAKE_YOUR_CASE':
+        return <MakeYourCase content={content} isTeacherView={isTeacherView} />;
       default:
         return null;
     }
@@ -74,22 +81,20 @@ export default function ActivityPhase({ content }: Props) {
   const header = (
     <>
       <Stack spacing={`${theme.sizing.space0}px`} sx={{ minWidth: 0 }}>
-        <Typography
+        <MathTypography
           variant="headingMd"
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {content.title}
-        </Typography>
+          text={content.title}
+        />
         {subtitle && (
           /* Compare and Make the Connections both set this at Rubik 16; only
              the Spot the Slip frame drops to 12, so the shared 16 wins rather
              than the subtitle changing size per template. */
-          <Typography
+          <MathTypography
             variant="rubikBody"
             sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {subtitle}
-          </Typography>
+            text={subtitle}
+          />
         )}
       </Stack>
 

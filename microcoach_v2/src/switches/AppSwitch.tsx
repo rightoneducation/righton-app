@@ -3,13 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ScreenType } from '../lib/MicroCoachModels';
 import { useAppOutletContext } from '../hooks/useAppOutletContext';
 import { useLogOut } from '../hooks/useAuthActions';
-import { useClassrooms } from '../hooks/useClassrooms';
-import { useMisconceptions } from '../hooks/useMisconceptions';
-import { usePlanItems, PlanItemsScope } from '../hooks/usePlanItems';
 import { useScreenSize } from '../hooks/useScreenSize';
-import { useSessions } from '../hooks/useSessions';
-import { useUserState } from '../hooks/useUserState';
-import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import AppContainer from '../containers/AppContainer';
 import { HeaderVariant } from '../components/Header';
 import TemplateDebugMenu from '../components/TemplateDebugMenu';
@@ -39,9 +33,10 @@ import Reflect from '../pages/Reflect';
  * the auth check is still in flight, so their own copy and imagery start
  * loading immediately rather than queueing behind it.
  *
- * The rest are mid-auth-flow screens — the auth state *is* their content, so
- * they wait. AuthGuard still redirects on every screen once the status
- * resolves; this only governs what happens during LOADING.
+ * Everything else requires a signed-in user: AuthGuard holds it during
+ * LOADING (its content is the user's own data) and redirects a signed-out
+ * visitor to the landing page. AuthGuard's other status redirects apply to
+ * every screen either way.
  */
 const PUBLIC_SCREENS = new Set<ScreenType>([
   ScreenType.LANDING,
@@ -53,17 +48,8 @@ const PUBLIC_SCREENS = new Set<ScreenType>([
   // behind the auth check just showed a blank screen for the length of
   // validateUser before the message appeared.
   ScreenType.AUTH,
-  // TODO(auth): move UNDERSTAND behind the guard once sign-in is wired; also
-  // needs AuthGuard's LOGGEDOUT case to redirect.
-  ScreenType.DASHBOARD,
-  ScreenType.REVIEW,
-  ScreenType.CHOOSE_ACTIVITY,
-  ScreenType.MY_PLAN,
-  ScreenType.ACTIVITY_DETAIL,
-  ScreenType.PROFILE,
-  ScreenType.CHANGE_PASSWORD,
-  ScreenType.UPLOAD_RTD,
-  ScreenType.REFLECT,
+  // Every in-app screen is deliberately absent: they need a signed-in user, so
+  // AuthGuard holds them during LOADING and sends a signed-out visitor to /.
 ]);
 
 // The wizard's own chrome: brand only, no auth links to a flow you are in.
@@ -105,29 +91,9 @@ interface AppSwitchProps {
 }
 
 export default function AppSwitch({ currentScreen }: AppSwitchProps) {
-  const { apiClients } = useAppOutletContext();
-  const user = useUserState(apiClients);
-  const { userProfile } = useMicroCoachDataState();
-  const classrooms = useClassrooms(apiClients, userProfile?.id ?? null);
-  const sessions = useSessions(apiClients, classrooms.selectedClassroomId);
-  useMisconceptions(apiClients, sessions.selectedSessionId);
-
-  let planScope: PlanItemsScope = null;
-  if (sessions.selectedSessionId) {
-    planScope = {
-      type: 'session',
-      sessionId: sessions.selectedSessionId,
-    };
-  } else if (classrooms.selectedClassroomId) {
-    planScope = {
-      type: 'class',
-      classId: classrooms.selectedClassroomId,
-    };
-  }
-  const { saveActivity, markPlanItemDone, removePlanItem } = usePlanItems(
-    apiClients,
-    planScope,
-  );
+  const { apiClients, user, classrooms, sessions, plan } =
+    useAppOutletContext();
+  const { saveActivity, markPlanItemDone, removePlanItem } = plan;
 
   const screenSize = useScreenSize();
   const { handleLogOut } = useLogOut(apiClients, user);
@@ -188,10 +154,18 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       screenComponent = <ResetPassword screenSize={screenSize} isInSession />;
       break;
     case ScreenType.DASHBOARD:
-      screenComponent = <Dashboard screenSize={screenSize} />;
+      screenComponent = (
+        <Dashboard
+          apiClients={apiClients}
+          screenSize={screenSize}
+          classrooms={classrooms}
+          sessions={sessions}
+          plan={plan}
+        />
+      );
       break;
     case ScreenType.REVIEW:
-      screenComponent = <Review screenSize={screenSize} />;
+      screenComponent = <Review screenSize={screenSize} sessions={sessions} />;
       break;
     case ScreenType.CHOOSE_ACTIVITY:
       screenComponent = (
@@ -205,7 +179,7 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       screenComponent = <UploadFlow screenSize={screenSize} />;
       break;
     case ScreenType.REFLECT:
-      screenComponent = <Reflect screenSize={screenSize} />;
+      screenComponent = <Reflect screenSize={screenSize} sessions={sessions} />;
       break;
     case ScreenType.PROFILE:
       screenComponent = (
@@ -228,7 +202,7 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
     case ScreenType.LANDING:
     default:
       screenComponent = (
-        <Landing screenSize={screenSize} signOut={user.signOut} />
+        <Landing screenSize={screenSize} />
       );
   }
 
@@ -244,6 +218,9 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
     <AppContainer
       headerVariant={headerVariant}
       onLogOut={handleHeaderLogOut}
+      classrooms={classrooms.classrooms}
+      selectedClassroomId={classrooms.selectedClassroomId}
+      onSelectClassroom={classrooms.selectClassroom}
       // The sign-up frames carry no footer either.
       showFooter={!usesAppChrome && !isSignUp}
     >

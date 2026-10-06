@@ -1,10 +1,7 @@
 import { useEffect } from 'react';
 import { IAPIClients } from '../api';
-import { IPipelineOutput } from '../lib/PipelineModels';
-import mockPipelineOutput from '../lib/mocks/mockPipelineOutput.json';
+import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
 import { useMicroCoachDataDispatch } from './context/useMicroCoachDataContext';
-
-const mockMisconceptionsData = mockPipelineOutput as unknown as IPipelineOutput;
 
 // eslint-disable-next-line import/prefer-default-export
 export function useMisconceptions(
@@ -17,18 +14,21 @@ export function useMisconceptions(
     let cancelled = false;
 
     if (!sessionId) {
+      dispatch({ type: 'SET_MISCONCEPTIONS', payload: [] });
       dispatch({
-        type: 'SET_MISCONCEPTIONS',
-        payload: mockMisconceptionsData.misconceptions,
+        type: 'SET_MISCONCEPTIONS_STATUS',
+        payload: MicroCoachDataStatus.IDLE,
       });
-      dispatch({ type: 'SET_MISCONCEPTIONS_STATUS', payload: 'ready' });
       dispatch({ type: 'SET_MISCONCEPTIONS_ERROR', payload: null });
       return undefined;
     }
 
     const activeSessionId = sessionId;
     dispatch({ type: 'SET_MISCONCEPTIONS', payload: [] });
-    dispatch({ type: 'SET_MISCONCEPTIONS_STATUS', payload: 'loading' });
+    dispatch({
+      type: 'SET_MISCONCEPTIONS_STATUS',
+      payload: MicroCoachDataStatus.LOADING,
+    });
     dispatch({ type: 'SET_MISCONCEPTIONS_ERROR', payload: null });
 
     async function loadMisconceptions() {
@@ -37,13 +37,26 @@ export function useMisconceptions(
           await apiClients.misconception.getMisconceptionsBySessionId(
             activeSessionId,
           );
+
+        const misconceptionsWithActivities = await Promise.all(
+          fetchedMisconceptions.map(async (misconception) => ({
+            ...misconception,
+            nextStepActivities:
+              await apiClients.activity.getActivitiesByMisconceptionId(
+                misconception.id,
+              ),
+          })),
+        );
         if (cancelled) return;
 
         dispatch({
           type: 'SET_MISCONCEPTIONS',
-          payload: fetchedMisconceptions,
+          payload: misconceptionsWithActivities,
         });
-        dispatch({ type: 'SET_MISCONCEPTIONS_STATUS', payload: 'ready' });
+        dispatch({
+          type: 'SET_MISCONCEPTIONS_STATUS',
+          payload: MicroCoachDataStatus.READY,
+        });
       } catch (error) {
         if (cancelled) return;
 
@@ -54,7 +67,10 @@ export function useMisconceptions(
               ? error
               : new Error('Failed to load misconceptions'),
         });
-        dispatch({ type: 'SET_MISCONCEPTIONS_STATUS', payload: 'error' });
+        dispatch({
+          type: 'SET_MISCONCEPTIONS_STATUS',
+          payload: MicroCoachDataStatus.ERROR,
+        });
       }
     }
 

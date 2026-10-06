@@ -57,26 +57,6 @@ export function runLabel(entry: RunIndexEntry): string {
   return `${entry.n} — ${tag}${bits.join(' · ') || entry.id}${tail}`;
 }
 
-const RUN_STORAGE_KEY = 'preview.runId';
-
-// localStorage throws outright in some privacy modes; a scratchpad remembering
-// your last run is not worth taking the page down over.
-function readStoredRunId(): string | null {
-  try {
-    return window.localStorage.getItem(RUN_STORAGE_KEY);
-  } catch {
-    return null;
-  }
-}
-
-function storeRunId(id: string): void {
-  try {
-    window.localStorage.setItem(RUN_STORAGE_KEY, id);
-  } catch {
-    /* ignore */
-  }
-}
-
 export const isEmpty = (v: Json): boolean =>
   v === null ||
   v === undefined ||
@@ -143,9 +123,10 @@ export function usePipelineRun(): PipelineRunState {
           return { ...entry, n };
         });
         setRuns(numbered);
-        const stored = readStoredRunId();
-        const match = numbered.find((entry) => entry.id === stored);
-        setActiveId(match ? match.id : numbered[0].id);
+        // Always open on the newest run. The page's job is to show what the
+        // pipeline just produced, so a remembered selection from a previous
+        // visit would quietly hide a run that has since completed.
+        setActiveId(numbered[0].id);
       })
       .catch(() => {
         if (!cancelled) setStatus('error');
@@ -172,7 +153,6 @@ export function usePipelineRun(): PipelineRunState {
         setManifest(run.manifest as Rec);
         setStatus('loaded');
         setLoadSeq((s) => s + 1);
-        storeRunId(activeId);
       })
       .catch(() => {
         if (!cancelled) setStatus('error');

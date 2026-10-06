@@ -154,6 +154,13 @@ export const StepChip = styled(Box)(({ theme }) => ({
 // Figma: 40 square, radius 16, sitting behind the column letter. The fill is
 // the whole signal — the teacher frame tints it by correctness, the student
 // frame draws no fill at all so the answer is not given away.
+//
+// Sized by `minWidth` rather than `width`, the way StepChip above is. The design
+// assumes a single character, and the generator mostly obliges with "A" and "B" —
+// but it writes "Student A" often enough, and a fixed 40px box with centred
+// content and flexShrink: 0 let that overflow symmetrically: the text sat across
+// the tint instead of inside it, and the left column's badge spilled past the
+// edge of the activity panel. A single letter still renders as the 40 square.
 export const ColumnBadge = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isCorrect' && prop !== 'isRevealed',
 })<{ isCorrect: boolean; isRevealed: boolean }>(({
@@ -174,12 +181,15 @@ export const ColumnBadge = styled(Box, {
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
-    width: columnBadgeSize,
+    minWidth: columnBadgeSize,
     height: columnBadgeSize,
+    padding: `0 ${theme.sizing.space2}px`,
     borderRadius: columnBadgeRadius,
     backgroundColor: background,
     color: palette.background.navyBlue,
     ...theme.typography.headingMd,
+    whiteSpace: 'nowrap',
+    boxSizing: 'border-box',
   };
 });
 
@@ -310,7 +320,7 @@ export const ViewToggleOption = styled(Button, {
 // Figma: 52 x 52, rx 13.2, filled with the same vertical ramp the upload
 // icons use — the gradient token matches stop for stop, so it is reused
 // rather than redeclared. Appears in the board-prompt band of both My
-// Favorite No and Math Hospital.
+// Favorite No and Math Detective.
 export const PromptIconTile = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -351,7 +361,7 @@ export const TonedPanel = styled(Box, {
     grey: palette.foreground.wildSand,
     // The student-task band sits a step darker than the footnote bands.
     greyDeep: palette.foreground.greyAccent,
-    // Math Hospital's expected-answer panel: accentBlue at 30% over white,
+    // Math Detective's expected-answer panel: accentBlue at 30% over white,
     // which lands on the existing periwinkle within a channel or two.
     periwinkle: palette.foreground.periwinkle,
   };

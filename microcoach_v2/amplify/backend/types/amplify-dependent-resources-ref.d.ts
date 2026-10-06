@@ -81,6 +81,13 @@ export type AmplifyDependentResourcesAttributes = {
       "Name": "string",
       "Region": "string"
     },
+    "microcoachv2ScoresCalc": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "microcoachv2TeacherUpload": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
@@ -96,6 +103,13 @@ export type AmplifyDependentResourcesAttributes = {
       "Region": "string"
     },
     "microcoachv2bb9ce5a2PostAuthentication": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "microcoachv2bb9ce5a2PreSignup": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",

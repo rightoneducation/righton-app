@@ -1,6 +1,7 @@
-import { styled } from '@mui/material/styles';
+import { styled, Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import ButtonBase from '@mui/material/ButtonBase';
 import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import { ScreenSize } from '../MicroCoachModels';
@@ -174,30 +175,53 @@ export const StepperRow = styled(Box, {
   }),
 }));
 
-export const StepItem = styled(Box, {
-  shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => ({
+const stepItemStyles = (theme: Theme, screenSize: ScreenSize) => ({
   display: 'flex',
-  flexDirection: 'column',
+  flexDirection: 'column' as const,
   alignItems: 'center',
   gap: theme.sizing.space1,
   // Must not shrink, or the row has nothing to overflow and labels collide.
   flexShrink: 0,
   ...(screenSize !== ScreenSize.LARGE && { scrollSnapAlign: 'start' }),
+});
+
+export const StepItem = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => stepItemStyles(theme, screenSize));
+
+// A completed step: same layout as StepItem, but a real button so it takes
+// keyboard focus and Enter/Space. The label underlines on hover and focus so it
+// reads as a link.
+export const StepButton = styled(ButtonBase, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => ({
+  ...stepItemStyles(theme, screenSize),
+  borderRadius: theme.sizing.space1,
+  '&:hover .step-label, &.Mui-focusVisible .step-label': {
+    textDecoration: 'underline',
+  },
 }));
 
+export type StepState = 'COMPLETE' | 'CURRENT' | 'UPCOMING';
+
+/** One colour per step state — the circle fill and the label share it. */
+export const stepColor = (theme: Theme, state: StepState) => {
+  const palette = theme.palette.designSystem;
+  if (state === 'CURRENT') return palette.foreground.accentBlue;
+  if (state === 'COMPLETE') return palette.surface.darkBlue;
+  return palette.surface.neutralGray;
+};
+
 export const StepCircle = styled(Box, {
-  shouldForwardProp: noIsActive,
-})<ActiveProps>(({ theme, isActive }) => ({
+  shouldForwardProp: (prop) => prop !== 'stepState',
+})<{ stepState: StepState }>(({ theme, stepState }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   width: stepCircleSize,
   height: stepCircleSize,
   borderRadius: '50%',
-  backgroundColor: isActive
-    ? theme.palette.designSystem.foreground.accentBlue
-    : theme.palette.designSystem.surface.neutralGray,
+  backgroundColor: stepColor(theme, stepState),
   color: theme.palette.designSystem.background.offWhite,
   ...theme.typography.stepNumber,
 }));

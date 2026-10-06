@@ -189,7 +189,7 @@ export type MicroCoachMisconception = {
   id: string,
   sessionId: string,
   classId: string,
-  activities?: ModelMicroCoachActivityConnection | null,
+  activity?: ModelMicroCoachActivityConnection | null,
   rank: number,
   badge?: Badge | null,
   title: string,
@@ -237,7 +237,7 @@ export type MicroCoachActivity = {
 export enum ActivityType {
   INCORRECT_WORKED_EXAMPLES = "INCORRECT_WORKED_EXAMPLES",
   COMPARE_THE_THINKING = "COMPARE_THE_THINKING",
-  MATH_HOSPITAL = "MATH_HOSPITAL",
+  MATH_DETECTIVE = "MATH_DETECTIVE",
   MULTIPLE_REPRESENTATIONS = "MULTIPLE_REPRESENTATIONS",
   FAVORITE_NO = "FAVORITE_NO",
 }
@@ -535,6 +535,65 @@ export type DeleteMicroCoachAssessmentInput = {
   id: string,
 };
 
+export type CreateMicroCoachSavedPlanInput = {
+  id?: string | null,
+  classId: string,
+  sessionId?: string | null,
+  items?: Array< ItemInput | null > | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
+};
+
+export type ItemInput = {
+  id: string,
+  status: PlanStatus,
+};
+
+export enum PlanStatus {
+  SAVED = "SAVED",
+  COMPLETED = "COMPLETED",
+}
+
+
+export type ModelMicroCoachSavedPlanConditionInput = {
+  classId?: ModelIDInput | null,
+  sessionId?: ModelIDInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelMicroCoachSavedPlanConditionInput | null > | null,
+  or?: Array< ModelMicroCoachSavedPlanConditionInput | null > | null,
+  not?: ModelMicroCoachSavedPlanConditionInput | null,
+};
+
+export type MicroCoachSavedPlan = {
+  __typename: "MicroCoachSavedPlan",
+  id: string,
+  classId: string,
+  sessionId?: string | null,
+  items?:  Array<Item | null > | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type Item = {
+  __typename: "Item",
+  id: string,
+  status: PlanStatus,
+};
+
+export type UpdateMicroCoachSavedPlanInput = {
+  id: string,
+  classId?: string | null,
+  sessionId?: string | null,
+  items?: Array< ItemInput | null > | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
+};
+
+export type DeleteMicroCoachSavedPlanInput = {
+  id: string,
+};
+
 export type CreateMicroCoachMisconceptionInput = {
   id?: string | null,
   sessionId: string,
@@ -704,65 +763,6 @@ export type UpdateMicroCoachActivityInput = {
 };
 
 export type DeleteMicroCoachActivityInput = {
-  id: string,
-};
-
-export type CreateMicroCoachSavedPlanInput = {
-  id?: string | null,
-  classId: string,
-  sessionId?: string | null,
-  items?: Array< ItemInput | null > | null,
-  createdAt?: string | null,
-  updatedAt?: string | null,
-};
-
-export type ItemInput = {
-  id: string,
-  status: PlanStatus,
-};
-
-export enum PlanStatus {
-  SAVED = "SAVED",
-  COMPLETED = "COMPLETED",
-}
-
-
-export type ModelMicroCoachSavedPlanConditionInput = {
-  classId?: ModelIDInput | null,
-  sessionId?: ModelIDInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
-  and?: Array< ModelMicroCoachSavedPlanConditionInput | null > | null,
-  or?: Array< ModelMicroCoachSavedPlanConditionInput | null > | null,
-  not?: ModelMicroCoachSavedPlanConditionInput | null,
-};
-
-export type MicroCoachSavedPlan = {
-  __typename: "MicroCoachSavedPlan",
-  id: string,
-  classId: string,
-  sessionId?: string | null,
-  items?:  Array<Item | null > | null,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type Item = {
-  __typename: "Item",
-  id: string,
-  status: PlanStatus,
-};
-
-export type UpdateMicroCoachSavedPlanInput = {
-  id: string,
-  classId?: string | null,
-  sessionId?: string | null,
-  items?: Array< ItemInput | null > | null,
-  createdAt?: string | null,
-  updatedAt?: string | null,
-};
-
-export type DeleteMicroCoachSavedPlanInput = {
   id: string,
 };
 
@@ -1147,6 +1147,29 @@ export type ModelMicroCoachAssessmentFilterInput = {
   not?: ModelMicroCoachAssessmentFilterInput | null,
 };
 
+export type ModelMicroCoachSavedPlanFilterInput = {
+  id?: ModelIDInput | null,
+  classId?: ModelIDInput | null,
+  sessionId?: ModelIDInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelMicroCoachSavedPlanFilterInput | null > | null,
+  or?: Array< ModelMicroCoachSavedPlanFilterInput | null > | null,
+  not?: ModelMicroCoachSavedPlanFilterInput | null,
+};
+
+export type ModelMicroCoachSavedPlanConnection = {
+  __typename: "ModelMicroCoachSavedPlanConnection",
+  items:  Array<MicroCoachSavedPlan | null >,
+  nextToken?: string | null,
+};
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+
 export type ModelMicroCoachMisconceptionFilterInput = {
   id?: ModelIDInput | null,
   sessionId?: ModelIDInput | null,
@@ -1191,29 +1214,6 @@ export type ModelMicroCoachActivityFilterInput = {
   or?: Array< ModelMicroCoachActivityFilterInput | null > | null,
   not?: ModelMicroCoachActivityFilterInput | null,
 };
-
-export type ModelMicroCoachSavedPlanFilterInput = {
-  id?: ModelIDInput | null,
-  classId?: ModelIDInput | null,
-  sessionId?: ModelIDInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
-  and?: Array< ModelMicroCoachSavedPlanFilterInput | null > | null,
-  or?: Array< ModelMicroCoachSavedPlanFilterInput | null > | null,
-  not?: ModelMicroCoachSavedPlanFilterInput | null,
-};
-
-export type ModelMicroCoachSavedPlanConnection = {
-  __typename: "ModelMicroCoachSavedPlanConnection",
-  items:  Array<MicroCoachSavedPlan | null >,
-  nextToken?: string | null,
-};
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
 
 export type ModelContextDataFilterInput = {
   id?: ModelIDInput | null,
@@ -1373,6 +1373,16 @@ export type ModelSubscriptionMicroCoachAssessmentFilterInput = {
   or?: Array< ModelSubscriptionMicroCoachAssessmentFilterInput | null > | null,
 };
 
+export type ModelSubscriptionMicroCoachSavedPlanFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  classId?: ModelSubscriptionIDInput | null,
+  sessionId?: ModelSubscriptionIDInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionMicroCoachSavedPlanFilterInput | null > | null,
+  or?: Array< ModelSubscriptionMicroCoachSavedPlanFilterInput | null > | null,
+};
+
 export type ModelSubscriptionMicroCoachMisconceptionFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   sessionId?: ModelSubscriptionIDInput | null,
@@ -1419,16 +1429,6 @@ export type ModelSubscriptionMicroCoachActivityFilterInput = {
 export type ModelSubscriptionBooleanInput = {
   ne?: boolean | null,
   eq?: boolean | null,
-};
-
-export type ModelSubscriptionMicroCoachSavedPlanFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  classId?: ModelSubscriptionIDInput | null,
-  sessionId?: ModelSubscriptionIDInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionMicroCoachSavedPlanFilterInput | null > | null,
-  or?: Array< ModelSubscriptionMicroCoachSavedPlanFilterInput | null > | null,
 };
 
 export type ModelSubscriptionContextDataFilterInput = {
@@ -2064,7 +2064,7 @@ export type CreateMicroCoachSessionMutation = {
         id: string,
         sessionId: string,
         classId: string,
-        activities?:  {
+        activity?:  {
           __typename: "ModelMicroCoachActivityConnection",
           items:  Array< {
             __typename: "MicroCoachActivity",
@@ -2168,7 +2168,7 @@ export type UpdateMicroCoachSessionMutation = {
         id: string,
         sessionId: string,
         classId: string,
-        activities?:  {
+        activity?:  {
           __typename: "ModelMicroCoachActivityConnection",
           items:  Array< {
             __typename: "MicroCoachActivity",
@@ -2272,7 +2272,7 @@ export type DeleteMicroCoachSessionMutation = {
         id: string,
         sessionId: string,
         classId: string,
-        activities?:  {
+        activity?:  {
           __typename: "ModelMicroCoachActivityConnection",
           items:  Array< {
             __typename: "MicroCoachActivity",
@@ -2388,6 +2388,69 @@ export type DeleteMicroCoachAssessmentMutation = {
   } | null,
 };
 
+export type CreateMicroCoachSavedPlanMutationVariables = {
+  input: CreateMicroCoachSavedPlanInput,
+  condition?: ModelMicroCoachSavedPlanConditionInput | null,
+};
+
+export type CreateMicroCoachSavedPlanMutation = {
+  createMicroCoachSavedPlan?:  {
+    __typename: "MicroCoachSavedPlan",
+    id: string,
+    classId: string,
+    sessionId?: string | null,
+    items?:  Array< {
+      __typename: "Item",
+      id: string,
+      status: PlanStatus,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateMicroCoachSavedPlanMutationVariables = {
+  input: UpdateMicroCoachSavedPlanInput,
+  condition?: ModelMicroCoachSavedPlanConditionInput | null,
+};
+
+export type UpdateMicroCoachSavedPlanMutation = {
+  updateMicroCoachSavedPlan?:  {
+    __typename: "MicroCoachSavedPlan",
+    id: string,
+    classId: string,
+    sessionId?: string | null,
+    items?:  Array< {
+      __typename: "Item",
+      id: string,
+      status: PlanStatus,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteMicroCoachSavedPlanMutationVariables = {
+  input: DeleteMicroCoachSavedPlanInput,
+  condition?: ModelMicroCoachSavedPlanConditionInput | null,
+};
+
+export type DeleteMicroCoachSavedPlanMutation = {
+  deleteMicroCoachSavedPlan?:  {
+    __typename: "MicroCoachSavedPlan",
+    id: string,
+    classId: string,
+    sessionId?: string | null,
+    items?:  Array< {
+      __typename: "Item",
+      id: string,
+      status: PlanStatus,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateMicroCoachMisconceptionMutationVariables = {
   input: CreateMicroCoachMisconceptionInput,
   condition?: ModelMicroCoachMisconceptionConditionInput | null,
@@ -2399,7 +2462,7 @@ export type CreateMicroCoachMisconceptionMutation = {
     id: string,
     sessionId: string,
     classId: string,
-    activities?:  {
+    activity?:  {
       __typename: "ModelMicroCoachActivityConnection",
       items:  Array< {
         __typename: "MicroCoachActivity",
@@ -2467,7 +2530,7 @@ export type UpdateMicroCoachMisconceptionMutation = {
     id: string,
     sessionId: string,
     classId: string,
-    activities?:  {
+    activity?:  {
       __typename: "ModelMicroCoachActivityConnection",
       items:  Array< {
         __typename: "MicroCoachActivity",
@@ -2535,7 +2598,7 @@ export type DeleteMicroCoachMisconceptionMutation = {
     id: string,
     sessionId: string,
     classId: string,
-    activities?:  {
+    activity?:  {
       __typename: "ModelMicroCoachActivityConnection",
       items:  Array< {
         __typename: "MicroCoachActivity",
@@ -2689,69 +2752,6 @@ export type DeleteMicroCoachActivityMutation = {
     instructionalMove?: string | null,
     strategyTag?: string | null,
     phases?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateMicroCoachSavedPlanMutationVariables = {
-  input: CreateMicroCoachSavedPlanInput,
-  condition?: ModelMicroCoachSavedPlanConditionInput | null,
-};
-
-export type CreateMicroCoachSavedPlanMutation = {
-  createMicroCoachSavedPlan?:  {
-    __typename: "MicroCoachSavedPlan",
-    id: string,
-    classId: string,
-    sessionId?: string | null,
-    items?:  Array< {
-      __typename: "Item",
-      id: string,
-      status: PlanStatus,
-    } | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateMicroCoachSavedPlanMutationVariables = {
-  input: UpdateMicroCoachSavedPlanInput,
-  condition?: ModelMicroCoachSavedPlanConditionInput | null,
-};
-
-export type UpdateMicroCoachSavedPlanMutation = {
-  updateMicroCoachSavedPlan?:  {
-    __typename: "MicroCoachSavedPlan",
-    id: string,
-    classId: string,
-    sessionId?: string | null,
-    items?:  Array< {
-      __typename: "Item",
-      id: string,
-      status: PlanStatus,
-    } | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteMicroCoachSavedPlanMutationVariables = {
-  input: DeleteMicroCoachSavedPlanInput,
-  condition?: ModelMicroCoachSavedPlanConditionInput | null,
-};
-
-export type DeleteMicroCoachSavedPlanMutation = {
-  deleteMicroCoachSavedPlan?:  {
-    __typename: "MicroCoachSavedPlan",
-    id: string,
-    classId: string,
-    sessionId?: string | null,
-    items?:  Array< {
-      __typename: "Item",
-      id: string,
-      status: PlanStatus,
-    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3444,7 +3444,7 @@ export type GetMicroCoachSessionQuery = {
         id: string,
         sessionId: string,
         classId: string,
-        activities?:  {
+        activity?:  {
           __typename: "ModelMicroCoachActivityConnection",
           items:  Array< {
             __typename: "MicroCoachActivity",
@@ -3551,7 +3551,7 @@ export type ListMicroCoachSessionsQuery = {
           id: string,
           sessionId: string,
           classId: string,
-          activities?:  {
+          activity?:  {
             __typename: "ModelMicroCoachActivityConnection",
             nextToken?: string | null,
           } | null,
@@ -3626,218 +3626,6 @@ export type ListMicroCoachAssessmentsQuery = {
       assessmentCode: string,
       type: AssessmentType,
       weekNumber: number,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetMicroCoachMisconceptionQueryVariables = {
-  id: string,
-};
-
-export type GetMicroCoachMisconceptionQuery = {
-  getMicroCoachMisconception?:  {
-    __typename: "MicroCoachMisconception",
-    id: string,
-    sessionId: string,
-    classId: string,
-    activities?:  {
-      __typename: "ModelMicroCoachActivityConnection",
-      items:  Array< {
-        __typename: "MicroCoachActivity",
-        id: string,
-        misconceptionId: string,
-        sessionId: string,
-        classId: string,
-        activityType: ActivityType,
-        title?: string | null,
-        isSelected?: boolean | null,
-        selectLabel?: string | null,
-        detailStatus: DetailStatus,
-        routine?: string | null,
-        durationMinutes?: number | null,
-        durationLabel?: string | null,
-        grouping?:  {
-          __typename: "Grouping",
-          level: GroupingLevel,
-          label: string,
-        } | null,
-        targets?: string | null,
-        instructionalMove?: string | null,
-        strategyTag?: string | null,
-        phases?: string | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    rank: number,
-    badge?: Badge | null,
-    title: string,
-    titleCased?: string | null,
-    shortLabel?: string | null,
-    description: string,
-    consequence?: string | null,
-    prevalence?:  {
-      __typename: "Prevalence",
-      level: PrevalenceLevel,
-      label: string,
-      studentsNeedingSupport?: number | null,
-      studentsUnderstood?: number | null,
-      studentsNoResponse?: number | null,
-      totalAnalyzed: number,
-      supportSummaryLabel?: string | null,
-      understoodSummaryLabel?: string | null,
-      shortCountLabel?: string | null,
-    } | null,
-    detailStatus: DetailStatus,
-    studentWork?: string | null,
-    skillContext?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListMicroCoachMisconceptionsQueryVariables = {
-  filter?: ModelMicroCoachMisconceptionFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListMicroCoachMisconceptionsQuery = {
-  listMicroCoachMisconceptions?:  {
-    __typename: "ModelMicroCoachMisconceptionConnection",
-    items:  Array< {
-      __typename: "MicroCoachMisconception",
-      id: string,
-      sessionId: string,
-      classId: string,
-      activities?:  {
-        __typename: "ModelMicroCoachActivityConnection",
-        items:  Array< {
-          __typename: "MicroCoachActivity",
-          id: string,
-          misconceptionId: string,
-          sessionId: string,
-          classId: string,
-          activityType: ActivityType,
-          title?: string | null,
-          isSelected?: boolean | null,
-          selectLabel?: string | null,
-          detailStatus: DetailStatus,
-          routine?: string | null,
-          durationMinutes?: number | null,
-          durationLabel?: string | null,
-          grouping?:  {
-            __typename: "Grouping",
-            level: GroupingLevel,
-            label: string,
-          } | null,
-          targets?: string | null,
-          instructionalMove?: string | null,
-          strategyTag?: string | null,
-          phases?: string | null,
-          createdAt: string,
-          updatedAt: string,
-        } | null >,
-        nextToken?: string | null,
-      } | null,
-      rank: number,
-      badge?: Badge | null,
-      title: string,
-      titleCased?: string | null,
-      shortLabel?: string | null,
-      description: string,
-      consequence?: string | null,
-      prevalence?:  {
-        __typename: "Prevalence",
-        level: PrevalenceLevel,
-        label: string,
-        studentsNeedingSupport?: number | null,
-        studentsUnderstood?: number | null,
-        studentsNoResponse?: number | null,
-        totalAnalyzed: number,
-        supportSummaryLabel?: string | null,
-        understoodSummaryLabel?: string | null,
-        shortCountLabel?: string | null,
-      } | null,
-      detailStatus: DetailStatus,
-      studentWork?: string | null,
-      skillContext?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetMicroCoachActivityQueryVariables = {
-  id: string,
-};
-
-export type GetMicroCoachActivityQuery = {
-  getMicroCoachActivity?:  {
-    __typename: "MicroCoachActivity",
-    id: string,
-    misconceptionId: string,
-    sessionId: string,
-    classId: string,
-    activityType: ActivityType,
-    title?: string | null,
-    isSelected?: boolean | null,
-    selectLabel?: string | null,
-    detailStatus: DetailStatus,
-    routine?: string | null,
-    durationMinutes?: number | null,
-    durationLabel?: string | null,
-    grouping?:  {
-      __typename: "Grouping",
-      level: GroupingLevel,
-      label: string,
-    } | null,
-    targets?: string | null,
-    instructionalMove?: string | null,
-    strategyTag?: string | null,
-    phases?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListMicroCoachActivitiesQueryVariables = {
-  filter?: ModelMicroCoachActivityFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListMicroCoachActivitiesQuery = {
-  listMicroCoachActivities?:  {
-    __typename: "ModelMicroCoachActivityConnection",
-    items:  Array< {
-      __typename: "MicroCoachActivity",
-      id: string,
-      misconceptionId: string,
-      sessionId: string,
-      classId: string,
-      activityType: ActivityType,
-      title?: string | null,
-      isSelected?: boolean | null,
-      selectLabel?: string | null,
-      detailStatus: DetailStatus,
-      routine?: string | null,
-      durationMinutes?: number | null,
-      durationLabel?: string | null,
-      grouping?:  {
-        __typename: "Grouping",
-        level: GroupingLevel,
-        label: string,
-      } | null,
-      targets?: string | null,
-      instructionalMove?: string | null,
-      strategyTag?: string | null,
-      phases?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -4185,7 +3973,7 @@ export type MicroCoachSessionsByClassIdQuery = {
           id: string,
           sessionId: string,
           classId: string,
-          activities?:  {
+          activity?:  {
             __typename: "ModelMicroCoachActivityConnection",
             nextToken?: string | null,
           } | null,
@@ -4277,6 +4065,202 @@ export type MicroCoachAssessmentsBySessionIdQuery = {
   } | null,
 };
 
+export type MicroCoachSavedPlansByClassIdQueryVariables = {
+  classId: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelMicroCoachSavedPlanFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type MicroCoachSavedPlansByClassIdQuery = {
+  microCoachSavedPlansByClassId?:  {
+    __typename: "ModelMicroCoachSavedPlanConnection",
+    items:  Array< {
+      __typename: "MicroCoachSavedPlan",
+      id: string,
+      classId: string,
+      sessionId?: string | null,
+      items?:  Array< {
+        __typename: "Item",
+        id: string,
+        status: PlanStatus,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type MicroCoachSavedPlansBySessionIdQueryVariables = {
+  sessionId: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelMicroCoachSavedPlanFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type MicroCoachSavedPlansBySessionIdQuery = {
+  microCoachSavedPlansBySessionId?:  {
+    __typename: "ModelMicroCoachSavedPlanConnection",
+    items:  Array< {
+      __typename: "MicroCoachSavedPlan",
+      id: string,
+      classId: string,
+      sessionId?: string | null,
+      items?:  Array< {
+        __typename: "Item",
+        id: string,
+        status: PlanStatus,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetMicroCoachMisconceptionQueryVariables = {
+  id: string,
+};
+
+export type GetMicroCoachMisconceptionQuery = {
+  getMicroCoachMisconception?:  {
+    __typename: "MicroCoachMisconception",
+    id: string,
+    sessionId: string,
+    classId: string,
+    activity?:  {
+      __typename: "ModelMicroCoachActivityConnection",
+      items:  Array< {
+        __typename: "MicroCoachActivity",
+        id: string,
+        misconceptionId: string,
+        sessionId: string,
+        classId: string,
+        activityType: ActivityType,
+        title?: string | null,
+        isSelected?: boolean | null,
+        selectLabel?: string | null,
+        detailStatus: DetailStatus,
+        routine?: string | null,
+        durationMinutes?: number | null,
+        durationLabel?: string | null,
+        grouping?:  {
+          __typename: "Grouping",
+          level: GroupingLevel,
+          label: string,
+        } | null,
+        targets?: string | null,
+        instructionalMove?: string | null,
+        strategyTag?: string | null,
+        phases?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null >,
+      nextToken?: string | null,
+    } | null,
+    rank: number,
+    badge?: Badge | null,
+    title: string,
+    titleCased?: string | null,
+    shortLabel?: string | null,
+    description: string,
+    consequence?: string | null,
+    prevalence?:  {
+      __typename: "Prevalence",
+      level: PrevalenceLevel,
+      label: string,
+      studentsNeedingSupport?: number | null,
+      studentsUnderstood?: number | null,
+      studentsNoResponse?: number | null,
+      totalAnalyzed: number,
+      supportSummaryLabel?: string | null,
+      understoodSummaryLabel?: string | null,
+      shortCountLabel?: string | null,
+    } | null,
+    detailStatus: DetailStatus,
+    studentWork?: string | null,
+    skillContext?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListMicroCoachMisconceptionsQueryVariables = {
+  filter?: ModelMicroCoachMisconceptionFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListMicroCoachMisconceptionsQuery = {
+  listMicroCoachMisconceptions?:  {
+    __typename: "ModelMicroCoachMisconceptionConnection",
+    items:  Array< {
+      __typename: "MicroCoachMisconception",
+      id: string,
+      sessionId: string,
+      classId: string,
+      activity?:  {
+        __typename: "ModelMicroCoachActivityConnection",
+        items:  Array< {
+          __typename: "MicroCoachActivity",
+          id: string,
+          misconceptionId: string,
+          sessionId: string,
+          classId: string,
+          activityType: ActivityType,
+          title?: string | null,
+          isSelected?: boolean | null,
+          selectLabel?: string | null,
+          detailStatus: DetailStatus,
+          routine?: string | null,
+          durationMinutes?: number | null,
+          durationLabel?: string | null,
+          grouping?:  {
+            __typename: "Grouping",
+            level: GroupingLevel,
+            label: string,
+          } | null,
+          targets?: string | null,
+          instructionalMove?: string | null,
+          strategyTag?: string | null,
+          phases?: string | null,
+          createdAt: string,
+          updatedAt: string,
+        } | null >,
+        nextToken?: string | null,
+      } | null,
+      rank: number,
+      badge?: Badge | null,
+      title: string,
+      titleCased?: string | null,
+      shortLabel?: string | null,
+      description: string,
+      consequence?: string | null,
+      prevalence?:  {
+        __typename: "Prevalence",
+        level: PrevalenceLevel,
+        label: string,
+        studentsNeedingSupport?: number | null,
+        studentsUnderstood?: number | null,
+        studentsNoResponse?: number | null,
+        totalAnalyzed: number,
+        supportSummaryLabel?: string | null,
+        understoodSummaryLabel?: string | null,
+        shortCountLabel?: string | null,
+      } | null,
+      detailStatus: DetailStatus,
+      studentWork?: string | null,
+      skillContext?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type MicroCoachMisconceptionsBySessionIdQueryVariables = {
   sessionId: string,
   sortDirection?: ModelSortDirection | null,
@@ -4293,7 +4277,7 @@ export type MicroCoachMisconceptionsBySessionIdQuery = {
       id: string,
       sessionId: string,
       classId: string,
-      activities?:  {
+      activity?:  {
         __typename: "ModelMicroCoachActivityConnection",
         items:  Array< {
           __typename: "MicroCoachActivity",
@@ -4368,7 +4352,7 @@ export type MicroCoachMisconceptionsByClassIdQuery = {
       id: string,
       sessionId: string,
       classId: string,
-      activities?:  {
+      activity?:  {
         __typename: "ModelMicroCoachActivityConnection",
         items:  Array< {
           __typename: "MicroCoachActivity",
@@ -4420,6 +4404,78 @@ export type MicroCoachMisconceptionsByClassIdQuery = {
       detailStatus: DetailStatus,
       studentWork?: string | null,
       skillContext?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetMicroCoachActivityQueryVariables = {
+  id: string,
+};
+
+export type GetMicroCoachActivityQuery = {
+  getMicroCoachActivity?:  {
+    __typename: "MicroCoachActivity",
+    id: string,
+    misconceptionId: string,
+    sessionId: string,
+    classId: string,
+    activityType: ActivityType,
+    title?: string | null,
+    isSelected?: boolean | null,
+    selectLabel?: string | null,
+    detailStatus: DetailStatus,
+    routine?: string | null,
+    durationMinutes?: number | null,
+    durationLabel?: string | null,
+    grouping?:  {
+      __typename: "Grouping",
+      level: GroupingLevel,
+      label: string,
+    } | null,
+    targets?: string | null,
+    instructionalMove?: string | null,
+    strategyTag?: string | null,
+    phases?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListMicroCoachActivitiesQueryVariables = {
+  filter?: ModelMicroCoachActivityFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListMicroCoachActivitiesQuery = {
+  listMicroCoachActivities?:  {
+    __typename: "ModelMicroCoachActivityConnection",
+    items:  Array< {
+      __typename: "MicroCoachActivity",
+      id: string,
+      misconceptionId: string,
+      sessionId: string,
+      classId: string,
+      activityType: ActivityType,
+      title?: string | null,
+      isSelected?: boolean | null,
+      selectLabel?: string | null,
+      detailStatus: DetailStatus,
+      routine?: string | null,
+      durationMinutes?: number | null,
+      durationLabel?: string | null,
+      grouping?:  {
+        __typename: "Grouping",
+        level: GroupingLevel,
+        label: string,
+      } | null,
+      targets?: string | null,
+      instructionalMove?: string | null,
+      strategyTag?: string | null,
+      phases?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -4543,62 +4599,6 @@ export type MicroCoachActivitiesByClassIdQuery = {
       instructionalMove?: string | null,
       strategyTag?: string | null,
       phases?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type MicroCoachSavedPlansByClassIdQueryVariables = {
-  classId: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelMicroCoachSavedPlanFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type MicroCoachSavedPlansByClassIdQuery = {
-  microCoachSavedPlansByClassId?:  {
-    __typename: "ModelMicroCoachSavedPlanConnection",
-    items:  Array< {
-      __typename: "MicroCoachSavedPlan",
-      id: string,
-      classId: string,
-      sessionId?: string | null,
-      items?:  Array< {
-        __typename: "Item",
-        id: string,
-        status: PlanStatus,
-      } | null > | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type MicroCoachSavedPlansBySessionIdQueryVariables = {
-  sessionId: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelMicroCoachSavedPlanFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type MicroCoachSavedPlansBySessionIdQuery = {
-  microCoachSavedPlansBySessionId?:  {
-    __typename: "ModelMicroCoachSavedPlanConnection",
-    items:  Array< {
-      __typename: "MicroCoachSavedPlan",
-      id: string,
-      classId: string,
-      sessionId?: string | null,
-      items?:  Array< {
-        __typename: "Item",
-        id: string,
-        status: PlanStatus,
-      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -5421,7 +5421,7 @@ export type OnCreateMicroCoachSessionSubscription = {
         id: string,
         sessionId: string,
         classId: string,
-        activities?:  {
+        activity?:  {
           __typename: "ModelMicroCoachActivityConnection",
           items:  Array< {
             __typename: "MicroCoachActivity",
@@ -5524,7 +5524,7 @@ export type OnUpdateMicroCoachSessionSubscription = {
         id: string,
         sessionId: string,
         classId: string,
-        activities?:  {
+        activity?:  {
           __typename: "ModelMicroCoachActivityConnection",
           items:  Array< {
             __typename: "MicroCoachActivity",
@@ -5627,7 +5627,7 @@ export type OnDeleteMicroCoachSessionSubscription = {
         id: string,
         sessionId: string,
         classId: string,
-        activities?:  {
+        activity?:  {
           __typename: "ModelMicroCoachActivityConnection",
           items:  Array< {
             __typename: "MicroCoachActivity",
@@ -5740,6 +5740,66 @@ export type OnDeleteMicroCoachAssessmentSubscription = {
   } | null,
 };
 
+export type OnCreateMicroCoachSavedPlanSubscriptionVariables = {
+  filter?: ModelSubscriptionMicroCoachSavedPlanFilterInput | null,
+};
+
+export type OnCreateMicroCoachSavedPlanSubscription = {
+  onCreateMicroCoachSavedPlan?:  {
+    __typename: "MicroCoachSavedPlan",
+    id: string,
+    classId: string,
+    sessionId?: string | null,
+    items?:  Array< {
+      __typename: "Item",
+      id: string,
+      status: PlanStatus,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateMicroCoachSavedPlanSubscriptionVariables = {
+  filter?: ModelSubscriptionMicroCoachSavedPlanFilterInput | null,
+};
+
+export type OnUpdateMicroCoachSavedPlanSubscription = {
+  onUpdateMicroCoachSavedPlan?:  {
+    __typename: "MicroCoachSavedPlan",
+    id: string,
+    classId: string,
+    sessionId?: string | null,
+    items?:  Array< {
+      __typename: "Item",
+      id: string,
+      status: PlanStatus,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteMicroCoachSavedPlanSubscriptionVariables = {
+  filter?: ModelSubscriptionMicroCoachSavedPlanFilterInput | null,
+};
+
+export type OnDeleteMicroCoachSavedPlanSubscription = {
+  onDeleteMicroCoachSavedPlan?:  {
+    __typename: "MicroCoachSavedPlan",
+    id: string,
+    classId: string,
+    sessionId?: string | null,
+    items?:  Array< {
+      __typename: "Item",
+      id: string,
+      status: PlanStatus,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type OnCreateMicroCoachMisconceptionSubscriptionVariables = {
   filter?: ModelSubscriptionMicroCoachMisconceptionFilterInput | null,
 };
@@ -5750,7 +5810,7 @@ export type OnCreateMicroCoachMisconceptionSubscription = {
     id: string,
     sessionId: string,
     classId: string,
-    activities?:  {
+    activity?:  {
       __typename: "ModelMicroCoachActivityConnection",
       items:  Array< {
         __typename: "MicroCoachActivity",
@@ -5817,7 +5877,7 @@ export type OnUpdateMicroCoachMisconceptionSubscription = {
     id: string,
     sessionId: string,
     classId: string,
-    activities?:  {
+    activity?:  {
       __typename: "ModelMicroCoachActivityConnection",
       items:  Array< {
         __typename: "MicroCoachActivity",
@@ -5884,7 +5944,7 @@ export type OnDeleteMicroCoachMisconceptionSubscription = {
     id: string,
     sessionId: string,
     classId: string,
-    activities?:  {
+    activity?:  {
       __typename: "ModelMicroCoachActivityConnection",
       items:  Array< {
         __typename: "MicroCoachActivity",
@@ -6035,66 +6095,6 @@ export type OnDeleteMicroCoachActivitySubscription = {
     instructionalMove?: string | null,
     strategyTag?: string | null,
     phases?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateMicroCoachSavedPlanSubscriptionVariables = {
-  filter?: ModelSubscriptionMicroCoachSavedPlanFilterInput | null,
-};
-
-export type OnCreateMicroCoachSavedPlanSubscription = {
-  onCreateMicroCoachSavedPlan?:  {
-    __typename: "MicroCoachSavedPlan",
-    id: string,
-    classId: string,
-    sessionId?: string | null,
-    items?:  Array< {
-      __typename: "Item",
-      id: string,
-      status: PlanStatus,
-    } | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateMicroCoachSavedPlanSubscriptionVariables = {
-  filter?: ModelSubscriptionMicroCoachSavedPlanFilterInput | null,
-};
-
-export type OnUpdateMicroCoachSavedPlanSubscription = {
-  onUpdateMicroCoachSavedPlan?:  {
-    __typename: "MicroCoachSavedPlan",
-    id: string,
-    classId: string,
-    sessionId?: string | null,
-    items?:  Array< {
-      __typename: "Item",
-      id: string,
-      status: PlanStatus,
-    } | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteMicroCoachSavedPlanSubscriptionVariables = {
-  filter?: ModelSubscriptionMicroCoachSavedPlanFilterInput | null,
-};
-
-export type OnDeleteMicroCoachSavedPlanSubscription = {
-  onDeleteMicroCoachSavedPlan?:  {
-    __typename: "MicroCoachSavedPlan",
-    id: string,
-    classId: string,
-    sessionId?: string | null,
-    items?:  Array< {
-      __typename: "Item",
-      id: string,
-      status: PlanStatus,
-    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,

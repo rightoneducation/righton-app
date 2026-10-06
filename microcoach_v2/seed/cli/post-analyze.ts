@@ -597,7 +597,7 @@ async function main() {
         // Last group = "Ready to Generalize" (understood). All others need help.
         const allGroups: any[] = [];
         for (const move of (matchingGapGroup.moveOptions ?? [])) {
-          const groups = move?.tabs?.studentGroupings?.groups;
+          const groups = move?.phases?.beforeClass?.groupFormation?.groups;
           if (Array.isArray(groups) && groups.length > 0) {
             allGroups.push(...groups);
             break; // use the first activity that has groupings

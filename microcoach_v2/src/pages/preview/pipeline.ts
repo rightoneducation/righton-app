@@ -17,9 +17,9 @@ export interface Origin {
   href: string;
 }
 
-export const COORDINATION_DOC: Origin = {
-  label: 'March 2026 coordination doc',
-  href: 'https://docs.google.com/presentation/d/1PGmfYpXJRvVFBil-ykVB4hXWYuLDJn_qiCowcmVxb7k/edit?usp=sharing',
+export const WAVE2_DOC: Origin = {
+  label: 'Wave 2 doc',
+  href: 'https://docs.google.com/document/d/1YnGsDBJGAlpy0nyE36nAogB9hl38YLav8TdP6guvdRA/edit?tab=t.0',
 };
 
 export interface Stage {
@@ -49,12 +49,12 @@ export const STAGES: Stage[] = [
     subtitle: "Look up what the standards build on and lead to",
     who: 'api',
     where: 'GetLearningScience → Learning Commons',
-    detail: 'Queries the knowledge graph for the session\'s standards, then masks fields according to the eval condition.',
-    out: ['knowledge-graph standards', 'prerequisite + dependent standards', 'masked by condition'],
+    detail: 'Queries the knowledge graph for the session\'s standards. In eval runs, the chosen condition then excludes one section of the response before it reaches any prompt, so the run measures what that section contributes. For example, NO_PREREQ empties the prerequisite standards; NONE keeps the full graph.',
+    out: ['knowledge-graph standards', 'prerequisite + dependent standards', 'one section excluded per eval condition'],
   },
   {
     id: 'count',
-    label: 'Compute Responses',
+    label: 'Compute Response Patterns',
     subtitle: "Tally who picked which wrong answer, and how sure they were",
     who: 'code',
     where: 'generate.ts 4b',
@@ -63,7 +63,7 @@ export const STAGES: Stage[] = [
   },
   {
     id: 'gen',
-    label: 'Generate Misconceptions',
+    label: 'Identify/Generate Misconceptions',
     subtitle: "Name the thinking behind each wrong answer",
     who: 'llm',
     where: 'LLMGenMisconception',
@@ -72,21 +72,30 @@ export const STAGES: Stage[] = [
   },
   {
     id: 'reach',
-    label: 'Compute Reach',
+    label: 'Compute Misconception Reach',
     subtitle: "Count how many students each misconception affects",
     who: 'code',
     where: 'generate.ts 4c → computeReach.ts',
-    detail: 'Runs inside the same step as Generate Misconceptions, on the lambda\'s output. Counts the distinct students who chose any option linked to a misconception. Not estimated.',
-    out: ['studentCount', 'studentPercent'],
+    detail: 'Runs inside the same step as Generate Misconceptions, on the lambda\'s output. Counts the distinct students who chose any option linked to a misconception, and the mean confidence of their linked picks. Not estimated.',
+    out: ['studentCount', 'studentPercent', 'meanConfidence'],
+  },
+  {
+    id: 'rubric',
+    label: 'Score & Rank Misconceptions',
+    subtitle: "Grade each one on the Wave 2 rubric and pick the Recommended Focus",
+    who: 'code',
+    where: 'ScoresCalc · misconceptionRubric.json',
+    detail: 'One call over all misconceptions. Bands the measured inputs (share of class, downstream standards, mean confidence) 0–3, asks the model for Conceptual Depth 0–3, sums, ranks and keeps the top three. Rank 1 is the Recommended Focus.',
+    out: ['rubric scores + total', 'priorityRank', 'isRecommendedFocus', 'retained'],
   },
   {
     id: 'need',
-    label: 'Generate Instructional Needs',
-    subtitle: "Decide what students need next, and which to address first",
+    label: 'Identify/Generate Instructional Needs',
+    subtitle: "Decide what students need to do next",
     who: 'llm',
     where: 'LLMGenInstrNeed',
-    detail: 'One call over all misconceptions. Writes what students need to do next, the rationale inputs, and ranks the misconceptions using the priority composite inside the prompt.',
-    out: ['instructional need', 'rationale', 'priorityRank'],
+    detail: 'One call over the retained misconceptions. Writes what students need to do next and the rationale behind it. Rank and depth arrive as givens from step 6; the need inherits its misconception\'s rank.',
+    out: ['instructional need', 'rationale'],
   },
   {
     id: 'select',
@@ -94,16 +103,16 @@ export const STAGES: Stage[] = [
     subtitle: "Choose the two best-fitting activity routines",
     who: 'llm',
     where: 'LLMSelectTemplate',
-    detail: 'One call over all needs. Picks the two activity templates whose primary instructional move best fits each need.',
-    out: ['top two templates with fit'],
+    detail: 'One call over all needs. Picks the two activity templates whose primary instructional move best fits each need, scoring each pick 0–3 on the Wave 2 Instructional Fit scale.',
+    out: ['top two templates', 'instructionalFit 0–3', 'belowThreshold'],
   },
   {
     id: 'activity',
-    label: 'Generate Activity Template Contents',
+    label: 'Generate Activities',
     subtitle: "Write the classroom activity for each routine",
     who: 'llm',
     where: 'NextStepOption (6a planner, 6b generator)',
-    detail: 'A planner call assigns activity structures across all misconceptions, then a generator call per misconception per format (whole class, split class). This is the pre-template generator: it does not yet receive the templates selected in step 7.',
+    detail: 'A planner call assigns activity structures across all misconceptions, then a generator call per misconception per format (whole class, split class). This is the pre-template generator: it does not yet receive the templates selected in step 8.',
     out: ['activities per misconception × format'],
   },
 ];
@@ -127,7 +136,7 @@ export const GROUPS: StageGroup[] = [
     id: 'analysis',
     label: 'Misconception analysis',
     cadence: 'once per quiz',
-    stageIds: ['count', 'gen', 'reach'],
+    stageIds: ['count', 'gen', 'reach', 'rubric'],
     inner: { label: 'step 4c', stageIds: ['gen', 'reach'] },
   },
   {

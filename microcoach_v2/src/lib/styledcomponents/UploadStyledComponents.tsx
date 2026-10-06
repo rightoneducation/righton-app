@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import { ScreenSize } from '../MicroCoachModels';
 import { noScreenSize, ScreenSizeProps } from './LandingStyledComponents';
@@ -92,6 +93,31 @@ export const SetupValue = styled(Box, {
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
+}));
+
+/**
+ * SetupValue's editable sibling: the Week field is the one the teacher can
+ * change, so it is a real Select drawn in the unlocked SetupValue treatment.
+ */
+export const SetupSelect = styled(Select<string>)(({ theme }) => ({
+  width: '100%',
+  height: 42,
+  borderRadius: 9,
+  backgroundColor: theme.palette.designSystem.surface.skyBlue,
+  color: theme.palette.designSystem.surface.atlanticNavy,
+  ...theme.typography.placeholderLabel,
+  '& .MuiOutlinedInput-notchedOutline': {
+    borderWidth: 2,
+    borderColor: theme.palette.designSystem.foreground.fadedSelectedNavy,
+  },
+  '&:hover .MuiOutlinedInput-notchedOutline, &.Mui-focused .MuiOutlinedInput-notchedOutline':
+    {
+      borderWidth: 2,
+      borderColor: theme.palette.designSystem.foreground.selectedNavy,
+    },
+  '& .MuiSelect-icon': {
+    color: theme.palette.designSystem.surface.atlanticNavy,
+  },
 }));
 
 /** The two upload cards sit side by side at LARGE and stack below it. */
