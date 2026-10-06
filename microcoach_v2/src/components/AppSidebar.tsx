@@ -14,7 +14,7 @@ import {
 const icons: Record<string, React.ReactNode> = {
   home: <HomeOutlinedIcon fontSize="small" />,
   'this-week': <CalendarTodayOutlinedIcon fontSize="small" />,
-  'past-insights': <HistoryOutlinedIcon fontSize="small" />,
+  'past-activities': <HistoryOutlinedIcon fontSize="small" />,
 };
 
 interface AppSidebarProps {
@@ -53,6 +53,7 @@ export default function AppSidebar({
         <SidebarItem
           key={item.id}
           isActive={item.isActive}
+          screenSize={screenSize}
           startIcon={icons[item.id]}
           onClick={() => onSelect(item.id)}
           aria-current={item.isActive ? 'page' : undefined}

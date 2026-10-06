@@ -62,7 +62,9 @@ export default function AppContainer({
         onLogOut={onLogOut}
       />
       <BodyContainer component="main">{children}</BodyContainer>
-      {headerVariant === 'app' && <NeedHelpButton />}
+      {(headerVariant === 'app' || headerVariant === 'home') && (
+        <NeedHelpButton />
+      )}
       {showFooter && <Footer screenSize={screenSize} />}
     </ScreenContainer>
   );

@@ -34,6 +34,9 @@ export enum ScreenType {
   // Likewise `upload-rtd/*` — both steps are UploadFlow.
   UPLOAD_RTD,
   REFLECT,
+  // The sidebar's other two destinations, beside DASHBOARD (Home).
+  THIS_WEEK,
+  PAST_ACTIVITIES,
 }
 
 // Resolved once from useMediaQuery at the top of a page and drilled down, so

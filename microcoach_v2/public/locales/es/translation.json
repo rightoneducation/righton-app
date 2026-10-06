@@ -5,7 +5,8 @@
     "signup": "Registrarse",
     "login": "Iniciar sesión",
     "classSwitcher": "Seleccione una clase",
-    "noClasses": "Aún no hay clases"
+    "noClasses": "Aún no hay clases",
+    "accountMenu": "Menú de la cuenta"
   },
   "common": {
     "needHelp": "¿Necesita ayuda?"
@@ -120,12 +121,12 @@
     "banner": "Los resultados de tu clase están listos: revisa los patrones de conceptos erróneos y las actividades recomendadas",
     "dismissBanner": "Descartar",
     "title": "Bienvenido de nuevo a MicroCoach",
-    "subtitle": "Revisa los patrones de conceptos erróneos en el pensamiento de tus estudiantes\npara identificar oportunidades de fortalecer la comprensión.",
+    "subtitle": "Sube tus archivos MIU para comprender mejor\nel pensamiento de tus estudiantes y recibir los próximos pasos recomendados.",
     "classPrompt": "¿Con qué clase trabajas hoy?",
     "moreClasses": "Más",
     "weekLabel": "Semana",
     "cta": {
-      "ASSESS": "Subir resultados de los estudiantes",
+      "ASSESS": "Sube archivos MIU para analizar",
       "UNDERSTAND": "Revisar patrones de conceptos erróneos",
       "REASSESS": "Subir resultados de la reevaluación",
       "REFLECT": "Reflexionar sobre el impacto"
@@ -133,9 +134,9 @@
     "steps": {
       "ASSESS": "Evaluar",
       "UNDERSTAND": "Comprender",
-      "CHOOSE": "Elegir actividad",
+      "CHOOSE": "Seleccionar actividad",
       "REASSESS": "Reevaluar",
-      "REFLECT": "Reflexionar sobre el impacto"
+      "REFLECT": "Reflexionar"
     },
     "noClassesTitle": "Agrega tu primera clase para comenzar",
     "addClassPlaceholder": "Nombre de la clase",
@@ -144,9 +145,40 @@
     "sidebar": {
       "home": "Inicio",
       "thisWeek": "Esta semana",
-      "pastInsights": "Información anterior"
+      "pastActivities": "Actividades anteriores"
     },
-    "weekNumber": "Semana {{number}}"
+    "weekNumber": "Semana {{number}}",
+    "myActivity": "Mi actividad"
+  },
+  "thisWeek": {
+    "title": "Progreso semanal de actividades",
+    "addClass": "Agregar otra clase",
+    "sort": "Ordenar",
+    "sortRecent": "Más recientes primero",
+    "sortOldest": "Más antiguas primero",
+    "sortClass": "Por clase",
+    "students": "{{count}} estudiantes",
+    "step": "Paso {{number}}: {{label}}",
+    "open": "Abrir",
+    "waiting": "Esperando a MicroCoach",
+    "next": {
+      "ASSESS": "Analizando tus archivos MIU, los resultados llegarán pronto",
+      "UNDERSTAND": "Revisa los conceptos erróneos antes de elegir una actividad",
+      "CHOOSE": "Elige tu próxima actividad",
+      "REASSESS": "Compara tus resultados MIU y RTD para comprender el crecimiento de la clase",
+      "REFLECT": "Reflexiona sobre cómo ha crecido tu clase"
+    },
+    "sortLabel": "Ordenar actividades"
+  },
+  "pastActivities": {
+    "title": "Actividades anteriores",
+    "classWeek": "{{className}} · {{week}}",
+    "incomplete": "Incompleto: subir archivos MIU",
+    "completed": "Completado el {{date}}",
+    "studentWorks": "{{count}} trabajos de estudiantes",
+    "openDetails": "Abrir detalles de la actividad",
+    "remove": "Eliminar",
+    "weekOf": "Semana del {{date}}"
   },
   "signup": {
     "welcome": "Bienvenido a MicroCoach",
@@ -178,7 +210,7 @@
     "removeClass": "Quitar clase",
     "selectTitle": "Seleccione su nombre y su clase para comenzar",
     "more": "Más",
-    "upload": "Suba archivos PPQ para analizar",
+    "upload": "Suba archivos MIU para analizar",
     "showPassword": "Mostrar contraseña",
     "hidePassword": "Ocultar contraseña",
     "codeError": "Ese código no es correcto. Revise su correo e inténtelo de nuevo.",
@@ -244,8 +276,8 @@
     "reviewTitle": "Revisar y enviar",
     "reviewBody": "Confirme que subió los archivos correctos de Ejemplar y Respuestas RTD para la clase y la semana previstas. Una vez enviados, MicroCoach comenzará a analizarlos.",
     "uploaded": "SUBIDOS",
-    "ppqExemplar": "Ejemplar PPQ",
-    "ppqResponses": "Respuestas PPQ",
+    "ppqExemplar": "Ejemplar MIU",
+    "ppqResponses": "Respuestas MIU",
     "backToUpload": "Volver a subir",
     "submit": "Enviar archivos para análisis",
     "weekOf": "Semana del {{date}}",

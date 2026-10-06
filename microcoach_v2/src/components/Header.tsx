@@ -4,7 +4,10 @@ import { Link as RouterLink } from 'react-router-dom';
 import { styled, Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button, { ButtonProps } from '@mui/material/Button';
+import ButtonBase from '@mui/material/ButtonBase';
+import Divider from '@mui/material/Divider';
 import Link, { LinkProps } from '@mui/material/Link';
+import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Skeleton from '@mui/material/Skeleton';
@@ -12,6 +15,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ContentRow from './ContentRow';
 import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import { IUserState } from '../hooks/useUserState';
@@ -29,8 +33,14 @@ import { avatarIcons, DEFAULT_AVATAR_INDEX } from '../images/avatars';
  * every step but the last, since offering a Sign Up link to someone already
  * signing up makes no sense. Its final step still shows an identity, but that
  * comes from the LOGGEDIN branch rather than the variant.
+ *
+ * `home` is the sidebar screens' chrome (dashboard/Dashboard1-3): the identity
+ * shrinks to an initials avatar and the class switcher goes, since those
+ * screens pick the class in the page. The frames draw no log out or profile
+ * control, so the avatar opens the account menu from the previous dashboard
+ * frame (OldDashboard1: Account Settings, then Log out).
  */
-export type HeaderVariant = 'public' | 'signup' | 'app' | 'profile';
+export type HeaderVariant = 'public' | 'signup' | 'app' | 'profile' | 'home';
 
 interface HeaderProps {
   screenSize: ScreenSize;
@@ -202,6 +212,33 @@ const ClassSelect = styled(Select<string>, {
   },
 }));
 
+// Figma (Dashboard1): a 56px skyBlue circle holding the initials.
+const InitialsAvatar = styled(ButtonBase)(({ theme }) => ({
+  width: 56,
+  height: 56,
+  flexShrink: 0,
+  borderRadius: '50%',
+  backgroundColor: theme.palette.designSystem.foreground.skyBlue,
+  color: theme.palette.designSystem.background.navyBlue,
+  ...theme.typography.smallTitle,
+  letterSpacing: '-0.02em',
+  '&.Mui-focusVisible': {
+    outline: `2px solid ${theme.palette.designSystem.surface.white}`,
+    outlineOffset: 2,
+  },
+}));
+
+// Figma (OldDashboard1): 244 wide, accentBlue, radius 8, a white hairline
+// between Account Settings and the outlined Log out pill.
+const accountMenuPaperSx = {
+  width: 244,
+  mt: 1,
+  borderRadius: '8px',
+  bgcolor: 'designSystem.foreground.accentBlue',
+  color: 'designSystem.surface.white',
+  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+};
+
 // Skeleton inherits its colour from the surrounding text colour, which is
 // invisible against the navy bar.
 const authSkeletonSx = { bgcolor: 'designSystem.background.fadedWhiteVeil' };
@@ -233,9 +270,18 @@ export default function Header({
   // the first class is added.
   const { classrooms, selectedClassId, selectClass } = classroomState;
 
-  // Both app variants share the nav block; only its contents differ.
+  const initials = [userProfile?.firstName, userProfile?.lastName]
+    .map((part) => part?.trim().charAt(0) ?? '')
+    .join('')
+    .toUpperCase();
+  const [accountAnchor, setAccountAnchor] = React.useState<HTMLElement | null>(
+    null,
+  );
+
+  // Every app variant shares the nav block; only its contents differ.
   const isProfileChrome = variant === 'profile';
-  const usesAppNav = variant === 'app' || isProfileChrome;
+  const isHomeChrome = variant === 'home';
+  const usesAppNav = variant === 'app' || isProfileChrome || isHomeChrome;
 
   const isCompactBrand = usesAppNav && screenSize === ScreenSize.SMALL;
 
@@ -283,7 +329,7 @@ export default function Header({
             spacing={2}
             sx={{ justifyContent: 'flex-end', minWidth: 0 }}
           >
-            {isResolvingAuth ? (
+            {isResolvingAuth && (
               <Skeleton
                 animation="wave"
                 variant="rounded"
@@ -291,7 +337,54 @@ export default function Header({
                 height={44}
                 sx={{ ...authSkeletonSx, borderRadius: `${appPillRadius}px` }}
               />
-            ) : (
+            )}
+            {!isResolvingAuth && isHomeChrome && (
+              <>
+                <InitialsAvatar
+                  aria-label={t('header.accountMenu')}
+                  aria-haspopup="menu"
+                  aria-expanded={!!accountAnchor}
+                  onClick={(event) => setAccountAnchor(event.currentTarget)}
+                >
+                  {initials}
+                </InitialsAvatar>
+                <Menu
+                  anchorEl={accountAnchor}
+                  open={!!accountAnchor}
+                  onClose={() => setAccountAnchor(null)}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  slotProps={{ paper: { sx: accountMenuPaperSx } }}
+                >
+                  <MenuItem
+                    component={RouterLink}
+                    to="/profile"
+                    onClick={() => setAccountAnchor(null)}
+                    sx={{ gap: 1, typography: 'rubikBody' }}
+                  >
+                    <SettingsOutlinedIcon fontSize="small" />
+                    {t('profile.title')}
+                  </MenuItem>
+                  <Divider
+                    sx={{ mx: 2, borderColor: 'designSystem.surface.white' }}
+                  />
+                  <Box sx={{ px: 3, py: 1.5 }}>
+                    <LogOutButton
+                      fullWidth
+                      disableElevation
+                      onClick={() => {
+                        setAccountAnchor(null);
+                        onLogOut?.();
+                      }}
+                      startIcon={<LogoutIcon fontSize="small" />}
+                    >
+                      {t('profile.logOut')}
+                    </LogOutButton>
+                  </Box>
+                </Menu>
+              </>
+            )}
+            {!isResolvingAuth && !isHomeChrome && (
               <>
                 {screenSize === ScreenSize.LARGE && (
                   <>

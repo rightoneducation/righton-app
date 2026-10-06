@@ -16,6 +16,9 @@ import {
   HomeLayout,
   HomeContent,
   HomeBand,
+  HomeCard,
+  StepperBand,
+  MyActivityButton,
   FloatingBanner,
   PickerRow,
   PickerColumn,
@@ -35,12 +38,13 @@ import {
 } from '../lib/styledcomponents/ReviewStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 import { useClassProgress } from '../hooks/useClassProgress';
+import { useSidebarNav } from '../hooks/useSidebarNav';
 import { ClassroomsProps } from '../hooks/useClassrooms';
 import { UserProps } from '../hooks/useUserState';
 import { IAPIClients } from '../api';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
+import { ScreenSize } from '../lib/MicroCoachModels';
 import { SessionStatus } from '../AWSAPI';
-import { ISidebarItem } from '../lib/PipelineModels';
 import {
   buildFlowSteps,
   deriveCurrentStep,
@@ -106,11 +110,7 @@ export default function Dashboard({
     (c) => !inlineClasses.some((shown) => shown.id === c.id),
   );
 
-  const sidebarItems: ISidebarItem[] = [
-    { id: 'home', label: t('home.sidebar.home'), isActive: true },
-    { id: 'this-week', label: t('home.sidebar.thisWeek'), isActive: false },
-    { id: 'past-insights', label: t('home.sidebar.pastInsights'), isActive: false },
-  ];
+  const sidebar = useSidebarNav();
 
   const weekLabel = (session: IMicroCoachSession) =>
     session.weekLabel ||
@@ -118,12 +118,6 @@ export default function Dashboard({
     (session.weekNumber != null
       ? t('home.weekNumber', { number: session.weekNumber })
       : new Date(session.createdAt).toLocaleDateString());
-
-  const handleSidebarSelect = (itemId: string) => {
-    if (itemId === 'home') return;
-    // eslint-disable-next-line no-console
-    console.log('sidebar destination not yet built', itemId);
-  };
 
   const handleAddClass = async () => {
     if (!newClassName.trim() || isAdding) return;
@@ -138,9 +132,9 @@ export default function Dashboard({
   return (
     <HomeLayout screenSize={screenSize}>
       <AppSidebar
-        items={sidebarItems}
+        items={sidebar.items}
         screenSize={screenSize}
-        onSelect={handleSidebarSelect}
+        onSelect={sidebar.onSelect}
       />
 
       <HomeContent screenSize={screenSize}>
@@ -179,11 +173,29 @@ export default function Dashboard({
               </Typography>
             </HomeBand>
 
-            <HomeBand wide sx={{ mt: `${theme.sizing.space8}px` }}>
+            <StepperBand
+              screenSize={screenSize}
+              sx={{ mt: `${theme.sizing.space2}px` }}
+            >
               <FlowStepper steps={flowSteps} screenSize={screenSize} />
-            </HomeBand>
+              <MyActivityButton
+                disableElevation
+                onClick={() => navigate('/past-activities')}
+              >
+                {t('home.myActivity')}
+              </MyActivityButton>
+            </StepperBand>
 
-            <HomeBand sx={{ mt: `${theme.sizing.space8}px` }}>
+            <HomeCard
+              screenSize={screenSize}
+              sx={{
+                mt: `${
+                  screenSize === ScreenSize.LARGE
+                    ? theme.sizing.space12 + theme.sizing.space1
+                    : theme.sizing.space8
+                }px`,
+              }}
+            >
               <Typography
                 variant="smallTitle"
                 sx={{
@@ -194,114 +206,111 @@ export default function Dashboard({
               >
                 {t('home.subtitle')}
               </Typography>
-            </HomeBand>
 
-            <PickerRow
-              screenSize={screenSize}
-              sx={{ mt: `${theme.sizing.space11}px` }}
-            >
-              <PickerColumn screenSize={screenSize} basis={357}>
-                <PickerLabel screenSize={screenSize}>
-                  {t(hasClasses ? 'home.classPrompt' : 'home.noClassesTitle')}
-                </PickerLabel>
-                {hasClasses && (
-                  <ChipWrap>
-                    {inlineClasses.map((classroom) => (
-                      <ClassChip
-                        key={classroom.id}
-                        isActive={classroom.id === selectedClassId}
-                        aria-pressed={classroom.id === selectedClassId}
-                        onClick={() => selectClass(classroom.id)}
-                      >
-                        {classroom.name}
-                      </ClassChip>
-                    ))}
-                    {overflowClasses.length > 0 && (
-                      <ClassChip
-                        isActive={false}
-                        isMore
-                        endIcon={<KeyboardArrowDownIcon />}
-                        aria-haspopup="menu"
-                        onClick={(event) => setMoreAnchor(event.currentTarget)}
-                      >
-                        {t('home.moreClasses')}
-                      </ClassChip>
-                    )}
-                    <Menu
-                      anchorEl={moreAnchor}
-                      open={!!moreAnchor}
-                      onClose={() => setMoreAnchor(null)}
-                    >
-                      {overflowClasses.map((classroom) => (
-                        <MenuItem
+              <PickerRow screenSize={screenSize}>
+                <PickerColumn screenSize={screenSize} basis={357}>
+                  <PickerLabel screenSize={screenSize}>
+                    {t(hasClasses ? 'home.classPrompt' : 'home.noClassesTitle')}
+                  </PickerLabel>
+                  {hasClasses && (
+                    <ChipWrap>
+                      {inlineClasses.map((classroom) => (
+                        <ClassChip
                           key={classroom.id}
-                          onClick={() => {
-                            selectClass(classroom.id);
-                            setMoreAnchor(null);
-                          }}
+                          isActive={classroom.id === selectedClassId}
+                          aria-pressed={classroom.id === selectedClassId}
+                          onClick={() => selectClass(classroom.id)}
                         >
                           {classroom.name}
+                        </ClassChip>
+                      ))}
+                      {overflowClasses.length > 0 && (
+                        <ClassChip
+                          isActive={false}
+                          isMore
+                          endIcon={<KeyboardArrowDownIcon />}
+                          aria-haspopup="menu"
+                          onClick={(event) => setMoreAnchor(event.currentTarget)}
+                        >
+                          {t('home.moreClasses')}
+                        </ClassChip>
+                      )}
+                      <Menu
+                        anchorEl={moreAnchor}
+                        open={!!moreAnchor}
+                        onClose={() => setMoreAnchor(null)}
+                      >
+                        {overflowClasses.map((classroom) => (
+                          <MenuItem
+                            key={classroom.id}
+                            onClick={() => {
+                              selectClass(classroom.id);
+                              setMoreAnchor(null);
+                            }}
+                          >
+                            {classroom.name}
+                          </MenuItem>
+                        ))}
+                      </Menu>
+                    </ChipWrap>
+                  )}
+                  {!hasClasses && canAddClass && (
+                    <Stack spacing={`${theme.sizing.space2}px`}>
+                      <SignUpField
+                        placeholder={t('home.addClassPlaceholder')}
+                        inputProps={{ 'aria-label': t('home.addClassPlaceholder') }}
+                        value={newClassName}
+                        isError={addError}
+                        onChange={(event) => setNewClassName(event.target.value)}
+                        onKeyDown={(event) => {
+                          if (event.key === 'Enter') handleAddClass();
+                        }}
+                      />
+                      {addError && (
+                        <Typography
+                          variant="rubikBody"
+                          sx={{ color: 'designSystem.status.errorStroke' }}
+                        >
+                          {t('home.addClassError')}
+                        </Typography>
+                      )}
+                      <AddClassChip
+                        disableElevation
+                        disabled={!newClassName.trim() || isAdding}
+                        startIcon={<AddIcon sx={{ fontSize: 16 }} />}
+                        onClick={handleAddClass}
+                      >
+                        {t('home.addClass')}
+                      </AddClassChip>
+                    </Stack>
+                  )}
+                </PickerColumn>
+
+                {progress.sessions.length > 0 && (
+                  <PickerColumn screenSize={screenSize} basis={403}>
+                    <PickerLabel screenSize={screenSize}>
+                      {t('home.weekLabel')}
+                    </PickerLabel>
+                    <WeekSelect
+                      value={selectedSession?.id ?? ''}
+                      onChange={(event) => setSelectedSessionId(event.target.value)}
+                      inputProps={{ 'aria-label': t('home.weekLabel') }}
+                    >
+                      {progress.sessions.map((session) => (
+                        <MenuItem key={session.id} value={session.id}>
+                          {weekLabel(session)}
                         </MenuItem>
                       ))}
-                    </Menu>
-                  </ChipWrap>
+                    </WeekSelect>
+                  </PickerColumn>
                 )}
-                {!hasClasses && canAddClass && (
-                  <Stack spacing={`${theme.sizing.space2}px`}>
-                    <SignUpField
-                      placeholder={t('home.addClassPlaceholder')}
-                      inputProps={{ 'aria-label': t('home.addClassPlaceholder') }}
-                      value={newClassName}
-                      isError={addError}
-                      onChange={(event) => setNewClassName(event.target.value)}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter') handleAddClass();
-                      }}
-                    />
-                    {addError && (
-                      <Typography
-                        variant="rubikBody"
-                        sx={{ color: 'designSystem.status.errorStroke' }}
-                      >
-                        {t('home.addClassError')}
-                      </Typography>
-                    )}
-                    <AddClassChip
-                      disableElevation
-                      disabled={!newClassName.trim() || isAdding}
-                      startIcon={<AddIcon sx={{ fontSize: 16 }} />}
-                      onClick={handleAddClass}
-                    >
-                      {t('home.addClass')}
-                    </AddClassChip>
-                  </Stack>
-                )}
-              </PickerColumn>
-
-              {progress.sessions.length > 0 && (
-                <PickerColumn screenSize={screenSize} basis={403}>
-                  <PickerLabel screenSize={screenSize}>
-                    {t('home.weekLabel')}
-                  </PickerLabel>
-                  <WeekSelect
-                    value={selectedSession?.id ?? ''}
-                    onChange={(event) => setSelectedSessionId(event.target.value)}
-                    inputProps={{ 'aria-label': t('home.weekLabel') }}
-                  >
-                    {progress.sessions.map((session) => (
-                      <MenuItem key={session.id} value={session.id}>
-                        {weekLabel(session)}
-                      </MenuItem>
-                    ))}
-                  </WeekSelect>
-                </PickerColumn>
-              )}
-            </PickerRow>
+              </PickerRow>
+            </HomeCard>
 
             {hasClasses && (
               <HomeCta
                 onClick={() => navigate(cta.path)}
-                sx={{ mt: `${theme.sizing.space12}px` }}
+                sx={{ mt: `${theme.sizing.space7}px` }}
               >
                 {t(cta.labelKey)}
               </HomeCta>

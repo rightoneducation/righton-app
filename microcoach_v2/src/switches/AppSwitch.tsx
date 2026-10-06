@@ -14,6 +14,8 @@ import SignUpWizard from '../containers/SignUpWizard';
 import ResetPassword from '../pages/ResetPassword';
 import AuthCallback from '../pages/AuthCallback';
 import Dashboard from '../pages/Dashboard';
+import ThisWeek from '../pages/ThisWeek';
+import PastActivities from '../pages/PastActivities';
 import Review from '../pages/Review';
 import ChooseActivity from '../pages/ChooseActivity';
 import MyPlan from '../pages/MyPlan';
@@ -74,12 +76,21 @@ const PROFILE_CHROME_SCREENS = new Set<ScreenType>([
   ScreenType.CHANGE_PASSWORD,
 ]);
 
+// The sidebar screens draw their own header (see HeaderVariant `home`).
+const SIDEBAR_SCREENS = new Set<ScreenType>([
+  ScreenType.DASHBOARD,
+  ScreenType.THIS_WEEK,
+  ScreenType.PAST_ACTIVITIES,
+]);
+
 const APP_CHROME_SCREENS = new Set<ScreenType>([
   ScreenType.PROFILE,
   ScreenType.CHANGE_PASSWORD,
   ScreenType.UPLOAD_RTD,
   ScreenType.REFLECT,
   ScreenType.DASHBOARD,
+  ScreenType.THIS_WEEK,
+  ScreenType.PAST_ACTIVITIES,
   ScreenType.REVIEW,
   ScreenType.CHOOSE_ACTIVITY,
   ScreenType.MY_PLAN,
@@ -155,6 +166,12 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
         />
       );
       break;
+    case ScreenType.THIS_WEEK:
+      screenComponent = <ThisWeek screenSize={screenSize} />;
+      break;
+    case ScreenType.PAST_ACTIVITIES:
+      screenComponent = <PastActivities screenSize={screenSize} />;
+      break;
     case ScreenType.REVIEW:
       screenComponent = <Review screenSize={screenSize} />;
       break;
@@ -194,6 +211,7 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
 
   let headerVariant: HeaderVariant = 'public';
   if (PROFILE_CHROME_SCREENS.has(currentScreen)) headerVariant = 'profile';
+  else if (SIDEBAR_SCREENS.has(currentScreen)) headerVariant = 'home';
   else if (usesAppChrome) headerVariant = 'app';
   else if (isSignUp) headerVariant = 'signup';
 

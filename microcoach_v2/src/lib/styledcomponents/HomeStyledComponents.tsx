@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import { ScreenSize } from '../MicroCoachModels';
 import { pageGutter } from '../../components/ContentRow';
 import { noScreenSize, ScreenSizeProps } from './LandingStyledComponents';
+import homePatternBand from '../../images/homePatternBand.svg';
 
 // Lifted from MisconceptionModalStyledComponents — a touch-drag scroller
 // shouldn't show a desktop scrollbar track.
@@ -18,7 +19,6 @@ const hideScrollbar = {
 
 export const SIDEBAR_WIDTH = 264;
 
-const stepCircleSize = 40;
 const chipRadius = 25;
 const ctaRadius = 29;
 
@@ -26,20 +26,34 @@ interface ActiveProps {
   isActive: boolean;
 }
 
-const noIsActive = (prop: PropertyKey) => prop !== 'isActive';
+// Figma (Dashboard1-3): the tiled band runs y 519-877 of the frame, 383 below
+// the 136 header. It is drawn under the sidebar, which simply covers it.
+const patternBandTop = 383;
 
 export const HomeLayout = styled(Box, {
   shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ screenSize }) => ({
+})<ScreenSizeProps>(({ theme, screenSize }) => ({
   display: 'flex',
   flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
   alignItems: 'stretch',
   width: '100%',
   flexGrow: 1,
+  backgroundColor: theme.palette.designSystem.background.coolWhite,
+  // The band is decoration sized for the desktop frame; below LARGE the
+  // content stacks and would sit across it at arbitrary points.
+  ...(screenSize === ScreenSize.LARGE && {
+    backgroundImage: `url(${homePatternBand})`,
+    backgroundRepeat: 'repeat-x',
+    backgroundPosition: `left 0 top ${patternBandTop}px`,
+  }),
 }));
 
-// Sits below the header rather than beside it, and only on this screen — no
-// other frame in the set carries a sidebar.
+// Sits below the header rather than beside it, on the three sidebar screens
+// (Home, This Week, Past Activities).
+//
+// At LARGE the right padding is 0 so the active tab can run flush into the
+// page edge, as Figma draws it (x21 to the sidebar's 264). The tabs are 68
+// tall on a 99 pitch, so the gap between them is space6.
 export const Sidebar = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => {
@@ -51,41 +65,59 @@ export const Sidebar = styled(Box, {
     flexShrink: 0,
     gap: isLarge ? theme.sizing.space6 : theme.sizing.space3,
     width: isLarge ? SIDEBAR_WIDTH : '100%',
-    paddingTop: isLarge ? theme.sizing.space8 : theme.sizing.space4,
+    paddingTop: isLarge ? theme.sizing.space3 : theme.sizing.space4,
     paddingBottom: theme.sizing.space4,
-    paddingLeft: theme.sizing.space5,
-    paddingRight: theme.sizing.space5,
-    backgroundColor: theme.palette.designSystem.foreground.accentBlue,
+    paddingLeft: isLarge ? theme.sizing.space4 : theme.sizing.space5,
+    paddingRight: isLarge ? 0 : theme.sizing.space5,
+    backgroundColor: theme.palette.designSystem.background.sidebarBlue,
     boxSizing: 'border-box',
     overflowX: isLarge ? 'visible' : 'auto',
   };
 });
 
+const sidebarTabHeight = 68;
+
+// LARGE: a tab rounded on the left only, flush against the page. Below LARGE
+// the items sit in a scrolling row, where a flush edge has nothing to meet,
+// so they keep the full pill.
 export const SidebarItem = styled(Button, {
-  shouldForwardProp: noIsActive,
-})<ActiveProps>(({ theme, isActive }) => ({
-  justifyContent: 'flex-start',
-  gap: theme.sizing.space2,
-  padding: `${theme.sizing.space1}px ${theme.sizing.space4}px`,
-  borderRadius: theme.sizing.space5,
-  backgroundColor: isActive
-    ? theme.palette.designSystem.foreground.fadedNavyBlue
-    : 'transparent',
-  color: theme.palette.designSystem.surface.white,
-  ...theme.typography.mediumLabel,
-  textTransform: 'none',
-  whiteSpace: 'nowrap',
-  '&:hover': {
-    backgroundColor: theme.palette.designSystem.foreground.fadedNavyBlue,
-  },
-}));
+  shouldForwardProp: (prop) => prop !== 'isActive' && prop !== 'screenSize',
+})<ActiveProps & ScreenSizeProps>(({ theme, isActive, screenSize }) => {
+  const isLarge = screenSize === ScreenSize.LARGE;
+  const palette = theme.palette.designSystem;
+
+  return {
+    justifyContent: 'flex-start',
+    flexShrink: 0,
+    gap: theme.sizing.space2,
+    height: isLarge ? sidebarTabHeight : undefined,
+    padding: isLarge
+      ? `0 ${theme.sizing.space4}px`
+      : `${theme.sizing.space1}px ${theme.sizing.space4}px`,
+    borderRadius: isLarge
+      ? `${sidebarTabHeight / 2}px 0 0 ${sidebarTabHeight / 2}px`
+      : theme.sizing.space5,
+    backgroundColor: isActive ? palette.background.sidebarActive : 'transparent',
+    color: palette.surface.white,
+    ...theme.typography.mediumLabel,
+    textTransform: 'none',
+    whiteSpace: 'nowrap',
+    // Hover stays lighter than the active tab, so pointing at an item never
+    // looks like selecting it.
+    '&:hover': {
+      backgroundColor: isActive
+        ? palette.background.sidebarActive
+        : palette.background.fadedWhiteHover,
+    },
+  };
+});
 
 // SMALL can't fit three labels across, so the sidebar collapses to a select.
 export const SidebarSelect = styled(Select<string>)(({ theme }) => ({
   width: '100%',
   height: 44,
   borderRadius: theme.sizing.space5,
-  backgroundColor: theme.palette.designSystem.foreground.fadedNavyBlue,
+  backgroundColor: theme.palette.designSystem.background.sidebarActive,
   color: theme.palette.designSystem.surface.white,
   ...theme.typography.mediumLabel,
   '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
@@ -109,9 +141,10 @@ export const HomeContent = styled(Box, {
     flexGrow: 1,
     width: '100%',
     // At LARGE the banner floats, so this alone puts the hero's line box at the
-    // Figma y. Below that the banner is in flow and sets the hero's position.
+    // Figma y (Dashboard1-3: baseline 276, 24 lower than the earlier frame).
+    // Below that the banner is in flow and sets the hero's position.
     paddingTop: isLarge
-      ? theme.sizing.space11 + theme.sizing.space1
+      ? theme.sizing.space11 + theme.sizing.space1 + theme.sizing.space5
       : theme.sizing.space6,
     paddingBottom: isLarge ? theme.sizing.space12 : theme.sizing.space8,
     paddingLeft: gutter,
@@ -120,14 +153,42 @@ export const HomeContent = styled(Box, {
   };
 });
 
-export const HomeBand = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'wide',
-})<{ wide?: boolean }>(({ theme, wide }) => ({
+export const HomeBand = styled(Box)(({ theme }) => ({
   width: '100%',
-  maxWidth: wide
-    ? theme.sizing.stepperMaxWidth
-    : theme.sizing.homeContentMaxWidth,
+  maxWidth: theme.sizing.homeContentMaxWidth,
 }));
+
+// Figma (Dashboard1): three stacked soft shadows, offset down and right.
+export const homeCardShadow = [
+  '5px 8px 9px rgba(0, 0, 0, 0.03)',
+  '11px 18px 13px rgba(0, 0, 0, 0.02)',
+  '20px 32px 15px rgba(0, 0, 0, 0.01)',
+].join(', ');
+
+// Figma (Dashboard1): 914x322, radius 20, holding the subtitle and pickers.
+// 914 is the 858 picker column plus 28 each side.
+export const HomeCard = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => {
+  const isLarge = screenSize === ScreenSize.LARGE;
+  const inset = theme.sizing.space5 + theme.sizing.space0;
+
+  return {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: theme.sizing.space6,
+    width: '100%',
+    maxWidth: theme.sizing.homeCardMaxWidth,
+    padding: isLarge
+      ? `${theme.sizing.space6}px ${inset}px ${theme.sizing.space6 + theme.sizing.space0}px`
+      : theme.sizing.space4,
+    borderRadius: theme.sizing.space4,
+    backgroundColor: theme.palette.designSystem.surface.white,
+    boxShadow: homeCardShadow,
+    boxSizing: 'border-box',
+  };
+});
 
 // Figma draws the banner over the hero's leading rather than above it, so at
 // LARGE it sits out of flow. Below LARGE the copy wraps to several lines and
@@ -158,6 +219,24 @@ export const FloatingBanner = styled(Box, {
   };
 });
 
+// Breadcrumb on the left, "My activity" on the right. Below LARGE the two
+// stack, since the five labels alone already overflow the width.
+export const StepperBand = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => {
+  const isLarge = screenSize === ScreenSize.LARGE;
+
+  return {
+    display: 'flex',
+    flexDirection: isLarge ? 'row' : 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: theme.sizing.space4,
+    width: '100%',
+    maxWidth: theme.sizing.stepperMaxWidth,
+  };
+});
+
 // At SMALL the five steps are far wider than the viewport, so the row becomes
 // a native touch-drag scroller: overflow-x gives momentum scrolling for free,
 // and scroll-snap settles it on step boundaries.
@@ -166,83 +245,94 @@ export const StepperRow = styled(Box, {
 })<ScreenSizeProps>(({ theme, screenSize }) => ({
   display: 'flex',
   alignItems: 'flex-start',
-  width: '100%',
+  gap: theme.sizing.space2,
+  minWidth: 0,
+  // Figma: the labels' line box starts ~19 below the My activity button's top.
+  paddingTop: screenSize === ScreenSize.LARGE ? theme.sizing.space4 : 0,
   ...(screenSize !== ScreenSize.LARGE && {
+    width: '100%',
     overflowX: 'auto',
     scrollSnapType: 'x mandatory',
-    paddingBottom: theme.sizing.space1,
     ...hideScrollbar,
   }),
 }));
 
-const stepItemStyles = (theme: Theme, screenSize: ScreenSize) => ({
+export type StepState = 'COMPLETE' | 'CURRENT' | 'UPCOMING';
+
+// Figma (Dashboard1): every label is the same navy; only the current step is
+// marked, by a 3.33px rule running 20px past the label each side.
+const stepItemStyles = (
+  theme: Theme,
+  screenSize: ScreenSize,
+  stepState: StepState,
+) => ({
   display: 'flex',
-  flexDirection: 'column' as const,
-  alignItems: 'center',
-  gap: theme.sizing.space1,
   // Must not shrink, or the row has nothing to overflow and labels collide.
   flexShrink: 0,
+  padding: `0 ${theme.sizing.space4}px ${theme.sizing.space4}px`,
+  borderBottom: `3px solid ${
+    stepState === 'CURRENT'
+      ? theme.palette.designSystem.surface.atlanticNavy
+      : 'transparent'
+  }`,
+  color: theme.palette.designSystem.surface.atlanticNavy,
+  ...theme.typography.stepLabel,
+  whiteSpace: 'nowrap' as const,
   ...(screenSize !== ScreenSize.LARGE && { scrollSnapAlign: 'start' }),
 });
 
-export const StepItem = styled(Box, {
-  shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => stepItemStyles(theme, screenSize));
+const noStepProps = (prop: PropertyKey) =>
+  prop !== 'screenSize' && prop !== 'stepState';
 
-// A completed step: same layout as StepItem, but a real button so it takes
-// keyboard focus and Enter/Space. The label underlines on hover and focus so it
-// reads as a link.
+export const StepItem = styled(Box, {
+  shouldForwardProp: noStepProps,
+})<ScreenSizeProps & { stepState: StepState }>(
+  ({ theme, screenSize, stepState }) =>
+    stepItemStyles(theme, screenSize, stepState),
+);
+
+// A step that links back to its page: same look as StepItem, but a real button
+// so it takes keyboard focus and Enter/Space. The label underlines on hover and
+// focus so it reads as a link.
 export const StepButton = styled(ButtonBase, {
-  shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => ({
-  ...stepItemStyles(theme, screenSize),
-  borderRadius: theme.sizing.space1,
-  '&:hover .step-label, &.Mui-focusVisible .step-label': {
-    textDecoration: 'underline',
+  shouldForwardProp: noStepProps,
+})<ScreenSizeProps & { stepState: StepState }>(
+  ({ theme, screenSize, stepState }) => ({
+    ...stepItemStyles(theme, screenSize, stepState),
+    '&:hover .step-label, &.Mui-focusVisible .step-label': {
+      textDecoration: 'underline',
+    },
+  }),
+);
+
+// Figma: Rubik 23.3/600, sitting level with the labels' baseline.
+export const StepSeparator = styled(Box)(({ theme }) => ({
+  flexShrink: 0,
+  fontFamily: theme.typography.stepLabel.fontFamily,
+  fontWeight: 600,
+  fontSize: 23,
+  lineHeight: 1,
+  color: theme.palette.designSystem.surface.atlanticNavy,
+}));
+
+// Figma: 229x42, radius 21. Drawn in Open Sans 14/600, which the app does not
+// load; Rubik at the same size and weight stands in.
+export const MyActivityButton = styled(Button)(({ theme }) => ({
+  flexShrink: 0,
+  minWidth: 229,
+  height: 42,
+  padding: `0 ${theme.sizing.space5}px`,
+  borderRadius: 21,
+  backgroundColor: theme.palette.designSystem.foreground.accentBlue,
+  color: theme.palette.designSystem.surface.white,
+  ...theme.typography.buttonLabelSm,
+  fontWeight: 600,
+  textTransform: 'none',
+  whiteSpace: 'nowrap',
+  '&:hover': {
+    backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
   },
 }));
-
-export type StepState = 'COMPLETE' | 'CURRENT' | 'UPCOMING';
-
-/** One colour per step state — the circle fill and the label share it. */
-export const stepColor = (theme: Theme, state: StepState) => {
-  const palette = theme.palette.designSystem;
-  if (state === 'CURRENT') return palette.foreground.accentBlue;
-  if (state === 'COMPLETE') return palette.surface.darkBlue;
-  return palette.surface.neutralGray;
-};
-
-export const StepCircle = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'stepState',
-})<{ stepState: StepState }>(({ theme, stepState }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: stepCircleSize,
-  height: stepCircleSize,
-  borderRadius: '50%',
-  backgroundColor: stepColor(theme, stepState),
-  color: theme.palette.designSystem.background.offWhite,
-  ...theme.typography.stepNumber,
-}));
-
-// Grows to fill whatever the labels leave, so the uneven label widths
-// ("Assess" vs "Reflect on impact") need no hardcoded offsets. Inside the
-// SMALL scroller it takes a fixed width instead, since there is no width left
-// to distribute.
-export const StepConnector = styled(Box, {
-  shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => {
-  const isSmall = screenSize === ScreenSize.SMALL;
-
-  return {
-    flex: isSmall ? `0 0 ${theme.sizing.space11}px` : '1 1 0',
-    minWidth: isSmall ? undefined : theme.sizing.space5,
-    height: theme.borders.borderWidth,
-    marginTop: stepCircleSize / 2,
-    backgroundColor: theme.palette.designSystem.foreground.accentBlue,
-  };
-});
 
 // Figma: the 858 content column splits 357 (chips) + 98 gap + 403 (select).
 // Below LARGE the two stack, class above week.
@@ -341,12 +431,13 @@ export const WeekSelect = styled(Select<string>)(({ theme }) => ({
   backgroundColor: theme.palette.designSystem.surface.white,
   color: theme.palette.designSystem.surface.atlanticNavy,
   ...theme.typography.placeholderLabel,
+  // Figma #E0E4EF: 6 off greyAccent at its widest channel, so it reuses it.
   '& .MuiOutlinedInput-notchedOutline': {
     borderWidth: 2,
-    borderColor: theme.palette.designSystem.surface.darkBlue,
+    borderColor: theme.palette.designSystem.foreground.greyAccent,
   },
   '&:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: theme.palette.designSystem.surface.darkBlue,
+    borderColor: theme.palette.designSystem.foreground.greyAccent,
   },
   '& .MuiSelect-icon': {
     color: theme.palette.designSystem.surface.atlanticNavy,
