@@ -119,16 +119,15 @@
     "copyright": "Copyright © 2026 RightOn Education. Todos los derechos reservados.",
     "privacypolicy": "Política de Privacidad"
   },
-  "home": {
-    "banner": "Los resultados de tu clase están listos: revisa los patrones de conceptos erróneos y las actividades recomendadas",
-    "dismissBanner": "Descartar",
-    "title": "Bienvenido de nuevo a MicroCoach",
-    "subtitle": "Sube tus archivos MIU para comprender mejor\nel pensamiento de tus estudiantes y recibir los próximos pasos recomendados.",
+  "dashboard": {
+    "title": "Bienvenido a MicroCoach",
+    "titleReturning": "Bienvenido de nuevo a MicroCoach",
+    "subtitle": "Sube tus archivos MIU del lunes para comprender mejor\nel pensamiento de tus estudiantes y recibir los próximos pasos recomendados.",
     "classPrompt": "¿Con qué clase trabajas hoy?",
     "moreClasses": "Más",
     "weekLabel": "Semana",
     "cta": {
-      "ASSESS": "Sube archivos MIU para analizar",
+      "ASSESS": "Sube los archivos MIU del lunes para analizar",
       "UNDERSTAND": "Revisar patrones de conceptos erróneos",
       "REASSESS": "Subir resultados de la reevaluación",
       "REFLECT": "Reflexionar sobre el impacto"
@@ -140,47 +139,53 @@
       "REASSESS": "Reevaluar",
       "REFLECT": "Reflexionar"
     },
-    "noClassesTitle": "Agrega tu primera clase para comenzar",
-    "addClassPlaceholder": "Nombre de la clase",
-    "addClass": "Agregar clase",
-    "addClassError": "No se pudo guardar la clase. Inténtalo de nuevo.",
+    "noClassesTitle": "Agrega tus clases para comenzar",
     "sidebar": {
-      "home": "Inicio",
+      "dashboard": "Inicio",
       "thisWeek": "Esta semana",
       "pastActivities": "Actividades anteriores"
     },
-    "weekNumber": "Semana {{number}}",
-    "myActivity": "Mi actividad"
+    "myActivity": "Mi actividad",
+    "noClassesHint": "Las clases se agregan en Configuración de la cuenta.",
+    "accountSettingsLink": "Ir a Configuración de la cuenta",
+    "weekOption": "Semana {{number}} ({{range}})",
+    "classesError": "No pudimos cargar tus clases. Actualiza la página para intentarlo de nuevo.",
+    "loadingClasses": "Cargando tus clases",
+    "loadingNextStep": "Cargando tu próximo paso"
   },
   "thisWeek": {
     "title": "Progreso semanal de actividades",
-    "addClass": "Agregar otra clase",
-    "sort": "Ordenar",
-    "sortRecent": "Más recientes primero",
-    "sortOldest": "Más antiguas primero",
-    "sortClass": "Por clase",
+    "weekHeading": "Semana {{number}}: {{range}}",
     "students": "{{count}} estudiantes",
-    "step": "Paso {{number}}: {{label}}",
-    "open": "Abrir",
-    "waiting": "Esperando a MicroCoach",
-    "next": {
-      "ASSESS": "Analizando tus archivos MIU, los resultados llegarán pronto",
-      "UNDERSTAND": "Revisa los conceptos erróneos antes de elegir una actividad",
-      "CHOOSE": "Elige tu próxima actividad",
-      "REASSESS": "Compara tus resultados MIU y RTD para comprender el crecimiento de la clase",
+    "waiting": "Esperando a MicroCoach...",
+    "remove": "Eliminar",
+    "status": {
+      "ASSESS": "Sube tus archivos MIU del lunes para comenzar",
+      "AWAITING": "Analizando tus archivos MIU, los resultados llegarán pronto",
+      "UNDERSTAND": "Comprende los conceptos erróneos antes de elegir una actividad",
+      "CHOOSE": "Selecciona tu próxima actividad",
+      "REASSESS": "Compara tus resultados MIU para comprender el crecimiento de la clase",
       "REFLECT": "Reflexiona sobre cómo ha crecido tu clase"
     },
-    "sortLabel": "Ordenar actividades"
+    "action": {
+      "ASSESS": "Subir archivos MIU",
+      "UNDERSTAND": "Revisar conceptos erróneos",
+      "CHOOSE": "Ver actividades",
+      "REASSESS": "Resultados de reevaluación",
+      "REFLECT": "Reflexionar"
+    }
   },
   "pastActivities": {
     "title": "Actividades anteriores",
-    "classWeek": "{{className}} · {{week}}",
-    "incomplete": "Incompleto: subir archivos MIU",
+    "weekHeading": "Semana {{number}}: {{range}}",
+    "students": "{{count}} estudiantes",
     "completed": "Completado el {{date}}",
-    "studentWorks": "{{count}} trabajos de estudiantes",
-    "openDetails": "Abrir detalles de la actividad",
+    "reviewResults": "Revisar resultados de la clase",
+    "viewData": "Ver datos",
     "remove": "Eliminar",
-    "weekOf": "Semana del {{date}}"
+    "sort": "Ordenar",
+    "sortLabel": "Ordenar actividades",
+    "sortClass": "Por clase"
   },
   "signup": {
     "welcome": "Bienvenido a MicroCoach",
@@ -282,7 +287,6 @@
     "ppqResponses": "Respuestas MIU",
     "backToUpload": "Volver a subir",
     "submit": "Enviar archivos para análisis",
-    "weekOf": "Semana del {{date}}",
     "noClass": "Ninguna clase seleccionada",
     "addClassHint": "Agrega una clase en el panel para comenzar a subir archivos."
   },

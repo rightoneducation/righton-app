@@ -1,24 +1,34 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import SidebarPage from '../components/SidebarPage';
-import ActivityListToolbar from '../components/ActivityListToolbar';
+import ActivitySortMenu from '../components/ActivitySortMenu';
 import {
   ActivitySortOrder,
-  sortActivities,
+  groupPastActivities,
 } from '../lib/ActivityListModels';
 import { mockPastActivities } from '../lib/mocks/mockClassActivity';
+import { formatSchoolWeek, formatShortDate } from '../lib/weeks';
 import {
+  ActivityGroupList,
   ActivityList,
   ActivityCard,
+  ActivityName,
+  CardActionButton,
+  CardColumn,
   CardLine,
-  CardDivider,
-  OutlinePill,
-  IncompletePill,
-  SoftPillButton,
+  CardMessage,
+  CardRow,
+  ClassName,
+  CompletedTag,
+  RemoveTile,
+  StudentsTag,
+  WeekHeading,
+  WeekGroup,
+  WeekHeadingRow,
   ScreenSizeProps,
 } from '../lib/styledcomponents/ActivityListStyledComponents';
 
@@ -30,87 +40,85 @@ const logPending = (action: string, id?: string) => {
 
 export default function PastActivities({ screenSize }: ScreenSizeProps) {
   const { t, i18n } = useTranslation();
+  const theme = useTheme();
+  const navigate = useNavigate();
   const [sortOrder, setSortOrder] = React.useState(
     ActivitySortOrder.RECENT_FIRST,
   );
-  const rows = sortActivities(
-    mockPastActivities,
-    sortOrder,
-    (row) => row.weekStart,
-  );
-
-  // Date-only strings parse as UTC midnight; formatting in UTC keeps "Jun 30"
-  // from becoming "Jun 29" west of Greenwich.
-  const shortDate = (isoDate: string) =>
-    new Date(isoDate).toLocaleDateString(i18n.language, {
-      month: 'short',
-      day: 'numeric',
-      timeZone: 'UTC',
-    });
+  const groups = groupPastActivities(mockPastActivities, sortOrder);
 
   return (
-    <SidebarPage screenSize={screenSize} title={t('pastActivities.title')}>
-      <ActivityList screenSize={screenSize}>
-        <ActivityListToolbar
-          sortOrder={sortOrder}
-          onSortChange={setSortOrder}
-          onAddClass={() => logPending('add-class')}
-        />
-        {rows.map((row) => (
-          // Figma: 28 between the incomplete pill, the title line and the
-          // buttons.
-          <ActivityCard key={row.id} tint="pink" sx={{ gap: 3.5 }}>
-            {!row.completedAt && (
-              <IncompletePill>{t('pastActivities.incomplete')}</IncompletePill>
-            )}
-            <CardLine>
-              <Typography
-                variant="headingMd"
-                sx={{ color: 'designSystem.surface.atlanticNavy' }}
-              >
-                {t('pastActivities.classWeek', {
-                  className: row.className,
-                  week: t('pastActivities.weekOf', {
-                    date: shortDate(row.weekStart),
-                  }),
-                })}
-              </Typography>
-              <CardDivider aria-hidden>|</CardDivider>
-              {row.completedAt && (
-                <OutlinePill tone="plain">
-                  {t('pastActivities.completed', {
-                    date: shortDate(row.completedAt),
-                  })}
-                </OutlinePill>
+    <SidebarPage
+      screenSize={screenSize}
+      title={t('pastActivities.title')}
+      contentGap={theme.sizing.space12}
+    >
+      <ActivityGroupList>
+        {groups.map((group, groupIndex) => (
+          <WeekGroup key={group.weekStart ?? 'by-class'}>
+            <WeekHeadingRow>
+              {group.weekStart && (
+                <WeekHeading>
+                  {formatSchoolWeek(
+                    group.weekStart,
+                    t,
+                    i18n.language,
+                    'pastActivities.weekHeading',
+                  )}
+                </WeekHeading>
               )}
-              <OutlinePill tone="plain">
-                {t('pastActivities.studentWorks', {
-                  count: row.studentWorkCount,
-                })}
-              </OutlinePill>
-            </CardLine>
-            <Box
-              sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}
-            >
-              <SoftPillButton
-                disableElevation
-                startIcon={<DescriptionOutlinedIcon />}
-                onClick={() => logPending('open-details', row.id)}
-              >
-                {t('pastActivities.openDetails')}
-              </SoftPillButton>
-              <SoftPillButton
-                disableElevation
-                startIcon={<DeleteOutlineIcon />}
-                aria-label={`${t('pastActivities.remove')} ${row.className}`}
-                onClick={() => logPending('remove', row.id)}
-              >
-                {t('pastActivities.remove')}
-              </SoftPillButton>
-            </Box>
-          </ActivityCard>
+              {groupIndex === 0 && (
+                <ActivitySortMenu
+                  sortOrder={sortOrder}
+                  onSortChange={setSortOrder}
+                />
+              )}
+            </WeekHeadingRow>
+            <ActivityList>
+              {group.rows.map((row) => (
+                <CardRow key={row.id}>
+                  <ActivityCard screenSize={screenSize}>
+                    <CardColumn align="start">
+                      <CardLine>
+                        <ClassName>{row.className}</ClassName>
+                        <StudentsTag>
+                          {t('pastActivities.students', {
+                            count: row.studentCount,
+                          })}
+                        </StudentsTag>
+                        <CompletedTag>
+                          {t('pastActivities.completed', {
+                            date: formatShortDate(row.completedAt, i18n.language),
+                          })}
+                        </CompletedTag>
+                      </CardLine>
+                      <ActivityName>{row.activityName}</ActivityName>
+                    </CardColumn>
+                    <CardColumn align="end">
+                      <CardMessage>{t('pastActivities.reviewResults')}</CardMessage>
+                      {/* Design note: View data goes back to the reflect screen.
+                          Until rows are real it opens the selected class's. */}
+                      <CardActionButton
+                        disableElevation
+                        endIcon={<ChevronRightIcon />}
+                        onClick={() => navigate('/reflect')}
+                      >
+                        {t('pastActivities.viewData')}
+                      </CardActionButton>
+                    </CardColumn>
+                  </ActivityCard>
+                  <RemoveTile
+                    aria-label={`${t('pastActivities.remove')} ${row.className}`}
+                    onClick={() => logPending('remove', row.id)}
+                  >
+                    <DeleteOutlineIcon fontSize="small" />
+                  </RemoveTile>
+                </CardRow>
+              ))}
+            </ActivityList>
+          </WeekGroup>
         ))}
-      </ActivityList>
+      </ActivityGroupList>
     </SidebarPage>
   );
 }

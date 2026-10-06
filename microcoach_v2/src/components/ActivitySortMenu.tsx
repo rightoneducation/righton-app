@@ -2,55 +2,43 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import AddIcon from '@mui/icons-material/Add';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { ActivitySortOrder } from '../lib/ActivityListModels';
 import {
-  ActivityToolbar,
-  AddClassPill,
   SortButton,
   sortMenuPaperSx,
 } from '../lib/styledcomponents/ActivityListStyledComponents';
 
+// By class is the only option offered; the page opens grouped by week,
+// newest first (ActivitySortOrder.RECENT_FIRST).
 const SORT_OPTIONS: { order: ActivitySortOrder; labelKey: string }[] = [
-  { order: ActivitySortOrder.RECENT_FIRST, labelKey: 'thisWeek.sortRecent' },
-  { order: ActivitySortOrder.OLDEST_FIRST, labelKey: 'thisWeek.sortOldest' },
-  { order: ActivitySortOrder.BY_CLASS, labelKey: 'thisWeek.sortClass' },
+  { order: ActivitySortOrder.BY_CLASS, labelKey: 'pastActivities.sortClass' },
 ];
 
-interface ActivityListToolbarProps {
+interface ActivitySortMenuProps {
   sortOrder: ActivitySortOrder;
   onSortChange: (order: ActivitySortOrder) => void;
-  onAddClass: () => void;
 }
 
-// "Add another class" on the left, Sort on the right. Figma draws the sort
-// menu open above the button, right edges aligned.
-export default function ActivityListToolbar({
+// Past Activities' Sort control. Figma (v2 Dashboard3) draws the menu open
+// above the button, right edges aligned.
+export default function ActivitySortMenu({
   sortOrder,
   onSortChange,
-  onAddClass,
-}: ActivityListToolbarProps) {
+}: ActivitySortMenuProps) {
   const { t } = useTranslation();
   const [sortAnchor, setSortAnchor] = React.useState<HTMLElement | null>(null);
 
   return (
-    <ActivityToolbar>
-      <AddClassPill
-        disableElevation
-        startIcon={<AddIcon />}
-        onClick={onAddClass}
-      >
-        {t('thisWeek.addClass')}
-      </AddClassPill>
+    <>
       <SortButton
         startIcon={<SwapVertIcon />}
-        aria-label={t('thisWeek.sortLabel')}
+        aria-label={t('pastActivities.sortLabel')}
         aria-haspopup="menu"
         aria-expanded={!!sortAnchor}
         onClick={(event) => setSortAnchor(event.currentTarget)}
       >
-        {t('thisWeek.sort')}
+        {t('pastActivities.sort')}
       </SortButton>
       <Menu
         anchorEl={sortAnchor}
@@ -65,7 +53,13 @@ export default function ActivityListToolbar({
             key={option.order}
             selected={option.order === sortOrder}
             onClick={() => {
-              onSortChange(option.order);
+              // Picking the active option turns it off, back to the default
+              // week view; with one option there is no other way back.
+              onSortChange(
+                option.order === sortOrder
+                  ? ActivitySortOrder.RECENT_FIRST
+                  : option.order,
+              );
               setSortAnchor(null);
             }}
           >
@@ -73,6 +67,6 @@ export default function ActivityListToolbar({
           </MenuItem>
         ))}
       </Menu>
-    </ActivityToolbar>
+    </>
   );
 }

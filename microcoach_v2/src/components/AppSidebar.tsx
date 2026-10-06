@@ -9,10 +9,10 @@ import {
   Sidebar,
   SidebarItem,
   SidebarSelect,
-} from '../lib/styledcomponents/HomeStyledComponents';
+} from '../lib/styledcomponents/DashboardStyledComponents';
 
 const icons: Record<string, React.ReactNode> = {
-  home: <HomeOutlinedIcon fontSize="small" />,
+  dashboard: <HomeOutlinedIcon fontSize="small" />,
   'this-week': <CalendarTodayOutlinedIcon fontSize="small" />,
   'past-activities': <HistoryOutlinedIcon fontSize="small" />,
 };

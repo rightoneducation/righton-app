@@ -7,7 +7,7 @@ import {
   StepItem,
   StepButton,
   StepSeparator,
-} from '../lib/styledcomponents/HomeStyledComponents';
+} from '../lib/styledcomponents/DashboardStyledComponents';
 
 interface FlowStepperProps {
   steps: IFlowStep[];

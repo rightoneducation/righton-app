@@ -1,37 +1,28 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import SidebarPage from '../components/SidebarPage';
-import ActivityListToolbar from '../components/ActivityListToolbar';
-import { FlowStep } from '../lib/flowProgress';
-import {
-  ActivitySortOrder,
-  IWeeklyClassProgress,
-  sortActivities,
-} from '../lib/ActivityListModels';
+import ClassStepTrack from '../components/ClassStepTrack';
+import { IWeeklyClassProgress } from '../lib/ActivityListModels';
 import { mockWeeklyProgress } from '../lib/mocks/mockClassActivity';
+import { currentSchoolWeek, formatSchoolWeek } from '../lib/weeks';
 import {
   ActivityList,
   ActivityCard,
-  CardRow,
+  CardActionButton,
+  CardColumn,
   CardLine,
-  CardDivider,
-  CardTag,
-  OutlinePill,
-  OpenButton,
+  CardMessage,
+  CardRow,
+  ClassName,
   RemoveTile,
+  StudentsTag,
+  WaitingPill,
+  WeekSubheading,
   ScreenSizeProps,
 } from '../lib/styledcomponents/ActivityListStyledComponents';
-
-const STEP_NUMBER: Record<IWeeklyClassProgress['step'], number> = {
-  [FlowStep.ASSESS]: 1,
-  [FlowStep.UNDERSTAND]: 2,
-  [FlowStep.CHOOSE]: 3,
-  [FlowStep.REASSESS]: 4,
-  [FlowStep.REFLECT]: 5,
-};
 
 // Placeholder for actions that need the cross-class data this page mocks.
 const logPending = (action: string, id?: string) => {
@@ -39,64 +30,65 @@ const logPending = (action: string, id?: string) => {
   console.log('this-week action not yet built', action, id);
 };
 
+// The status line's key: a class whose files are still being analysed reads
+// differently from one that has not uploaded yet, though both are at ASSESS.
+const statusKey = (row: IWeeklyClassProgress) =>
+  row.isAwaitingResults ? 'AWAITING' : row.step;
+
 export default function ThisWeek({ screenSize }: ScreenSizeProps) {
-  const { t } = useTranslation();
-  const [sortOrder, setSortOrder] = React.useState(
-    ActivitySortOrder.RECENT_FIRST,
-  );
-  const rows = sortActivities(
-    mockWeeklyProgress,
-    sortOrder,
-    (row) => row.createdAt,
+  const { t, i18n } = useTranslation();
+  const theme = useTheme();
+
+  // Design note (v2 Dashboard2): no sorting here, at most ~six classes a week,
+  // listed alphabetically.
+  const rows = [...mockWeeklyProgress].sort((a, b) =>
+    a.className.localeCompare(b.className),
   );
 
   return (
-    <SidebarPage screenSize={screenSize} title={t('thisWeek.title')}>
-      <ActivityList screenSize={screenSize}>
-        <ActivityListToolbar
-          sortOrder={sortOrder}
-          onSortChange={setSortOrder}
-          onAddClass={() => logPending('add-class')}
-        />
+    <SidebarPage
+      screenSize={screenSize}
+      title={t('thisWeek.title')}
+      contentGap={theme.sizing.space7}
+    >
+      <ActivityList>
+        <WeekSubheading>
+          {formatSchoolWeek(
+            currentSchoolWeek(),
+            t,
+            i18n.language,
+            'thisWeek.weekHeading',
+          )}
+        </WeekSubheading>
         {rows.map((row) => (
           <CardRow key={row.id}>
-            <ActivityCard tint="grey" sx={{ gap: 2.5 }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
-                <CardLine sx={{ flexGrow: 1 }}>
-                  <Typography
-                    variant="headingMd"
-                    sx={{ color: 'designSystem.surface.atlanticNavy' }}
-                  >
-                    {row.className}
-                  </Typography>
-                  <CardDivider aria-hidden>|</CardDivider>
-                  <CardTag tone="step">
-                    {t('thisWeek.step', {
-                      number: STEP_NUMBER[row.step],
-                      label: t(`home.steps.${row.step}`),
-                    })}
-                  </CardTag>
-                  <CardTag tone="count">
+            <ActivityCard screenSize={screenSize}>
+              <CardColumn align="start">
+                <CardLine>
+                  <ClassName>{row.className}</ClassName>
+                  <StudentsTag>
                     {t('thisWeek.students', { count: row.studentCount })}
-                  </CardTag>
+                  </StudentsTag>
                 </CardLine>
-                <Box
-                  sx={{ display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0 }}
-                >
-                  {row.isAwaitingResults && (
-                    <OutlinePill tone="success">{t('thisWeek.waiting')}</OutlinePill>
-                  )}
-                  <OpenButton disableElevation onClick={() => logPending('open', row.id)}>
-                    {t('thisWeek.open')}
-                  </OpenButton>
-                </Box>
-              </Box>
-              <Typography variant="h4" sx={{ color: 'designSystem.surface.black' }}>
-                {t(`thisWeek.next.${row.step}`)}
-              </Typography>
+                <ClassStepTrack step={row.step} />
+              </CardColumn>
+              <CardColumn align="end">
+                <CardMessage>{t(`thisWeek.status.${statusKey(row)}`)}</CardMessage>
+                {row.isAwaitingResults ? (
+                  <WaitingPill>{t('thisWeek.waiting')}</WaitingPill>
+                ) : (
+                  <CardActionButton
+                    disableElevation
+                    endIcon={<ArrowForwardIcon />}
+                    onClick={() => logPending(row.step, row.id)}
+                  >
+                    {t(`thisWeek.action.${row.step}`)}
+                  </CardActionButton>
+                )}
+              </CardColumn>
             </ActivityCard>
             <RemoveTile
-              aria-label={`${t('pastActivities.remove')} ${row.className}`}
+              aria-label={`${t('thisWeek.remove')} ${row.className}`}
               onClick={() => logPending('remove', row.id)}
             >
               <DeleteOutlineIcon fontSize="small" />

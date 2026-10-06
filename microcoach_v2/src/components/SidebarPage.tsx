@@ -5,14 +5,17 @@ import { useSidebarNav } from '../hooks/useSidebarNav';
 import { useI18nReady } from '../hooks/readiness';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import {
-  HomeLayout,
-  HomeContent,
-  HomeBand,
-} from '../lib/styledcomponents/HomeStyledComponents';
+  SidebarLayout,
+  SidebarContent,
+  SidebarTitleBand,
+} from '../lib/styledcomponents/DashboardStyledComponents';
 
 interface SidebarPageProps {
   screenSize: ScreenSize;
   title: string;
+  // Title to content, at LARGE. The list pages' frames differ here (This Week
+  // ~40, Past Activities ~78), so each page passes its own token.
+  contentGap?: number;
   children?: React.ReactNode;
 }
 
@@ -21,22 +24,27 @@ interface SidebarPageProps {
 export default function SidebarPage({
   screenSize,
   title,
+  contentGap,
   children,
 }: SidebarPageProps) {
   const sidebar = useSidebarNav();
   const isReady = useI18nReady();
 
   return (
-    <HomeLayout screenSize={screenSize}>
+    <SidebarLayout screenSize={screenSize}>
       <AppSidebar
         items={sidebar.items}
         screenSize={screenSize}
         onSelect={sidebar.onSelect}
       />
-      <HomeContent screenSize={screenSize}>
+      <SidebarContent
+        screenSize={screenSize}
+        isTitled
+        contentGap={contentGap}
+      >
         {isReady && (
           <>
-            <HomeBand>
+            <SidebarTitleBand>
               <Typography
                 variant="h1"
                 sx={{
@@ -46,11 +54,11 @@ export default function SidebarPage({
               >
                 {title}
               </Typography>
-            </HomeBand>
+            </SidebarTitleBand>
             {children}
           </>
         )}
-      </HomeContent>
-    </HomeLayout>
+      </SidebarContent>
+    </SidebarLayout>
   );
 }

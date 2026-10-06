@@ -228,7 +228,7 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
 
   let headerVariant: HeaderVariant = 'public';
   if (PROFILE_CHROME_SCREENS.has(currentScreen)) headerVariant = 'profile';
-  else if (SIDEBAR_SCREENS.has(currentScreen)) headerVariant = 'home';
+  else if (SIDEBAR_SCREENS.has(currentScreen)) headerVariant = 'sidebar';
   else if (usesAppChrome) headerVariant = 'app';
   else if (isSignUp) headerVariant = 'signup';
 

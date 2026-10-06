@@ -5,11 +5,11 @@ import { ISidebarItem } from '../lib/PipelineModels';
 // The three sidebar screens, in sidebar order. The active tab is read off the
 // URL, so each page renders the same sidebar without saying which one it is.
 const SIDEBAR_DESTINATIONS = [
-  { id: 'home', labelKey: 'home.sidebar.home', path: '/dashboard' },
-  { id: 'this-week', labelKey: 'home.sidebar.thisWeek', path: '/this-week' },
+  { id: 'dashboard', labelKey: 'dashboard.sidebar.dashboard', path: '/dashboard' },
+  { id: 'this-week', labelKey: 'dashboard.sidebar.thisWeek', path: '/this-week' },
   {
     id: 'past-activities',
-    labelKey: 'home.sidebar.pastActivities',
+    labelKey: 'dashboard.sidebar.pastActivities',
     path: '/past-activities',
   },
 ];

@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import ContentRow from '../components/ContentRow';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import { UploadStepProps } from '../lib/UploadModels';
-import { formatWeekLabel } from '../lib/weeks';
+import { formatSchoolWeek } from '../lib/weeks';
 import { SignUpCta } from '../lib/styledcomponents/SignUpStyledComponents';
 import {
   GhostAction,
@@ -54,7 +54,7 @@ export default function UploadRtdReview({
     { label: t('upload.class'), value: className },
     {
       label: t('upload.week'),
-      value: formatWeekLabel(upload.weekStart, t, i18n.language),
+      value: formatSchoolWeek(upload.weekStart, t, i18n.language),
     },
     { label: t('upload.ppqExemplar'), value: upload.exemplar.name },
     { label: t('upload.ppqResponses'), value: upload.responses.name },

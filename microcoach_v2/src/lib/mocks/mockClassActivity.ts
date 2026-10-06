@@ -1,7 +1,7 @@
 import { FlowStep } from '../flowProgress';
 import { IPastActivity, IWeeklyClassProgress } from '../ActivityListModels';
 
-// The rows drawn in dashboard/Dashboard2 and Dashboard3, until a cross-class
+// The rows drawn in dashboard/v2 Dashboard2 and Dashboard3, until a cross-class
 // query exists to replace them.
 
 export const mockWeeklyProgress: IWeeklyClassProgress[] = [
@@ -11,7 +11,6 @@ export const mockWeeklyProgress: IWeeklyClassProgress[] = [
     studentCount: 24,
     step: FlowStep.UNDERSTAND,
     isAwaitingResults: false,
-    createdAt: '2025-07-07T14:00:00.000Z',
   },
   {
     id: 'week-joy',
@@ -19,7 +18,6 @@ export const mockWeeklyProgress: IWeeklyClassProgress[] = [
     studentCount: 24,
     step: FlowStep.CHOOSE,
     isAwaitingResults: false,
-    createdAt: '2025-07-07T13:00:00.000Z',
   },
   {
     id: 'week-peace',
@@ -27,7 +25,6 @@ export const mockWeeklyProgress: IWeeklyClassProgress[] = [
     studentCount: 24,
     step: FlowStep.ASSESS,
     isAwaitingResults: true,
-    createdAt: '2025-07-07T12:00:00.000Z',
   },
   {
     id: 'week-grace',
@@ -35,37 +32,50 @@ export const mockWeeklyProgress: IWeeklyClassProgress[] = [
     studentCount: 24,
     step: FlowStep.REASSESS,
     isAwaitingResults: false,
-    createdAt: '2025-07-07T11:00:00.000Z',
   },
 ];
 
 export const mockPastActivities: IPastActivity[] = [
   {
-    id: 'past-justice',
+    id: 'past-justice-9',
     className: 'Justice',
-    weekStart: '2025-06-30',
-    completedAt: null,
-    studentWorkCount: 24,
+    studentCount: 24,
+    activityName: 'Spot the Slip',
+    completedAt: '2026-10-22',
   },
   {
-    id: 'past-joy',
+    id: 'past-joy-9',
     className: 'Joy',
-    weekStart: '2025-06-24',
-    completedAt: '2025-07-03',
-    studentWorkCount: 22,
+    studentCount: 24,
+    activityName: 'Compare the Thinking',
+    completedAt: '2026-10-22',
   },
   {
-    id: 'past-peace',
+    id: 'past-peace-9',
     className: 'Peace',
-    weekStart: '2025-06-15',
-    completedAt: '2025-07-02',
-    studentWorkCount: 22,
+    studentCount: 24,
+    activityName: 'Math Detective',
+    completedAt: '2026-10-22',
   },
   {
-    id: 'past-grace',
+    id: 'past-grace-9',
     className: 'Grace',
-    weekStart: '2025-06-05',
-    completedAt: '2025-07-01',
-    studentWorkCount: 22,
+    studentCount: 24,
+    activityName: 'Spot the Slip',
+    completedAt: '2026-10-22',
+  },
+  {
+    id: 'past-grace-8',
+    className: 'Grace',
+    studentCount: 24,
+    activityName: 'My Favorite No',
+    completedAt: '2026-10-15',
+  },
+  {
+    id: 'past-justice-8',
+    className: 'Justice',
+    studentCount: 24,
+    activityName: 'Make Your Case',
+    completedAt: '2026-10-15',
   },
 ];

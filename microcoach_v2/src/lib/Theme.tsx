@@ -23,7 +23,7 @@ const designSystemColors = {
     fadedWhiteVeil: '#FFFFFF2E',
     // black at 50% — the modal backdrop.
     scrim: '#00000080',
-    // The sidebar screens' page (Home, This Week, Past Activities). 5 off
+    // The sidebar screens' page (Dashboard, This Week, Past Activities). 5 off
     // offWhite at its widest channel, but cool where offWhite is warm — the
     // redesign's whole move away from cream — so it stays its own value.
     coolWhite: '#FAFDFE',
@@ -483,17 +483,16 @@ const sizing = {
   // Review and submit runs narrower than the rest of the flow: Figma insets it
   // to x 502..1418, so the column is the card.
   reviewContentMaxWidth: 916,
-  // Home is its own column: Figma splits 858 into 357 chips + 98 + 403 select.
-  // The stepper row and banner deliberately break out of that column: Figma
-  // (Dashboard1) runs the breadcrumb and "My activity" across x 401.5..1566.5.
-  homeContentMaxWidth: 858,
-  stepperMaxWidth: 1165,
-  // The white card around the class and week pickers (Dashboard1: 914 wide).
-  homeCardMaxWidth: 914,
+  // The dashboard is its own column: Figma splits 858 into 357 chips + 98 + 403 select.
+  // The stepper row and the card around it break out of that column: Figma
+  // (dashboard/v2 Dashboard1) runs both across x 383..1589.
+  dashboardContentMaxWidth: 858,
+  stepperMaxWidth: 1206,
+  // The white card holding title, pickers and CTA (v2 Dashboard1: 1206 wide).
+  dashboardCardMaxWidth: 1206,
   // This Week and Past Activities: the card list, side tile included
-  // (Dashboard2: 1172 card + 12 + 44 tile; Dashboard3: 1230 card).
-  activityListMaxWidth: 1230,
-  bannerMaxWidth: 770,
+  // (v2 Dashboard2/3: 1172 card + 16 + 44 tile).
+  activityListMaxWidth: 1232,
   // Figma corner radii, shared by the step panel, step cards and video card.
   sectionRadius: 32,
   heroImageRadius: 37,

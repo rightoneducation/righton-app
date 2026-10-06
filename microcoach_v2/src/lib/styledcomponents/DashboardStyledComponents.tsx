@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { ScreenSize } from '../MicroCoachModels';
 import { pageGutter } from '../../components/ContentRow';
 import { noScreenSize, ScreenSizeProps } from './LandingStyledComponents';
-import homePatternBand from '../../images/homePatternBand.svg';
+import sidebarPatternTile from '../../images/sidebarPatternTile.svg';
 
 // Lifted from MisconceptionModalStyledComponents — a touch-drag scroller
 // shouldn't show a desktop scrollbar track.
@@ -28,9 +28,12 @@ interface ActiveProps {
 
 // Figma (Dashboard1-3): the tiled band runs y 519-877 of the frame, 383 below
 // the 136 header. It is drawn under the sidebar, which simply covers it.
+// sidebarPatternTile.svg is design's 497-wide module (dashboard/v2/
+// BackgroundPattern.svg) padded to 601: the frames repeat it every 601px
+// (x -1, 600, 1201), and repeat-x lays copies edge to edge at the image width.
 const patternBandTop = 383;
 
-export const HomeLayout = styled(Box, {
+export const SidebarLayout = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => ({
   display: 'flex',
@@ -42,14 +45,14 @@ export const HomeLayout = styled(Box, {
   // The band is decoration sized for the desktop frame; below LARGE the
   // content stacks and would sit across it at arbitrary points.
   ...(screenSize === ScreenSize.LARGE && {
-    backgroundImage: `url(${homePatternBand})`,
+    backgroundImage: `url(${sidebarPatternTile})`,
     backgroundRepeat: 'repeat-x',
     backgroundPosition: `left 0 top ${patternBandTop}px`,
   }),
 }));
 
 // Sits below the header rather than beside it, on the three sidebar screens
-// (Home, This Week, Past Activities).
+// (Dashboard, This Week, Past Activities).
 //
 // At LARGE the right padding is 0 so the active tab can run flush into the
 // page edge, as Figma draws it (x21 to the sidebar's 264). The tabs are 68
@@ -125,27 +128,42 @@ export const SidebarSelect = styled(Select<string>)(({ theme }) => ({
   '& .MuiSelect-icon': { color: theme.palette.designSystem.surface.white },
 }));
 
-// Not clamped itself — each band below sets its own max width, so the stepper
-// can run wider than the column the rest of the page sits in.
-export const HomeContent = styled(Box, {
-  shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => {
+interface SidebarContentProps extends ScreenSizeProps {
+  // The list pages open on a page title; the dashboard opens on its stepper.
+  isTitled?: boolean;
+  // Overrides the LARGE section gap (a theme.sizing token).
+  contentGap?: number;
+}
+
+// The sidebar screens' content column: its gap spaces the page's sections and
+// its padding is the page inset. Not clamped itself — each section sets its own
+// max width, so the stepper and card can run wider than the picker column.
+// Figma (v2 Dashboard1-3, LARGE): the dashboard's stepper row starts ~38 under
+// the header and its card ~64 below the stepper; the list pages' title sits
+// ~92 down; the gap from title to list differs per page, so a page can pass
+// its own (contentGap).
+export const SidebarContent = styled(Box, {
+  shouldForwardProp: (prop) =>
+    prop !== 'screenSize' && prop !== 'isTitled' && prop !== 'contentGap',
+})<SidebarContentProps>(({ theme, screenSize, isTitled, contentGap }) => {
   const isLarge = screenSize === ScreenSize.LARGE;
   const gutter = pageGutter(theme, screenSize);
+  let paddingTop = theme.sizing.space6;
+  let gap = theme.sizing.space6;
+  if (isLarge) {
+    paddingTop = isTitled ? theme.sizing.space13 : theme.sizing.space7;
+    gap = contentGap ?? (isTitled ? theme.sizing.space8 : theme.sizing.space11);
+  }
 
   return {
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    gap,
     flexGrow: 1,
     width: '100%',
-    // At LARGE the banner floats, so this alone puts the hero's line box at the
-    // Figma y (Dashboard1-3: baseline 276, 24 lower than the earlier frame).
-    // Below that the banner is in flow and sets the hero's position.
-    paddingTop: isLarge
-      ? theme.sizing.space11 + theme.sizing.space1 + theme.sizing.space5
-      : theme.sizing.space6,
+    paddingTop,
     paddingBottom: isLarge ? theme.sizing.space12 : theme.sizing.space8,
     paddingLeft: gutter,
     paddingRight: gutter,
@@ -153,71 +171,58 @@ export const HomeContent = styled(Box, {
   };
 });
 
-export const HomeBand = styled(Box)(({ theme }) => ({
+export const SidebarTitleBand = styled(Box)(({ theme }) => ({
   width: '100%',
-  maxWidth: theme.sizing.homeContentMaxWidth,
+  maxWidth: theme.sizing.dashboardContentMaxWidth,
 }));
 
 // Figma (Dashboard1): three stacked soft shadows, offset down and right.
-export const homeCardShadow = [
+export const dashboardCardShadow = [
   '5px 8px 9px rgba(0, 0, 0, 0.03)',
   '11px 18px 13px rgba(0, 0, 0, 0.02)',
   '20px 32px 15px rgba(0, 0, 0, 0.01)',
 ].join(', ');
 
-// Figma (Dashboard1): 914x322, radius 20, holding the subtitle and pickers.
-// 914 is the 858 picker column plus 28 each side.
-export const HomeCard = styled(Box, {
+// Figma (v2 Dashboard1): 1206x542, radius 20, holding the heading, then the
+// pickers and CTA. The two groups sit ~92 apart (space12); each spaces its own
+// items more tightly.
+export const DashboardCard = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => {
   const isLarge = screenSize === ScreenSize.LARGE;
-  const inset = theme.sizing.space5 + theme.sizing.space0;
 
   return {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: theme.sizing.space6,
+    gap: isLarge ? theme.sizing.space12 : theme.sizing.space6,
     width: '100%',
-    maxWidth: theme.sizing.homeCardMaxWidth,
-    padding: isLarge
-      ? `${theme.sizing.space6}px ${inset}px ${theme.sizing.space6 + theme.sizing.space0}px`
-      : theme.sizing.space4,
+    maxWidth: theme.sizing.dashboardCardMaxWidth,
+    padding: isLarge ? theme.sizing.space6 : theme.sizing.space4,
     borderRadius: theme.sizing.space4,
     backgroundColor: theme.palette.designSystem.surface.white,
-    boxShadow: homeCardShadow,
+    boxShadow: dashboardCardShadow,
     boxSizing: 'border-box',
   };
 });
 
-// Figma draws the banner over the hero's leading rather than above it, so at
-// LARGE it sits out of flow. Below LARGE the copy wraps to several lines and
-// would grow down into the hero, so it returns to the flow instead.
-export const FloatingBanner = styled(Box, {
-  shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => {
-  const isLarge = screenSize === ScreenSize.LARGE;
+// Title over subtitle (Figma: ~20 between them).
+export const DashboardHeading = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: theme.sizing.space4,
+  textAlign: 'center',
+}));
 
-  if (!isLarge) {
-    return {
-      width: '100%',
-      maxWidth: theme.sizing.bannerMaxWidth,
-      marginBottom: theme.sizing.space6,
-      boxSizing: 'border-box',
-    };
-  }
-
-  return {
-    position: 'absolute',
-    top: theme.sizing.space5,
-    left: '50%',
-    transform: 'translateX(-50%)',
-    width: `calc(100% - ${2 * pageGutter(theme, screenSize)}px)`,
-    maxWidth: theme.sizing.bannerMaxWidth,
-    boxSizing: 'border-box',
-    zIndex: 1,
-  };
-});
+// The pickers and the CTA under them (Figma: ~32 between).
+export const DashboardForm = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: theme.sizing.space6,
+  width: '100%',
+}));
 
 // Breadcrumb on the left, "My activity" on the right. Below LARGE the two
 // stack, since the five labels alone already overflow the width.
@@ -244,11 +249,10 @@ export const StepperRow = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => ({
   display: 'flex',
-  alignItems: 'flex-start',
+  // Centred so the separators sit level with the labels inside their tabs.
+  alignItems: 'center',
   gap: theme.sizing.space2,
   minWidth: 0,
-  // Figma: the labels' line box starts ~19 below the My activity button's top.
-  paddingTop: screenSize === ScreenSize.LARGE ? theme.sizing.space4 : 0,
   ...(screenSize !== ScreenSize.LARGE && {
     width: '100%',
     overflowX: 'auto',
@@ -260,7 +264,9 @@ export const StepperRow = styled(Box, {
 export type StepState = 'COMPLETE' | 'CURRENT' | 'UPCOMING';
 
 // Figma (Dashboard1): every label is the same navy; only the current step is
-// marked, by a 3.33px rule running 20px past the label each side.
+// marked, by a 3.33px rule running 20px past the label each side and 20 below
+// it. The tab's even 20 inset gives both, and puts the label ~20 below the top
+// of the row, level with the Figma frame.
 const stepItemStyles = (
   theme: Theme,
   screenSize: ScreenSize,
@@ -269,7 +275,7 @@ const stepItemStyles = (
   display: 'flex',
   // Must not shrink, or the row has nothing to overflow and labels collide.
   flexShrink: 0,
-  padding: `0 ${theme.sizing.space4}px ${theme.sizing.space4}px`,
+  padding: theme.sizing.space4,
   borderBottom: `3px solid ${
     stepState === 'CURRENT'
       ? theme.palette.designSystem.surface.atlanticNavy
@@ -334,8 +340,16 @@ export const MyActivityButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-// Figma: the 858 content column splits 357 (chips) + 98 gap + 403 (select).
-// Below LARGE the two stack, class above week.
+// Figma: three chips per row (the export's 3 + 2 wrap). The class column's
+// wrapped content (chips, hint, error) is capped at that width, so it never
+// widens the column; the label alone decides how wide the column is.
+const CHIP_WIDTH = 102;
+const CHIPS_PER_ROW = 3;
+const classSlotMaxWidth = (theme: Theme) =>
+  CHIPS_PER_ROW * CHIP_WIDTH + (CHIPS_PER_ROW - 1) * theme.sizing.space5;
+
+// Class column, then week column (Figma: ~84 between the label's end and the
+// select). Below LARGE the two stack, class above week.
 export const PickerRow = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => {
@@ -346,26 +360,32 @@ export const PickerRow = styled(Box, {
     flexDirection: isLarge ? 'row' : 'column',
     alignItems: 'flex-start',
     width: '100%',
-    maxWidth: theme.sizing.homeContentMaxWidth,
-    gap: isLarge ? theme.sizing.space13 : theme.sizing.space6,
+    maxWidth: theme.sizing.dashboardContentMaxWidth,
+    gap: isLarge ? theme.sizing.space12 : theme.sizing.space6,
   };
 });
 
-// flex-basis resolves against the main axis, so the LARGE basis has to drop
-// once the row turns into a column or it would set a height.
+// At LARGE a column either fits its content (class) or takes the rest of the
+// row (`grow`, week). Below LARGE each spans the full width.
 export const PickerColumn = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'basis' && prop !== 'screenSize',
-})<ScreenSizeProps & { basis: number }>(({ theme, screenSize, basis }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.sizing.space3,
-  flex: screenSize === ScreenSize.LARGE ? `1 1 ${basis}px` : 'none',
-  width: screenSize === ScreenSize.LARGE ? undefined : '100%',
-  minWidth: 0,
-}));
+  shouldForwardProp: (prop) => prop !== 'grow' && prop !== 'screenSize',
+})<ScreenSizeProps & { grow?: boolean }>(({ theme, screenSize, grow }) => {
+  const isLarge = screenSize === ScreenSize.LARGE;
+  let flex = 'none';
+  if (isLarge) flex = grow ? '1 1 auto' : '0 0 auto';
 
-// Figma runs this label to ~370, past its own 357 column and into the gutter.
-// That only fits at LARGE — narrower than that it has to wrap.
+  return {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.sizing.space3,
+    flex,
+    width: isLarge ? undefined : '100%',
+    minWidth: 0,
+  };
+});
+
+// One line at LARGE, where it sets the class column's width. Below LARGE the
+// column is the full width and the label wraps.
 export const PickerLabel = styled(Typography, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => ({
@@ -374,14 +394,19 @@ export const PickerLabel = styled(Typography, {
   whiteSpace: screenSize === ScreenSize.LARGE ? 'nowrap' : 'normal',
 }));
 
-// 357px against 102px chips fits exactly three, so the 3 + 2 wrap in the
-// export falls out of the column width rather than an authored break.
 export const ChipWrap = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
   justifyContent: 'flex-start',
   columnGap: theme.sizing.space5,
   rowGap: theme.sizing.space4,
+  maxWidth: classSlotMaxWidth(theme),
+}));
+
+// The no-classes hint and the load error, in the chips' place and width.
+export const PickerNote = styled(Typography)(({ theme }) => ({
+  ...theme.typography.rubikBody,
+  maxWidth: classSlotMaxWidth(theme),
 }));
 
 export const ClassChip = styled(Button, {
@@ -396,7 +421,7 @@ export const ClassChip = styled(Button, {
       : palette.surface.skyBlue;
 
   return {
-    minWidth: 102,
+    minWidth: CHIP_WIDTH,
     height: 50,
     padding: `0 ${theme.sizing.space4}px`,
     borderRadius: chipRadius,
@@ -444,7 +469,7 @@ export const WeekSelect = styled(Select<string>)(({ theme }) => ({
   },
 }));
 
-export const HomeCta = styled(Button)(({ theme }) => ({
+export const DashboardCta = styled(Button)(({ theme }) => ({
   // width/maxWidth rather than minWidth: at 393 a 440 minimum overflows the
   // page, and minWidth beats the parent's width.
   width: '100%',
@@ -459,6 +484,13 @@ export const HomeCta = styled(Button)(({ theme }) => ({
   whiteSpace: 'nowrap',
   '&:hover': {
     backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
+  },
+  // Disabled only while the next step is still loading (it shows a spinner):
+  // keep the button's own colours, dimmed, rather than MUI's grey.
+  '&.Mui-disabled': {
+    backgroundColor: theme.palette.designSystem.background.navyBlue,
+    color: theme.palette.designSystem.surface.white,
+    opacity: 0.7,
   },
 }));
 
