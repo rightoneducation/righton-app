@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { APIClients } from '../api';
 import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import { IUserState } from '../hooks/useUserState';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import {
   clearGoogleProfile,
   readGoogleProfile,
@@ -17,7 +18,8 @@ import {
 interface AuthCallbackProps {
   apiClients: APIClients;
   screenSize: ScreenSize;
-  user: IUserState;
+  setSignedInUser: IUserState['setSignedInUser'];
+  signOut: IUserState['signOut'];
 }
 
 // Landing route for the Cognito Hosted-UI redirect (/auth), and where a Google
@@ -38,10 +40,11 @@ interface AuthCallbackProps {
 export default function AuthCallback({
   apiClients,
   screenSize,
-  user,
+  setSignedInUser,
+  signOut,
 }: AuthCallbackProps) {
   const theme = useTheme();
-  const { userStatus, setSignedInUser, signOut } = user;
+  const { userStatus } = useMicroCoachDataState();
   // validateUser can resolve more than once (StrictMode double-invokes effects
   // in dev), and a second pass would post a second createUser for an identity
   // that now has a row.
@@ -69,7 +72,8 @@ export default function AuthCallback({
         // the `aws.cognito.signin.user.admin` scope, which this pool's app
         // clients do not grant, so calling it first just logs a 400 on every
         // signup before falling through to the value we already had.
-        const email = stash?.email || (await apiClients.auth.getUserEmail()) || '';
+        const email =
+          stash?.email || (await apiClients.auth.getUserEmail()) || '';
         const profile = await apiClients.user.signUpGoogleBuildBackendUser({
           email,
           firstName: givenName,

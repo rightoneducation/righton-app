@@ -86,8 +86,10 @@
     "title": "Comprenda el pensamiento de sus estudiantes",
     "subtitle": "Perspectivas y patrones de conceptos erróneos de los datos de su clase",
     "worksAnalyzed": "{{count}} trabajos de estudiantes analizados",
+    "worksAnalyzedUnavailable": "Trabajos de estudiantes analizados: No disponible",
     "viewDetails": "Ver detalles",
-    "strongUnderstanding": "{{count}} estudiantes mostraron una comprensión sólida"
+    "strongUnderstanding": "{{count}} estudiantes mostraron una comprensión sólida",
+    "strongUnderstandingUnavailable": "Estudiantes con comprensión sólida: No disponible"
   },
   "hero": {
     "title": "Vea cómo piensa toda su clase.",

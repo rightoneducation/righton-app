@@ -17,19 +17,19 @@ import {
   SummaryRow,
 } from '../lib/styledcomponents/UploadStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 
 /** The confirmation step: what is about to be submitted, and for whom. */
 export default function UploadRtdReview({
   screenSize,
   upload,
   actions,
-  user,
-  classrooms,
 }: UploadStepProps) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { userProfile } = user;
+  const { userProfile, classrooms, selectedClassroomId } =
+    useMicroCoachDataState();
 
   const isReady = useAllReady(useI18nReady());
 
@@ -40,8 +40,8 @@ export default function UploadRtdReview({
   if (!isReady) return null;
 
   const className =
-    classrooms.classrooms.find((c) => c.id === classrooms.selectedClassId)
-      ?.name ?? t('upload.noClass');
+    classrooms.find((c) => c.id === selectedClassroomId)?.name ??
+    t('upload.noClass');
   const teacherName = [userProfile?.firstName, userProfile?.lastName]
     .filter(Boolean)
     .join(' ');

@@ -1,8 +1,7 @@
 import { ScreenSize } from './MicroCoachModels';
 import { IUserState } from '../hooks/useUserState';
-import { IClassroomsState } from '../hooks/useClassrooms';
 import { IAPIClients } from '../api';
-import {UserRole} from '../api/Models/IUser';
+import { UserRole } from '../api/Models/IUser';
 
 // Wizard state, actions and step-prop shape. Kept out of SignUpWizard itself so
 // the steps can type their props without importing the container that renders
@@ -51,13 +50,14 @@ export interface ISignUpActions {
   removeClass: (index: number) => void;
 }
 
-export interface SignUpStepProps {
+export interface SignUpStepProps extends Pick<
+  IUserState,
+  'setSignedInUser' | 'updateUserProfile'
+> {
   apiClients: IAPIClients;
   screenSize: ScreenSize;
   state: ISignUpState;
   actions: ISignUpActions;
-  user: IUserState;
-  classrooms: IClassroomsState;
 }
 
 /** Class names the teacher actually typed, ignoring untouched empty rows. */

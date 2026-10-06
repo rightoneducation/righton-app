@@ -16,8 +16,8 @@ import PlanItemRow from '../components/PlanItemRow';
 import { PromptIconTile } from '../lib/styledcomponents/ActivityDetailStyledComponents';
 import { SignUpCta } from '../lib/styledcomponents/SignUpStyledComponents';
 import { ScreenSize } from '../lib/MicroCoachModels';
-import { PlanProps } from '../hooks/usePlanItems';
 import { IPlanItem } from '../lib/PipelineModels';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import {
   PlanBackButton,
   ChangeActivityButton,
@@ -27,13 +27,22 @@ import {
 } from '../lib/styledcomponents/MyPlanStyledComponents';
 import { ScreenSizeProps } from '../lib/styledcomponents/ReviewStyledComponents';
 
-export default function MyPlan({ screenSize, plan }: ScreenSizeProps & PlanProps) {
+interface MyPlanProps extends ScreenSizeProps {
+  markPlanItemDone: (id: string) => void;
+  removePlanItem: (id: string) => void;
+}
+
+export default function MyPlan({
+  screenSize,
+  markPlanItemDone,
+  removePlanItem,
+}: MyPlanProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
   const isLarge = screenSize === ScreenSize.LARGE;
 
-  const { planItems, markPlanItemDone, removePlanItem } = plan;
+  const { planItems } = useMicroCoachDataState();
 
   const saved = planItems.filter((item) => item.status === 'SAVED');
   const completed = planItems.filter((item) => item.status === 'COMPLETED');
@@ -123,12 +132,8 @@ export default function MyPlan({ screenSize, plan }: ScreenSizeProps & PlanProps
               key={item.id}
               item={item}
               onOpenDetails={handleOpenDetails}
-              onMarkDone={(id) =>
-                markPlanItemDone(id)
-              }
-              onRemove={(id) =>
-                removePlanItem(id)
-              }
+              onMarkDone={(id) => markPlanItemDone(id)}
+              onRemove={(id) => removePlanItem(id)}
             />
           ))
         )}
