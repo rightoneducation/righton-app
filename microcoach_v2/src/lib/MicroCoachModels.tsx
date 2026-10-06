@@ -60,7 +60,12 @@ export enum ScreenSize {
 export const GOOGLE_OAUTH_CLIENT_ID =
   '23009502295-pl64u1k194fd798ps8esc58hhorts7gh.apps.googleusercontent.com';
 
-export type MicroCoachDataStatus = 'idle' | 'loading' | 'ready' | 'error';
+export enum MicroCoachDataStatus {
+  IDLE = 'idle',
+  LOADING = 'loading',
+  READY = 'ready',
+  ERROR = 'error',
+}
 
 export interface IMicroCoachDataState {
   userProfile: IUser | null;
@@ -88,16 +93,16 @@ export const initMicroCoachDataState: IMicroCoachDataState = {
   userErrorString: '',
   classrooms: [],
   selectedClassroomId: null,
-  classroomsStatus: 'idle',
+  classroomsStatus: MicroCoachDataStatus.IDLE,
   classroomsError: null,
   sessions: [],
   selectedSessionId: null,
-  sessionsStatus: 'idle',
+  sessionsStatus: MicroCoachDataStatus.IDLE,
   sessionsError: null,
   misconceptions: [],
-  misconceptionsStatus: 'idle',
+  misconceptionsStatus: MicroCoachDataStatus.IDLE,
   misconceptionsError: null,
   planItems: [],
-  planItemsStatus: 'idle',
+  planItemsStatus: MicroCoachDataStatus.IDLE,
   planItemsError: null,
 };

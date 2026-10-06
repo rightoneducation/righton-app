@@ -10,8 +10,6 @@ import {
   useMicroCoachDataState,
 } from './context/useMicroCoachDataContext';
 
-export type PlanItemsStatus = MicroCoachDataStatus;
-
 export type PlanItemsScope =
   | { type: 'class'; classId: string }
   | { type: 'session'; sessionId: string }
@@ -19,7 +17,7 @@ export type PlanItemsScope =
 
 export interface IPlanItemsState {
   planItems: IPlanItem[];
-  status: PlanItemsStatus;
+  status: MicroCoachDataStatus;
   error: Error | null;
   saveActivity: (item: IPlanItem) => void;
   markPlanItemDone: (id: string) => void;
@@ -97,15 +95,24 @@ export function usePlanItems(
     if (!scopeType || !scopeId) {
       savedPlanRef.current = null;
       dispatch({ type: 'SET_PLAN_ITEMS', payload: [] });
-      dispatch({ type: 'SET_PLAN_ITEMS_STATUS', payload: 'idle' });
+      dispatch({
+        type: 'SET_PLAN_ITEMS_STATUS',
+        payload: MicroCoachDataStatus.IDLE,
+      });
       dispatch({ type: 'SET_PLAN_ITEMS_ERROR', payload: null });
       return undefined;
     }
 
-    if (scopeType === 'session' && misconceptionsStatus !== 'ready') {
+    if (
+      scopeType === 'session' &&
+      misconceptionsStatus !== MicroCoachDataStatus.READY
+    ) {
       savedPlanRef.current = null;
       dispatch({ type: 'SET_PLAN_ITEMS', payload: [] });
-      dispatch({ type: 'SET_PLAN_ITEMS_STATUS', payload: 'loading' });
+      dispatch({
+        type: 'SET_PLAN_ITEMS_STATUS',
+        payload: MicroCoachDataStatus.LOADING,
+      });
       dispatch({ type: 'SET_PLAN_ITEMS_ERROR', payload: null });
       return undefined;
     }
@@ -113,7 +120,10 @@ export function usePlanItems(
     const activeScopeType = scopeType;
     const activeScopeId = scopeId;
     dispatch({ type: 'SET_PLAN_ITEMS', payload: [] });
-    dispatch({ type: 'SET_PLAN_ITEMS_STATUS', payload: 'loading' });
+    dispatch({
+      type: 'SET_PLAN_ITEMS_STATUS',
+      payload: MicroCoachDataStatus.LOADING,
+    });
     dispatch({ type: 'SET_PLAN_ITEMS_ERROR', payload: null });
 
     async function loadPlanItems() {
@@ -137,7 +147,10 @@ export function usePlanItems(
             misconceptions,
           ),
         });
-        dispatch({ type: 'SET_PLAN_ITEMS_STATUS', payload: 'ready' });
+        dispatch({
+          type: 'SET_PLAN_ITEMS_STATUS',
+          payload: MicroCoachDataStatus.READY,
+        });
       } catch (error) {
         if (cancelled) return;
 
@@ -148,7 +161,10 @@ export function usePlanItems(
               ? error
               : new Error('Failed to load saved plans'),
         });
-        dispatch({ type: 'SET_PLAN_ITEMS_STATUS', payload: 'error' });
+        dispatch({
+          type: 'SET_PLAN_ITEMS_STATUS',
+          payload: MicroCoachDataStatus.ERROR,
+        });
       }
     }
 

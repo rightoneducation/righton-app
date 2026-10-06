@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import AppContentRow from '../components/AppContentRow';
 import FlowNav, { FlowTabId } from '../components/FlowNav';
-import { ScreenSize } from '../lib/MicroCoachModels';
+import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { ContentPanel } from '../lib/styledcomponents/ActivityDetailStyledComponents';
 import {
@@ -40,7 +40,8 @@ export default function Reflect({ screenSize, sessions }: ReflectProps) {
     misconceptions,
   );
   const dataReady =
-    sessions.status === 'ready' && misconceptionsStatus === 'ready';
+    sessions.status === MicroCoachDataStatus.READY &&
+    misconceptionsStatus === MicroCoachDataStatus.READY;
   const isReady = useAllReady(useI18nReady(), dataReady);
 
   if (!isReady) return null;

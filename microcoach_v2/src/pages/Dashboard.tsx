@@ -45,6 +45,7 @@ import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import { IAPIClients } from '../api';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { SessionStatus } from '../AWSAPI';
+import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
 import { ISidebarItem } from '../lib/PipelineModels';
 import {
   buildFlowSteps,
@@ -77,13 +78,13 @@ export default function Dashboard({
   const dispatch = useMicroCoachDataDispatch();
   const classList = classrooms.classrooms;
   const selectedClassId = classrooms.selectedClassroomId ?? '';
-  const classesLoaded = classrooms.status !== 'loading';
+  const classesLoaded = classrooms.status !== MicroCoachDataStatus.LOADING;
   const selectClass = classrooms.selectClassroom;
   const sessionList = sortSessionsLatestFirst(sessions.sessions);
   const isReady = useAllReady(
     useI18nReady(),
     classesLoaded,
-    sessions.status !== 'loading',
+    sessions.status !== MicroCoachDataStatus.LOADING,
   );
 
   const [isBannerOpen, setIsBannerOpen] = React.useState(true);

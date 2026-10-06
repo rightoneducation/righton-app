@@ -8,14 +8,12 @@ import {
   useMicroCoachDataState,
 } from './context/useMicroCoachDataContext';
 
-export type SessionsStatus = MicroCoachDataStatus;
-
 export interface UseSessionsResult {
   sessions: IMicroCoachSession[];
   selectedSessionId: string | null;
   selectedSession: IMicroCoachSession | null;
   selectSession: (sessionId: string) => void;
-  status: SessionsStatus;
+  status: MicroCoachDataStatus;
   error: Error | null;
 }
 
@@ -33,7 +31,10 @@ export function useSessions(
     if (!classId) {
       dispatch({ type: 'SET_SESSIONS', payload: [] });
       dispatch({ type: 'SET_SELECTED_SESSION_ID', payload: null });
-      dispatch({ type: 'SET_SESSIONS_STATUS', payload: 'idle' });
+      dispatch({
+        type: 'SET_SESSIONS_STATUS',
+        payload: MicroCoachDataStatus.IDLE,
+      });
       dispatch({ type: 'SET_SESSIONS_ERROR', payload: null });
       return undefined;
     }
@@ -41,7 +42,10 @@ export function useSessions(
     const activeClassId = classId;
     dispatch({ type: 'SET_SESSIONS', payload: [] });
     dispatch({ type: 'SET_SELECTED_SESSION_ID', payload: null });
-    dispatch({ type: 'SET_SESSIONS_STATUS', payload: 'loading' });
+    dispatch({
+      type: 'SET_SESSIONS_STATUS',
+      payload: MicroCoachDataStatus.LOADING,
+    });
     dispatch({ type: 'SET_SESSIONS_ERROR', payload: null });
 
     async function loadSessions() {
@@ -56,7 +60,10 @@ export function useSessions(
           type: 'SET_SELECTED_SESSION_ID',
           payload: sortedSessions[0]?.id ?? null,
         });
-        dispatch({ type: 'SET_SESSIONS_STATUS', payload: 'ready' });
+        dispatch({
+          type: 'SET_SESSIONS_STATUS',
+          payload: MicroCoachDataStatus.READY,
+        });
       } catch (error) {
         if (cancelled) return;
 
@@ -67,7 +74,10 @@ export function useSessions(
               ? error
               : new Error('Failed to load sessions'),
         });
-        dispatch({ type: 'SET_SESSIONS_STATUS', payload: 'error' });
+        dispatch({
+          type: 'SET_SESSIONS_STATUS',
+          payload: MicroCoachDataStatus.ERROR,
+        });
       }
     }
 

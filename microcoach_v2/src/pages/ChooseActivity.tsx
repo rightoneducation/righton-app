@@ -10,7 +10,7 @@ import AppContentRow from '../components/AppContentRow';
 import FlowNav, { FlowTabId } from '../components/FlowNav';
 import ActivityCard from '../components/ActivityCard';
 import ChooseActivitySkeleton from '../components/ChooseActivitySkeleton';
-import { ScreenSize } from '../lib/MicroCoachModels';
+import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import { IPlanItem } from '../lib/PipelineModels';
 import {
   BackButton,
@@ -179,7 +179,7 @@ export default function ChooseActivity({
   const { misconceptionId } = useParams();
   const { misconceptions, misconceptionsStatus, planItems } =
     useMicroCoachDataState();
-  const dataReady = misconceptionsStatus === 'ready';
+  const dataReady = misconceptionsStatus === MicroCoachDataStatus.READY;
   const isReady = useAllReady(useI18nReady(), dataReady);
 
   if (!isReady) {

@@ -12,7 +12,7 @@ import FlowNav, { FlowTabId } from '../components/FlowNav';
 import MisconceptionCard from '../components/MisconceptionCard';
 import MisconceptionDetailModal from '../components/MisconceptionDetailModal';
 import ReviewSkeleton from '../components/ReviewSkeleton';
-import { ScreenSize } from '../lib/MicroCoachModels';
+import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import {
   ResultsBanner,
   CountChip,
@@ -35,7 +35,7 @@ export default function Review({ screenSize, sessions }: ReviewProps) {
 
   const { misconceptions, misconceptionsStatus } = useMicroCoachDataState();
   const session = sessions.selectedSession;
-  const dataReady = misconceptionsStatus === 'ready';
+  const dataReady = misconceptionsStatus === MicroCoachDataStatus.READY;
   const isReady = useAllReady(useI18nReady(), dataReady);
 
   const [isBannerOpen, setIsBannerOpen] = React.useState(true);

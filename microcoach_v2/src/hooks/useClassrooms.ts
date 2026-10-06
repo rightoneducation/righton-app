@@ -7,14 +7,12 @@ import {
   useMicroCoachDataState,
 } from './context/useMicroCoachDataContext';
 
-export type ClassroomsStatus = MicroCoachDataStatus;
-
 export interface UseClassroomsResult {
   classrooms: IMicroCoachClassroom[];
   selectedClassroomId: string | null;
   selectedClassroom: IMicroCoachClassroom | null;
   selectClassroom: (classroomId: string) => void;
-  status: ClassroomsStatus;
+  status: MicroCoachDataStatus;
   error: Error | null;
 }
 
@@ -32,7 +30,10 @@ export function useClassrooms(
     if (!userId) {
       dispatch({ type: 'SET_CLASSROOMS', payload: [] });
       dispatch({ type: 'SET_SELECTED_CLASSROOM_ID', payload: null });
-      dispatch({ type: 'SET_CLASSROOMS_STATUS', payload: 'idle' });
+      dispatch({
+        type: 'SET_CLASSROOMS_STATUS',
+        payload: MicroCoachDataStatus.IDLE,
+      });
       dispatch({ type: 'SET_CLASSROOMS_ERROR', payload: null });
       return undefined;
     }
@@ -40,7 +41,10 @@ export function useClassrooms(
     const activeUserId = userId;
     dispatch({ type: 'SET_CLASSROOMS', payload: [] });
     dispatch({ type: 'SET_SELECTED_CLASSROOM_ID', payload: null });
-    dispatch({ type: 'SET_CLASSROOMS_STATUS', payload: 'loading' });
+    dispatch({
+      type: 'SET_CLASSROOMS_STATUS',
+      payload: MicroCoachDataStatus.LOADING,
+    });
     dispatch({ type: 'SET_CLASSROOMS_ERROR', payload: null });
 
     async function loadClassrooms() {
@@ -50,7 +54,10 @@ export function useClassrooms(
         if (cancelled) return;
 
         dispatch({ type: 'SET_CLASSROOMS', payload: fetchedClassrooms });
-        dispatch({ type: 'SET_CLASSROOMS_STATUS', payload: 'ready' });
+        dispatch({
+          type: 'SET_CLASSROOMS_STATUS',
+          payload: MicroCoachDataStatus.READY,
+        });
       } catch (error) {
         if (cancelled) return;
 
@@ -61,7 +68,10 @@ export function useClassrooms(
               ? error
               : new Error('Failed to load classrooms'),
         });
-        dispatch({ type: 'SET_CLASSROOMS_STATUS', payload: 'error' });
+        dispatch({
+          type: 'SET_CLASSROOMS_STATUS',
+          payload: MicroCoachDataStatus.ERROR,
+        });
       }
     }
 

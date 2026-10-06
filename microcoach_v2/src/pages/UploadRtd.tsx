@@ -10,7 +10,11 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import AppContentRow from '../components/AppContentRow';
-import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
+import {
+  MicroCoachDataStatus,
+  ScreenSize,
+  UserStatusType,
+} from '../lib/MicroCoachModels';
 import { UploadStepProps } from '../lib/UploadModels';
 import { formatWeekLabel, recentWeeks } from '../lib/weeks';
 import { PromptIconTile } from '../lib/styledcomponents/ActivityDetailStyledComponents';
@@ -63,7 +67,7 @@ export default function UploadRtd({
   const isReady = useAllReady(
     useI18nReady(),
     userStatus !== UserStatusType.LOADING,
-    classroomsStatus !== 'loading',
+    classroomsStatus !== MicroCoachDataStatus.LOADING,
   );
 
   if (!isReady) return null;
