@@ -53,7 +53,14 @@ export function useClassrooms(
           await apiClients.classroom.getClassroomsByUserId(activeUserId);
         if (cancelled) return;
 
-        dispatch({ type: 'SET_CLASSROOMS', payload: fetchedClassrooms });
+        const sortedClassrooms = [...fetchedClassrooms].sort((a, b) =>
+          a.createdAt.localeCompare(b.createdAt),
+        );
+        dispatch({ type: 'SET_CLASSROOMS', payload: sortedClassrooms });
+        dispatch({
+          type: 'SET_SELECTED_CLASSROOM_ID',
+          payload: sortedClassrooms[0]?.id ?? null,
+        });
         dispatch({
           type: 'SET_CLASSROOMS_STATUS',
           payload: MicroCoachDataStatus.READY,
