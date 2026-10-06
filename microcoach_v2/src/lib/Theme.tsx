@@ -23,6 +23,8 @@ const designSystemColors = {
     fadedWhiteVeil: '#FFFFFF2E',
     // black at 50% — the modal backdrop.
     scrim: '#00000080',
+    // black at 30% — the upload flow's Start over modal backdrop (Upload6).
+    scrimLight: '#0000004D',
     // The sidebar screens' page (Dashboard, This Week, Past Activities). 5 off
     // offWhite at its widest channel, but cool where offWhite is warm — the
     // redesign's whole move away from cream — so it stays its own value.
@@ -86,6 +88,9 @@ const designSystemColors = {
     darkBlue: '#02215F',
     secondary: '#FFFDFB',
     black: '#000000',
+    // The Start over modal's title (Upload6): 23 off black at its widest
+    // channel, so it does not reuse it.
+    nearBlack: '#171717',
     white: '#FFFFFF',
     neutralGray: '#E4E3E2',
     skyBlue: '#EAF7FE',

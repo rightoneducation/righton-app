@@ -40,7 +40,7 @@ import { avatarIcons, DEFAULT_AVATAR_INDEX } from '../images/avatars';
  * control, so the avatar opens the account menu from the previous dashboard
  * frame (OldDashboard1: Account Settings, then Log out).
  */
-export type HeaderVariant = 'public' | 'signup' | 'app' | 'profile' | 'sidebar';
+export type HeaderVariant = 'public' | 'signup' | 'app' | 'profile' | 'avatar';
 
 interface HeaderProps {
   screenSize: ScreenSize;
@@ -277,8 +277,8 @@ export default function Header({
 
   // Every app variant shares the nav block; only its contents differ.
   const isProfileChrome = variant === 'profile';
-  const isSidebarChrome = variant === 'sidebar';
-  const usesAppNav = variant === 'app' || isProfileChrome || isSidebarChrome;
+  const isAvatarChrome = variant === 'avatar';
+  const usesAppNav = variant === 'app' || isProfileChrome || isAvatarChrome;
 
   const isCompactBrand = usesAppNav && screenSize === ScreenSize.SMALL;
 
@@ -335,7 +335,7 @@ export default function Header({
                 sx={{ ...authSkeletonSx, borderRadius: `${appPillRadius}px` }}
               />
             )}
-            {!isResolvingAuth && isSidebarChrome && (
+            {!isResolvingAuth && isAvatarChrome && (
               <>
                 <InitialsAvatar
                   aria-label={t('header.accountMenu')}
@@ -381,7 +381,7 @@ export default function Header({
                 </Menu>
               </>
             )}
-            {!isResolvingAuth && !isSidebarChrome && (
+            {!isResolvingAuth && !isAvatarChrome && (
               <>
                 {screenSize === ScreenSize.LARGE && (
                   <>

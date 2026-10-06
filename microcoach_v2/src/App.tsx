@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
+  Navigate,
   Route,
   RouterProvider,
   Outlet,
@@ -149,8 +150,13 @@ function App() {
               element={<AppSwitch currentScreen={ScreenType.ACTIVITY_DETAIL} />}
             />
             <Route
+              path="upload-miu/*"
+              element={<AppSwitch currentScreen={ScreenType.UPLOAD_MIU} />}
+            />
+            {/* The upload was /upload-rtd before the MIU rename. */}
+            <Route
               path="upload-rtd/*"
-              element={<AppSwitch currentScreen={ScreenType.UPLOAD_RTD} />}
+              element={<Navigate to="/upload-miu" replace />}
             />
             <Route
               path="reflect"

@@ -76,17 +76,19 @@ const PROFILE_CHROME_SCREENS = new Set<ScreenType>([
   ScreenType.CHANGE_PASSWORD,
 ]);
 
-// The sidebar screens draw their own header (see HeaderVariant `home`).
-const SIDEBAR_SCREENS = new Set<ScreenType>([
+// Screens whose header is the initials avatar and its account menu (HeaderVariant
+// `avatar`): the sidebar screens and the MIU upload flow.
+const AVATAR_HEADER_SCREENS = new Set<ScreenType>([
   ScreenType.DASHBOARD,
   ScreenType.THIS_WEEK,
   ScreenType.PAST_ACTIVITIES,
+  ScreenType.UPLOAD_MIU,
 ]);
 
 const APP_CHROME_SCREENS = new Set<ScreenType>([
   ScreenType.PROFILE,
   ScreenType.CHANGE_PASSWORD,
-  ScreenType.UPLOAD_RTD,
+  ScreenType.UPLOAD_MIU,
   ScreenType.REFLECT,
   ScreenType.DASHBOARD,
   ScreenType.THIS_WEEK,
@@ -206,8 +208,14 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
     case ScreenType.ACTIVITY_DETAIL:
       screenComponent = <ActivityDetail screenSize={screenSize} />;
       break;
-    case ScreenType.UPLOAD_RTD:
-      screenComponent = <UploadFlow screenSize={screenSize} />;
+    case ScreenType.UPLOAD_MIU:
+      screenComponent = (
+        <UploadFlow
+          apiClients={apiClients}
+          screenSize={screenSize}
+          classrooms={classrooms}
+        />
+      );
       break;
     case ScreenType.REFLECT:
       screenComponent = <Reflect screenSize={screenSize} sessions={sessions} />;
@@ -242,7 +250,7 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
 
   let headerVariant: HeaderVariant = 'public';
   if (PROFILE_CHROME_SCREENS.has(currentScreen)) headerVariant = 'profile';
-  else if (SIDEBAR_SCREENS.has(currentScreen)) headerVariant = 'sidebar';
+  else if (AVATAR_HEADER_SCREENS.has(currentScreen)) headerVariant = 'avatar';
   else if (usesAppChrome) headerVariant = 'app';
   else if (isSignUp) headerVariant = 'signup';
 

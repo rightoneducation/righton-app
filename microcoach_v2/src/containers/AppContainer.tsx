@@ -63,7 +63,7 @@ export default function AppContainer({
         onSelectClassroom={onSelectClassroom}
       />
       <BodyContainer component="main">{children}</BodyContainer>
-      {(headerVariant === 'app' || headerVariant === 'sidebar') && (
+      {(headerVariant === 'app' || headerVariant === 'avatar') && (
         <NeedHelpButton />
       )}
       {showFooter && <Footer screenSize={screenSize} />}

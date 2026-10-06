@@ -35,8 +35,8 @@ export enum ScreenType {
   MY_PLAN,
   ACTIVITY_DETAIL,
   PROFILE,
-  // Likewise `upload-rtd/*` — both steps are UploadFlow.
-  UPLOAD_RTD,
+  // Likewise `upload-miu/*` — both steps are UploadFlow.
+  UPLOAD_MIU,
   REFLECT,
   // The sidebar's other two destinations, beside DASHBOARD.
   THIS_WEEK,

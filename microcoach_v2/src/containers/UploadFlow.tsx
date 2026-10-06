@@ -1,71 +1,157 @@
 import React, { useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { IAPIClients } from '../api';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import {
-  IUploadState,
   IUploadActions,
-  UploadSlot,
+  IUploadState,
   UploadStepProps,
-  initialUploadState,
+  emptyUploadState,
+  isFileReady,
+  validateUploadFile,
 } from '../lib/UploadModels';
 import { currentSchoolWeek, schoolWeeks } from '../lib/weeks';
-import UploadRtd from '../pages/UploadRtd';
-import UploadRtdReview from '../pages/UploadRtdReview';
+import { UseClassroomsResult } from '../hooks/useClassrooms';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import UploadMiu from '../pages/UploadMiu';
+import UploadMiuReview from '../pages/UploadMiuReview';
+import UploadMiuSubmitted from '../pages/UploadMiuSubmitted';
 
 /**
- * The two RTD upload steps. Same arrangement as SignUpWizard: `upload-rtd/*` is
- * one route match, so the picked files survive going "Back to upload" from the
- * review step without needing a provider above both screens.
+ * The MIU upload: set up and upload, review, then submitted. `upload-miu/*` is
+ * one route match (same arrangement as SignUpWizard), so the picked files
+ * survive "Back to upload" from the review step without a provider above both.
+ *
+ * Files stay in the browser until "Submit files for analysis": that uploads
+ * both to S3 and starts the analysis (UploadAPIClient).
  */
 
-/** The file names the frames show, so the demo reads as the design does. */
-const MOCK_FILE_NAMES: Record<UploadSlot, string> = {
-  exemplar: 'ALG_W36_COACH_Exemplar.docx',
-  responses: 'W36_PPQ_Responses.xlsx',
-};
-
 interface UploadFlowProps {
+  apiClients: IAPIClients;
   screenSize: ScreenSize;
+  classrooms: UseClassroomsResult;
 }
 
-export default function UploadFlow({ screenSize }: UploadFlowProps) {
-  // The dashboard passes the week the teacher picked there; the class needs no hand-off,
-  // as both screens read the shared selected classroom.
+export default function UploadFlow({
+  apiClients,
+  screenSize,
+  classrooms,
+}: UploadFlowProps) {
   const location = useLocation();
+  const navigate = useNavigate();
+  const step = useParams()['*'] ?? '';
+  const { userProfile } = useMicroCoachDataState();
+
+  // Class and week arrive pre-filled from the dashboard: the class through the
+  // shared selection, the week through router state.
   const [upload, setUpload] = useState<IUploadState>(() => {
     const passedWeek = (location.state as { weekStart?: string } | null)
       ?.weekStart;
-    return {
-      ...initialUploadState,
-      weekStart:
-        passedWeek && schoolWeeks().includes(passedWeek)
-          ? passedWeek
-          : currentSchoolWeek(),
-    };
+    return emptyUploadState(
+      null,
+      passedWeek && schoolWeeks().includes(passedWeek)
+        ? passedWeek
+        : currentSchoolWeek(),
+    );
   });
-  const step = useParams()['*'] ?? '';
+
+  // Until the teacher picks one here, the class follows the dashboard's
+  // selection, which may still be loading when the flow mounts.
+  const classId = upload.classId ?? classrooms.selectedClassroomId ?? '';
 
   const actions: IUploadActions = {
-    completeFile: (slot) =>
-      setUpload((s) => ({
-        ...s,
-        [slot]: { name: MOCK_FILE_NAMES[slot], status: 'COMPLETE' },
-      })),
-    failFile: (slot) =>
-      setUpload((s) => ({
-        ...s,
-        [slot]: { name: MOCK_FILE_NAMES[slot], status: 'ERROR' },
-      })),
-    clearFile: (slot) => setUpload((s) => ({ ...s, [slot]: null })),
+    setClass: (nextClassId) => {
+      setUpload((s) => ({ ...s, classId: nextClassId }));
+      // Keep the app-wide selection in step, as the dashboard picker does.
+      classrooms.selectClassroom(nextClassId);
+    },
     setWeek: (weekStart) => setUpload((s) => ({ ...s, weekStart })),
-    submit: () => setUpload((s) => ({ ...s, isSubmitted: true })),
+    pickFile: (slot, file) => {
+      const error = validateUploadFile(slot, file);
+      setUpload((s) => ({
+        ...s,
+        [slot]: { name: file.name, file: error ? null : file, error },
+      }));
+    },
+    clearFile: (slot) => setUpload((s) => ({ ...s, [slot]: null })),
+    submit: async () => {
+      const { exemplar, responses } = upload;
+      if (!classId || !exemplar?.file || !responses?.file) return false;
+      setUpload((s) => ({ ...s, submitStatus: 'SUBMITTING', submitError: null }));
+
+      let keys: { docxKey: string; xlsxKey: string };
+      try {
+        const [docxKey, xlsxKey] = await Promise.all([
+          apiClients.upload.uploadFile(classId, exemplar.file),
+          apiClients.upload.uploadFile(classId, responses.file),
+        ]);
+        keys = { docxKey, xlsxKey };
+      } catch (error) {
+        console.error('Could not upload the MIU files', error);
+        setUpload((s) => ({ ...s, submitStatus: 'ERROR', submitError: 'UPLOAD' }));
+        return false;
+      }
+
+      try {
+        await apiClients.upload.startAnalysis({ classroomId: classId, ...keys });
+      } catch (error) {
+        console.error('Could not start the analysis', error);
+        // The files are in S3 but nothing will read them: take them back out.
+        await Promise.all(
+          [keys.docxKey, keys.xlsxKey].map((key) =>
+            apiClients.upload.removeFile(key).catch(() => undefined),
+          ),
+        );
+        setUpload((s) => ({ ...s, submitStatus: 'ERROR', submitError: 'ANALYSIS' }));
+        return false;
+      }
+
+      setUpload((s) => ({ ...s, submitStatus: 'IDLE', submission: keys }));
+      return true;
+    },
+    startOver: async () => {
+      const { submission } = upload;
+      if (submission) {
+        await Promise.all(
+          [submission.docxKey, submission.xlsxKey].map((key) =>
+            apiClients.upload.removeFile(key).catch((error) => {
+              console.error('Could not remove an uploaded file', error);
+            }),
+          ),
+        );
+      }
+      setUpload((s) => emptyUploadState(s.classId, s.weekStart));
+      navigate('/upload-miu', { replace: true });
+    },
+    startNewClassroom: () => {
+      setUpload((s) => emptyUploadState('', s.weekStart));
+      navigate('/upload-miu');
+    },
   };
 
-  const stepProps: UploadStepProps = { screenSize, upload, actions };
+  const stepProps: UploadStepProps = {
+    screenSize,
+    upload: { ...upload, classId },
+    actions,
+    classrooms: classrooms.classrooms,
+    teacher: userProfile,
+  };
 
-  return step === 'review' ? (
-    <UploadRtdReview {...stepProps} />
-  ) : (
-    <UploadRtd {...stepProps} />
-  );
+  // Each later step needs what the one before it produced; reached without
+  // it (a refresh, a pasted URL), start the flow from the top.
+  if (step === 'review') {
+    return isFileReady(upload.exemplar) && isFileReady(upload.responses) ? (
+      <UploadMiuReview {...stepProps} />
+    ) : (
+      <Navigate to="/upload-miu" replace />
+    );
+  }
+  if (step === 'submitted') {
+    return upload.submission ? (
+      <UploadMiuSubmitted {...stepProps} />
+    ) : (
+      <Navigate to="/upload-miu" replace />
+    );
+  }
+  return <UploadMiu {...stepProps} />;
 }
