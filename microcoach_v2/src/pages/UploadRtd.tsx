@@ -10,7 +10,11 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import AppContentRow from '../components/AppContentRow';
-import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
+import {
+  MicroCoachDataStatus,
+  ScreenSize,
+  UserStatusType,
+} from '../lib/MicroCoachModels';
 import { UploadStepProps } from '../lib/UploadModels';
 import { formatWeekLabel, recentWeeks } from '../lib/weeks';
 import { PromptIconTile } from '../lib/styledcomponents/ActivityDetailStyledComponents';
@@ -30,6 +34,7 @@ import {
   GhostAction,
 } from '../lib/styledcomponents/UploadStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 
 /**
  * RTD upload — one screen in four states, exactly as the frames draw it:
@@ -44,14 +49,17 @@ export default function UploadRtd({
   screenSize,
   upload,
   actions,
-  user,
-  classrooms,
 }: UploadStepProps) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { userProfile, userStatus } = user;
-  const { classrooms: classList, selectedClassId } = classrooms;
+  const {
+    userProfile,
+    userStatus,
+    classrooms: classList,
+    selectedClassroomId,
+    classroomsStatus,
+  } = useMicroCoachDataState();
 
   // Waits on auth and the class list: this screen renders during LOADING (it
   // is in PUBLIC_SCREENS), and painting before they settle flashed an empty
@@ -59,7 +67,7 @@ export default function UploadRtd({
   const isReady = useAllReady(
     useI18nReady(),
     userStatus !== UserStatusType.LOADING,
-    classrooms.isLoaded,
+    classroomsStatus !== MicroCoachDataStatus.LOADING,
   );
 
   if (!isReady) return null;
@@ -71,7 +79,8 @@ export default function UploadRtd({
   // Read from the shared selection, so switching class in the header mid-upload
   // updates this card rather than leaving it pointing at the old class.
   const className =
-    classList.find((classroom) => classroom.id === selectedClassId)?.name ?? '';
+    classList.find((classroom) => classroom.id === selectedClassroomId)?.name ??
+    '';
   const hasClass = !!className;
   const weekOptions = recentWeeks();
 
@@ -262,9 +271,9 @@ export default function UploadRtd({
                 disableElevation
                 sx={{ alignSelf: 'center' }}
                 onClick={() =>
-                  (file
+                  file
                     ? actions.clearFile(slot.key)
-                    : actions.completeFile(slot.key))
+                    : actions.completeFile(slot.key)
                 }
               >
                 {t(file ? 'upload.replaceFile' : 'upload.uploadFile')}

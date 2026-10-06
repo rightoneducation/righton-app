@@ -1,6 +1,5 @@
 import { SessionStatus } from '../AWSAPI';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
-import { IMicroCoachSavedPlan } from '../api/Models/IMicroCoachSavedPlan';
 import { IFlowStep } from './PipelineModels';
 import { Translate } from './activityMarks';
 
@@ -36,17 +35,16 @@ const ORDER: FlowStep[] = [
  */
 export function deriveCurrentStep(
   session: IMicroCoachSession | null,
-  savedPlans: IMicroCoachSavedPlan[],
+  // Whether a plan has been saved for this session (usePlanItems scopes its
+  // items to the selected session).
+  hasSavedPlan: boolean,
 ): FlowStep {
   if (!session || session.status === SessionStatus.DATA_INGESTED) {
     return FlowStep.ASSESS;
   }
   if (session.status === SessionStatus.COMPLETED) return FlowStep.DONE;
   if (session.postPpqAssessmentId) return FlowStep.REFLECT;
-  const hasPlan = savedPlans.some(
-    (plan) => plan.sessionId === session.id && plan.items.length > 0,
-  );
-  if (hasPlan) return FlowStep.REASSESS;
+  if (hasSavedPlan) return FlowStep.REASSESS;
   return FlowStep.UNDERSTAND;
 }
 

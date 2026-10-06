@@ -1,3 +1,7 @@
+import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
+import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
+import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
+import { IUser } from '../api/Models/IUser';
 import { IPlanItem } from './PipelineModels';
 
 // Auth lifecycle states, mirroring central_v2's UserStatusType.
@@ -59,7 +63,49 @@ export enum ScreenSize {
 export const GOOGLE_OAUTH_CLIENT_ID =
   '23009502295-pl64u1k194fd798ps8esc58hhorts7gh.apps.googleusercontent.com';
 
-// App data only — signed-in user state lives in RootLayout (see App.tsx).
-export interface IMicroCoachDataState {
-  planItems: IPlanItem[];
+export enum MicroCoachDataStatus {
+  IDLE = 'idle',
+  LOADING = 'loading',
+  READY = 'ready',
+  ERROR = 'error',
 }
+
+export interface IMicroCoachDataState {
+  userProfile: IUser | null;
+  userStatus: UserStatusType;
+  userErrorString: string;
+  classrooms: IMicroCoachClassroom[];
+  selectedClassroomId: string | null;
+  classroomsStatus: MicroCoachDataStatus;
+  classroomsError: Error | null;
+  sessions: IMicroCoachSession[];
+  selectedSessionId: string | null;
+  sessionsStatus: MicroCoachDataStatus;
+  sessionsError: Error | null;
+  misconceptions: IMicroCoachMisconception[];
+  misconceptionsStatus: MicroCoachDataStatus;
+  misconceptionsError: Error | null;
+  planItems: IPlanItem[];
+  planItemsStatus: MicroCoachDataStatus;
+  planItemsError: Error | null;
+}
+
+export const initMicroCoachDataState: IMicroCoachDataState = {
+  userProfile: null,
+  userStatus: UserStatusType.LOADING,
+  userErrorString: '',
+  classrooms: [],
+  selectedClassroomId: null,
+  classroomsStatus: MicroCoachDataStatus.IDLE,
+  classroomsError: null,
+  sessions: [],
+  selectedSessionId: null,
+  sessionsStatus: MicroCoachDataStatus.IDLE,
+  sessionsError: null,
+  misconceptions: [],
+  misconceptionsStatus: MicroCoachDataStatus.IDLE,
+  misconceptionsError: null,
+  planItems: [],
+  planItemsStatus: MicroCoachDataStatus.IDLE,
+  planItemsError: null,
+};

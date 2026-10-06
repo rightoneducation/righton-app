@@ -16,9 +16,8 @@ import { IUserState } from './useUserState';
 //
 // Auth only — app data actions live in useMicroCoachDataActions.
 //
-// Both take the user handle as an argument rather than reading it from a
-// context, matching how they already take apiClients. RootLayout owns the
-// state; see App.tsx.
+// Both will now receive the action handle created by useUserState. The state itself
+// lives in MicroCoachDataContext and is read directly by UI consumers.
 
 export function useLogOut(apiClients: APIClients, user: IUserState) {
   const { signOut, setUserStatus } = user;

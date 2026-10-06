@@ -36,65 +36,76 @@ import {
   ResultsBanner,
   ScreenSizeProps,
 } from '../lib/styledcomponents/ReviewStyledComponents';
+import { UseClassroomsResult } from '../hooks/useClassrooms';
+import { UseSessionsResult } from '../hooks/useSessions';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
-import { useClassProgress } from '../hooks/useClassProgress';
 import { useSidebarNav } from '../hooks/useSidebarNav';
-import { ClassroomsProps } from '../hooks/useClassrooms';
-import { UserProps } from '../hooks/useUserState';
+import { IPlanItemsState } from '../hooks/usePlanItems';
+import {
+  useMicroCoachDataDispatch,
+  useMicroCoachDataState,
+} from '../hooks/context/useMicroCoachDataContext';
+import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import { IAPIClients } from '../api';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
-import { ScreenSize } from '../lib/MicroCoachModels';
+import { ScreenSize, MicroCoachDataStatus } from '../lib/MicroCoachModels';
 import { SessionStatus } from '../AWSAPI';
 import {
   buildFlowSteps,
   deriveCurrentStep,
+  sortSessionsLatestFirst,
   stepCta,
 } from '../lib/flowProgress';
 
 // Chips shown inline before the rest fold into "More".
 const VISIBLE_CLASS_COUNT = 4;
 
-interface DashboardProps extends ScreenSizeProps, UserProps, ClassroomsProps {
+interface DashboardProps extends ScreenSizeProps {
   apiClients: IAPIClients;
+  classrooms: UseClassroomsResult;
+  sessions: UseSessionsResult;
+  plan: IPlanItemsState;
 }
 
 export default function Dashboard({
   apiClients,
   screenSize,
-  user,
   classrooms,
+  sessions,
+  plan,
 }: DashboardProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const {
-    classrooms: classList,
-    selectedClassId,
-    isLoaded: classesLoaded,
-    selectClass,
-    addClass,
-  } = classrooms;
-  const progress = useClassProgress(apiClients, selectedClassId);
-  const isReady = useAllReady(useI18nReady(), classesLoaded, progress.isReady);
+  const { userProfile } = useMicroCoachDataState();
+  const dispatch = useMicroCoachDataDispatch();
+  const classList = classrooms.classrooms;
+  const selectedClassId = classrooms.selectedClassroomId ?? '';
+  const classesLoaded = classrooms.status !== MicroCoachDataStatus.LOADING;
+  const selectClass = classrooms.selectClassroom;
+  const sessionList = sortSessionsLatestFirst(sessions.sessions);
+  const isReady = useAllReady(
+    useI18nReady(),
+    classesLoaded,
+    sessions.status !== MicroCoachDataStatus.LOADING,
+  );
 
-  // '' follows the latest session. A stored id that does not belong to the
-  // current class falls back to latest too, so switching class needs no reset.
-  const [selectedSessionId, setSelectedSessionId] = React.useState('');
   const [isBannerOpen, setIsBannerOpen] = React.useState(true);
   const [moreAnchor, setMoreAnchor] = React.useState<HTMLElement | null>(null);
   const [newClassName, setNewClassName] = React.useState('');
   const [isAdding, setIsAdding] = React.useState(false);
   const [addError, setAddError] = React.useState(false);
 
-  const selectedSession =
-    progress.sessions.find((s) => s.id === selectedSessionId) ??
-    progress.sessions[0] ??
-    null;
-  const currentStep = deriveCurrentStep(selectedSession, progress.savedPlans);
+  // The week picked in useSessions; until one is picked, the latest session.
+  const selectedSession = sessions.selectedSession ?? sessionList[0] ?? null;
+  const currentStep = deriveCurrentStep(
+    selectedSession,
+    plan.planItems.length > 0,
+  );
   const flowSteps = buildFlowSteps(currentStep, t);
   const cta = stepCta(currentStep);
   const hasClasses = classList.length > 0;
-  const canAddClass = !!user.userProfile?.id;
+  const canAddClass = !!userProfile?.id;
   const showBanner =
     isBannerOpen && selectedSession?.status === SessionStatus.GENERATED;
 
@@ -118,6 +129,28 @@ export default function Dashboard({
     (session.weekNumber != null
       ? t('home.weekNumber', { number: session.weekNumber })
       : new Date(session.createdAt).toLocaleDateString());
+
+  // Creates the row, appends it to the classroom state and selects it.
+  const addClass = async (name: string) => {
+    const userId = userProfile?.id;
+    if (!userId) return null;
+    try {
+      const created = await apiClients.classroom.createClassroom({
+        userId,
+        name: name.trim(),
+        grade: null,
+        state: null,
+        schoolYear: null,
+      } as IMicroCoachClassroom);
+      if (!created) return null;
+      dispatch({ type: 'SET_CLASSROOMS', payload: [...classList, created] });
+      selectClass(created.id);
+      return created;
+    } catch (error) {
+      console.error('Could not create classroom', error);
+      return null;
+    }
+  };
 
   const handleAddClass = async () => {
     if (!newClassName.trim() || isAdding) return;
@@ -286,17 +319,19 @@ export default function Dashboard({
                   )}
                 </PickerColumn>
 
-                {progress.sessions.length > 0 && (
+                {sessionList.length > 0 && (
                   <PickerColumn screenSize={screenSize} basis={403}>
                     <PickerLabel screenSize={screenSize}>
                       {t('home.weekLabel')}
                     </PickerLabel>
                     <WeekSelect
                       value={selectedSession?.id ?? ''}
-                      onChange={(event) => setSelectedSessionId(event.target.value)}
+                      onChange={(event) =>
+                        sessions.selectSession(event.target.value)
+                      }
                       inputProps={{ 'aria-label': t('home.weekLabel') }}
                     >
-                      {progress.sessions.map((session) => (
+                      {sessionList.map((session) => (
                         <MenuItem key={session.id} value={session.id}>
                           {weekLabel(session)}
                         </MenuItem>

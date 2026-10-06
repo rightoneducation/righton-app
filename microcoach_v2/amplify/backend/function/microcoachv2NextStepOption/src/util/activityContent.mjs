@@ -173,8 +173,8 @@ const MakeYourCaseContent = z.object({
   positions: z.array(z.object({
     // Had no describe, and came back carrying the isStrongest flag as text —
     // "Challenge (strongest)", "Challenges claim (strongest)". MAKE_YOUR_CASE is
-    // the one template with no entry in mockPipelineOutput.json, so there is no
-    // design reference for these; the constraint here is only that the label names
+    // This template has no original design reference for these; the constraint
+    // here is only that the label names
     // the position and nothing else.
     label: z.string().describe('A short name for this position, two or three words — e.g. "Agree", "Disagree", "Unsure". Do not mark which is strongest in the text; that is what isStrongest is for.'),
     stance: z.string().describe('Which side of the claim this argument takes'),

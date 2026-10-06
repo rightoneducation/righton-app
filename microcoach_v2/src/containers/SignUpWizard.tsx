@@ -9,7 +9,6 @@ import {
 } from '../lib/SignUpModels';
 import { IAPIClients } from '../api';
 import { IUserState } from '../hooks/useUserState';
-import { IClassroomsState } from '../hooks/useClassrooms';
 import SignUpRole from '../pages/SignUpRole';
 import SignUpRegister from '../pages/SignUpRegister';
 import SignUpVerify from '../pages/SignUpVerify';
@@ -30,17 +29,17 @@ import SignUpSelect from '../pages/SignUpSelect';
  */
 
 interface SignUpWizardProps {
-  apiClients: IAPIClients,
+  apiClients: IAPIClients;
   screenSize: ScreenSize;
-  user: IUserState;
-  classrooms: IClassroomsState;
+  setSignedInUser: IUserState['setSignedInUser'];
+  updateUserProfile: IUserState['updateUserProfile'];
 }
 
-export default function SignUpWizard({ 
-  apiClients, 
-  screenSize, 
-  user,
-  classrooms,
+export default function SignUpWizard({
+  apiClients,
+  screenSize,
+  setSignedInUser,
+  updateUserProfile,
 }: SignUpWizardProps) {
   const [state, setState] = useState<ISignUpState>(initialSignUpState);
   const step = useParams()['*'] ?? '';
@@ -69,8 +68,8 @@ export default function SignUpWizard({
     screenSize,
     state,
     actions,
-    user,
-    classrooms,
+    setSignedInUser,
+    updateUserProfile,
   };
 
   switch (step) {

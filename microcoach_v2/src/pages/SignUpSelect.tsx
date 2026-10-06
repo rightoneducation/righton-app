@@ -19,19 +19,23 @@ import {
   TeacherSelectField,
 } from '../lib/styledcomponents/SignUpStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
-import { newClassroom } from '../hooks/useClassrooms';
+import {
+  useMicroCoachDataDispatch,
+  useMicroCoachDataState,
+} from '../hooks/context/useMicroCoachDataContext';
+import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 
 export default function SignUpSelect({
   apiClients,
   screenSize,
   state,
-  user,
-  classrooms,
+  setSignedInUser,
 }: SignUpStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { setSignedInUser, userProfile } = user;
+  const { userProfile } = useMicroCoachDataState();
+  const dispatch = useMicroCoachDataDispatch();
   const isReady = useAllReady(useI18nReady());
 
   const classes = namedClasses(state);
@@ -59,8 +63,9 @@ export default function SignUpSelect({
    *
    * The classes are written as MicroCoachClassroom rows first, keyed by the
    * User row id SignUpVerify stored on the profile. Order matters twice:
-   * - before setSignedInUser, because LOGGEDIN is what triggers useClassrooms'
-   *   load — signing in first can fetch an empty list ahead of the writes;
+   * - before setSignedInUser, and pushed into the classroom state directly:
+   *   useClassrooms loads when the user id appears (at SignUpVerify, before
+   *   any class exists), so it will not refetch them;
    * - one at a time, because the dashboard lists classes by createdAt, so this
    *   keeps the order they were typed in.
    * A class that fails to save is logged and skipped rather than blocking the
@@ -73,14 +78,22 @@ export default function SignUpSelect({
     const commit = async () => {
       const userId = userProfile?.id;
       const ids: Record<string, string> = {};
+      const createdRows: IMicroCoachClassroom[] = [];
       if (userId) {
         await classes.reduce(async (previous, name) => {
           await previous;
           try {
-            const created = await apiClients.classroom.createClassroom(
-              newClassroom(userId, name),
-            );
-            if (created) ids[name] = created.id;
+            const created = await apiClients.classroom.createClassroom({
+              userId,
+              name: name.trim(),
+              grade: null,
+              state: null,
+              schoolYear: null,
+            } as IMicroCoachClassroom);
+            if (created) {
+              ids[name] = created.id;
+              createdRows.push(created);
+            }
           } catch (error) {
             console.error(`Could not save class "${name}"`, error);
           }
@@ -89,6 +102,7 @@ export default function SignUpSelect({
         console.error('Signup reached class save with no User row id');
       }
       setClassIdsByName(ids);
+      dispatch({ type: 'SET_CLASSROOMS', payload: createdRows });
       setSignedInUser({
         ...(userProfile ?? {}),
         email: state.email,
@@ -106,10 +120,10 @@ export default function SignUpSelect({
   if (!isReady) return null;
 
   const handleUpload = () => {
-    // Selecting by id survives useClassrooms' load landing after this: the
-    // load keeps a selection that is present in what it fetched.
     const selectedId = selectedClass ? classIdsByName[selectedClass] : undefined;
-    if (selectedId) classrooms.selectClass(selectedId);
+    if (selectedId) {
+      dispatch({ type: 'SET_SELECTED_CLASSROOM_ID', payload: selectedId });
+    }
     // The upload screen is a later flow; the prototype hands off to the app.
     // No reset needed: leaving /signup unmounts the wizard and its state.
     navigate('/dashboard');

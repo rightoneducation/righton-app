@@ -16,10 +16,10 @@ import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import ContentRow from './ContentRow';
 import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
-import { IUserState } from '../hooks/useUserState';
-import { IClassroomsState } from '../hooks/useClassrooms';
+import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { avatarIcons, DEFAULT_AVATAR_INDEX } from '../images/avatars';
 
 /**
@@ -44,10 +44,11 @@ export type HeaderVariant = 'public' | 'signup' | 'app' | 'profile' | 'home';
 
 interface HeaderProps {
   screenSize: ScreenSize;
-  user: IUserState;
-  classrooms: IClassroomsState;
   variant?: HeaderVariant;
   onLogOut?: () => void;
+  classrooms?: IMicroCoachClassroom[];
+  selectedClassroomId?: string | null;
+  onSelectClassroom?: (classroomId: string) => void;
 }
 
 // styled() erases MUI's polymorphic `component` prop, so re-declare it here to
@@ -245,13 +246,14 @@ const authSkeletonSx = { bgcolor: 'designSystem.background.fadedWhiteVeil' };
 
 export default function Header({
   screenSize,
-  user,
-  classrooms: classroomState,
   variant = 'public',
   onLogOut,
+  classrooms = [],
+  selectedClassroomId = null,
+  onSelectClassroom,
 }: HeaderProps) {
   const { t } = useTranslation();
-  const { userStatus, userProfile } = user;
+  const { userStatus, userProfile } = useMicroCoachDataState();
   const isResolvingAuth = userStatus === UserStatusType.LOADING;
 
   /*
@@ -264,11 +266,6 @@ export default function Header({
     .filter(Boolean)
     .join(' ');
   const teacherEmail = userProfile?.email || '';
-
-  // Same selection as the dashboard's class chips (useClassrooms). Rendered
-  // disabled rather than hidden while empty so the header does not reflow once
-  // the first class is added.
-  const { classrooms, selectedClassId, selectClass } = classroomState;
 
   const initials = [userProfile?.firstName, userProfile?.lastName]
     .map((part) => part?.trim().charAt(0) ?? '')
@@ -426,15 +423,18 @@ export default function Header({
                 {!isProfileChrome && (
                   <ClassSelect
                     screenSize={screenSize}
-                    value={selectedClassId}
+                    value={selectedClassroomId ?? ''}
                     displayEmpty
-                    disabled={classrooms.length === 0}
-                    renderValue={(value) =>
-                      classrooms.find((c) => c.id === value)?.name ||
-                      t('header.noClasses')
+                    disabled={classrooms.length === 0 || !onSelectClassroom}
+                    renderValue={(classroomId) =>
+                      classrooms.find(
+                        (classroom) => classroom.id === classroomId,
+                      )?.name ?? t('header.noClasses')
                     }
                     IconComponent={KeyboardArrowDownIcon}
-                    onChange={(event) => selectClass(event.target.value)}
+                    onChange={(event) =>
+                      onSelectClassroom?.(event.target.value)
+                    }
                     inputProps={{ 'aria-label': t('header.classSwitcher') }}
                   >
                     {classrooms.map((classroom) => (

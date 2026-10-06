@@ -417,9 +417,7 @@ function getStudentGroups(
  * source: amplify/backend/function/microcoachv2LLMSelectTemplate/src/util/activityLibrary.json
  * (`id`, `title`, `primaryMoveLong`, `description` per template). Hand-copied
  * because seed/ cannot import from amplify/ — same reason TEMPLATE_CONTENT_TYPE
- * is duplicated in Preview.tsx. The mock confirms the mapping: spot-the-slip's
- * routine.subtitle in mockPipelineOutput.json is "Incorrect Worked Example
- * Analysis", which is exactly its primaryMoveLong.
+ * is duplicated in Preview.tsx.
  */
 const ROUTINES: Record<string, { name: string; subtitle: string; description: string }> = {
   'spot-the-slip': {
