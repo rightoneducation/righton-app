@@ -21,6 +21,7 @@ import {
   UPDATE_MISCONCEPTION,
   UPDATE_CLASSROOM_WEEK,
 } from './util/graphql.mjs';
+import { ccssDomainName } from './util/ccssDomains.mjs';
 
 const AMPLIFY_ENV = process.env.ENV || 'dev';
 
@@ -265,13 +266,23 @@ function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learni
       (item) => normalize(item.code) === normalize(m.ccssStandard)
     );
 
+    // Short names come from the instructional-need call's `skillNames`; the
+    // domain is a dictionary lookup on the code, never the model.
+    const skillNames = new Map((m.skillNames ?? []).map((s) => [normalize(s.code), s.name]));
+    const skill = (code, description) => ({
+      standard: code,
+      name: skillNames.get(normalize(code)) ?? null,
+      domainName: ccssDomainName(code),
+      description,
+    });
+
     const prerequisiteGaps = m.prerequisiteGapCodes?.length
-      ? m.prerequisiteGapCodes.map((code) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
-      : (frameworkItem?.prerequisiteStandards ?? []).map((r) => ({ standard: r.code, description: r.description }));
+      ? m.prerequisiteGapCodes.map((code) => skill(code, standardsDescMap.get(code) ?? ''))
+      : (frameworkItem?.prerequisiteStandards ?? []).map((r) => skill(r.code, r.description));
 
     const impactedObjectives = m.impactedObjectiveCodes?.length
-      ? m.impactedObjectiveCodes.map((code) => ({ standard: code, description: standardsDescMap.get(code) ?? '' }))
-      : (frameworkItem?.futureDependentStandards ?? []).map((r) => ({ standard: r.code, description: r.description }));
+      ? m.impactedObjectiveCodes.map((code) => skill(code, standardsDescMap.get(code) ?? ''))
+      : (frameworkItem?.futureDependentStandards ?? []).map((r) => skill(r.code, r.description));
 
     const reach = computeMisconceptionReach(m.wrongAnswers, studentResponses);
 
@@ -300,8 +311,7 @@ function buildNextSteps(misconceptions, activitiesPerGroup, ppqQuestions, learni
       successIndicators: m.successIndicators ?? [],
       ccssStandards: {
         targetObjective: {
-          standard: m.ccssStandard,
-          description: standardsDescMap.get(m.ccssStandard) ?? frameworkItem?.description ?? '',
+          ...skill(m.ccssStandard, standardsDescMap.get(m.ccssStandard) ?? frameworkItem?.description ?? ''),
           learningComponents: (frameworkItem?.learningComponents ?? []).map((c) => c.description).filter(Boolean),
         },
         impactedObjectives,

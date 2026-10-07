@@ -78,6 +78,16 @@ const AVATAR_HEADER_SCREENS = new Set<ScreenType>([
   ScreenType.UPLOAD_MIU,
 ]);
 
+// The Understand-to-Reflect flow: the avatar header plus the class switcher,
+// so a teacher can jump between classes mid-flow (Misconceptions frames).
+const FLOW_SCREENS = new Set<ScreenType>([
+  ScreenType.REVIEW,
+  ScreenType.CHOOSE_ACTIVITY,
+  ScreenType.ACTIVITY_DETAIL,
+  ScreenType.MY_PLAN,
+  ScreenType.REFLECT,
+]);
+
 const APP_CHROME_SCREENS = new Set<ScreenType>([
   ScreenType.PROFILE,
   ScreenType.CHANGE_PASSWORD,
@@ -191,11 +201,18 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       );
       break;
     case ScreenType.REVIEW:
-      screenComponent = <Review screenSize={screenSize} sessions={sessions} />;
+      screenComponent = (
+        <Review screenSize={screenSize} sessions={sessions} plan={plan} />
+      );
       break;
     case ScreenType.CHOOSE_ACTIVITY:
       screenComponent = (
-        <ChooseActivity screenSize={screenSize} saveActivity={saveActivity} />
+        <ChooseActivity
+          screenSize={screenSize}
+          sessions={sessions}
+          plan={plan}
+          saveActivity={saveActivity}
+        />
       );
       break;
     case ScreenType.ACTIVITY_DETAIL:
@@ -243,7 +260,9 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
   const isSignUp = SIGNUP_SCREENS.has(currentScreen);
 
   let headerVariant: HeaderVariant = 'public';
-  if (AVATAR_HEADER_SCREENS.has(currentScreen)) headerVariant = 'avatar';
+  if (AVATAR_HEADER_SCREENS.has(currentScreen) || FLOW_SCREENS.has(currentScreen)) {
+    headerVariant = 'avatar';
+  }
   else if (usesAppChrome) headerVariant = 'app';
   else if (isSignUp) headerVariant = 'signup';
 
@@ -256,6 +275,7 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       onSelectClassroom={classrooms.selectClassroom}
       // The sign-up frames carry no footer either.
       showFooter={!usesAppChrome && !isSignUp}
+      showClassSwitcher={FLOW_SCREENS.has(currentScreen)}
       showHelp={
         currentScreen !== ScreenType.PROFILE &&
         currentScreen !== ScreenType.CHANGE_PASSWORD

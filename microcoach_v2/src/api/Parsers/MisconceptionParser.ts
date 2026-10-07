@@ -55,6 +55,12 @@ export class MisconceptionParser {
       nextStepActivities: [],
       studentWork: misconception.studentWork ? JSON.parse(misconception.studentWork) as IStudentWork: null,
       skillContext: misconception.skillContext ? JSON.parse(misconception.skillContext) as ISkillContext:  null,
+      responseEvidence: (misconception.responseEvidence ?? [])
+        .filter((item): item is NonNullable<typeof item> => item != null)
+        .map((item) => ({
+          questionNumber: item.questionNumber,
+          answers: item.answers.filter((answer): answer is string => answer != null),
+        })),
     }
 
     return parsedMisconception
