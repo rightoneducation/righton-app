@@ -163,7 +163,7 @@ export default function PastActivities({
                       <RemoveTile
                         aria-label={`${t('activityList.remove')} ${row.className}`}
                         onClick={() =>
-                          remove.ask({ sessionId: row.id, className: row.className })
+                          remove.ask({ id: row.id, className: row.className })
                         }
                       >
                         <DeleteOutlineIcon fontSize="small" />

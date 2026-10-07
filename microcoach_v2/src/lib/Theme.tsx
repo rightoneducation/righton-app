@@ -419,6 +419,20 @@ const designSystemTypography = {
     fontSize: '40px',
     lineHeight: 'normal',
   },
+  // Account Settings: the name on the navy card (Account1).
+  headingXl: {
+    fontFamily: poppins,
+    fontWeight: 700,
+    fontSize: '32px',
+    lineHeight: 'normal',
+  },
+  // Account Settings: "Account Created" and the field labels.
+  labelSmBold: {
+    fontFamily: poppins,
+    fontWeight: 600,
+    fontSize: '14px',
+    lineHeight: 'normal',
+  },
   // The review step's body copy and its "UPLOADED" heading — headingLg is
   // already Poppins 600/24, so these are its 400 and 500 weights.
   bodyLg: {
@@ -572,6 +586,8 @@ declare module '@mui/material/styles' {
     stepChipLabel: CSSProperties;
     outcomeLabel: CSSProperties;
     displayBold: CSSProperties;
+    headingXl: CSSProperties;
+    labelSmBold: CSSProperties;
     bodyLg: CSSProperties;
     subheadingLg: CSSProperties;
     submissionLabelLight: CSSProperties;
@@ -618,6 +634,8 @@ declare module '@mui/material/styles' {
     stepChipLabel?: CSSProperties;
     outcomeLabel?: CSSProperties;
     displayBold?: CSSProperties;
+    headingXl?: CSSProperties;
+    labelSmBold?: CSSProperties;
     bodyLg?: CSSProperties;
     subheadingLg?: CSSProperties;
     submissionLabelLight?: CSSProperties;
@@ -665,6 +683,8 @@ declare module '@mui/material/Typography' {
     stepChipLabel: true;
     outcomeLabel: true;
     displayBold: true;
+    headingXl: true;
+    labelSmBold: true;
     bodyLg: true;
     subheadingLg: true;
     submissionLabelLight: true;
@@ -747,6 +767,8 @@ const Theme = createTheme({
           stepChipLabel: 'p',
           outcomeLabel: 'p',
           displayBold: 'p',
+          headingXl: 'p',
+          labelSmBold: 'p',
           bodyLg: 'p',
           subheadingLg: 'p',
           submissionLabelLight: 'p',
@@ -796,6 +818,8 @@ const Theme = createTheme({
     stepChipLabel: { ...designSystemTypography.stepChipLabel },
     outcomeLabel: { ...designSystemTypography.outcomeLabel },
     displayBold: { ...designSystemTypography.displayBold },
+    headingXl: { ...designSystemTypography.headingXl },
+    labelSmBold: { ...designSystemTypography.labelSmBold },
     bodyLg: { ...designSystemTypography.bodyLg },
     subheadingLg: { ...designSystemTypography.subheadingLg },
     submissionLabelLight: { ...designSystemTypography.submissionLabelLight },

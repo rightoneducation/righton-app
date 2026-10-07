@@ -2,6 +2,7 @@ import { BaseAPIClient, GraphQLOptions } from '../base/BaseAPIClient';
 import { IUserAPIClient } from './interfaces/IUserAPIClient';
 import { IUser, UserRole } from '../../Models/IUser';
 import { UserParser } from '../../Parsers/UserParser';
+import { schoolFromEmail } from '../../../lib/schools';
 import {
   CreateMicroCoachUserMutation,
   CreateMicroCoachUserMutationVariables,
@@ -47,7 +48,11 @@ export const userProfileLocalStorage = 'microcoach_userprofile';
 export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
 
   async createUser(user: IUser): Promise<IUser | null> {
-    const input = UserParser.parseAWSUserInputfromIUser(user);
+    // Every new account gets its school from its email domain (lib/schools).
+    const input = UserParser.parseAWSUserInputfromIUser({
+      ...user,
+      school: user.school ?? schoolFromEmail(user.email),
+    });
     const variables: CreateMicroCoachUserMutationVariables = { input };
     const res = await this.callGraphQL<CreateMicroCoachUserMutation>(
       createMicroCoachUser,

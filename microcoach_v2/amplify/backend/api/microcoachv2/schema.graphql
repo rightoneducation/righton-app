@@ -26,6 +26,8 @@ type MicroCoachUser
   email: String! @index(name: "byEmail", queryField: "usersByEmail")
   firstName: String
   lastName: String
+  # Derived from the email domain at sign-up; read-only in the app.
+  school: String
   classes: [MicroCoachClassroom] @hasMany(indexName: "byUser", fields: ["id"])
   role: UserRole! @index(name: "byRole", queryField: "usersByRole")
   createdAt: AWSDateTime!

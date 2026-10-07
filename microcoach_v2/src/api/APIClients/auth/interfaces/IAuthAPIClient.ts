@@ -34,6 +34,8 @@ export interface IAuthAPIClient {
   awsSignIn(email: string, password: string): Promise<SignInOutput>;
   awsSignInFederated(): Promise<void>;
   awsResetPassword(username: string): Promise<ResetPasswordOutput>;
+  isFederatedUser(): Promise<boolean>;
+  awsUpdatePassword(oldPassword: string, newPassword: string): Promise<void>;
   awsConfirmResetPassword(input: ConfirmResetPasswordInput): Promise<void>;
   awsSignOut(): Promise<void>;
   awsResendConfirmationCode(email: string): Promise<ResendSignUpCodeOutput>;

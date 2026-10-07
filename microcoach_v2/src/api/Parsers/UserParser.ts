@@ -42,6 +42,7 @@ export class UserParser {
       email: user.email,
       firstName: user.firstName || '',
       lastName: user.lastName || '',
+      school: user.school ?? null,
       // `classes` is a @hasMany relation, not a field on the row. Nothing reads
       // it off User today; class names would come from their own Class rows.
       classes: [],
@@ -64,6 +65,9 @@ export class UserParser {
       );
     }
 
+    // `school` is spread rather than listed so this compiles against
+    // CreateMicroCoachUserInput before and after codegen picks the field up.
+    const school = user.school ? { school: user.school } : {};
     return {
       id: user.id,
       cognitoId: user.cognitoId,
@@ -71,6 +75,7 @@ export class UserParser {
       firstName: user.firstName,
       lastName: user.lastName,
       role: this.parseAWSRolefromUserRole(user.role),
+      ...school,
     };
   }
 

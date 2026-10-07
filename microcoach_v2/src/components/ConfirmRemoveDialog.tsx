@@ -15,9 +15,14 @@ interface ConfirmRemoveDialogProps {
   hasError: boolean;
   onCancel: () => void;
   onConfirm: () => void;
+  // Wording overrides; the defaults describe removing a session.
+  title?: string;
+  body?: string;
+  errorText?: string;
 }
 
-// Removing a session deletes it from the backend. No frame draws this step, so
+// Confirms a delete from the backend: a session (This Week, Past Activities) or
+// a class (Account Settings, through the wording props). No frame draws this step, so
 // it is a plain MUI dialog until design supplies one.
 export default function ConfirmRemoveDialog({
   className,
@@ -25,15 +30,18 @@ export default function ConfirmRemoveDialog({
   hasError,
   onCancel,
   onConfirm,
+  title,
+  body,
+  errorText,
 }: ConfirmRemoveDialogProps) {
   const { t } = useTranslation();
 
   return (
     <Dialog open={className !== null} onClose={isRemoving ? undefined : onCancel}>
-      <DialogTitle>{t('activityList.removeTitle')}</DialogTitle>
+      <DialogTitle>{title ?? t('activityList.removeTitle')}</DialogTitle>
       <DialogContent>
         <Typography variant="rubikBody">
-          {t('activityList.removeBody', { className })}
+          {body ?? t('activityList.removeBody', { className })}
         </Typography>
         {hasError && (
           <Typography
@@ -41,7 +49,7 @@ export default function ConfirmRemoveDialog({
             role="alert"
             sx={{ color: 'designSystem.status.errorStroke' }}
           >
-            {t('activityList.removeError')}
+            {errorText ?? t('activityList.removeError')}
           </Typography>
         )}
       </DialogContent>

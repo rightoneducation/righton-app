@@ -163,7 +163,7 @@ export default function ThisWeek({
                   onClick={() =>
                     row.sessionId &&
                     remove.ask({
-                      sessionId: row.sessionId,
+                      id: row.sessionId,
                       className: row.className,
                     })
                   }

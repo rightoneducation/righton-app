@@ -14,6 +14,9 @@ export interface IUser {
   email: string;
   firstName?: string;
   lastName?: string;
+  // Derived from the email domain at sign-up (lib/schools); null when the
+  // domain names no school or the row predates the field.
+  school?: string | null;
   classes?: string[];
   role?: UserRole | null;
   createdAt?: string;
