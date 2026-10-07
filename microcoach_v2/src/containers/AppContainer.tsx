@@ -35,6 +35,8 @@ interface AppContainerProps {
   children: ReactNode;
   headerVariant?: HeaderVariant;
   showFooter?: boolean;
+  // The floating Need help button; the Account frames draw none.
+  showHelp?: boolean;
   onLogOut?: () => void;
   classrooms?: IMicroCoachClassroom[];
   selectedClassroomId?: string | null;
@@ -45,6 +47,7 @@ export default function AppContainer({
   children,
   headerVariant = 'public',
   showFooter = true,
+  showHelp = true,
   onLogOut,
   classrooms,
   selectedClassroomId,
@@ -63,7 +66,7 @@ export default function AppContainer({
         onSelectClassroom={onSelectClassroom}
       />
       <BodyContainer component="main">{children}</BodyContainer>
-      {(headerVariant === 'app' || headerVariant === 'avatar') && (
+      {showHelp && (headerVariant === 'app' || headerVariant === 'avatar') && (
         <NeedHelpButton />
       )}
       {showFooter && <Footer screenSize={screenSize} />}

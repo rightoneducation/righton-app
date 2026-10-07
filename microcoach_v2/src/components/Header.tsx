@@ -20,27 +20,23 @@ import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import ContentRow from './ContentRow';
 import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
-import { avatarIcons, DEFAULT_AVATAR_INDEX } from '../images/avatars';
 
 /**
- * `profile` is the app chrome as the profile frame draws it: the identity
- * presented as an avatar and a name rather than name-and-email, and no class
- * switcher. Every other in-app frame (newexports/Wireframe2,3,5) draws the
- * 362-wide name-and-email pill beside the 180-wide class select, so this is a
- * second app variant rather than a change to the first.
+ * `app` is the in-app chrome (newexports/Wireframe2,3,5): the 362-wide
+ * name-and-email pill beside the 180-wide class select.
  *
  * `signup` is the wizard's own chrome: the frames draw the brand alone on
  * every step but the last, since offering a Sign Up link to someone already
  * signing up makes no sense. Its final step still shows an identity, but that
  * comes from the LOGGEDIN branch rather than the variant.
  *
- * `home` is the sidebar screens' chrome (dashboard/Dashboard1-3): the identity
- * shrinks to an initials avatar and the class switcher goes, since those
- * screens pick the class in the page. The frames draw no log out or profile
- * control, so the avatar opens the account menu from the previous dashboard
- * frame (OldDashboard1: Account Settings, then Log out).
+ * `avatar` is the chrome of the sidebar screens, the MIU upload and Account
+ * Settings: the identity shrinks to an initials avatar and the class switcher
+ * goes, since those screens pick the class in the page. The frames draw no
+ * log out control, so the avatar opens the account menu from the previous
+ * dashboard frame (OldDashboard1: Account Settings, then Log out).
  */
-export type HeaderVariant = 'public' | 'signup' | 'app' | 'profile' | 'avatar';
+export type HeaderVariant = 'public' | 'signup' | 'app' | 'avatar';
 
 interface HeaderProps {
   screenSize: ScreenSize;
@@ -151,45 +147,6 @@ const IdentityPill = styled(Box)<RouterExtras>(({ theme }) => ({
   textOverflow: 'ellipsis',
 }));
 
-/*
- * Figma (profile): 180x44, holding the avatar and the name alone.
- *
- * 180 is a floor rather than the width: the frame measured it against "Mr.
- * Anderson", and the name this actually renders is the full display name, which
- * does not fit. Growing beats ellipsising a name at this length.
- */
-const AvatarIdentityPill = styled(Box)<RouterExtras>(({ theme }) => ({
-  ...identityPillBase(theme),
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.sizing.space2,
-  minWidth: 180,
-  minHeight: 44,
-  padding: `0 ${theme.sizing.space3 + 2}px`,
-  ...theme.typography.buttonLabel,
-  textDecoration: 'none',
-}));
-
-// Figma: 28.7x35.4, rx 6.7 — the sidebar plate at header scale, and clipping
-// the same art, so it takes the same treatment.
-const HeaderAvatar = styled(Box)(({ theme }) => ({
-  width: 29,
-  height: 35,
-  flexShrink: 0,
-  overflow: 'hidden',
-  borderRadius: 7,
-  backgroundColor: theme.palette.designSystem.surface.avatarPlate,
-  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.offWhite}`,
-  boxSizing: 'border-box',
-}));
-
-const HeaderAvatarImage = styled('img')({
-  display: 'block',
-  width: '100%',
-  height: '100%',
-  objectFit: 'cover',
-});
-
 const ClassSelect = styled(Select<string>, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
 })<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
@@ -276,9 +233,8 @@ export default function Header({
   );
 
   // Every app variant shares the nav block; only its contents differ.
-  const isProfileChrome = variant === 'profile';
   const isAvatarChrome = variant === 'avatar';
-  const usesAppNav = variant === 'app' || isProfileChrome || isAvatarChrome;
+  const usesAppNav = variant === 'app' || isAvatarChrome;
 
   const isCompactBrand = usesAppNav && screenSize === ScreenSize.SMALL;
 
@@ -394,56 +350,40 @@ export default function Header({
                     </LogOutButton>
                     {/* The frame gives no separate control for reaching the
                         profile, so the identity itself is the way in. */}
-                    {isProfileChrome ? (
-                      <AvatarIdentityPill component={RouterLink} to="/profile">
-                        <HeaderAvatar>
-                          <HeaderAvatarImage
-                            src={avatarIcons[DEFAULT_AVATAR_INDEX]}
-                            alt=""
-                          />
-                        </HeaderAvatar>
+                    <IdentityPill
+                      component={RouterLink}
+                      to="/profile"
+                      sx={{ textDecoration: 'none' }}
+                    >
+                      <Box component="span" sx={{ fontWeight: 500 }}>
                         {teacherName}
-                      </AvatarIdentityPill>
-                    ) : (
-                      <IdentityPill
-                        component={RouterLink}
-                        to="/profile"
-                        sx={{ textDecoration: 'none' }}
-                      >
-                        <Box component="span" sx={{ fontWeight: 500 }}>
-                          {teacherName}
-                        </Box>
-                        {` • ${teacherEmail}`}
-                      </IdentityPill>
-                    )}
+                      </Box>
+                      {` • ${teacherEmail}`}
+                    </IdentityPill>
                   </>
                 )}
-                {/* The profile frame carries no class switcher; every other
-                    in-app frame does. */}
-                {!isProfileChrome && (
-                  <ClassSelect
-                    screenSize={screenSize}
-                    value={selectedClassroomId ?? ''}
-                    displayEmpty
-                    disabled={classrooms.length === 0 || !onSelectClassroom}
-                    renderValue={(classroomId) =>
-                      classrooms.find(
-                        (classroom) => classroom.id === classroomId,
-                      )?.name ?? t('header.noClasses')
-                    }
-                    IconComponent={KeyboardArrowDownIcon}
-                    onChange={(event) =>
-                      onSelectClassroom?.(event.target.value)
-                    }
-                    inputProps={{ 'aria-label': t('header.classSwitcher') }}
-                  >
-                    {classrooms.map((classroom) => (
-                      <MenuItem key={classroom.id} value={classroom.id}>
-                        {classroom.name}
-                      </MenuItem>
-                    ))}
-                  </ClassSelect>
-                )}
+                <ClassSelect
+                  screenSize={screenSize}
+                  value={selectedClassroomId ?? ''}
+                  displayEmpty
+                  disabled={classrooms.length === 0 || !onSelectClassroom}
+                  renderValue={(classroomId) =>
+                    classrooms.find(
+                      (classroom) => classroom.id === classroomId,
+                    )?.name ?? t('header.noClasses')
+                  }
+                  IconComponent={KeyboardArrowDownIcon}
+                  onChange={(event) =>
+                    onSelectClassroom?.(event.target.value)
+                  }
+                  inputProps={{ 'aria-label': t('header.classSwitcher') }}
+                >
+                  {classrooms.map((classroom) => (
+                    <MenuItem key={classroom.id} value={classroom.id}>
+                      {classroom.name}
+                    </MenuItem>
+                  ))}
+                </ClassSelect>
               </>
             )}
           </Stack>

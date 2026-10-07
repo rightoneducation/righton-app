@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 interface RemoveTarget {
-  sessionId: string;
+  id: string;
   className: string;
 }
 
@@ -19,7 +19,7 @@ export interface ConfirmRemoveState {
  * failed delete so the teacher sees the error and can retry or cancel.
  */
 export function useConfirmRemove(
-  removeSession: (sessionId: string) => Promise<boolean>,
+  remove: (id: string) => Promise<boolean>,
 ): ConfirmRemoveState {
   const [target, setTarget] = useState<RemoveTarget | null>(null);
   const [isRemoving, setIsRemoving] = useState(false);
@@ -43,7 +43,7 @@ export function useConfirmRemove(
       if (!target) return;
       setIsRemoving(true);
       setHasError(false);
-      const removed = await removeSession(target.sessionId);
+      const removed = await remove(target.id);
       setIsRemoving(false);
       if (removed) close();
       else setHasError(true);

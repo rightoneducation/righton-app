@@ -65,20 +65,13 @@ const SIGNUP_SCREENS = new Set<ScreenType>([
   ScreenType.AUTH,
 ]);
 
-/*
- * The profile frame draws the app header differently from every other in-app
- * frame: identity as avatar-and-name, and no class switcher. CHANGE_PASSWORD
- * has no frame of its own, but it is entered from the profile — flipping the
- * pill and re-adding the switcher mid-flow would read as a glitch.
- */
-const PROFILE_CHROME_SCREENS = new Set<ScreenType>([
+// Screens whose header is the initials avatar and its account menu (HeaderVariant
+// `avatar`): the sidebar screens, the MIU upload flow and Account Settings.
+// CHANGE_PASSWORD has no frame of its own; it is entered from the account
+// page, so it keeps that page's header.
+const AVATAR_HEADER_SCREENS = new Set<ScreenType>([
   ScreenType.PROFILE,
   ScreenType.CHANGE_PASSWORD,
-]);
-
-// Screens whose header is the initials avatar and its account menu (HeaderVariant
-// `avatar`): the sidebar screens and the MIU upload flow.
-const AVATAR_HEADER_SCREENS = new Set<ScreenType>([
   ScreenType.DASHBOARD,
   ScreenType.THIS_WEEK,
   ScreenType.PAST_ACTIVITIES,
@@ -226,6 +219,7 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
           apiClients={apiClients}
           screenSize={screenSize}
           updateUserProfile={user.updateUserProfile}
+          onLogOut={handleHeaderLogOut}
         />
       );
       break;
@@ -249,8 +243,7 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
   const isSignUp = SIGNUP_SCREENS.has(currentScreen);
 
   let headerVariant: HeaderVariant = 'public';
-  if (PROFILE_CHROME_SCREENS.has(currentScreen)) headerVariant = 'profile';
-  else if (AVATAR_HEADER_SCREENS.has(currentScreen)) headerVariant = 'avatar';
+  if (AVATAR_HEADER_SCREENS.has(currentScreen)) headerVariant = 'avatar';
   else if (usesAppChrome) headerVariant = 'app';
   else if (isSignUp) headerVariant = 'signup';
 
@@ -263,6 +256,10 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       onSelectClassroom={classrooms.selectClassroom}
       // The sign-up frames carry no footer either.
       showFooter={!usesAppChrome && !isSignUp}
+      showHelp={
+        currentScreen !== ScreenType.PROFILE &&
+        currentScreen !== ScreenType.CHANGE_PASSWORD
+      }
     >
       <AuthGuard
         handleLogOut={handleLogOut}
