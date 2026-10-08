@@ -592,36 +592,45 @@ async function main() {
           continue;
         }
 
-        // ── "Before" set: students from activity Groups A + B (all except last group) ──
-        // Groups are ordered weakest → strongest by injectStudentsIntoGroups.
-        // Last group = "Ready to Generalize" (understood). All others need help.
-        const allGroups: any[] = [];
+        // ── "Before" set: the students who needed help on this misconception ──
+        // Wave 2 activities carry no severity groups, so the set comes from the
+        // misconception's own studentGroups (computed from the PPQ responses on its
+        // linked questions). Older Wave 1 output grouped students inside the
+        // activity, weakest first, with the last group the ones who understood;
+        // that is still read when a run has it.
+        let beforeNames = new Set<string>();
+        let allGroupStudentNames = new Set<string>();
+        let understoodNames: string[] = [];
+        let groupsUsedLabel = '';
+        const legacyGroups: any[] = [];
         for (const move of (matchingGapGroup.moveOptions ?? [])) {
           const groups = move?.phases?.beforeClass?.groupFormation?.groups;
           if (Array.isArray(groups) && groups.length > 0) {
-            allGroups.push(...groups);
+            legacyGroups.push(...groups);
             break; // use the first activity that has groupings
           }
         }
-
-        if (allGroups.length < 2) {
-          console.log(`    ⚠ ${misconception.title}: no student groupings found on activity — skipping`);
-          continue;
-        }
-
-        // All groups except the last = students needing help before intervention
-        const needHelpGroups = allGroups.slice(0, -1);
-        const beforeNames = new Set<string>();
-        for (const group of needHelpGroups) {
-          for (const name of (group.students ?? [])) {
-            beforeNames.add(name);
+        if (legacyGroups.length >= 2) {
+          const needHelpGroups = legacyGroups.slice(0, -1);
+          beforeNames = new Set(needHelpGroups.flatMap((g: any) => (g.students ?? []) as string[]));
+          allGroupStudentNames = new Set(legacyGroups.flatMap((g: any) => (g.students ?? []) as string[]));
+          understoodNames = legacyGroups[legacyGroups.length - 1].students ?? [];
+          groupsUsedLabel = needHelpGroups.map((g: any) => g.name ?? g.label).join(', ');
+        } else {
+          const studentGroups = matchingGapGroup.studentGroups ?? {};
+          const building: string[] = studentGroups.buildingUnderstanding ?? [];
+          const understood: string[] = studentGroups.understoodConcept ?? [];
+          if (!building.length) {
+            console.log(`    ⚠ ${misconception.title}: no students recorded as needing support — skipping`);
+            continue;
           }
+          beforeNames = new Set(building);
+          allGroupStudentNames = new Set([...building, ...understood]);
+          understoodNames = understood;
+          groupsUsedLabel = 'buildingUnderstanding';
         }
 
         // Students in the class roster who were absent from PPQ (not in any group) but took POST_PPQ
-        const allGroupStudentNames = new Set<string>(
-          allGroups.flatMap((g: any) => (g.students ?? []) as string[])
-        );
         const absentPostStudents = students.filter((s: any) => {
           const displayName = normalizeName(s.name);
           return !allGroupStudentNames.has(s.name) && !allGroupStudentNames.has(displayName)
@@ -629,7 +638,7 @@ async function main() {
         });
 
         console.log(`    ${misconception.title}:`);
-        console.log(`      Groups used: ${needHelpGroups.map((g: any) => g.name).join(', ')} (${beforeNames.size} students)`);
+        console.log(`      Needing support before: ${groupsUsedLabel} (${beforeNames.size} students)`);
         if (absentPostStudents.length > 0) {
           console.log(`      Absent from PPQ but took POST_PPQ: ${absentPostStudents.map((s: any) => normalizeName(s.name)).join(', ')}`);
         }
@@ -660,9 +669,8 @@ async function main() {
           }
         }
 
-        // Check for newly surfaced: students in the last group (understood) who now score < threshold
-        const understoodGroup = allGroups[allGroups.length - 1];
-        for (const name of (understoodGroup.students ?? [])) {
+        // Check for newly surfaced: students who had understood but now score < threshold
+        for (const name of understoodNames) {
           const studentId = nameToStudentId.get(name);
           if (!studentId) continue;
 
@@ -707,7 +715,7 @@ async function main() {
         const afterCount = studentsStillNeedHelp.length + studentsNewlySurfaced.length;
 
         // Comparable = grouped students who took POST_PPQ + absent DB students who took it + unmatched students with responses
-        const allGroupStudents = allGroups.flatMap((g: any) => g.students ?? []);
+        const allGroupStudents = [...allGroupStudentNames];
         const groupComparable = allGroupStudents.filter((name: string) => {
           const id = nameToStudentId.get(name);
           return id && postPpqStudentIds.has(id);

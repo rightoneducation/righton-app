@@ -114,6 +114,10 @@ export class RunCapture {
     if (trace?.resolvedPrompt) {
       this.write(`prompts/${n}-${name}.txt`, trace.resolvedPrompt);
     }
+    // NextStepOption's closing discussion and its review are separate calls with
+    // their own prompts.
+    if (trace?.discussionPrompt) this.write(`prompts/${n}-${name}-discussion.txt`, trace.discussionPrompt);
+    if (trace?.reviewPrompt) this.write(`prompts/${n}-${name}-review.txt`, trace.reviewPrompt);
   }
 
   /** Anything worth putting in the manifest that isn't derived from calls. */

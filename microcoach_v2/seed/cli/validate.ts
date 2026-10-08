@@ -46,14 +46,15 @@ const configPath = path.resolve(
 const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 const nso = config?.nextStepOption ?? {};
 
-const DISCUSSION_Q_MIN        = nso.discussionQuestions?.min ?? 2;
-const DISCUSSION_Q_MAX        = nso.discussionQuestions?.max ?? 3;
-const GROUPS_MIN              = nso.studentGroups?.min ?? 2;
-const GROUPS_MAX              = nso.studentGroups?.max ?? 3;
+const cdo = nso.closingDiscussion ?? {};
+const QUESTION_COUNT          = cdo.questionCount ?? 3;
+const WATCH_FOR_MIN           = cdo.watchFors?.min ?? 1;
+const WATCH_FOR_MAX           = cdo.watchFors?.max ?? 3;
+const EXAMPLES_MIN            = nso.examples?.min ?? 1;
+const EXAMPLES_MAX            = nso.examples?.max ?? 3;
 const ALLOWED_DURATION_BUCKETS: Array<{ label: string; min: number; max: number }> =
   nso.allowedDurationBuckets ?? [];
 const DESIGN_PRINCIPLES: string[] = nso.designPrinciples ?? [];
-const VALID_FORMATS = ['Whole class', 'Split class'];
 
 // source: amplify/backend/function/microcoachv2NextStepOption/src/util/activityContent.mjs
 // (CONTENT_TYPES). seed/ cannot import from amplify/, so this is hand-copied —
@@ -62,10 +63,11 @@ const KNOWN_CONTENT_TYPES = [
   'INCORRECT_WORKED_EXAMPLES',
   'FAVORITE_NO',
   'COMPARE_THE_THINKING',
-  'MULTIPLE_REPRESENTATIONS',
   'MATH_DETECTIVE',
   'MAKE_YOUR_CASE',
 ];
+// The templates whose artifact is a set of up to three examples.
+const EXAMPLE_TYPES = ['INCORRECT_WORKED_EXAMPLES', 'FAVORITE_NO', 'MATH_DETECTIVE'];
 
 // ── CLI args ──────────────────────────────────────────────────────────────────
 
@@ -124,65 +126,8 @@ const SESSIONS_BY_CLASSROOM = /* GraphQL */ `
   }
 `;
 
-const STUDENT_RESPONSES_BY_ASSESSMENT = /* GraphQL */ `
-  query StudentResponsesByAssessmentId($assessmentId: ID!) {
-    studentResponsesByAssessmentId(assessmentId: $assessmentId, limit: 1000) {
-      items {
-        studentId
-        questionResponses {
-          questionNumber
-          response
-          isCorrect
-        }
-      }
-    }
-  }
-`;
 
-// ── Helpers (replicated from generate-next-steps.ts) ─────────────────────────
-
-function parseQuestionNumbers(source: string): number[] {
-  const matches = (source ?? '').matchAll(/Q(\d+)/gi);
-  const nums = new Set<number>();
-  for (const m of matches) nums.add(parseInt(m[1], 10));
-  return [...nums].sort((a, b) => a - b);
-}
-
-function getStudentPerformanceData(
-  studentResponses: any[],
-  questionNumbers: number[],
-  studentNameMap: Map<string, string>,
-): Array<{ name: string; score: number }> {
-  if (!questionNumbers.length) return [];
-  const qSet = new Set(questionNumbers);
-  const result: Array<{ name: string; score: number }> = [];
-  for (const sr of studentResponses) {
-    const name = studentNameMap.get(sr.studentId);
-    if (!name) continue;
-    const relevant = (sr.questionResponses ?? []).filter((qr: any) => qSet.has(qr.questionNumber));
-    if (!relevant.length) continue;
-    const correct = relevant.filter((qr: any) => qr.isCorrect).length;
-    result.push({ name, score: Math.round((correct / relevant.length) * 100) / 100 });
-  }
-  return result.sort((a, b) => a.name.localeCompare(b.name));
-}
-
-/** Replicate the sort+split logic from injectStudentsIntoGroups — returns expected group assignments */
-function computeExpectedGroups(
-  numGroups: number,
-  studentData: Array<{ name: string; score: number }>,
-): string[][] {
-  const sorted = [...studentData].sort((a, b) => a.score - b.score || a.name.localeCompare(b.name));
-  const base = Math.floor(sorted.length / numGroups);
-  const remainder = sorted.length % numGroups;
-  let offset = 0;
-  return Array.from({ length: numGroups }, (_, i) => {
-    const size = base + (i < remainder ? 1 : 0);
-    const slice = sorted.slice(offset, offset + size).map(s => s.name);
-    offset += size;
-    return slice;
-  });
-}
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
 function parseDurationMinutes(time: string): number | null {
   const m = (time ?? '').match(/(\d+)/);
@@ -259,7 +204,6 @@ function runMisconceptionStructuralChecks(misconception: any, sessionLabel: stri
 
 function runStructuralChecks(
   activity: any,
-  allGroupStudents: Set<string>,  // students from studentData (expected assignees)
   label: string,
 ): TestResult[] {
   const results: TestResult[] = [];
@@ -269,61 +213,48 @@ function runStructuralChecks(
     results.push({ ...base, check: checkName, pass, detail });
   }
 
-  // The four rendered phases. `tabs` used to be checked here instead; nothing in
-  // src/ ever read it, and it is no longer generated.
-  const phases = activity.phases ?? {};
-  const beforeClass = phases.beforeClass ?? {};
-  const groupFormation = beforeClass.groupFormation ?? {};
-  const groups: any[] = groupFormation.groups ?? [];
-  const content = phases.activity ?? null;
-
-  const checklist: any[] = beforeClass.checklist ?? [];
-  check('beforeClass.checklist is a non-empty array', Array.isArray(checklist) && checklist.length > 0, `got ${checklist.length} item(s)`);
-  const badChecklist = checklist.filter((c: any) => !Number.isInteger(c?.order) || !c?.title);
-  check('beforeClass.checklist items have {order, title}', badChecklist.length === 0, badChecklist.length ? `${badChecklist.length} item(s) missing fields` : undefined);
-
-  check('phases.activity present', content != null, content ? undefined : 'no typed activity content');
+  // The Wave 2 content the app renders (src/lib/ActivityContentModels.ts). The
+  // full shape is pinned by the Lambda's zod schema; these are the rules a
+  // reviewer most wants to see pass or fail by name.
+  const content = activity.content ?? null;
+  check('content present', content != null, content ? undefined : 'no Wave 2 content');
   if (content) {
+    check('content.schemaVersion is 2', content.schemaVersion === 2, `got ${content.schemaVersion}`);
+    const facilitate = content.facilitate ?? {};
+    check('facilitate.type is a known content type', KNOWN_CONTENT_TYPES.includes(facilitate.type), `got "${facilitate.type}"`);
     check(
-      'phases.activity.type is a known content type',
-      KNOWN_CONTENT_TYPES.includes(content.type),
-      `got "${content.type}"`,
+      "facilitate.type matches the activity's activityType",
+      facilitate.type === activity.activityType,
+      `content "${facilitate.type}" vs activityType "${activity.activityType}"`,
     );
-    check(
-      'phases.activity.type matches the activity\'s activityType',
-      content.type === activity.activityType,
-      `content "${content.type}" vs activityType "${activity.activityType}"`,
-    );
+    check('whyThisActivity present', Boolean(content.whyThisActivity?.trim()));
+    check('beforeClass.steps non-empty', (content.beforeClass?.steps ?? []).length > 0);
+    check('howToRun non-empty', (content.howToRun ?? []).length > 0);
+
+    if (EXAMPLE_TYPES.includes(facilitate.type)) {
+      const examples: any[] = facilitate.examples ?? [];
+      check(`examples (${EXAMPLES_MIN}-${EXAMPLES_MAX})`, examples.length >= EXAMPLES_MIN && examples.length <= EXAMPLES_MAX, `got ${examples.length}`);
+      const problems = examples.map((e: any) => String(e?.problem ?? '').replace(/\s|\$/g, ''));
+      check('examples use different problems', new Set(problems).size === problems.length, `problems: ${problems.join(' | ')}`);
+    }
+    // Exactly one ERROR step per worked example: the marker the UI keys the error
+    // row off, and what the accuracy reviewer must preserve.
+    if (facilitate.type === 'INCORRECT_WORKED_EXAMPLES') {
+      const badErrorCount = (facilitate.examples ?? []).filter(
+        (e: any) => (e?.steps ?? []).filter((st: any) => st?.annotation?.kind === 'ERROR').length !== 1,
+      );
+      check('each worked example has exactly one ERROR step', badErrorCount.length === 0, badErrorCount.length ? `${badErrorCount.length} example(s) with 0 or >1 ERROR steps` : undefined);
+    }
+
+    const discussion = content.discussion ?? {};
+    check(`discussion questions (${QUESTION_COUNT})`, (discussion.questions ?? []).length === QUESTION_COUNT, `got ${(discussion.questions ?? []).length}`);
+    const watchFors: any[] = discussion.watchFors ?? [];
+    check(`watch for sets (${WATCH_FOR_MIN}-${WATCH_FOR_MAX})`, watchFors.length >= WATCH_FOR_MIN && watchFors.length <= WATCH_FOR_MAX, `got ${watchFors.length}`);
+    check('mathematical takeaway present', Boolean(discussion.takeaway?.trim()));
   }
 
-  const facSteps: any[] = phases.facilitation?.steps ?? [];
-  check('facilitation.steps is a non-empty array', facSteps.length > 0, `got ${facSteps.length} step(s)`);
-  const discQs: any[] = phases.discussion?.questions ?? [];
-  check(
-    `discussion questions (${DISCUSSION_Q_MIN}-${DISCUSSION_Q_MAX})`,
-    discQs.length >= DISCUSSION_Q_MIN && discQs.length <= DISCUSSION_Q_MAX,
-    `got ${discQs.length}`,
-  );
-
-  // Worked examples, for the one content type that carries them. Exactly one
-  // step per example should be annotated ERROR: that marker is what the UI keys
-  // the error row off, and it is also what the accuracy reviewer must preserve.
-  if (content?.type === 'INCORRECT_WORKED_EXAMPLES') {
-    const examples: any[] = content.examples ?? [];
-    check('worked examples present', examples.length > 0, `got ${examples.length}`);
-    const badShape = examples.filter(
-      (e: any) => !e?.prompt || !Array.isArray(e?.steps) || e.steps.length === 0 || !e?.finalOutcome,
-    );
-    check('worked examples have {prompt, steps, finalOutcome}', badShape.length === 0, badShape.length ? `${badShape.length} example(s) missing fields` : undefined);
-    const badErrorCount = examples.filter(
-      (e: any) => (e?.steps ?? []).filter((st: any) => st?.annotation?.kind === 'ERROR').length !== 1,
-    );
-    check('each worked example has exactly one ERROR step', badErrorCount.length === 0, badErrorCount.length ? `${badErrorCount.length} example(s) with 0 or >1 ERROR steps` : undefined);
-  }
-
-  // The IMicroCoachActivity fields the UI reads around the phases.
+  // The IMicroCoachActivity fields the UI reads around the content.
   check('routine present', activity.routine?.name != null, activity.routine ? undefined : 'no routine — unknown templateId?');
-  check('grouping present', activity.grouping?.level != null, activity.grouping ? undefined : 'no grouping');
   check('durationMinutes present', Number.isInteger(activity.durationMinutes), `got ${activity.durationMinutes}`);
   check(
     'detailStatus matches content presence',
@@ -331,132 +262,14 @@ function runStructuralChecks(
     `got "${activity.detailStatus}"`,
   );
 
-  // Student groups count
-  check(
-    `student groups count (${GROUPS_MIN}-${GROUPS_MAX})`,
-    groups.length >= GROUPS_MIN && groups.length <= GROUPS_MAX,
-    `got ${groups.length}`,
-  );
-
-  // All students assigned (exactly once)
-  if (allGroupStudents.size > 0) {
-    const assignedStudents: string[] = groups.flatMap((g: any) => g.students ?? []);
-    const assignedSet = new Set(assignedStudents);
-    const missing = [...allGroupStudents].filter(s => !assignedSet.has(s));
-    const extras = assignedStudents.filter(s => !allGroupStudents.has(s));
-    check(
-      'all students assigned',
-      missing.length === 0 && extras.length === 0,
-      missing.length ? `missing: ${missing.join(', ')}` : extras.length ? `unexpected: ${extras.join(', ')}` : undefined,
-    );
-
-    const seen = new Set<string>();
-    const dupes: string[] = [];
-    for (const s of assignedStudents) {
-      if (seen.has(s)) dupes.push(s);
-      seen.add(s);
-    }
-    check('no duplicate students across groups', dupes.length === 0, dupes.length ? `duplicates: ${dupes.join(', ')}` : undefined);
-  }
-
-  // Duration in allowed bucket
   const durationMinutes = parseDurationMinutes(activity.time ?? '');
   if (durationMinutes !== null) {
-    check(
-      'duration in allowed bucket',
-      isInDurationBucket(durationMinutes),
-      `${durationMinutes} min not in any bucket`,
-    );
+    check('duration in allowed bucket', isInDurationBucket(durationMinutes), `${durationMinutes} min not in any bucket`);
   } else {
     check('duration parseable', false, `could not parse time: "${activity.time}"`);
   }
 
-  // Format valid
-  check(
-    'format is valid',
-    VALID_FORMATS.includes(activity.format),
-    `got "${activity.format}"`,
-  );
-
   return results;
-}
-
-// ── Student sorting check ─────────────────────────────────────────────────────
-
-function runStudentSortingCheck(
-  activity: any,
-  studentData: Array<{ name: string; score: number }>,
-  label: string,
-): TestResult {
-  const base = { classroom: label, misconception: '', activity: activity.title ?? '(untitled)' };
-  const groups: any[] = activity?.phases?.beforeClass?.groupFormation?.groups ?? [];
-
-  if (!studentData.length) {
-    return { ...base, check: 'student sorting', pass: true, detail: 'no student data — skipped' };
-  }
-  if (!groups.length) {
-    return { ...base, check: 'student sorting', pass: false, detail: 'no groups found in activity' };
-  }
-
-  const expected = computeExpectedGroups(groups.length, studentData);
-  const actual = groups.map((g: any) => (g.students ?? []) as string[]);
-
-  const diffs: string[] = [];
-  for (let i = 0; i < expected.length; i++) {
-    const exp = [...expected[i]].sort();
-    const act = [...(actual[i] ?? [])].sort();
-    if (JSON.stringify(exp) !== JSON.stringify(act)) {
-      diffs.push(`Group ${String.fromCharCode(65 + i)}: expected [${exp.join(', ')}] got [${act.join(', ')}]`);
-    }
-  }
-
-  return {
-    ...base,
-    check: 'student sorting',
-    pass: diffs.length === 0,
-    detail: diffs.length ? diffs.join(' | ') : undefined,
-  };
-}
-
-/**
- * Asserts the weakest-first group order the whole pipeline assumes.
- *
- * injectStudentsIntoGroups fills the groups by ascending score, and
- * post-analyze.ts takes every group but the last as its "needs help" cohort. If
- * the model labelled its groups strongest-first, the names land in the right
- * slots but every label and description is attached to the wrong cohort — and
- * nothing else in the run would show it.
- */
-function runGroupOrderingCheck(
-  activity: any,
-  studentData: Array<{ name: string; score: number }>,
-  label: string,
-): TestResult {
-  const base = { classroom: label, misconception: '', activity: activity.title ?? '(untitled)' };
-  const groups: any[] = activity?.phases?.beforeClass?.groupFormation?.groups ?? [];
-
-  if (!studentData.length || groups.length < 2) {
-    return { ...base, check: 'group ordering', pass: true, detail: 'not enough data — skipped' };
-  }
-
-  const scoreOf = new Map(studentData.map(s => [s.name, s.score]));
-  const means = groups.map((g: any) => {
-    const scores = (g.students ?? []).map((n: string) => scoreOf.get(n)).filter((v: unknown) => typeof v === 'number');
-    return scores.length ? scores.reduce((a: number, b: number) => a + b, 0) / scores.length : null;
-  });
-
-  const scored = means.filter((m): m is number => m !== null);
-  if (scored.length !== means.length) {
-    return { ...base, check: 'group ordering', pass: true, detail: 'a group has no scored students — skipped' };
-  }
-
-  const ordered = scored.every((m, i) => i === 0 || m >= scored[i - 1]);
-  return {
-    ...base,
-    check: 'group ordering (weakest first)',
-    pass: ordered,
-    detail: ordered ? undefined : `group means: ${scored.map(m => m.toFixed(2)).join(' → ')}`,
-  };
 }
 
 // ── LLM checks ────────────────────────────────────────────────────────────────
@@ -639,12 +452,6 @@ async function main(): Promise<void> {
 
     console.log(` ${targets.length} session(s) to validate (week(s) ${targets.map((s: any) => s.weekNumber).join(', ')})`);
 
-    // Build student name map
-    const studentNameMap = new Map<string, string>();
-    for (const s of (classroom.students?.items ?? [])) {
-      if (s.id && s.name) studentNameMap.set(s.id, s.name);
-    }
-
     for (const session of targets) {
       const sessionLabel = `${classroomLabel}, week ${session.weekNumber}`;
 
@@ -657,18 +464,6 @@ async function main(): Promise<void> {
         continue;
       }
 
-      // Fetch student responses for the PPQ assessment
-      const ppqAssessment = (session.assessments?.items ?? []).find((a: any) => a.type === 'PPQ');
-      let studentResponses: any[] = [];
-      if (ppqAssessment?.id) {
-        try {
-          const srData = await gql(STUDENT_RESPONSES_BY_ASSESSMENT, { assessmentId: ppqAssessment.id });
-          studentResponses = srData?.studentResponsesByAssessmentId?.items ?? [];
-        } catch (err) {
-          console.warn(`  ⚠  Could not fetch student responses for session ${session.id}: ${err}`);
-        }
-      }
-
       // Queue LLM check tasks for this session (run in parallel per activity)
       const llmTasks: Array<{
         misconceptionTitle: string;
@@ -678,9 +473,6 @@ async function main(): Promise<void> {
 
       for (const misconception of nextSteps) {
         const miscoTitle = misconception.title ?? '(unknown)';
-        const qNums = parseQuestionNumbers(misconception.evidence?.source ?? '');
-        const studentData = getStudentPerformanceData(studentResponses, qNums, studentNameMap);
-        const allGroupStudents = new Set(studentData.map(s => s.name));
 
         // Misconception-level structural checks
         const miscoChecks = runMisconceptionStructuralChecks(misconception, sessionLabel);
@@ -695,23 +487,12 @@ async function main(): Promise<void> {
           };
 
           // Structural checks
-          const structural = runStructuralChecks(activity, allGroupStudents, sessionLabel);
+          const structural = runStructuralChecks(activity, sessionLabel);
           for (const r of structural) {
             r.classroom = sessionLabel;
             r.misconception = resultBase.misconception;
           }
           allResults.push(...structural);
-
-          // Student sorting check
-          if (studentData.length > 0) {
-            const sortResult = runStudentSortingCheck(activity, studentData, sessionLabel);
-            sortResult.misconception = resultBase.misconception;
-            allResults.push(sortResult);
-
-            const orderResult = runGroupOrderingCheck(activity, studentData, sessionLabel);
-            orderResult.misconception = resultBase.misconception;
-            allResults.push(orderResult);
-          }
 
           // Queue LLM check
           const promise = invokeLLMVerify(misconception, activity)
