@@ -32,11 +32,13 @@ export enum ScreenType {
   DASHBOARD,
   REVIEW,
   CHOOSE_ACTIVITY,
-  MY_PLAN,
+  MY_ACTIVITY,
   ACTIVITY_DETAIL,
   PROFILE,
   // Likewise `upload-miu/*` — both steps are UploadFlow.
   UPLOAD_MIU,
+  // `upload-reassess/*`: the same UploadFlow, for the upload after the activity.
+  UPLOAD_REASSESS,
   REFLECT,
   // The sidebar's other two destinations, beside DASHBOARD.
   THIS_WEEK,

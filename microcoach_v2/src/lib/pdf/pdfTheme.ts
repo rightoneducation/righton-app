@@ -49,6 +49,7 @@ export const pdfColors = {
   grey: designSystemColors.foreground.wildSand,
   neutralGrey: designSystemColors.surface.neutralGray,
   accent: designSystemColors.foreground.accentBlue,
+  brightBlue: designSystemColors.foreground.brightBlue,
   needsSupport: designSystemColors.status.needsSupport,
   understood: designSystemColors.status.understood,
   prerequisite: designSystemColors.status.prerequisite,

@@ -47,6 +47,25 @@ export class SessionParser {
       postPpqAssessmentId: session.postPpqAssessmentId ?? null,
       pregeneratedNextSteps: session.pregeneratedNextSteps ?? null,
       evaluationResults: session.evaluationResults ?? null,
+      questionStats: (session.questionStats ?? [])
+        .filter((stat): stat is NonNullable<typeof stat> => stat != null)
+        .map((stat) => ({
+          questionNumber: stat.questionNumber,
+          percentCorrect: stat.percentCorrect,
+          questionText: stat.questionText ?? null,
+          options: (stat.options ?? [])
+            .filter((option): option is NonNullable<typeof option> => option != null)
+            .map((option) => ({
+              letter: option.letter,
+              text: option.text ?? null,
+              percentChosen: option.percentChosen ?? null,
+              isCorrect: option.isCorrect ?? false,
+              studentNames: (option.studentNames ?? []).filter(
+                (name): name is string => name != null,
+              ),
+            })),
+        }))
+        .sort((a, b) => a.questionNumber - b.questionNumber),
       createdAt: session.createdAt,
       updatedAt: session.updatedAt,
     }

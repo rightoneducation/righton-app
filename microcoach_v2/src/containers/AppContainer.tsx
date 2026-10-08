@@ -34,6 +34,8 @@ const BodyContainer = styled(Box)({
 interface AppContainerProps {
   children: ReactNode;
   headerVariant?: HeaderVariant;
+  // Avatar header only: add the class switcher (the flow screens).
+  showClassSwitcher?: boolean;
   showFooter?: boolean;
   // The floating Need help button; the Account frames draw none.
   showHelp?: boolean;
@@ -46,6 +48,7 @@ interface AppContainerProps {
 export default function AppContainer({
   children,
   headerVariant = 'public',
+  showClassSwitcher = false,
   showFooter = true,
   showHelp = true,
   onLogOut,
@@ -60,6 +63,7 @@ export default function AppContainer({
       <Header
         screenSize={screenSize}
         variant={headerVariant}
+        showClassSwitcher={showClassSwitcher}
         onLogOut={onLogOut}
         classrooms={classrooms}
         selectedClassroomId={selectedClassroomId}

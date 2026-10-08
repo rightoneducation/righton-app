@@ -1,204 +1,128 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import AppContentRow from '../components/AppContentRow';
-import FlowNav, { FlowTabId } from '../components/FlowNav';
 import ActivityCard from '../components/ActivityCard';
-import ChooseActivitySkeleton from '../components/ChooseActivitySkeleton';
+import { FlowStepperBand, MisconceptionSelectedBar } from '../components/FlowHeader';
+import LoadingSlot from '../components/LoadingSlot';
 import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import { IPlanItem } from '../lib/PipelineModels';
+import planItemFor from '../lib/planItem';
 import {
-  BackButton,
-  ContextBanner,
-  ACTIVITY_CARD_GAP,
-} from '../lib/styledcomponents/ChooseActivityStyledComponents';
-import {
-  FocusBadge,
-  PrevalenceChip,
+  UnderstandColumn,
+  UnderstandPage,
   ScreenSizeProps,
-} from '../lib/styledcomponents/ReviewStyledComponents';
-import { useAllReady, useI18nReady } from '../hooks/readiness';
+} from '../lib/styledcomponents/UnderstandStyledComponents';
+import {
+  ActivityCardRow,
+  TitleBlock,
+} from '../lib/styledcomponents/ChooseActivityStyledComponents';
+import { useI18nReady } from '../hooks/readiness';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import { UseSessionsResult } from '../hooks/useSessions';
+import { IPlanItemsState } from '../hooks/usePlanItems';
 import { IMicroCoachActivity } from '../api/Models/IMicroCoachActivity';
-import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
+
+// One card's height: what the loading spinner holds open (Figma: 475).
+const CARD_HEIGHT = 475;
 
 interface ChooseActivityProps extends ScreenSizeProps {
+  sessions: UseSessionsResult;
+  plan: IPlanItemsState;
   saveActivity: (item: IPlanItem) => void;
 }
 
-interface ChooseActivityViewProps extends ChooseActivityProps {
-  misconception: IMicroCoachMisconception;
-  planItems: IPlanItem[];
-}
-
-function ChooseActivityView({
-  misconception,
-  screenSize,
-  planItems,
-  saveActivity,
-}: ChooseActivityViewProps) {
-  const { t } = useTranslation();
-  const theme = useTheme();
-  const navigate = useNavigate();
-  const isLarge = screenSize === ScreenSize.LARGE;
-
-  // Selection lives in the plan, so choosing here is what populates My Plan.
-  const selectedActivityId =
-    planItems.find(
-      (item) =>
-        item.status === 'SAVED' && item.misconceptionId === misconception.id,
-    )?.activityId ?? null;
-
-  const handleSelect = (activity: IMicroCoachActivity) => {
-    saveActivity({
-      id: activity.id,
-      status: 'SAVED',
-      activityId: activity.id,
-      activityTitle: activity.routine.name,
-      skillCode: misconception.skillContext?.focusSkill.code ?? '',
-      misconceptionId: misconception.id,
-      misconceptionTitle: misconception.titleCased,
-      prevalence: {
-        level: misconception.prevalence.level,
-        label: misconception.prevalence.label,
-      },
-      grouping: activity.grouping ?? { level: 'WHOLE_CLASS', label: '' },
-    });
-  };
-
-  const handleTabSelect = (tabId: FlowTabId) => {
-    if (tabId === 'prepare') navigate('/myplan');
-    if (tabId === 'reflect') navigate('/reflect');
-  };
-
-  const handleHowToRun = (activityId: string) => {
-    navigate(`/activity/${activityId}`);
-  };
-
-  return (
-    <AppContentRow
-      screenSize={screenSize}
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: `${theme.sizing.space6}px`,
-        pt: isLarge ? `${theme.sizing.space8}px` : `${theme.sizing.space6}px`,
-        pb: isLarge ? `${theme.sizing.space14}px` : `${theme.sizing.space11}px`,
-      }}
-    >
-      <FlowNav
-        screenSize={screenSize}
-        activeTabId="understand-act"
-        onTabSelect={handleTabSelect}
-        onAction={() => navigate('/myplan')}
-      />
-
-      <BackButton
-        disableElevation
-        startIcon={<ArrowBackIcon />}
-        onClick={() => navigate('/review')}
-      >
-        {t('chooseActivity.back')}
-      </BackButton>
-
-      <ContextBanner>
-        <Typography
-          variant="headingMd"
-          sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {t('chooseActivity.addressing', { title: misconception.title })}
-        </Typography>
-        <Stack direction="row" alignItems="center" spacing={2}>
-          {misconception.badge && (
-            <FocusBadge outlined>
-              {misconception.badge.replace(/_/g, ' ')}
-            </FocusBadge>
-          )}
-          <PrevalenceChip>{misconception.prevalence.label}</PrevalenceChip>
-        </Stack>
-      </ContextBanner>
-
-      <Box>
-        <Typography
-          variant="appTitle"
-          sx={{
-            color: 'designSystem.surface.atlanticNavy',
-            mb: `${theme.sizing.space2}px`,
-          }}
-        >
-          {t('chooseActivity.title')}
-        </Typography>
-        <Typography
-          variant="uploadLabel"
-          sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {t('chooseActivity.subheading')}
-        </Typography>
-      </Box>
-
-      <Stack
-        direction={isLarge ? 'row' : 'column'}
-        spacing={
-          isLarge ? `${ACTIVITY_CARD_GAP}px` : `${theme.sizing.space5}px`
-        }
-        alignItems="stretch"
-      >
-        {misconception.nextStepActivities.map((activity) => (
-          <Box
-            key={activity.id}
-            sx={{
-              flex: '1 1 0',
-              minWidth: 0,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <ActivityCard
-              activity={activity}
-              isSelected={activity.id === selectedActivityId}
-              screenSize={screenSize}
-              onSelect={() => handleSelect(activity)}
-              onHowToRun={handleHowToRun}
-            />
-          </Box>
-        ))}
-      </Stack>
-    </AppContentRow>
-  );
-}
-
+/**
+ * Select Activity (microcoach-assets/SelectActivity): the misconception picked
+ * on /review and its next-step activities. View activity details continues to
+ * the activity's Before Class page; Select activity saves it to the plan and
+ * goes to My Activity.
+ *
+ * The page renders at once; only the cards wait on the misconceptions query.
+ */
 export default function ChooseActivity({
   screenSize,
+  sessions,
+  plan,
   saveActivity,
 }: ChooseActivityProps) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const isI18nReady = useI18nReady();
   const { misconceptionId } = useParams();
-  const { misconceptions, misconceptionsStatus, planItems } =
-    useMicroCoachDataState();
-  const dataReady = misconceptionsStatus === MicroCoachDataStatus.READY;
-  const isReady = useAllReady(useI18nReady(), dataReady);
+  const { misconceptions, misconceptionsStatus } = useMicroCoachDataState();
 
-  if (!isReady) {
-    return <ChooseActivitySkeleton screenSize={screenSize} />;
-  }
+  if (!isI18nReady) return null;
 
+  const isLoading =
+    misconceptionsStatus === MicroCoachDataStatus.LOADING ||
+    misconceptionsStatus === MicroCoachDataStatus.IDLE;
+  const hasFailed = misconceptionsStatus === MicroCoachDataStatus.ERROR;
   const misconception =
     misconceptions.find((item) => item.id === misconceptionId) ?? null;
 
-  if (!misconception) {
+  // Only once the list has answered: an unknown id goes back to the choice.
+  if (misconceptionsStatus === MicroCoachDataStatus.READY && !misconception) {
     return <Navigate to="/review" replace />;
   }
 
+  const handleSelect = (activity: IMicroCoachActivity) => {
+    if (!misconception) return;
+    saveActivity(planItemFor(misconception, activity));
+    navigate('/myactivity');
+  };
+
   return (
-    <ChooseActivityView
-      misconception={misconception}
-      screenSize={screenSize}
-      planItems={planItems}
-      saveActivity={saveActivity}
-    />
+    <UnderstandPage screenSize={screenSize}>
+      <UnderstandColumn>
+        <FlowStepperBand screenSize={screenSize} sessions={sessions} plan={plan} />
+
+        {misconception && <MisconceptionSelectedBar title={misconception.title} />}
+
+        <TitleBlock>
+          <Typography
+            variant="appTitle"
+            component="h1"
+            sx={{ color: 'designSystem.surface.atlanticNavy' }}
+          >
+            {t('chooseActivity.title')}
+          </Typography>
+          <Typography
+            variant="uploadLabel"
+            sx={{ color: 'designSystem.surface.atlanticNavy' }}
+          >
+            {t('chooseActivity.subheading')}
+          </Typography>
+        </TitleBlock>
+
+        <LoadingSlot
+          isLoading={isLoading}
+          minHeight={screenSize === ScreenSize.LARGE ? CARD_HEIGHT : 0}
+          label={t('chooseActivity.loading')}
+        >
+          {hasFailed || !misconception ? (
+            <Typography
+              variant="rubikBody"
+              role="alert"
+              sx={{ color: 'designSystem.status.errorStroke' }}
+            >
+              {t('chooseActivity.loadError')}
+            </Typography>
+          ) : (
+            <ActivityCardRow screenSize={screenSize}>
+              {misconception.nextStepActivities.map((activity) => (
+                <ActivityCard
+                  key={activity.id}
+                  activity={activity}
+                  screenSize={screenSize}
+                  onViewDetails={(activityId) => navigate(`/activity/${activityId}/before-class`)}
+                  onSelect={handleSelect}
+                />
+              ))}
+            </ActivityCardRow>
+          )}
+        </LoadingSlot>
+      </UnderstandColumn>
+    </UnderstandPage>
   );
 }

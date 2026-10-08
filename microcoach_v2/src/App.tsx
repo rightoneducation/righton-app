@@ -145,13 +145,18 @@ function App() {
               path="review/:misconceptionId/activities"
               element={<AppSwitch currentScreen={ScreenType.CHOOSE_ACTIVITY} />}
             />
+            {/* Without a phase, ActivityFlow redirects to Before class. */}
             <Route
-              path="activity/:activityId"
+              path="activity/:activityId/:phase?"
               element={<AppSwitch currentScreen={ScreenType.ACTIVITY_DETAIL} />}
             />
             <Route
               path="upload-miu/*"
               element={<AppSwitch currentScreen={ScreenType.UPLOAD_MIU} />}
+            />
+            <Route
+              path="upload-reassess/*"
+              element={<AppSwitch currentScreen={ScreenType.UPLOAD_REASSESS} />}
             />
             {/* The upload was /upload-rtd before the MIU rename. */}
             <Route
@@ -171,9 +176,11 @@ function App() {
               element={<AppSwitch currentScreen={ScreenType.CHANGE_PASSWORD} />}
             />
             <Route
-              path="myplan"
-              element={<AppSwitch currentScreen={ScreenType.MY_PLAN} />}
+              path="myactivity"
+              element={<AppSwitch currentScreen={ScreenType.MY_ACTIVITY} />}
             />
+            {/* My Activity was /myplan before the rename. */}
+            <Route path="myplan" element={<Navigate to="/myactivity" replace />} />
             {/*
               Scratchpad for reviewing eval pipeline output. Deliberately not
               routed through AppSwitch/AuthGuard — it reads the TEMPORARY

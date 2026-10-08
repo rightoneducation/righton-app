@@ -41,6 +41,8 @@ export type HeaderVariant = 'public' | 'signup' | 'app' | 'avatar';
 interface HeaderProps {
   screenSize: ScreenSize;
   variant?: HeaderVariant;
+  // Avatar variant only: also show the class switcher (the flow screens).
+  showClassSwitcher?: boolean;
   onLogOut?: () => void;
   classrooms?: IMicroCoachClassroom[];
   selectedClassroomId?: string | null;
@@ -204,6 +206,7 @@ const authSkeletonSx = { bgcolor: 'designSystem.background.fadedWhiteVeil' };
 export default function Header({
   screenSize,
   variant = 'public',
+  showClassSwitcher = false,
   onLogOut,
   classrooms = [],
   selectedClassroomId = null,
@@ -246,6 +249,33 @@ export default function Header({
     if (usesAppNav || variant === 'signup') return 'appTitle';
     return 'navTitle';
   })();
+
+  // The app variant always shows it; the avatar variant does on the
+  // Understand-to-Reflect flow screens (showClassSwitcher).
+  const classSwitcher = (
+    <ClassSelect
+      screenSize={screenSize}
+      value={selectedClassroomId ?? ''}
+      displayEmpty
+      disabled={classrooms.length === 0 || !onSelectClassroom}
+      renderValue={(classroomId) =>
+        classrooms.find(
+          (classroom) => classroom.id === classroomId,
+        )?.name ?? t('header.noClasses')
+      }
+      IconComponent={KeyboardArrowDownIcon}
+      onChange={(event) =>
+        onSelectClassroom?.(event.target.value)
+      }
+      inputProps={{ 'aria-label': t('header.classSwitcher') }}
+    >
+      {classrooms.map((classroom) => (
+        <MenuItem key={classroom.id} value={classroom.id}>
+          {classroom.name}
+        </MenuItem>
+      ))}
+    </ClassSelect>
+  );
 
   return (
     <HeaderBar component="header">
@@ -293,6 +323,7 @@ export default function Header({
             )}
             {!isResolvingAuth && isAvatarChrome && (
               <>
+                {showClassSwitcher && classSwitcher}
                 <InitialsAvatar
                   aria-label={t('header.accountMenu')}
                   aria-haspopup="menu"
@@ -362,28 +393,7 @@ export default function Header({
                     </IdentityPill>
                   </>
                 )}
-                <ClassSelect
-                  screenSize={screenSize}
-                  value={selectedClassroomId ?? ''}
-                  displayEmpty
-                  disabled={classrooms.length === 0 || !onSelectClassroom}
-                  renderValue={(classroomId) =>
-                    classrooms.find(
-                      (classroom) => classroom.id === classroomId,
-                    )?.name ?? t('header.noClasses')
-                  }
-                  IconComponent={KeyboardArrowDownIcon}
-                  onChange={(event) =>
-                    onSelectClassroom?.(event.target.value)
-                  }
-                  inputProps={{ 'aria-label': t('header.classSwitcher') }}
-                >
-                  {classrooms.map((classroom) => (
-                    <MenuItem key={classroom.id} value={classroom.id}>
-                      {classroom.name}
-                    </MenuItem>
-                  ))}
-                </ClassSelect>
+                {classSwitcher}
               </>
             )}
           </Stack>

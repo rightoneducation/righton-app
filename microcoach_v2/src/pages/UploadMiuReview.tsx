@@ -23,7 +23,7 @@ import { useI18nReady } from '../hooks/readiness';
  * keeps the picked files.
  */
 export default function UploadMiuReview(props: UploadStepProps) {
-  const { screenSize, upload, actions } = props;
+  const { screenSize, upload, actions, basePath } = props;
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ export default function UploadMiuReview(props: UploadStepProps) {
 
   const handleSubmit = async () => {
     // Replace, so Back from the success screen cannot resubmit.
-    if (await actions.submit()) navigate('/upload-miu/submitted', { replace: true });
+    if (await actions.submit()) navigate(`${basePath}/submitted`, { replace: true });
   };
 
   return (
@@ -101,7 +101,7 @@ export default function UploadMiuReview(props: UploadStepProps) {
               disableElevation
               disabled={isSubmitting}
               startIcon={<ArrowBackIcon fontSize="small" />}
-              onClick={() => navigate('/upload-miu')}
+              onClick={() => navigate(basePath)}
             >
               {t('upload.backToUpload')}
             </GhostAction>

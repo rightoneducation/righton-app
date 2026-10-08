@@ -28,7 +28,7 @@ interface FlowNavProps extends ScreenSizeProps {
 export default function FlowNav({
   screenSize,
   activeTabId,
-  actionLabelKey = 'flowNav.myPlan',
+  actionLabelKey = 'flowNav.myActivity',
   onTabSelect,
   onAction,
 }: FlowNavProps) {

@@ -49,8 +49,12 @@ export interface IStudentWork {
 
 export interface ISkill {
   code: string;
+  // Short teacher-facing name; older rows carry null, so the UI falls back to the code.
   name: string | null;
   description: string;
+  // Plain-language CCSS domain ("Expressions and Equations"); absent on older rows,
+  // where the client derives it from the code (lib/ccssDomains).
+  domainName?: string | null;
 }
 
 export interface ISkillGroup {
@@ -61,7 +65,7 @@ export interface ISkillGroup {
 export interface ISkillContext {
   tabLabel: string;
   sectionTitle: string;
-  focusSkill: ISkill & { groupLabel: string };
+  focusSkill: ISkill & { groupLabel: string; learningComponents?: string[] };
   prerequisiteGaps: ISkillGroup;
   upcomingSkills: ISkillGroup;
 }
@@ -82,7 +86,6 @@ export type ActivityType =
   | 'INCORRECT_WORKED_EXAMPLES'
   | 'FAVORITE_NO'
   | 'COMPARE_THE_THINKING'
-  | 'MULTIPLE_REPRESENTATIONS'
   | 'MATH_DETECTIVE'
   | 'MAKE_YOUR_CASE';
 

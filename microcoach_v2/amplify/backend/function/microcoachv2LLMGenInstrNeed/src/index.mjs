@@ -26,7 +26,8 @@
  *
  * Output: { ok: true, needs: [{ title, wrongAnswers, instructionalNeed: { text,
  * teacherRole, evidenceUsed }, rationale: { priorityRank, prevalence,
- * confidenceSignal, prerequisiteGaps, forwardImpact, recurrence, whyThisNeed } }],
+ * confidenceSignal, prerequisiteGaps, forwardImpact, recurrence, whyThisNeed },
+ * skillNames: [{ code, name }] }],
  * rejected, missing } — one per input misconception, matched by position then exact
  * title; an unmatched need is dropped and counted. `priorityRank` is echoed from the
  * input, never produced here. On failure: { ok: false, error: { message } }.
@@ -47,6 +48,8 @@ const ws = config?.writingStyle ?? {};
 const MODEL              = nc.model ?? 'gpt-5-mini';
 const NEED_MAX_SENTENCES = nc.maxSentences ?? 3;
 const NEED_WORKED        = nc.worked ?? null;
+// Skill names sit on one row beside the code chip in the Related Skills tab.
+const SKILL_NAME_MAX     = nc.skillNameMaxChars ?? 40;
 
 // ── Schema ────────────────────────────────────────────────────────────────────
 
@@ -85,6 +88,12 @@ const Need = z.object({
     ),
   }),
   rationale: Rationale,
+  skillNames: z.array(z.object({
+    code: z.string().describe('A CCSS code exactly as written: the misconception\'s standard, or one listed in prerequisiteGaps or forwardImpact'),
+    name: z.string().describe(
+      `A short teacher-facing name for that skill: 2-5 words, at most ${SKILL_NAME_MAX} characters, sentence case, no code, no LaTeX. Name the skill, do not restate the standard. e.g. "Graphing linear inequalities", "Solving systems of equations"`,
+    ),
+  })).describe('One entry for the misconception\'s standard and one for every code in prerequisiteGaps and forwardImpact'),
 });
 
 const NeedResponse = z.object({
@@ -273,11 +282,37 @@ Rules for the need:
   Good: "Connecting the algebraic transformation to the meaning of slope and y-intercept lets students see why the inequality must be rewritten before its coefficients can be read graphically — which is what makes the rule generalize rather than be memorized."
   Not: "Students repeatedly shaded the wrong side, so they need to check which side satisfies the inequality." 
 
+**3. Skill names** — skillNames: one entry for the misconception's standard and for each code in prerequisiteGaps and forwardImpact. Each name is 2-5 words, at most ${SKILL_NAME_MAX} characters, naming the skill a teacher would recognise ("Graphing linear inequalities"), never the code or the full standard text.
+
 Return JSON matching the schema.
 `.trim();
 }
 
 // ── Validate ──────────────────────────────────────────────────────────────────
+
+// The length is asked for, not enforced by the schema, so cut an over-long name
+// back to its last whole word rather than failing the call over a label.
+function clampSkillName(name) {
+  const text = String(name ?? '').replace(/\s+/g, ' ').trim();
+  if (text.length <= SKILL_NAME_MAX) return text;
+  const cut = text.slice(0, SKILL_NAME_MAX + 1);
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > 0 ? cut.slice(0, lastSpace) : text.slice(0, SKILL_NAME_MAX)).replace(/[,;:\-–]+$/, '');
+}
+
+// Names only for the codes this need actually references, one per code.
+function cleanSkillNames(skillNames, m, rationale) {
+  const wanted = new Set([m.ccssStandard, ...(rationale?.prerequisiteGaps ?? []), ...(rationale?.forwardImpact ?? [])]
+    .filter(Boolean)
+    .map((code) => String(code).trim()));
+  const byCode = new Map();
+  for (const entry of skillNames ?? []) {
+    const code = String(entry?.code ?? '').trim();
+    const name = clampSkillName(entry?.name);
+    if (wanted.has(code) && name && !byCode.has(code)) byCode.set(code, name);
+  }
+  return [...byCode].map(([code, name]) => ({ code, name }));
+}
 
 // One need per input misconception, matched by position when the title agrees,
 // else by exact title. A need matching nothing is dropped and counted; a
@@ -313,6 +348,7 @@ function validateOutput(structured, misconceptions) {
         ...n.rationale,
         priorityRank: m.priorityRank ?? null,
       },
+      skillNames: cleanSkillNames(n.skillNames, m, n.rationale),
     };
   });
   // Input misconceptions the model returned nothing for. Distinct from `rejected`
@@ -334,6 +370,7 @@ function formatNeedLog(needs) {
     lines.push(`   confidence: ${n.rationale.confidenceSignal}`);
     lines.push(`   prereq gaps: ${n.rationale.prerequisiteGaps.join(', ') || '—'} · forward: ${n.rationale.forwardImpact.join(', ') || '—'} · ${n.rationale.recurrence}`);
     lines.push(`   why: ${n.rationale.whyThisNeed}`);
+    lines.push(`   skills: ${n.skillNames.map((s) => `${s.code} "${s.name}"`).join(', ') || '—'}`);
     lines.push('');
   });
   return lines.join('\n');

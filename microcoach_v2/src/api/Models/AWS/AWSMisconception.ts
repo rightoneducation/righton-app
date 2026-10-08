@@ -16,6 +16,10 @@ export type AWSMisconception = {
   detailStatus: DetailStatus
   studentWork?: string | null
   skillContext?: string | null
+  responseEvidence?: Array<{
+    questionNumber: number
+    answers: Array<string | null>
+  } | null> | null
   createdAt: string
   updatedAt: string
 }

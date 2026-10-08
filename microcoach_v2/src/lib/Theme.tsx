@@ -106,6 +106,9 @@ const designSystemColors = {
   status: {
     base: '#FFFFFF',
     success: '#3EBF8F',
+    // The "Correct" label on Review's question tiles: 37 off success at its
+    // widest channel, so it does not reuse it.
+    correctGreen: '#199072',
     lightGreen: '#ECFFE3',
     uploading: '#DFEDF3',
     uploadingIcon: '#375EF9',

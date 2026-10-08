@@ -1,11 +1,22 @@
 import { ScreenSize } from './MicroCoachModels';
 import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import { IUser } from '../api/Models/IUser';
+import { AssessmentType } from '../AWSAPI';
 
 // MIU upload state, actions and step-prop shape — split out of UploadFlow for
 // the same reason as SignUpModels: the steps type their props from here.
 
 export type UploadSlot = 'exemplar' | 'responses';
+
+/**
+ * Where each upload lives. PPQ is the class's first MIU upload (Assess);
+ * POST_PPQ the one after running the activity (Reassess, Upload2 frame). Both
+ * are the same three steps: set up and upload, review, submitted.
+ */
+export const UPLOAD_BASE_PATH: Record<AssessmentType, string> = {
+  [AssessmentType.PPQ]: '/upload-miu',
+  [AssessmentType.POST_PPQ]: '/upload-reassess',
+};
 export type UploadFileError = 'FORMAT' | 'SIZE';
 
 // Design notes: the exemplar takes .docx, the responses .xlsx, each up to 5MB.
@@ -86,6 +97,9 @@ export interface IUploadActions {
 
 export interface UploadStepProps {
   screenSize: ScreenSize;
+  kind: AssessmentType;
+  /** UPLOAD_BASE_PATH[kind]; the steps navigate under it. */
+  basePath: string;
   upload: IUploadState;
   actions: IUploadActions;
   classrooms: IMicroCoachClassroom[];

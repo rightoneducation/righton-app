@@ -151,7 +151,7 @@ export default function Dashboard({
   const sidebar = useSidebarNav();
 
   const handleCta = () => {
-    if (cta.path === '/upload-miu') {
+    if (cta.path === '/upload-miu' || cta.path === '/upload-reassess') {
       navigate(cta.path, { state: { weekStart } });
     } else {
       navigate(cta.path);

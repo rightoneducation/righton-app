@@ -19,6 +19,18 @@ export type AWSSession = {
   postPpqAssessmentId?: string | null
   pregeneratedNextSteps?: string | null
   evaluationResults?: string | null
+  questionStats?: Array<{
+    questionNumber: number
+    percentCorrect: number
+    questionText?: string | null
+    options?: Array<{
+      letter: string
+      text?: string | null
+      percentChosen?: number | null
+      isCorrect?: boolean | null
+      studentNames?: Array<string | null> | null
+    } | null> | null
+  } | null> | null
   createdAt: string
   updatedAt: string
 }

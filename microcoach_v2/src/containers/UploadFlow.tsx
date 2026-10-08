@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { IAPIClients } from '../api';
+import { AssessmentType } from '../AWSAPI';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import {
   IUploadActions,
   IUploadState,
+  UPLOAD_BASE_PATH,
   UploadStepProps,
   emptyUploadState,
   isFileReady,
@@ -18,8 +20,9 @@ import UploadMiuReview from '../pages/UploadMiuReview';
 import UploadMiuSubmitted from '../pages/UploadMiuSubmitted';
 
 /**
- * The MIU upload: set up and upload, review, then submitted. `upload-miu/*` is
- * one route match (same arrangement as SignUpWizard), so the picked files
+ * An MIU upload: set up and upload, review, then submitted. `kind` picks
+ * which: the class's first upload (PPQ, /upload-miu) or the one after running
+ * the activity (POST_PPQ, /upload-reassess). Each `<path>/*` is one route match (same arrangement as SignUpWizard), so the picked files
  * survive "Back to upload" from the review step without a provider above both.
  *
  * Files stay in the browser until "Submit files for analysis": that uploads
@@ -30,17 +33,20 @@ interface UploadFlowProps {
   apiClients: IAPIClients;
   screenSize: ScreenSize;
   classrooms: UseClassroomsResult;
+  kind: AssessmentType;
 }
 
 export default function UploadFlow({
   apiClients,
   screenSize,
   classrooms,
+  kind,
 }: UploadFlowProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const step = useParams()['*'] ?? '';
   const { userProfile } = useMicroCoachDataState();
+  const basePath = UPLOAD_BASE_PATH[kind];
 
   // Class and week arrive pre-filled from the dashboard: the class through the
   // shared selection, the week through router state.
@@ -93,7 +99,11 @@ export default function UploadFlow({
       }
 
       try {
-        await apiClients.upload.startAnalysis({ classroomId: classId, ...keys });
+        await apiClients.upload.startAnalysis({
+          classroomId: classId,
+          ...keys,
+          assessmentType: kind,
+        });
       } catch (error) {
         console.error('Could not start the analysis', error);
         // The files are in S3 but nothing will read them: take them back out.
@@ -121,16 +131,18 @@ export default function UploadFlow({
         );
       }
       setUpload((s) => emptyUploadState(s.classId, s.weekStart));
-      navigate('/upload-miu', { replace: true });
+      navigate(basePath, { replace: true });
     },
     startNewClassroom: () => {
       setUpload((s) => emptyUploadState('', s.weekStart));
-      navigate('/upload-miu');
+      navigate(basePath);
     },
   };
 
   const stepProps: UploadStepProps = {
     screenSize,
+    kind,
+    basePath,
     upload: { ...upload, classId },
     actions,
     classrooms: classrooms.classrooms,
@@ -143,14 +155,14 @@ export default function UploadFlow({
     return isFileReady(upload.exemplar) && isFileReady(upload.responses) ? (
       <UploadMiuReview {...stepProps} />
     ) : (
-      <Navigate to="/upload-miu" replace />
+      <Navigate to={basePath} replace />
     );
   }
   if (step === 'submitted') {
     return upload.submission ? (
       <UploadMiuSubmitted {...stepProps} />
     ) : (
-      <Navigate to="/upload-miu" replace />
+      <Navigate to={basePath} replace />
     );
   }
   return <UploadMiu {...stepProps} />;

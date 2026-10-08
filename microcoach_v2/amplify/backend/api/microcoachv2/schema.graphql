@@ -91,6 +91,9 @@ type MicroCoachSession @model @auth(rules: [{ allow: private }]) {
     @hasMany(indexName: "bySession", fields: ["id"])
   pregeneratedNextSteps: AWSJSON
   evaluationResults: AWSJSON
+  # Class % correct per MIU question (the Review screen's "Correct responses"
+  # tiles), with the question text for the tile's tooltip.
+  questionStats: [QuestionStat]
 
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
@@ -149,9 +152,32 @@ type MicroCoachMisconception @model @auth(rules: [{ allow: private }, { allow: p
 
   studentWork: AWSJSON
   skillContext: AWSJSON
+  # Which questions and answers point to this misconception
+  # ("Q2, Answers C & D; Q4, Answers A & C").
+  responseEvidence: [ResponseEvidence]
 
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
+}
+
+type QuestionStat {
+  questionNumber: Int!
+  percentCorrect: Float!
+  questionText: String
+  options: [QuestionOption]
+}
+
+type QuestionOption {
+  letter: String!
+  text: String
+  percentChosen: Float
+  isCorrect: Boolean
+  studentNames: [String]
+}
+
+type ResponseEvidence {
+  questionNumber: Int!
+  answers: [String]!
 }
 
 type Prevalence {
@@ -171,8 +197,8 @@ enum ActivityType {
   INCORRECT_WORKED_EXAMPLES
   COMPARE_THE_THINKING
   MATH_DETECTIVE
-  MULTIPLE_REPRESENTATIONS
   FAVORITE_NO
+  MAKE_YOUR_CASE
 }
 
 enum GroupingLevel {

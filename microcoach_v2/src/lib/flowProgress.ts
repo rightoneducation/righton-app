@@ -51,15 +51,15 @@ export function deriveCurrentStep(
 /*
  * Where each step lives once it is done. Not stepCta: that answers "what next"
  * for the current step, so CHOOSE there means go and choose (/review), while a
- * completed CHOOSE means look at what was chosen (/myplan). Its own page,
+ * completed CHOOSE means look at what was chosen (/myactivity). Its own page,
  * /review/:misconceptionId/activities, needs a misconception the stepper does
  * not have.
  */
 const STEP_PATH: Record<Exclude<FlowStep, FlowStep.DONE>, string> = {
   [FlowStep.ASSESS]: '/upload-miu',
   [FlowStep.UNDERSTAND]: '/review',
-  [FlowStep.CHOOSE]: '/myplan',
-  [FlowStep.REASSESS]: '/upload-miu',
+  [FlowStep.CHOOSE]: '/myactivity',
+  [FlowStep.REASSESS]: '/upload-reassess',
   [FlowStep.REFLECT]: '/reflect',
 };
 
@@ -94,14 +94,14 @@ export function buildPendingFlowSteps(t: Translate): IFlowStep[] {
 }
 
 // The dashboard's one call to action follows the current step. REASSESS is
-// another upload (the post-PPQ); DONE starts the next cycle the same way.
+// the post-activity upload (/upload-reassess); DONE starts the next cycle the same way.
 export function stepCta(current: FlowStep): { labelKey: string; path: string } {
   switch (current) {
     case FlowStep.UNDERSTAND:
     case FlowStep.CHOOSE:
       return { labelKey: 'dashboard.cta.UNDERSTAND', path: '/review' };
     case FlowStep.REASSESS:
-      return { labelKey: 'dashboard.cta.REASSESS', path: '/upload-miu' };
+      return { labelKey: 'dashboard.cta.REASSESS', path: '/upload-reassess' };
     case FlowStep.REFLECT:
       return { labelKey: 'dashboard.cta.REFLECT', path: '/reflect' };
     case FlowStep.ASSESS:
