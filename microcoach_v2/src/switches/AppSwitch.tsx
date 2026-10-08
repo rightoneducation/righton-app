@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ScreenType } from '../lib/MicroCoachModels';
+import { AssessmentType } from '../AWSAPI';
 import { useAppOutletContext } from '../hooks/useAppOutletContext';
 import { useLogOut } from '../hooks/useAuthActions';
 import { useScreenSize } from '../hooks/useScreenSize';
 import AppContainer from '../containers/AppContainer';
 import { HeaderVariant } from '../components/Header';
-import TemplateDebugMenu from '../components/TemplateDebugMenu';
 import AuthGuard from '../containers/AuthGuard';
 import Landing from '../pages/Landing';
 import Login from '../pages/Login';
@@ -18,8 +18,8 @@ import ThisWeek from '../pages/ThisWeek';
 import PastActivities from '../pages/PastActivities';
 import Review from '../pages/Review';
 import ChooseActivity from '../pages/ChooseActivity';
-import MyPlan from '../pages/MyPlan';
-import ActivityDetail from '../pages/ActivityDetail';
+import MyActivity from '../pages/MyActivity';
+import ActivityFlow from '../pages/ActivityFlow';
 import Profile from '../pages/Profile';
 import UploadFlow from '../containers/UploadFlow';
 import Reflect from '../pages/Reflect';
@@ -84,7 +84,9 @@ const FLOW_SCREENS = new Set<ScreenType>([
   ScreenType.REVIEW,
   ScreenType.CHOOSE_ACTIVITY,
   ScreenType.ACTIVITY_DETAIL,
-  ScreenType.MY_PLAN,
+  ScreenType.MY_ACTIVITY,
+  // Reached from My Activity's Upload MIU files; Upload2 draws the switcher.
+  ScreenType.UPLOAD_REASSESS,
   ScreenType.REFLECT,
 ]);
 
@@ -92,13 +94,14 @@ const APP_CHROME_SCREENS = new Set<ScreenType>([
   ScreenType.PROFILE,
   ScreenType.CHANGE_PASSWORD,
   ScreenType.UPLOAD_MIU,
+  ScreenType.UPLOAD_REASSESS,
   ScreenType.REFLECT,
   ScreenType.DASHBOARD,
   ScreenType.THIS_WEEK,
   ScreenType.PAST_ACTIVITIES,
   ScreenType.REVIEW,
   ScreenType.CHOOSE_ACTIVITY,
-  ScreenType.MY_PLAN,
+  ScreenType.MY_ACTIVITY,
   ScreenType.ACTIVITY_DETAIL,
 ]);
 
@@ -109,7 +112,7 @@ interface AppSwitchProps {
 export default function AppSwitch({ currentScreen }: AppSwitchProps) {
   const { apiClients, user, classrooms, sessions, plan } =
     useAppOutletContext();
-  const { saveActivity, markPlanItemDone, removePlanItem } = plan;
+  const { saveActivity } = plan;
 
   const screenSize = useScreenSize();
   const { handleLogOut } = useLogOut(apiClients, user);
@@ -216,17 +219,28 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       );
       break;
     case ScreenType.ACTIVITY_DETAIL:
-      screenComponent = <ActivityDetail screenSize={screenSize} />;
+      screenComponent = (
+        <ActivityFlow screenSize={screenSize} sessions={sessions} plan={plan} />
+      );
       break;
     case ScreenType.UPLOAD_MIU:
+    case ScreenType.UPLOAD_REASSESS: {
+      const kind =
+        currentScreen === ScreenType.UPLOAD_REASSESS
+          ? AssessmentType.POST_PPQ
+          : AssessmentType.PPQ;
       screenComponent = (
         <UploadFlow
+          // Keyed so moving between the two uploads starts a fresh form.
+          key={kind}
+          kind={kind}
           apiClients={apiClients}
           screenSize={screenSize}
           classrooms={classrooms}
         />
       );
       break;
+    }
     case ScreenType.REFLECT:
       screenComponent = <Reflect screenSize={screenSize} sessions={sessions} />;
       break;
@@ -240,13 +254,9 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
         />
       );
       break;
-    case ScreenType.MY_PLAN:
+    case ScreenType.MY_ACTIVITY:
       screenComponent = (
-        <MyPlan
-          screenSize={screenSize}
-          markPlanItemDone={markPlanItemDone}
-          removePlanItem={removePlanItem}
-        />
+        <MyActivity screenSize={screenSize} sessions={sessions} plan={plan} />
       );
       break;
     case ScreenType.LANDING:
@@ -290,9 +300,6 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       >
         {screenComponent}
       </AuthGuard>
-      {/* Review scaffolding — remove with TemplateDebugMenu once the activity
-          screen is backed by real data. */}
-      {currentScreen === ScreenType.ACTIVITY_DETAIL && <TemplateDebugMenu />}
     </AppContainer>
   );
 }

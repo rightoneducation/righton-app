@@ -15,25 +15,14 @@
     "understandAct": "Comprender y actuar",
     "prepare": "Preparar",
     "reflect": "Reflexionar",
-    "myPlan": "Mi plan",
+    "myActivity": "Mi actividad",
     "myActivities": "Mis actividades",
     "myLessonPlan": "Mi plan de clase"
   },
   "activityDetail": {
-    "back": "Volver a las opciones de actividad",
-    "beforeClass": "Antes de clase",
-    "activity": "Actividad",
-    "facilitation": "Facilitación",
-    "discussion": "Discusión",
     "teacherView": "Docente",
     "studentView": "Estudiante",
-    "exportPdf": "Exportar PDF",
-    "next": "Siguiente: {{phase}}",
-    "saveToPlan": "Guardar en el plan de clase",
     "noContent": "Este paso aún no está disponible para esta actividad.",
-    "printSubtitle": "Preparado para: {{misconception}}",
-    "exporting": "Preparando PDF…",
-    "page": "Página",
     "stepNumber": "Paso {{number}}",
     "stepCorrect": "(Correcto)",
     "stepError": "← (Error: {{note}})",
@@ -57,26 +46,6 @@
     "selectActivity": "Seleccionar actividad",
     "loading": "Cargando actividades",
     "loadError": "No pudimos cargar las actividades de este concepto erróneo. Actualiza la página para intentarlo de nuevo."
-  },
-  "myPlan": {
-    "back": "Volver a elegir actividad",
-    "title": "Su actividad guardada",
-    "subheading": "Actividades guardadas para Álgebra 1 - Período 2. Abra una actividad para prepararla y márquela como hecha después de la clase.",
-    "changeActivity": "Cambiar actividad",
-    "completed": "Completadas",
-    "openDetails": "Abrir detalles de la actividad",
-    "markAsDone": "Marcar como hecha",
-    "remove": "Quitar",
-    "empty": "Aún no hay actividades guardadas. Elija una en los próximos pasos de un concepto erróneo.",
-    "statActivities": "Actividades realizadas",
-    "statActivitiesValue": "{{count}} completadas",
-    "statUpload": "Subir archivos RTD",
-    "statUploadValue": "Su siguiente acción",
-    "statProgress": "Ver progreso",
-    "statProgressValue": "Se activa tras la carga",
-    "promptTitle": "Suba archivos RTD para seguir el progreso",
-    "promptBody": "Ha marcado actividades como completadas. Suba los archivos RTD para que MicroCoach analice los resultados y detecte brechas de aprendizaje.",
-    "promptCta": "Subir archivos RTD"
   },
   "misconceptionModal": {
     "close": "Cerrar",
@@ -374,7 +343,8 @@
     "startOverBody": "Si subiste los archivos equivocados, vuelve a subirlos.\nSi no, ya terminaste. Te enviaremos tus resultados en un plazo de 24 horas.",
     "startOverConfirm": "Sí, empezar de nuevo",
     "startOverKeep": "Conservar mi envío",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "teacherPlaceholder": "Selecciona tu nombre y correo"
   },
   "reflect": {
     "title": "Próximos pasos que implementó",
@@ -391,5 +361,115 @@
     "removeError": "No se pudo eliminar la sesión. Inténtalo de nuevo.",
     "remove": "Eliminar",
     "cancel": "Cancelar"
+  },
+  "activityFlow": {
+    "loading": "Cargando la actividad",
+    "loadError": "No pudimos cargar esta actividad. Actualiza la página para intentarlo de nuevo.",
+    "changeActivity": "Cambiar actividad",
+    "phasesLabel": "Pasos de la actividad",
+    "phases": {
+      "beforeClass": "Antes de la clase",
+      "facilitate": "Facilitar la actividad",
+      "discussion": "Discusión de cierre"
+    },
+    "beforeClass": {
+      "title": "Por hacer antes de la clase",
+      "subtitle": "Pasos para preparar la actividad",
+      "groupingTitle": "Agrupación para esta actividad"
+    },
+    "facilitate": {
+      "title": "Cómo llevarla a cabo",
+      "subtitle": "Pasos para facilitar la actividad",
+      "examplesTitle": "Ejemplos resueltos incorrectos",
+      "viewLabel": "Elige una vista",
+      "teacherView": "Vista docente",
+      "studentView": "Vista estudiante",
+      "viewNote": "La vista docente muestra respuestas y notas de enseñanza. La vista estudiante muestra solo lo que compartirás con tus estudiantes.",
+      "exportTeacher": "Exportar PDF docente",
+      "exportStudent": "Exportar PDF estudiante",
+      "exporting": "Preparando PDF…",
+      "exampleLabel": "Ejemplo {{number}}",
+      "ofTotal": "de {{total}}",
+      "slip": "Desliz",
+      "final": "Final:",
+      "prev": "Anterior",
+      "next": "Siguiente"
+    },
+    "discussion": {
+      "title": "Preguntas de discusión",
+      "subtitle": "Preguntas para el cierre de la clase",
+      "answer": "Respuesta",
+      "watchFor": "Presta atención a",
+      "watchForLabel": "Presta atención a {{number}}",
+      "tryAsking": "Intenta preguntar",
+      "respondWith": "Responde con",
+      "takeaway": "Idea matemática clave"
+    },
+    "nav": {
+      "backChoices": "Atrás: Opciones de actividad",
+      "nextFacilitate": "Siguiente: Facilitar la actividad",
+      "backBeforeClass": "Atrás: Antes de la clase",
+      "nextDiscussion": "Siguiente: Discusión de cierre",
+      "backFacilitate": "Atrás: Facilitar la actividad",
+      "selectActivity": "Seleccionar esta actividad",
+      "goToMyActivity": "Ir a Mi actividad"
+    },
+    "changeDialog": {
+      "title": "Cambiar actividad",
+      "close": "Cerrar",
+      "question": "¿Seguro que quieres cambiar la actividad seleccionada?",
+      "body": "Volverás a la página “Selecciona tu actividad de siguiente paso”.",
+      "cancel": "Cancelar",
+      "confirm": "Sí, cambiar actividad"
+    },
+    "pdf": {
+      "teacherLabel": "Facilitar la actividad",
+      "studentLabel": "Hoja de actividad para estudiantes",
+      "misconception": "Concepto erróneo:",
+      "teacherExamples": "Ejemplos resueltos incorrectos - Ejemplos para mostrar a la clase"
+    },
+    "materialsComing": "Los materiales de esta actividad aparecerán aquí pronto.",
+    "noContent": "El contenido de esta actividad aún no está disponible. Elige otra actividad o vuelve más tarde.",
+    "or": "o"
+  },
+  "myActivity": {
+    "title": "Mi actividad",
+    "intro": "Revisa la actividad que guardaste para tu clase. Después de realizarla, sube los archivos MIU del jueves para que MicroCoach pueda seguir el progreso de tus estudiantes a lo largo del tiempo",
+    "uploadMiu": "Subir archivos MIU",
+    "loading": "Cargando tu actividad guardada",
+    "loadError": "No pudimos cargar tu actividad guardada. Actualiza la página para intentarlo de nuevo.",
+    "empty": "Aún no has guardado ninguna actividad. Elige una de las actividades de siguiente paso de un concepto erróneo."
+  },
+  "activityTemplates": {
+    "INCORRECT_WORKED_EXAMPLES": {
+      "name": "Encuentra el desliz",
+      "subtitle": "Localiza dónde falla el razonamiento",
+      "description": "Los estudiantes examinan una solución resuelta, identifican el primer paso en que el razonamiento se desvía, explican por qué ese paso no es válido y trabajan juntos para corregir el error.",
+      "artifactTitle": "Ejemplos resueltos incorrectos"
+    },
+    "FAVORITE_NO": {
+      "name": "Mi “no” favorito",
+      "subtitle": "Conserva y aprovecha el pensamiento productivo",
+      "description": "Los estudiantes analizan una respuesta incorrecta significativa que revela una idea matemática que vale la pena conservar o desarrollar. Comentan por qué la respuesta podría parecer razonable, identifican qué hace bien el razonamiento y lo revisan conservando lo que es matemáticamente útil.",
+      "artifactTitle": "Ejemplos de análisis del pensamiento estudiantil"
+    },
+    "MATH_DETECTIVE": {
+      "name": "Detective matemático",
+      "subtitle": "Investiga los problemas de fondo",
+      "description": "Los estudiantes se convierten en “detectives matemáticos”: investigan una solución incorrecta, identifican el problema matemático de fondo, revisan el razonamiento y comprueban si la revisión funciona.",
+      "artifactTitle": "Ejemplos de análisis del pensamiento estudiantil"
+    },
+    "COMPARE_THE_THINKING": {
+      "name": "Compara el razonamiento",
+      "subtitle": "Examina contrastes significativos",
+      "description": "Los estudiantes comparan dos estrategias o representaciones de solución significativamente distintas y examinan el razonamiento, las fortalezas, las limitaciones y las diferencias matemáticas importantes entre ellas.",
+      "artifactTitle": "Estrategias para comparar - Ejemplos para mostrar a la clase"
+    },
+    "MAKE_YOUR_CASE": {
+      "name": "Defiende tu postura",
+      "subtitle": "Articula y justifica afirmaciones",
+      "description": "Los estudiantes formulan o evalúan una afirmación matemática, expresan su razonamiento, construyen argumentos con evidencia y razonamiento, y consideran si la evidencia respalda la afirmación.",
+      "artifactTitle": "La afirmación - Ejemplo para mostrar a la clase"
+    }
   }
 }

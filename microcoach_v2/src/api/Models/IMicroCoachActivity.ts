@@ -1,10 +1,10 @@
 import type {
   ActivityType,
   DetailStatus,
-  IActivityPhases,
   IGrouping,
   IRoutine,
 } from "../../lib/PipelineModels";
+import type { IActivityContent } from "../../lib/ActivityContentModels";
 
 export interface IMicroCoachActivity {
   activityType: ActivityType;
@@ -20,5 +20,6 @@ export interface IMicroCoachActivity {
   targets: string | null;
   instructionalMove: string | null;
   strategyTag: string | null;
-  phases: IActivityPhases | null;
+  /** The template content; null for rows written before the Wave 2 shape. */
+  content: IActivityContent | null;
 }

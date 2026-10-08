@@ -40,7 +40,7 @@ const STEP_PATH: Record<FlowStep, string> = {
   [FlowStep.ASSESS]: '/upload-miu',
   [FlowStep.UNDERSTAND]: '/review',
   [FlowStep.CHOOSE]: '/review',
-  [FlowStep.REASSESS]: '/upload-miu',
+  [FlowStep.REASSESS]: '/upload-reassess',
   [FlowStep.REFLECT]: '/reflect',
   [FlowStep.DONE]: '/reflect',
 };
@@ -145,7 +145,7 @@ export default function ThisWeek({
                             path: STEP_PATH[row.step],
                             // The upload pre-fills the week it is for.
                             state:
-                              STEP_PATH[row.step] === '/upload-miu'
+                              STEP_PATH[row.step].startsWith('/upload-')
                                 ? { weekStart }
                                 : undefined,
                           })

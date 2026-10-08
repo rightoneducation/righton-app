@@ -10,6 +10,10 @@ import { ITeacherUploadInput, IUploadAPIClient } from "./interfaces/IUploadAPICl
  *   input TeacherUploadInput { classroomId: ID!  docxKey: String!  xlsxKey: String! }
  * and microcoachv2TeacherUpload reads exactly that input. Until the schema
  * carries it, AppSync rejects this call and startAnalysis throws.
+ *
+ * The client also sends `assessmentType` (PPQ or POST_PPQ) so the analysis can
+ * tell a first upload from the one after the activity: the v2 input needs
+ * `assessmentType: AssessmentType!`, and the Lambda needs to read it.
  */
 const teacherUploadMutation = /* GraphQL */ `
   mutation TeacherUpload($input: TeacherUploadInput!) {

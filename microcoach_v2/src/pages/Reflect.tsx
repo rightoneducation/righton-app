@@ -48,7 +48,7 @@ export default function Reflect({ screenSize, sessions }: ReflectProps) {
 
   const handleTabSelect = (tabId: FlowTabId) => {
     if (tabId === 'understand-act') navigate('/review');
-    if (tabId === 'prepare') navigate('/myplan');
+    if (tabId === 'prepare') navigate('/myactivity');
   };
 
   const isLarge = screenSize === ScreenSize.LARGE;
@@ -68,7 +68,7 @@ export default function Reflect({ screenSize, sessions }: ReflectProps) {
         screenSize={screenSize}
         activeTabId="reflect"
         onTabSelect={handleTabSelect}
-        onAction={() => navigate('/myplan')}
+        onAction={() => navigate('/myactivity')}
       />
 
       <Typography
@@ -155,7 +155,7 @@ export default function Reflect({ screenSize, sessions }: ReflectProps) {
               <Typography
                 variant="rubikSubBold"
                 component="button"
-                onClick={() => navigate('/myplan')}
+                onClick={() => navigate('/myactivity')}
                 sx={{
                   mt: `${theme.sizing.space1}px`,
                   p: 0,

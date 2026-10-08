@@ -16,19 +16,6 @@ const chipRadius = 4;
 const actionHeight = 37;
 const stepBadgeSize = 20;
 
-// Shared with ActivityDetail's header banner — leave as is.
-export const ContextBanner = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.sizing.space2,
-  width: '100%',
-  padding: theme.sizing.space5,
-  borderRadius: theme.sizing.sectionRadius,
-  backgroundColor: theme.palette.designSystem.surface.skyBlue,
-  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.navyBlue}`,
-  boxSizing: 'border-box',
-}));
-
 // Figma: 1130x65 rx12 white on a 2px periwinkle hairline, Rubik 20, 32 in.
 export const SelectedBar = styled(Box)(({ theme }) => ({
   display: 'flex',

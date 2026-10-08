@@ -1,10 +1,7 @@
 import { styled, Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
 
-const pillRadius = 18;
-const cardRadius = 24;
 const chipRadius = 15;
 // Figma: the "Step N" pill is 66 x 29. Both the chip's radius and the step
 // row's are derived from the height, so the pair stays a true pill.
@@ -21,102 +18,6 @@ const columnBadgeRadius = 16;
 interface ActiveProps {
   isActive: boolean;
 }
-
-export const PhaseTabBar = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexWrap: 'wrap',
-  alignItems: 'center',
-  gap: theme.sizing.space2,
-  width: '100%',
-}));
-
-export const PhaseTab = styled(Button, {
-  shouldForwardProp: (prop) => prop !== 'isActive',
-})<ActiveProps>(({ theme, isActive }) => ({
-  minWidth: 200,
-  height: 36,
-  padding: `0 ${theme.sizing.space3}px`,
-  borderRadius: pillRadius,
-  backgroundColor: isActive
-    ? theme.palette.designSystem.surface.atlanticNavy
-    : theme.palette.designSystem.foreground.accentBlue,
-  color: isActive
-    ? theme.palette.designSystem.surface.white
-    : theme.palette.designSystem.background.offWhite,
-  ...theme.typography.buttonLabelSm,
-  textTransform: 'none',
-  whiteSpace: 'nowrap',
-  '&:hover': {
-    backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
-  },
-}));
-
-export const PhaseTabSeparator = styled(Box)(({ theme }) => ({
-  ...theme.typography.rubikBody,
-  fontWeight: 600,
-  color: theme.palette.designSystem.surface.atlanticNavy,
-  userSelect: 'none',
-}));
-
-// Figma: 1126x506 rx24, white on a navy hairline, 24 inset.
-export const PhaseCard = styled(Paper)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.sizing.space4,
-  width: '100%',
-  padding: theme.sizing.space5,
-  borderRadius: cardRadius,
-  backgroundColor: theme.palette.designSystem.surface.white,
-  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.surface.atlanticNavy}`,
-  boxSizing: 'border-box',
-}));
-
-export const PhaseFooterBar = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexWrap: 'wrap',
-  alignItems: 'center',
-  gap: theme.sizing.space2,
-  width: '100%',
-  marginTop: 'auto',
-  paddingTop: theme.sizing.space4,
-}));
-
-export type FooterTone = 'quiet' | 'solid';
-
-interface FooterActionProps {
-  tone: FooterTone;
-}
-
-export const PhaseFooterAction = styled(Button, {
-  shouldForwardProp: (prop) => prop !== 'tone',
-})<FooterActionProps>(({ theme, tone }) => ({
-  minWidth: tone === 'solid' ? 240 : 200,
-  height: 36,
-  padding: `0 ${theme.sizing.space3}px`,
-  borderRadius: pillRadius,
-  backgroundColor:
-    tone === 'solid'
-      ? theme.palette.designSystem.background.navyBlue
-      : theme.palette.designSystem.surface.skyBlue,
-  border:
-    tone === 'solid'
-      ? 'none'
-      : // Every activity frame outlines the quiet actions at 50%, not full.
-        `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.foreground.fadedDeepNavy}`,
-  color:
-    tone === 'solid'
-      ? theme.palette.designSystem.surface.white
-      : theme.palette.designSystem.background.navyBlue,
-  ...theme.typography.buttonLabelSmLight,
-  textTransform: 'none',
-  whiteSpace: 'nowrap',
-  '&:hover': {
-    backgroundColor:
-      tone === 'solid'
-        ? theme.palette.designSystem.surface.atlanticNavy
-        : theme.palette.designSystem.foreground.lightBlue,
-  },
-}));
 
 export const NumberBadge = styled(Box)(({ theme }) => ({
   display: 'flex',

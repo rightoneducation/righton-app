@@ -1,7 +1,11 @@
+import { AssessmentType } from "../../../../AWSAPI";
+
 export interface ITeacherUploadInput {
   classroomId: string;
   docxKey: string;
   xlsxKey: string;
+  /** PPQ for the first upload, POST_PPQ for the one after the activity. */
+  assessmentType: AssessmentType;
 }
 
 export interface IUploadAPIClient {
