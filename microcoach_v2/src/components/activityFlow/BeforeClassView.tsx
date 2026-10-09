@@ -25,13 +25,16 @@ interface BeforeClassViewProps {
 /** Before class (SpotTheSlip_BeforeClass): the prep checklist, then the grouping plan. */
 export default function BeforeClassView({ content }: BeforeClassViewProps) {
   const { t } = useTranslation();
+  // Generated ids: /preview renders many of these on one page.
+  const beforeClassTitleId = React.useId();
+  const groupingTitleId = React.useId();
 
   return (
     <PhaseCards>
-      <FlowCard component="section" aria-labelledby="before-class-title">
+      <FlowCard component="section" aria-labelledby={beforeClassTitleId}>
         <FlowCardHeader>
           <FlowCardTitle>
-            <Typography id="before-class-title" variant="headingLg" component="h2">
+            <Typography id={beforeClassTitleId} variant="headingLg" component="h2">
               {t('activityFlow.beforeClass.title')}
             </Typography>
             <Typography variant="rubikBody">
@@ -50,9 +53,9 @@ export default function BeforeClassView({ content }: BeforeClassViewProps) {
         </Checklist>
       </FlowCard>
 
-      <FlowCard component="section" aria-labelledby="grouping-title">
+      <FlowCard component="section" aria-labelledby={groupingTitleId}>
         <GroupingHeader>
-          <Typography id="grouping-title" variant="headingLg" component="h2">
+          <Typography id={groupingTitleId} variant="headingLg" component="h2">
             {t('activityFlow.beforeClass.groupingTitle')}
           </Typography>
           <GroupingSequenceChips steps={content.howToRun} />

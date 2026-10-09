@@ -29,9 +29,9 @@ import { STAGES, GROUPS, Stage, Who, Origin } from './pipeline';
  *
  * Presents the pipeline itself: the stages in the current iteration, every formula they
  * apply (and whether code or the model applies it), then each misconception
- * from the selected run collapsed to the three things the pipeline produced for
- * it — the misconception, the instructional need with the inputs that ranked
- * it, and the activity templates selected.
+ * from the selected run collapsed to what the pipeline produced for it — the
+ * misconception with its rubric, the instructional need, the activity templates
+ * selected, and the activities generated for them.
  *
  * The pipeline diagram and formulae are static: they describe the code on this
  * branch, not the run's version tag. The run supplies the misconceptions.
@@ -136,7 +136,7 @@ function Formulae() {
     <section className="p2-section p2-section-wide">
       <h2 className="p2-h2">Formulae</h2>
       <p className="p2-lede">
-        Every computation between the response rows and the selected template, in the same boxes as the pipeline
+        Every computation from the response rows to the generated activity, in the same boxes as the pipeline
         above. Constants are as written in the source named on each card.
       </p>
       <ol className="p2-flow p2-flow-static">
@@ -182,7 +182,7 @@ function Formulae() {
               );
             }),
           );
-          // Boxes with nothing to compute (fetch-only, under construction) are left out.
+          // Boxes with nothing to compute (fetch-only) are left out.
           if (cards.length === 0) return null;
           return (
             <li className="p2-group" key={g.id}>
@@ -264,7 +264,7 @@ function EvidenceCount({ item }: { item: Rec }) {
 }
 
 function MisconceptionBlock({ item }: { item: Rec }) {
-  const refs = asArray(item.wrongAnswers).map((w) => `Q${String(w.questionNumber)}·${asStr(w.letter)}`);
+  const wrongAnswers = asArray(item.wrongAnswers);
   const ccss = asRec(item.ccssStandards);
   const target = ccss ? asRec(ccss.targetObjective) : null;
   return (
@@ -277,7 +277,48 @@ function MisconceptionBlock({ item }: { item: Rec }) {
         )}
       </p>
       <Row k="selected one or more linked responses" v={<EvidenceCount item={item} />} />
-      <Row k="wrong answers" v={<Chips items={refs} />} />
+      <Row
+        k="wrong answers linked"
+        v={
+          wrongAnswers.length === 0 ? (
+            <span className="p2-nil">—</span>
+          ) : (
+            // Each linked option with the stage's explanation of what its value
+            // shows: how the link was justified, not just which options.
+            <ul className="p2-list">
+              {wrongAnswers.map((w) => {
+                const ref = `Q${String(w.questionNumber)}·${asStr(w.letter)}`;
+                return (
+                  <li key={ref}>
+                    <span className="p2-mono">{ref}</span>
+                    {asStr(w.explanation) !== '' && (
+                      <>
+                        {' — '}
+                        <MathText text={asStr(w.explanation)} inline />
+                      </>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )
+        }
+      />
+      {asStr(item.evidenceBasis) !== '' && (
+        <Row
+          k="evidence basis"
+          v={
+            <span>
+              {asStr(item.evidenceBasis)}
+              <span className="p2-row-k">
+                {asStr(item.evidenceBasis) === 'grounded'
+                  ? ' · the option content supports this reading'
+                  : ' · the most plausible of several readings'}
+              </span>
+            </span>
+          }
+        />
+      )}
       {target && <Row k="standard" v={<span className="p2-mono">{asStr(target.standard)}</span>} />}
       {asStr(item.learningScienceConnection) !== '' && (
         <Row k="learning science" v={<span>{asStr(item.learningScienceConnection)}</span>} />
@@ -505,7 +546,27 @@ function NeedBlock({ item }: { item: Rec }) {
             <MathText text={asStr(need.text)} />
           </p>
           <Row k="teacher role" v={<span>{asStr(need.teacherRole) || '—'}</span>} />
+          {asStrings(need.evidenceUsed).length > 0 && (
+            <Row
+              k="evidence used"
+              v={
+                <ul className="p2-list">
+                  {asStrings(need.evidenceUsed).map((e) => (
+                    <li key={e}>
+                      <MathText text={e} inline />
+                    </li>
+                  ))}
+                </ul>
+              }
+            />
+          )}
         </>
+      )}
+      {asArray(item.skillNames).length > 0 && (
+        <Row
+          k="skill names"
+          v={<Chips items={asArray(item.skillNames).map((sk) => `${asStr(sk.code)} · ${asStr(sk.name)}`)} />}
+        />
       )}
       {r && (
         <div className="p2-inputs">
@@ -617,6 +678,11 @@ function GeneratedActivity({
           <p className="p2-text">
             <MathText text={content.whyThisActivity} />
           </p>
+          {move && asStr(move.targets) !== '' && <Row k="targets" v={<MathText text={asStr(move.targets)} inline />} />}
+          {move && asStr(move.instructionalMove) !== '' && (
+            <Row k="instructional move" v={<MathText text={asStr(move.instructionalMove)} inline />} />
+          )}
+          {move && asStr(move.strategyTag) !== '' && <Row k="strategy" v={<span>{asStr(move.strategyTag)}</span>} />}
           {phase('Before class', <BeforeClassView content={content} />)}
           {phase(
             'Facilitate activity',
@@ -679,7 +745,7 @@ function TemplateBlock({ item }: { item: Rec }) {
     );
   }
   return (
-    <Block label="Activity selected" hint="LLMSelectTemplate · top two templates">
+    <Block label="Activity selected" hint="LLMSelectTemplate · up to two templates">
       {picks.length === 1 && (
         <p className="p2-text">
           <span className="p2-nofit">Only one template cleared the threshold.</span>
@@ -698,7 +764,6 @@ function TemplateBlock({ item }: { item: Rec }) {
                 <span className={typeof pick.instructionalFit === 'number' && pick.instructionalFit >= 2 ? 'p2-fit p2-fit-strong' : 'p2-fit'}>
                   {typeof pick.instructionalFit === 'number' ? `fit ${pick.instructionalFit}/3` : asStr(pick.fit) || '?'}
                 </span>
-                {pick.belowThreshold === true && <span className="p2-fit p2-fit-below">below threshold</span>}
               </div>
               <div className="p2-text">
                 <MathText text={asStr(pick.rationale)} />
@@ -791,7 +856,8 @@ function flowLine(manifest: Rec, misconceptionCount: number): string {
   const stages = [
     `${mis} misconceptions`,
     needs !== null && `${needs} instructional needs (1 each)`,
-    picks !== null && `${picks} activity templates (2 each)`,
+    picks !== null && `${picks} activity templates (up to 2 each)`,
+    num('activityCount') !== null && `${num('activityCount')} activities`,
   ].filter(Boolean);
   return [input.join(' · '), ...stages].filter((s) => s !== '').join('  →  ');
 }
@@ -819,6 +885,14 @@ function RunBar({
   onCollapseAll: () => void;
 }) {
   const missing = asArray(manifest.instructionalNeedsMissing);
+  // In-pipeline guards that fired (seed/eval exportEvalOutputs → guardFires).
+  // Runs from before the field existed say so rather than claiming none.
+  const guardFires = Array.isArray(manifest.guardFires) ? asArray(manifest.guardFires) : null;
+  let guardText = 'not recorded';
+  if (guardFires && guardFires.length === 0) guardText = 'none';
+  if (guardFires && guardFires.length > 0) {
+    guardText = `${guardFires.length} (${guardFires.map((g) => asStr(g.label)).join(', ')})`;
+  }
   const stat = (label: string, value: React.ReactNode) => (
     <span className="p2-stat" key={label}>
       <span className="p2-stat-k">{label}</span>
@@ -862,6 +936,12 @@ function RunBar({
       <div className="p2-bar-row p2-stats">
         {stat('version', asStr(manifest.version) || 'untagged')}
         {stat('condition', String(manifest.condition ?? '—'))}
+        {stat('guards fired', guardText)}
+        {typeof manifest.needSeparationChecked === 'number' &&
+          stat(
+            'needs prescribing an activity',
+            `${asArray(manifest.needSeparationFlags).length}/${manifest.needSeparationChecked}`,
+          )}
         <span className="p2-flowline">{flowLine(manifest, count)}</span>
       </div>
       {missing.length > 0 && (
@@ -971,6 +1051,8 @@ const STYLES = `
   margin-bottom: 6px; word-break: break-word; }
 .p2-notes { margin: 0; padding-left: 16px; font-size: 11px; color: #4b535c; }
 .p2-notes li { margin-bottom: 3px; }
+.p2-list { margin: 0; padding-left: 16px; font-size: 13px; }
+.p2-list li { margin-bottom: 4px; }
 
 /* misconception cards */
 .p2-card { background: #fff; border: 1px solid #dfe3e8; border-radius: 8px; margin-bottom: 10px; }
@@ -1022,7 +1104,6 @@ const STYLES = `
 .p2-fit { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; background: #eceff3;
   color: #4b535c; border-radius: 4px; padding: 1px 6px; }
 .p2-fit-strong { background: #e5edff; color: #2f5bd0; }
-.p2-fit-below { background: #fdecec; color: #b3261e; margin-left: 4px; }
 .p2-nofit { color: #9a5b00; font-weight: 600; }
 .p2-rubric-row { display: inline-flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .p2-rubric-points { font-size: 13px; font-weight: 700; color: #2c3238; min-width: 62px; display: inline-block; }

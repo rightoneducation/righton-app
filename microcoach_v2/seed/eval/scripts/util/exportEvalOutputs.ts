@@ -39,6 +39,28 @@ function gitSha(): string {
   }
 }
 
+/**
+ * Sub-call labels NextStepOption records when one of its in-pipeline guards
+ * fires (see its index.mjs). Collected into the manifest's `guardFires` so
+ * /preview and the run report show how often generation leaned on them.
+ */
+const GUARD_LABELS = new Set(['answerable-fallback', 'retry-incomplete-system']);
+
+export interface GuardFire {
+  call: string;
+  label: string;
+  /** What the guard saw: the replaced instruction, or whether the retry fixed it. */
+  detail: string;
+}
+
+export function guardFire(call: string, sc: Record<string, any>): GuardFire {
+  const detail =
+    sc.label === 'retry-incomplete-system'
+      ? (sc.fixed ? 'fixed by the retry' : 'still incomplete after the retry')
+      : `"${sc.before ?? ''}"`;
+  return { call, label: sc.label, detail };
+}
+
 const slug = (s: string) =>
   (s || 'unknown').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 24);
 
@@ -53,6 +75,7 @@ export class RunCapture {
   private tokens = { prompt: 0, completion: 0, total: 0 };
   private models = new Set<string>();
   private fallbacks: Array<{ call: string; label: string; reason?: string }> = [];
+  private guardFires: GuardFire[] = [];
   private extras: Record<string, any> = {};
 
   constructor(opts: RunOptions) {
@@ -105,6 +128,7 @@ export class RunCapture {
       if (sc.model) this.models.add(sc.model);
       addUsage(sc.usage);
       if (sc.fellBack) this.fallbacks.push({ call: name, label: sc.label, reason: sc.reason });
+      if (GUARD_LABELS.has(sc.label)) this.guardFires.push(guardFire(name, sc));
     }
     // A Lambda that makes a single model call reports usage at the top level with no
     // subCalls. Counting only subCalls silently zeroed those out of every manifest.
@@ -147,6 +171,7 @@ export class RunCapture {
       tokens: this.tokens,
       modelCalls: this.seq,
       silentFallbacks: this.fallbacks,
+      guardFires: this.guardFires,
       ...this.extras,
       ...summary,
     };

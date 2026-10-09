@@ -2,7 +2,7 @@ import { Who, Origin, WAVE2_DOC } from './pipeline';
 
 /**
  * Every computation the pipeline performs on its way from student responses to
- * a selected activity template, as it exists in the code on this branch. Each
+ * the generated activity, as it exists in the code on this branch. Each
  * entry points at the pipeline stage (by id) that performs it, so the formulae
  * section lays out in the same boxes as the diagram.
  *
@@ -52,7 +52,7 @@ export const FORMULAE: Formula[] = [
         tex: '\\text{count for an option} = \\text{students who picked it}',
       },
     ],
-    notes: ['Shown to the model in step 4 as "N students chose this" beside each option.'],
+    notes: ['Shown to the model in step 4 as "N students chose this" beside each option, and again in step 9 as the evidence for each linked question the activity is built from.'],
   },
   {
     id: 'confidence',
@@ -116,8 +116,8 @@ export const FORMULAE: Formula[] = [
     origin: WAVE2_DOC,
     steps: [
       {
-        text: 'Frequency: the share of class from step 5, banded 0 to 3.',
-        tex: '\\text{frequency} = 0 \\ (0\\text{–}10\\%), \\ 1 \\ (>10\\text{–}25\\%), \\ 2 \\ (>25\\text{–}50\\%), \\ 3 \\ (>50\\%)',
+        text: 'Frequency: the share of class from step 5, scored continuously from 0 to 3 and reaching 3 at 50%, where the rubric\'s top band begins.',
+        tex: '\\text{frequency} = \\min\\left(3, \\ 3 \\times \\dfrac{\\text{share of class}}{50\\%}\\right)',
       },
       {
         text: 'Learning progression influence: how many standards the misconception\'s standard builds towards in the knowledge graph, banded 0 to 3.',
@@ -132,8 +132,8 @@ export const FORMULAE: Formula[] = [
         tex: '\\text{depth} \\in \\{0, 1, 2, 3\\}',
       },
       {
-        text: 'Add the four. A metric that could not be measured is left out and the maximum shrinks to match, so a misconception whose standard was not in the graph is not penalised against the others.',
-        tex: '\\text{total} = \\text{frequency} + \\text{progression} + \\text{confidence} + \\text{depth}, \\quad \\text{normalized} = \\dfrac{\\text{total}}{3 \\times \\text{metrics scored}}',
+        text: 'Weight and add the four: progression counts once, the other three count three times. That gives the score, out of 30. A metric that could not be measured is left out and the maximum shrinks to match, so a misconception whose standard was not in the graph is not penalised against the others.',
+        tex: '\\text{score} = 3 \\times \\text{frequency} + 1 \\times \\text{progression} + 3 \\times \\text{confidence} + 3 \\times \\text{depth}, \\quad \\text{normalized} = \\dfrac{\\text{score}}{\\text{maximum possible}}',
       },
       {
         text: 'Highest normalized score is ranked #1 and is the Recommended Focus. Ties go to the deeper misconception, then the larger share of class, then the higher mean confidence, then the order the model listed them. The top three continue; the rest are kept in the run output with their scores but get no need, templates or activities.',
@@ -142,7 +142,9 @@ export const FORMULAE: Formula[] = [
     ],
     notes: [
       'Every band, level description, the cap of three and the tiebreak are read from misconceptionRubric.json; the engine does no arithmetic of its own.',
-      'The doc\'s fifth metric, the Learning Commons Misconception Evaluator score, is a reserved slot (enabled: false) — no integration exists yet — so the maximum today is 12, not 15.',
+      'Frequency is scored continuously rather than in the doc\'s four bands, because the bands gave 29%, 39% and 43% the same score and ties were settled by the tiebreak rather than by reach. It saturates at 50% because the doc\'s top band begins there: anything above half the class already scores the maximum.',
+      'Progression is weighted at a third of the others: only two of its four levels are reachable on the standards fetched here, so at equal weight a one-level difference cancelled a two-level difference in share of class.',
+      'The doc\'s fifth metric, the Learning Commons Misconception Evaluator score, is a reserved slot (enabled: false) — no integration exists yet — so the maximum today is 30, not 39.',
       'Progression influence is a pilot proxy: the doc counts learning components the standard builds towards; the graph query returns that edge at the standard level only.',
       'The rubric is both the selector here and, per the doc, an evaluation measure. Using it to select means it cannot also serve as an independent judge of misconception quality (doc §2b).',
     ],
@@ -161,15 +163,35 @@ export const FORMULAE: Formula[] = [
         tex: '\\text{instructional fit} = 0 \\ (\\text{poor}), \\ 1 \\ (\\text{partial}), \\ 2 \\ (\\text{strong}), \\ 3 \\ (\\text{exceptional})',
       },
       {
-        text: 'A pick under 2 is flagged. Nothing is regenerated on a flag in this pass; it is recorded for the evaluation harness.',
-        tex: '\\text{below threshold} = \\text{instructional fit} < 2',
+        text: 'Only picks scoring 2 or more are kept. If one clears it the need gets one template; if none does, the model says why and that misconception gets no activities rather than a weak one.',
+        tex: '\\text{kept} = \\text{instructional fit} \\geq 2',
       },
       { text: 'Prefer two different templates when both fit strongly. Use the same template twice only when it is clearly better than every alternative, and then say how the two activities would differ. Never pick a weak template just for variety.' },
     ],
     notes: [
-      'A need\'s rank is its misconception\'s rank from step 6; the doc has no separate rubric for needs. Instructional Fit is the doc\'s one metric evaluated at template selection; the rest of its activity rubric is scored on the generated activity, after this.',
+      'A need\'s rank is its misconception\'s rank from step 6; the doc has no separate rubric for needs. Instructional Fit is the doc\'s one activity-rubric metric applied inside the pipeline. The rest of the activity rubric is not scored on generated activities yet; that belongs to the evaluation work, not to generation.',
       'The model also explains why each template it passed over was weaker.',
       'RightOn! is only selectable when a game catalog is supplied.',
+    ],
+  },
+  {
+    id: 'activityChecks',
+    stageId: 'activity',
+    title: 'Checks inside the pipeline',
+    who: 'code',
+    source: 'microcoachv2NextStepOption/src/index.mjs · util/activityContent.mjs',
+    steps: [
+      {
+        text: 'Each example problem is written as an instruction and its math, separately. The math declares whether it is one expression or a system; a system must list at least two, so it cannot arrive with an inequality missing. Code joins them into the problem students see.',
+        tex: '\\text{problem} = \\text{instruction} + \\text{: } + \\text{every expression, comma-separated}',
+      },
+      { text: 'If an instruction says "system" but its math is not one, the activity is generated again, once. Whichever attempt has fewer such examples is kept.' },
+      { text: 'If an instruction asks about "the point" but no point is given, it becomes "Find a solution", which a student can answer from the math shown.' },
+      { text: 'LaTeX is repaired: commands broken by JSON parsing (a single-backslash \\rightarrow arriving as "ightarrow") are restored, and doubled backslashes are collapsed.' },
+    ],
+    notes: [
+      'These run inside generation and are part of it, not evaluation. Each one is recorded when it fires; the run bar above shows how many fired on this run.',
+      'None of them rewrites the model\'s wording beyond the two named replacements; the retry regenerates rather than patches.',
     ],
   },
 ];
