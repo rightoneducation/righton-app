@@ -67,9 +67,29 @@ const RunStep = z.object({
  * move, and the stored pair is built from them by toStoredFacilitate.
  */
 const TASK_MAX = 80;
-// One or more $…$ spans separated only by commas or semicolons: the schema itself
-// leaves no room for words around the math (a bound, not a describe).
-const MATH_ONLY = /^\s*\$[^$]+\$(\s*[,;]\s*\$[^$]+\$)*\s*$/;
+// One $…$ span and nothing else: the schema itself leaves no room for words
+// around the math (a bound, not a describe).
+const ONE_EXPRESSION = /^\s*\$[^$]+\$\s*$/;
+const Expression = z.string().regex(ONE_EXPRESSION);
+
+/**
+ * The math as a declared shape. A system is its own variant that needs at least
+ * two expressions, so strict mode cannot produce a "system" with one inequality
+ * (v30 stored "Graph the solution set of the system: $y + x > 2$", its second
+ * inequality missing). The kind comes first, so the model commits to it before
+ * writing anything else; one expression per item also leaves no place for
+ * "\quad\text{and}\quad" between them.
+ */
+const MathStatement = z.discriminatedUnion('kind', [
+  z.object({
+    kind: z.literal('SINGLE'),
+    expressions: z.array(Expression).length(1).describe('The one expression, equation or inequality, e.g. ["$x - 2y \\geq -3$"]'),
+  }),
+  z.object({
+    kind: z.literal('SYSTEM'),
+    expressions: z.array(Expression).min(2).max(3).describe('Every equation or inequality of the system, one per item, e.g. ["$y + x > 2$", "$y \\leq 3x - 2$"]. All of them: the work and the answers may only use what is listed here.'),
+  }),
+]);
 
 function problemFields(mode) {
   if (mode === 'stored') {
@@ -79,8 +99,8 @@ function problemFields(mode) {
     };
   }
   return {
+    math: MathStatement.describe('The problem\'s math, with no words. SYSTEM for a system (list every equation or inequality in it), SINGLE otherwise. Never a point or answer choices to pick from.'),
     task: z.string().max(TASK_MAX).describe('The instruction alone, as a short imperative or question with no trailing punctuation, e.g. "Graph the inequality", "Solve for $x$", "Find a solution of the system". Student-facing: never student work, a description of a response, a hint, or how to solve it. Never a multiple-choice stem ("Which graph…", "Which of the following…"): the student sees no answer choices, so restate the question as an open problem that needs no given value, e.g. "Find a solution of the system" or "Graph the system".'),
-    math: z.string().regex(MATH_ONLY).describe('Only the LaTeX for the problem, with no words: the expression, equation or inequality, e.g. "$x - 2y \\geq -3$"; a system as its parts joined by a comma, e.g. "$y + x > 2$, $y \\leq 3x - 2$" (never \\begin{cases}). Never a point or answer choices to pick from, and never words such as "point:", "and" or "options:".'),
   };
 }
 
@@ -183,20 +203,44 @@ export const EXAMPLE_TYPES = ['INCORRECT_WORKED_EXAMPLES', 'FAVORITE_NO', 'MATH_
 // made it into the math ("Decide whether the point is a solution: $…$"). The
 // prompt asks for problems that need no given value; when one slips through
 // without its point, it becomes a problem a student can still answer.
+// `onFallback` is told each time, so the run can count how often this guard
+// covered for the generator.
 const NAMES_A_POINT = /\b(the|this|that|a specific|the given) point\b/i;
-const HAS_A_POINT = /;\s*\$/;
+const IS_A_POINT = /^\s*\$\s*\(.*\)\s*\$\s*$/;
 const ANSWERABLE_FALLBACK = 'Find a solution';
 
-export function toStoredFacilitate(facilitate) {
+const expressionsOf = (math) => (math?.expressions ?? []).map((e) => String(e).trim());
+
+export function toStoredFacilitate(facilitate, onFallback = () => {}) {
   if (!EXAMPLE_TYPES.includes(facilitate?.type)) return facilitate;
   return {
     ...facilitate,
     examples: facilitate.examples.map(({ task, math, ...rest }) => {
-      const missingPoint = NAMES_A_POINT.test(task ?? '') && !HAS_A_POINT.test(math ?? '');
+      const expressions = expressionsOf(math);
+      const joined = expressions.join(', ');
+      const missingPoint = NAMES_A_POINT.test(task ?? '') && !expressions.some((e) => IS_A_POINT.test(e));
+      if (missingPoint) onFallback({ task, math: joined });
       const instruction = (missingPoint ? ANSWERABLE_FALLBACK : String(task ?? '')).trim().replace(/[.:?]\s*$/, '');
-      return { problem: math, prompt: instruction ? `${instruction}: ${math}` : math, ...rest };
+      return { problem: joined, prompt: instruction ? `${instruction}: ${joined}` : joined, ...rest };
     }),
   };
+}
+
+/**
+ * Generated examples whose instruction names a system but whose math is not one
+ * (declared SINGLE, or fewer than two expressions). The schema forces a SYSTEM to
+ * list two or more; this catches the model declaring SINGLE under "Graph the
+ * system". The handler regenerates the activity once when any are found.
+ */
+const NAMES_A_SYSTEM = /\bsystems?\b/i;
+
+export function incompleteSystems(facilitate) {
+  if (!EXAMPLE_TYPES.includes(facilitate?.type)) return [];
+  return (facilitate.examples ?? []).flatMap(({ task, math }, i) => (
+    NAMES_A_SYSTEM.test(task ?? '') && (math?.kind !== 'SYSTEM' || expressionsOf(math).length < 2)
+      ? [{ example: i + 1, task, math: expressionsOf(math).join(', ') }]
+      : []
+  ));
 }
 
 const DEFAULT_BOUNDS = {

@@ -51,6 +51,7 @@ import {
   discussionDraftSchema,
   toStoredDiscussion,
   toStoredFacilitate,
+  incompleteSystems,
 } from './util/activityContent.mjs';
 import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
@@ -127,12 +128,34 @@ const DiscussionReview = z.object({
  */
 const CONTROL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F​-‍﻿]/g;
 
+/**
+ * Put back LaTeX commands that JSON parsing turned into control characters.
+ *
+ * When the model writes a command with a single backslash inside its JSON
+ * ("\rightarrow", "\frac", "\times", "\beta", "\neq"), the backslash and the
+ * first letter form a valid JSON escape, so parsing yields a carriage return,
+ * form feed, tab, backspace or newline followed by the rest of the command
+ * ("ightarrow", "rac"). Run 10-09 v29 stored "12ightarrow 3y" this way. A carriage
+ * return, tab, form feed or backspace directly before a letter is never intended
+ * in this content, so it is restored wherever it appears. A newline before a
+ * letter is ordinary prose outside math, so it is restored only inside $…$.
+ * Must run before CONTROL_CHARS, which would otherwise delete the form feed and
+ * backspace and leave "rac" and "egin" with nothing to show what they were.
+ */
+const LOST_ESCAPE_LETTER = { '\r': 'r', '\t': 't', '\f': 'f', '\b': 'b' };
+
+function restoreLostEscapes(text) {
+  return text
+    .replace(/[\r\t\f\b](?=[a-zA-Z])/g, (c) => `\\${LOST_ESCAPE_LETTER[c]}`)
+    .replace(/\$\$[^$]*\$\$|\$[^$]*\$/g, (span) => span.replace(/\n(?=[a-zA-Z])/g, '\\n'));
+}
+
 function sanitizeStrings(value) {
   if (typeof value === 'string') {
     // Two or more backslashes before a letter or a space are an over-escaped command,
     // which LaTeX reads as a line break rather than the command meant. Strings
     // with a begin-environment (cases, aligned) keep theirs: there it is the row break.
-    const cleaned = value.replace(CONTROL_CHARS, '');
+    const cleaned = restoreLostEscapes(value).replace(CONTROL_CHARS, '');
     const unescaped = /\\begin\{/.test(cleaned) ? cleaned : cleaned.replace(/\\{2,}(?=[a-zA-Z ])/g, '\\');
     return unescaped.replace(/ {2,}/g, ' ').trim();
   }
@@ -472,7 +495,7 @@ Subject: ${classroomContext.subject ?? 'math'} | Class size: ${classroomContext.
 - **howToRun**: ${BOUNDS.howToRunMin}-${BOUNDS.howToRunMax} steps following the template's classroom flow. Give each step its grouping; leave \`groupings\` empty for a step that doesn't regroup; use two values only when the teacher chooses between them.${hasExamples ? ' Refer to examples as "Example 1", "Example 2", … and never to more examples than you write.' : ''}
 - ${FACILITATE_INSTRUCTIONS[contentType]()}
 - \`facilitate.type\` must be exactly "${contentType}".${hasExamples ? `
-- Each example uses a different problem: a meaningfully different instance of the same need, so the teacher can choose among them. \`task\` is the instruction alone (e.g. "Graph the inequality"), \`math\` the LaTeX alone (e.g. "$x - 2y \\geq -3$"); they are joined into the problem students see. Students see no answer choices, so when a source question is multiple choice, restate it as an open problem they can answer without them and without any given value: a "which point" question becomes "Find a solution of the system", a "which graph" question becomes "Graph the inequality" or "Graph the system".` : ''}
+- Each example uses a different problem: a meaningfully different instance of the same need, so the teacher can choose among them. \`task\` is the instruction alone (e.g. "Graph the inequality"), \`math\` the LaTeX alone, one expression per item: SINGLE for one expression, SYSTEM for a system, listing every equation or inequality in it; they are joined into the problem students see. A system's student work and teacher answers may only use equations and inequalities that \`math\` lists, and an instruction that says "system" needs a SYSTEM. Students see no answer choices, so when a source question is multiple choice, restate it as an open problem they can answer without them and without any given value: a "which point" question becomes "Find a solution of the system", a "which graph" question becomes "Graph the inequality" or "Graph the system".` : ''}
 - **targets**, **instructionalMove**, **strategyTag**${lvnFactors.length ? ' (use the LVN factors above)' : ''}, **durationMinutes**, **aiReasoning**: as described in the schema.
 
 Every problem, step and number must be mathematically correct and complete: real problems drawn from the evidence above, never placeholders. Where the schema marks a field teacher-only, the student-facing fields must not give it away.
@@ -513,7 +536,7 @@ ${JSON.stringify(examples.map(e => ({ problem: e.problem, prompt: e.prompt, slip
         ],
       });
       const raw = completion.choices[0]?.message?.content ?? '[]';
-      const parsed = JSON.parse(raw);
+      const parsed = sanitizeStrings(JSON.parse(raw));
       if (!Array.isArray(parsed) || parsed.length !== examples.length) {
         recordSubCall('validate-worked-examples', VALIDATOR_MODEL, completion, {
           fellBack: true, reason: 'shape mismatch',
@@ -631,11 +654,25 @@ ${MATH_FORMATTING}
   };
 
   try {
-    const generated = await structuredCall(
+    const generateActivity = () => structuredCall(
       'generate-activity', MODEL,
       'You are an expert K-12 math instructional coach. Output exclusively valid JSON.',
       activityPrompt, ActivitySchema, 'activity',
     );
+    let generated = await generateActivity();
+    // An instruction that names a system over math that is not one ("Graph the
+    // system: $y + x > 2$") cannot be answered. Regenerate once; keep whichever
+    // attempt has fewer such examples, and record both counts so evaluation can
+    // see how often this fired and whether the retry fixed it.
+    const incomplete = incompleteSystems(generated.facilitate);
+    if (incomplete.length) {
+      const retried = await generateActivity();
+      const stillIncomplete = incompleteSystems(retried.facilitate);
+      recordSubCall('retry-incomplete-system', null, null, {
+        before: incomplete, after: stillIncomplete, fixed: stillIncomplete.length === 0,
+      });
+      if (stillIncomplete.length < incomplete.length) generated = retried;
+    }
     const {
       targets, instructionalMove, strategyTag, durationMinutes, aiReasoning, ...activity
     } = generated;
@@ -649,7 +686,8 @@ ${MATH_FORMATTING}
     // them worse — it turned "and" into "or" in a system for a union-vs-
     // intersection misconception (contradicting the activity's own verdicts) and
     // swapped a point the activity relied on.
-    activity.facilitate = toStoredFacilitate(activity.facilitate);
+    activity.facilitate = toStoredFacilitate(activity.facilitate, ({ task, math }) =>
+      recordSubCall('answerable-fallback', null, null, { before: task, math, after: 'Find a solution' }));
     if (activity.facilitate.type === 'INCORRECT_WORKED_EXAMPLES') {
       activity.facilitate.examples = await validateWorkedExamples(
         activity.facilitate.examples,
