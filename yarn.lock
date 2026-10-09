@@ -11033,13 +11033,6 @@ create-ts-index@^1.14.0:
     tslib "^2.3.1"
     yargs "^17.3.0"
 
-cross-fetch@4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-4.0.0.tgz#f037aef1580bb3a1a35164ea2a848ba81b445983"
-  integrity sha512-e4a5N8lVvuLgAWgnCrLr2PP0YyDOTHa9H/Rj54dirp61qXnNq46m82bRhNqIA5VccJtWBvPTFRV3TtvHUKPB1g==
-  dependencies:
-    node-fetch "^2.6.12"
-
 cross-spawn@^7.0.0, cross-spawn@^7.0.2, cross-spawn@^7.0.3, cross-spawn@^7.0.6:
   version "7.0.6"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-7.0.6.tgz#8a58fe78f00dcd70c370451759dfbfaf03e8ee9f"
@@ -14332,12 +14325,10 @@ i18next-browser-languagedetector@^8.0.0:
   dependencies:
     "@babel/runtime" "^7.23.2"
 
-i18next-http-backend@^2.2.1, i18next-http-backend@^2.4.2, i18next-http-backend@^2.6.2:
-  version "2.7.3"
-  resolved "https://registry.yarnpkg.com/i18next-http-backend/-/i18next-http-backend-2.7.3.tgz#335e5884b4c5446cdb4817cb35e81ee4ac7be9f4"
-  integrity sha512-FgZxrXdRA5u44xfYsJlEBL4/KH3f2IluBpgV/7riW0YW2VEyM8FzVt2XHAOi6id0Ppj7vZvCZVpp5LrGXnc8Ig==
-  dependencies:
-    cross-fetch "4.0.0"
+i18next-http-backend@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/i18next-http-backend/-/i18next-http-backend-4.0.2.tgz#22ff8ddb13a7d416754996ea25890c5d9dd18702"
+  integrity sha512-oay62dIB2kL7+WHzoUXBjWfL3+mwijD3pQkQkIEaRLhy6kjXxUhrRenV0gInwlCASAaJaDy94+XvYizK+cAGdA==
 
 i18next@^22.4.15:
   version "22.5.1"
@@ -17234,7 +17225,7 @@ node-fetch-native@^1.6.6:
   resolved "https://registry.yarnpkg.com/node-fetch-native/-/node-fetch-native-1.6.7.tgz#9d09ca63066cc48423211ed4caf5d70075d76a71"
   integrity sha512-g9yhqoedzIUm0nTnTqAQvueMPVOuIY16bqgAJJC8XOOubYFNwz6IER9qs0Gq2Xd0+CecCKFjtdDTMA4u4xG06Q==
 
-node-fetch@^2.0.0, node-fetch@^2.6.12, node-fetch@^2.6.7:
+node-fetch@^2.0.0, node-fetch@^2.6.7:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.7.0.tgz#d0f0fa6e3e2dc1d27efcd8ad99d550bda94d187d"
   integrity sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==
