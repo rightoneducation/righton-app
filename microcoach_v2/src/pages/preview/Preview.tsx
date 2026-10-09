@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useTranslation } from 'react-i18next';
 import {
   Rec,
   RunIndexEntry,
@@ -14,10 +15,13 @@ import {
 } from './shared';
 import { FORMULAE } from './formulae';
 import MathText from '../../components/MathText';
-import ActivityPhase from '../../components/phases/ActivityPhase';
-import BeforeClassPhase from '../../components/phases/BeforeClassPhase';
-import StepListPhase from '../../components/phases/StepListPhase';
-import { IActivityContent, IActivityPhases, IPhaseStep } from '../../lib/PipelineModels';
+import BeforeClassView from '../../components/activityFlow/BeforeClassView';
+import DiscussionView from '../../components/activityFlow/DiscussionView';
+import FacilitateView from '../../components/activityFlow/FacilitateView';
+import { useScreenSize } from '../../hooks/useScreenSize';
+import { IActivityContent, toActivityContent } from '../../lib/ActivityContentModels';
+import { activityTemplateCopy } from '../../lib/activityTemplates';
+import { ActivityType } from '../../lib/PipelineModels';
 import { STAGES, GROUPS, Stage, Who, Origin } from './pipeline';
 
 /**
@@ -548,57 +552,45 @@ const TEMPLATE_CONTENT_TYPE: Record<string, string> = {
   'make-your-case': 'MAKE_YOUR_CASE',
 };
 
-const KNOWN_CONTENT_TYPES = [
-  'INCORRECT_WORKED_EXAMPLES',
-  'FAVORITE_NO',
-  'COMPARE_THE_THINKING',
-  'MULTIPLE_REPRESENTATIONS',
-  'MATH_DETECTIVE',
-  'MAKE_YOUR_CASE',
-];
-
 /**
- * The generated activity for one pick, rendered through the real component the
- * app uses rather than a preview-only imitation — if it renders here it renders
- * there.
+ * One generated activity, rendered through the same views the app's activity
+ * pages use (Before class, Facilitate activity, Closing discussion), so what
+ * shows here is what teachers will see. A second implementation would drift,
+ * and not drifting is the point of this page.
  *
- * The run is read through loose `Rec` types on purpose, so the cast into
- * `IActivityContent` happens here and only after `type` is checked against the
- * known set. An unrecognised type means the generator produced something the UI
- * has no case for, which is worth saying out loud rather than rendering blank.
+ * `content` is the Wave 2 shape (src/lib/ActivityContentModels.ts). Runs from
+ * before it carry `phases` instead; those say so rather than rendering blank.
+ * Each phase is collapsible so a run can be read activity by activity.
  */
-/**
- * One generated activity, all four phases.
- *
- * Takes the whole `phases` object rather than just `phases.activity`, which is what
- * it used to receive: the before-class checklist, the facilitation steps, the closing
- * questions and the group cards were all generated and none of them reached this
- * page, so an activity read as a quarter of itself and generation looked gappy when
- * it was not.
- *
- * Renders through the same components ActivityDetail uses, so what shows here is what
- * the app shows — a second implementation would drift, and not drifting is the whole
- * point of this page. The order differs from the app and the PDF on purpose: those
- * run before-class first, and here the activity body leads because it is the thing
- * under review.
- *
- * Every phase is gated on presence. Runs before v20 have `beforeClass` and the rest
- * as null, and those runs still need to be readable.
- */
-function GeneratedActivity({ phases, templateId, time }: { phases: Rec | null; templateId: string; time: string }) {
-  const activity = asRec(phases?.activity ?? null);
-  const type = asStr(activity?.type ?? null);
-  const known = activity != null && KNOWN_CONTENT_TYPES.includes(type);
+function GeneratedActivity({
+  move,
+  templateId,
+  misconceptionTitle,
+}: {
+  move: Rec | null;
+  templateId: string;
+  misconceptionTitle: string;
+}) {
+  const { t } = useTranslation();
+  const screenSize = useScreenSize();
+  const content: IActivityContent | null = move ? toActivityContent(move.content) : null;
+  const activityType = content?.facilitate.type ?? null;
+  const copy = activityType ? activityTemplateCopy(activityType as ActivityType, t) : null;
+  const purposes = Array.isArray(move?.questionPurposes) ? (move?.questionPurposes as unknown[]).map(String) : [];
+  const review = move ? asRec(move.discussionReview ?? null) : null;
+  const issues = review ? asArray(review.issues) : [];
 
-  const beforeClass = asRec(phases?.beforeClass ?? null);
-  const facilitation = asRec(phases?.facilitation ?? null);
-  const discussion = asRec(phases?.discussion ?? null);
-  const steps = (rec: Rec | null, key: string) => {
-    const rows = rec ? asArray(rec[key]) : [];
-    return rows.length ? (rows as unknown as IPhaseStep[]) : null;
-  };
-  const facilitationSteps = steps(facilitation, 'steps');
-  const discussionQuestions = steps(discussion, 'questions');
+  const phase = (label: string, body: React.ReactNode) => (
+    <details className="p2-activity-phase">
+      <summary className="p2-phase-head">
+        <span className="p2-chevron" aria-hidden="true">
+          ▸
+        </span>
+        <span className="p2-block-label">{label}</span>
+      </summary>
+      <div className="p2-activity-body">{body}</div>
+    </details>
+  );
 
   return (
     <details className="p2-activity-row">
@@ -607,90 +599,56 @@ function GeneratedActivity({ phases, templateId, time }: { phases: Rec | null; t
           ▸
         </span>
         <span className="p2-block-label">Activity</span>
-        <span className="p2-activity-title">
-          {asStr(activity?.title ?? null) === '' ? (
-            '(untitled)'
-          ) : (
-            <MathText text={asStr(activity?.title ?? null)} inline />
-          )}
-        </span>
+        <span className="p2-activity-title">{copy ? `${copy.name} — ${copy.subtitle}` : '(no content)'}</span>
         <span className="p2-pick-id">{templateId}</span>
-        {type !== '' && <span className="p2-mono p2-activity-type">{type}</span>}
-        {time !== '' && <span className="p2-meta">{time}</span>}
+        {move && asStr(move.time) !== '' && <span className="p2-meta">{asStr(move.time)}</span>}
       </summary>
 
-      {/* Phases in the order a teacher meets them, matching ActivityDetail and the
-          PDF. The casts are this page's usual ones: it reads an arbitrary archived
-          run as Rec, and the components take the typed shapes. */}
-      {beforeClass && (
-        <details className="p2-activity-phase">
-          <summary className="p2-phase-head">
-            <span className="p2-chevron" aria-hidden="true">
-              ▸
-            </span>
-            <span className="p2-block-label">Before class</span>
-          </summary>
-          <div className="p2-activity-body">
-            <BeforeClassPhase
-              beforeClass={beforeClass as unknown as IActivityPhases['beforeClass']}
-            />
-          </div>
-        </details>
-      )}
-
-      <details className="p2-activity-phase">
-        <summary className="p2-phase-head">
-          <span className="p2-chevron" aria-hidden="true">
-            ▸
+      {!content || !copy ? (
+        <p className="p2-text">
+          <span className="p2-nofit">
+            {move == null
+              ? 'No activity was generated for this template.'
+              : 'This run predates the Wave 2 content shape, so the app cannot render it.'}
           </span>
-          <span className="p2-block-label">Activity</span>
-          {!known && <span className="p2-nofit">not renderable</span>}
-        </summary>
-        {known ? (
-          /* ActivityPhase brings its own teacher/student toggle for the types that
-             support one, so this wrapper adds no controls of its own. */
-          <div className="p2-activity-body">
-            <ActivityPhase content={activity as unknown as IActivityContent} />
-          </div>
-        ) : (
+        </p>
+      ) : (
+        <>
           <p className="p2-text">
-            <span className="p2-nofit">
-              {activity == null
-                ? 'No activity was generated for this template.'
-                : `Unrecognised activity type ${type === '' ? '(missing)' : `"${type}"`} — nothing in the app renders this.`}
+            <MathText text={content.whyThisActivity} />
+          </p>
+          {phase('Before class', <BeforeClassView content={content} />)}
+          {phase(
+            'Facilitate activity',
+            <FacilitateView
+              content={content}
+              template={copy}
+              misconceptionTitle={misconceptionTitle}
+              screenSize={screenSize}
+            />,
+          )}
+          {phase('Closing discussion', <DiscussionView content={content} screenSize={screenSize} />)}
+          <p className="p2-text">
+            <span className="p2-meta">
+              Question purposes: {purposes.length ? purposes.join(' · ') : 'not recorded'}
+            </span>
+            {' · '}
+            <span className={issues.length ? 'p2-nofit' : 'p2-meta'}>
+              {review == null
+                ? 'accuracy review: not recorded'
+                : `accuracy review: ${issues.length ? `${issues.length} issue(s) fixed` : 'no issues'}`}
             </span>
           </p>
-        )}
-      </details>
-
-      {facilitationSteps && (
-        <details className="p2-activity-phase">
-          <summary className="p2-phase-head">
-            <span className="p2-chevron" aria-hidden="true">
-              ▸
-            </span>
-            <span className="p2-block-label">Facilitation</span>
-          </summary>
-          <div className="p2-activity-body">
-            <StepListPhase title={asStr(facilitation?.title ?? null)} steps={facilitationSteps} />
-          </div>
-        </details>
-      )}
-
-      {/* `asColumns` is deliberately not passed: three questions across read fine at
-          the app's content width and are cramped in this page's column. */}
-      {discussionQuestions && (
-        <details className="p2-activity-phase">
-          <summary className="p2-phase-head">
-            <span className="p2-chevron" aria-hidden="true">
-              ▸
-            </span>
-            <span className="p2-block-label">Discussion</span>
-          </summary>
-          <div className="p2-activity-body">
-            <StepListPhase title={asStr(discussion?.title ?? null)} steps={discussionQuestions} />
-          </div>
-        </details>
+          {issues.length > 0 && (
+            <ul className="p2-text">
+              {issues.map((issue) => (
+                <li key={`${asStr(issue.component)}-${asStr(issue.problem).slice(0, 24)}`}>
+                  <strong>{asStr(issue.component)}</strong>: <MathText text={asStr(issue.problem)} inline />
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
       )}
     </details>
   );
@@ -795,19 +753,17 @@ function MisconceptionCard({
         {asArray(asRec(item.selectedTemplates)?.picks ?? null).map((pick) => {
           const templateId = asStr(pick.templateId);
           const want = TEMPLATE_CONTENT_TYPE[templateId];
-          const activityOf = (mo: Rec): Rec | null => {
-            const phases = asRec(mo.phases);
-            return phases ? asRec(phases.activity ?? null) : null;
-          };
-          const hit = want
-            ? asArray(item.moveOptions).find((mo) => asStr(activityOf(mo)?.type ?? null) === want)
-            : undefined;
+          const moves = asArray(item.moveOptions);
+          // By template id first; older runs only carry the content type.
+          const hit =
+            moves.find((mo) => asStr(mo.templateId) === templateId) ??
+            (want ? moves.find((mo) => asStr(mo.activityType) === want) : undefined);
           return (
             <GeneratedActivity
               key={templateId}
               templateId={templateId}
-              phases={hit ? asRec(hit.phases) : null}
-              time={hit ? asStr(hit.time) : ''}
+              move={hit ?? null}
+              misconceptionTitle={asStr(item.title)}
             />
           );
         })}

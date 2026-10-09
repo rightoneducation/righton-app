@@ -1,0 +1,162 @@
+{
+  "savedAt": "2026-10-09T03:25:06.046Z",
+  "source": "seed/eval/replays/2026-10-09-baseline",
+  "rates": {
+    "contract": {
+      "COMPARE_THE_THINKING": {
+        "pass": 3,
+        "total": 3
+      },
+      "MAKE_YOUR_CASE": {
+        "pass": 3,
+        "total": 3
+      },
+      "MATH_DETECTIVE": {
+        "pass": 3,
+        "total": 3
+      },
+      "FAVORITE_NO": {
+        "pass": 3,
+        "total": 3
+      },
+      "INCORRECT_WORKED_EXAMPLES": {
+        "pass": 3,
+        "total": 3
+      }
+    },
+    "no over-escaped LaTeX": {
+      "COMPARE_THE_THINKING": {
+        "pass": 3,
+        "total": 3
+      },
+      "MAKE_YOUR_CASE": {
+        "pass": 3,
+        "total": 3
+      },
+      "MATH_DETECTIVE": {
+        "pass": 3,
+        "total": 3
+      },
+      "FAVORITE_NO": {
+        "pass": 3,
+        "total": 3
+      },
+      "INCORRECT_WORKED_EXAMPLES": {
+        "pass": 3,
+        "total": 3
+      }
+    },
+    "examples.count 1-3": {
+      "MATH_DETECTIVE": {
+        "pass": 3,
+        "total": 3
+      },
+      "FAVORITE_NO": {
+        "pass": 3,
+        "total": 3
+      },
+      "INCORRECT_WORKED_EXAMPLES": {
+        "pass": 3,
+        "total": 3
+      }
+    },
+    "problem is math only": {
+      "MATH_DETECTIVE": {
+        "pass": 3,
+        "total": 3
+      },
+      "FAVORITE_NO": {
+        "pass": 3,
+        "total": 3
+      },
+      "INCORRECT_WORKED_EXAMPLES": {
+        "pass": 3,
+        "total": 3
+      }
+    },
+    "prompt contains the math": {
+      "MATH_DETECTIVE": {
+        "pass": 3,
+        "total": 3
+      },
+      "FAVORITE_NO": {
+        "pass": 3,
+        "total": 3
+      },
+      "INCORRECT_WORKED_EXAMPLES": {
+        "pass": 3,
+        "total": 3
+      }
+    },
+    "prompt states math once": {
+      "MATH_DETECTIVE": {
+        "pass": 3,
+        "total": 3
+      },
+      "FAVORITE_NO": {
+        "pass": 3,
+        "total": 3
+      },
+      "INCORRECT_WORKED_EXAMPLES": {
+        "pass": 3,
+        "total": 3
+      }
+    },
+    "prompt has no label": {
+      "MATH_DETECTIVE": {
+        "pass": 3,
+        "total": 3
+      },
+      "FAVORITE_NO": {
+        "pass": 3,
+        "total": 3
+      },
+      "INCORRECT_WORKED_EXAMPLES": {
+        "pass": 3,
+        "total": 3
+      }
+    },
+    "prompt has no student work": {
+      "MATH_DETECTIVE": {
+        "pass": 3,
+        "total": 3
+      },
+      "FAVORITE_NO": {
+        "pass": 3,
+        "total": 3
+      },
+      "INCORRECT_WORKED_EXAMPLES": {
+        "pass": 3,
+        "total": 3
+      }
+    },
+    "prompt does not name the answer": {
+      "MATH_DETECTIVE": {
+        "pass": 3,
+        "total": 3
+      },
+      "FAVORITE_NO": {
+        "pass": 3,
+        "total": 3
+      },
+      "INCORRECT_WORKED_EXAMPLES": {
+        "pass": 3,
+        "total": 3
+      }
+    },
+    "examples use different problems": {
+      "MATH_DETECTIVE": {
+        "pass": 3,
+        "total": 3
+      },
+      "FAVORITE_NO": {
+        "pass": 3,
+        "total": 3
+      },
+      "INCORRECT_WORKED_EXAMPLES": {
+        "pass": 3,
+        "total": 3
+      }
+    }
+  }
+}

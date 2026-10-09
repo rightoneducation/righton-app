@@ -10,41 +10,38 @@ const MATH_MODEL   = lvo.mathModel   ?? 'o3-mini';
 
 // ── Activity shape ────────────────────────────────────────────────────────────
 
-/**
- * Where each layout keeps the one problem students are put in front of.
- *
- * Byte-identical to PROBLEM_FIELD in microcoachv2NextStepOption/src/util/
- * activityContent.mjs — each Lambda bundles its own src, so shared tables are
- * duplicated the same way loadsecrets.mjs is. Change them together.
- *
- * INCORRECT_WORKED_EXAMPLES is absent on purpose: its problem lives per example in
- * `examples[].prompt` and is reviewed alongside the work attempting it.
+/*
+ * Activities carry the Wave 2 content (src/lib/ActivityContentModels.ts,
+ * schemaVersion 2) in `activity.content`; the template's artifact is
+ * `content.facilitate`. Mirrors activityProblems() in microcoachv2NextStepOption/
+ * src/util/activityContent.mjs — each Lambda bundles its own src. Change together.
  */
-const PROBLEM_FIELD = {
-  FAVORITE_NO: ['boardPrompt', 'problem'],
-  COMPARE_THE_THINKING: ['problem'],
-  MULTIPLE_REPRESENTATIONS: ['studentTask'],
-  MATH_DETECTIVE: ['problem'],
-  MAKE_YOUR_CASE: ['claim', 'text'],
-};
 
-function readActivityProblem(content) {
-  const path = PROBLEM_FIELD[content?.type];
-  if (!path) return null;
-  const value = path.reduce((node, key) => node?.[key], content);
-  return typeof value === 'string' && value.trim() ? value : null;
+/**
+ * The problem statements students are put in front of, outside Spot the Slip
+ * (whose problems are checked alongside their worked steps). Make Your Case is
+ * absent on purpose: its claim is meant to be false or conditional.
+ */
+function activityProblems(facilitate) {
+  switch (facilitate?.type) {
+    case 'FAVORITE_NO':
+    case 'MATH_DETECTIVE':
+      return (facilitate.examples ?? []).map((ex) => ex.prompt).filter(Boolean);
+    case 'COMPARE_THE_THINKING':
+      return facilitate.problem ? [facilitate.problem] : [];
+    default:
+      return [];
+  }
 }
 
-/** `{order, title, body}` rows — the shape beforeClass, facilitation and discussion share. */
-const formatSteps = (rows) => (rows ?? [])
-  .map((s, i) => `  ${s?.order ?? i + 1}. ${s?.title ?? ''}${s?.body ? ` — ${s.body}` : ''}`)
-  .join('\n');
+const bulletList = (rows) => (rows ?? []).map((row) => `  - ${row}`).join('\n');
 
 // ── Prompt builders ───────────────────────────────────────────────────────────
 
 export function buildDesignPrompt(misconception, activity) {
-  const phases = activity.phases ?? {};
-  const content = phases.activity ?? {};
+  const content = activity.content ?? {};
+  const facilitate = content.facilitate ?? {};
+  const discussion = content.discussion ?? {};
 
   const principlesText = DESIGN_PRINCIPLES
     .map((p, i) => `${i + 1}. **${p.split(':')[0]}**: ${p.split(':').slice(1).join(':').trim()}`)
@@ -74,18 +71,21 @@ ${evidenceText || '  (none)'}
 
 Title: ${activity.title}
 Routine: ${activity.routine?.name ?? '(none)'} — ${activity.routine?.subtitle ?? ''}
-Activity type: ${content.type ?? '(none)'}
-Activity title: ${content.title ?? ''}
-${content.subtitle ? `Activity subtitle: ${content.subtitle}` : ''}
+Activity type: ${facilitate.type ?? '(none)'}
+Why this activity: ${content.whyThisActivity ?? '(none)'}
 
 Before class (teacher prep):
-${formatSteps(phases.beforeClass?.checklist) || '  (none)'}
+${bulletList(content.beforeClass?.steps) || '  (none)'}
 
-Facilitation steps:
-${formatSteps(phases.facilitation?.steps) || '  (none)'}
+How to run it:
+${(content.howToRun ?? []).map((s, i) => `  ${i + 1}. ${s.title} — ${s.body}`).join('\n') || '  (none)'}
+
+The artifact students analyze (teacher view):
+${JSON.stringify(facilitate, null, 2)}
 
 Closing discussion questions:
-${formatSteps(phases.discussion?.questions) || '  (none)'}
+${bulletList((discussion.questions ?? []).map((q) => q.question)) || '  (none)'}
+Mathematical takeaway: ${discussion.takeaway ?? '(none)'}
 
 ---
 
@@ -121,13 +121,13 @@ const WORKED_EXAMPLE_CHECKS = [
 ];
 
 export function workedExamplesOf(activity) {
-  const content = activity.phases?.activity;
-  if (content?.type !== 'INCORRECT_WORKED_EXAMPLES') return null;
-  return Array.isArray(content.examples) && content.examples.length ? content.examples : null;
+  const facilitate = activity.content?.facilitate;
+  if (facilitate?.type !== 'INCORRECT_WORKED_EXAMPLES') return null;
+  return Array.isArray(facilitate.examples) && facilitate.examples.length ? facilitate.examples : null;
 }
 
 export function buildMathPrompt(activity) {
-  const content = activity.phases?.activity ?? {};
+  const facilitate = activity.content?.facilitate ?? {};
   const examples = workedExamplesOf(activity);
 
   // Wave 2 annotates the intentional error structurally, on the step that carries it,
@@ -139,10 +139,10 @@ export function buildMathPrompt(activity) {
         return `      ${st?.step ?? j + 1}. ${st?.text ?? ''}${mark}`;
       })
       .join('\n');
-    return `  Example ${i + 1}${e.label ? ` (${e.label})` : ''}: ${e.prompt ?? ''}\n    Steps:\n${steps}\n    Arrives at: ${e.finalOutcome ?? ''}`;
+    return `  Example ${i + 1}: ${e.prompt ?? ''}\n    Steps:\n${steps}\n    Arrives at: ${e.finalOutcome ?? ''}`;
   }).join('\n\n');
 
-  const problem = readActivityProblem(content);
+  const problems = activityProblems(facilitate);
 
   const workedExampleSection = examples
     ? `
@@ -172,8 +172,9 @@ ${iweText}
 ## Activity
 
 Title: ${activity.title}
-Activity type: ${content.type ?? '(none)'}
-Central problem: ${problem ?? '(this layout has no single central problem)'}
+Activity type: ${facilitate.type ?? '(none)'}
+Problems students work on:
+${problems.length ? problems.map((p) => `  - ${p}`).join('\n') : '  (none outside the worked examples)'}
 ${workedExampleSection}
 ---
 
@@ -184,7 +185,7 @@ Return a JSON object with exactly these keys:
 }
 
 Rules:
-- problem_math_correct: Is the central problem mathematically correct? If there is no central problem, return true and say so in the details.${workedExampleRules}
+- problem_math_correct: Is every listed problem mathematically correct and well-posed? If none are listed, return true and say so in the details.${workedExampleRules}
 `.trim();
 }
 
