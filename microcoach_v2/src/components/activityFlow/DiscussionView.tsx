@@ -99,15 +99,18 @@ interface DiscussionViewProps extends ScreenSizeProps {
  */
 export default function DiscussionView({ content, screenSize }: DiscussionViewProps) {
   const { t } = useTranslation();
+  // Generated ids: /preview renders many of these on one page.
+  const discussionTitleId = React.useId();
+  const takeawayTitleId = React.useId();
   const { questions, watchFors, takeaway } = content.discussion;
   const isLarge = screenSize === ScreenSize.LARGE;
 
   return (
     <PhaseCards>
-      <FlowCard component="section" aria-labelledby="discussion-title">
+      <FlowCard component="section" aria-labelledby={discussionTitleId}>
         <FlowCardHeader>
           <FlowCardTitle>
-            <Typography id="discussion-title" variant="headingLg" component="h2">
+            <Typography id={discussionTitleId} variant="headingLg" component="h2">
               {t('activityFlow.discussion.title')}
             </Typography>
             <Typography variant="rubikBody">
@@ -150,8 +153,8 @@ export default function DiscussionView({ content, screenSize }: DiscussionViewPr
         </WatchForRow>
       )}
 
-      <TakeawayBand component="section" aria-labelledby="takeaway-title">
-        <Typography id="takeaway-title" variant="headingLg" component="h2">
+      <TakeawayBand component="section" aria-labelledby={takeawayTitleId}>
+        <Typography id={takeawayTitleId} variant="headingLg" component="h2">
           {t('activityFlow.discussion.takeaway')}
         </Typography>
         <MathTypography variant="rubikBody" text={takeaway} />

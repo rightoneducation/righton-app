@@ -2,18 +2,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import IosShareIcon from '@mui/icons-material/IosShare';
 import MathTypography from '../MathTypography';
 import { GroupingOptions } from '../GroupingChips';
-import {
-  IActivityContent,
-  ISpotTheSlipFacilitate,
-} from '../../lib/ActivityContentModels';
-import { IActivityTemplateCopy } from '../../lib/activityTemplates';
+import { ISpotTheSlipFacilitate } from '../../lib/ActivityContentModels';
 import formatStepAnnotation from '../../lib/activityMarks';
-import exportActivityPdf, { PdfAudience } from '../../lib/pdf/exportActivityPdf';
 import { DurationChip } from '../../lib/styledcomponents/ChooseActivityStyledComponents';
 import {
   StepChip,
@@ -22,33 +14,31 @@ import {
 import {
   ExampleDetail,
   ExampleSteps,
-  ExampleTile,
-  ExampleTiles,
-  ExamplesToolbar,
-  ExportButton,
   FlowCard,
   FlowCardHeader,
   FlowCardTitle,
-  PagerButton,
-  PagerRow,
   PhaseCards,
   RunBadge,
   RunGrid,
   RunStepItem,
   RunStepText,
   RunStepTitleRow,
-  ScreenSizeProps,
   SlipChip,
-  ToggleGroup,
-  ViewPillOption,
-  ViewPillToggle,
 } from '../../lib/styledcomponents/ActivityFlowStyledComponents';
-
-interface PanelProps extends ScreenSizeProps {
-  content: IActivityContent;
-  template: IActivityTemplateCopy;
-  misconceptionTitle: string;
-}
+import {
+  ArtifactHeader,
+  ArtifactPanelProps,
+  ExampleOfHeading,
+  ExamplePager,
+  ExamplePicker,
+  useArtifactView,
+} from './ArtifactParts';
+import {
+  CompareThinkingPanel,
+  FavoriteNoPanel,
+  MakeYourCasePanel,
+  MathDetectivePanel,
+} from './FacilitatePanels';
 
 /**
  * Spot the Slip's worked examples (InflowScreens/Facilitate_Teacher, _Student).
@@ -59,111 +49,46 @@ interface PanelProps extends ScreenSizeProps {
  */
 function SpotTheSlipPanel({
   facilitate,
-  content,
-  template,
-  misconceptionTitle,
-  screenSize,
-}: PanelProps & { facilitate: ISpotTheSlipFacilitate }) {
+  ...props
+}: ArtifactPanelProps & { facilitate: ISpotTheSlipFacilitate }) {
   const { t } = useTranslation();
-  const [audience, setAudience] = React.useState<PdfAudience>('teacher');
+  const titleId = React.useId();
+  const view = useArtifactView(props);
+  const { isTeacher } = view;
   const [exampleIndex, setExampleIndex] = React.useState(0);
-  const [isExporting, setIsExporting] = React.useState(false);
-
-  const isTeacher = audience === 'teacher';
   const { examples } = facilitate;
   const example = examples[exampleIndex];
 
-  const handleExport = async () => {
-    setIsExporting(true);
-    try {
-      await exportActivityPdf({
-        audience,
-        content,
-        facilitate,
-        template,
-        misconceptionTitle,
-        t,
-      });
-    } finally {
-      setIsExporting(false);
-    }
-  };
-
   return (
-    <FlowCard component="section" aria-labelledby="examples-title">
-      <Typography id="examples-title" variant="headingMd" component="h2">
-        {template.artifactTitle}
-      </Typography>
+    <FlowCard component="section" aria-labelledby={titleId}>
+      <ArtifactHeader titleId={titleId} title={props.template.artifactTitle} view={view} />
 
-      <ExamplesToolbar>
-        <ToggleGroup>
-          <ViewPillToggle role="group" aria-label={t('activityFlow.facilitate.viewLabel')}>
-            <ViewPillOption
-              isActive={isTeacher}
-              aria-pressed={isTeacher}
-              onClick={() => setAudience('teacher')}
-            >
-              {t('activityFlow.facilitate.teacherView')}
-            </ViewPillOption>
-            <ViewPillOption
-              isActive={!isTeacher}
-              aria-pressed={!isTeacher}
-              onClick={() => setAudience('student')}
-            >
-              {t('activityFlow.facilitate.studentView')}
-            </ViewPillOption>
-          </ViewPillToggle>
-          <Typography variant="microLabel">
-            {t('activityFlow.facilitate.viewNote')}
-          </Typography>
-        </ToggleGroup>
-        <ExportButton
-          disableElevation
-          disabled={isExporting}
-          endIcon={<IosShareIcon />}
-          onClick={handleExport}
-        >
-          {(() => {
-            if (isExporting) return t('activityFlow.facilitate.exporting');
-            return isTeacher
-              ? t('activityFlow.facilitate.exportTeacher')
-              : t('activityFlow.facilitate.exportStudent');
-          })()}
-        </ExportButton>
-      </ExamplesToolbar>
-
-      <ExampleTiles screenSize={screenSize}>
-        {examples.map((item, index) => (
-          <ExampleTile
-            key={item.prompt}
-            isSelected={index === exampleIndex}
-            aria-pressed={index === exampleIndex}
-            onClick={() => setExampleIndex(index)}
-          >
+      <ExamplePicker
+        count={examples.length}
+        index={exampleIndex}
+        onSelect={setExampleIndex}
+        screenSize={props.screenSize}
+        renderTile={(index) => (
+          <>
             <Typography variant="headingMdBold" component="span">
               {t('activityFlow.facilitate.exampleLabel', { number: index + 1 })}
             </Typography>
-            <MathTypography variant="rubikSubBold" component="span" text={item.problem} />
+            <MathTypography variant="rubikSubBold" component="span" text={examples[index].problem} />
             {isTeacher && (
               <SlipChip>
                 <span>
                   <strong>{t('activityFlow.facilitate.slip')}</strong>
-                  {`: ${item.slip}`}
+                  {`: ${examples[index].slip}`}
                 </span>
               </SlipChip>
             )}
-          </ExampleTile>
-        ))}
-      </ExampleTiles>
+          </>
+        )}
+      />
 
       {example && (
         <ExampleDetail aria-live="polite">
-          <Typography variant="headingMdBold" component="h3">
-            {t('activityFlow.facilitate.exampleLabel', { number: exampleIndex + 1 })}
-            <Typography component="span" variant="headingMd" sx={{ fontWeight: 400 }}>
-              {` ${t('activityFlow.facilitate.ofTotal', { total: examples.length })}`}
-            </Typography>
-          </Typography>
+          <ExampleOfHeading index={exampleIndex} count={examples.length} />
           <MathTypography variant="rubikSubBold" text={example.prompt} />
           <ExampleSteps>
             {example.steps.map((step) => {
@@ -202,49 +127,48 @@ function SpotTheSlipPanel({
         </ExampleDetail>
       )}
 
-      {examples.length > 1 && (
-        <PagerRow>
-          <PagerButton
-            startIcon={<ArrowBackIcon />}
-            disabled={exampleIndex === 0}
-            onClick={() => setExampleIndex((index) => Math.max(index - 1, 0))}
-          >
-            {t('activityFlow.facilitate.prev')}
-          </PagerButton>
-          <PagerButton
-            endIcon={<ArrowForwardIcon />}
-            disabled={exampleIndex === examples.length - 1}
-            onClick={() =>
-              setExampleIndex((index) => Math.min(index + 1, examples.length - 1))
-            }
-          >
-            {t('activityFlow.facilitate.next')}
-          </PagerButton>
-        </PagerRow>
-      )}
+      <ExamplePager index={exampleIndex} count={examples.length} onChange={setExampleIndex} />
     </FlowCard>
   );
 }
 
-/**
- * Facilitate activity: how to run it, then the template's own artifact. Only
- * Spot the Slip's is built so far; the other templates' panels follow.
- */
+/** The template's own artifact, by content type. */
+function ArtifactPanel(props: ArtifactPanelProps) {
+  const { content } = props;
+  const { facilitate } = content;
+  switch (facilitate.type) {
+    case 'INCORRECT_WORKED_EXAMPLES':
+      return <SpotTheSlipPanel facilitate={facilitate} {...props} />;
+    case 'COMPARE_THE_THINKING':
+      return <CompareThinkingPanel facilitate={facilitate} {...props} />;
+    case 'MAKE_YOUR_CASE':
+      return <MakeYourCasePanel facilitate={facilitate} {...props} />;
+    case 'MATH_DETECTIVE':
+      return <MathDetectivePanel facilitate={facilitate} {...props} />;
+    case 'FAVORITE_NO':
+      return <FavoriteNoPanel facilitate={facilitate} {...props} />;
+    default:
+      return null;
+  }
+}
+
+/** Facilitate activity: how to run it, then the template's own artifact. */
 export default function FacilitateView({
   content,
   template,
   misconceptionTitle,
   screenSize,
-}: PanelProps) {
+}: ArtifactPanelProps) {
   const { t } = useTranslation();
-  const { facilitate, howToRun } = content;
+  const { howToRun } = content;
+  const runTitleId = React.useId();
 
   return (
     <PhaseCards>
-      <FlowCard component="section" aria-labelledby="how-to-run-title">
+      <FlowCard component="section" aria-labelledby={runTitleId}>
         <FlowCardHeader>
           <FlowCardTitle>
-            <Typography id="how-to-run-title" variant="headingLg" component="h2">
+            <Typography id={runTitleId} variant="headingLg" component="h2">
               {t('activityFlow.facilitate.title')}
             </Typography>
             <Typography variant="rubikBody">
@@ -269,22 +193,12 @@ export default function FacilitateView({
         </RunGrid>
       </FlowCard>
 
-      {facilitate.type === 'INCORRECT_WORKED_EXAMPLES' ? (
-        <SpotTheSlipPanel
-          facilitate={facilitate}
-          content={content}
-          template={template}
-          misconceptionTitle={misconceptionTitle}
-          screenSize={screenSize}
-        />
-      ) : (
-        <FlowCard component="section" aria-labelledby="examples-title">
-          <Typography id="examples-title" variant="headingMd" component="h2">
-            {template.artifactTitle}
-          </Typography>
-          <Typography variant="rubikBody">{t('activityFlow.materialsComing')}</Typography>
-        </FlowCard>
-      )}
+      <ArtifactPanel
+        content={content}
+        template={template}
+        misconceptionTitle={misconceptionTitle}
+        screenSize={screenSize}
+      />
     </PhaseCards>
   );
 }

@@ -393,7 +393,48 @@
       "slip": "Slip",
       "final": "Final:",
       "prev": "Prev",
-      "next": "Next"
+      "next": "Next",
+      "problem": "Problem",
+      "strategyVerdict": {
+        "CORRECT": "Correct approach",
+        "INCORRECT": "Wrong approach",
+        "STRONGER": "More Sophisticated Approach"
+      },
+      "claim": "Claim",
+      "claimOption": {
+        "TRUE": "A. True",
+        "FALSE": "B. False",
+        "CONDITIONAL": "C. It depends"
+      },
+      "voteOption": {
+        "YES": "A. Yes",
+        "NO": "B. No",
+        "UNDECIDED": "C. Undecided"
+      },
+      "why": "Why?",
+      "examplesToBringIn": "Examples to bring in",
+      "exampleAnswer": "Answer: {{answer}}",
+      "argumentsTitle": "Arguments to anticipate",
+      "argumentStance": {
+        "SUPPORT": "Supports the claim",
+        "CHALLENGE": "Challenges the claim"
+      },
+      "stepsToFollow": "Steps to follow",
+      "examplesToTry": "Examples to try",
+      "stage": {
+        "INVESTIGATE": "Investigate — where did the reasoning break?",
+        "SOLVE": "Solve — rewrite the faulty step",
+        "GENERALIZE": "Generalize — write the rule that prevents this"
+      },
+      "askStudents": "Ask students",
+      "stageAnswer": {
+        "INVESTIGATE": "Expected answer",
+        "SOLVE": "Corrected step",
+        "GENERALIZE": "Target rule (write on board)"
+      },
+      "anonymousResponse": "Anonymous student response",
+      "studentWork": "Student’s work",
+      "whatToNotice": "What to notice"
     },
     "discussion": {
       "title": "Discussion questions",
@@ -426,9 +467,10 @@
       "teacherLabel": "Facilitate activity",
       "studentLabel": "Student Activity Handout",
       "misconception": "Misconception:",
-      "teacherExamples": "Incorrect Worked examples - Examples to show the class"
+      "teacherExamples": "Incorrect Worked examples - Examples to show the class",
+      "markCorrect": "(correct)",
+      "markIncorrect": "(incorrect)"
     },
-    "materialsComing": "This activity's materials will appear here soon.",
     "noContent": "This activity's content isn't available yet. Choose another activity or check back later.",
     "or": "or"
   },

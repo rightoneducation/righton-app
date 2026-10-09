@@ -393,7 +393,48 @@
       "slip": "Desliz",
       "final": "Final:",
       "prev": "Anterior",
-      "next": "Siguiente"
+      "next": "Siguiente",
+      "problem": "Problema",
+      "strategyVerdict": {
+        "CORRECT": "Enfoque correcto",
+        "INCORRECT": "Enfoque incorrecto",
+        "STRONGER": "Enfoque más sofisticado"
+      },
+      "claim": "Afirmación",
+      "claimOption": {
+        "TRUE": "A. Verdadero",
+        "FALSE": "B. Falso",
+        "CONDITIONAL": "C. Depende"
+      },
+      "voteOption": {
+        "YES": "A. Sí",
+        "NO": "B. No",
+        "UNDECIDED": "C. No estoy seguro"
+      },
+      "why": "¿Por qué?",
+      "examplesToBringIn": "Ejemplos para presentar",
+      "exampleAnswer": "Respuesta: {{answer}}",
+      "argumentsTitle": "Argumentos que pueden surgir",
+      "argumentStance": {
+        "SUPPORT": "Apoya la afirmación",
+        "CHALLENGE": "Cuestiona la afirmación"
+      },
+      "stepsToFollow": "Pasos a seguir",
+      "examplesToTry": "Ejemplos para probar",
+      "stage": {
+        "INVESTIGATE": "Investigar: ¿dónde falló el razonamiento?",
+        "SOLVE": "Resolver: reescribe el paso equivocado",
+        "GENERALIZE": "Generalizar: escribe la regla que lo evita"
+      },
+      "askStudents": "Pregunta a tus estudiantes",
+      "stageAnswer": {
+        "INVESTIGATE": "Respuesta esperada",
+        "SOLVE": "Paso corregido",
+        "GENERALIZE": "Regla objetivo (escríbela en la pizarra)"
+      },
+      "anonymousResponse": "Respuesta anónima de un estudiante",
+      "studentWork": "Trabajo del estudiante",
+      "whatToNotice": "Qué observar"
     },
     "discussion": {
       "title": "Preguntas de discusión",
@@ -426,9 +467,10 @@
       "teacherLabel": "Facilitar la actividad",
       "studentLabel": "Hoja de actividad para estudiantes",
       "misconception": "Concepto erróneo:",
-      "teacherExamples": "Ejemplos resueltos incorrectos - Ejemplos para mostrar a la clase"
+      "teacherExamples": "Ejemplos resueltos incorrectos - Ejemplos para mostrar a la clase",
+      "markCorrect": "(correcto)",
+      "markIncorrect": "(incorrecto)"
     },
-    "materialsComing": "Los materiales de esta actividad aparecerán aquí pronto.",
     "noContent": "El contenido de esta actividad aún no está disponible. Elige otra actividad o vuelve más tarde.",
     "or": "o"
   },

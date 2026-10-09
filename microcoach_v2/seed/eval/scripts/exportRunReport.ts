@@ -17,6 +17,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { loadFixture } from './util/importEvalFixtures';
+import { GuardFire, guardFire } from './util/exportEvalOutputs';
 
 const RUNS_ROOT = path.resolve(__dirname, '../runs');
 const RUBRIC = JSON.parse(fs.readFileSync(
@@ -348,19 +349,22 @@ function main() {
   const swapPath = path.join(runDir, 'SWAP.md');
   const swapNote = fs.existsSync(swapPath) ? fs.readFileSync(swapPath, 'utf8') : null;
 
-  // Each in-pipeline guard that fired, from the activity calls' sub-call traces.
-  const guardFires: string[] = [];
-  const callsDir = path.join(runDir, 'calls');
-  for (const f of fs.existsSync(callsDir) ? fs.readdirSync(callsDir).filter((x) => /activity/.test(x)) : []) {
-    const call = JSON.parse(fs.readFileSync(path.join(callsDir, f), 'utf8'));
-    const out = typeof call.output === 'string' ? JSON.parse(call.output) : call.output;
-    for (const sc of out?._trace?.subCalls ?? []) {
-      if (sc.label === 'answerable-fallback') guardFires.push(`answerable fallback in ${f.replace(/\.json$/, '')} ("${sc.before}")`);
-      if (sc.label === 'retry-incomplete-system') {
-        guardFires.push(`incomplete-system retry in ${f.replace(/\.json$/, '')} (${sc.fixed ? 'fixed by the retry' : 'still incomplete after the retry'})`);
+  // Each in-pipeline guard that fired: from the manifest when the run recorded
+  // it (the same list /preview shows), otherwise from the activity calls' traces.
+  const fires: GuardFire[] = Array.isArray(manifest.guardFires) ? manifest.guardFires : [];
+  if (!Array.isArray(manifest.guardFires)) {
+    const callsDir = path.join(runDir, 'calls');
+    for (const f of fs.existsSync(callsDir) ? fs.readdirSync(callsDir).filter((x) => /activity/.test(x)) : []) {
+      const call = JSON.parse(fs.readFileSync(path.join(callsDir, f), 'utf8'));
+      const out = typeof call.output === 'string' ? JSON.parse(call.output) : call.output;
+      for (const sc of out?._trace?.subCalls ?? []) {
+        if (sc.label === 'answerable-fallback' || sc.label === 'retry-incomplete-system') {
+          fires.push(guardFire(f.replace(/\.json$/, '').replace(/^\d+-/, ''), sc));
+        }
       }
     }
   }
+  const guardFires = fires.map((g) => `${g.label} in ${g.call} (${g.detail})`);
 
   const scored = output.filter((m) => Number.isInteger(m.priorityRank)).sort((a, b) => a.priorityRank - b.priorityRank);
   const retained = scored.filter((m) => m.retained !== false);

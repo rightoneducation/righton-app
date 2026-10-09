@@ -1,5 +1,5 @@
 import React from 'react';
-import { IActivityContent, ISpotTheSlipFacilitate } from '../ActivityContentModels';
+import { IActivityContent } from '../ActivityContentModels';
 import { IActivityTemplateCopy } from '../activityTemplates';
 import { Translate } from '../activityMarks';
 
@@ -7,9 +7,8 @@ export type PdfAudience = 'teacher' | 'student';
 
 interface ExportActivityPdfArgs {
   audience: PdfAudience;
+  /** The handout's artifact is `content.facilitate`, for any template. */
   content: IActivityContent;
-  /** Only Spot the Slip exports so far. */
-  facilitate: ISpotTheSlipFacilitate;
   template: IActivityTemplateCopy;
   misconceptionTitle: string;
   t: Translate;
@@ -27,7 +26,6 @@ interface ExportActivityPdfArgs {
 export default async function exportActivityPdf({
   audience,
   content,
-  facilitate,
   template,
   misconceptionTitle,
   t,
@@ -43,14 +41,13 @@ export default async function exportActivityPdf({
       audience === 'teacher' ? (
         <TeacherHandout
           content={content}
-          facilitate={facilitate}
           template={template}
           misconceptionTitle={misconceptionTitle}
           t={t}
         />
       ) : (
         <StudentHandout
-          facilitate={facilitate}
+          content={content}
           template={template}
           misconceptionTitle={misconceptionTitle}
           t={t}
