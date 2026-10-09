@@ -58,6 +58,7 @@
     "sync-prompt-config": "node scripts/sync-prompt-config.mjs",
     "seed:eval": "ts-node --project seed/tsconfig.json seed/eval/scripts/runEval.ts",
     "seed:replay": "node seed/eval/scripts/replayActivity.mjs",
+    "seed:report": "ts-node --project seed/tsconfig.json seed/eval/scripts/exportRunReport.ts",
     "seed:extract-fixture": "ts-node --project seed/tsconfig.json seed/eval/scripts/util/extractFixture.ts",
     "eval:prompt": "node seed/eval/scripts/util/print-prompt.mjs"
   },

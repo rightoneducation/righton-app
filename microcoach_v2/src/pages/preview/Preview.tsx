@@ -374,9 +374,9 @@ function ScoreStrip({ item }: { item: Rec }) {
   const rubric = asRec(item.rubric);
   if (!rubric || typeof rubric.total !== 'number' || typeof rubric.maxPossible !== 'number') return null;
   return (
-    <span className="p2-meta p2-meta-scores" title="misconception rubric total">
+    <span className="p2-meta p2-meta-scores" title="misconception rubric score">
       <span className="p2-mono p2-score-total">
-        {rubric.total}/{rubric.maxPossible}
+        {rubric.total} / {rubric.maxPossible}
       </span>
     </span>
   );
@@ -465,11 +465,11 @@ function RubricBlock({ item, tie }: { item: Rec; tie?: TieNote }) {
           );
         })}
         <Row
-          k="→ total"
+          k="→ score"
           v={
             <span>
               <span className="p2-mono p2-rubric-points p2-rubric-total">
-                {total == null || max == null ? '—' : `${total} of ${max}`}
+                {total == null || max == null ? '—' : `${total} / ${max}`}
               </span>
               {' · '}
               <span className="p2-rank-inline">#{String(item.priorityRank ?? '—')}</span>
@@ -797,7 +797,7 @@ function flowLine(manifest: Rec, misconceptionCount: number): string {
 }
 
 // Where reviewers leave feedback on what this page shows.
-const COMMENTS_DOC = 'https://docs.google.com/document/d/1d4oYPquSkR8XVKbzVMil-Ux_PiyGELHIHyTgooFv5rc/edit?usp=drive_link';
+const COMMENTS_DOC = 'https://docs.google.com/document/d/16wNqCum2RTAFdNX5J2VJgm87U06_kE1bdI9syw9J3B8/edit?usp=drive_link';
 
 function RunBar({
   runs,
