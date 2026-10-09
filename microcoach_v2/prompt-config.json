@@ -185,12 +185,9 @@
     ],
     "validator": {
       "model": "o3-mini",
-      "systemPrompt": "You are a math accuracy reviewer. Output only valid JSON.",
-      "problemReviewInstructions": "Return ONLY the problem itself, as a student would see it written on the board. If the mathematics is wrong, return the corrected problem; if it is already correct, return it unchanged, byte for byte. Do not add the answer, the diagnosis, a list of corrections, bracketed notes, teaching guidance, or any sentence describing what you changed — several of these activities ask students to find the error themselves, and including it destroys the activity. Keep the length close to the original. Return JSON: { \"problem\": \"<corrected or original problem>\" }"
+      "systemPrompt": "You are a math accuracy reviewer. Output only valid JSON."
     },
-    "durationNote": "Teachers have a 10-15 minute window for the activity and its closing discussion (Wave 2 doc, Activity Timing); 15 is the hard ceiling and the target sits below it. Prep before class is outside that window.",
-    "problemGrowthLimit": 1.5,
-    "problemGrowthLimitNote": "Ceiling on how much longer the math reviewer's corrected problem may be than the original before the result is discarded and the original kept. The reviewer once returned 2,135 characters of lesson, bracketed answers and commentary about its own edit in place of a ~520-character problem. Falls back loudly: the reason lands in the run's sub-call record."
+    "durationNote": "Teachers have a 10-15 minute window for the activity and its closing discussion (Wave 2 doc, Activity Timing); 15 is the hard ceiling and the target sits below it. Prep before class is outside that window."
   },
   "ingestPPQ": {
     "description": "microcoachIngestPPQ — extracts misconceptions from PPQ assessment text",

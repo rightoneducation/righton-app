@@ -1,6 +1,6 @@
 {
-  "savedAt": "2026-10-08T08:26:25.459Z",
-  "source": "/Users/drew/righton-app/microcoach_v2/seed/eval/replays/2026-10-08T08-23-37",
+  "savedAt": "2026-10-09T03:25:06.046Z",
+  "source": "seed/eval/replays/2026-10-09-baseline",
   "rates": {
     "contract": {
       "COMPARE_THE_THINKING": {
@@ -70,13 +70,13 @@
         "total": 3
       },
       "INCORRECT_WORKED_EXAMPLES": {
-        "pass": 2,
+        "pass": 3,
         "total": 3
       }
     },
     "prompt contains the math": {
       "MATH_DETECTIVE": {
-        "pass": 2,
+        "pass": 3,
         "total": 3
       },
       "FAVORITE_NO": {
@@ -90,7 +90,7 @@
     },
     "prompt states math once": {
       "MATH_DETECTIVE": {
-        "pass": 2,
+        "pass": 3,
         "total": 3
       },
       "FAVORITE_NO": {

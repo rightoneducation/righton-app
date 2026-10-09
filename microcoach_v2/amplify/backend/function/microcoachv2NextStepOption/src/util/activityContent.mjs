@@ -66,7 +66,7 @@ const RunStep = z.object({
  * in `prompt`, the math twice). With one job per field there is nothing to
  * move, and the stored pair is built from them by toStoredFacilitate.
  */
-const TASK_MAX = 60;
+const TASK_MAX = 80;
 // One or more $…$ spans separated only by commas or semicolons: the schema itself
 // leaves no room for words around the math (a bound, not a describe).
 const MATH_ONLY = /^\s*\$[^$]+\$(\s*[,;]\s*\$[^$]+\$)*\s*$/;
@@ -79,8 +79,8 @@ function problemFields(mode) {
     };
   }
   return {
-    task: z.string().max(TASK_MAX).describe('The instruction alone, as a short imperative or question with no trailing punctuation, e.g. "Graph the inequality", "Solve for $x$", "Is the point a solution of the system". Student-facing: never student work, a description of a response, a hint, or how to solve it.'),
-    math: z.string().regex(MATH_ONLY).describe('Only the LaTeX for the problem, with no words: the expression, equation or inequality, e.g. "$x - 2y \\geq -3$"; a system as its parts joined by a comma, e.g. "$y + x > 2$, $y \\leq 3x - 2$" (never \\begin{cases}); and when the problem asks about a point or answer choices, those after a semicolon with no label, e.g. "$y \\geq x - 5$, $y < -2x + 4$; $(1,-6)$" for the task "Is the point a solution of the system". Never words such as "point:", "and" or "options:".'),
+    task: z.string().max(TASK_MAX).describe('The instruction alone, as a short imperative or question with no trailing punctuation, e.g. "Graph the inequality", "Solve for $x$", "Find a solution of the system". Student-facing: never student work, a description of a response, a hint, or how to solve it. Never a multiple-choice stem ("Which graph…", "Which of the following…"): the student sees no answer choices, so restate the question as an open problem that needs no given value, e.g. "Find a solution of the system" or "Graph the system".'),
+    math: z.string().regex(MATH_ONLY).describe('Only the LaTeX for the problem, with no words: the expression, equation or inequality, e.g. "$x - 2y \\geq -3$"; a system as its parts joined by a comma, e.g. "$y + x > 2$, $y \\leq 3x - 2$" (never \\begin{cases}). Never a point or answer choices to pick from, and never words such as "point:", "and" or "options:".'),
   };
 }
 
@@ -179,12 +179,21 @@ export const CONTENT_TYPES = Object.keys(FACILITATE_BY_TYPE);
 export const EXAMPLE_TYPES = ['INCORRECT_WORKED_EXAMPLES', 'FAVORITE_NO', 'MATH_DETECTIVE'];
 
 /** The generated artifact in its stored shape: each example's task + math → prompt + problem. */
+// A task that asks about a specific point is unanswerable when the point never
+// made it into the math ("Decide whether the point is a solution: $…$"). The
+// prompt asks for problems that need no given value; when one slips through
+// without its point, it becomes a problem a student can still answer.
+const NAMES_A_POINT = /\b(the|this|that|a specific|the given) point\b/i;
+const HAS_A_POINT = /;\s*\$/;
+const ANSWERABLE_FALLBACK = 'Find a solution';
+
 export function toStoredFacilitate(facilitate) {
   if (!EXAMPLE_TYPES.includes(facilitate?.type)) return facilitate;
   return {
     ...facilitate,
     examples: facilitate.examples.map(({ task, math, ...rest }) => {
-      const instruction = String(task ?? '').trim().replace(/[.:?]\s*$/, '');
+      const missingPoint = NAMES_A_POINT.test(task ?? '') && !HAS_A_POINT.test(math ?? '');
+      const instruction = (missingPoint ? ANSWERABLE_FALLBACK : String(task ?? '')).trim().replace(/[.:?]\s*$/, '');
       return { problem: math, prompt: instruction ? `${instruction}: ${math}` : math, ...rest };
     }),
   };
@@ -278,34 +287,4 @@ export function activityContentSchemaFor(contentType, bounds = {}) {
       takeaway: z.string(),
     }),
   });
-}
-
-// ── Problems the math reviewer checks ─────────────────────────────────────────
-
-/**
- * The problem statements to send to the single-problem math reviewer, as
- * [path, text] pairs, so each corrected text can be written back in place.
- *
- * Spot the Slip is absent: its examples are reviewed by validateWorkedExamples,
- * problem and work together. Make Your Case is absent on purpose: its claim is
- * meant to be false or only conditionally true, and a reviewer told to "correct
- * errors" would quietly repair the very thing students are asked to argue about.
- */
-export function activityProblems(facilitate) {
-  switch (facilitate?.type) {
-    case 'FAVORITE_NO':
-    case 'MATH_DETECTIVE':
-      // The generated `math`, before toStoredFacilitate builds prompt and problem
-      // from it, so a corrected problem reaches both.
-      return (facilitate.examples ?? []).map((ex, i) => [['examples', i, 'math'], ex.math]);
-    case 'COMPARE_THE_THINKING':
-      return [[['problem'], facilitate.problem]];
-    default:
-      return [];
-  }
-}
-
-export function writeActivityProblem(facilitate, path, text) {
-  const parent = path.slice(0, -1).reduce((node, key) => node?.[key], facilitate);
-  if (parent) parent[path[path.length - 1]] = text;
 }
