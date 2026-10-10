@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-15",
+  "version": "2026-10-08",
   "source": "Activity Library docs (Wave 2) — six activity templates, selection guidance, and template bodies",
   "selectionPrinciples": {
     "purpose": "The six activity templates support different instructional moves, from locating and repairing misconceptions to comparing strategies, building mathematical arguments, and using interactive experiences to surface student thinking. Select the routine that best fits the misconception, student response data, mathematical content, and lesson context — not simply the type of question or distractor.",
@@ -28,6 +28,142 @@
         "meansTemplate": "compare-the-thinking",
         "note": "Uncommon terminology for a comparison between two correct solutions — a specific application of Compare the Thinking. Select the template on the instructional value of the comparison, not on one particular configuration."
       }
+    ]
+  },
+  "designGuidance": {
+    "source": "Wave 2 Instructional Activity Templates doc — General Design Guidance, Closing Discussion, Activity Information Hierarchy and Assessment Context sections, transcribed. Tune here; the prompts render it through formatDesignGuidance().",
+    "purpose": [
+      "These activity templates should support teacher facilitation, not simply present mathematical content. MicroCoach should help a teacher turn evidence of student thinking into a productive mathematical conversation.",
+      "The purpose of an activity is not merely to identify the misconception; it is to make student thinking visible and use that thinking as the starting point for further mathematical learning.",
+      "Consistently emphasize: the misconception being addressed; the student thinking behind it, treating distractors and incorrect solutions as understandable representations of reasoning rather than simply \"wrong\" answers; teacher facilitation, including prompts and anticipated student discussion that help teachers elicit, interpret, and build on student thinking; and a clear mathematical takeaway that resolves or extends the thinking surfaced during the activity.",
+      "Use asset-based language that normalizes mistakes and supports a positive culture of error. Students should be invited to examine and revise mathematical thinking without being stigmatized for making a mistake. All students' mathematical thinking can be a productive starting point for learning.",
+      "Treat distractors as instructional assets. A well-designed distractor reveals a particular way of thinking and can provide the basis for productive classroom discussion about why an answer might seem reasonable, where the reasoning breaks down, and how it can be revised."
+    ],
+    "timing": "Teachers have ~30-minute blocks, split between a 10-15 minute debrief/activity and a 10-15 minute quick diagnostic. Frame every activity to fit within a 10-15 minute window (or less), including the closing discussion.",
+    "grouping": {
+      "principle": "Treat grouping as a reusable interaction pattern, not a separate design for every arrangement. Adapt the interaction only when needed to support the kind of mathematical thinking students are expected to produce. The template's priority pattern is a design priority, not a rigid requirement.",
+      "patterns": [
+        "Individual preparation or response: a lightweight opportunity for students to develop or record their own thinking before collaborating, when individual accountability or diagnostic evidence is important.",
+        "Pairs: a shared prompt, representation, or mathematical artifact to support partner explanation, comparison, investigation, or revision.",
+        "Two-group activity: students organized around differentiated positions, strategies, or lines of investigation, with a clear transition that brings the groups' thinking together for comparison, evaluation, or refinement.",
+        "Whole-class discussion: one shared task or representation that allows students to contribute, compare, question, evaluate, and refine mathematical thinking, connected to the mathematical takeaway."
+      ]
+    },
+    "views": {
+      "principle": "When an activity includes an artifact students analyze, provide distinct Teacher and Student views of the same underlying artifact, so the teacher can project the student-facing version while keeping facilitation support.",
+      "student": "Show the mathematical task, response, worked example, strategies, claim, or other artifact students are expected to analyze. Do not reveal answers, error annotations, intended misconceptions, or other information that would short-circuit the intended mathematical thinking.",
+      "teacher": "Provide what the teacher needs to facilitate: the intended misconception or reasoning pathway, the mathematical resolution, facilitation prompts, what to listen for, and other teacher-only guidance."
+    },
+    "workedExamples": {
+      "appliesTo": [
+        "spot-the-slip",
+        "my-favorite-no",
+        "math-detective"
+      ],
+      "rule": "Generate up to 3 examples that meaningfully support the identified instructional need. Teachers can select and facilitate any subset based on their goals and available time. Fewer strong examples are better than three where one is filler; each should target a meaningfully different instance of the need."
+    },
+    "informationHierarchy": {
+      "title": "The classroom-facing name of the routine (the template title). Fixed per template.",
+      "subtitle": "The primary instructional move (the template's primaryMove). Fixed per template.",
+      "description": "What students do and the mathematical purpose. Fixed per template.",
+      "whyThisActivity": "A brief, teacher-facing explanation of why this activity was selected for this learning need. Connect the student's identified misconception or learning need to the instructional purpose of the template and the specific activity, rather than describing what the activity asks students to do. It should complement, not duplicate, the description. Do not expose internal scoring, evaluation criteria, or technical details, and do not overstate what can be inferred from the student evidence. Example: \"Students appear to be treating a percentage increase and an equal percentage decrease as if they cancel each other out. This activity uses comparison and explanation to help students examine why the outcomes differ and revise the underlying reasoning.\""
+    },
+    "evidenceAndInference": [
+      "Multiple-choice response data provide evidence about what students selected, but do not necessarily establish why a student selected it.",
+      "Treat the selected answer, response frequency, question, and distractor as observed evidence, and treat the identified misconception as the assessment's designated interpretation of that evidence.",
+      "Treat any explanation of why a student might have selected a distractor as an instructional interpretation or hypothesis, even when it is documented in an exemplar document. A distractor may be reached through multiple reasoning pathways, and some students may select an answer without the presumed reasoning.",
+      "Do not assume that all students who selected the same distractor shared the same reasoning. Do not claim a pathway represents the thinking of all students who selected that answer, or is authentic student reasoning, unless supported by authentic student work.",
+      "When generating a worked solution or explanation from a distractor, use the exemplar's explanation as a reference and expand or adapt it into a mathematically coherent instructional representation, framed as a plausible reasoning pathway associated with the misconception.",
+      "Prefer language such as \"One possible way a student might reason is…\" or \"A worked example illustrating this misconception could…\" when the reasoning is inferred."
+    ],
+    "closingDiscussion": {
+      "purpose": "The Closing Discussion should help the teacher use the activity to surface, consolidate, and extend the mathematical thinking that matters most for the identified instructional need.",
+      "components": "Each activity includes 3 Discussion Questions, 1-3 Watch For sets, and a Mathematical Takeaway. They should be coherent with one another, grounded in the specific activity, and generated as connected components, not independently.",
+      "instructionalNeed": "The instructional need identifies the mathematical understanding, misconception, reasoning gap, or opportunity the activity addresses. Use it as the starting point for identifying what mathematical understanding the activity should help students develop or clarify.",
+      "relationship": [
+        "Instructional need → Mathematical takeaway → Discussion Questions + Watch For sets.",
+        "The instructional need identifies why the activity is needed.",
+        "The mathematical takeaway identifies the mathematical understanding the activity should surface or develop.",
+        "The Discussion Questions give students opportunities to test, generalize, apply, challenge, or connect that understanding.",
+        "The Watch For sets anticipate meaningful student thinking that may emerge and help the teacher respond productively.",
+        "Discussion Questions and Watch For sets reinforce and extend the same mathematical takeaway rather than introducing unrelated mathematics. The takeaway is the central mathematical anchor."
+      ],
+      "order": "Generate in the order need → takeaway → questions + Watch For. Teachers see them displayed as Discussion Questions, then Watch For sets, then the Mathematical Takeaway — the takeaway is the anchor during generation and checking, and closes the discussion on the page."
+    },
+    "mathematicalTakeaway": {
+      "definition": "The mathematical understanding students should have an opportunity to develop, clarify, or recognize through the activity.",
+      "requirements": [
+        "A concise statement of the underlying mathematical idea, relationship, principle, or reasoning — not a description of the activity steps.",
+        "Addresses the instructional need while remaining faithful to the actual mathematics of the activity.",
+        "Captures what is mathematically important beyond the particular examples or numbers used in the activity.",
+        "Specific enough to serve as the mathematical anchor for the Discussion Questions and Watch For sets.",
+        "Does not overstate a pattern or generalize beyond the conditions under which the mathematics is true.",
+        "Uses mathematically precise language appropriate to the students' level.",
+        "Does not simply say what students did: \"Students compared the two strategies\" describes an activity; \"Different strategies can produce the same result, but they may make different assumptions or reveal different aspects of the mathematics\" is a takeaway.",
+        "Does not simply restate the instructional need: the need describes what students need to develop or clarify; the takeaway describes the mathematical understanding that addresses it.",
+        "Before using it to generate the rest of the Closing Discussion, verify it is mathematically correct, appropriately precise, and supported by the activity."
+      ]
+    },
+    "discussionQuestions": {
+      "count": 3,
+      "purpose": "Build on the mathematical thinking surfaced during the activity and help students deepen or extend the mathematical takeaway. Teachers can use, adapt, or replace them. Help students test, generalize, apply, challenge, or connect the underlying idea rather than review the activity steps, repeat worked examples, provide more practice, or introduce an unrelated skill. When possible, move beyond the original activity: whether an idea always holds, the conditions under which it does or doesn't, applying it in a new situation, or connecting it to a broader principle. Prioritize questions that reveal or develop reasoning over questions that merely elicit a correct answer.",
+      "types": {
+        "TEST": "Examine whether an idea or strategy still works when something changes.",
+        "GENERALIZE": "Identify a pattern, relationship, condition, or rule that extends beyond the examples in the activity.",
+        "APPLY": "Use the mathematical idea in a meaningfully different situation.",
+        "CHALLENGE": "Find a counterexample, limitation, boundary case, or situation in which the original reasoning needs to be modified.",
+        "CONNECT": "Connect the mathematical idea to another representation, strategy, concept, or mathematical principle."
+      },
+      "typesNote": "Do not force every activity to include every type. Select the purposes that best support the mathematical takeaway.",
+      "requirements": [
+        "Mathematically meaningful and connected to the mathematical takeaway.",
+        "Answerable using the activity, prior knowledge reasonably expected of the students, and mathematical reasoning.",
+        "Requires more than recall, repetition, or completion of another nearly identical example.",
+        "Creates an opportunity for explanation, justification, comparison, prediction, representation, construction, or transfer.",
+        "Appropriately open when multiple valid approaches or answers are possible.",
+        "Uses mathematically precise language.",
+        "Avoids false or unsupported generalizations.",
+        "Does not introduce a new mathematical skill or concept unrelated to the instructional need or takeaway.",
+        "Specific to the activity rather than generic.",
+        "No two questions elicit essentially the same reasoning.",
+        "If a question asks whether a claim \"always\" holds, the claim and its conditions must be mathematically verified. If it does not always hold, the question explicitly invites students to determine when it holds, find a counterexample, or identify the conditions.",
+        "Questions do not embed the intended conclusion. When students are to determine whether a claim is true, preserve that opportunity."
+      ]
+    },
+    "watchFor": {
+      "purpose": "Brief, actionable teacher guidance that helps teachers anticipate student thinking, respond to what students say or do, and move the conversation forward. Selected because they are instructionally useful for the need or illuminate the takeaway — not simply because they are common misconceptions. They complement the Discussion Questions by focusing on likely in-the-moment student responses and how the teacher might respond. Not a comprehensive list: a small number of high-value student moves.",
+      "count": "At least 1 and up to 3, prioritizing quality, relevance, and usefulness over quantity. Prefer 2-3 high-value sets when the activity supports them, but allow a single set when one response pattern is substantially more relevant than others.",
+      "structure": {
+        "watchFor": "One specific student move, misconception, interpretation, or productive idea the teacher may encounter. Describe what students might say, do, choose, or misunderstand, grounded in the specific thinking surfaced by the activity.",
+        "tryAsking": "A specific, student-facing prompt to elicit, probe, clarify, challenge, or extend the student's thinking — one that helps students do the reasoning rather than leading them to the answer.",
+        "howToRespond": "Concise guidance on how to respond to what the student says or does: affirm productive thinking, surface the reasoning, address a misconception, connect to the mathematical idea, or prompt revision. When helpful, include the anticipated idea or answer the teacher should be prepared to recognize."
+      },
+      "rules": [
+        "Each set focuses on one specific student move or misconception; do not combine unrelated misconceptions or list possible errors.",
+        "Asset-based: incorrect responses are understandable representations of reasoning, not evidence of deficiency. When a response contains productive thinking, help the teacher identify and build on it before addressing what needs to change.",
+        "Do not assume an individual student's response has a single underlying cause. Use \"Students may…\" or \"A student might…\", and give prompts that investigate the reasoning rather than asserting an inferred misconception as certain.",
+        "Ground each set in the specific activity, takeaway, instructional need, and student thinking represented or anticipated in the activity.",
+        "Focus on student thinking that is likely and instructionally consequential.",
+        "Prompts are open enough to elicit reasoning and do not give away the answer.",
+        "The teacher response is actionable, not a restatement of the misconception or the correct answer.",
+        "Include productive or partially correct thinking when it offers an important opportunity to build understanding.",
+        "Avoid generic prompts such as \"Can you explain your thinking?\" unless paired with a specific mathematical focus.",
+        "Do not duplicate the Discussion Questions: Watch For is in-the-moment thinking and teacher response; Discussion Questions are whole-class exploration of the takeaway.",
+        "Do not invent a misconception solely because it is common in the topic; it must connect plausibly to the reasoning students use in this activity.",
+        "Distinguish what is observable from what is inferred: describe what the student might say, do, choose, or represent before suggesting an interpretation."
+      ],
+      "flow": "Watch for → Try asking → How to respond."
+    },
+    "accuracyCheck": [
+      "The Mathematical Takeaway is mathematically correct and supported by the activity.",
+      "The Discussion Questions are mathematically correct, well-posed, and aligned to the takeaway.",
+      "Every question's premise is mathematically valid, and its answer is correct when solved independently. A question that invites \"sometimes\" or \"when does this work?\" must have an answer whose conditions are actually true — never one that endorses an invalid move (for example, that operating on only one side of an equation can preserve equality).",
+      "Any anticipated answer, generalization, counterexample, or condition in the teacher guidance is mathematically accurate.",
+      "The Watch For sets describe plausible student thinking grounded in the activity rather than generic misconceptions.",
+      "The \"Try asking\" prompts genuinely elicit or advance mathematical reasoning rather than give away the answer.",
+      "The \"How to respond\" guidance accurately reflects the mathematics and does not assume more about student thinking than the evidence supports.",
+      "The three Discussion Questions and the Watch For sets collectively reinforce the same mathematical takeaway.",
+      "No component introduces unrelated mathematics or relies on an unstated assumption."
     ]
   },
   "templates": [
@@ -88,6 +224,7 @@
             "description": "Students articulate what they should look for or do differently in similar problems."
           }
         ],
+        "groupingPattern": "Individual think → pairs → whole-class discussion. Give students time to locate the first breakdown independently. Partners then explain, compare, and revise the reasoning before the class discusses the first breakdown, compares revisions, and makes the takeaway explicit.",
         "examples": [
           {
             "topic": "Adding fractions",
@@ -198,6 +335,7 @@
             "description": "Students articulate what they can keep in mind when solving similar problems."
           }
         ],
+        "groupingPattern": "Individual reflection → pairs → whole-class discussion. Have students first identify what is mathematically useful or reasonable in the response. Partners then discuss what to preserve and what needs to change before the class examines productive ideas, clarifies the misconception, and develops a shared takeaway.",
         "examples": [
           {
             "topic": "Adding fractions",
@@ -295,6 +433,7 @@
             "description": "The teacher reinforces the mathematical idea that the comparison makes visible and connects it to the misconception or learning goal."
           }
         ],
+        "groupingPattern": "Two-group → whole-class discussion. Have each of two groups develop and explain one approach, then bring the groups together to identify important similarities, differences, strengths, limitations, and mathematical choices. Pairs → whole-class discussion can be used when students would benefit from examining both approaches more closely before discussing the comparison as a class.",
         "examples": [
           {
             "topic": "Solving an equation",
@@ -401,6 +540,7 @@
             "description": "The teacher reinforces the mathematical idea that resolves the issue and helps students recognize or avoid it in future problems."
           }
         ],
+        "groupingPattern": "Pairs or whole class → whole-class discussion. Use pairs for a focused investigation of the evidence, possible explanations, and potential revisions. Use a teacher-facilitated whole-class discussion from the start when the response raises multiple plausible explanations or requires more collective reasoning. Bring the thinking together to compare interpretations, evaluate evidence, and identify what the investigation reveals.",
         "examples": [
           {
             "topic": "Distributive property",
@@ -521,6 +661,7 @@
             "description": "Students articulate what the mathematics supports and, when appropriate, refine or qualify the original claim."
           }
         ],
+        "groupingPattern": "Individual preparation → two groups or whole-class discussion. When the claim supports mathematically defensible positions, students may prepare in support and challenge/qualification groups, develop and present their cases, and then come together to evaluate the evidence and refine the claim. Use whole-class discussion instead when assigned positions are inappropriate or when the goal is to qualify the claim rather than debate opposing sides.",
         "examples": [
           {
             "topic": "Perimeter and area",
@@ -679,6 +820,7 @@
             "description": "The teacher reinforces the mathematical idea that resolves or extends the misconception and connects it to the thinking surfaced during the activity. Where appropriate, students test, generalize, or apply the idea in a new context."
           }
         ],
+        "groupingPattern": "Individual or small-group play → whole-class discussion. Use individual play when the goal is to surface each student's answer, confidence, hint use, or misconception pattern. Use small-group play when collaborative reasoning during the interactive experience is itself part of the instructional purpose. In either case, use the resulting response patterns to guide the whole-class discussion.",
         "examples": [
           {
             "topic": "Why Keep-Change-Flip works when dividing fractions",

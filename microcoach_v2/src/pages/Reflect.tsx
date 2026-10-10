@@ -2,30 +2,33 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import AppContentRow from '../components/AppContentRow';
 import FlowNav, { FlowTabId } from '../components/FlowNav';
+import ReflectionDetailModal from '../components/ReflectionDetailModal';
 import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
+import { IImplementedActivity } from '../lib/PipelineModels';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
-import { ContentPanel } from '../lib/styledcomponents/ActivityDetailStyledComponents';
 import {
   CountChip,
   ScreenSizeProps,
 } from '../lib/styledcomponents/ReviewStyledComponents';
+import {
+  ActivityContext,
+  ActivityContextRow,
+  ReflectContent,
+  ReflectDetailsButton,
+  ReflectPage,
+  ReflectionCard,
+  ReflectionResults,
+  ScoreChange,
+  ScoreGroup,
+  ScoreRow,
+} from '../lib/styledcomponents/ReflectStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 import { UseSessionsResult } from '../hooks/useSessions';
 import buildReflectionResults from '../lib/reflectionResults';
 
-/**
- * Reflect — the impact of the next steps the teacher actually ran.
- *
- * Built in the app's own chrome rather than reproducing the export: the two
- * Reflect frames are scaled artboards (2889 and 1920 wide, brand at 28px
- * rather than 32), so their content is the source of truth but their
- * dimensions are not.
- */
 interface ReflectProps extends ScreenSizeProps {
   sessions: UseSessionsResult;
 }
@@ -35,6 +38,8 @@ export default function Reflect({ screenSize, sessions }: ReflectProps) {
   const theme = useTheme();
   const navigate = useNavigate();
   const { misconceptions, misconceptionsStatus } = useMicroCoachDataState();
+  const [selectedActivity, setSelectedActivity] =
+    React.useState<IImplementedActivity | null>(null);
   const reflect = buildReflectionResults(
     sessions.selectedSession,
     misconceptions,
@@ -54,124 +59,86 @@ export default function Reflect({ screenSize, sessions }: ReflectProps) {
   const isLarge = screenSize === ScreenSize.LARGE;
 
   return (
-    <AppContentRow
-      screenSize={screenSize}
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: `${theme.sizing.space5}px`,
-        pt: isLarge ? `${theme.sizing.space8}px` : `${theme.sizing.space6}px`,
-        pb: isLarge ? `${theme.sizing.space14}px` : `${theme.sizing.space11}px`,
-      }}
-    >
-      <FlowNav
+    <ReflectPage>
+      <ReflectionDetailModal
+        activity={selectedActivity}
         screenSize={screenSize}
-        activeTabId="reflect"
-        onTabSelect={handleTabSelect}
-        onAction={() => navigate('/myplan')}
+        onClose={() => setSelectedActivity(null)}
       />
-
-      <Typography
-        variant="appTitle"
-        sx={{ color: 'designSystem.surface.atlanticNavy' }}
+      <AppContentRow
+        screenSize={screenSize}
+        sx={{
+          pt: isLarge ? `${theme.sizing.space8}px` : `${theme.sizing.space6}px`,
+          pb: isLarge ? `${theme.sizing.space14}px` : `${theme.sizing.space11}px`,
+        }}
       >
-        {t('reflect.title')}
-      </Typography>
+        <ReflectContent>
+          <FlowNav
+            screenSize={screenSize}
+            activeTabId="reflect"
+            onTabSelect={handleTabSelect}
+            onAction={() => navigate('/myplan')}
+          />
+          <ReflectContent>
+            <Typography variant="appTitle" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+              {t('reflect.title')}
+            </Typography>
+            <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+              {t('reflect.subtitle')}
+            </Typography>
+          </ReflectContent>
+          {reflect.implementedActivities.map((activity) => {
+            const improvement = activity.masteryAfter - activity.masteryBefore;
 
-      {reflect.implementedActivities.map((activity) => (
-        <ContentPanel key={activity.id}>
-          <Stack
-            direction={isLarge ? 'row' : 'column'}
-            alignItems={isLarge ? 'flex-start' : 'stretch'}
-            justifyContent="space-between"
-            spacing={`${theme.sizing.space3}px`}
-          >
-            <Box sx={{ minWidth: 0 }}>
-              <Typography
-                variant="headingMd"
-                sx={{
-                  display: 'block',
-                  color: 'designSystem.surface.atlanticNavy',
-                }}
-              >
-                {activity.title}
-              </Typography>
-
-              <Stack
-                direction="row"
-                alignItems="center"
-                flexWrap="wrap"
-                spacing={`${theme.sizing.space1}px`}
-                sx={{ mt: `${theme.sizing.space1}px` }}
-              >
-                <Typography
-                  variant="rubikSubBold"
-                  sx={{ color: 'designSystem.surface.atlanticNavy' }}
-                >
-                  {t('reflect.addresses')}
-                </Typography>
-                <CountChip>{activity.skillCode}</CountChip>
-                <Typography
-                  variant="smallBodyText"
-                  sx={{ color: 'designSystem.surface.atlanticNavy' }}
-                >
-                  {activity.misconceptionTitle}
-                </Typography>
-              </Stack>
-
-              <Typography
-                variant="smallBodyText"
-                sx={{
-                  display: 'block',
-                  mt: `${theme.sizing.space1}px`,
-                  color: 'designSystem.surface.atlanticNavy',
-                }}
-              >
-                <Box component="span" sx={{ fontWeight: 700 }}>
-                  {activity.studentsImproved}
-                </Box>
-                {` ${t('reflect.improved')}`}
-              </Typography>
-            </Box>
-
-            {/* The headline number: the frames set the delta above its label,
-                right-aligned against the card. */}
-            <Stack
-              alignItems={isLarge ? 'flex-end' : 'flex-start'}
-              sx={{ flexShrink: 0 }}
-            >
-              <Typography
-                variant="headingLg"
-                sx={{ color: 'designSystem.surface.atlanticNavy' }}
-              >
-                {`${activity.masteryBefore}% → ${activity.masteryAfter}%`}
-              </Typography>
-              <Typography
-                variant="rubikSubBold"
-                sx={{ color: 'designSystem.surface.atlanticNavy' }}
-              >
-                {t('reflect.mastery')}
-              </Typography>
-              <Typography
-                variant="rubikSubBold"
-                component="button"
-                onClick={() => navigate('/myplan')}
-                sx={{
-                  mt: `${theme.sizing.space1}px`,
-                  p: 0,
-                  border: 'none',
-                  background: 'none',
-                  cursor: 'pointer',
-                  textDecoration: 'underline',
-                  color: 'designSystem.foreground.accentBlue',
-                }}
-              >
-                {t('reflect.viewDetails')}
-              </Typography>
-            </Stack>
-          </Stack>
-        </ContentPanel>
-      ))}
-    </AppContentRow>
+            return (
+              <ReflectionCard key={activity.id}>
+                <ReflectContent>
+                  <Typography variant="headingLg" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                    {activity.title}
+                  </Typography>
+                  <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                    {t('reflect.activitySubtitle')}
+                  </Typography>
+                </ReflectContent>
+                <ActivityContext>
+                  <ActivityContextRow>
+                    <CountChip>{activity.skillCode}</CountChip>
+                    <Typography variant="rubikSubBold" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                      {activity.misconceptionTitle}
+                    </Typography>
+                  </ActivityContextRow>
+                  <Typography variant="smallBodyText" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                    {t('reflect.activityDescription')}
+                  </Typography>
+                </ActivityContext>
+                <ReflectionResults isLarge={isLarge}>
+                  <ScoreGroup>
+                    <Typography variant="headingMd" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                      {t('reflect.scoreTitle')}
+                    </Typography>
+                    <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                      {t('reflect.scoreSubtitle')}
+                    </Typography>
+                    <ScoreRow>
+                      <Typography variant="headingLg" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                        {t('reflect.percentCorrect', { percent: activity.masteryBefore })}
+                      </Typography>
+                      <Typography variant="headingLg" sx={{ color: 'designSystem.surface.atlanticNavy' }}>→</Typography>
+                      <Typography variant="headingLg" sx={{ color: 'designSystem.surface.green' }}>
+                        {t('reflect.percentCorrect', { percent: activity.masteryAfter })}
+                      </Typography>
+                      <ScoreChange>{t('reflect.percentagePointGain', { improvement })}</ScoreChange>
+                    </ScoreRow>
+                  </ScoreGroup>
+                  <ReflectDetailsButton disableElevation onClick={() => setSelectedActivity(activity)}>
+                    {t('reflect.viewDetails')}
+                  </ReflectDetailsButton>
+                </ReflectionResults>
+              </ReflectionCard>
+            );
+          })}
+        </ReflectContent>
+      </AppContentRow>
+    </ReflectPage>
   );
 }

@@ -255,10 +255,24 @@
     "addClassHint": "Add a class on the dashboard to start an upload."
   },
   "reflect": {
-    "title": "Next Steps You Implemented",
+    "title": "How Your Class Responded",
+    "subtitle": "Comparing your first MIU (before) with the second (after) for the misconception you focused on.",
+    "activitySubtitle": "Incorrect worked example analysis",
+    "activityDescription": "Students examine a worked solution, identify the first step where the reasoning goes off track, explain why the mistake happened, and work together to correct it.",
+    "scoreTitle": "MIU 1 → MIU 2 Score",
+    "scoreSubtitle": "Average percent correct across the class",
     "addresses": "Addresses:",
     "mastery": "Class mastery improvement",
     "improved": "students showed improvement",
-    "viewDetails": "View details"
+    "viewDetails": "View Details",
+    "detailsTitle": "Class results comparison",
+    "detailsFor": "Results for {{title}}",
+    "closeDetails": "Close results details",
+    "before": "Before follow-up activity",
+    "after": "After follow-up activity",
+    "improvement": "Impact of the follow-up activity",
+    "improvementSummary": "{{improvement}} percentage-point improvement, with {{students}} students showing improvement.",
+    "percentCorrect": "{{percent}}%",
+    "percentagePointGain": "+{{improvement}} percentage points"
   }
 }

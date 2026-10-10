@@ -48,11 +48,11 @@
         },
         "microcoachv2LLMVerify": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2LLMVerify-6d7652746d6c7a70706a-build.zip"
+          "s3Key": "amplify-builds/microcoachv2LLMVerify-53682b7a773959667159-build.zip"
         },
         "microcoachv2NextStepOption": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2NextStepOption-392b414a647a6d693249-build.zip"
+          "s3Key": "amplify-builds/microcoachv2NextStepOption-496850493839785a416f-build.zip"
         },
         "microcoachv2RegenEvaluator": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
@@ -64,7 +64,7 @@
         },
         "microcoachv2TeacherUploadGen": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2TeacherUploadGen-53364930735241577668-build.zip"
+          "s3Key": "amplify-builds/microcoachv2TeacherUploadGen-364c5367667a74585178-build.zip"
         },
         "microcoachv2LLMGenMisconception": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
@@ -72,11 +72,11 @@
         },
         "microcoachv2LLMGenInstrNeed": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2LLMGenInstrNeed-34663344314254335747-build.zip"
+          "s3Key": "amplify-builds/microcoachv2LLMGenInstrNeed-6153767530794b35686e-build.zip"
         },
         "microcoachv2LLMSelectTemplate": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2LLMSelectTemplate-69303161694c412f6975-build.zip"
+          "s3Key": "amplify-builds/microcoachv2LLMSelectTemplate-75415a4b4e4b5035725a-build.zip"
         },
         "microcoachv2ScoresCalc": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",

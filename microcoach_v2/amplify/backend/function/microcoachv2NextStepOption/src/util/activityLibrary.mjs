@@ -79,6 +79,7 @@ export function formatForInfill(t) {
   out.push(t.description);
   out.push('', 'Classroom flow:');
   out.push(bullets((f.classroomFlow ?? []).map((s, i) => `${i + 1}. ${s.step}: ${s.description}`)));
+  if (f.groupingPattern) out.push('', `Priority grouping pattern: ${f.groupingPattern}`);
   if (f.examples?.length) {
     out.push('', 'Illustrative examples:');
     for (const ex of f.examples) {
@@ -110,4 +111,61 @@ export function formatForInfill(t) {
   }
   if (f.optionalExtension) out.push('', `Optional extension: ${f.optionalExtension}`);
   return out.join('\n');
+}
+
+/**
+ * Render sections of `designGuidance`, the Wave 2 doc's general guidance that
+ * applies across templates. Each prompt asks for only the sections it needs, so
+ * the activity prompt doesn't carry the closing-discussion rules and vice versa.
+ *
+ * Sections: purpose, timing, grouping, views, workedExamples, informationHierarchy,
+ * evidenceAndInference, closingDiscussion, mathematicalTakeaway,
+ * discussionQuestions, watchFor, accuracyCheck.
+ */
+export function formatDesignGuidance(sections, lib = library) {
+  const g = lib.designGuidance ?? {};
+  const out = [];
+  const add = (heading, body) => { out.push('', `### ${heading}`, body); };
+  for (const section of sections) {
+    switch (section) {
+      case 'purpose':
+        add('Design purpose', bullets(g.purpose)); break;
+      case 'timing':
+        add('Timing', g.timing); break;
+      case 'grouping':
+        add('Grouping', `${g.grouping.principle}\n${bullets(g.grouping.patterns)}`); break;
+      case 'views':
+        add('Teacher and Student views', `${g.views.principle}\n  - Student view: ${g.views.student}\n  - Teacher view: ${g.views.teacher}`); break;
+      case 'workedExamples':
+        add('How many examples', g.workedExamples.rule); break;
+      case 'informationHierarchy':
+        add('Why This Activity', g.informationHierarchy.whyThisActivity); break;
+      case 'evidenceAndInference':
+        add('Evidence and inference from multiple-choice responses', bullets(g.evidenceAndInference)); break;
+      case 'closingDiscussion': {
+        const c = g.closingDiscussion;
+        add('Closing Discussion', [c.purpose, c.components, c.instructionalNeed, bullets(c.relationship), c.order].join('\n'));
+        break;
+      }
+      case 'mathematicalTakeaway':
+        add('Mathematical Takeaway', `${g.mathematicalTakeaway.definition}\n${bullets(g.mathematicalTakeaway.requirements)}`); break;
+      case 'discussionQuestions': {
+        const d = g.discussionQuestions;
+        const types = Object.entries(d.types).map(([k, v]) => `${k}: ${v}`);
+        add(`Discussion Questions (exactly ${d.count})`, [d.purpose, 'Purposes:', bullets(types), d.typesNote, 'Each question must:', bullets(d.requirements)].join('\n'));
+        break;
+      }
+      case 'watchFor': {
+        const w = g.watchFor;
+        const parts = Object.entries(w.structure).map(([k, v]) => `${k}: ${v}`);
+        add('Watch For, Try Asking, How to Respond', [w.purpose, w.count, 'Each set:', bullets(parts), 'Rules:', bullets(w.rules), `Flow: ${w.flow}`].join('\n'));
+        break;
+      }
+      case 'accuracyCheck':
+        add('Mathematical accuracy and coherence check', bullets(g.accuracyCheck)); break;
+      default:
+        throw new Error(`Unknown designGuidance section "${section}"`);
+    }
+  }
+  return out.join('\n').trim();
 }

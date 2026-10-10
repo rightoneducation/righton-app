@@ -255,10 +255,24 @@
     "addClassHint": "Agrega una clase en el panel para comenzar a subir archivos."
   },
   "reflect": {
-    "title": "Próximos pasos que implementó",
+    "title": "Cómo respondió su clase",
+    "subtitle": "Comparamos su primer MIU (antes) con el segundo (después) para la idea errónea en la que se enfocó.",
+    "activitySubtitle": "Análisis de ejemplos resueltos incorrectos",
+    "activityDescription": "Los estudiantes examinan una solución resuelta, identifican el primer paso donde el razonamiento se desvía, explican por qué ocurrió el error y trabajan juntos para corregirlo.",
+    "scoreTitle": "Puntaje de MIU 1 → MIU 2",
+    "scoreSubtitle": "Porcentaje promedio de respuestas correctas de la clase",
     "addresses": "Aborda:",
     "mastery": "Mejora del dominio de la clase",
     "improved": "estudiantes mejoraron",
-    "viewDetails": "Ver detalles"
+    "viewDetails": "Ver detalles",
+    "detailsTitle": "Comparación de resultados de la clase",
+    "detailsFor": "Resultados para {{title}}",
+    "closeDetails": "Cerrar detalles de resultados",
+    "before": "Antes de la actividad de seguimiento",
+    "after": "Después de la actividad de seguimiento",
+    "improvement": "Impacto de la actividad de seguimiento",
+    "improvementSummary": "Mejora de {{improvement}} puntos porcentuales, con {{students}} estudiantes mostrando mejora.",
+    "percentCorrect": "{{percent}}%",
+    "percentagePointGain": "+{{improvement}} puntos porcentuales"
   }
 }
