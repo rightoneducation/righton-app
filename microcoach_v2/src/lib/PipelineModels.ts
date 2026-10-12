@@ -365,10 +365,11 @@ export interface IImplementedActivity {
   skillCode: string;
   misconceptionTitle: string;
   questionCount: number;
-  /** Percentages the frame states outright; nothing here is derived. */
-  masteryBefore: number;
-  masteryAfter: number;
-  studentsImproved: number;
+  averagePercentCorrectBefore: number;
+  averagePercentCorrectAfter: number;
+  averageQuestionsCorrectBefore: number;
+  averageQuestionsCorrectAfter: number;
+  improvedStudentCount: number;
 }
 
 export interface IReflect {

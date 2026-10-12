@@ -36,7 +36,8 @@ export default function ReflectionDetailModal({
   const theme = useTheme();
   const isLarge = screenSize === ScreenSize.LARGE;
   const improvement = activity
-    ? activity.masteryAfter - activity.masteryBefore
+    ? activity.averagePercentCorrectAfter -
+      activity.averagePercentCorrectBefore
     : 0;
   const trend = getReflectionTrend(improvement);
 
@@ -92,7 +93,9 @@ export default function ReflectionDetailModal({
                   {t('reflect.before')}
                 </Typography>
                 <Typography variant="headingLg" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                  {t('reflect.percentCorrect', { percent: activity.masteryBefore })}
+                  {t('reflect.percentCorrect', {
+                    percent: activity.averagePercentCorrectBefore,
+                  })}
                 </Typography>
               </ComparisonBlock>
               <ComparisonBlock>
@@ -100,7 +103,9 @@ export default function ReflectionDetailModal({
                   {t('reflect.after')}
                 </Typography>
                 <ReflectionTrendValue variant="headingLg" trend={trend}>
-                  {t('reflect.percentCorrect', { percent: activity.masteryAfter })}
+                  {t('reflect.percentCorrect', {
+                    percent: activity.averagePercentCorrectAfter,
+                  })}
                 </ReflectionTrendValue>
               </ComparisonBlock>
             </ComparisonRow>
@@ -109,7 +114,10 @@ export default function ReflectionDetailModal({
                 {t('reflect.improvement')}
               </Typography>
               <Typography variant="headingMd" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                {t('reflect.improvementSummary', { improvement, students: activity.studentsImproved })}
+                {t('reflect.improvementSummary', {
+                  improvement,
+                  students: activity.improvedStudentCount,
+                })}
               </Typography>
             </ComparisonBlock>
           </ReflectModalBody>

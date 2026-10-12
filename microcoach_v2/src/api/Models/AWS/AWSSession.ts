@@ -1,4 +1,4 @@
-import { PublishStatus, SessionStatus } from '../../../AWSAPI'
+import { PublishStatus, ReflectionResult, SessionStatus } from '../../../AWSAPI'
 
 export type AWSSession = {
   __typename?: 'MicroCoachSession'
@@ -19,6 +19,7 @@ export type AWSSession = {
   postPpqAssessmentId?: string | null
   pregeneratedNextSteps?: string | null
   evaluationResults?: string | null
+  reflectionResults?: Array<ReflectionResult | null> | null
   createdAt: string
   updatedAt: string
 }

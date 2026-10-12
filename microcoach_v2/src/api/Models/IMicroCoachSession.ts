@@ -1,5 +1,16 @@
 import { PublishStatus, SessionStatus } from "../../AWSAPI";
 
+export interface IMicroCoachReflectionResult {
+  activityId: string | null;
+  misconceptionId: string;
+  questionCount: number;
+  averagePercentCorrectBefore: number;
+  averagePercentCorrectAfter: number;
+  averageQuestionsCorrectBefore: number;
+  averageQuestionsCorrectAfter: number;
+  improvedStudentCount: number;
+}
+
 export interface IMicroCoachSession {
   id: string;
   classId: string;
@@ -18,6 +29,7 @@ export interface IMicroCoachSession {
   postPpqAssessmentId: string | null;
   pregeneratedNextSteps: string | null;
   evaluationResults: string | null;
+  reflectionResults: IMicroCoachReflectionResult[];
   createdAt: string;
   updatedAt: string;
 }

@@ -472,6 +472,17 @@ export const getMicroCoachSession = /* GraphQL */ `query GetMicroCoachSession($i
       }
       __typename
     }
+    reflectionResults {
+      activityId
+      misconceptionId
+      questionCount
+      averagePercentCorrectBefore
+      averagePercentCorrectAfter
+      averageQuestionsCorrectBefore
+      averageQuestionsCorrectAfter
+      improvedStudentCount
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -579,6 +590,17 @@ export const listMicroCoachSessions = /* GraphQL */ `query ListMicroCoachSession
           studentNames
           __typename
         }
+        __typename
+      }
+      reflectionResults {
+        activityId
+        misconceptionId
+        questionCount
+        averagePercentCorrectBefore
+        averagePercentCorrectAfter
+        averageQuestionsCorrectBefore
+        averageQuestionsCorrectAfter
+        improvedStudentCount
         __typename
       }
       createdAt

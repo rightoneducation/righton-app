@@ -9,6 +9,7 @@ import ReflectionDetailModal from '../components/ReflectionDetailModal';
 import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import { IImplementedActivity } from '../lib/PipelineModels';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import useReflectionResults from '../hooks/useReflectionResults';
 import { ScreenSizeProps } from '../lib/styledcomponents/ReviewStyledComponents';
 import {
   ActivityContext,
@@ -32,30 +33,19 @@ import {
   ScoreValues,
 } from '../lib/styledcomponents/ReflectStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
-import { UseSessionsResult } from '../hooks/useSessions';
-import buildReflectionResults, {
-  getReflectionTrend,
-} from '../lib/reflectionResults';
+import { getReflectionTrend } from '../lib/reflectionResults';
 
-interface ReflectProps extends ScreenSizeProps {
-  sessions: UseSessionsResult;
-}
+type ReflectProps = ScreenSizeProps;
 
-export default function Reflect({ screenSize, sessions }: ReflectProps) {
+export default function Reflect({ screenSize }: ReflectProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { misconceptions, misconceptionsStatus, planItems } =
-    useMicroCoachDataState();
+  const { planItems } = useMicroCoachDataState();
+  const { reflect, status } = useReflectionResults();
   const [selectedActivity, setSelectedActivity] =
     React.useState<IImplementedActivity | null>(null);
-  const reflect = buildReflectionResults(
-    sessions.selectedSession,
-    misconceptions,
-  );
-  const dataReady =
-    sessions.status === MicroCoachDataStatus.READY &&
-    misconceptionsStatus === MicroCoachDataStatus.READY;
+  const dataReady = status === MicroCoachDataStatus.READY;
   const isReady = useAllReady(useI18nReady(), dataReady);
 
   if (!isReady) return null;
@@ -103,10 +93,12 @@ export default function Reflect({ screenSize, sessions }: ReflectProps) {
               {reflect.implementedActivities.map((activity) => {
                 const { questionCount } = activity;
                 const percentagePointChange =
-                  activity.masteryAfter - activity.masteryBefore;
+                  activity.averagePercentCorrectAfter -
+                  activity.averagePercentCorrectBefore;
                 const trend = getReflectionTrend(percentagePointChange);
                 const averageQuestionChange =
-                  (percentagePointChange / 100) * questionCount;
+                  activity.averageQuestionsCorrectAfter -
+                  activity.averageQuestionsCorrectBefore;
                 const formattedQuestionChange = `${
                   averageQuestionChange > 0 ? '+' : ''
                 }${averageQuestionChange.toFixed(1)}`;
@@ -156,11 +148,15 @@ export default function Reflect({ screenSize, sessions }: ReflectProps) {
                           <ScoreRow>
                             <ScoreValues>
                               <Typography variant="reflectScore" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                                {t('reflect.percentCorrect', { percent: activity.masteryBefore })}
+                                {t('reflect.percentCorrect', {
+                                  percent: activity.averagePercentCorrectBefore,
+                                })}
                               </Typography>
                               <Typography variant="reflectScore" sx={{ color: 'designSystem.surface.atlanticNavy' }}>→</Typography>
                               <ReflectionTrendValue variant="reflectScore" trend={trend}>
-                                {t('reflect.percentCorrect', { percent: activity.masteryAfter })}
+                                {t('reflect.percentCorrect', {
+                                  percent: activity.averagePercentCorrectAfter,
+                                })}
                               </ReflectionTrendValue>
                             </ScoreValues>
                             <ScoreChange trend={trend}>
