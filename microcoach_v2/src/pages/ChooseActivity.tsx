@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AppContentRow from '../components/AppContentRow';
-import FlowNav, { FlowTabId } from '../components/FlowNav';
+import FlowNav, { FlowTabId, flowTabPath } from '../components/FlowNav';
 import ActivityCard from '../components/ActivityCard';
 import ChooseActivitySkeleton from '../components/ChooseActivitySkeleton';
 import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
@@ -72,8 +72,8 @@ function ChooseActivityView({
   };
 
   const handleTabSelect = (tabId: FlowTabId) => {
-    if (tabId === 'prepare') navigate('/myplan');
-    if (tabId === 'reflect') navigate('/reflect');
+    if (tabId === 'select-activity') return;
+    navigate(flowTabPath(tabId, planItems.length > 0));
   };
 
   const handleHowToRun = (activityId: string) => {
@@ -93,7 +93,7 @@ function ChooseActivityView({
     >
       <FlowNav
         screenSize={screenSize}
-        activeTabId="understand-act"
+        activeTabId="select-activity"
         onTabSelect={handleTabSelect}
         onAction={() => navigate('/myplan')}
       />

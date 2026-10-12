@@ -10,25 +10,52 @@ import {
 } from '../lib/styledcomponents/FlowNavStyledComponents';
 import { ScreenSizeProps } from '../lib/styledcomponents/LandingStyledComponents';
 
-export type FlowTabId = 'understand-act' | 'prepare' | 'reflect';
+export type FlowTabId =
+  | 'assess'
+  | 'understand'
+  | 'select-activity'
+  | 'reassess'
+  | 'reflect';
 
 export const FLOW_TABS: { id: FlowTabId; labelKey: string }[] = [
-  { id: 'understand-act', labelKey: 'flowNav.understandAct' },
-  { id: 'prepare', labelKey: 'flowNav.prepare' },
+  { id: 'assess', labelKey: 'flowNav.assess' },
+  { id: 'understand', labelKey: 'flowNav.understand' },
+  { id: 'select-activity', labelKey: 'flowNav.selectActivity' },
+  { id: 'reassess', labelKey: 'flowNav.reassess' },
   { id: 'reflect', labelKey: 'flowNav.reflect' },
 ];
+
+export function flowTabPath(
+  tabId: FlowTabId,
+  hasSavedActivity: boolean,
+): string {
+  switch (tabId) {
+    case 'assess':
+    case 'reassess':
+      return '/upload-rtd';
+    case 'understand':
+      return '/review';
+    case 'select-activity':
+      return hasSavedActivity ? '/myplan' : '/review';
+    case 'reflect':
+    default:
+      return '/reflect';
+  }
+}
 
 interface FlowNavProps extends ScreenSizeProps {
   activeTabId: FlowTabId;
   actionLabelKey?: string;
+  compactAction?: boolean;
   onTabSelect: (tabId: FlowTabId) => void;
-  onAction: () => void;
+  onAction?: () => void;
 }
 
 export default function FlowNav({
   screenSize,
   activeTabId,
   actionLabelKey = 'flowNav.myPlan',
+  compactAction = false,
   onTabSelect,
   onAction,
 }: FlowNavProps) {
@@ -47,8 +74,16 @@ export default function FlowNav({
       <Stack
         direction="row"
         alignItems="center"
-        spacing={`${theme.sizing.space2}px`}
+        spacing={`${theme.sizing.space5}px`}
         component="nav"
+        sx={{
+          width: '100%',
+          minWidth: 0,
+          paddingLeft: isLarge ? `${theme.sizing.space2}px` : '0px',
+          overflowX: 'auto',
+          scrollbarWidth: 'none',
+          '&::-webkit-scrollbar': { display: 'none' },
+        }}
       >
         {FLOW_TABS.map((tab, index) => (
           <React.Fragment key={tab.id}>
@@ -63,8 +98,8 @@ export default function FlowNav({
           </React.Fragment>
         ))}
       </Stack>
-      {activeTabId !== 'prepare' && 
-        <FlowNavAction disableElevation onClick={onAction}>
+      {onAction &&
+        <FlowNavAction compact={compactAction} disableElevation onClick={onAction}>
           {t(actionLabelKey)}
         </FlowNavAction>
       }

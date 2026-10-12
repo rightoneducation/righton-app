@@ -12,7 +12,9 @@ import {
   ComparisonBlock,
   ComparisonRow,
   ReflectModalBody,
+  ReflectionTrendValue,
 } from '../lib/styledcomponents/ReflectStyledComponents';
+import { getReflectionTrend } from '../lib/reflectionResults';
 import {
   MODAL_MAX_WIDTH,
   MODAL_TOP_OFFSET,
@@ -36,6 +38,7 @@ export default function ReflectionDetailModal({
   const improvement = activity
     ? activity.masteryAfter - activity.masteryBefore
     : 0;
+  const trend = getReflectionTrend(improvement);
 
   return (
     <Modal
@@ -96,9 +99,9 @@ export default function ReflectionDetailModal({
                 <Typography variant="rubikSubBold" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
                   {t('reflect.after')}
                 </Typography>
-                <Typography variant="headingLg" sx={{ color: 'designSystem.surface.green' }}>
+                <ReflectionTrendValue variant="headingLg" trend={trend}>
                   {t('reflect.percentCorrect', { percent: activity.masteryAfter })}
-                </Typography>
+                </ReflectionTrendValue>
               </ComparisonBlock>
             </ComparisonRow>
             <ComparisonBlock>

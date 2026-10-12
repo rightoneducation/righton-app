@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import AppContentRow from '../components/AppContentRow';
-import FlowNav, { FlowTabId } from '../components/FlowNav';
+import FlowNav, { FlowTabId, flowTabPath } from '../components/FlowNav';
 import MisconceptionCard from '../components/MisconceptionCard';
 import MisconceptionDetailModal from '../components/MisconceptionDetailModal';
 import ReviewSkeleton from '../components/ReviewSkeleton';
@@ -33,7 +33,8 @@ export default function Review({ screenSize, sessions }: ReviewProps) {
   const navigate = useNavigate();
   const isLarge = screenSize === ScreenSize.LARGE;
 
-  const { misconceptions, misconceptionsStatus } = useMicroCoachDataState();
+  const { misconceptions, misconceptionsStatus, planItems } =
+    useMicroCoachDataState();
   const session = sessions.selectedSession;
   const dataReady = misconceptionsStatus === MicroCoachDataStatus.READY;
   const isReady = useAllReady(useI18nReady(), dataReady);
@@ -60,8 +61,8 @@ export default function Review({ screenSize, sessions }: ReviewProps) {
     misconceptions.find((item) => item.id === selectedId) ?? null;
 
   const handleTabSelect = (tabId: FlowTabId) => {
-    if (tabId === 'prepare') navigate('/myplan');
-    if (tabId === 'reflect') navigate('/reflect');
+    if (tabId === 'understand') return;
+    navigate(flowTabPath(tabId, planItems.length > 0));
   };
 
   const handleAction = () => {
@@ -81,7 +82,7 @@ export default function Review({ screenSize, sessions }: ReviewProps) {
     >
       <FlowNav
         screenSize={screenSize}
-        activeTabId="understand-act"
+        activeTabId="understand"
         onTabSelect={handleTabSelect}
         onAction={handleAction}
       />

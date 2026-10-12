@@ -115,6 +115,9 @@ const designSystemColors = {
     // score and its 20%-over-white composite for the average-gain chip.
     reflectionImprovement: '#199072',
     reflectionImprovementTint: '#D1E9E2',
+    // Reflect regression: the after score uses the existing needs-support
+    // orange, while this pale composite keeps the change chip readable.
+    reflectionDeclineTint: '#FADFD6',
   },
   // The plotted graph inside a representation card. Charts are their own
   // surface with their own legibility needs — same reason `gradients` is
@@ -359,6 +362,12 @@ const designSystemTypography = {
     fontSize: '24px',
     lineHeight: 'normal',
   },
+  reflectSectionTitle: {
+    fontFamily: rubik,
+    fontWeight: 700,
+    fontSize: '20px',
+    lineHeight: 'normal',
+  },
   reflectScore: {
     fontFamily: poppins,
     fontWeight: 600,
@@ -492,6 +501,14 @@ const sizing = {
   homeContentMaxWidth: 858,
   stepperMaxWidth: 1050,
   bannerMaxWidth: 770,
+  reflectCardMinHeight: 432,
+  reflectContextMinHeight: 96,
+  reflectDetailsButtonWidth: 163,
+  reflectDetailsButtonHeight: 37,
+  flowActionMinWidth: 160,
+  flowActionHeight: 36,
+  reflectHomeActionWidth: 131,
+  reflectHomeActionHeight: 37,
   // Figma corner radii, shared by the step panel, step cards and video card.
   sectionRadius: 32,
   heroImageRadius: 37,
@@ -559,6 +576,7 @@ declare module '@mui/material/styles' {
     headingSm: CSSProperties;
     headingMd: CSSProperties;
     headingLg: CSSProperties;
+    reflectSectionTitle: CSSProperties;
     reflectScore: CSSProperties;
     statusLabel: CSSProperties;
     smallBodyText: CSSProperties;
@@ -607,6 +625,7 @@ declare module '@mui/material/styles' {
     headingSm?: CSSProperties;
     headingMd?: CSSProperties;
     headingLg?: CSSProperties;
+    reflectSectionTitle?: CSSProperties;
     reflectScore?: CSSProperties;
     statusLabel?: CSSProperties;
     smallBodyText?: CSSProperties;
@@ -656,6 +675,7 @@ declare module '@mui/material/Typography' {
     headingSm: true;
     headingMd: true;
     headingLg: true;
+    reflectSectionTitle: true;
     reflectScore: true;
     statusLabel: true;
     smallBodyText: true;
@@ -740,6 +760,7 @@ const Theme = createTheme({
           headingSm: 'p',
           headingMd: 'p',
           headingLg: 'p',
+          reflectSectionTitle: 'p',
           reflectScore: 'p',
           statusLabel: 'p',
           smallBodyText: 'p',
@@ -791,6 +812,7 @@ const Theme = createTheme({
     headingSm: { ...designSystemTypography.headingSm },
     headingMd: { ...designSystemTypography.headingMd },
     headingLg: { ...designSystemTypography.headingLg },
+    reflectSectionTitle: { ...designSystemTypography.reflectSectionTitle },
     reflectScore: { ...designSystemTypography.reflectScore },
     statusLabel: { ...designSystemTypography.statusLabel },
     smallBodyText: { ...designSystemTypography.smallBodyText },

@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AppContentRow from '../components/AppContentRow';
-import FlowNav, { FlowTabId } from '../components/FlowNav';
+import FlowNav, { FlowTabId, flowTabPath } from '../components/FlowNav';
 import PhaseTabBar, { PhaseId, PHASES } from '../components/PhaseTabBar';
 import ActivityPhase from '../components/phases/ActivityPhase';
 import BeforeClassPhase from '../components/phases/BeforeClassPhase';
@@ -52,9 +52,8 @@ function ActivityDetailView({
   const nextPhase = PHASES[phaseIndex + 1];
 
   const handleTabSelect = (tabId: FlowTabId) => {
-    if (tabId === 'prepare') navigate('/myplan');
-    if (tabId === 'understand-act') navigate('/review');
-    if (tabId === 'reflect') navigate('/reflect');
+    if (tabId === 'select-activity') return;
+    navigate(flowTabPath(tabId, false));
   };
 
   const [isExporting, setIsExporting] = React.useState(false);
@@ -163,7 +162,7 @@ function ActivityDetailView({
     >
       <FlowNav
         screenSize={screenSize}
-        activeTabId="understand-act"
+        activeTabId="select-activity"
         onTabSelect={handleTabSelect}
         onAction={() => navigate('/myplan')}
       />

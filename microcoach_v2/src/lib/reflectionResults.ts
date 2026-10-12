@@ -7,6 +7,14 @@ import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { IImplementedActivity, IReflect } from './PipelineModels';
 
+export type ReflectionTrend = 'improved' | 'declined' | 'unchanged';
+
+export function getReflectionTrend(change: number): ReflectionTrend {
+  if (change > 0) return 'improved';
+  if (change < 0) return 'declined';
+  return 'unchanged';
+}
+
 interface PostPpqResults {
   hasResults?: boolean;
   classMasteryBefore?: number;

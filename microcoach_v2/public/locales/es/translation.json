@@ -11,8 +11,10 @@
     "needHelp": "¿Necesita ayuda?"
   },
   "flowNav": {
-    "understandAct": "Comprender y actuar",
-    "prepare": "Preparar",
+    "assess": "Evaluar",
+    "understand": "Comprender",
+    "selectActivity": "Elegir actividad",
+    "reassess": "Reevaluar",
     "reflect": "Reflexionar",
     "home": "Inicio",
     "myPlan": "Mi plan",
@@ -261,7 +263,7 @@
     "activitySubtitle": "Análisis de ejemplos resueltos incorrectos",
     "activityDescription": "Los estudiantes examinan una solución resuelta, identifican el primer paso donde el razonamiento se desvía, explican por qué ocurrió el error y trabajan juntos para corregirlo.",
     "scoreTitle": "Puntaje de MIU 1 → MIU 2",
-    "scoreSubtitle": "Porcentaje promedio de respuestas correctas en [DATOS SIMULADOS: 6 preguntas — SE REEMPLAZARÁN]",
+    "scoreSubtitle": "Porcentaje promedio de respuestas correctas en {{count}} preguntas",
     "addresses": "Aborda:",
     "mastery": "Mejora del dominio de la clase",
     "improved": "estudiantes mejoraron",
@@ -275,6 +277,9 @@
     "improvementSummary": "Mejora de {{improvement}} puntos porcentuales, con {{students}} estudiantes mostrando mejora.",
     "percentCorrect": "{{percent}}%",
     "percentagePointGain": "+{{improvement}} puntos porcentuales",
-    "averageQuestionsGainPlaceholder": "[DATOS SIMULADOS: +2,5 preguntas correctas en promedio — SE REEMPLAZARÁN]"
+    "averageQuestionsGainPlaceholder": "{{change}} preguntas correctas en promedio",
+    "noChange": "Sin cambios",
+    "questionCountPlaceholder": "{{count}} es simulado",
+    "questionChangePlaceholder": "{{change}} es simulado"
   }
 }

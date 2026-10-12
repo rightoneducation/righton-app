@@ -11,7 +11,7 @@ import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import InsightsIcon from '@mui/icons-material/Insights';
 import AppContentRow from '../components/AppContentRow';
-import FlowNav, { FlowTabId } from '../components/FlowNav';
+import FlowNav, { FlowTabId, flowTabPath } from '../components/FlowNav';
 import PlanItemRow from '../components/PlanItemRow';
 import { PromptIconTile } from '../lib/styledcomponents/ActivityDetailStyledComponents';
 import { SignUpCta } from '../lib/styledcomponents/SignUpStyledComponents';
@@ -48,8 +48,8 @@ export default function MyPlan({
   const completed = planItems.filter((item) => item.status === 'COMPLETED');
 
   const handleTabSelect = (tabId: FlowTabId) => {
-    if (tabId === 'understand-act') navigate('/review');
-    if (tabId === 'reflect') navigate('/reflect');
+    if (tabId === 'select-activity') return;
+    navigate(flowTabPath(tabId, planItems.length > 0));
   };
 
   const handleOpenDetails = (item: IPlanItem) => {
@@ -76,9 +76,8 @@ export default function MyPlan({
     >
       <FlowNav
         screenSize={screenSize}
-        activeTabId="prepare"
+        activeTabId="select-activity"
         onTabSelect={handleTabSelect}
-        onAction={() => navigate('/myplan')}
       />
 
       <PlanBackButton
