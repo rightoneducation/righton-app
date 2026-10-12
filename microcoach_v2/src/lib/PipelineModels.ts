@@ -360,8 +360,11 @@ export interface ISession {
 export interface IImplementedActivity {
   id: string;
   title: string;
+  subtitle: string;
+  description: string;
   skillCode: string;
   misconceptionTitle: string;
+  questionCount: number;
   /** Percentages the frame states outright; nothing here is derived. */
   masteryBefore: number;
   masteryAfter: number;

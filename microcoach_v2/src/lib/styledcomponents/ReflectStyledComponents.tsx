@@ -182,17 +182,6 @@ export const ScoreChange = styled(Box, {
   ...theme.typography.headingLg,
 }));
 
-export const MockDataTag = styled('span')(({ theme }) => ({
-  display: 'inline-flex',
-  padding: `0 ${theme.sizing.space0}px`,
-  borderRadius: `${theme.sizing.space0}px`,
-  border: theme.borders.faintNavy,
-  backgroundColor: theme.palette.designSystem.foreground.wildSand,
-  color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.microLabel,
-  whiteSpace: 'nowrap',
-}));
-
 export const ReflectDetailsButton = styled(Button)(({ theme }) => ({
   alignSelf: 'flex-start',
   minWidth: `${theme.sizing.reflectDetailsButtonWidth}px`,

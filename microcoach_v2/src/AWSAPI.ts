@@ -8,6 +8,7 @@ export type CreateMicroCoachUserInput = {
   email: string,
   firstName?: string | null,
   lastName?: string | null,
+  school?: string | null,
   role: UserRole,
   createdAt?: string | null,
   updatedAt?: string | null,
@@ -24,6 +25,7 @@ export type ModelMicroCoachUserConditionInput = {
   email?: ModelStringInput | null,
   firstName?: ModelStringInput | null,
   lastName?: ModelStringInput | null,
+  school?: ModelStringInput | null,
   role?: ModelUserRoleInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
@@ -84,6 +86,7 @@ export type MicroCoachUser = {
   email: string,
   firstName?: string | null,
   lastName?: string | null,
+  school?: string | null,
   classes?: ModelMicroCoachClassroomConnection | null,
   role: UserRole,
   createdAt: string,
@@ -137,6 +140,7 @@ export type MicroCoachSession = {
   misconceptions?: ModelMicroCoachMisconceptionConnection | null,
   pregeneratedNextSteps?: string | null,
   evaluationResults?: string | null,
+  questionStats?:  Array<QuestionStat | null > | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -201,6 +205,7 @@ export type MicroCoachMisconception = {
   detailStatus: DetailStatus,
   studentWork?: string | null,
   skillContext?: string | null,
+  responseEvidence?:  Array<ResponseEvidence | null > | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -238,8 +243,8 @@ export enum ActivityType {
   INCORRECT_WORKED_EXAMPLES = "INCORRECT_WORKED_EXAMPLES",
   COMPARE_THE_THINKING = "COMPARE_THE_THINKING",
   MATH_DETECTIVE = "MATH_DETECTIVE",
-  MULTIPLE_REPRESENTATIONS = "MULTIPLE_REPRESENTATIONS",
   FAVORITE_NO = "FAVORITE_NO",
+  MAKE_YOUR_CASE = "MAKE_YOUR_CASE",
 }
 
 
@@ -290,6 +295,29 @@ export enum PrevalenceLevel {
 }
 
 
+export type ResponseEvidence = {
+  __typename: "ResponseEvidence",
+  questionNumber: number,
+  answers: Array< string | null >,
+};
+
+export type QuestionStat = {
+  __typename: "QuestionStat",
+  questionNumber: number,
+  percentCorrect: number,
+  questionText?: string | null,
+  options?:  Array<QuestionOption | null > | null,
+};
+
+export type QuestionOption = {
+  __typename: "QuestionOption",
+  letter: string,
+  text?: string | null,
+  percentChosen?: number | null,
+  isCorrect?: boolean | null,
+  studentNames?: Array< string | null > | null,
+};
+
 export type ModelMicroCoachStudentConnection = {
   __typename: "ModelMicroCoachStudentConnection",
   items:  Array<MicroCoachStudent | null >,
@@ -312,6 +340,7 @@ export type UpdateMicroCoachUserInput = {
   email?: string | null,
   firstName?: string | null,
   lastName?: string | null,
+  school?: string | null,
   role?: UserRole | null,
   createdAt?: string | null,
   updatedAt?: string | null,
@@ -433,8 +462,24 @@ export type CreateMicroCoachSessionInput = {
   postPpqAssessmentId?: string | null,
   pregeneratedNextSteps?: string | null,
   evaluationResults?: string | null,
+  questionStats?: Array< QuestionStatInput | null > | null,
   createdAt?: string | null,
   updatedAt?: string | null,
+};
+
+export type QuestionStatInput = {
+  questionNumber: number,
+  percentCorrect: number,
+  questionText?: string | null,
+  options?: Array< QuestionOptionInput | null > | null,
+};
+
+export type QuestionOptionInput = {
+  letter: string,
+  text?: string | null,
+  percentChosen?: number | null,
+  isCorrect?: boolean | null,
+  studentNames?: Array< string | null > | null,
 };
 
 export type ModelMicroCoachSessionConditionInput = {
@@ -489,6 +534,7 @@ export type UpdateMicroCoachSessionInput = {
   postPpqAssessmentId?: string | null,
   pregeneratedNextSteps?: string | null,
   evaluationResults?: string | null,
+  questionStats?: Array< QuestionStatInput | null > | null,
   createdAt?: string | null,
   updatedAt?: string | null,
 };
@@ -609,6 +655,7 @@ export type CreateMicroCoachMisconceptionInput = {
   detailStatus: DetailStatus,
   studentWork?: string | null,
   skillContext?: string | null,
+  responseEvidence?: Array< ResponseEvidenceInput | null > | null,
   createdAt?: string | null,
   updatedAt?: string | null,
 };
@@ -623,6 +670,11 @@ export type PrevalenceInput = {
   supportSummaryLabel?: string | null,
   understoodSummaryLabel?: string | null,
   shortCountLabel?: string | null,
+};
+
+export type ResponseEvidenceInput = {
+  questionNumber: number,
+  answers: Array< string | null >,
 };
 
 export type ModelMicroCoachMisconceptionConditionInput = {
@@ -670,6 +722,7 @@ export type UpdateMicroCoachMisconceptionInput = {
   detailStatus?: DetailStatus | null,
   studentWork?: string | null,
   skillContext?: string | null,
+  responseEvidence?: Array< ResponseEvidenceInput | null > | null,
   createdAt?: string | null,
   updatedAt?: string | null,
 };
@@ -1072,6 +1125,7 @@ export type ModelMicroCoachUserFilterInput = {
   email?: ModelStringInput | null,
   firstName?: ModelStringInput | null,
   lastName?: ModelStringInput | null,
+  school?: ModelStringInput | null,
   role?: ModelUserRoleInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
@@ -1267,6 +1321,7 @@ export type ModelSubscriptionMicroCoachUserFilterInput = {
   email?: ModelSubscriptionStringInput | null,
   firstName?: ModelSubscriptionStringInput | null,
   lastName?: ModelSubscriptionStringInput | null,
+  school?: ModelSubscriptionStringInput | null,
   role?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
@@ -1477,6 +1532,7 @@ export type CreateMicroCoachUserMutation = {
     email: string,
     firstName?: string | null,
     lastName?: string | null,
+    school?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -1550,6 +1606,7 @@ export type UpdateMicroCoachUserMutation = {
     email: string,
     firstName?: string | null,
     lastName?: string | null,
+    school?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -1623,6 +1680,7 @@ export type DeleteMicroCoachUserMutation = {
     email: string,
     firstName?: string | null,
     lastName?: string | null,
+    school?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -1751,6 +1809,20 @@ export type CreateMicroCoachClassroomMutation = {
         } | null,
         pregeneratedNextSteps?: string | null,
         evaluationResults?: string | null,
+        questionStats?:  Array< {
+          __typename: "QuestionStat",
+          questionNumber: number,
+          percentCorrect: number,
+          questionText?: string | null,
+          options?:  Array< {
+            __typename: "QuestionOption",
+            letter: string,
+            text?: string | null,
+            percentChosen?: number | null,
+            isCorrect?: boolean | null,
+            studentNames?: Array< string | null > | null,
+          } | null > | null,
+        } | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -1846,6 +1918,20 @@ export type UpdateMicroCoachClassroomMutation = {
         } | null,
         pregeneratedNextSteps?: string | null,
         evaluationResults?: string | null,
+        questionStats?:  Array< {
+          __typename: "QuestionStat",
+          questionNumber: number,
+          percentCorrect: number,
+          questionText?: string | null,
+          options?:  Array< {
+            __typename: "QuestionOption",
+            letter: string,
+            text?: string | null,
+            percentChosen?: number | null,
+            isCorrect?: boolean | null,
+            studentNames?: Array< string | null > | null,
+          } | null > | null,
+        } | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -1941,6 +2027,20 @@ export type DeleteMicroCoachClassroomMutation = {
         } | null,
         pregeneratedNextSteps?: string | null,
         evaluationResults?: string | null,
+        questionStats?:  Array< {
+          __typename: "QuestionStat",
+          questionNumber: number,
+          percentCorrect: number,
+          questionText?: string | null,
+          options?:  Array< {
+            __typename: "QuestionOption",
+            letter: string,
+            text?: string | null,
+            percentChosen?: number | null,
+            isCorrect?: boolean | null,
+            studentNames?: Array< string | null > | null,
+          } | null > | null,
+        } | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -2111,6 +2211,11 @@ export type CreateMicroCoachSessionMutation = {
         detailStatus: DetailStatus,
         studentWork?: string | null,
         skillContext?: string | null,
+        responseEvidence?:  Array< {
+          __typename: "ResponseEvidence",
+          questionNumber: number,
+          answers: Array< string | null >,
+        } | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -2118,6 +2223,20 @@ export type CreateMicroCoachSessionMutation = {
     } | null,
     pregeneratedNextSteps?: string | null,
     evaluationResults?: string | null,
+    questionStats?:  Array< {
+      __typename: "QuestionStat",
+      questionNumber: number,
+      percentCorrect: number,
+      questionText?: string | null,
+      options?:  Array< {
+        __typename: "QuestionOption",
+        letter: string,
+        text?: string | null,
+        percentChosen?: number | null,
+        isCorrect?: boolean | null,
+        studentNames?: Array< string | null > | null,
+      } | null > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2215,6 +2334,11 @@ export type UpdateMicroCoachSessionMutation = {
         detailStatus: DetailStatus,
         studentWork?: string | null,
         skillContext?: string | null,
+        responseEvidence?:  Array< {
+          __typename: "ResponseEvidence",
+          questionNumber: number,
+          answers: Array< string | null >,
+        } | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -2222,6 +2346,20 @@ export type UpdateMicroCoachSessionMutation = {
     } | null,
     pregeneratedNextSteps?: string | null,
     evaluationResults?: string | null,
+    questionStats?:  Array< {
+      __typename: "QuestionStat",
+      questionNumber: number,
+      percentCorrect: number,
+      questionText?: string | null,
+      options?:  Array< {
+        __typename: "QuestionOption",
+        letter: string,
+        text?: string | null,
+        percentChosen?: number | null,
+        isCorrect?: boolean | null,
+        studentNames?: Array< string | null > | null,
+      } | null > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2319,6 +2457,11 @@ export type DeleteMicroCoachSessionMutation = {
         detailStatus: DetailStatus,
         studentWork?: string | null,
         skillContext?: string | null,
+        responseEvidence?:  Array< {
+          __typename: "ResponseEvidence",
+          questionNumber: number,
+          answers: Array< string | null >,
+        } | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -2326,6 +2469,20 @@ export type DeleteMicroCoachSessionMutation = {
     } | null,
     pregeneratedNextSteps?: string | null,
     evaluationResults?: string | null,
+    questionStats?:  Array< {
+      __typename: "QuestionStat",
+      questionNumber: number,
+      percentCorrect: number,
+      questionText?: string | null,
+      options?:  Array< {
+        __typename: "QuestionOption",
+        letter: string,
+        text?: string | null,
+        percentChosen?: number | null,
+        isCorrect?: boolean | null,
+        studentNames?: Array< string | null > | null,
+      } | null > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2514,6 +2671,11 @@ export type CreateMicroCoachMisconceptionMutation = {
     detailStatus: DetailStatus,
     studentWork?: string | null,
     skillContext?: string | null,
+    responseEvidence?:  Array< {
+      __typename: "ResponseEvidence",
+      questionNumber: number,
+      answers: Array< string | null >,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2582,6 +2744,11 @@ export type UpdateMicroCoachMisconceptionMutation = {
     detailStatus: DetailStatus,
     studentWork?: string | null,
     skillContext?: string | null,
+    responseEvidence?:  Array< {
+      __typename: "ResponseEvidence",
+      questionNumber: number,
+      answers: Array< string | null >,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2650,6 +2817,11 @@ export type DeleteMicroCoachMisconceptionMutation = {
     detailStatus: DetailStatus,
     studentWork?: string | null,
     skillContext?: string | null,
+    responseEvidence?:  Array< {
+      __typename: "ResponseEvidence",
+      questionNumber: number,
+      answers: Array< string | null >,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3090,6 +3262,7 @@ export type GetMicroCoachUserQuery = {
     email: string,
     firstName?: string | null,
     lastName?: string | null,
+    school?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -3166,6 +3339,7 @@ export type ListMicroCoachUsersQuery = {
       email: string,
       firstName?: string | null,
       lastName?: string | null,
+      school?: string | null,
       classes?:  {
         __typename: "ModelMicroCoachClassroomConnection",
         items:  Array< {
@@ -3264,6 +3438,20 @@ export type GetMicroCoachClassroomQuery = {
         } | null,
         pregeneratedNextSteps?: string | null,
         evaluationResults?: string | null,
+        questionStats?:  Array< {
+          __typename: "QuestionStat",
+          questionNumber: number,
+          percentCorrect: number,
+          questionText?: string | null,
+          options?:  Array< {
+            __typename: "QuestionOption",
+            letter: string,
+            text?: string | null,
+            percentChosen?: number | null,
+            isCorrect?: boolean | null,
+            studentNames?: Array< string | null > | null,
+          } | null > | null,
+        } | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -3333,6 +3521,12 @@ export type ListMicroCoachClassroomsQuery = {
           } | null,
           pregeneratedNextSteps?: string | null,
           evaluationResults?: string | null,
+          questionStats?:  Array< {
+            __typename: "QuestionStat",
+            questionNumber: number,
+            percentCorrect: number,
+            questionText?: string | null,
+          } | null > | null,
           createdAt: string,
           updatedAt: string,
         } | null >,
@@ -3491,6 +3685,11 @@ export type GetMicroCoachSessionQuery = {
         detailStatus: DetailStatus,
         studentWork?: string | null,
         skillContext?: string | null,
+        responseEvidence?:  Array< {
+          __typename: "ResponseEvidence",
+          questionNumber: number,
+          answers: Array< string | null >,
+        } | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -3498,6 +3697,20 @@ export type GetMicroCoachSessionQuery = {
     } | null,
     pregeneratedNextSteps?: string | null,
     evaluationResults?: string | null,
+    questionStats?:  Array< {
+      __typename: "QuestionStat",
+      questionNumber: number,
+      percentCorrect: number,
+      questionText?: string | null,
+      options?:  Array< {
+        __typename: "QuestionOption",
+        letter: string,
+        text?: string | null,
+        percentChosen?: number | null,
+        isCorrect?: boolean | null,
+        studentNames?: Array< string | null > | null,
+      } | null > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3577,6 +3790,11 @@ export type ListMicroCoachSessionsQuery = {
           detailStatus: DetailStatus,
           studentWork?: string | null,
           skillContext?: string | null,
+          responseEvidence?:  Array< {
+            __typename: "ResponseEvidence",
+            questionNumber: number,
+            answers: Array< string | null >,
+          } | null > | null,
           createdAt: string,
           updatedAt: string,
         } | null >,
@@ -3584,6 +3802,20 @@ export type ListMicroCoachSessionsQuery = {
       } | null,
       pregeneratedNextSteps?: string | null,
       evaluationResults?: string | null,
+      questionStats?:  Array< {
+        __typename: "QuestionStat",
+        questionNumber: number,
+        percentCorrect: number,
+        questionText?: string | null,
+        options?:  Array< {
+          __typename: "QuestionOption",
+          letter: string,
+          text?: string | null,
+          percentChosen?: number | null,
+          isCorrect?: boolean | null,
+          studentNames?: Array< string | null > | null,
+        } | null > | null,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -3697,6 +3929,7 @@ export type UsersByCognitoIdQuery = {
       email: string,
       firstName?: string | null,
       lastName?: string | null,
+      school?: string | null,
       classes?:  {
         __typename: "ModelMicroCoachClassroomConnection",
         items:  Array< {
@@ -3746,6 +3979,7 @@ export type UsersByEmailQuery = {
       email: string,
       firstName?: string | null,
       lastName?: string | null,
+      school?: string | null,
       classes?:  {
         __typename: "ModelMicroCoachClassroomConnection",
         items:  Array< {
@@ -3795,6 +4029,7 @@ export type UsersByRoleQuery = {
       email: string,
       firstName?: string | null,
       lastName?: string | null,
+      school?: string | null,
       classes?:  {
         __typename: "ModelMicroCoachClassroomConnection",
         items:  Array< {
@@ -3870,6 +4105,12 @@ export type MicroCoachClassroomsByUserIdQuery = {
           } | null,
           pregeneratedNextSteps?: string | null,
           evaluationResults?: string | null,
+          questionStats?:  Array< {
+            __typename: "QuestionStat",
+            questionNumber: number,
+            percentCorrect: number,
+            questionText?: string | null,
+          } | null > | null,
           createdAt: string,
           updatedAt: string,
         } | null >,
@@ -3999,6 +4240,11 @@ export type MicroCoachSessionsByClassIdQuery = {
           detailStatus: DetailStatus,
           studentWork?: string | null,
           skillContext?: string | null,
+          responseEvidence?:  Array< {
+            __typename: "ResponseEvidence",
+            questionNumber: number,
+            answers: Array< string | null >,
+          } | null > | null,
           createdAt: string,
           updatedAt: string,
         } | null >,
@@ -4006,6 +4252,20 @@ export type MicroCoachSessionsByClassIdQuery = {
       } | null,
       pregeneratedNextSteps?: string | null,
       evaluationResults?: string | null,
+      questionStats?:  Array< {
+        __typename: "QuestionStat",
+        questionNumber: number,
+        percentCorrect: number,
+        questionText?: string | null,
+        options?:  Array< {
+          __typename: "QuestionOption",
+          letter: string,
+          text?: string | null,
+          percentChosen?: number | null,
+          isCorrect?: boolean | null,
+          studentNames?: Array< string | null > | null,
+        } | null > | null,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -4183,6 +4443,11 @@ export type GetMicroCoachMisconceptionQuery = {
     detailStatus: DetailStatus,
     studentWork?: string | null,
     skillContext?: string | null,
+    responseEvidence?:  Array< {
+      __typename: "ResponseEvidence",
+      questionNumber: number,
+      answers: Array< string | null >,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4254,6 +4519,11 @@ export type ListMicroCoachMisconceptionsQuery = {
       detailStatus: DetailStatus,
       studentWork?: string | null,
       skillContext?: string | null,
+      responseEvidence?:  Array< {
+        __typename: "ResponseEvidence",
+        questionNumber: number,
+        answers: Array< string | null >,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -4329,6 +4599,11 @@ export type MicroCoachMisconceptionsBySessionIdQuery = {
       detailStatus: DetailStatus,
       studentWork?: string | null,
       skillContext?: string | null,
+      responseEvidence?:  Array< {
+        __typename: "ResponseEvidence",
+        questionNumber: number,
+        answers: Array< string | null >,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -4404,6 +4679,11 @@ export type MicroCoachMisconceptionsByClassIdQuery = {
       detailStatus: DetailStatus,
       studentWork?: string | null,
       skillContext?: string | null,
+      responseEvidence?:  Array< {
+        __typename: "ResponseEvidence",
+        questionNumber: number,
+        answers: Array< string | null >,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -4841,6 +5121,7 @@ export type OnCreateMicroCoachUserSubscription = {
     email: string,
     firstName?: string | null,
     lastName?: string | null,
+    school?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -4914,6 +5195,7 @@ export type OnUpdateMicroCoachUserSubscription = {
     email: string,
     firstName?: string | null,
     lastName?: string | null,
+    school?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -4987,6 +5269,7 @@ export type OnDeleteMicroCoachUserSubscription = {
     email: string,
     firstName?: string | null,
     lastName?: string | null,
+    school?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -5114,6 +5397,20 @@ export type OnCreateMicroCoachClassroomSubscription = {
         } | null,
         pregeneratedNextSteps?: string | null,
         evaluationResults?: string | null,
+        questionStats?:  Array< {
+          __typename: "QuestionStat",
+          questionNumber: number,
+          percentCorrect: number,
+          questionText?: string | null,
+          options?:  Array< {
+            __typename: "QuestionOption",
+            letter: string,
+            text?: string | null,
+            percentChosen?: number | null,
+            isCorrect?: boolean | null,
+            studentNames?: Array< string | null > | null,
+          } | null > | null,
+        } | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -5208,6 +5505,20 @@ export type OnUpdateMicroCoachClassroomSubscription = {
         } | null,
         pregeneratedNextSteps?: string | null,
         evaluationResults?: string | null,
+        questionStats?:  Array< {
+          __typename: "QuestionStat",
+          questionNumber: number,
+          percentCorrect: number,
+          questionText?: string | null,
+          options?:  Array< {
+            __typename: "QuestionOption",
+            letter: string,
+            text?: string | null,
+            percentChosen?: number | null,
+            isCorrect?: boolean | null,
+            studentNames?: Array< string | null > | null,
+          } | null > | null,
+        } | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -5302,6 +5613,20 @@ export type OnDeleteMicroCoachClassroomSubscription = {
         } | null,
         pregeneratedNextSteps?: string | null,
         evaluationResults?: string | null,
+        questionStats?:  Array< {
+          __typename: "QuestionStat",
+          questionNumber: number,
+          percentCorrect: number,
+          questionText?: string | null,
+          options?:  Array< {
+            __typename: "QuestionOption",
+            letter: string,
+            text?: string | null,
+            percentChosen?: number | null,
+            isCorrect?: boolean | null,
+            studentNames?: Array< string | null > | null,
+          } | null > | null,
+        } | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -5468,6 +5793,11 @@ export type OnCreateMicroCoachSessionSubscription = {
         detailStatus: DetailStatus,
         studentWork?: string | null,
         skillContext?: string | null,
+        responseEvidence?:  Array< {
+          __typename: "ResponseEvidence",
+          questionNumber: number,
+          answers: Array< string | null >,
+        } | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -5475,6 +5805,20 @@ export type OnCreateMicroCoachSessionSubscription = {
     } | null,
     pregeneratedNextSteps?: string | null,
     evaluationResults?: string | null,
+    questionStats?:  Array< {
+      __typename: "QuestionStat",
+      questionNumber: number,
+      percentCorrect: number,
+      questionText?: string | null,
+      options?:  Array< {
+        __typename: "QuestionOption",
+        letter: string,
+        text?: string | null,
+        percentChosen?: number | null,
+        isCorrect?: boolean | null,
+        studentNames?: Array< string | null > | null,
+      } | null > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5571,6 +5915,11 @@ export type OnUpdateMicroCoachSessionSubscription = {
         detailStatus: DetailStatus,
         studentWork?: string | null,
         skillContext?: string | null,
+        responseEvidence?:  Array< {
+          __typename: "ResponseEvidence",
+          questionNumber: number,
+          answers: Array< string | null >,
+        } | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -5578,6 +5927,20 @@ export type OnUpdateMicroCoachSessionSubscription = {
     } | null,
     pregeneratedNextSteps?: string | null,
     evaluationResults?: string | null,
+    questionStats?:  Array< {
+      __typename: "QuestionStat",
+      questionNumber: number,
+      percentCorrect: number,
+      questionText?: string | null,
+      options?:  Array< {
+        __typename: "QuestionOption",
+        letter: string,
+        text?: string | null,
+        percentChosen?: number | null,
+        isCorrect?: boolean | null,
+        studentNames?: Array< string | null > | null,
+      } | null > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5674,6 +6037,11 @@ export type OnDeleteMicroCoachSessionSubscription = {
         detailStatus: DetailStatus,
         studentWork?: string | null,
         skillContext?: string | null,
+        responseEvidence?:  Array< {
+          __typename: "ResponseEvidence",
+          questionNumber: number,
+          answers: Array< string | null >,
+        } | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -5681,6 +6049,20 @@ export type OnDeleteMicroCoachSessionSubscription = {
     } | null,
     pregeneratedNextSteps?: string | null,
     evaluationResults?: string | null,
+    questionStats?:  Array< {
+      __typename: "QuestionStat",
+      questionNumber: number,
+      percentCorrect: number,
+      questionText?: string | null,
+      options?:  Array< {
+        __typename: "QuestionOption",
+        letter: string,
+        text?: string | null,
+        percentChosen?: number | null,
+        isCorrect?: boolean | null,
+        studentNames?: Array< string | null > | null,
+      } | null > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5862,6 +6244,11 @@ export type OnCreateMicroCoachMisconceptionSubscription = {
     detailStatus: DetailStatus,
     studentWork?: string | null,
     skillContext?: string | null,
+    responseEvidence?:  Array< {
+      __typename: "ResponseEvidence",
+      questionNumber: number,
+      answers: Array< string | null >,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5929,6 +6316,11 @@ export type OnUpdateMicroCoachMisconceptionSubscription = {
     detailStatus: DetailStatus,
     studentWork?: string | null,
     skillContext?: string | null,
+    responseEvidence?:  Array< {
+      __typename: "ResponseEvidence",
+      questionNumber: number,
+      answers: Array< string | null >,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5996,6 +6388,11 @@ export type OnDeleteMicroCoachMisconceptionSubscription = {
     detailStatus: DetailStatus,
     studentWork?: string | null,
     skillContext?: string | null,
+    responseEvidence?:  Array< {
+      __typename: "ResponseEvidence",
+      questionNumber: number,
+      answers: Array< string | null >,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,

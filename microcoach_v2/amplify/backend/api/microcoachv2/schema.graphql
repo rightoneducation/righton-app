@@ -94,6 +94,10 @@ type MicroCoachSession @model @auth(rules: [{ allow: private }]) {
   # Class % correct per MIU question (the Review screen's "Correct responses"
   # tiles), with the question text for the tile's tooltip.
   questionStats: [QuestionStat]
+  # Deterministic comparison between the original and follow-up MIUs. The
+  # qualitative analysis added by the Reflect generation task can extend this
+  # embedded result without making the UI parse pregeneratedNextSteps AWSJSON.
+  reflectionResults: [ReflectionResult]
 
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
@@ -173,6 +177,17 @@ type QuestionOption {
   percentChosen: Float
   isCorrect: Boolean
   studentNames: [String]
+}
+
+type ReflectionResult {
+  activityId: ID
+  misconceptionId: ID!
+  questionCount: Int!
+  averagePercentCorrectBefore: Float!
+  averagePercentCorrectAfter: Float!
+  averageQuestionsCorrectBefore: Float!
+  averageQuestionsCorrectAfter: Float!
+  improvedStudentCount: Int!
 }
 
 type ResponseEvidence {

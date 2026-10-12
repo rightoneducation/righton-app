@@ -17,6 +17,7 @@ export function getReflectionTrend(change: number): ReflectionTrend {
 
 interface PostPpqResults {
   hasResults?: boolean;
+  questionCount?: number;
   classMasteryBefore?: number;
   classMasteryAfter?: number;
   improvedCount?: number;
@@ -25,6 +26,8 @@ interface PostPpqResults {
 interface GeneratedMove {
   id?: string;
   title?: string;
+  summary?: string;
+  instructionalMove?: string;
 }
 
 interface GeneratedNextStep {
@@ -35,6 +38,7 @@ interface GeneratedNextStep {
     targetObjective?: { standard?: string };
   };
   moveOptions?: GeneratedMove[];
+  questionErrorRates?: unknown[];
   postPpqResults?: PostPpqResults;
 }
 
@@ -96,11 +100,21 @@ export default function buildReflectionResults(
           generatedMove?.title ??
           nextStep.title ??
           '',
+        subtitle:
+          activity?.routine.subtitle.trim() ||
+          generatedMove?.instructionalMove?.trim() ||
+          '',
+        description:
+          activity?.routine.description.trim() ||
+          generatedMove?.summary?.trim() ||
+          '',
         skillCode:
           misconception?.skillContext?.focusSkill.code ??
           nextStep.ccssStandards?.targetObjective?.standard ??
           '',
         misconceptionTitle: misconception?.titleCased ?? nextStep.title ?? '',
+        questionCount:
+          results.questionCount ?? nextStep.questionErrorRates?.length ?? 0,
         masteryBefore: results.classMasteryBefore,
         masteryAfter: results.classMasteryAfter,
         studentsImproved: results.improvedCount,
