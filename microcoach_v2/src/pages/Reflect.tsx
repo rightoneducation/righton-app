@@ -9,18 +9,20 @@ import ReflectionDetailModal from '../components/ReflectionDetailModal';
 import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import { IImplementedActivity } from '../lib/PipelineModels';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
-import {
-  CountChip,
-  ScreenSizeProps,
-} from '../lib/styledcomponents/ReviewStyledComponents';
+import { ScreenSizeProps } from '../lib/styledcomponents/ReviewStyledComponents';
 import {
   ActivityContext,
   ActivityContextRow,
-  ReflectContent,
   ReflectDetailsButton,
+  ReflectHeading,
   ReflectPage,
+  ReflectPageContent,
+  ReflectSkillCodeChip,
   ReflectionCard,
+  ReflectionCardHeading,
+  ReflectionCardList,
   ReflectionResults,
+  ReflectResultsSection,
   ScoreChange,
   ScoreGroup,
   ScoreRow,
@@ -72,72 +74,75 @@ export default function Reflect({ screenSize, sessions }: ReflectProps) {
           pb: isLarge ? `${theme.sizing.space14}px` : `${theme.sizing.space11}px`,
         }}
       >
-        <ReflectContent>
+        <ReflectPageContent>
           <FlowNav
             screenSize={screenSize}
             activeTabId="reflect"
+            actionLabelKey="flowNav.home"
             onTabSelect={handleTabSelect}
-            onAction={() => navigate('/myplan')}
+            onAction={() => navigate('/')}
           />
-          <ReflectContent>
-            <Typography variant="appTitle" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-              {t('reflect.title')}
-            </Typography>
-            <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-              {t('reflect.subtitle')}
-            </Typography>
-          </ReflectContent>
-          {reflect.implementedActivities.map((activity) => {
-            const improvement = activity.masteryAfter - activity.masteryBefore;
-
-            return (
-              <ReflectionCard key={activity.id}>
-                <ReflectContent>
-                  <Typography variant="headingLg" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                    {activity.title}
-                  </Typography>
-                  <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                    {t('reflect.activitySubtitle')}
-                  </Typography>
-                </ReflectContent>
-                <ActivityContext>
-                  <ActivityContextRow>
-                    <CountChip>{activity.skillCode}</CountChip>
-                    <Typography variant="rubikSubBold" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                      {activity.misconceptionTitle}
-                    </Typography>
-                  </ActivityContextRow>
-                  <Typography variant="smallBodyText" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                    {t('reflect.activityDescription')}
-                  </Typography>
-                </ActivityContext>
-                <ReflectionResults isLarge={isLarge}>
-                  <ScoreGroup>
-                    <Typography variant="headingMd" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                      {t('reflect.scoreTitle')}
+          <ReflectResultsSection>
+            <ReflectHeading>
+              <Typography variant="appTitle" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                {t('reflect.title')}
+              </Typography>
+              <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                {t('reflect.subtitle')}
+              </Typography>
+            </ReflectHeading>
+            <ReflectionCardList>
+              {reflect.implementedActivities.map((activity) => (
+                <ReflectionCard key={activity.id} elevation={4}>
+                  <ReflectionCardHeading>
+                    <Typography variant="headingLg" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                      {activity.title}
                     </Typography>
                     <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                      {t('reflect.scoreSubtitle')}
+                      {t('reflect.activitySubtitle')}
                     </Typography>
-                    <ScoreRow>
-                      <Typography variant="headingLg" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                        {t('reflect.percentCorrect', { percent: activity.masteryBefore })}
+                  </ReflectionCardHeading>
+                  <ActivityContext>
+                    <ActivityContextRow>
+                      <ReflectSkillCodeChip>
+                        {activity.skillCode}
+                      </ReflectSkillCodeChip>
+                      <Typography variant="rubikSubBold" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                        {activity.misconceptionTitle}
                       </Typography>
-                      <Typography variant="headingLg" sx={{ color: 'designSystem.surface.atlanticNavy' }}>→</Typography>
-                      <Typography variant="headingLg" sx={{ color: 'designSystem.surface.green' }}>
-                        {t('reflect.percentCorrect', { percent: activity.masteryAfter })}
+                    </ActivityContextRow>
+                    <Typography variant="smallBodyText" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                      {t('reflect.activityDescription')}
+                    </Typography>
+                  </ActivityContext>
+                  <ReflectionResults>
+                    <ScoreGroup>
+                      <Typography variant="headingMd" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                        {t('reflect.scoreTitle')}
                       </Typography>
-                      <ScoreChange>{t('reflect.percentagePointGain', { improvement })}</ScoreChange>
-                    </ScoreRow>
-                  </ScoreGroup>
-                  <ReflectDetailsButton disableElevation onClick={() => setSelectedActivity(activity)}>
-                    {t('reflect.viewDetails')}
-                  </ReflectDetailsButton>
-                </ReflectionResults>
-              </ReflectionCard>
-            );
-          })}
-        </ReflectContent>
+                      <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                        {t('reflect.scoreSubtitle')}
+                      </Typography>
+                      <ScoreRow>
+                        <Typography variant="reflectScore" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                          {t('reflect.percentCorrect', { percent: activity.masteryBefore })}
+                        </Typography>
+                        <Typography variant="reflectScore" sx={{ color: 'designSystem.surface.atlanticNavy' }}>→</Typography>
+                        <Typography variant="reflectScore" sx={{ color: 'designSystem.status.reflectionImprovement' }}>
+                          {t('reflect.percentCorrect', { percent: activity.masteryAfter })}
+                        </Typography>
+                        <ScoreChange>{t('reflect.averageQuestionsGainPlaceholder')}</ScoreChange>
+                      </ScoreRow>
+                    </ScoreGroup>
+                    <ReflectDetailsButton disableElevation onClick={() => setSelectedActivity(activity)}>
+                      {t('reflect.viewDetails')}
+                    </ReflectDetailsButton>
+                  </ReflectionResults>
+                </ReflectionCard>
+              ))}
+            </ReflectionCardList>
+          </ReflectResultsSection>
+        </ReflectPageContent>
       </AppContentRow>
     </ReflectPage>
   );

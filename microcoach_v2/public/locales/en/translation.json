@@ -14,6 +14,7 @@
     "understandAct": "Understand & Act",
     "prepare": "Prepare",
     "reflect": "Reflect",
+    "home": "Home",
     "myPlan": "My Plan",
     "myActivities": "My Activities",
     "myLessonPlan": "My Lesson Plan"
@@ -260,7 +261,7 @@
     "activitySubtitle": "Incorrect worked example analysis",
     "activityDescription": "Students examine a worked solution, identify the first step where the reasoning goes off track, explain why the mistake happened, and work together to correct it.",
     "scoreTitle": "MIU 1 → MIU 2 Score",
-    "scoreSubtitle": "Average percent correct across the class",
+    "scoreSubtitle": "Average percent correct across [MOCK DATA: 6 questions — TO BE REPLACED]",
     "addresses": "Addresses:",
     "mastery": "Class mastery improvement",
     "improved": "students showed improvement",
@@ -273,6 +274,7 @@
     "improvement": "Impact of the follow-up activity",
     "improvementSummary": "{{improvement}} percentage-point improvement, with {{students}} students showing improvement.",
     "percentCorrect": "{{percent}}%",
-    "percentagePointGain": "+{{improvement}} percentage points"
+    "percentagePointGain": "+{{improvement}} percentage points",
+    "averageQuestionsGainPlaceholder": "[MOCK DATA: +2.5 questions correct on average — TO BE REPLACED]"
   }
 }

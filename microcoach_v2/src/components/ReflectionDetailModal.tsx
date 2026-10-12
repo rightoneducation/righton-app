@@ -10,7 +10,7 @@ import { ScreenSize } from '../lib/MicroCoachModels';
 import { CountChip } from '../lib/styledcomponents/ReviewStyledComponents';
 import {
   ComparisonBlock,
-  ComparisonGrid,
+  ComparisonRow,
   ReflectModalBody,
 } from '../lib/styledcomponents/ReflectStyledComponents';
 import {
@@ -83,7 +83,7 @@ export default function ReflectionDetailModal({
               {activity.title}
             </Typography>
             <CountChip>{activity.skillCode}</CountChip>
-            <ComparisonGrid isLarge={isLarge}>
+            <ComparisonRow screenSize={screenSize}>
               <ComparisonBlock>
                 <Typography variant="rubikSubBold" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
                   {t('reflect.before')}
@@ -100,7 +100,7 @@ export default function ReflectionDetailModal({
                   {t('reflect.percentCorrect', { percent: activity.masteryAfter })}
                 </Typography>
               </ComparisonBlock>
-            </ComparisonGrid>
+            </ComparisonRow>
             <ComparisonBlock>
               <Typography variant="rubikSubBold" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
                 {t('reflect.improvement')}

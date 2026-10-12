@@ -111,6 +111,10 @@ const designSystemColors = {
     errorIcon: '#E68A9F',
     // status.lightGreen at 50% over white — the "Matches" representation card.
     successTint: '#F6FFF1',
+    // Reflect score comparison: Figma uses this darker green for the after
+    // score and its 20%-over-white composite for the average-gain chip.
+    reflectionImprovement: '#199072',
+    reflectionImprovementTint: '#D1E9E2',
   },
   // The plotted graph inside a representation card. Charts are their own
   // surface with their own legibility needs — same reason `gradients` is
@@ -355,6 +359,15 @@ const designSystemTypography = {
     fontSize: '24px',
     lineHeight: 'normal',
   },
+  reflectScore: {
+    fontFamily: poppins,
+    fontWeight: 600,
+    fontSize: '48px',
+    lineHeight: 'normal',
+    '@media (max-width:699px)': {
+      fontSize: '32px',
+    },
+  },
   statusLabel: {
     fontFamily: poppins,
     fontWeight: 500,
@@ -546,6 +559,7 @@ declare module '@mui/material/styles' {
     headingSm: CSSProperties;
     headingMd: CSSProperties;
     headingLg: CSSProperties;
+    reflectScore: CSSProperties;
     statusLabel: CSSProperties;
     smallBodyText: CSSProperties;
     headingMdBold: CSSProperties;
@@ -593,6 +607,7 @@ declare module '@mui/material/styles' {
     headingSm?: CSSProperties;
     headingMd?: CSSProperties;
     headingLg?: CSSProperties;
+    reflectScore?: CSSProperties;
     statusLabel?: CSSProperties;
     smallBodyText?: CSSProperties;
     headingMdBold?: CSSProperties;
@@ -641,6 +656,7 @@ declare module '@mui/material/Typography' {
     headingSm: true;
     headingMd: true;
     headingLg: true;
+    reflectScore: true;
     statusLabel: true;
     smallBodyText: true;
     headingMdBold: true;
@@ -724,6 +740,7 @@ const Theme = createTheme({
           headingSm: 'p',
           headingMd: 'p',
           headingLg: 'p',
+          reflectScore: 'p',
           statusLabel: 'p',
           smallBodyText: 'p',
           headingMdBold: 'p',
@@ -774,6 +791,7 @@ const Theme = createTheme({
     headingSm: { ...designSystemTypography.headingSm },
     headingMd: { ...designSystemTypography.headingMd },
     headingLg: { ...designSystemTypography.headingLg },
+    reflectScore: { ...designSystemTypography.reflectScore },
     statusLabel: { ...designSystemTypography.statusLabel },
     smallBodyText: { ...designSystemTypography.smallBodyText },
     headingMdBold: { ...designSystemTypography.headingMdBold },
