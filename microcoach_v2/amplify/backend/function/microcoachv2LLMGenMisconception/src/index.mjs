@@ -141,6 +141,64 @@ function formatQuestion(q) {
   return `${header}\n${stem}\n${rows.join('\n')}`;
 }
 
+// ── LaTeX in the output ───────────────────────────────────────────────────────
+// Copied from microcoachv2NextStepOption/src/index.mjs (each Lambda is its own
+// package): the descriptions and explanations now carry LaTeX, and the same
+// JSON-escape damage ("\\frac" parsed into a form feed + "rac") applies here.
+/**
+ * Strip control characters from every string in the generated activity.
+ *
+ * The model reaches for them as invisible separators when a field asks for an
+ * "inline sequence". Nothing renders them, so the page looks right while the bytes
+ * travel on into the PDF and the database. Tabs and newlines are kept.
+ */
+const CONTROL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F​-‍﻿]/g;
+
+/**
+ * Put back LaTeX commands that JSON parsing turned into control characters.
+ *
+ * When the model writes a command with a single backslash inside its JSON
+ * ("\rightarrow", "\frac", "\times", "\beta", "\neq"), the backslash and the
+ * first letter form a valid JSON escape, so parsing yields a carriage return,
+ * form feed, tab, backspace or newline followed by the rest of the command
+ * ("ightarrow", "rac"). Run 10-09 v29 stored "12ightarrow 3y" this way. A carriage
+ * return, tab, form feed or backspace directly before a letter is never intended
+ * in this content, so it is restored wherever it appears. A newline before a
+ * letter is ordinary prose outside math, so it is restored only inside $…$.
+ * Must run before CONTROL_CHARS, which would otherwise delete the form feed and
+ * backspace and leave "rac" and "egin" with nothing to show what they were.
+ */
+const LOST_ESCAPE_LETTER = { '\r': 'r', '\t': 't', '\f': 'f', '\b': 'b' };
+
+function restoreLostEscapes(text) {
+  return text
+    .replace(/[\r\t\f\b](?=[a-zA-Z])/g, (c) => `\\${LOST_ESCAPE_LETTER[c]}`)
+    .replace(/\$\$[^$]*\$\$|\$[^$]*\$/g, (span) => span.replace(/\n(?=[a-zA-Z])/g, '\\n'));
+}
+
+function sanitizeStrings(value) {
+  if (typeof value === 'string') {
+    // Two or more backslashes before a letter or a space are an over-escaped command,
+    // which LaTeX reads as a line break rather than the command meant. Strings
+    // with a begin-environment (cases, aligned) keep theirs: there it is the row break.
+    const cleaned = restoreLostEscapes(value).replace(CONTROL_CHARS, '');
+    const unescaped = /\\begin\{/.test(cleaned) ? cleaned : cleaned.replace(/\\{2,}(?=[a-zA-Z ])/g, '\\');
+    return unescaped.replace(/ {2,}/g, ' ').trim();
+  }
+  if (Array.isArray(value)) return value.map(sanitizeStrings);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, sanitizeStrings(v)]));
+  }
+  return value;
+}
+
+// The activity prompts' math rule (NextStepOption MATH_FORMATTING), scoped to
+// the fields the app renders as math. Titles stay plain words: they are short
+// noun phrases, and the admission checks read them for "(" and "or".
+const MATH_FORMATTING = `## Math formatting
+- In descriptions, wrong-answer explanations and question texts, use LaTeX for every mathematical expression: $...$ inline, $$...$$ for a standalone equation. Never use Unicode math symbols (≤ ≥ ≠ × ÷ √ π ½ ²) or caret/underscore notation outside the delimiters. Fractions are $\\frac{a}{b}$, inequalities $\\leq$ / $\\geq$, multiplication $\\times$. Write each command with ONE backslash: never \\\\ (a line break) or \\  (a forced space). Plain prose stays plain English — only the math goes inside delimiters.
+- Titles contain no math and no LaTeX: plain words only.`;
+
 export function buildPrompt(questions, context, learningScienceData) {
   const examples = STYLE_EXAMPLES.map((e) => `- ${e}`).join('\n');
   const learningScienceSection = formatLearningScience(learningScienceData);
@@ -176,6 +234,8 @@ export function buildPrompt(questions, context, learningScienceData) {
     - Descriptions: ${ws.descriptions ?? 'Concrete and specific. No hedging words.'}
     - Match the register of these real examples:
     ${examples}
+
+    ${MATH_FORMATTING}
 
     ## Grounding rules
     - Infer the most plausible mathematical misconception supported by the response pattern and the question content. Do not assume an incorrect answer corresponds to a single known misconception: a distractor can be reached by more than one route, and the Wave 2 answer key says which option is correct without saying what any distractor represents.
@@ -462,7 +522,8 @@ export const handler = async (event) => {
 
     const raw = completion.choices[0]?.message?.content;
     if (!raw) throw new Error('Empty completion content');
-    const structured = GenResponseForSession.parse(JSON.parse(raw));
+    // LaTeX commands parsed into control characters are put back before validation.
+    const structured = GenResponseForSession.parse(sanitizeStrings(JSON.parse(raw)));
     const { misconceptions, questions: validated, rejected, admissionFlags } = validateOutput(structured, questions);
 
     console.log(formatMisconceptionLog(misconceptions));

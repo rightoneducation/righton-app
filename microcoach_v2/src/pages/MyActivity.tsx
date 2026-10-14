@@ -35,6 +35,7 @@ import { useI18nReady } from '../hooks/readiness';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { IPlanItemsState } from '../hooks/usePlanItems';
+import MathTypography from '../components/MathTypography';
 
 // One card's height: what the loading spinner holds open (Figma: 310).
 const CARD_HEIGHT = 310;
@@ -75,9 +76,7 @@ function SavedActivityCard({
       <MisconceptionBand>
         <MisconceptionBandHead>
           {skillCode && <CodeChip>{skillCode}</CodeChip>}
-          <Typography variant="rubikBodyBold" component="h3">
-            {misconception.title}
-          </Typography>
+          <MathTypography variant="rubikBodyBold" component="h3" text={misconception.title} />
         </MisconceptionBandHead>
         <Typography variant="smallBodyText">{template.description}</Typography>
       </MisconceptionBand>

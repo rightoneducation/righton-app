@@ -2,7 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import {
   IMicroCoachMisconception,
@@ -22,6 +21,7 @@ import {
   PrevalenceTag,
 } from '../lib/styledcomponents/UnderstandStyledComponents';
 import { continueTooltipSx } from '../lib/styledcomponents/UploadStyledComponents';
+import MathTypography from './MathTypography';
 
 /** "Q2, Answers C & D; Q4, Answer A" — one clause per question. */
 export function formatResponseEvidence(
@@ -94,13 +94,12 @@ export default function MisconceptionCard({
             </Tooltip>
           )}
         </BadgeRow>
-        <Typography
+        <MathTypography
           variant="headingMd"
           component="h2"
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {misconception.title}
-        </Typography>
+          text={misconception.title}
+        />
         <Tooltip
           title={t(`review.prevalenceRange.${misconception.prevalence.level}`)}
           placement="bottom"
@@ -125,14 +124,13 @@ export default function MisconceptionCard({
 
       <LabelledBlock>
         <BlockLabel>{t('review.possibleExplanation')}</BlockLabel>
-        <Typography
+        <MathTypography
           variant="rubikBody"
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {[misconception.description, misconception.consequence]
+          text={[misconception.description, misconception.consequence]
             .filter(Boolean)
             .join(' ')}
-        </Typography>
+        />
       </LabelledBlock>
 
       <CardActions>

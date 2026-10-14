@@ -23,6 +23,7 @@ import {
   SkillTone,
   SkillToggle,
 } from '../lib/styledcomponents/MisconceptionModalStyledComponents';
+import MathText from './MathText';
 
 // Long enough to read a domain name after a tap; a hover leaves as usual.
 const TOOLTIP_TOUCH_HOLD_MS = 3000;
@@ -74,17 +75,19 @@ function SkillRow({ skill, tone, learningComponents = [] }: SkillRowProps) {
           aria-controls={detailId}
           onClick={() => setIsOpen((open) => !open)}
         >
-          <span>{skill.name ?? skill.code}</span>
+          <MathText text={skill.name ?? skill.code} inline />
           <Chevron fontSize="small" />
         </SkillToggle>
       </SkillRowHead>
       <Collapse in={isOpen} unmountOnExit>
         <SkillDetail id={detailId}>
-          <span>{skill.description}</span>
+          <MathText text={skill.description} inline />
           {learningComponents.length > 0 && (
             <ComponentList>
               {learningComponents.map((component) => (
-                <li key={component}>{component}</li>
+                <li key={component}>
+                  <MathText text={component} inline />
+                </li>
               ))}
             </ComponentList>
           )}

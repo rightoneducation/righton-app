@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import Typography from '@mui/material/Typography';
 import FlowStepper from './FlowStepper';
 import {
   buildFlowSteps,
@@ -20,6 +19,7 @@ import {
 import { ScreenSizeProps } from '../lib/styledcomponents/LandingStyledComponents';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { IPlanItemsState } from '../hooks/usePlanItems';
+import MathTypography from './MathTypography';
 
 interface FlowStepperBandProps extends ScreenSizeProps {
   sessions: UseSessionsResult;
@@ -70,9 +70,7 @@ export function MisconceptionSelectedBar({ title }: { title: string }) {
     <SelectedBar>
       <span>
         {`${t('chooseActivity.selected')} `}
-        <Typography component="strong" variant="uploadLabel" sx={{ fontWeight: 600 }}>
-          {title}
-        </Typography>
+        <MathTypography component="strong" variant="uploadLabel" sx={{ fontWeight: 600 }} text={title} />
       </span>
       <ChangeLink onClick={() => navigate('/review')}>
         {t('chooseActivity.change')}

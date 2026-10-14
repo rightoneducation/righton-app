@@ -36,6 +36,7 @@ import { useI18nReady } from '../hooks/readiness';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { IPlanItemsState } from '../hooks/usePlanItems';
+import MathText from '../components/MathText';
 
 // One card's height: what the loading spinner holds open (Figma: 544).
 const CARD_HEIGHT = 544;
@@ -219,7 +220,16 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
                 return (
                   <Tooltip
                     key={stat.questionNumber}
-                    title={stat.questionText ? `${label}. ${stat.questionText}` : ''}
+                    title={
+                      stat.questionText ? (
+                        <>
+                          {`${label}. `}
+                          <MathText text={stat.questionText} inline />
+                        </>
+                      ) : (
+                        ''
+                      )
+                    }
                     placement="bottom"
                     arrow
                     slotProps={continueTooltipSx}

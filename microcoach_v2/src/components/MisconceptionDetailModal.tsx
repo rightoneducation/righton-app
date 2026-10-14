@@ -10,6 +10,8 @@ import { IQuestionStat } from '../api/Models/IMicroCoachSession';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import StudentResponsesTab, { flaggedOptionKeys } from './StudentResponsesTab';
 import RelatedSkillsTab from './RelatedSkillsTab';
+import MathTypography from './MathTypography';
+import mathText from '../lib/mathText';
 import { CardBadge } from '../lib/styledcomponents/UnderstandStyledComponents';
 import {
   MODAL_MAX_HEIGHT,
@@ -102,13 +104,12 @@ function DetailContent({
                   : 'review.additional',
               )}
             </CardBadge>
-            <Typography
+            <MathTypography
               variant="headingLg"
               component="h3"
               sx={{ color: 'designSystem.surface.atlanticNavy' }}
-            >
-              {misconception.titleCased}
-            </Typography>
+              text={misconception.titleCased}
+            />
           </ModalHeading>
 
           <TabGroup screenSize={screenSize}>
@@ -205,7 +206,8 @@ export default function MisconceptionDetailModal({
     <Modal
       isOpen={Boolean(misconception)}
       onRequestClose={onClose}
-      contentLabel={misconception?.titleCased ?? ''}
+      // An accessible name is a plain string: math reads as text.
+      contentLabel={mathText(misconception?.titleCased)}
       style={{
         overlay: {
           backgroundColor: theme.palette.designSystem.background.scrim,

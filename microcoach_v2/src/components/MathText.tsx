@@ -1,6 +1,7 @@
 import React from 'react';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
+import { splitMath } from '../lib/mathDelimiters';
 
 /**
  * Renders a string that may contain LaTeX math expressions.
@@ -9,7 +10,9 @@ import 'katex/dist/katex.min.css';
  *   $...$   — inline math
  *   \[...\] — display (block) math
  *   \(...\) — inline math
- * Plain text between delimiters is rendered as-is.
+ * Plain text between delimiters is rendered as-is. What counts as math (and
+ * what is a price, like "$75 … $5") is decided by lib/mathDelimiters, the
+ * parser the PDFs share.
  * Falls back to raw text if KaTeX cannot parse an expression.
  *
  * When `inline` is true, display math is forced inline (no block breaks)
@@ -18,36 +21,6 @@ import 'katex/dist/katex.min.css';
  *
  * Ported from microcoach/prototype/src/components/MathText.js.
  */
-
-type Part = { type: 'text'; content: string } | { type: 'math'; content: string; display: boolean };
-
-// Match $$...$$ before $...$ to avoid the outer $ consuming first.
-// Also support LaTeX/MathJax \[...\] (display) and \(...\) (inline) delimiters.
-const DELIMITERS = /(\$\$[\s\S]+?\$\$|\$[^$\n]+?\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\))/g;
-
-function splitMath(text: string): Part[] {
-  const parts: Part[] = [];
-  let lastIndex = 0;
-  let match: RegExpExecArray | null;
-  const regex = new RegExp(DELIMITERS.source, 'g');
-
-  // eslint-disable-next-line no-cond-assign
-  while ((match = regex.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push({ type: 'text', content: text.slice(lastIndex, match.index) });
-    }
-    const token = match[0];
-    const isDisplay = token.startsWith('$$') || token.startsWith('\\[');
-    // $...$ delimiters are 1 char each; $$ \[ \] \( \) are all 2 chars each.
-    const trim = token.startsWith('$') && !token.startsWith('$$') ? 1 : 2;
-    parts.push({ type: 'math', content: token.slice(trim, -trim).trim(), display: isDisplay });
-    lastIndex = regex.lastIndex;
-  }
-  if (lastIndex < text.length) {
-    parts.push({ type: 'text', content: text.slice(lastIndex) });
-  }
-  return parts;
-}
 
 interface MathTextProps {
   text: string | null | undefined;
