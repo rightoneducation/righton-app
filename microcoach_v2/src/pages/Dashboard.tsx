@@ -8,8 +8,9 @@ import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AppSidebar from '../components/AppSidebar';
-import FlowStepper from '../components/FlowStepper';
+import ClassStepTrack from '../components/ClassStepTrack';
 import LoadingSlot from '../components/LoadingSlot';
+import WeeklyProgressList from '../components/WeeklyProgressList';
 import {
   SidebarLayout,
   SidebarContent,
@@ -17,6 +18,7 @@ import {
   DashboardHeading,
   DashboardForm,
   StepperBand,
+  StepperRow,
   MyActivityButton,
   PickerRow,
   PickerColumn,
@@ -42,6 +44,7 @@ import {
   buildFlowSteps,
   buildPendingFlowSteps,
   deriveCurrentStep,
+  hasChosenActivity,
   sortSessionsLatestFirst,
   stepCta,
 } from '../lib/flowProgress';
@@ -132,6 +135,7 @@ export default function Dashboard({
   // next action, rather than guessing a later step.
   const cta = stepCta(isStepKnown ? currentStep : FlowStep.ASSESS);
   const isCtaLoading = !sessionsKnown;
+  const canOpenMyActivity = isStepKnown && hasChosenActivity(currentStep);
   // Shown while classes load (a teacher normally has them); hidden only once
   // the list is known to be empty or failed.
   const showCta = !classesKnown || hasClasses;
@@ -170,10 +174,15 @@ export default function Dashboard({
         {isI18nReady && (
           <>
             <StepperBand screenSize={screenSize}>
-              <FlowStepper steps={flowSteps} screenSize={screenSize} />
+              {/* rev2 LandingPage: the circle track, not the flow pages'
+                  breadcrumb; StepperRow scrolls it sideways below LARGE. */}
+              <StepperRow screenSize={screenSize}>
+                <ClassStepTrack steps={flowSteps} size="large" />
+              </StepperRow>
               <MyActivityButton
                 disableElevation
-                onClick={() => navigate('/past-activities')}
+                disabled={!canOpenMyActivity}
+                onClick={() => navigate('/myactivity')}
               >
                 {t('dashboard.myActivity')}
               </MyActivityButton>
@@ -316,6 +325,14 @@ export default function Dashboard({
                 )}
               </DashboardForm>
             </DashboardCard>
+
+            {/* rev2 LandingPage: This Week now lives below the upload card. */}
+            <WeeklyProgressList
+              apiClients={apiClients}
+              screenSize={screenSize}
+              classrooms={classrooms}
+              sessions={sessions}
+            />
           </>
         )}
       </SidebarContent>

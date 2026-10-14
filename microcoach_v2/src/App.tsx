@@ -131,7 +131,8 @@ function App() {
             />
             <Route
               path="this-week"
-              element={<AppSwitch currentScreen={ScreenType.THIS_WEEK} />}
+              // This Week merged into Home (rev2 LandingPage).
+              element={<Navigate to="/dashboard" replace />}
             />
             <Route
               path="past-activities"

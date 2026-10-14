@@ -3,7 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import FlowStepper from './FlowStepper';
-import { buildFlowSteps, deriveCurrentStep } from '../lib/flowProgress';
+import {
+  buildFlowSteps,
+  deriveCurrentStep,
+  hasChosenActivity,
+} from '../lib/flowProgress';
 import {
   MyActivityButton,
   StepperBand,
@@ -22,21 +26,27 @@ interface FlowStepperBandProps extends ScreenSizeProps {
 }
 
 /**
- * The flow's top row (Select Activity, the activity phases, My Activity): the
- * class's place in the loop on the left, My Activity on the right.
+ * The flow's top row (Understand, Select Activity, the activity phases, My
+ * Activity): the class's place in the loop on the left, My Activity on the
+ * right, greyed out until an activity is chosen.
  */
 export function FlowStepperBand({ screenSize, sessions, plan }: FlowStepperBandProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const flowSteps = buildFlowSteps(
-    deriveCurrentStep(sessions.selectedSession, plan.planItems.length > 0),
-    t,
+  const currentStep = deriveCurrentStep(
+    sessions.selectedSession,
+    plan.planItems.length > 0,
   );
+  const flowSteps = buildFlowSteps(currentStep, t);
 
   return (
     <StepperBand screenSize={screenSize}>
       <FlowStepper steps={flowSteps} screenSize={screenSize} />
-      <MyActivityButton disableElevation onClick={() => navigate('/past-activities')}>
+      <MyActivityButton
+        disableElevation
+        disabled={!hasChosenActivity(currentStep)}
+        onClick={() => navigate('/myactivity')}
+      >
         {t('dashboard.myActivity')}
       </MyActivityButton>
     </StepperBand>

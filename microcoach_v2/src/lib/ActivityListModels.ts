@@ -45,17 +45,21 @@ const byClass = (a: IPastActivity, b: IPastActivity) =>
   a.className.localeCompare(b.className);
 
 /**
- * Date orders group under week headings (v2 Dashboard3_a), classes A-Z within
- * a week. By class is one flat list, oldest first within a class as drawn
- * (Dashboard3_b; design marked this order for further review).
+ * Date orders group under week headings (rev2 PastActivities), classes A-Z
+ * within a week. By class is one flat list.
  */
 export function groupPastActivities(
   rows: IPastActivity[],
   order: ActivitySortOrder,
 ): IPastActivityGroup[] {
   if (order === ActivitySortOrder.BY_CLASS) {
+    // rev2 design note: most recently completed, then activity name, break
+    // ties within a class.
     const sorted = [...rows].sort(
-      (a, b) => byClass(a, b) || a.completedAt.localeCompare(b.completedAt),
+      (a, b) =>
+        byClass(a, b) ||
+        b.completedAt.localeCompare(a.completedAt) ||
+        (a.activityName ?? '').localeCompare(b.activityName ?? ''),
     );
     return [{ weekStart: null, rows: sorted }];
   }

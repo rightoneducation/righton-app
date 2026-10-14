@@ -1,4 +1,4 @@
-import { styled, Theme } from '@mui/material/styles';
+import { alpha, styled, Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ButtonBase from '@mui/material/ButtonBase';
@@ -345,6 +345,12 @@ export const MyActivityButton = styled(Button)(({ theme }) => ({
   whiteSpace: 'nowrap',
   '&:hover': {
     backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
+  },
+  // rev2 LandingPage: greyed out (#666666 at 50%; ashyGray, 7 off) until the
+  // class has a chosen activity.
+  '&.Mui-disabled': {
+    backgroundColor: alpha(theme.palette.designSystem.surface.ashyGray, 0.5),
+    color: theme.palette.designSystem.surface.white,
   },
 }));
 

@@ -14,7 +14,6 @@ import SignUpWizard from '../containers/SignUpWizard';
 import ResetPassword from '../pages/ResetPassword';
 import AuthCallback from '../pages/AuthCallback';
 import Dashboard from '../pages/Dashboard';
-import ThisWeek from '../pages/ThisWeek';
 import PastActivities from '../pages/PastActivities';
 import Review from '../pages/Review';
 import ChooseActivity from '../pages/ChooseActivity';
@@ -73,7 +72,6 @@ const AVATAR_HEADER_SCREENS = new Set<ScreenType>([
   ScreenType.PROFILE,
   ScreenType.CHANGE_PASSWORD,
   ScreenType.DASHBOARD,
-  ScreenType.THIS_WEEK,
   ScreenType.PAST_ACTIVITIES,
   ScreenType.UPLOAD_MIU,
 ]);
@@ -97,7 +95,6 @@ const APP_CHROME_SCREENS = new Set<ScreenType>([
   ScreenType.UPLOAD_REASSESS,
   ScreenType.REFLECT,
   ScreenType.DASHBOARD,
-  ScreenType.THIS_WEEK,
   ScreenType.PAST_ACTIVITIES,
   ScreenType.REVIEW,
   ScreenType.CHOOSE_ACTIVITY,
@@ -180,16 +177,6 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
           classrooms={classrooms}
           sessions={sessions}
           plan={plan}
-        />
-      );
-      break;
-    case ScreenType.THIS_WEEK:
-      screenComponent = (
-        <ThisWeek
-          apiClients={apiClients}
-          screenSize={screenSize}
-          classrooms={classrooms}
-          sessions={sessions}
         />
       );
       break;

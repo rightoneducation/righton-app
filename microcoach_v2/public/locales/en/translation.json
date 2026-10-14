@@ -75,6 +75,7 @@
     "title": "Understand Your Students' Thinking",
     "subtitle": "MicroCoach surfaces misconception patterns in your students' responses, along with possible explanations for the thinking behind them.",
     "worksAnalyzed": "{{count}} student works analyzed",
+    "viewMiu": "View Mix It Up",
     "viewDetails": "View details",
     "recommendedFocus": "Recommended focus",
     "additional": "Additional misconception",
@@ -159,7 +160,6 @@
     "noClassesTitle": "Add your classes to get started",
     "sidebar": {
       "dashboard": "Home",
-      "thisWeek": "This Week",
       "pastActivities": "Past Activities"
     },
     "myActivity": "My activity",
@@ -170,26 +170,26 @@
     "loadingClasses": "Loading your classes",
     "loadingNextStep": "Loading your next step"
   },
-  "thisWeek": {
+  "weeklyProgress": {
     "title": "Weekly Activity Progress",
     "weekHeading": "Week {{number}}: {{range}}",
     "students": "{{count}} students",
     "waiting": "Waiting on MicroCoach...",
     "status": {
-      "ASSESS": "Upload your Monday MIU files to get started",
-      "AWAITING": "Analyzing your MIU files, results coming soon",
+      "ASSESS": "Understand your students’ thinking",
+      "AWAITING": "Analyzing MIU files, expect email results within 48 hours",
       "UNDERSTAND": "Understand misconceptions before choosing an activity",
       "CHOOSE": "Select your next activity",
-      "REASSESS": "Compare your MIU results to understand class growth",
-      "REFLECT": "Reflect on how your class has grown",
+      "REASSESS": "See how student understanding has changed",
+      "REFLECT": "See how student understanding has changed",
       "DONE": "This week's activity is complete"
     },
     "action": {
-      "ASSESS": "Upload MIU files",
+      "ASSESS": "Upload MIU 1 files",
       "UNDERSTAND": "Review misconceptions",
       "CHOOSE": "View activities",
-      "REASSESS": "Reassess results",
-      "REFLECT": "Reflect",
+      "REASSESS": "Upload MIU 2 files",
+      "REFLECT": "View results",
       "DONE": "View data"
     },
     "empty": "No classes yet. Add your classes in Account Settings."
@@ -203,7 +203,9 @@
     "viewData": "View data",
     "sort": "Sort",
     "sortLabel": "Sort activities",
-    "sortClass": "By class",
+    "sortNewest": "Date: Newest first",
+    "sortOldest": "Date: Oldest first",
+    "sortClass": "By class: A-Z",
     "empty": "No completed activities yet.",
     "untitled": "Activity"
   },

@@ -5,18 +5,14 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import CancelIcon from '@mui/icons-material/Cancel';
-import FlowStepper from '../components/FlowStepper';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import { FlowStepperBand } from '../components/FlowHeader';
 import LoadingSlot from '../components/LoadingSlot';
 import MisconceptionCard from '../components/MisconceptionCard';
 import MisconceptionDetailModal, {
   MisconceptionDetailSelection,
 } from '../components/MisconceptionDetailModal';
 import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
-import { buildFlowSteps, deriveCurrentStep } from '../lib/flowProgress';
-import {
-  MyActivityButton,
-  StepperBand,
-} from '../lib/styledcomponents/DashboardStyledComponents';
 import {
   BannerOverlay,
   CardRow,
@@ -29,6 +25,7 @@ import {
   TitleRow,
   UnderstandColumn,
   UnderstandPage,
+  ViewMiuLink,
   WorksPill,
   ScreenSizeProps,
 } from '../lib/styledcomponents/UnderstandStyledComponents';
@@ -101,11 +98,11 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
     dismissedFor !== sessionId &&
     !readBannerSeen(sessionId);
 
-  const flowSteps = buildFlowSteps(
-    deriveCurrentStep(session, plan.planItems.length > 0),
-    t,
-  );
   const questionStats = session?.questionStats ?? [];
+  // The MIU PDF behind "View Mix It Up" (rev2 Misconceptions). No session or
+  // assessment field holds one yet (the schema is the intern's workstream), so
+  // the link stays hidden until one does; point this at that field.
+  const miuPdfUrl: string | null = null;
   const selectedMisconception =
     misconceptions.find((item) => item.id === selected?.id) ?? null;
 
@@ -125,15 +122,11 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
   return (
     <UnderstandPage screenSize={screenSize}>
       <UnderstandColumn>
-        <StepperBand screenSize={screenSize}>
-          <FlowStepper steps={flowSteps} screenSize={screenSize} />
-          <MyActivityButton
-            disableElevation
-            onClick={() => navigate('/past-activities')}
-          >
-            {t('dashboard.myActivity')}
-          </MyActivityButton>
-        </StepperBand>
+        <FlowStepperBand
+          screenSize={screenSize}
+          sessions={sessions}
+          plan={plan}
+        />
 
         <TitleGroup>
           <TitleRow>
@@ -148,6 +141,12 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
               <WorksPill>
                 {t('review.worksAnalyzed', { count: session.studentWorksAnalyzed })}
               </WorksPill>
+            )}
+            {miuPdfUrl && (
+              <ViewMiuLink href={miuPdfUrl} target="_blank" rel="noopener noreferrer">
+                <DescriptionOutlinedIcon fontSize="small" aria-hidden />
+                {t('review.viewMiu')}
+              </ViewMiuLink>
             )}
           </TitleRow>
           <Typography

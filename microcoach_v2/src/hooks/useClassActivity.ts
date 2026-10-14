@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IAPIClients } from '../api';
 import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
@@ -7,17 +7,11 @@ import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
 import { deriveCurrentStep } from '../lib/flowProgress';
 import { IPastActivity, IWeeklyClassProgress } from '../lib/ActivityListModels';
 import { weekOf } from '../lib/weeks';
-import {
-  useMicroCoachDataDispatch,
-  useMicroCoachDataState,
-} from './context/useMicroCoachDataContext';
 
 export interface UseClassActivityResult {
   thisWeek: IWeeklyClassProgress[];
   past: IPastActivity[];
   status: MicroCoachDataStatus;
-  // Deletes the session; resolves false when the delete failed.
-  removeSession: (sessionId: string) => Promise<boolean>;
 }
 
 interface ClassActivity {
@@ -122,18 +116,13 @@ export function useClassActivity(
   apiClients: IAPIClients,
   classrooms: IMicroCoachClassroom[] | null,
 ): UseClassActivityResult {
-  const { sessions: selectedClassSessions, selectedSessionId } =
-    useMicroCoachDataState();
-  const dispatch = useMicroCoachDataDispatch();
-  const classKey = classrooms?.map((classroom) => classroom.id).join(',') ?? null;
-  // Bumped after a delete to refetch.
-  const [reloadToken, setReloadToken] = useState(0);
+  const requestKey =
+    classrooms?.map((classroom) => classroom.id).join(',') ?? null;
   const [result, setResult] = useState<{
     key: string;
     data: ClassActivity;
     status: MicroCoachDataStatus;
   } | null>(null);
-  const requestKey = classKey === null ? null : `${classKey}#${reloadToken}`;
 
   useEffect(() => {
     if (requestKey === null || !classrooms) return undefined;
@@ -161,37 +150,8 @@ export function useClassActivity(
     // classrooms is read through requestKey, which changes whenever its ids do.
   }, [apiClients, requestKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const removeSession = useCallback(
-    async (sessionId: string) => {
-      try {
-        const deleted = await apiClients.session.deleteSession(sessionId);
-        if (!deleted) return false;
-        // The app-wide session list (the selected class's) must not keep a
-        // deleted session, or the dashboard, Review and Reflect would point at it.
-        if (selectedClassSessions.some((session) => session.id === sessionId)) {
-          const remaining = selectedClassSessions.filter(
-            (session) => session.id !== sessionId,
-          );
-          dispatch({ type: 'SET_SESSIONS', payload: remaining });
-          if (selectedSessionId === sessionId) {
-            dispatch({
-              type: 'SET_SELECTED_SESSION_ID',
-              payload: remaining[0]?.id ?? null,
-            });
-          }
-        }
-        setReloadToken((token) => token + 1);
-        return true;
-      } catch (error) {
-        console.error('Could not delete session', error);
-        return false;
-      }
-    },
-    [apiClients, dispatch, selectedClassSessions, selectedSessionId],
-  );
-
-  // Keep the last answer on screen while a refetch runs, so a delete does not
-  // flash the list back to a spinner.
+  // Keep the last answer on screen while a refetch runs (the class list
+  // changed), so the list does not flash back to a spinner.
   const isCurrent = result !== null && result.key === requestKey;
   let status = MicroCoachDataStatus.LOADING;
   if (isCurrent) status = result.status;
@@ -203,6 +163,5 @@ export function useClassActivity(
     thisWeek: result?.data.thisWeek ?? [],
     past: result?.data.past ?? [],
     status,
-    removeSession,
   };
 }

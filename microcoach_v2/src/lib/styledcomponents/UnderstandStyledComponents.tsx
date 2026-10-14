@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { ScreenSize } from '../MicroCoachModels';
 import { noScreenSize, ScreenSizeProps } from './LandingStyledComponents';
@@ -70,6 +71,19 @@ export const WorksPill = styled(Typography)(({ theme }) => ({
   color: theme.palette.designSystem.surface.atlanticNavy,
   ...theme.typography.rubikBody,
   boxSizing: 'border-box',
+}));
+
+// rev2 Misconceptions: "View Mix It Up" beside the works pill — a document
+// icon and Rubik 16/600 in brightBlue, opening the MIU PDF in a new tab.
+export const ViewMiuLink = styled(Link)(({ theme }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: theme.sizing.space1,
+  color: theme.palette.designSystem.foreground.brightBlue,
+  ...theme.typography.rubikBody,
+  fontWeight: 600,
+  textDecoration: 'none',
+  '&:hover, &:focus-visible': { textDecoration: 'underline' },
 }));
 
 // Figma (frame 3): a one-time overlay across the title, so it takes no space.

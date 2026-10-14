@@ -75,6 +75,7 @@
     "title": "Comprenda el pensamiento de sus estudiantes",
     "subtitle": "MicroCoach muestra patrones de conceptos erróneos en las respuestas de tus estudiantes, junto con posibles explicaciones del razonamiento detrás de ellos.",
     "worksAnalyzed": "{{count}} trabajos de estudiantes analizados",
+    "viewMiu": "Ver Mix It Up",
     "viewDetails": "Ver detalles",
     "recommendedFocus": "Enfoque recomendado",
     "additional": "Concepto erróneo adicional",
@@ -159,7 +160,6 @@
     "noClassesTitle": "Agrega tus clases para comenzar",
     "sidebar": {
       "dashboard": "Inicio",
-      "thisWeek": "Esta semana",
       "pastActivities": "Actividades anteriores"
     },
     "myActivity": "Mi actividad",
@@ -170,26 +170,26 @@
     "loadingClasses": "Cargando tus clases",
     "loadingNextStep": "Cargando tu próximo paso"
   },
-  "thisWeek": {
+  "weeklyProgress": {
     "title": "Progreso semanal de actividades",
     "weekHeading": "Semana {{number}}: {{range}}",
     "students": "{{count}} estudiantes",
     "waiting": "Esperando a MicroCoach...",
     "status": {
-      "ASSESS": "Sube tus archivos MIU del lunes para comenzar",
-      "AWAITING": "Analizando tus archivos MIU, los resultados llegarán pronto",
+      "ASSESS": "Comprende el pensamiento de tus estudiantes",
+      "AWAITING": "Analizando los archivos MIU, recibirás los resultados por correo en 48 horas",
       "UNDERSTAND": "Comprende los conceptos erróneos antes de elegir una actividad",
       "CHOOSE": "Selecciona tu próxima actividad",
-      "REASSESS": "Compara tus resultados MIU para comprender el crecimiento de la clase",
-      "REFLECT": "Reflexiona sobre cómo ha crecido tu clase",
+      "REASSESS": "Observa cómo ha cambiado la comprensión de tus estudiantes",
+      "REFLECT": "Observa cómo ha cambiado la comprensión de tus estudiantes",
       "DONE": "La actividad de esta semana está completa"
     },
     "action": {
-      "ASSESS": "Subir archivos MIU",
+      "ASSESS": "Subir archivos MIU 1",
       "UNDERSTAND": "Revisar conceptos erróneos",
       "CHOOSE": "Ver actividades",
-      "REASSESS": "Resultados de reevaluación",
-      "REFLECT": "Reflexionar",
+      "REASSESS": "Subir archivos MIU 2",
+      "REFLECT": "Ver resultados",
       "DONE": "Ver datos"
     },
     "empty": "Aún no hay clases. Agrega tus clases en Configuración de la cuenta."
@@ -203,7 +203,9 @@
     "viewData": "Ver datos",
     "sort": "Ordenar",
     "sortLabel": "Ordenar actividades",
-    "sortClass": "Por clase",
+    "sortNewest": "Fecha: más recientes primero",
+    "sortOldest": "Fecha: más antiguas primero",
+    "sortClass": "Por clase: A-Z",
     "empty": "Aún no hay actividades completadas.",
     "untitled": "Actividad"
   },

@@ -3,16 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import SidebarPage from '../components/SidebarPage';
 import ActivitySortMenu from '../components/ActivitySortMenu';
 import LoadingSlot from '../components/LoadingSlot';
-import ConfirmRemoveDialog from '../components/ConfirmRemoveDialog';
 import { IAPIClients } from '../api';
 import { UseClassroomsResult } from '../hooks/useClassrooms';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { useClassActivity } from '../hooks/useClassActivity';
-import { useConfirmRemove } from '../hooks/useConfirmRemove';
 import { useOpenClassSession } from '../hooks/useOpenClassSession';
 import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
 import {
@@ -29,17 +26,14 @@ import {
   CardColumn,
   CardLine,
   CardMessage,
-  CardRow,
   ClassName,
   CompletedTag,
-  RemoveTile,
   StudentsTag,
   WeekHeading,
   WeekGroup,
   WeekHeadingRow,
   ScreenSizeProps,
 } from '../lib/styledcomponents/ActivityListStyledComponents';
-
 
 // One card's height: what the loading spinner holds open.
 const CARD_HEIGHT = 128;
@@ -68,7 +62,6 @@ export default function PastActivities({
     apiClients,
     classesKnown ? classrooms.classrooms : null,
   );
-  const remove = useConfirmRemove(activity.removeSession);
   const openClassSession = useOpenClassSession(classrooms, sessions);
   const isLoading = activity.status === MicroCoachDataStatus.LOADING;
   const hasFailed =
@@ -122,66 +115,54 @@ export default function PastActivities({
                 </WeekHeadingRow>
                 <ActivityList>
                   {group.rows.map((row) => (
-                    <CardRow key={row.id}>
-                      <ActivityCard screenSize={screenSize}>
-                        <CardColumn align="start">
-                          <CardLine>
-                            <ClassName>{row.className}</ClassName>
-                            <StudentsTag>
-                              {t('pastActivities.students', {
-                                count: row.studentCount,
-                              })}
-                            </StudentsTag>
-                            <CompletedTag>
-                              {t('pastActivities.completed', {
-                                date: formatShortDate(row.completedAt, i18n.language),
-                              })}
-                            </CompletedTag>
-                          </CardLine>
-                          <ActivityName>
-                            {row.activityName ?? t('pastActivities.untitled')}
-                          </ActivityName>
-                        </CardColumn>
-                        <CardColumn align="end">
-                          <CardMessage>{t('pastActivities.reviewResults')}</CardMessage>
-                          {/* Design note: View data goes back to the reflect screen. */}
-                          <CardActionButton
-                            disableElevation
-                            endIcon={<ChevronRightIcon />}
-                            onClick={() =>
-                              openClassSession({
-                                classId: row.classId,
-                                sessionId: row.id,
-                                path: '/reflect',
-                              })
-                            }
-                          >
-                            {t('pastActivities.viewData')}
-                          </CardActionButton>
-                        </CardColumn>
-                      </ActivityCard>
-                      <RemoveTile
-                        aria-label={`${t('activityList.remove')} ${row.className}`}
-                        onClick={() =>
-                          remove.ask({ id: row.id, className: row.className })
-                        }
-                      >
-                        <DeleteOutlineIcon fontSize="small" />
-                      </RemoveTile>
-                    </CardRow>
+                    <ActivityCard key={row.id} screenSize={screenSize}>
+                      <CardColumn align="start">
+                        <CardLine>
+                          <ClassName>{row.className}</ClassName>
+                          <StudentsTag>
+                            {t('pastActivities.students', {
+                              count: row.studentCount,
+                            })}
+                          </StudentsTag>
+                          <CompletedTag>
+                            {t('pastActivities.completed', {
+                              date: formatShortDate(
+                                row.completedAt,
+                                i18n.language,
+                              ),
+                            })}
+                          </CompletedTag>
+                        </CardLine>
+                        <ActivityName>
+                          {row.activityName ?? t('pastActivities.untitled')}
+                        </ActivityName>
+                      </CardColumn>
+                      <CardColumn align="end">
+                        <CardMessage>
+                          {t('pastActivities.reviewResults')}
+                        </CardMessage>
+                        {/* Design note: View data goes back to the reflect screen. */}
+                        <CardActionButton
+                          disableElevation
+                          endIcon={<ChevronRightIcon />}
+                          onClick={() =>
+                            openClassSession({
+                              classId: row.classId,
+                              sessionId: row.id,
+                              path: '/reflect',
+                            })
+                          }
+                        >
+                          {t('pastActivities.viewData')}
+                        </CardActionButton>
+                      </CardColumn>
+                    </ActivityCard>
                   ))}
                 </ActivityList>
               </WeekGroup>
             ))}
         </LoadingSlot>
       </ActivityGroupList>
-      <ConfirmRemoveDialog
-        className={remove.target?.className ?? null}
-        isRemoving={remove.isRemoving}
-        hasError={remove.hasError}
-        onCancel={remove.cancel}
-        onConfirm={remove.confirm}
-      />
     </SidebarPage>
   );
 }

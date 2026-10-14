@@ -48,6 +48,13 @@ export function deriveCurrentStep(
   return FlowStep.UNDERSTAND;
 }
 
+// Whether the class has an activity to show on My Activity: saving a plan is
+// what moves it on to REASSESS. Until then the button is greyed out (rev2
+// LandingPage).
+export function hasChosenActivity(step: FlowStep): boolean {
+  return [FlowStep.REASSESS, FlowStep.REFLECT, FlowStep.DONE].includes(step);
+}
+
 /*
  * Where each step lives once it is done. Not stepCta: that answers "what next"
  * for the current step, so CHOOSE there means go and choose (/review), while a
