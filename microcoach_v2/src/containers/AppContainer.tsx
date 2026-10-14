@@ -43,6 +43,9 @@ interface AppContainerProps {
   classrooms?: IMicroCoachClassroom[];
   selectedClassroomId?: string | null;
   onSelectClassroom?: (classroomId: string) => void;
+  // The teacher's picture for the header avatar; initials when null.
+  profilePictureUrl?: string | null;
+  areClassesLoading?: boolean;
 }
 
 export default function AppContainer({
@@ -52,6 +55,8 @@ export default function AppContainer({
   showFooter = true,
   showHelp = true,
   onLogOut,
+  profilePictureUrl = null,
+  areClassesLoading = false,
   classrooms,
   selectedClassroomId,
   onSelectClassroom,
@@ -68,6 +73,8 @@ export default function AppContainer({
         classrooms={classrooms}
         selectedClassroomId={selectedClassroomId}
         onSelectClassroom={onSelectClassroom}
+        profilePictureUrl={profilePictureUrl}
+        areClassesLoading={areClassesLoading}
       />
       <BodyContainer component="main">{children}</BodyContainer>
       {showHelp && (headerVariant === 'app' || headerVariant === 'avatar') && (

@@ -11,7 +11,6 @@ import {
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import Modal from 'react-modal';
 import { APIClients, AppType, Environment } from './api';
 import Theme from './lib/Theme';
 import { GOOGLE_OAUTH_CLIENT_ID, ScreenType } from './lib/MicroCoachModels';
@@ -39,11 +38,6 @@ import { MicroCoachDataProvider } from './lib/context/MicroCoachDataContext';
  * where the resolver can also reach useNavigate, and reaches the screens through
  * the Outlet.
  */
-// react-modal needs to know the app root so it can mark it aria-hidden while a
-// modal is open. Without this it warns and leaves the background readable by
-// screen readers — the other apps in the monorepo skip it.
-Modal.setAppElement('#root');
-
 function RootLayout({ apiClients }: { apiClients: APIClients }) {
   const user = useUserState(apiClients);
   // On-load session restore: without it a refresh comes up signed out and the
@@ -131,7 +125,8 @@ function App() {
             />
             <Route
               path="this-week"
-              element={<AppSwitch currentScreen={ScreenType.THIS_WEEK} />}
+              // This Week merged into Home (rev2 LandingPage).
+              element={<Navigate to="/dashboard" replace />}
             />
             <Route
               path="past-activities"
@@ -188,6 +183,8 @@ function App() {
               protect.
             */}
             <Route path="preview" element={<Preview />} />
+            {/* Any other URL goes to the landing page instead of the router's error page. */}
+            <Route path="*" element={<Navigate to="/" replace />} />
         </Route>,
       ),
     );

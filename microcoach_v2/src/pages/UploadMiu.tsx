@@ -11,6 +11,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import { SkeletonPill } from '../components/skeletons/SkeletonParts';
 import { AssessmentType } from '../AWSAPI';
 import ContentRow from '../components/ContentRow';
 import {
@@ -148,8 +149,11 @@ function FileSlotCard({
         >
           <UploadedFileRow isError={!!upload.error}>
             <UploadedFileMain>
+              {/* A long name truncates so the status and X stay in the row. */}
               <Typography
                 variant="statusLabel"
+                noWrap
+                title={upload.name}
                 sx={{ color: 'designSystem.background.navyBlue' }}
               >
                 {upload.name}
@@ -230,6 +234,7 @@ export default function UploadMiu({
   upload,
   actions,
   classrooms,
+  areClassesLoading,
   teacher,
 }: UploadStepProps) {
   const { t, i18n } = useTranslation();
@@ -324,6 +329,12 @@ export default function UploadMiu({
                   >
                     {t('upload.class')}
                   </Typography>
+                  {/* While the class list loads, its shape rather than "No classes yet". */}
+                  {areClassesLoading ? (
+                    <Box role="status" aria-busy aria-label={t('upload.class')}>
+                      <SkeletonPill width="100%" height={42} radius={9} />
+                    </Box>
+                  ) : (
                   <SetupSelect
                     id="upload-class"
                     isEmpty={!hasClass}
@@ -346,6 +357,7 @@ export default function UploadMiu({
                       </MenuItem>
                     ))}
                   </SetupSelect>
+                  )}
                 </SetupField>
                 <SetupField>
                   <Typography

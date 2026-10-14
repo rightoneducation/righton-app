@@ -9,6 +9,7 @@ export type CreateMicroCoachUserInput = {
   firstName?: string | null,
   lastName?: string | null,
   school?: string | null,
+  profilePicPath?: string | null,
   role: UserRole,
   createdAt?: string | null,
   updatedAt?: string | null,
@@ -26,6 +27,7 @@ export type ModelMicroCoachUserConditionInput = {
   firstName?: ModelStringInput | null,
   lastName?: ModelStringInput | null,
   school?: ModelStringInput | null,
+  profilePicPath?: ModelStringInput | null,
   role?: ModelUserRoleInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
@@ -87,6 +89,7 @@ export type MicroCoachUser = {
   firstName?: string | null,
   lastName?: string | null,
   school?: string | null,
+  profilePicPath?: string | null,
   classes?: ModelMicroCoachClassroomConnection | null,
   role: UserRole,
   createdAt: string,
@@ -341,6 +344,7 @@ export type UpdateMicroCoachUserInput = {
   firstName?: string | null,
   lastName?: string | null,
   school?: string | null,
+  profilePicPath?: string | null,
   role?: UserRole | null,
   createdAt?: string | null,
   updatedAt?: string | null,
@@ -1126,6 +1130,7 @@ export type ModelMicroCoachUserFilterInput = {
   firstName?: ModelStringInput | null,
   lastName?: ModelStringInput | null,
   school?: ModelStringInput | null,
+  profilePicPath?: ModelStringInput | null,
   role?: ModelUserRoleInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
@@ -1322,6 +1327,7 @@ export type ModelSubscriptionMicroCoachUserFilterInput = {
   firstName?: ModelSubscriptionStringInput | null,
   lastName?: ModelSubscriptionStringInput | null,
   school?: ModelSubscriptionStringInput | null,
+  profilePicPath?: ModelSubscriptionStringInput | null,
   role?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
@@ -1533,6 +1539,7 @@ export type CreateMicroCoachUserMutation = {
     firstName?: string | null,
     lastName?: string | null,
     school?: string | null,
+    profilePicPath?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -1607,6 +1614,7 @@ export type UpdateMicroCoachUserMutation = {
     firstName?: string | null,
     lastName?: string | null,
     school?: string | null,
+    profilePicPath?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -1681,6 +1689,7 @@ export type DeleteMicroCoachUserMutation = {
     firstName?: string | null,
     lastName?: string | null,
     school?: string | null,
+    profilePicPath?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -3263,6 +3272,7 @@ export type GetMicroCoachUserQuery = {
     firstName?: string | null,
     lastName?: string | null,
     school?: string | null,
+    profilePicPath?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -3340,6 +3350,7 @@ export type ListMicroCoachUsersQuery = {
       firstName?: string | null,
       lastName?: string | null,
       school?: string | null,
+      profilePicPath?: string | null,
       classes?:  {
         __typename: "ModelMicroCoachClassroomConnection",
         items:  Array< {
@@ -3930,6 +3941,7 @@ export type UsersByCognitoIdQuery = {
       firstName?: string | null,
       lastName?: string | null,
       school?: string | null,
+      profilePicPath?: string | null,
       classes?:  {
         __typename: "ModelMicroCoachClassroomConnection",
         items:  Array< {
@@ -3980,6 +3992,7 @@ export type UsersByEmailQuery = {
       firstName?: string | null,
       lastName?: string | null,
       school?: string | null,
+      profilePicPath?: string | null,
       classes?:  {
         __typename: "ModelMicroCoachClassroomConnection",
         items:  Array< {
@@ -4030,6 +4043,7 @@ export type UsersByRoleQuery = {
       firstName?: string | null,
       lastName?: string | null,
       school?: string | null,
+      profilePicPath?: string | null,
       classes?:  {
         __typename: "ModelMicroCoachClassroomConnection",
         items:  Array< {
@@ -5122,6 +5136,7 @@ export type OnCreateMicroCoachUserSubscription = {
     firstName?: string | null,
     lastName?: string | null,
     school?: string | null,
+    profilePicPath?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -5196,6 +5211,7 @@ export type OnUpdateMicroCoachUserSubscription = {
     firstName?: string | null,
     lastName?: string | null,
     school?: string | null,
+    profilePicPath?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -5270,6 +5286,7 @@ export type OnDeleteMicroCoachUserSubscription = {
     firstName?: string | null,
     lastName?: string | null,
     school?: string | null,
+    profilePicPath?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {

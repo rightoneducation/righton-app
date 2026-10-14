@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -18,13 +19,16 @@ import {
 import { useI18nReady } from '../hooks/readiness';
 
 /**
- * Files submitted (Figma Upload5): the analysis has started. "Start over"
+ * Files submitted (Figma Upload5): the analysis has started. "Back to
+ * homepage" leaves it running (rev2 design note; no frame, so it sits first
+ * in the action row, as on the upload step). "Start over"
  * confirms, then cancels this submission; "Upload new classroom" starts a fresh
  * upload and leaves this one running.
  */
 export default function UploadMiuSubmitted(props: UploadStepProps) {
   const { screenSize, actions } = props;
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const theme = useTheme();
   const isI18nReady = useI18nReady();
   const isLarge = screenSize === ScreenSize.LARGE;
@@ -105,6 +109,12 @@ export default function UploadMiuSubmitted(props: UploadStepProps) {
           <GhostAction
             disableElevation
             startIcon={<ArrowBackIcon fontSize="small" />}
+            onClick={() => navigate('/dashboard')}
+          >
+            {t('upload.backHome')}
+          </GhostAction>
+          <GhostAction
+            disableElevation
             onClick={() => setIsConfirming(true)}
           >
             {t('upload.startOver')}

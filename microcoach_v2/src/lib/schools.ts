@@ -17,15 +17,38 @@ const PERSONAL_DOMAINS = new Set([
   'icloud.com',
 ]);
 
+// Labels that sit between a school's name and the TLD without naming it:
+// lincoln.k12.nj.us, oxford.ac.uk, school.edu.au.
+const GENERIC_LABELS = new Set(['k12', 'ac', 'edu', 'sch', 'co']);
+
+// US district domains carry the state before .us (lincoln.k12.nj.us).
+const US_STATES = new Set([
+  'al', 'ak', 'az', 'ar', 'ca', 'co', 'ct', 'de', 'dc', 'fl', 'ga', 'hi', 'id',
+  'il', 'in', 'ia', 'ks', 'ky', 'la', 'me', 'md', 'ma', 'mi', 'mn', 'ms', 'mo',
+  'mt', 'ne', 'nv', 'nh', 'nj', 'nm', 'ny', 'nc', 'nd', 'oh', 'ok', 'or', 'pa',
+  'ri', 'sc', 'sd', 'tn', 'tx', 'ut', 'vt', 'va', 'wa', 'wv', 'wi', 'wy',
+]);
+
 /** The school for an email, or null when the domain does not name one. */
 // eslint-disable-next-line import/prefer-default-export
 export function schoolFromEmail(email: string): string | null {
   const domain = email.split('@')[1]?.trim().toLowerCase();
   if (!domain || PERSONAL_DOMAINS.has(domain)) return null;
   if (SCHOOLS_BY_DOMAIN[domain]) return SCHOOLS_BY_DOMAIN[domain];
-  // Drop the TLD and any subdomain prefix like "mail." or "students.".
+  // Drop the TLD, then the generic labels (and a US state) in front of it;
+  // the label left last names the school. Any subdomain prefix like "mail."
+  // or "students." sits before it and is ignored.
   const parts = domain.split('.');
-  const label = parts.length > 1 ? parts[parts.length - 2] : parts[0];
+  const isUs = parts.length > 1 && parts[parts.length - 1] === 'us';
+  if (parts.length > 1) parts.pop();
+  while (
+    parts.length > 1 &&
+    (GENERIC_LABELS.has(parts[parts.length - 1]) ||
+      (isUs && US_STATES.has(parts[parts.length - 1])))
+  ) {
+    parts.pop();
+  }
+  const label = parts[parts.length - 1];
   return label
     .split(/[-_]+/)
     .filter(Boolean)

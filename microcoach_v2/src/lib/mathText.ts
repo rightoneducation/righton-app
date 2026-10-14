@@ -1,5 +1,8 @@
+import { splitMath } from './mathDelimiters';
+
 /**
- * LaTeX in generated content, as plain text the PDF can draw.
+ * LaTeX in generated content, as plain text: for the PDFs, and for the places
+ * on screen markup cannot reach (a native tooltip, an accessible name).
  *
  * The screen renders `$…$` through KaTeX (MathText); @react-pdf has no math
  * renderer, so without this a handout prints "$-6x+3y>12$" as written. Every
@@ -98,9 +101,11 @@ function plainMath(tex: string): string {
  */
 export default function mathText(text: string | null | undefined): string {
   if (!text) return '';
-  return text
-    .replace(/\$\$([^$]*)\$\$|\$([^$]*)\$/g, (_m, display: string | undefined, inline: string | undefined) =>
-      plainMath(display ?? inline ?? ''))
+  // The same split the screen uses (lib/mathDelimiters), so a price like "$5"
+  // stays text here too and \(…\) / \[…\] convert like $…$.
+  return splitMath(text)
+    .map((part) => (part.type === 'math' ? plainMath(part.content) : part.content))
+    .join('')
     // Glyphs outside Rubik that reach the PDF from outside the math: the
     // screen's marks and arrows (the catalogue's "← (Error: …)", "✓", "✗").
     .replace(/[←✓✗✔✘]/g, '')

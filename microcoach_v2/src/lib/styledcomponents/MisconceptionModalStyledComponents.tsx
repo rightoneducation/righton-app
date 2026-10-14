@@ -34,12 +34,15 @@ export const ModalHeaderBar = styled(Box)(({ theme }) => ({
   gap: theme.sizing.space3,
   flexShrink: 0,
   minHeight: 61,
+  // The title sits clear of the bar's edges even when it wraps.
+  paddingTop: theme.sizing.space2,
+  paddingBottom: theme.sizing.space2,
   paddingLeft: theme.sizing.space5,
   paddingRight: theme.sizing.space3,
   backgroundColor: theme.palette.designSystem.background.navyBlue,
 }));
 
-/** Everything under the bar; only the tab panel inside it scrolls. */
+/** Everything under the bar: the scroll area over the footer. */
 export const ModalBody = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -57,34 +60,68 @@ export const ModalHeading = styled(Box)(({ theme }) => ({
   gap: theme.sizing.space1,
 }));
 
-// Tabs and their panel share one outline, so they sit in a column with no gap.
-export const TabGroup = styled(Box)({
+/*
+ * The heading and tabs over the footer. LARGE (the frame): a fixed column in
+ * which only the tab panel scrolls. Below LARGE the fixed parts would leave
+ * the panel half the modal, so this whole area scrolls instead, with the tabs
+ * pinned to its top.
+ */
+export const ModalScrollArea = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => ({
   display: 'flex',
   flexDirection: 'column',
+  gap: theme.sizing.space4,
   flex: '1 1 auto',
   minHeight: 0,
-});
+  ...(screenSize !== ScreenSize.LARGE && { overflowY: 'auto' }),
+}));
 
-export const ModalTabs = styled(Tabs)({
+// Tabs and their panel share one outline, so they sit in a column with no gap.
+export const TabGroup = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ screenSize }) =>
+  screenSize === ScreenSize.LARGE
+    ? { display: 'flex', flexDirection: 'column', flex: '1 1 auto', minHeight: 0 }
+    : { display: 'flex', flexDirection: 'column' },
+);
+
+export const ModalTabs = styled(Tabs, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => ({
   minHeight: 0,
+  // Never squeezed by the panel under it: a long panel used to collapse the
+  // strip and clip both labels.
+  flexShrink: 0,
+  ...(screenSize !== ScreenSize.LARGE && {
+    position: 'sticky',
+    top: 0,
+    zIndex: 2,
+    backgroundColor: theme.palette.designSystem.surface.white,
+  }),
   // The fill carries selection; an indicator would cut across the seam where
   // the selected tab joins the panel.
   '& .MuiTabs-indicator': {
     display: 'none',
   },
-});
+}));
 
 // Figma: two 376x40 tabs, rx12 top; the selected one takes the panel's
 // sky blue so the two read as one surface.
-export const ModalTab = styled(Tab)(({ theme }) => ({
+export const ModalTab = styled(Tab, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => ({
   minHeight: 40,
-  padding: `0 ${theme.sizing.space3}px`,
+  padding: `${theme.sizing.space1}px ${theme.sizing.space3}px`,
   border: theme.borders.subtle,
   borderRadius: `${theme.sizing.space2}px ${theme.sizing.space2}px 0 0`,
   alignItems: 'flex-start',
   justifyContent: 'center',
   textAlign: 'left',
   ...theme.typography.headingMd,
+  // Below LARGE each tab is ~half of 360: smaller type keeps a label on one
+  // line, and a longer one (Spanish) wraps with the tab growing to fit.
+  ...(screenSize !== ScreenSize.LARGE && { fontSize: 16 }),
   textTransform: 'none',
   color: theme.palette.designSystem.surface.atlanticNavy,
   backgroundColor: theme.palette.designSystem.background.offWhite,
@@ -98,14 +135,16 @@ export const ModalTab = styled(Tab)(({ theme }) => ({
   },
 }));
 
-/** The scroll region: header, tabs and footer stay fixed around it. */
-export const TabPanel = styled(Box)(({ theme }) => ({
+/** LARGE: the scroll region, with heading, tabs and footer fixed around it. */
+export const TabPanel = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.sizing.space5,
-  flex: '1 1 auto',
-  minHeight: 0,
-  overflowY: 'auto',
+  ...(screenSize === ScreenSize.LARGE
+    ? { flex: '1 1 auto', minHeight: 0, overflowY: 'auto' }
+    : { flex: 'none' }),
   padding: theme.sizing.space3,
   border: theme.borders.subtle,
   borderRadius: `0 0 ${theme.sizing.space3}px ${theme.sizing.space3}px`,

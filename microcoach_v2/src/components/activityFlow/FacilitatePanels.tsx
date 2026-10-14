@@ -61,7 +61,18 @@ function ToneIcon({ tone }: { tone: Tone }) {
 }
 
 /** A line of student work: tinted and marked in teacher view, plain for students. */
-function WorkLine({ text, status, isTeacher }: { text: string; status: WorkStatus; isTeacher: boolean }) {
+function WorkLine({
+  text,
+  status,
+  isTeacher,
+  variant = 'smallBodyText',
+}: {
+  text: string;
+  status: WorkStatus;
+  isTeacher: boolean;
+  // Figma: 14 in My Favorite No's student work, 16 under Math Detective's open example.
+  variant?: 'smallBodyText' | 'rubikBody';
+}) {
   return (
     <StepRow
       isError={isTeacher && status === 'INCORRECT'}
@@ -71,7 +82,7 @@ function WorkLine({ text, status, isTeacher }: { text: string; status: WorkStatu
       sx={{ px: 1, borderRadius: 0, minHeight: 0 }}
     >
       <MathTypography
-        variant="smallBodyText"
+        variant={variant}
         sx={{ color: navy }}
         text={isTeacher ? withWorkMark(text, status) : text}
       />
@@ -142,7 +153,7 @@ export function CompareThinkingPanel({
                   >
                     <StepChip>{t('activityDetail.stepNumber', { number: step.step })}</StepChip>
                     <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <MathTypography variant="smallBodyText" sx={{ color: navy }} text={step.text} suffix={mark} />
+                      <MathTypography variant="rubikBody" sx={{ color: navy }} text={step.text} suffix={mark} />
                     </Box>
                   </StepRow>
                 );
@@ -158,12 +169,13 @@ export function CompareThinkingPanel({
                   >
                     <ToneIcon tone={note.tone} />
                     <Box sx={{ minWidth: 0 }}>
+                      {/* Figma (Compare the Thinking Teacher2): "WHY IT WORKS:" Rubik 16/500, text 16. */}
                       {note.heading && (
-                        <Typography variant="rubikSubBold" sx={{ color: navy, textTransform: 'uppercase' }}>
-                          {note.heading}
+                        <Typography variant="rubikLabel" sx={{ color: navy, textTransform: 'uppercase' }}>
+                          {`${note.heading.replace(/:$/, '')}:`}
                         </Typography>
                       )}
-                      <MathTypography variant="smallBodyText" sx={{ color: navy }} text={note.text} />
+                      <MathTypography variant="rubikBody" sx={{ color: navy }} text={note.text} />
                     </Box>
                   </Stack>
                 ))}
@@ -226,17 +238,18 @@ export function MakeYourCasePanel({
             {CLAIM_OPTIONS.map((option) => {
               const isResolution = option === resolution.verdict;
               return (
+                // Figma (Make Your Case Teacher): options 16, "Why?" 16/500, explanation 16.
                 <TonedPanel key={option} tone={isResolution ? 'periwinkle' : 'grey'}>
-                  <Typography variant="rubikSubBold" sx={{ color: navy }}>
+                  <Typography variant="rubikBody" sx={{ color: navy }}>
                     {t(`activityFlow.facilitate.claimOption.${option}`)}
                     {isResolution ? ' ✓' : ''}
                   </Typography>
                   {isResolution && (
                     <>
-                      <Typography variant="rubikSubBold" sx={{ color: navy }}>
+                      <Typography variant="rubikLabel" sx={{ color: navy }}>
                         {t('activityFlow.facilitate.why')}
                       </Typography>
-                      <MathTypography variant="smallBodyText" sx={{ color: navy }} text={resolution.why} />
+                      <MathTypography variant="rubikBody" sx={{ color: navy }} text={resolution.why} />
                     </>
                   )}
                 </TonedPanel>
@@ -250,9 +263,10 @@ export function MakeYourCasePanel({
             </Typography>
             {facilitate.examples.map((example) => (
               <Box key={example.prompt}>
-                <MathTypography variant="rubikSubBold" sx={{ color: navy }} text={example.prompt} />
+                {/* Figma: prompt and answer both Rubik 16. */}
+                <MathTypography variant="rubikBody" sx={{ color: navy }} text={example.prompt} />
                 <MathTypography
-                  variant="smallBodyText"
+                  variant="rubikBody"
                   sx={{ color: navy }}
                   text={t('activityFlow.facilitate.exampleAnswer', { answer: example.answer })}
                 />
@@ -282,7 +296,10 @@ export function MakeYourCasePanel({
         <>
           <Stack direction="row" flexWrap="wrap" gap={`${theme.sizing.space2}px`}>
             {VOTE_OPTIONS.map((option) => (
-              <StepChip key={option}>{t(`activityFlow.facilitate.voteOption.${option}`)}</StepChip>
+              // Figma (Make Your Case Student): the vote options are Rubik 16.
+              <StepChip key={option} sx={{ typography: 'rubikBody' }}>
+                {t(`activityFlow.facilitate.voteOption.${option}`)}
+              </StepChip>
             ))}
           </Stack>
           <NumberedList title={t('activityFlow.facilitate.stepsToFollow')} items={facilitate.studentSteps} />
@@ -334,10 +351,17 @@ export function MathDetectivePanel({
       {example && (
         <ExampleDetail aria-live="polite">
           <ExampleOfHeading index={index} count={examples.length} />
-          <MathTypography variant="rubikSubBold" text={example.prompt} />
+          {/* Figma (Math Detective Teacher): the problem Poppins 20/600, the work 16. */}
+          <MathTypography variant="headingMd" text={example.prompt} />
           <Stack spacing={`${theme.sizing.space0}px`}>
             {example.workSummary.map((line) => (
-              <WorkLine key={line.text} text={line.text} status={line.status} isTeacher={isTeacher} />
+              <WorkLine
+                key={line.text}
+                text={line.text}
+                status={line.status}
+                isTeacher={isTeacher}
+                variant="rubikBody"
+              />
             ))}
           </Stack>
           {example.stages.map((stage) => (
@@ -409,7 +433,8 @@ export function FavoriteNoPanel({
       {example && (
         <ExampleDetail aria-live="polite">
           <ExampleOfHeading index={index} count={examples.length} />
-          <Typography variant="microLabel">{t('activityFlow.facilitate.anonymousResponse')}</Typography>
+          {/* Figma (My Favorite No Teacher): Poppins 16/600. */}
+          <Typography variant="headingSm">{t('activityFlow.facilitate.anonymousResponse')}</Typography>
           <MathTypography variant="rubikSubBold" text={example.prompt} />
           <Stack
             direction={props.screenSize === ScreenSize.SMALL ? 'column' : 'row'}
@@ -440,7 +465,7 @@ export function FavoriteNoPanel({
           {isTeacher && (
             <PromptBand tone="grey">
               <InfoOutlinedIcon sx={{ color: navy, flexShrink: 0 }} />
-              <MathTypography variant="smallBodyText" sx={{ color: navy }} text={example.sourceNote} />
+              <MathTypography variant="rubikBody" sx={{ color: navy }} text={example.sourceNote} />
             </PromptBand>
           )}
         </ExampleDetail>

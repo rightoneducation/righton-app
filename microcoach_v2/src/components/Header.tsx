@@ -47,6 +47,11 @@ interface HeaderProps {
   classrooms?: IMicroCoachClassroom[];
   selectedClassroomId?: string | null;
   onSelectClassroom?: (classroomId: string) => void;
+  // The teacher's picture for the avatar; initials when null.
+  profilePictureUrl?: string | null;
+  // The class list has not answered yet: the switcher shows its shape rather
+  // than "No classes yet".
+  areClassesLoading?: boolean;
 }
 
 // styled() erases MUI's polymorphic `component` prop, so re-declare it here to
@@ -178,6 +183,8 @@ const InitialsAvatar = styled(ButtonBase)(({ theme }) => ({
   height: 56,
   flexShrink: 0,
   borderRadius: '50%',
+  // A picture fills the circle instead of the initials.
+  overflow: 'hidden',
   backgroundColor: theme.palette.designSystem.foreground.skyBlue,
   color: theme.palette.designSystem.background.navyBlue,
   ...theme.typography.smallTitle,
@@ -211,6 +218,8 @@ export default function Header({
   classrooms = [],
   selectedClassroomId = null,
   onSelectClassroom,
+  profilePictureUrl = null,
+  areClassesLoading = false,
 }: HeaderProps) {
   const { t } = useTranslation();
   const { userStatus, userProfile } = useMicroCoachDataState();
@@ -252,7 +261,16 @@ export default function Header({
 
   // The app variant always shows it; the avatar variant does on the
   // Understand-to-Reflect flow screens (showClassSwitcher).
-  const classSwitcher = (
+  const classSwitcher = areClassesLoading ? (
+    <Skeleton
+      animation="wave"
+      variant="rounded"
+      width={screenSize === ScreenSize.SMALL ? 140 : 180}
+      height={44}
+      aria-label={t('header.classSwitcher')}
+      sx={{ ...authSkeletonSx, borderRadius: `${appPillRadius}px` }}
+    />
+  ) : (
     <ClassSelect
       screenSize={screenSize}
       value={selectedClassroomId ?? ''}
@@ -330,7 +348,16 @@ export default function Header({
                   aria-expanded={!!accountAnchor}
                   onClick={(event) => setAccountAnchor(event.currentTarget)}
                 >
-                  {initials}
+                  {profilePictureUrl ? (
+                    <Box
+                      component="img"
+                      src={profilePictureUrl}
+                      alt=""
+                      sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  ) : (
+                    initials
+                  )}
                 </InitialsAvatar>
                 <Menu
                   anchorEl={accountAnchor}

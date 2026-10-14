@@ -25,6 +25,8 @@ import {
   ResponderPill,
   ShowStudentsButton,
 } from '../lib/styledcomponents/MisconceptionModalStyledComponents';
+import MathText from './MathText';
+import MathTypography from './MathTypography';
 
 const optionKey = (questionNumber: number, letter: string) => `${questionNumber}:${letter}`;
 
@@ -93,9 +95,11 @@ export default function StudentResponsesTab({
       {explanation && (
         <LabelledText>
           <PanelLabel>{t('review.possibleExplanation')}</PanelLabel>
-          <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-            {explanation}
-          </Typography>
+          <MathTypography
+            variant="rubikBody"
+            sx={{ color: 'designSystem.surface.atlanticNavy' }}
+            text={explanation}
+          />
         </LabelledText>
       )}
 
@@ -110,7 +114,7 @@ export default function StudentResponsesTab({
             <QuestionCard key={stat.questionNumber}>
               <QuestionHeading>
                 <span>{t('review.questionLabel', { number: stat.questionNumber })}</span>
-                {stat.questionText && <span>{stat.questionText}</span>}
+                {stat.questionText && <MathText text={stat.questionText} inline />}
               </QuestionHeading>
               <PanelLabel sx={{ typography: 'smallBodyText', color: 'designSystem.background.navyBlue' }}>
                 {t('misconceptionModal.howStudentsResponded')}
@@ -126,7 +130,14 @@ export default function StudentResponsesTab({
                       <OptionRow screenSize={screenSize}>
                         <OptionText>
                           <span>
-                            {option.text ? `${option.letter}. ${option.text}` : option.letter}
+                            {option.text ? (
+                              <>
+                                {`${option.letter}. `}
+                                <MathText text={option.text} inline />
+                              </>
+                            ) : (
+                              option.letter
+                            )}
                           </span>
                           {option.isCorrect && (
                             <OptionTag tone="correct">{t('misconceptionModal.correctAnswer')}</OptionTag>
@@ -174,15 +185,19 @@ export default function StudentResponsesTab({
             <ErrorBlock key={`${bucket.errorTag}-${bucket.optionSummary}`}>
               <OptionRow screenSize={screenSize}>
                 <OptionText>
-                  <Typography variant="rubikSubBold" sx={{ color: 'designSystem.background.navyBlue' }}>
-                    {bucket.optionSummary}
-                  </Typography>
+                  <MathTypography
+                    variant="rubikSubBold"
+                    sx={{ color: 'designSystem.background.navyBlue' }}
+                    text={bucket.optionSummary}
+                  />
                 </OptionText>
                 <ErrorTagChip>{bucket.errorTag}</ErrorTagChip>
               </OptionRow>
-              <Typography variant="smallBodyText" sx={{ color: 'designSystem.background.navyBlue' }}>
-                {bucket.interpretation}
-              </Typography>
+              <MathTypography
+                variant="smallBodyText"
+                sx={{ color: 'designSystem.background.navyBlue' }}
+                text={bucket.interpretation}
+              />
               <ResponderGroup>
                 {bucket.students.map((name) => (
                   <ResponderPill key={name}>{name}</ResponderPill>

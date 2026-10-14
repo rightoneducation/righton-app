@@ -1,12 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link as RouterLink } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import ContentRow from './ContentRow';
 import { ScreenSize } from '../lib/MicroCoachModels';
+
+const PRIVACY_POLICY_URL =
+  'https://drive.google.com/file/d/1npOgxBwXLikhZ54XUelfQY5nHMpBBt5T/view?usp=drive_link';
 
 interface FooterProps {
   screenSize: ScreenSize;
@@ -54,9 +56,11 @@ export default function Footer({ screenSize }: FooterProps) {
         >
           {t('footer.copyright')}
         </Typography>
+        {/* Same policy document the website footer opens. */}
         <Link
-          component={RouterLink}
-          to="/privacy"
+          href={PRIVACY_POLICY_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           sx={{
             ...{ typography: 'footer' },
             color: 'designSystem.surface.white',

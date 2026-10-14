@@ -111,6 +111,8 @@ export const InitialsAvatar = styled(Box)(({ theme }) => ({
   width: AVATAR_SIZE,
   height: AVATAR_SIZE,
   borderRadius: '50%',
+  // A picture fills the circle instead of the initials.
+  overflow: 'hidden',
   backgroundColor: theme.palette.designSystem.surface.skyBlue,
   color: theme.palette.designSystem.foreground.selectedNavy,
   fontFamily: theme.typography.rubikBody.fontFamily,
@@ -130,9 +132,13 @@ export const EditPictureChip = styled(Button)(({ theme }) => ({
   ...theme.typography.buttonLabelSmLight,
   textTransform: 'none',
   whiteSpace: 'nowrap',
-  cursor: 'default',
   '&:hover': {
     backgroundColor: theme.palette.designSystem.surface.skyBlue,
+    textDecoration: 'underline',
+  },
+  '&.Mui-disabled': {
+    backgroundColor: theme.palette.designSystem.surface.skyBlue,
+    color: theme.palette.designSystem.surface.atlanticNavy,
   },
 }));
 

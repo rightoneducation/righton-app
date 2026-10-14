@@ -1,4 +1,4 @@
-import { styled, Theme } from '@mui/material/styles';
+import { alpha, styled, Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ButtonBase from '@mui/material/ButtonBase';
@@ -271,21 +271,21 @@ export const StepperRow = styled(Box, {
 
 export type StepState = 'COMPLETE' | 'CURRENT' | 'UPCOMING';
 
-// Figma (Dashboard1): every label is the same navy; only the current step is
-// marked, by a 3.33px rule running 20px past the label each side and 20 below
+// Figma (Dashboard1): every label is the same navy; only the page you are on
+// is marked, by a 3.33px rule running 20px past the label each side and 20 below
 // it. The tab's even 20 inset gives both, and puts the label ~20 below the top
 // of the row, level with the Figma frame.
 const stepItemStyles = (
   theme: Theme,
   screenSize: ScreenSize,
-  stepState: StepState,
+  isMarked: boolean,
 ) => ({
   display: 'flex',
   // Must not shrink, or the row has nothing to overflow and labels collide.
   flexShrink: 0,
   padding: theme.sizing.space4,
   borderBottom: `3px solid ${
-    stepState === 'CURRENT'
+    isMarked
       ? theme.palette.designSystem.surface.atlanticNavy
       : 'transparent'
   }`,
@@ -296,13 +296,13 @@ const stepItemStyles = (
 });
 
 const noStepProps = (prop: PropertyKey) =>
-  prop !== 'screenSize' && prop !== 'stepState';
+  prop !== 'screenSize' && prop !== 'isMarked';
 
 export const StepItem = styled(Box, {
   shouldForwardProp: noStepProps,
-})<ScreenSizeProps & { stepState: StepState }>(
-  ({ theme, screenSize, stepState }) =>
-    stepItemStyles(theme, screenSize, stepState),
+})<ScreenSizeProps & { isMarked: boolean }>(
+  ({ theme, screenSize, isMarked }) =>
+    stepItemStyles(theme, screenSize, isMarked),
 );
 
 // A step that links back to its page: same look as StepItem, but a real button
@@ -310,9 +310,9 @@ export const StepItem = styled(Box, {
 // focus so it reads as a link.
 export const StepButton = styled(ButtonBase, {
   shouldForwardProp: noStepProps,
-})<ScreenSizeProps & { stepState: StepState }>(
-  ({ theme, screenSize, stepState }) => ({
-    ...stepItemStyles(theme, screenSize, stepState),
+})<ScreenSizeProps & { isMarked: boolean }>(
+  ({ theme, screenSize, isMarked }) => ({
+    ...stepItemStyles(theme, screenSize, isMarked),
     '&:hover .step-label, &.Mui-focusVisible .step-label': {
       textDecoration: 'underline',
     },
@@ -345,6 +345,12 @@ export const MyActivityButton = styled(Button)(({ theme }) => ({
   whiteSpace: 'nowrap',
   '&:hover': {
     backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
+  },
+  // rev2 LandingPage: greyed out (#666666 at 50%; ashyGray, 7 off) until the
+  // class has a chosen activity.
+  '&.Mui-disabled': {
+    backgroundColor: alpha(theme.palette.designSystem.surface.ashyGray, 0.5),
+    color: theme.palette.designSystem.surface.white,
   },
 }));
 

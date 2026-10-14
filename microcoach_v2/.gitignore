@@ -58,3 +58,7 @@ amplify/backend/function/*/src/.replay-tmp/
 
 # seed CLI fixtures (local only, mirrors microcoach/.gitignore)
 Data/
+
+# Playwright QA (yarn qa:login / qa:shots)
+tests/e2e/.auth/
+tests/e2e/output/

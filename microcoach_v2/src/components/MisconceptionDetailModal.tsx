@@ -10,6 +10,8 @@ import { IQuestionStat } from '../api/Models/IMicroCoachSession';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import StudentResponsesTab, { flaggedOptionKeys } from './StudentResponsesTab';
 import RelatedSkillsTab from './RelatedSkillsTab';
+import MathTypography from './MathTypography';
+import mathText from '../lib/mathText';
 import { CardBadge } from '../lib/styledcomponents/UnderstandStyledComponents';
 import {
   MODAL_MAX_HEIGHT,
@@ -20,6 +22,7 @@ import {
   ModalFooter,
   ModalHeaderBar,
   ModalHeading,
+  ModalScrollArea,
   ModalTab,
   ModalTabs,
   TabGroup,
@@ -57,7 +60,16 @@ function DetailContent({
 }: DetailContentProps) {
   const { t } = useTranslation();
   const [tab, setTab] = React.useState<ModalTabId>('student-responses');
+  const scrollAreaRef = React.useRef<HTMLDivElement>(null);
   const { isRecommendedFocus } = misconception;
+  const isLarge = screenSize === ScreenSize.LARGE;
+
+  const changeTab = (next: ModalTabId) => {
+    setTab(next);
+    // Below LARGE the scroll area holds the panel: start the new tab at the
+    // top. (At LARGE the keyed panel remounts at its own top.)
+    if (scrollAreaRef.current) scrollAreaRef.current.scrollTop = 0;
+  };
 
   return (
     <>
@@ -65,7 +77,11 @@ function DetailContent({
         <Typography
           variant="bodyLg"
           component="h2"
-          sx={{ color: 'designSystem.background.cream' }}
+          // One line at 393 below LARGE.
+          sx={{
+            color: 'designSystem.background.cream',
+            ...(!isLarge && { fontSize: 20 }),
+          }}
         >
           {t('misconceptionModal.title')}
         </Typography>
@@ -79,65 +95,79 @@ function DetailContent({
       </ModalHeaderBar>
 
       <ModalBody>
-        <ModalHeading>
-          <CardBadge isFocus={isRecommendedFocus}>
-            {t(isRecommendedFocus ? 'review.recommendedFocus' : 'review.additional')}
-          </CardBadge>
-          <Typography
-            variant="headingLg"
-            component="h3"
-            sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {misconception.titleCased}
-          </Typography>
-        </ModalHeading>
-
-        <TabGroup>
-          <ModalTabs
-            variant="fullWidth"
-            value={tab}
-            onChange={(unused, next: ModalTabId) => setTab(next)}
-          >
-            <ModalTab
-              value="student-responses"
-              label={t('misconceptionModal.studentResponses')}
-              id="misconception-tab-student-responses"
-              aria-controls="misconception-panel"
+        <ModalScrollArea ref={scrollAreaRef} screenSize={screenSize}>
+          <ModalHeading>
+            <CardBadge isFocus={isRecommendedFocus}>
+              {t(
+                isRecommendedFocus
+                  ? 'review.recommendedFocus'
+                  : 'review.additional',
+              )}
+            </CardBadge>
+            <MathTypography
+              variant="headingLg"
+              component="h3"
+              sx={{ color: 'designSystem.surface.atlanticNavy' }}
+              text={misconception.titleCased}
             />
-            <ModalTab
-              value="related-skills"
-              label={t('misconceptionModal.relatedSkills')}
-              id="misconception-tab-related-skills"
-              aria-controls="misconception-panel"
-            />
-          </ModalTabs>
+          </ModalHeading>
 
-          {/* Keyed on the tab so switching tabs starts the scroll at the top. */}
-          <TabPanel
-            key={tab}
-            id="misconception-panel"
-            role="tabpanel"
-            aria-labelledby={`misconception-tab-${tab}`}
-            tabIndex={0}
-          >
-            {tab === 'student-responses' ? (
-              <StudentResponsesTab
-                misconception={misconception}
-                questionStats={questionStats}
+          <TabGroup screenSize={screenSize}>
+            <ModalTabs
+              variant="fullWidth"
+              value={tab}
+              onChange={(unused, next: ModalTabId) => changeTab(next)}
+              screenSize={screenSize}
+            >
+              <ModalTab
                 screenSize={screenSize}
-                initialOpenKeys={showNames ? flaggedOptionKeys(misconception) : []}
+                value="student-responses"
+                label={t('misconceptionModal.studentResponses')}
+                id="misconception-tab-student-responses"
+                aria-controls="misconception-panel"
               />
-            ) : (
-              <RelatedSkillsTab
-                skillContext={misconception.skillContext}
+              <ModalTab
                 screenSize={screenSize}
+                value="related-skills"
+                label={t('misconceptionModal.relatedSkills')}
+                id="misconception-tab-related-skills"
+                aria-controls="misconception-panel"
               />
-            )}
-          </TabPanel>
-        </TabGroup>
+            </ModalTabs>
+
+            {/* Keyed on the tab so switching tabs starts the scroll at the top. */}
+            <TabPanel
+              key={tab}
+              screenSize={screenSize}
+              id="misconception-panel"
+              role="tabpanel"
+              aria-labelledby={`misconception-tab-${tab}`}
+              tabIndex={0}
+            >
+              {tab === 'student-responses' ? (
+                <StudentResponsesTab
+                  misconception={misconception}
+                  questionStats={questionStats}
+                  screenSize={screenSize}
+                  initialOpenKeys={
+                    showNames ? flaggedOptionKeys(misconception) : []
+                  }
+                />
+              ) : (
+                <RelatedSkillsTab
+                  skillContext={misconception.skillContext}
+                  screenSize={screenSize}
+                />
+              )}
+            </TabPanel>
+          </TabGroup>
+        </ModalScrollArea>
 
         <ModalFooter>
-          <ModalCtaButton disableElevation onClick={() => onChooseActivity(misconception.id)}>
+          <ModalCtaButton
+            disableElevation
+            onClick={() => onChooseActivity(misconception.id)}
+          >
             {t('misconceptionModal.chooseActivity')}
           </ModalCtaButton>
         </ModalFooter>
@@ -176,7 +206,8 @@ export default function MisconceptionDetailModal({
     <Modal
       isOpen={Boolean(misconception)}
       onRequestClose={onClose}
-      contentLabel={misconception?.titleCased ?? ''}
+      // An accessible name is a plain string: math reads as text.
+      contentLabel={mathText(misconception?.titleCased)}
       style={{
         overlay: {
           backgroundColor: theme.palette.designSystem.background.scrim,

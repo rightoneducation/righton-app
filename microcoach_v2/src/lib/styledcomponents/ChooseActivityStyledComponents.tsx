@@ -48,23 +48,53 @@ export const TitleBlock = styled(Box)(({ theme }) => ({
   gap: theme.sizing.space1,
 }));
 
-/** Figma: two 551-wide cards 28 apart at LARGE, stacked below. */
+/*
+ * At LARGE the cards sit side by side and share their rows (CSS subgrid):
+ * name, subtitle, grouping chips, Why this activity?, How to run it, buttons.
+ * Each section starts at the same height on every card, whatever the length
+ * of the text above it. Stacked below LARGE, each card is its own column.
+ */
+export const ACTIVITY_CARD_ROWS = 6;
+
+interface AlignedProps {
+  isAligned: boolean;
+}
+const noAligned = (prop: PropertyKey) => prop !== 'isAligned';
+
+/** Figma: two 551-wide cards 28 apart at LARGE (one grid the cards share rows of), stacked below. */
 export const ActivityCardRow = styled(Box, {
   shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => ({
-  display: 'flex',
-  flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
-  alignItems: 'stretch',
-  gap: theme.sizing.space6,
-  width: '100%',
-  '& > *': { flex: '1 1 0', minWidth: 0 },
-}));
+})<ScreenSizeProps>(({ theme, screenSize }) =>
+  screenSize === ScreenSize.LARGE
+    ? {
+        display: 'grid',
+        gridTemplateRows: `repeat(${ACTIVITY_CARD_ROWS}, auto)`,
+        gridAutoFlow: 'column',
+        gridAutoColumns: 'minmax(0, 1fr)',
+        columnGap: theme.sizing.space6,
+        width: '100%',
+      }
+    : {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: theme.sizing.space6,
+        width: '100%',
+      },
+);
 
 // Figma: 551x475 rx32 white with the dashboard card's soft shadow, 25 in.
-export const ActivityCardSurface = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.sizing.space5,
+export const ActivityCardSurface = styled(Box, {
+  shouldForwardProp: noAligned,
+})<AlignedProps>(({ theme, isAligned }) => ({
+  ...(isAligned
+    ? {
+        display: 'grid',
+        gridRow: `span ${ACTIVITY_CARD_ROWS}`,
+        gridTemplateRows: 'subgrid',
+        rowGap: theme.sizing.space5,
+        alignContent: 'start',
+      }
+    : { display: 'flex', flexDirection: 'column', gap: theme.sizing.space5 }),
   padding: theme.sizing.space5,
   borderRadius: theme.sizing.space6,
   backgroundColor: theme.palette.designSystem.surface.white,
@@ -72,12 +102,20 @@ export const ActivityCardSurface = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 
-/** Name, routine and grouping sequence, tight together (Figma: ~10 apart). */
-export const CardHeader = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.sizing.space1,
-}));
+/** Name, routine and grouping sequence, tight together (Figma: ~10 apart): three of the card's rows. */
+export const CardHeader = styled(Box, {
+  shouldForwardProp: noAligned,
+})<AlignedProps>(({ theme, isAligned }) =>
+  isAligned
+    ? {
+        display: 'grid',
+        gridRow: 'span 3',
+        gridTemplateRows: 'subgrid',
+        rowGap: theme.sizing.space1,
+        alignItems: 'start',
+      }
+    : { display: 'flex', flexDirection: 'column', gap: theme.sizing.space1 },
+);
 
 export const NameRow = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -182,7 +220,10 @@ export const CardActionRow = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between',
   flexWrap: 'wrap',
   gap: theme.sizing.space2,
+  // Stacked, the buttons sit at the card's foot; side by side, the shared
+  // bottom row puts them there.
   marginTop: 'auto',
+  alignSelf: 'end',
 }));
 
 interface CardActionProps {

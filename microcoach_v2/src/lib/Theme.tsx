@@ -512,9 +512,9 @@ const sizing = {
   stepperMaxWidth: 1206,
   // The white card holding title, pickers and CTA (v2 Dashboard1: 1206 wide).
   dashboardCardMaxWidth: 1206,
-  // This Week and Past Activities: the card list, side tile included
-  // (v2 Dashboard2/3: 1172 card + 16 + 44 tile).
-  activityListMaxWidth: 1232,
+  // Home's Weekly Activity Progress and Past Activities: the card list
+  // (rev2 frames: 1172, no side tile since delete was dropped).
+  activityListMaxWidth: 1172,
   // Figma corner radii, shared by the step panel, step cards and video card.
   sectionRadius: 32,
   heroImageRadius: 37,

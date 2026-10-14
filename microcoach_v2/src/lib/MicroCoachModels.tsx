@@ -40,8 +40,7 @@ export enum ScreenType {
   // `upload-reassess/*`: the same UploadFlow, for the upload after the activity.
   UPLOAD_REASSESS,
   REFLECT,
-  // The sidebar's other two destinations, beside DASHBOARD.
-  THIS_WEEK,
+  // The sidebar's other destination, beside DASHBOARD.
   PAST_ACTIVITIES,
 }
 

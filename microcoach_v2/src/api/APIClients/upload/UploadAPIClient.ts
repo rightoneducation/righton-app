@@ -1,4 +1,4 @@
-import { remove, uploadData } from "aws-amplify/storage";
+import { getUrl, remove, uploadData } from "aws-amplify/storage";
 import { BaseAPIClient, GraphQLOptions } from "../base/BaseAPIClient";
 import { ITeacherUploadInput, IUploadAPIClient } from "./interfaces/IUploadAPIClient";
 
@@ -42,6 +42,28 @@ export class UploadAPIClient extends BaseAPIClient implements IUploadAPIClient {
 
   async removeFile(key: string): Promise<void> {
     await remove({ path: key });
+  }
+
+  /*
+   * central_v2's pattern (awsUploadImagePrivate + profilePicPath): the picture
+   * goes under the teacher's private prefix and the User row keeps its path.
+   * Timestamped so a new picture never collides with a cached old one.
+   */
+  async uploadProfilePicture(file: File): Promise<string> {
+    const result = await uploadData({
+      path: ({ identityId }) =>
+        `private/${identityId}/profile/${Date.now()}-${safeName(file.name)}`,
+      data: file,
+      options: { contentType: file.type || undefined },
+    }).result;
+    return result.path;
+  }
+
+  // central_v2 serves pictures through CloudFront; this app has no
+  // distribution, so it signs a URL for the owner instead.
+  async getFileUrl(path: string): Promise<string> {
+    const { url } = await getUrl({ path, options: { expiresIn: 3600 } });
+    return url.toString();
   }
 
   async startAnalysis(input: ITeacherUploadInput): Promise<string> {

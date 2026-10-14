@@ -9,7 +9,9 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import ChangeActivityDialog from '../components/ChangeActivityDialog';
 import { FlowStepperBand, MisconceptionSelectedBar } from '../components/FlowHeader';
+import { FlowStep } from '../lib/flowProgress';
 import LoadingSlot from '../components/LoadingSlot';
+import { ActivityFlowSkeleton } from '../components/skeletons/ActivityFlowSkeletons';
 import BeforeClassView from '../components/activityFlow/BeforeClassView';
 import DiscussionView from '../components/activityFlow/DiscussionView';
 import FacilitateView from '../components/activityFlow/FacilitateView';
@@ -245,7 +247,12 @@ export default function ActivityFlow({ screenSize, sessions, plan }: ActivityFlo
   return (
     <UnderstandPage screenSize={screenSize}>
       <ActivityFlowColumn>
-        <FlowStepperBand screenSize={screenSize} sessions={sessions} plan={plan} />
+        <FlowStepperBand
+          screenSize={screenSize}
+          sessions={sessions}
+          plan={plan}
+          page={FlowStep.CHOOSE}
+        />
 
         {misconception && <MisconceptionSelectedBar title={misconception.title} />}
 
@@ -253,6 +260,7 @@ export default function ActivityFlow({ screenSize, sessions, plan }: ActivityFlo
           isLoading={isLoading}
           minHeight={CONTENT_HEIGHT}
           label={t('activityFlow.loading')}
+          skeleton={<ActivityFlowSkeleton />}
         >
           {hasFailed || !misconception || !activity ? (
             <Typography

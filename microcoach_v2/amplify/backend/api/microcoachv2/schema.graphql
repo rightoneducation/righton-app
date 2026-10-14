@@ -28,6 +28,9 @@ type MicroCoachUser
   lastName: String
   # Derived from the email domain at sign-up; read-only in the app.
   school: String
+  # S3 path of the teacher's profile picture (private/<identity>/profile/...);
+  # null shows their initials. Same field and pattern as central_v2's User.
+  profilePicPath: String
   classes: [MicroCoachClassroom] @hasMany(indexName: "byUser", fields: ["id"])
   role: UserRole! @index(name: "byRole", queryField: "usersByRole")
   createdAt: AWSDateTime!

@@ -9,9 +9,16 @@ import {
   sortMenuPaperSx,
 } from '../lib/styledcomponents/ActivityListStyledComponents';
 
-// By class is the only option offered; the page opens grouped by week,
-// newest first (ActivitySortOrder.RECENT_FIRST).
+// rev2 PastActivities: the page opens newest first.
 const SORT_OPTIONS: { order: ActivitySortOrder; labelKey: string }[] = [
+  {
+    order: ActivitySortOrder.RECENT_FIRST,
+    labelKey: 'pastActivities.sortNewest',
+  },
+  {
+    order: ActivitySortOrder.OLDEST_FIRST,
+    labelKey: 'pastActivities.sortOldest',
+  },
   { order: ActivitySortOrder.BY_CLASS, labelKey: 'pastActivities.sortClass' },
 ];
 
@@ -20,7 +27,7 @@ interface ActivitySortMenuProps {
   onSortChange: (order: ActivitySortOrder) => void;
 }
 
-// Past Activities' Sort control. Figma (v2 Dashboard3) draws the menu open
+// Past Activities' Sort control. Figma (rev2 PastActivities) draws the menu open
 // above the button, right edges aligned.
 export default function ActivitySortMenu({
   sortOrder,
@@ -53,13 +60,7 @@ export default function ActivitySortMenu({
             key={option.order}
             selected={option.order === sortOrder}
             onClick={() => {
-              // Picking the active option turns it off, back to the default
-              // week view; with one option there is no other way back.
-              onSortChange(
-                option.order === sortOrder
-                  ? ActivitySortOrder.RECENT_FIRST
-                  : option.order,
-              );
+              onSortChange(option.order);
               setSortAnchor(null);
             }}
           >

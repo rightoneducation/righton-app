@@ -20,25 +20,38 @@ export interface OpenClassSessionTarget {
  * Switching class makes useSessions refetch and select that class's latest
  * session, so the navigation waits until the target session is in the list
  * before selecting it. A failed session fetch still navigates, with the class
- * selected.
+ * selected, and so does a loaded list that lacks the target: the page then
+ * shows the class's latest session rather than waiting for one that will not
+ * arrive.
  */
 export function useOpenClassSession(
   classrooms: UseClassroomsResult,
   sessions: UseSessionsResult,
 ): (target: OpenClassSessionTarget) => void {
   const navigate = useNavigate();
-  const [pending, setPending] = useState<OpenClassSessionTarget | null>(null);
+  // awaitingReload: the class is being switched, so the session list on hand
+  // is the old class's until useSessions reports LOADING for the new one.
+  const [pending, setPending] = useState<
+    (OpenClassSessionTarget & { awaitingReload: boolean }) | null
+  >(null);
   const { selectSession } = sessions;
 
   useEffect(() => {
     if (!pending || classrooms.selectedClassroomId !== pending.classId) return;
+    if (pending.awaitingReload) {
+      // This effect can run before useSessions' own (child effects first), so
+      // READY here may still describe the previous class.
+      if (sessions.status === MicroCoachDataStatus.LOADING) {
+        setPending({ ...pending, awaitingReload: false });
+      }
+      return;
+    }
     const failed = sessions.status === MicroCoachDataStatus.ERROR;
+    const loaded = sessions.status === MicroCoachDataStatus.READY;
+    if (!failed && !loaded) return;
     const hasTarget =
       pending.sessionId === null ||
       sessions.sessions.some((session) => session.id === pending.sessionId);
-    if (!failed && !(sessions.status === MicroCoachDataStatus.READY && hasTarget)) {
-      return;
-    }
     if (pending.sessionId && hasTarget) selectSession(pending.sessionId);
     navigate(pending.path, { state: pending.state });
     setPending(null);
@@ -52,9 +65,8 @@ export function useOpenClassSession(
   ]);
 
   return (target) => {
-    if (classrooms.selectedClassroomId !== target.classId) {
-      classrooms.selectClassroom(target.classId);
-    }
-    setPending(target);
+    const isSwitching = classrooms.selectedClassroomId !== target.classId;
+    if (isSwitching) classrooms.selectClassroom(target.classId);
+    setPending({ ...target, awaitingReload: isSwitching });
   };
 }

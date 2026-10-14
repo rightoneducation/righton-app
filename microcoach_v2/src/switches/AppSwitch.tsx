@@ -1,10 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ScreenType } from '../lib/MicroCoachModels';
+import { MicroCoachDataStatus, ScreenType } from '../lib/MicroCoachModels';
 import { AssessmentType } from '../AWSAPI';
 import { useAppOutletContext } from '../hooks/useAppOutletContext';
 import { useLogOut } from '../hooks/useAuthActions';
 import { useScreenSize } from '../hooks/useScreenSize';
+import { useProfilePictureUrl } from '../hooks/useProfilePictureUrl';
 import AppContainer from '../containers/AppContainer';
 import { HeaderVariant } from '../components/Header';
 import AuthGuard from '../containers/AuthGuard';
@@ -14,7 +15,6 @@ import SignUpWizard from '../containers/SignUpWizard';
 import ResetPassword from '../pages/ResetPassword';
 import AuthCallback from '../pages/AuthCallback';
 import Dashboard from '../pages/Dashboard';
-import ThisWeek from '../pages/ThisWeek';
 import PastActivities from '../pages/PastActivities';
 import Review from '../pages/Review';
 import ChooseActivity from '../pages/ChooseActivity';
@@ -51,7 +51,8 @@ const PUBLIC_SCREENS = new Set<ScreenType>([
   // validateUser before the message appeared.
   ScreenType.AUTH,
   // Every in-app screen is deliberately absent: they need a signed-in user, so
-  // AuthGuard holds them during LOADING and sends a signed-out visitor to /.
+  // AuthGuard sends a signed-out visitor to /. During LOADING they render
+  // their skeletons while the session resolves.
 ]);
 
 // The wizard's own chrome: brand only, no auth links to a flow you are in.
@@ -73,7 +74,6 @@ const AVATAR_HEADER_SCREENS = new Set<ScreenType>([
   ScreenType.PROFILE,
   ScreenType.CHANGE_PASSWORD,
   ScreenType.DASHBOARD,
-  ScreenType.THIS_WEEK,
   ScreenType.PAST_ACTIVITIES,
   ScreenType.UPLOAD_MIU,
 ]);
@@ -97,7 +97,6 @@ const APP_CHROME_SCREENS = new Set<ScreenType>([
   ScreenType.UPLOAD_REASSESS,
   ScreenType.REFLECT,
   ScreenType.DASHBOARD,
-  ScreenType.THIS_WEEK,
   ScreenType.PAST_ACTIVITIES,
   ScreenType.REVIEW,
   ScreenType.CHOOSE_ACTIVITY,
@@ -117,6 +116,11 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
   const screenSize = useScreenSize();
   const { handleLogOut } = useLogOut(apiClients, user);
   const navigate = useNavigate();
+  // The header avatar shows the teacher's picture when they have one.
+  const profilePictureUrl = useProfilePictureUrl(
+    apiClients,
+    user.userProfile?.profilePicPath,
+  );
 
   /*
    * This used to clear the reducer by hand and never call handleLogOut, so the
@@ -180,16 +184,6 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
           classrooms={classrooms}
           sessions={sessions}
           plan={plan}
-        />
-      );
-      break;
-    case ScreenType.THIS_WEEK:
-      screenComponent = (
-        <ThisWeek
-          apiClients={apiClients}
-          screenSize={screenSize}
-          classrooms={classrooms}
-          sessions={sessions}
         />
       );
       break;
@@ -283,6 +277,11 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       classrooms={classrooms.classrooms}
       selectedClassroomId={classrooms.selectedClassroomId}
       onSelectClassroom={classrooms.selectClassroom}
+      profilePictureUrl={profilePictureUrl}
+      areClassesLoading={
+        classrooms.status === MicroCoachDataStatus.LOADING ||
+        classrooms.status === MicroCoachDataStatus.IDLE
+      }
       // The sign-up frames carry no footer either.
       showFooter={!usesAppChrome && !isSignUp}
       showClassSwitcher={FLOW_SCREENS.has(currentScreen)}
@@ -295,7 +294,6 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
         handleLogOut={handleLogOut}
         setUserStatus={user.setUserStatus}
         setUserErrorString={user.setUserErrorString}
-        screenSize={screenSize}
         requiresAuth={!PUBLIC_SCREENS.has(currentScreen)}
       >
         {screenComponent}

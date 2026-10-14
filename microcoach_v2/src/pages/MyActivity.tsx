@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import ChangeActivityDialog from '../components/ChangeActivityDialog';
 import { FlowStepperBand } from '../components/FlowHeader';
+import { FlowStep } from '../lib/flowProgress';
 import LoadingSlot from '../components/LoadingSlot';
+import { SavedActivitySkeleton } from '../components/skeletons/ActivityFlowSkeletons';
 import { IMicroCoachActivity } from '../api/Models/IMicroCoachActivity';
 import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
 import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
@@ -33,6 +35,7 @@ import { useI18nReady } from '../hooks/readiness';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { IPlanItemsState } from '../hooks/usePlanItems';
+import MathTypography from '../components/MathTypography';
 
 // One card's height: what the loading spinner holds open (Figma: 310).
 const CARD_HEIGHT = 310;
@@ -73,9 +76,7 @@ function SavedActivityCard({
       <MisconceptionBand>
         <MisconceptionBandHead>
           {skillCode && <CodeChip>{skillCode}</CodeChip>}
-          <Typography variant="rubikBodyBold" component="h3">
-            {misconception.title}
-          </Typography>
+          <MathTypography variant="rubikBodyBold" component="h3" text={misconception.title} />
         </MisconceptionBandHead>
         <Typography variant="smallBodyText">{template.description}</Typography>
       </MisconceptionBand>
@@ -124,6 +125,10 @@ export default function MyActivity({ screenSize, sessions, plan }: MyActivityPro
   const hasFailed =
     plan.status === MicroCoachDataStatus.ERROR ||
     misconceptionsStatus === MicroCoachDataStatus.ERROR;
+  // Select activity saves in the background and comes straight here, so a
+  // failed save (rolled back by usePlanItems) is reported here. A failed load
+  // sets the status to ERROR instead, so an error on a READY plan is a save.
+  const saveFailed = plan.status === MicroCoachDataStatus.READY && !!plan.error;
 
   const saved = plan.planItems.flatMap((item) => {
     if (item.status !== 'SAVED') return [];
@@ -170,7 +175,12 @@ export default function MyActivity({ screenSize, sessions, plan }: MyActivityPro
   return (
     <UnderstandPage screenSize={screenSize}>
       <ActivityFlowColumn>
-        <FlowStepperBand screenSize={screenSize} sessions={sessions} plan={plan} />
+        <FlowStepperBand
+          screenSize={screenSize}
+          sessions={sessions}
+          plan={plan}
+          page={FlowStep.CHOOSE}
+        />
 
         <MyActivityHeading>
           <Typography variant="appTitle" component="h1">
@@ -179,10 +189,21 @@ export default function MyActivity({ screenSize, sessions, plan }: MyActivityPro
           <Typography variant="uploadLabel">{t('myActivity.intro')}</Typography>
         </MyActivityHeading>
 
+        {saveFailed && (
+          <Typography
+            variant="rubikBody"
+            role="alert"
+            sx={{ color: 'designSystem.status.errorStroke' }}
+          >
+            {t('myActivity.saveError')}
+          </Typography>
+        )}
+
         <LoadingSlot
           isLoading={isLoading}
           minHeight={CARD_HEIGHT}
           label={t('myActivity.loading')}
+          skeleton={<SavedActivitySkeleton />}
         >
           {content}
         </LoadingSlot>

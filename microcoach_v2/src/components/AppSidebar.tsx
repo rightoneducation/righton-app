@@ -1,7 +1,6 @@
 import React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
 import { ISidebarItem } from '../lib/PipelineModels';
 import { ScreenSize } from '../lib/MicroCoachModels';
@@ -13,7 +12,6 @@ import {
 
 const icons: Record<string, React.ReactNode> = {
   dashboard: <HomeOutlinedIcon fontSize="small" />,
-  'this-week': <CalendarTodayOutlinedIcon fontSize="small" />,
   'past-activities': <HistoryOutlinedIcon fontSize="small" />,
 };
 

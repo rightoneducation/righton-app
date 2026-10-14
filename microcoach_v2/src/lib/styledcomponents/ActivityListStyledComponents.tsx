@@ -5,9 +5,9 @@ import Typography from '@mui/material/Typography';
 import { noScreenSize, ScreenSizeProps } from './LandingStyledComponents';
 import { ScreenSize } from '../MicroCoachModels';
 
-// This Week (dashboard/v2 Dashboard2) and Past Activities (Dashboard3): a
-// column of white cards, each with a trash tile beside it, under the sidebar
-// screens' shared title.
+// Home's Weekly Activity Progress (rev2 LandingPage) and Past Activities
+// (rev2 PastActivities): a column of white cards. Delete was dropped in rev2
+// (deferred to Wave 3), so the cards have no trash tile.
 
 const actionHeight = 42;
 const tagRadius = 4;
@@ -39,16 +39,27 @@ export const ActivityGroupList = styled(Box)(({ theme }) => ({
   maxWidth: theme.sizing.activityListMaxWidth,
 }));
 
-// Figma (Dashboard2): "Week 9: Oct 19-23", Poppins 16/600, over the cards.
+// Home (rev2 LandingPage): "Weekly Activity Progress", Rubik 36/500, over
+// the week heading.
+export const ProgressTitle = styled(Typography)(({ theme }) => ({
+  ...theme.typography.smallTitle,
+  fontSize: 36,
+  color: theme.palette.designSystem.surface.atlanticNavy,
+  // Rendered as an h2: drop the browser's default heading margins.
+  margin: 0,
+}));
+
+// Home (rev2 LandingPage): "Week 9: Oct 19-23", Rubik 24/600, over the cards.
 // Inset to the cards' text edge (the card's own padding).
 export const WeekSubheading = styled(Typography)(({ theme }) => ({
   paddingLeft: theme.sizing.space5,
-  ...theme.typography.headingSm,
+  ...theme.typography.smallTitle,
+  fontWeight: 600,
   letterSpacing: '-0.02em',
   color: theme.palette.designSystem.surface.atlanticNavy,
 }));
 
-// Figma (Dashboard3_a): a Rubik 24/600 heading over each week's cards, with
+// rev2 PastActivities: a Rubik 32/600 heading over each week's cards, with
 // Sort on the right of the first.
 export const WeekHeadingRow = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -60,10 +71,7 @@ export const WeekHeadingRow = styled(Box)(({ theme }) => ({
 }));
 
 export const WeekHeading = styled(Typography)(({ theme }) => ({
-  fontFamily: theme.typography.appTitle.fontFamily,
-  fontWeight: 600,
-  fontSize: 24,
-  lineHeight: 'normal',
+  ...theme.typography.appTitle,
   letterSpacing: '-0.02em',
   color: theme.palette.designSystem.surface.atlanticNavy,
 }));
@@ -95,13 +103,6 @@ export const sortMenuPaperSx = {
   '& .MuiMenuItem-root.Mui-selected, & .MuiMenuItem-root.Mui-selected:hover':
     { bgcolor: 'designSystem.background.navyBlue' },
 };
-
-// Figma: 16 between the card and its trash tile.
-export const CardRow = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'stretch',
-  gap: theme.sizing.space3,
-}));
 
 // Figma: 1172 wide, radius 16, one navy-free 8% drop. The left column holds
 // the class line and the step track or activity name; the right column the
@@ -164,7 +165,7 @@ export const ActivityName = styled(Typography)(({ theme }) => ({
   color: theme.palette.designSystem.surface.atlanticNavy,
 }));
 
-// Figma: Rubik 16/500, the step's status or "Review class results".
+// Figma: Rubik 16/500, the step's status.
 export const CardMessage = styled(Typography)(({ theme }) => ({
   ...theme.typography.rubikBody,
   fontWeight: 500,
@@ -227,21 +228,6 @@ export const WaitingPill = styled(Box)(({ theme }) => ({
   letterSpacing: '-0.02em',
   whiteSpace: 'nowrap',
   boxSizing: 'border-box',
-}));
-
-// Figma: the 44-wide tile beside each card holding Remove.
-export const RemoveTile = styled(Button)(({ theme }) => ({
-  flexShrink: 0,
-  minWidth: 44,
-  width: 44,
-  padding: 0,
-  borderRadius: theme.sizing.space3,
-  backgroundColor: theme.palette.designSystem.surface.white,
-  color: theme.palette.designSystem.surface.atlanticNavy,
-  boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
-  '&:hover': {
-    backgroundColor: theme.palette.designSystem.foreground.skyBlue,
-  },
 }));
 
 export type { ScreenSizeProps };

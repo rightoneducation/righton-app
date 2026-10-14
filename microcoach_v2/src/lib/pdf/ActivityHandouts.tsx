@@ -13,7 +13,7 @@ import {
 import { WorkStatus } from '../PipelineModels';
 import { IActivityTemplateCopy } from '../activityTemplates';
 import formatStepAnnotation, { Translate } from '../activityMarks';
-import mathText from './mathText';
+import mathText from '../mathText';
 import { pdfColors, pdfStyles } from './pdfTheme';
 import groupingIndividual from '../../images/groupingIndividual.png';
 import groupingPairs from '../../images/groupingPairs.png';

@@ -1,50 +1,56 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { IAPIClients } from '../api';
 import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
+import { IMicroCoachSavedPlan } from '../api/Models/IMicroCoachSavedPlan';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { SessionStatus } from '../AWSAPI';
 import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
-import { deriveCurrentStep } from '../lib/flowProgress';
+import { deriveCurrentStep, sessionForWeek } from '../lib/flowProgress';
 import { IPastActivity, IWeeklyClassProgress } from '../lib/ActivityListModels';
-import { weekOf } from '../lib/weeks';
-import {
-  useMicroCoachDataDispatch,
-  useMicroCoachDataState,
-} from './context/useMicroCoachDataContext';
 
 export interface UseClassActivityResult {
-  thisWeek: IWeeklyClassProgress[];
+  // Every class's place in the given week's flow.
+  week: IWeeklyClassProgress[];
   past: IPastActivity[];
   status: MicroCoachDataStatus;
-  // Deletes the session; resolves false when the delete failed.
-  removeSession: (sessionId: string) => Promise<boolean>;
+}
+
+// One class as fetched; the week's rows are built from these, so picking
+// another week does not refetch.
+interface ClassRecord {
+  classroom: IMicroCoachClassroom;
+  sessions: IMicroCoachSession[];
+  studentCount: number;
+  plans: IMicroCoachSavedPlan[];
 }
 
 interface ClassActivity {
-  thisWeek: IWeeklyClassProgress[];
+  perClass: ClassRecord[];
   past: IPastActivity[];
 }
 
-const EMPTY: ClassActivity = { thisWeek: [], past: [] };
+const EMPTY: ClassActivity = { perClass: [], past: [] };
 
-// The latest session created in the current calendar week, if any.
-function thisWeeksSession(
-  sessions: IMicroCoachSession[],
-  currentWeek: string,
-): IMicroCoachSession | null {
-  return (
-    sessions
-      .filter((session) => weekOf(session.createdAt) === currentWeek)
-      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0] ?? null
-  );
+function weekRows(perClass: ClassRecord[], weekStart: string): IWeeklyClassProgress[] {
+  return perClass.map(({ classroom, sessions, studentCount, plans }) => {
+    const session = sessionForWeek(sessions, weekStart);
+    const hasSavedPlan =
+      !!session && plans.some((plan) => plan.sessionId === session.id);
+    return {
+      classId: classroom.id,
+      sessionId: session?.id ?? null,
+      className: classroom.name,
+      studentCount,
+      step: deriveCurrentStep(session, hasSavedPlan),
+      isAwaitingResults: session?.status === SessionStatus.DATA_INGESTED,
+    };
+  });
 }
 
 async function loadClassActivity(
   apiClients: IAPIClients,
   classrooms: IMicroCoachClassroom[],
 ): Promise<ClassActivity> {
-  const currentWeek = weekOf(new Date().toISOString());
-
   const perClass = await Promise.all(
     classrooms.map(async (classroom) => {
       const [sessions, students, plans] = await Promise.all([
@@ -55,20 +61,6 @@ async function loadClassActivity(
       return { classroom, sessions, studentCount: students.length, plans };
     }),
   );
-
-  const thisWeek = perClass.map(({ classroom, sessions, studentCount, plans }) => {
-    const current = thisWeeksSession(sessions, currentWeek);
-    const hasSavedPlan =
-      !!current && plans.some((plan) => plan.sessionId === current.id);
-    return {
-      classId: classroom.id,
-      sessionId: current?.id ?? null,
-      className: classroom.name,
-      studentCount,
-      step: deriveCurrentStep(current, hasSavedPlan),
-      isAwaitingResults: current?.status === SessionStatus.DATA_INGESTED,
-    };
-  });
 
   const completed = perClass.flatMap(({ classroom, sessions, studentCount, plans }) =>
     sessions
@@ -107,33 +99,30 @@ async function loadClassActivity(
     completedAt: session.updatedAt,
   }));
 
-  return { thisWeek, past };
+  return { perClass, past };
 }
 
 /**
- * This Week and Past Activities span every class, while the app-level
+ * Home's weekly progress and Past Activities span every class, while the app-level
  * useSessions follows only the selected one, so this fetches on its own: per
  * class its sessions, students and saved plans (a teacher has a handful), then
  * one lookup per completed session's activity.
  *
- * `classrooms` is null until the class list has loaded.
+ * `classrooms` is null until the class list has loaded. `weekStart` picks the
+ * week the progress rows describe (Home's week dropdown).
  */
 export function useClassActivity(
   apiClients: IAPIClients,
   classrooms: IMicroCoachClassroom[] | null,
+  weekStart: string | null = null,
 ): UseClassActivityResult {
-  const { sessions: selectedClassSessions, selectedSessionId } =
-    useMicroCoachDataState();
-  const dispatch = useMicroCoachDataDispatch();
-  const classKey = classrooms?.map((classroom) => classroom.id).join(',') ?? null;
-  // Bumped after a delete to refetch.
-  const [reloadToken, setReloadToken] = useState(0);
+  const requestKey =
+    classrooms?.map((classroom) => classroom.id).join(',') ?? null;
   const [result, setResult] = useState<{
     key: string;
     data: ClassActivity;
     status: MicroCoachDataStatus;
   } | null>(null);
-  const requestKey = classKey === null ? null : `${classKey}#${reloadToken}`;
 
   useEffect(() => {
     if (requestKey === null || !classrooms) return undefined;
@@ -161,37 +150,8 @@ export function useClassActivity(
     // classrooms is read through requestKey, which changes whenever its ids do.
   }, [apiClients, requestKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const removeSession = useCallback(
-    async (sessionId: string) => {
-      try {
-        const deleted = await apiClients.session.deleteSession(sessionId);
-        if (!deleted) return false;
-        // The app-wide session list (the selected class's) must not keep a
-        // deleted session, or the dashboard, Review and Reflect would point at it.
-        if (selectedClassSessions.some((session) => session.id === sessionId)) {
-          const remaining = selectedClassSessions.filter(
-            (session) => session.id !== sessionId,
-          );
-          dispatch({ type: 'SET_SESSIONS', payload: remaining });
-          if (selectedSessionId === sessionId) {
-            dispatch({
-              type: 'SET_SELECTED_SESSION_ID',
-              payload: remaining[0]?.id ?? null,
-            });
-          }
-        }
-        setReloadToken((token) => token + 1);
-        return true;
-      } catch (error) {
-        console.error('Could not delete session', error);
-        return false;
-      }
-    },
-    [apiClients, dispatch, selectedClassSessions, selectedSessionId],
-  );
-
-  // Keep the last answer on screen while a refetch runs, so a delete does not
-  // flash the list back to a spinner.
+  // Keep the last answer on screen while a refetch runs (the class list
+  // changed), so the list does not flash back to a spinner.
   const isCurrent = result !== null && result.key === requestKey;
   let status = MicroCoachDataStatus.LOADING;
   if (isCurrent) status = result.status;
@@ -199,10 +159,15 @@ export function useClassActivity(
     status = MicroCoachDataStatus.READY;
   }
 
+  const perClass = result?.data.perClass;
+  const week = useMemo(
+    () => (perClass && weekStart ? weekRows(perClass, weekStart) : []),
+    [perClass, weekStart],
+  );
+
   return {
-    thisWeek: result?.data.thisWeek ?? [],
+    week,
     past: result?.data.past ?? [],
     status,
-    removeSession,
   };
 }

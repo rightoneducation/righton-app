@@ -2,6 +2,7 @@ import { SessionStatus } from '../AWSAPI';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { IFlowStep } from './PipelineModels';
 import { Translate } from './activityMarks';
+import { currentSchoolWeek, schoolWeeks, weekOf } from './weeks';
 
 // Where a class stands in the coaching loop, read off its persisted session.
 // Pure: the dashboard fetches, this decides.
@@ -46,6 +47,13 @@ export function deriveCurrentStep(
   if (session.postPpqAssessmentId) return FlowStep.REFLECT;
   if (hasSavedPlan) return FlowStep.REASSESS;
   return FlowStep.UNDERSTAND;
+}
+
+// Whether the class has an activity to show on My Activity: saving a plan is
+// what moves it on to REASSESS. Until then the button is greyed out (rev2
+// LandingPage).
+export function hasChosenActivity(step: FlowStep): boolean {
+  return [FlowStep.REASSESS, FlowStep.REFLECT, FlowStep.DONE].includes(step);
 }
 
 /*
@@ -121,4 +129,32 @@ export function sortSessionsLatestFirst(
     }
     return b.createdAt.localeCompare(a.createdAt);
   });
+}
+
+// A class's session for a school week: the latest one created that week, or
+// null when the class has not uploaded for it. The upload does not record
+// which week it was for, so the week is the one the session was created in.
+export function sessionForWeek(
+  sessions: IMicroCoachSession[],
+  weekStart: string,
+): IMicroCoachSession | null {
+  return (
+    sessions
+      .filter((session) => weekOf(session.createdAt) === weekStart)
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0] ?? null
+  );
+}
+
+// The week Home opens on: the week of the class's latest session while that
+// session's loop is still open (a class mid-way through last week's cycle
+// stays on it), otherwise the current week.
+export function defaultWeekFor(sessions: IMicroCoachSession[]): string {
+  const latest = [...sessions].sort((a, b) =>
+    b.createdAt.localeCompare(a.createdAt),
+  )[0];
+  if (!latest || latest.status === SessionStatus.COMPLETED) {
+    return currentSchoolWeek();
+  }
+  const week = weekOf(latest.createdAt);
+  return schoolWeeks().includes(week) ? week : currentSchoolWeek();
 }
