@@ -183,7 +183,9 @@ export default function ClassStepTrack({
               sx={{
                 color,
                 typography: 'rubikBodyBold',
-                fontSize: labelSize,
+                // A fluid column is ~70px on a phone: at 16px "Understand"
+                // runs into its neighbour, so labels drop to the compact size.
+                fontSize: fluid ? GEOMETRY.compact.labelSize : labelSize,
                 letterSpacing: '-0.02em',
                 whiteSpace: fluid ? 'normal' : 'nowrap',
                 textAlign: 'center',
