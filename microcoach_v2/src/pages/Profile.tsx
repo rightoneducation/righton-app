@@ -376,11 +376,9 @@ export default function Profile({
     setPictureError(null);
     setIsUploadingPicture(true);
     try {
-      const path = await apiClients.upload.uploadProfilePicture(file);
-      // Spread, not listed, so this compiles before codegen adds the field.
-      const picture = { profilePicPath: path };
-      const updated = await apiClients.user.updateUser({ id: userProfile.id, ...picture });
-      updateUserProfile({ ...(updated ?? {}), ...picture });
+      const profilePicPath = await apiClients.upload.uploadProfilePicture(file);
+      const updated = await apiClients.user.updateUser({ id: userProfile.id, profilePicPath });
+      updateUserProfile(updated ?? { profilePicPath });
     } catch (error) {
       console.error('Could not save the profile picture', error);
       setPictureError('UPLOAD');

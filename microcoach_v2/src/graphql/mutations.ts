@@ -14,6 +14,7 @@ export const createMicroCoachUser = /* GraphQL */ `
       firstName
       lastName
       school
+      profilePicPath
       classes {
         items {
           id
@@ -87,6 +88,7 @@ export const updateMicroCoachUser = /* GraphQL */ `
       firstName
       lastName
       school
+      profilePicPath
       classes {
         items {
           id
@@ -160,6 +162,7 @@ export const deleteMicroCoachUser = /* GraphQL */ `
       firstName
       lastName
       school
+      profilePicPath
       classes {
         items {
           id

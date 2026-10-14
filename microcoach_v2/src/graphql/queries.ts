@@ -11,6 +11,7 @@ export const getMicroCoachUser = /* GraphQL */ `
       firstName
       lastName
       school
+      profilePicPath
       classes {
         items {
           id
@@ -86,6 +87,7 @@ export const listMicroCoachUsers = /* GraphQL */ `
         firstName
         lastName
         school
+        profilePicPath
         classes {
           items {
             id
@@ -681,6 +683,7 @@ export const usersByCognitoId = /* GraphQL */ `
         firstName
         lastName
         school
+        profilePicPath
         classes {
           items {
             id
@@ -736,6 +739,7 @@ export const usersByEmail = /* GraphQL */ `
         firstName
         lastName
         school
+        profilePicPath
         classes {
           items {
             id
@@ -791,6 +795,7 @@ export const usersByRole = /* GraphQL */ `
         firstName
         lastName
         school
+        profilePicPath
         classes {
           items {
             id
