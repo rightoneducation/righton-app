@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import ChangeActivityDialog from '../components/ChangeActivityDialog';
 import { FlowStepperBand } from '../components/FlowHeader';
+import { FlowStep } from '../lib/flowProgress';
 import LoadingSlot from '../components/LoadingSlot';
 import { IMicroCoachActivity } from '../api/Models/IMicroCoachActivity';
 import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
@@ -124,6 +125,10 @@ export default function MyActivity({ screenSize, sessions, plan }: MyActivityPro
   const hasFailed =
     plan.status === MicroCoachDataStatus.ERROR ||
     misconceptionsStatus === MicroCoachDataStatus.ERROR;
+  // Select activity saves in the background and comes straight here, so a
+  // failed save (rolled back by usePlanItems) is reported here. A failed load
+  // sets the status to ERROR instead, so an error on a READY plan is a save.
+  const saveFailed = plan.status === MicroCoachDataStatus.READY && !!plan.error;
 
   const saved = plan.planItems.flatMap((item) => {
     if (item.status !== 'SAVED') return [];
@@ -170,7 +175,12 @@ export default function MyActivity({ screenSize, sessions, plan }: MyActivityPro
   return (
     <UnderstandPage screenSize={screenSize}>
       <ActivityFlowColumn>
-        <FlowStepperBand screenSize={screenSize} sessions={sessions} plan={plan} />
+        <FlowStepperBand
+          screenSize={screenSize}
+          sessions={sessions}
+          plan={plan}
+          page={FlowStep.CHOOSE}
+        />
 
         <MyActivityHeading>
           <Typography variant="appTitle" component="h1">
@@ -178,6 +188,16 @@ export default function MyActivity({ screenSize, sessions, plan }: MyActivityPro
           </Typography>
           <Typography variant="uploadLabel">{t('myActivity.intro')}</Typography>
         </MyActivityHeading>
+
+        {saveFailed && (
+          <Typography
+            variant="rubikBody"
+            role="alert"
+            sx={{ color: 'designSystem.status.errorStroke' }}
+          >
+            {t('myActivity.saveError')}
+          </Typography>
+        )}
 
         <LoadingSlot
           isLoading={isLoading}

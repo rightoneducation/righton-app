@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import { FlowStepperBand } from '../components/FlowHeader';
+import { FlowStep } from '../lib/flowProgress';
 import LoadingSlot from '../components/LoadingSlot';
 import MisconceptionCard from '../components/MisconceptionCard';
 import MisconceptionDetailModal, {
@@ -126,6 +127,7 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
           screenSize={screenSize}
           sessions={sessions}
           plan={plan}
+          page={FlowStep.UNDERSTAND}
         />
 
         <TitleGroup>

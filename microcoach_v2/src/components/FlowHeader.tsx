@@ -6,6 +6,7 @@ import FlowStepper from './FlowStepper';
 import {
   buildFlowSteps,
   deriveCurrentStep,
+  FlowStep,
   hasChosenActivity,
 } from '../lib/flowProgress';
 import {
@@ -23,6 +24,8 @@ import { IPlanItemsState } from '../hooks/usePlanItems';
 interface FlowStepperBandProps extends ScreenSizeProps {
   sessions: UseSessionsResult;
   plan: IPlanItemsState;
+  // The step this page belongs to; FlowStepper underlines it.
+  page: FlowStep;
 }
 
 /**
@@ -30,7 +33,12 @@ interface FlowStepperBandProps extends ScreenSizeProps {
  * Activity): the class's place in the loop on the left, My Activity on the
  * right, greyed out until an activity is chosen.
  */
-export function FlowStepperBand({ screenSize, sessions, plan }: FlowStepperBandProps) {
+export function FlowStepperBand({
+  screenSize,
+  sessions,
+  plan,
+  page,
+}: FlowStepperBandProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const currentStep = deriveCurrentStep(
@@ -41,7 +49,7 @@ export function FlowStepperBand({ screenSize, sessions, plan }: FlowStepperBandP
 
   return (
     <StepperBand screenSize={screenSize}>
-      <FlowStepper steps={flowSteps} screenSize={screenSize} />
+      <FlowStepper steps={flowSteps} page={page} screenSize={screenSize} />
       <MyActivityButton
         disableElevation
         disabled={!hasChosenActivity(currentStep)}

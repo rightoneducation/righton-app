@@ -199,7 +199,6 @@
     "weekHeading": "Week {{number}}: {{range}}",
     "students": "{{count}} students",
     "completed": "Completed {{date}}",
-    "reviewResults": "Review class results",
     "viewData": "View data",
     "sort": "Sort",
     "sortLabel": "Sort activities",
@@ -482,6 +481,7 @@
     "uploadMiu": "Upload MIU files",
     "loading": "Loading your saved activity",
     "loadError": "We couldn't load your saved activity. Refresh the page to try again.",
+    "saveError": "We couldn't save your activity. Go back and select it again.",
     "empty": "No activity saved yet. Choose one from a misconception's next-step activities."
   },
   "activityTemplates": {

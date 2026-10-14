@@ -96,6 +96,4 @@ function MathText({ text, inline = false, className }: MathTextProps) {
   );
 }
 
-MathText.defaultProps = { inline: false, className: undefined };
-
 export default MathText;

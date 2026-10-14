@@ -79,6 +79,11 @@ export function usePlanItems(
   } = useMicroCoachDataState();
   const dispatch = useMicroCoachDataDispatch();
   const savedPlanRef = useRef<IMicroCoachSavedPlan | null>(null);
+  // The current scope's load, and the last save. A save waits for both, so it
+  // sees the saved plan (if any) and updates it rather than creating a second
+  // one when Select is clicked before the load answers, or twice quickly.
+  const loadRef = useRef<Promise<void>>(Promise.resolve());
+  const saveQueueRef = useRef<Promise<void>>(Promise.resolve());
 
   const scopeType = scope?.type ?? null;
   let scopeId: string | null = null;
@@ -168,7 +173,8 @@ export function usePlanItems(
       }
     }
 
-    loadPlanItems();
+    // loadPlanItems reports its own failure, so this never rejects.
+    loadRef.current = loadPlanItems();
 
     return () => {
       cancelled = true;
@@ -183,34 +189,48 @@ export function usePlanItems(
   ]);
 
   const persistPlanItems = useCallback(
-    async (nextItems: IPlanItem[]) => {
-      if (!scopeType || !scopeId || !classId) {
-        throw new Error('Cannot save a plan without a class and plan scope');
-      }
+    (previousItems: IPlanItem[], nextItems: IPlanItem[]) => {
+      const save = async () => {
+        if (!scopeType || !scopeId || !classId) {
+          throw new Error('Cannot save a plan without a class and plan scope');
+        }
+        await loadRef.current;
 
-      const now = new Date().toISOString();
-      const currentPlan = savedPlanRef.current;
-      const plan: IMicroCoachSavedPlan = currentPlan
-        ? {
-            ...currentPlan,
-            items: toSavedPlanItems(nextItems),
-            updatedAt: now,
-          }
-        : {
-            id: uuidv4(),
-            classId,
-            sessionId: scopeType === 'session' ? scopeId : null,
-            items: toSavedPlanItems(nextItems),
-            createdAt: now,
-            updatedAt: now,
-          };
+        const now = new Date().toISOString();
+        const currentPlan = savedPlanRef.current;
+        // Saved items this client could not resolve (an activity it has not
+        // loaded) never reach planItems, so nextItems cannot carry them. Keep
+        // them as they were rather than dropping them from the plan.
+        const unresolvedItems = (currentPlan?.items ?? []).filter(
+          (savedItem) =>
+            !previousItems.some(
+              (item) => (item.activityId ?? item.id) === savedItem.id,
+            ),
+        );
+        const items = [...unresolvedItems, ...toSavedPlanItems(nextItems)];
+        const plan: IMicroCoachSavedPlan = currentPlan
+          ? { ...currentPlan, items, updatedAt: now }
+          : {
+              id: uuidv4(),
+              classId,
+              sessionId: scopeType === 'session' ? scopeId : null,
+              items,
+              createdAt: now,
+              updatedAt: now,
+            };
 
-      const savedPlan = currentPlan
-        ? await apiClients.savedPlan.updateSavedPlan(plan)
-        : await apiClients.savedPlan.createSavedPlan(plan);
+        const savedPlan = currentPlan
+          ? await apiClients.savedPlan.updateSavedPlan(plan)
+          : await apiClients.savedPlan.createSavedPlan(plan);
 
-      if (!savedPlan) throw new Error('The saved plan request returned no data');
-      savedPlanRef.current = savedPlan;
+        if (!savedPlan) throw new Error('The saved plan request returned no data');
+        savedPlanRef.current = savedPlan;
+      };
+
+      // One save at a time, in click order; a failed save doesn't block the next.
+      const run = saveQueueRef.current.then(save);
+      saveQueueRef.current = run.catch(() => undefined);
+      return run;
     },
     [apiClients, classId, scopeId, scopeType],
   );
@@ -220,7 +240,7 @@ export function usePlanItems(
       dispatch({ type: 'SET_PLAN_ITEMS_ERROR', payload: null });
 
       try {
-        await persistPlanItems(nextItems);
+        await persistPlanItems(previousItems, nextItems);
       } catch (error) {
         dispatch({ type: 'SET_PLAN_ITEMS', payload: previousItems });
         dispatch({

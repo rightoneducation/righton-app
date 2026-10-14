@@ -138,9 +138,6 @@ export default function PastActivities({
                         </ActivityName>
                       </CardColumn>
                       <CardColumn align="end">
-                        <CardMessage>
-                          {t('pastActivities.reviewResults')}
-                        </CardMessage>
                         {/* Design note: View data goes back to the reflect screen. */}
                         <CardActionButton
                           disableElevation

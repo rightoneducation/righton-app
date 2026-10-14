@@ -199,7 +199,6 @@
     "weekHeading": "Semana {{number}}: {{range}}",
     "students": "{{count}} estudiantes",
     "completed": "Completado el {{date}}",
-    "reviewResults": "Revisar resultados de la clase",
     "viewData": "Ver datos",
     "sort": "Ordenar",
     "sortLabel": "Ordenar actividades",
@@ -482,6 +481,7 @@
     "uploadMiu": "Subir archivos MIU",
     "loading": "Cargando tu actividad guardada",
     "loadError": "No pudimos cargar tu actividad guardada. Actualiza la página para intentarlo de nuevo.",
+    "saveError": "No pudimos guardar tu actividad. Vuelve atrás y selecciónala de nuevo.",
     "empty": "Aún no has guardado ninguna actividad. Elige una de las actividades de siguiente paso de un concepto erróneo."
   },
   "activityTemplates": {

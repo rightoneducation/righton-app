@@ -148,8 +148,11 @@ function FileSlotCard({
         >
           <UploadedFileRow isError={!!upload.error}>
             <UploadedFileMain>
+              {/* A long name truncates so the status and X stay in the row. */}
               <Typography
                 variant="statusLabel"
+                noWrap
+                title={upload.name}
                 sx={{ color: 'designSystem.background.navyBlue' }}
               >
                 {upload.name}

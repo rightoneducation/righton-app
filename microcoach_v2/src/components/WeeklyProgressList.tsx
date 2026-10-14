@@ -13,7 +13,7 @@ import { useClassActivity } from '../hooks/useClassActivity';
 import { useOpenClassSession } from '../hooks/useOpenClassSession';
 import { FlowStep } from '../lib/flowProgress';
 import { IWeeklyClassProgress } from '../lib/ActivityListModels';
-import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
+import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import { currentSchoolWeek, formatSchoolWeek } from '../lib/weeks';
 import {
   ActivityList,
@@ -128,14 +128,26 @@ export default function WeeklyProgressList({
           {!hasFailed &&
             rows.map((row) => (
               <ActivityCard key={row.classId} screenSize={screenSize}>
-                <CardColumn align="start">
+                {/* Below LARGE the card stacks; this column then spans it so
+                    the fluid track has a width to fill. */}
+                <CardColumn
+                  align="start"
+                  sx={
+                    screenSize === ScreenSize.LARGE
+                      ? undefined
+                      : { alignSelf: 'stretch' }
+                  }
+                >
                   <CardLine>
                     <ClassName>{row.className}</ClassName>
                     <StudentsTag>
                       {t('weeklyProgress.students', { count: row.studentCount })}
                     </StudentsTag>
                   </CardLine>
-                  <ClassStepTrack step={row.step} />
+                  <ClassStepTrack
+                    step={row.step}
+                    fluid={screenSize === ScreenSize.SMALL}
+                  />
                 </CardColumn>
                 <CardColumn align="end">
                   <CardMessage>

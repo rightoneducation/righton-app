@@ -4,6 +4,7 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import ActivityCard from '../components/ActivityCard';
 import { FlowStepperBand, MisconceptionSelectedBar } from '../components/FlowHeader';
+import { FlowStep } from '../lib/flowProgress';
 import LoadingSlot from '../components/LoadingSlot';
 import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import { IPlanItem } from '../lib/PipelineModels';
@@ -75,7 +76,12 @@ export default function ChooseActivity({
   return (
     <UnderstandPage screenSize={screenSize}>
       <UnderstandColumn>
-        <FlowStepperBand screenSize={screenSize} sessions={sessions} plan={plan} />
+        <FlowStepperBand
+          screenSize={screenSize}
+          sessions={sessions}
+          plan={plan}
+          page={FlowStep.CHOOSE}
+        />
 
         {misconception && <MisconceptionSelectedBar title={misconception.title} />}
 

@@ -38,7 +38,7 @@ import { useHasUploads } from '../hooks/useHasUploads';
 import { IPlanItemsState } from '../hooks/usePlanItems';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { IAPIClients } from '../api';
-import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
+import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import {
   FlowStep,
   buildFlowSteps,
@@ -175,9 +175,14 @@ export default function Dashboard({
           <>
             <StepperBand screenSize={screenSize}>
               {/* rev2 LandingPage: the circle track, not the flow pages'
-                  breadcrumb; StepperRow scrolls it sideways below LARGE. */}
+                  breadcrumb. On phones it fits the width; at medium
+                  StepperRow scrolls it sideways. */}
               <StepperRow screenSize={screenSize}>
-                <ClassStepTrack steps={flowSteps} size="large" />
+                <ClassStepTrack
+                  steps={flowSteps}
+                  size="large"
+                  fluid={screenSize === ScreenSize.SMALL}
+                />
               </StepperRow>
               <MyActivityButton
                 disableElevation

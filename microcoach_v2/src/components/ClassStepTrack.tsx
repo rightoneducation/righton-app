@@ -14,6 +14,8 @@ import { StepState } from '../lib/styledcomponents/DashboardStyledComponents';
 //   compact: each Weekly Activity Progress card (rev2 WeeklyActivityProgress)
 //   large:   Home's top stepper (rev2 LandingPage), with a 30% navy halo on
 //            the current step; completed steps (and Assess) link to their page
+// fluid: phones. The track takes its container's width instead of the fixed
+// pitch, and labels wrap, so five steps fit without scrolling the page.
 
 export type StepTrackSize = 'compact' | 'large';
 
@@ -73,12 +75,14 @@ interface ClassStepTrackProps {
   // Per-step state and links (buildFlowSteps / buildPendingFlowSteps).
   steps?: IFlowStep[];
   size?: StepTrackSize;
+  fluid?: boolean;
 }
 
 export default function ClassStepTrack({
   step = FlowStep.ASSESS,
   steps,
   size = 'compact',
+  fluid = false,
 }: ClassStepTrackProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -102,15 +106,21 @@ export default function ClassStepTrack({
   const fillTo = filledIndex === -1 ? lastIndex : filledIndex;
 
   const lineTop = (rowHeight - lineWidth) / 2;
+  // The line runs from the first circle's centre to the last one's: half a
+  // column in from each end. Fixed pitch in px; fluid in % of the track.
+  const columnShare = 100 / FLOW_ORDER.length;
+  const lineLeft = fluid ? `${columnShare / 2}%` : pitch / 2;
+  const lineLength = (count: number) =>
+    fluid ? `${count * columnShare}%` : count * pitch;
 
   return (
-    <Track>
+    <Track sx={fluid ? { width: '100%' } : undefined}>
       <Line
         sx={{
           top: lineTop,
-          left: pitch / 2,
+          left: lineLeft,
           height: lineWidth,
-          width: lastIndex * pitch,
+          width: lineLength(lastIndex),
           bgcolor: STATE_COLOR.UPCOMING,
         }}
         aria-hidden
@@ -118,9 +128,9 @@ export default function ClassStepTrack({
       <Line
         sx={{
           top: lineTop,
-          left: pitch / 2,
+          left: lineLeft,
           height: lineWidth,
-          width: fillTo * pitch,
+          width: lineLength(fillTo),
           bgcolor: STATE_COLOR.COMPLETE,
         }}
         aria-hidden
@@ -175,7 +185,8 @@ export default function ClassStepTrack({
                 typography: 'rubikBodyBold',
                 fontSize: labelSize,
                 letterSpacing: '-0.02em',
-                whiteSpace: 'nowrap',
+                whiteSpace: fluid ? 'normal' : 'nowrap',
+                textAlign: 'center',
               }}
             >
               {label}
@@ -186,7 +197,7 @@ export default function ClassStepTrack({
         // Circle to label: the halo's spread already sits in that space at
         // large, so the gap is smaller there.
         const columnSx = (theme: Theme) => ({
-          width: pitch,
+          ...(fluid ? { flex: '1 1 0', minWidth: 0 } : { width: pitch }),
           gap: `${size === 'large' ? theme.sizing.space0 : theme.sizing.space1}px`,
         });
         const ariaCurrent = state === 'CURRENT' ? ('step' as const) : undefined;

@@ -9,6 +9,7 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import ChangeActivityDialog from '../components/ChangeActivityDialog';
 import { FlowStepperBand, MisconceptionSelectedBar } from '../components/FlowHeader';
+import { FlowStep } from '../lib/flowProgress';
 import LoadingSlot from '../components/LoadingSlot';
 import BeforeClassView from '../components/activityFlow/BeforeClassView';
 import DiscussionView from '../components/activityFlow/DiscussionView';
@@ -245,7 +246,12 @@ export default function ActivityFlow({ screenSize, sessions, plan }: ActivityFlo
   return (
     <UnderstandPage screenSize={screenSize}>
       <ActivityFlowColumn>
-        <FlowStepperBand screenSize={screenSize} sessions={sessions} plan={plan} />
+        <FlowStepperBand
+          screenSize={screenSize}
+          sessions={sessions}
+          plan={plan}
+          page={FlowStep.CHOOSE}
+        />
 
         {misconception && <MisconceptionSelectedBar title={misconception.title} />}
 

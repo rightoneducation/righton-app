@@ -45,6 +45,8 @@ export const ProgressTitle = styled(Typography)(({ theme }) => ({
   ...theme.typography.smallTitle,
   fontSize: 36,
   color: theme.palette.designSystem.surface.atlanticNavy,
+  // Rendered as an h2: drop the browser's default heading margins.
+  margin: 0,
 }));
 
 // Home (rev2 LandingPage): "Week 9: Oct 19-23", Rubik 24/600, over the cards.
@@ -163,7 +165,7 @@ export const ActivityName = styled(Typography)(({ theme }) => ({
   color: theme.palette.designSystem.surface.atlanticNavy,
 }));
 
-// Figma: Rubik 16/500, the step's status or "Review class results".
+// Figma: Rubik 16/500, the step's status.
 export const CardMessage = styled(Typography)(({ theme }) => ({
   ...theme.typography.rubikBody,
   fontWeight: 500,
