@@ -79,6 +79,10 @@ export function usePlanItems(
   } = useMicroCoachDataState();
   const dispatch = useMicroCoachDataDispatch();
   const savedPlanRef = useRef<IMicroCoachSavedPlan | null>(null);
+  // The scope the stored status describes. The store is shared, so for the
+  // render after the scope changes (before the effect below marks it LOADING)
+  // it still holds the previous scope's READY; this reports LOADING instead.
+  const answeredScopeRef = useRef<string | null>(null);
   // The current scope's load, and the last save. A save waits for both, so it
   // sees the saved plan (if any) and updates it rather than creating a second
   // one when Select is clicked before the load answers, or twice quickly.
@@ -141,6 +145,7 @@ export function usePlanItems(
               );
         if (cancelled) return;
 
+        answeredScopeRef.current = activeScopeId;
         const savedPlan = [...fetchedSavedPlans].sort(
           (a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt),
         )[0];
@@ -159,6 +164,7 @@ export function usePlanItems(
       } catch (error) {
         if (cancelled) return;
 
+        answeredScopeRef.current = activeScopeId;
         dispatch({
           type: 'SET_PLAN_ITEMS_ERROR',
           payload:
@@ -299,10 +305,17 @@ export function usePlanItems(
     [dispatch, persistUpdate, planItems],
   );
 
+  const isAnswerForScope =
+    planItemsStatus !== MicroCoachDataStatus.READY &&
+    planItemsStatus !== MicroCoachDataStatus.ERROR
+      ? true
+      : answeredScopeRef.current === scopeId;
+  const status = isAnswerForScope ? planItemsStatus : MicroCoachDataStatus.LOADING;
+
   return useMemo(
     () => ({
       planItems,
-      status: planItemsStatus,
+      status,
       error: planItemsError,
       saveActivity,
       markPlanItemDone,
@@ -312,7 +325,7 @@ export function usePlanItems(
       markPlanItemDone,
       planItems,
       planItemsError,
-      planItemsStatus,
+      status,
       removePlanItem,
       saveActivity,
     ],

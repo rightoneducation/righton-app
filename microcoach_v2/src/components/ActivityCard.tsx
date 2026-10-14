@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Typography from '@mui/material/Typography';
 import { IMicroCoachActivity } from '../api/Models/IMicroCoachActivity';
+import { ScreenSize } from '../lib/MicroCoachModels';
 import MathTypography from './MathTypography';
 import { activityTemplateCopy } from '../lib/activityTemplates';
 import { GroupingSequenceChips } from './GroupingChips';
@@ -25,6 +26,11 @@ interface ActivityCardProps extends ScreenSizeProps {
   onSelect: (activity: IMicroCoachActivity) => void;
 }
 
+// An empty row keeps a missing section's place, so the rows below line up.
+function RowPlaceholder() {
+  return <span aria-hidden />;
+}
+
 /**
  * One next-step activity (Figma: SelectActivity): the template's name and
  * instructional move, the grouping sequence, why MicroCoach chose it, and the
@@ -40,10 +46,12 @@ export default function ActivityCard({
   const { t } = useTranslation();
   const template = activityTemplateCopy(activity.activityType, t);
   const { content } = activity;
+  // Side by side at LARGE: the card shares its rows with its neighbours.
+  const isAligned = screenSize === ScreenSize.LARGE;
 
   return (
-    <ActivityCardSurface>
-      <CardHeader>
+    <ActivityCardSurface isAligned={isAligned}>
+      <CardHeader isAligned={isAligned}>
         <NameRow>
           <Typography
             variant="headingLg"
@@ -57,7 +65,11 @@ export default function ActivityCard({
         <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
           {template.subtitle}
         </Typography>
-        {content && <GroupingSequenceChips steps={content.howToRun} />}
+        {content ? (
+          <GroupingSequenceChips steps={content.howToRun} />
+        ) : (
+          isAligned && <RowPlaceholder />
+        )}
       </CardHeader>
 
       <CardSection>
@@ -70,6 +82,7 @@ export default function ActivityCard({
         />
       </CardSection>
 
+      {!content && isAligned && <RowPlaceholder />}
       {content && (
         <CardSection>
           <Typography variant="headingSm" component="h3">

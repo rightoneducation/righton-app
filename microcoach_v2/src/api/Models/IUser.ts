@@ -17,6 +17,9 @@ export interface IUser {
   // Derived from the email domain at sign-up (lib/schools); null when the
   // domain names no school or the row predates the field.
   school?: string | null;
+  // S3 path of the teacher's picture (private/<identity>/profile/…); null when
+  // they have not set one, and the initials show instead.
+  profilePicPath?: string | null;
   classes?: string[];
   role?: UserRole | null;
   createdAt?: string;

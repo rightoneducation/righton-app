@@ -9,6 +9,7 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import { FlowStepperBand } from '../components/FlowHeader';
 import { FlowStep } from '../lib/flowProgress';
 import LoadingSlot from '../components/LoadingSlot';
+import MisconceptionCardsSkeleton from '../components/skeletons/MisconceptionCardsSkeleton';
 import MisconceptionCard from '../components/MisconceptionCard';
 import MisconceptionDetailModal, {
   MisconceptionDetailSelection,
@@ -178,6 +179,7 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
           isLoading={isLoading}
           minHeight={screenSize === ScreenSize.LARGE ? CARD_HEIGHT : 0}
           label={t('review.loading')}
+          skeleton={<MisconceptionCardsSkeleton screenSize={screenSize} />}
         >
           {hasFailed ? (
             <Typography
@@ -192,6 +194,7 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
               {misconceptions.map((misconception) => (
                 <MisconceptionCard
                   key={misconception.id}
+                  isAligned={screenSize === ScreenSize.LARGE}
                   misconception={misconception}
                   onViewDetails={(id, fromEvidence) => setSelected({ id, fromEvidence })}
                   onSelect={handleSelect}

@@ -1,15 +1,16 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AppSidebar from '../components/AppSidebar';
 import ClassStepTrack from '../components/ClassStepTrack';
 import LoadingSlot from '../components/LoadingSlot';
+import { SkeletonPill } from '../components/skeletons/SkeletonParts';
 import WeeklyProgressList from '../components/WeeklyProgressList';
 import {
   SidebarLayout,
@@ -43,21 +44,21 @@ import {
   FlowStep,
   buildFlowSteps,
   buildPendingFlowSteps,
+  defaultWeekFor,
   deriveCurrentStep,
   hasChosenActivity,
+  sessionForWeek,
   sortSessionsLatestFirst,
   stepCta,
 } from '../lib/flowProgress';
-import {
-  currentSchoolWeek,
-  formatSchoolWeek,
-  schoolWeeks,
-} from '../lib/weeks';
+import { formatSchoolWeek, schoolWeeks } from '../lib/weeks';
 
 // Chips shown inline before the rest fold into "More".
 const VISIBLE_CLASS_COUNT = 4;
 // One row of class chips: what the loading spinner holds open.
 const CHIP_ROW_HEIGHT = 50;
+// A class chip with a typical name in it.
+const CHIP_SKELETON_WIDTH = 140;
 
 interface DashboardProps extends ScreenSizeProps {
   apiClients: IAPIClients;
@@ -75,7 +76,7 @@ export default function Dashboard({
 }: DashboardProps) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { userProfile } = useMicroCoachDataState();
+  const { userProfile, misconceptionsStatus } = useMicroCoachDataState();
   const classList = classrooms.classrooms;
   const selectedClassId = classrooms.selectedClassroomId ?? '';
   const selectClass = classrooms.selectClassroom;
@@ -113,28 +114,54 @@ export default function Dashboard({
   );
 
   const [moreAnchor, setMoreAnchor] = React.useState<HTMLElement | null>(null);
-  // The week this upload is for. It only pre-fills the upload flow: the
-  // stepper and CTA follow the class's latest session whatever week is picked.
-  const [weekStart, setWeekStart] = React.useState(() => currentSchoolWeek());
+  /*
+   * The week drives the page: the stepper and CTA show the selected class's
+   * session for that week, Weekly Activity Progress shows every class's, and
+   * the upload is pre-filled with it. Until the teacher picks one it follows
+   * the class's open loop (defaultWeekFor), so a class part-way through last
+   * week's cycle opens on that week rather than starting over.
+   */
+  const [pickedWeek, setPickedWeek] = React.useState<string | null>(null);
+  const weekStart = pickedWeek ?? defaultWeekFor(sessionList);
+  const weekSession = sessionForWeek(sessionList, weekStart);
 
-  // The step does not wait on the saved plan. The plan only separates
-  // UNDERSTAND from REASSESS, and usePlanItems holds it at LOADING until the
-  // misconceptions are READY, so a failed misconception fetch would leave the
-  // page waiting for good. The step reads UNDERSTAND and moves on if a plan
-  // arrives.
-  const selectedSession = sessions.selectedSession ?? sessionList[0] ?? null;
+  // Review, Select Activity and the rest read the app-wide selected session,
+  // so it follows the week's session; the plan below is that session's.
+  const { selectSession, selectedSessionId } = sessions;
+  React.useEffect(() => {
+    if (weekSession && weekSession.id !== selectedSessionId) {
+      selectSession(weekSession.id);
+    }
+  }, [weekSession, selectedSessionId, selectSession]);
+
+  /*
+   * The saved plan is what separates UNDERSTAND from REASSESS, so a class that
+   * would read UNDERSTAND waits for it rather than showing Understand and then
+   * jumping. usePlanItems holds the plan at LOADING until the misconceptions
+   * are READY, so a failed misconception fetch counts as an answer (no plan).
+   */
+  const stepWithoutPlan = deriveCurrentStep(weekSession, false);
+  const isPlanKnown =
+    !!weekSession &&
+    weekSession.id === selectedSessionId &&
+    (plan.status === MicroCoachDataStatus.READY ||
+      plan.status === MicroCoachDataStatus.ERROR ||
+      misconceptionsStatus === MicroCoachDataStatus.ERROR);
+  const isStepPending =
+    !sessionsKnown ||
+    (!sessionsFailed && stepWithoutPlan === FlowStep.UNDERSTAND && !isPlanKnown);
   const currentStep = deriveCurrentStep(
-    selectedSession,
-    plan.planItems.length > 0,
+    weekSession,
+    isPlanKnown && plan.planItems.length > 0,
   );
-  const isStepKnown = sessionsKnown && !sessionsFailed;
+  const isStepKnown = !isStepPending && !sessionsFailed;
   const flowSteps = isStepKnown
     ? buildFlowSteps(currentStep, t)
     : buildPendingFlowSteps(t);
   // A failed session fetch falls back to the upload, which is always a valid
   // next action, rather than guessing a later step.
   const cta = stepCta(isStepKnown ? currentStep : FlowStep.ASSESS);
-  const isCtaLoading = !sessionsKnown;
+  const isCtaLoading = isStepPending;
   const canOpenMyActivity = isStepKnown && hasChosenActivity(currentStep);
   // Shown while classes load (a teacher normally has them); hidden only once
   // the list is known to be empty or failed.
@@ -227,6 +254,13 @@ export default function Dashboard({
                       isLoading={!classesKnown}
                       minHeight={CHIP_ROW_HEIGHT}
                       label={t('dashboard.loadingClasses')}
+                      skeleton={
+                        <ChipWrap>
+                          {[0, 1, 2].map((chip) => (
+                            <SkeletonPill key={chip} width={CHIP_SKELETON_WIDTH} height={CHIP_ROW_HEIGHT} />
+                          ))}
+                        </ChipWrap>
+                      }
                     >
                       {classesFailed && (
                         <PickerNote
@@ -299,7 +333,7 @@ export default function Dashboard({
                     </PickerLabel>
                     <WeekSelect
                       value={weekStart}
-                      onChange={(event) => setWeekStart(event.target.value)}
+                      onChange={(event) => setPickedWeek(event.target.value)}
                       inputProps={{ 'aria-label': t('dashboard.weekLabel') }}
                     >
                       {schoolWeeks().map((week) => (
@@ -311,22 +345,19 @@ export default function Dashboard({
                   </PickerColumn>
                 </PickerRow>
 
-                {showCta && (
-                  <DashboardCta
-                    onClick={handleCta}
-                    disabled={isCtaLoading}
-                    aria-busy={isCtaLoading}
+                {/* Until the step is known, a skeleton of the button holds its place. */}
+                {showCta && isCtaLoading && (
+                  <Box
+                    role="status"
+                    aria-busy
+                    aria-label={t('dashboard.loadingNextStep')}
+                    sx={{ width: '100%', maxWidth: 440 }}
                   >
-                    {isCtaLoading ? (
-                      <CircularProgress
-                        size={24}
-                        color="inherit"
-                        aria-label={t('dashboard.loadingNextStep')}
-                      />
-                    ) : (
-                      t(cta.labelKey)
-                    )}
-                  </DashboardCta>
+                    <SkeletonPill width="100%" height={58} />
+                  </Box>
+                )}
+                {showCta && !isCtaLoading && (
+                  <DashboardCta onClick={handleCta}>{t(cta.labelKey)}</DashboardCta>
                 )}
               </DashboardForm>
             </DashboardCard>
@@ -337,6 +368,7 @@ export default function Dashboard({
               screenSize={screenSize}
               classrooms={classrooms}
               sessions={sessions}
+              weekStart={weekStart}
             />
           </>
         )}

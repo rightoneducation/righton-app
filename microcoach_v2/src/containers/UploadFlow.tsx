@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { IAPIClients } from '../api';
 import { AssessmentType } from '../AWSAPI';
-import { ScreenSize } from '../lib/MicroCoachModels';
+import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import {
   IUploadActions,
   IUploadState,
@@ -146,6 +146,9 @@ export default function UploadFlow({
     upload: { ...upload, classId },
     actions,
     classrooms: classrooms.classrooms,
+    areClassesLoading:
+      classrooms.status === MicroCoachDataStatus.LOADING ||
+      classrooms.status === MicroCoachDataStatus.IDLE,
     teacher: userProfile,
   };
 

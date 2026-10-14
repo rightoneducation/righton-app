@@ -1,44 +1,56 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { IAPIClients } from '../api';
 import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
+import { IMicroCoachSavedPlan } from '../api/Models/IMicroCoachSavedPlan';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { SessionStatus } from '../AWSAPI';
 import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
-import { deriveCurrentStep } from '../lib/flowProgress';
+import { deriveCurrentStep, sessionForWeek } from '../lib/flowProgress';
 import { IPastActivity, IWeeklyClassProgress } from '../lib/ActivityListModels';
-import { weekOf } from '../lib/weeks';
 
 export interface UseClassActivityResult {
-  thisWeek: IWeeklyClassProgress[];
+  // Every class's place in the given week's flow.
+  week: IWeeklyClassProgress[];
   past: IPastActivity[];
   status: MicroCoachDataStatus;
 }
 
+// One class as fetched; the week's rows are built from these, so picking
+// another week does not refetch.
+interface ClassRecord {
+  classroom: IMicroCoachClassroom;
+  sessions: IMicroCoachSession[];
+  studentCount: number;
+  plans: IMicroCoachSavedPlan[];
+}
+
 interface ClassActivity {
-  thisWeek: IWeeklyClassProgress[];
+  perClass: ClassRecord[];
   past: IPastActivity[];
 }
 
-const EMPTY: ClassActivity = { thisWeek: [], past: [] };
+const EMPTY: ClassActivity = { perClass: [], past: [] };
 
-// The latest session created in the current calendar week, if any.
-function thisWeeksSession(
-  sessions: IMicroCoachSession[],
-  currentWeek: string,
-): IMicroCoachSession | null {
-  return (
-    sessions
-      .filter((session) => weekOf(session.createdAt) === currentWeek)
-      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0] ?? null
-  );
+function weekRows(perClass: ClassRecord[], weekStart: string): IWeeklyClassProgress[] {
+  return perClass.map(({ classroom, sessions, studentCount, plans }) => {
+    const session = sessionForWeek(sessions, weekStart);
+    const hasSavedPlan =
+      !!session && plans.some((plan) => plan.sessionId === session.id);
+    return {
+      classId: classroom.id,
+      sessionId: session?.id ?? null,
+      className: classroom.name,
+      studentCount,
+      step: deriveCurrentStep(session, hasSavedPlan),
+      isAwaitingResults: session?.status === SessionStatus.DATA_INGESTED,
+    };
+  });
 }
 
 async function loadClassActivity(
   apiClients: IAPIClients,
   classrooms: IMicroCoachClassroom[],
 ): Promise<ClassActivity> {
-  const currentWeek = weekOf(new Date().toISOString());
-
   const perClass = await Promise.all(
     classrooms.map(async (classroom) => {
       const [sessions, students, plans] = await Promise.all([
@@ -49,20 +61,6 @@ async function loadClassActivity(
       return { classroom, sessions, studentCount: students.length, plans };
     }),
   );
-
-  const thisWeek = perClass.map(({ classroom, sessions, studentCount, plans }) => {
-    const current = thisWeeksSession(sessions, currentWeek);
-    const hasSavedPlan =
-      !!current && plans.some((plan) => plan.sessionId === current.id);
-    return {
-      classId: classroom.id,
-      sessionId: current?.id ?? null,
-      className: classroom.name,
-      studentCount,
-      step: deriveCurrentStep(current, hasSavedPlan),
-      isAwaitingResults: current?.status === SessionStatus.DATA_INGESTED,
-    };
-  });
 
   const completed = perClass.flatMap(({ classroom, sessions, studentCount, plans }) =>
     sessions
@@ -101,20 +99,22 @@ async function loadClassActivity(
     completedAt: session.updatedAt,
   }));
 
-  return { thisWeek, past };
+  return { perClass, past };
 }
 
 /**
- * This Week and Past Activities span every class, while the app-level
+ * Home's weekly progress and Past Activities span every class, while the app-level
  * useSessions follows only the selected one, so this fetches on its own: per
  * class its sessions, students and saved plans (a teacher has a handful), then
  * one lookup per completed session's activity.
  *
- * `classrooms` is null until the class list has loaded.
+ * `classrooms` is null until the class list has loaded. `weekStart` picks the
+ * week the progress rows describe (Home's week dropdown).
  */
 export function useClassActivity(
   apiClients: IAPIClients,
   classrooms: IMicroCoachClassroom[] | null,
+  weekStart: string | null = null,
 ): UseClassActivityResult {
   const requestKey =
     classrooms?.map((classroom) => classroom.id).join(',') ?? null;
@@ -159,8 +159,14 @@ export function useClassActivity(
     status = MicroCoachDataStatus.READY;
   }
 
+  const perClass = result?.data.perClass;
+  const week = useMemo(
+    () => (perClass && weekStart ? weekRows(perClass, weekStart) : []),
+    [perClass, weekStart],
+  );
+
   return {
-    thisWeek: result?.data.thisWeek ?? [],
+    week,
     past: result?.data.past ?? [],
     status,
   };

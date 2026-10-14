@@ -30,14 +30,19 @@ const rows = [
 const ids = (order: ActivitySortOrder) =>
   groupPastActivities(rows, order).map((group) => ({
     weekStart: group.weekStart,
+    className: group.className,
     rows: group.rows.map((r) => r.id),
   }));
 
 describe('groupPastActivities', () => {
   it('newest first: weeks newest first, classes A-Z within a week', () => {
     expect(ids(ActivitySortOrder.RECENT_FIRST)).toEqual([
-      { weekStart: '2026-10-19', rows: ['grace-w9', 'joy-w9', 'justice-w9'] },
-      { weekStart: '2026-10-12', rows: ['grace-w8'] },
+      {
+        weekStart: '2026-10-19',
+        className: null,
+        rows: ['grace-w9', 'joy-w9', 'justice-w9'],
+      },
+      { weekStart: '2026-10-12', className: null, rows: ['grace-w8'] },
     ]);
   });
 
@@ -47,12 +52,11 @@ describe('groupPastActivities', () => {
     ).toEqual(['2026-10-12', '2026-10-19']);
   });
 
-  it('by class: one flat list, class A-Z, then newest first', () => {
+  it('by class: a group per class, A-Z, newest first within each', () => {
     expect(ids(ActivitySortOrder.BY_CLASS)).toEqual([
-      {
-        weekStart: null,
-        rows: ['grace-w9', 'grace-w8', 'joy-w9', 'justice-w9'],
-      },
+      { weekStart: null, className: 'Grace', rows: ['grace-w9', 'grace-w8'] },
+      { weekStart: null, className: 'Joy', rows: ['joy-w9'] },
+      { weekStart: null, className: 'Justice', rows: ['justice-w9'] },
     ]);
   });
 

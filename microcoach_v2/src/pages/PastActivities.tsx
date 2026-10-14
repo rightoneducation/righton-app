@@ -6,6 +6,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import SidebarPage from '../components/SidebarPage';
 import ActivitySortMenu from '../components/ActivitySortMenu';
 import LoadingSlot from '../components/LoadingSlot';
+import { PastActivitiesSkeleton } from '../components/skeletons/ActivityListSkeleton';
 import { IAPIClients } from '../api';
 import { UseClassroomsResult } from '../hooks/useClassrooms';
 import { UseSessionsResult } from '../hooks/useSessions';
@@ -79,6 +80,7 @@ export default function PastActivities({
           isLoading={isLoading}
           minHeight={CARD_HEIGHT}
           label={t('activityList.loading')}
+          skeleton={<PastActivitiesSkeleton screenSize={screenSize} />}
         >
           {hasFailed && (
             <Typography
@@ -94,18 +96,19 @@ export default function PastActivities({
           )}
           {!hasFailed &&
             groups.map((group, groupIndex) => (
-              <WeekGroup key={group.weekStart ?? 'by-class'}>
+              <WeekGroup key={group.key}>
                 <WeekHeadingRow>
-                  {group.weekStart && (
-                    <WeekHeading>
-                      {formatSchoolWeek(
-                        group.weekStart,
-                        t,
-                        i18n.language,
-                        'pastActivities.weekHeading',
-                      )}
-                    </WeekHeading>
-                  )}
+                  {/* By class, the class name heads its group in the week's place. */}
+                  <WeekHeading>
+                    {group.weekStart
+                      ? formatSchoolWeek(
+                          group.weekStart,
+                          t,
+                          i18n.language,
+                          'pastActivities.weekHeading',
+                        )
+                      : group.className}
+                  </WeekHeading>
                   {groupIndex === 0 && (
                     <ActivitySortMenu
                       sortOrder={sortOrder}

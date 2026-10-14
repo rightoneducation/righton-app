@@ -84,6 +84,7 @@ function MathText({ text, inline = false, className }: MathTextProps) {
         return (
           <span
             key={key}
+            className="math-text"
             style={displayMode ? { display: 'block', textAlign: 'center', margin: '8px 0' } : undefined}
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{ __html: html }}

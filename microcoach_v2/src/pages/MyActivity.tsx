@@ -6,6 +6,7 @@ import ChangeActivityDialog from '../components/ChangeActivityDialog';
 import { FlowStepperBand } from '../components/FlowHeader';
 import { FlowStep } from '../lib/flowProgress';
 import LoadingSlot from '../components/LoadingSlot';
+import { SavedActivitySkeleton } from '../components/skeletons/ActivityFlowSkeletons';
 import { IMicroCoachActivity } from '../api/Models/IMicroCoachActivity';
 import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
 import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
@@ -203,6 +204,7 @@ export default function MyActivity({ screenSize, sessions, plan }: MyActivityPro
           isLoading={isLoading}
           minHeight={CARD_HEIGHT}
           label={t('myActivity.loading')}
+          skeleton={<SavedActivitySkeleton />}
         >
           {content}
         </LoadingSlot>

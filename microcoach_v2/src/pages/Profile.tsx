@@ -17,6 +17,7 @@ import accountPatternTopLeft from '../images/accountPatternTopLeft.svg';
 import accountPatternBottomRight from '../images/accountPatternBottomRight.svg';
 import { IUserState } from '../hooks/useUserState';
 import { useConfirmRemove } from '../hooks/useConfirmRemove';
+import { useProfilePictureUrl } from '../hooks/useProfilePictureUrl';
 import {
   useMicroCoachDataDispatch,
   useMicroCoachDataState,
@@ -260,6 +261,17 @@ function PasswordPanel({ apiClients, onChanged }: PasswordPanelProps) {
  * school comes from the email's domain). Classes can be deleted here; adding
  * them waits on design. The password changes in place.
  */
+// The picture types browsers show reliably; the size cap matches the MIU uploads.
+const PICTURE_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
+const PICTURE_MAX_BYTES = 5 * 1024 * 1024;
+
+type PictureError = 'TYPE' | 'SIZE' | 'UPLOAD';
+const PICTURE_ERROR_KEY: Record<PictureError, string> = {
+  TYPE: 'profile.pictureTypeError',
+  SIZE: 'profile.pictureSizeError',
+  UPLOAD: 'profile.pictureUploadError',
+};
+
 interface ProfileProps extends ScreenSizeProps {
   apiClients: IAPIClients;
   updateUserProfile: IUserState['updateUserProfile'];
@@ -286,7 +298,13 @@ export default function Profile({
   const [isEditing, setIsEditing] = React.useState(false);
   const [draft, setDraft] = React.useState({ first, last });
   const [showFieldErrors, setShowFieldErrors] = React.useState(false);
+  const [isSavingProfile, setIsSavingProfile] = React.useState(false);
+  const [hasSaveFailed, setHasSaveFailed] = React.useState(false);
   const [isPasswordChanged, setIsPasswordChanged] = React.useState(false);
+  const pictureInputRef = React.useRef<HTMLInputElement>(null);
+  const [isUploadingPicture, setIsUploadingPicture] = React.useState(false);
+  const [pictureError, setPictureError] = React.useState<PictureError | null>(null);
+  const pictureUrl = useProfilePictureUrl(apiClients, userProfile?.profilePicPath);
   // Google accounts have no MicroCoach password; null until known, and the
   // section shows meanwhile since most teachers sign in with email.
   const [isFederated, setIsFederated] = React.useState<boolean | null>(null);
@@ -340,6 +358,37 @@ export default function Profile({
     setIsEditing(true);
   };
 
+  /*
+   * Edit Picture (central_v2's UserProfile, minus its upload modal): the file
+   * picker opens straight away; the picture goes to the teacher's private S3
+   * prefix and the User row keeps its path.
+   */
+  const handlePictureChosen = async (file: File | undefined) => {
+    if (!file || !userProfile.id) return;
+    if (!PICTURE_TYPES.includes(file.type)) {
+      setPictureError('TYPE');
+      return;
+    }
+    if (file.size > PICTURE_MAX_BYTES) {
+      setPictureError('SIZE');
+      return;
+    }
+    setPictureError(null);
+    setIsUploadingPicture(true);
+    try {
+      const path = await apiClients.upload.uploadProfilePicture(file);
+      // Spread, not listed, so this compiles before codegen adds the field.
+      const picture = { profilePicPath: path };
+      const updated = await apiClients.user.updateUser({ id: userProfile.id, ...picture });
+      updateUserProfile({ ...(updated ?? {}), ...picture });
+    } catch (error) {
+      console.error('Could not save the profile picture', error);
+      setPictureError('UPLOAD');
+    } finally {
+      setIsUploadingPicture(false);
+    }
+  };
+
   const handleSave = async () => {
     if (!draft.first.trim() || !draft.last.trim()) {
       // Stay in edit mode — the draft is still recoverable.
@@ -348,7 +397,9 @@ export default function Profile({
     }
     const firstName = draft.first.trim();
     const lastName = draft.last.trim();
+    setHasSaveFailed(false);
     if (userProfile.id) {
+      setIsSavingProfile(true);
       try {
         const updated = await apiClients.user.updateUser({
           id: userProfile.id,
@@ -357,9 +408,13 @@ export default function Profile({
         });
         updateUserProfile(updated ?? { firstName, lastName });
       } catch (error) {
-        // The edit still applies locally; only persistence failed.
+        // Stay in edit mode with the draft, so a retry is one click; showing
+        // the new name as saved would hide that it was not.
         console.error('Could not save the profile name', error);
-        updateUserProfile({ firstName, lastName });
+        setHasSaveFailed(true);
+        return;
+      } finally {
+        setIsSavingProfile(false);
       }
     } else {
       updateUserProfile({ firstName, lastName });
@@ -472,12 +527,51 @@ export default function Profile({
         <ProfileSidebar screenSize={screenSize}>
           <SidebarIdentity>
             <AvatarGroup>
-              <InitialsAvatar aria-hidden>{initials}</InitialsAvatar>
-              {/* No upload frame in this design, so the control is present but
-                  inert rather than opening something invented. */}
-              <EditPictureChip disableElevation aria-disabled>
-                {t('profile.editPicture')}
+              <InitialsAvatar aria-hidden>
+                {pictureUrl ? (
+                  <Box
+                    component="img"
+                    src={pictureUrl}
+                    alt=""
+                    sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  initials
+                )}
+              </InitialsAvatar>
+              <input
+                ref={pictureInputRef}
+                type="file"
+                accept={PICTURE_TYPES.join(',')}
+                hidden
+                onChange={(event) => {
+                  const input = event.currentTarget;
+                  handlePictureChosen(input.files?.[0]);
+                  // Cleared so choosing the same file again still fires.
+                  input.value = '';
+                }}
+              />
+              <EditPictureChip
+                disableElevation
+                disabled={isUploadingPicture}
+                aria-busy={isUploadingPicture}
+                onClick={() => pictureInputRef.current?.click()}
+              >
+                {isUploadingPicture ? (
+                  <CircularProgress size={16} color="inherit" aria-label={t('profile.saving')} />
+                ) : (
+                  t('profile.editPicture')
+                )}
               </EditPictureChip>
+              {pictureError && (
+                <Typography
+                  variant="buttonLabelSmLight"
+                  role="alert"
+                  sx={{ color: 'designSystem.surface.white', textAlign: 'center' }}
+                >
+                  {t(PICTURE_ERROR_KEY[pictureError])}
+                </Typography>
+              )}
             </AvatarGroup>
             <Box>
               <Typography variant="headingXl" component="h2">
@@ -529,11 +623,26 @@ export default function Profile({
                 {lockedField(t('profile.email'), t('profile.emailNote'), email)}
                 {lockedField(t('profile.school'), t('profile.schoolNote'), school)}
               </FieldPair>
+              {hasSaveFailed && (
+                <Typography
+                  variant="rubikBody"
+                  role="alert"
+                  sx={{ color: 'designSystem.status.errorStroke' }}
+                >
+                  {t('profile.saveError')}
+                </Typography>
+              )}
               <ProfileAction
                 disableElevation
+                disabled={isSavingProfile}
+                aria-busy={isSavingProfile}
                 onClick={isEditing ? handleSave : startEditing}
               >
-                {t(isEditing ? 'profile.save' : 'profile.editInformation')}
+                {isSavingProfile ? (
+                  <CircularProgress size={16} color="inherit" aria-label={t('profile.saving')} />
+                ) : (
+                  t(isEditing ? 'profile.save' : 'profile.editInformation')
+                )}
               </ProfileAction>
             </ProfileSection>
           </FormIntro>

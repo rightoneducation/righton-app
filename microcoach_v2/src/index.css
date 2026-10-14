@@ -14,3 +14,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/*
+ * KaTeX sets .katex to 1.21em, so math came out ~21% larger than the text
+ * around it (24px in a 20px line). Figma sets math at the line's own size.
+ * Scoped to MathText's spans so the selector outranks katex.min.css.
+ */
+.math-text .katex {
+  font-size: 1em;
+}

@@ -43,6 +43,7 @@ export class UserParser {
       firstName: user.firstName || '',
       lastName: user.lastName || '',
       school: user.school ?? null,
+      profilePicPath: user.profilePicPath ?? null,
       // `classes` is a @hasMany relation, not a field on the row. Nothing reads
       // it off User today; class names would come from their own Class rows.
       classes: [],

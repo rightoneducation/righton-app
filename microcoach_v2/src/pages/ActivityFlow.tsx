@@ -11,6 +11,7 @@ import ChangeActivityDialog from '../components/ChangeActivityDialog';
 import { FlowStepperBand, MisconceptionSelectedBar } from '../components/FlowHeader';
 import { FlowStep } from '../lib/flowProgress';
 import LoadingSlot from '../components/LoadingSlot';
+import { ActivityFlowSkeleton } from '../components/skeletons/ActivityFlowSkeletons';
 import BeforeClassView from '../components/activityFlow/BeforeClassView';
 import DiscussionView from '../components/activityFlow/DiscussionView';
 import FacilitateView from '../components/activityFlow/FacilitateView';
@@ -259,6 +260,7 @@ export default function ActivityFlow({ screenSize, sessions, plan }: ActivityFlo
           isLoading={isLoading}
           minHeight={CONTENT_HEIGHT}
           label={t('activityFlow.loading')}
+          skeleton={<ActivityFlowSkeleton />}
         >
           {hasFailed || !misconception || !activity ? (
             <Typography

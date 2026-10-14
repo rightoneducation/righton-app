@@ -35,9 +35,13 @@ export enum ActivitySortOrder {
   BY_CLASS = 'BY_CLASS',
 }
 
+// A heading and its cards: a school week (date orders) or a class (By class).
 export interface IPastActivityGroup {
-  // The week's Monday key, or null for the ungrouped by-class list.
+  key: string;
+  // The week's Monday key; null when grouped by class.
   weekStart: string | null;
+  // The class name; null when grouped by week.
+  className: string | null;
   rows: IPastActivity[];
 }
 
@@ -53,15 +57,25 @@ export function groupPastActivities(
   order: ActivitySortOrder,
 ): IPastActivityGroup[] {
   if (order === ActivitySortOrder.BY_CLASS) {
-    // rev2 design note: most recently completed, then activity name, break
-    // ties within a class.
-    const sorted = [...rows].sort(
-      (a, b) =>
-        byClass(a, b) ||
-        b.completedAt.localeCompare(a.completedAt) ||
-        (a.activityName ?? '').localeCompare(b.activityName ?? ''),
-    );
-    return [{ weekStart: null, rows: sorted }];
+    // One group per class, A-Z, headed by its name in place of the week.
+    // rev2 design note: most recently completed, then activity name, order
+    // the activities within a class.
+    const classes = new Map<string, IPastActivity[]>();
+    rows.forEach((row) => {
+      classes.set(row.classId, [...(classes.get(row.classId) ?? []), row]);
+    });
+    return Array.from(classes.entries())
+      .map(([classId, classRows]) => ({
+        key: classId,
+        weekStart: null,
+        className: classRows[0].className,
+        rows: [...classRows].sort(
+          (a, b) =>
+            b.completedAt.localeCompare(a.completedAt) ||
+            (a.activityName ?? '').localeCompare(b.activityName ?? ''),
+        ),
+      }))
+      .sort((a, b) => a.className.localeCompare(b.className));
   }
 
   const groups = new Map<string, IPastActivity[]>();
@@ -73,7 +87,9 @@ export function groupPastActivities(
   return Array.from(groups.entries())
     .sort(([a], [b]) => direction * a.localeCompare(b))
     .map(([weekStart, weekRows]) => ({
+      key: weekStart,
       weekStart,
+      className: null,
       rows: [...weekRows].sort(byClass),
     }));
 }

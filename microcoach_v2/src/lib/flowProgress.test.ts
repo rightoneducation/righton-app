@@ -5,8 +5,10 @@ import {
   FlowStep,
   buildFlowSteps,
   buildPendingFlowSteps,
+  defaultWeekFor,
   deriveCurrentStep,
   hasChosenActivity,
+  sessionForWeek,
   sortSessionsLatestFirst,
   stepCta,
 } from './flowProgress';
@@ -167,5 +169,45 @@ describe('sortSessionsLatestFirst', () => {
       session({ id: 'none-late', createdAt: '2026-10-30T00:00:00Z' }),
     ]);
     expect(sorted.map((s) => s.id)).toEqual(['none-late', 'w9', 'w8']);
+  });
+});
+
+describe('sessionForWeek', () => {
+  const earlier = session({ id: 'early', createdAt: '2026-10-12T15:00:00.000Z' });
+  const later = session({ id: 'late', createdAt: '2026-10-14T15:00:00.000Z' });
+  const lastWeek = session({ id: 'last', createdAt: '2026-10-07T15:00:00.000Z' });
+
+  it("takes the week's latest session", () => {
+    expect(sessionForWeek([earlier, lastWeek, later], '2026-10-12')?.id).toBe('late');
+  });
+
+  it('is null for a week with no session', () => {
+    expect(sessionForWeek([earlier, later], '2026-10-19')).toBeNull();
+  });
+});
+
+describe('defaultWeekFor', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date(2026, 9, 21, 12));
+  });
+  afterEach(() => jest.useRealTimers());
+
+  it('opens on the week of an open loop', () => {
+    expect(defaultWeekFor([session({ createdAt: '2026-10-14T15:00:00.000Z' })])).toBe(
+      '2026-10-12',
+    );
+  });
+
+  it('opens on the current week once the latest loop is complete', () => {
+    expect(
+      defaultWeekFor([
+        session({ status: SessionStatus.COMPLETED, createdAt: '2026-10-14T15:00:00.000Z' }),
+      ]),
+    ).toBe('2026-10-19');
+  });
+
+  it('opens on the current week with no sessions', () => {
+    expect(defaultWeekFor([])).toBe('2026-10-19');
   });
 });

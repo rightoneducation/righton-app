@@ -103,5 +103,7 @@ export interface UploadStepProps {
   upload: IUploadState;
   actions: IUploadActions;
   classrooms: IMicroCoachClassroom[];
+  // The class list has not answered yet: an empty list here is not "no classes".
+  areClassesLoading: boolean;
   teacher: IUser | null;
 }

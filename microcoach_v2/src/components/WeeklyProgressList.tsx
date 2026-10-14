@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ClassStepTrack from './ClassStepTrack';
 import LoadingSlot from './LoadingSlot';
+import { WeeklyProgressSkeleton } from './skeletons/ActivityListSkeleton';
 import { IAPIClients } from '../api';
 import { UseClassroomsResult } from '../hooks/useClassrooms';
 import { UseSessionsResult } from '../hooks/useSessions';
@@ -14,7 +15,7 @@ import { useOpenClassSession } from '../hooks/useOpenClassSession';
 import { FlowStep } from '../lib/flowProgress';
 import { IWeeklyClassProgress } from '../lib/ActivityListModels';
 import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
-import { currentSchoolWeek, formatSchoolWeek } from '../lib/weeks';
+import { formatSchoolWeek } from '../lib/weeks';
 import {
   ActivityList,
   ActivityCard,
@@ -55,15 +56,18 @@ interface WeeklyProgressListProps extends ScreenSizeProps {
   apiClients: IAPIClients;
   classrooms: UseClassroomsResult;
   sessions: UseSessionsResult;
+  // The week picked on Home: the heading and every class's step follow it.
+  weekStart: string;
 }
 
 // Home's "Weekly Activity Progress" (rev2 LandingPage, was the This Week
-// page): every class's place in the current week's flow.
+// page): every class's place in the picked week's flow.
 export default function WeeklyProgressList({
   apiClients,
   screenSize,
   classrooms,
   sessions,
+  weekStart,
 }: WeeklyProgressListProps) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
@@ -73,9 +77,9 @@ export default function WeeklyProgressList({
   const activity = useClassActivity(
     apiClients,
     classesKnown ? classrooms.classrooms : null,
+    weekStart,
   );
   const openClassSession = useOpenClassSession(classrooms, sessions);
-  const weekStart = currentSchoolWeek();
 
   const isLoading = activity.status === MicroCoachDataStatus.LOADING;
   const hasFailed =
@@ -83,7 +87,7 @@ export default function WeeklyProgressList({
 
   // Design note (rev2 WeeklyActivityProgress_1): no sorting, at most ~six
   // classes a week, listed alphabetically.
-  const rows = [...activity.thisWeek].sort((a, b) =>
+  const rows = [...activity.week].sort((a, b) =>
     a.className.localeCompare(b.className),
   );
 
@@ -112,6 +116,17 @@ export default function WeeklyProgressList({
           isLoading={isLoading}
           minHeight={CARD_HEIGHT}
           label={t('activityList.loading')}
+          // One placeholder row per class once the class list is in.
+          skeleton={
+            <WeeklyProgressSkeleton
+              screenSize={screenSize}
+              count={
+                classesKnown
+                  ? Math.min(Math.max(classrooms.classrooms.length, 1), 6)
+                  : 3
+              }
+            />
+          }
         >
           {hasFailed && (
             <Typography

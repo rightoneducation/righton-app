@@ -113,24 +113,55 @@ export const ResultsBannerBox = styled(Box)(({ theme }) => ({
   boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
 }));
 
-/** Figma: three 366-wide cards ~14 apart at LARGE, stacked below. */
+/*
+ * At LARGE the cards sit side by side and share their rows (CSS subgrid):
+ * badge, title, student count, evidence, explanation, buttons. Each section
+ * then starts at the same height on every card, whatever the length of the
+ * text above it, and the buttons share the bottom row. Stacked below LARGE,
+ * each card is its own column.
+ */
+export const MISCONCEPTION_CARD_ROWS = 6;
+
+interface AlignedProps {
+  isAligned: boolean;
+}
+const noAligned = (prop: PropertyKey) => prop !== 'isAligned';
+
+/** Figma: three 366-wide cards ~14 apart at LARGE (one grid the cards share rows of), stacked below. */
 export const CardRow = styled(Box, {
   shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => ({
-  display: 'flex',
-  flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
-  alignItems: 'stretch',
-  gap: theme.sizing.space3,
-  width: '100%',
-  '& > *': { flex: '1 1 0', minWidth: 0 },
-}));
+})<ScreenSizeProps>(({ theme, screenSize }) =>
+  screenSize === ScreenSize.LARGE
+    ? {
+        display: 'grid',
+        gridTemplateRows: `repeat(${MISCONCEPTION_CARD_ROWS}, auto)`,
+        gridAutoFlow: 'column',
+        gridAutoColumns: 'minmax(0, 1fr)',
+        columnGap: theme.sizing.space3,
+        width: '100%',
+      }
+    : {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: theme.sizing.space3,
+        width: '100%',
+      },
+);
 
-// Figma: 366x544 rx 32, white with the dashboard card's soft shadow. The
-// content sets the height; the row stretches the three to match.
-export const MisconceptionCardSurface = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.sizing.space3,
+
+// Figma: 366x544 rx 32, white with the dashboard card's soft shadow.
+export const MisconceptionCardSurface = styled(Box, {
+  shouldForwardProp: noAligned,
+})<AlignedProps>(({ theme, isAligned }) => ({
+  ...(isAligned
+    ? {
+        display: 'grid',
+        gridRow: `span ${MISCONCEPTION_CARD_ROWS}`,
+        gridTemplateRows: 'subgrid',
+        rowGap: theme.sizing.space3,
+        alignContent: 'start',
+      }
+    : { display: 'flex', flexDirection: 'column', gap: theme.sizing.space3 }),
   padding: theme.sizing.space6,
   borderRadius: theme.sizing.space6,
   backgroundColor: theme.palette.designSystem.surface.white,
@@ -138,13 +169,26 @@ export const MisconceptionCardSurface = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 
-/** Badge, title and student-count chip (Figma: ~6-10 between). */
-export const CardHeading = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  gap: theme.sizing.space2,
-}));
+/** Badge, title and student-count chip (Figma: ~6-10 between): three of the card's rows. */
+export const CardHeading = styled(Box, {
+  shouldForwardProp: noAligned,
+})<AlignedProps>(({ theme, isAligned }) =>
+  isAligned
+    ? {
+        display: 'grid',
+        gridRow: 'span 3',
+        gridTemplateRows: 'subgrid',
+        rowGap: theme.sizing.space2,
+        justifyItems: 'start',
+        alignItems: 'start',
+      }
+    : {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        gap: theme.sizing.space2,
+      },
+);
 
 export const BadgeRow = styled(Box)(({ theme }) => ({
   display: 'flex',

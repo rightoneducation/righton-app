@@ -50,6 +50,8 @@ interface MisconceptionCardProps {
   // cited options' students shown.
   onViewDetails: (misconceptionId: string, fromEvidence: boolean) => void;
   onSelect: (misconceptionId: string) => void;
+  // Side by side at LARGE: the card shares its rows with its neighbours.
+  isAligned: boolean;
 }
 
 /**
@@ -62,14 +64,15 @@ export default function MisconceptionCard({
   misconception,
   onViewDetails,
   onSelect,
+  isAligned,
 }: MisconceptionCardProps) {
   const { t } = useTranslation();
   const { isRecommendedFocus } = misconception;
   const evidence = formatResponseEvidence(misconception.responseEvidence, t);
 
   return (
-    <MisconceptionCardSurface>
-      <CardHeading>
+    <MisconceptionCardSurface isAligned={isAligned}>
+      <CardHeading isAligned={isAligned}>
         <BadgeRow>
           <CardBadge isFocus={isRecommendedFocus}>
             {t(isRecommendedFocus ? 'review.recommendedFocus' : 'review.additional')}
@@ -108,13 +111,16 @@ export default function MisconceptionCard({
         </Tooltip>
       </CardHeading>
 
-      {evidence && (
+      {/* Without evidence the row stays, empty, so the rows below still line up. */}
+      {evidence ? (
         <LabelledBlock>
           <BlockLabel>{t('review.responseEvidence')}</BlockLabel>
           <EvidenceLink type="button" onClick={() => onViewDetails(misconception.id, true)}>
             {evidence}
           </EvidenceLink>
         </LabelledBlock>
+      ) : (
+        isAligned && <span aria-hidden />
       )}
 
       <LabelledBlock>
