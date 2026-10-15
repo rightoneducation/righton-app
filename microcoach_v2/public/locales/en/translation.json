@@ -260,8 +260,6 @@
   "reflect": {
     "title": "How Your Class Responded",
     "subtitle": "Comparing your first MIU (before) with the second (after) for the misconception you focused on.",
-    "activitySubtitle": "Incorrect worked example analysis",
-    "activityDescription": "Students examine a worked solution, identify the first step where the reasoning goes off track, explain why the mistake happened, and work together to correct it.",
     "scoreTitle": "MIU 1 → MIU 2 Score",
     "scoreSubtitle": "Average percent correct across {{count}} questions",
     "addresses": "Addresses:",
@@ -277,9 +275,7 @@
     "improvementSummary": "{{improvement}} percentage-point improvement, with {{students}} students showing improvement.",
     "percentCorrect": "{{percent}}%",
     "percentagePointGain": "+{{improvement}} percentage points",
-    "averageQuestionsGainPlaceholder": "{{change}} questions correct on average",
-    "noChange": "No change",
-    "questionCountPlaceholder": "{{count}} is mock",
-    "questionChangePlaceholder": "{{change}} is mock"
+    "averageQuestionsGain": "{{change}} questions correct on average",
+    "noChange": "No change"
   }
 }

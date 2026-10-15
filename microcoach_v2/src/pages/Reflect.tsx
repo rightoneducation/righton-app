@@ -10,11 +10,11 @@ import ReflectSkeleton from '../components/ReflectSkeleton';
 import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import { IImplementedActivity } from '../lib/PipelineModels';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import useReflectionResults from '../hooks/useReflectionResults';
 import { ScreenSizeProps } from '../lib/styledcomponents/ReviewStyledComponents';
 import {
   ActivityContext,
   ActivityContextRow,
-  MockDataTag,
   ReflectDetailsButton,
   ReflectHeading,
   ReflectPage,
@@ -34,41 +34,19 @@ import {
   ScoreValues,
 } from '../lib/styledcomponents/ReflectStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
-import { UseSessionsResult } from '../hooks/useSessions';
-import buildReflectionResults, {
-  getReflectionTrend,
-} from '../lib/reflectionResults';
+import { getReflectionTrend } from '../lib/reflectionResults';
 
-// The result payload does not expose the MIU question count yet. Keeping the
-// placeholder in one named value makes it easy to replace when the API does.
-const REFLECT_QUESTION_COUNT_PLACEHOLDER = 6;
+type ReflectProps = ScreenSizeProps;
 
-// Temporary UI preview values. Set both numbers to the same value to preview
-// "No change", or use an empty object to display the backend scores again.
-const REFLECT_SCORE_TEST_VALUES: { before?: number; after?: number } = {
-  before: 64,
-  after: 51,
-};
-
-interface ReflectProps extends ScreenSizeProps {
-  sessions: UseSessionsResult;
-}
-
-export default function Reflect({ screenSize, sessions }: ReflectProps) {
+export default function Reflect({ screenSize }: ReflectProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const { misconceptions, misconceptionsStatus, planItems } =
-    useMicroCoachDataState();
+  const { planItems } = useMicroCoachDataState();
+  const { reflect, status } = useReflectionResults();
   const [selectedActivity, setSelectedActivity] =
     React.useState<IImplementedActivity | null>(null);
-  const reflect = buildReflectionResults(
-    sessions.selectedSession,
-    misconceptions,
-  );
-  const dataReady =
-    sessions.status === MicroCoachDataStatus.READY &&
-    misconceptionsStatus === MicroCoachDataStatus.READY;
+  const dataReady = status === MicroCoachDataStatus.READY;
   const isReady = useAllReady(useI18nReady(), dataReady);
 
   if (!isReady) return <ReflectSkeleton screenSize={screenSize} />;
@@ -114,16 +92,14 @@ export default function Reflect({ screenSize, sessions }: ReflectProps) {
             </ReflectHeading>
             <ReflectionCardList>
               {reflect.implementedActivities.map((activity) => {
-                const masteryBefore =
-                  REFLECT_SCORE_TEST_VALUES.before ?? activity.masteryBefore;
-                const masteryAfter =
-                  REFLECT_SCORE_TEST_VALUES.after ?? activity.masteryAfter;
+                const { questionCount } = activity;
                 const percentagePointChange =
-                  masteryAfter - masteryBefore;
+                  activity.averagePercentCorrectAfter -
+                  activity.averagePercentCorrectBefore;
                 const trend = getReflectionTrend(percentagePointChange);
                 const averageQuestionChange =
-                  (percentagePointChange / 100) *
-                  REFLECT_QUESTION_COUNT_PLACEHOLDER;
+                  activity.averageQuestionsCorrectAfter -
+                  activity.averageQuestionsCorrectBefore;
                 const formattedQuestionChange = `${
                   averageQuestionChange > 0 ? '+' : ''
                 }${averageQuestionChange.toFixed(1)}`;
@@ -140,7 +116,7 @@ export default function Reflect({ screenSize, sessions }: ReflectProps) {
                           {activity.title}
                         </Typography>
                         <Typography variant="uploadLabel" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                          {t('reflect.activitySubtitle')}
+                          {activity.subtitle}
                         </Typography>
                       </ReflectionCardHeading>
                       <ReflectionInset>
@@ -154,7 +130,7 @@ export default function Reflect({ screenSize, sessions }: ReflectProps) {
                             </Typography>
                           </ActivityContextRow>
                           <Typography variant="smallBodyText" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                            {t('reflect.activityDescription')}
+                            {activity.description}
                           </Typography>
                         </ActivityContext>
                       </ReflectionInset>
@@ -167,39 +143,29 @@ export default function Reflect({ screenSize, sessions }: ReflectProps) {
                           </Typography>
                           <Typography variant="uploadLabel" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
                             {t('reflect.scoreSubtitle', {
-                              count: REFLECT_QUESTION_COUNT_PLACEHOLDER,
-                            })}{' '}
-                            <MockDataTag>
-                              {t('reflect.questionCountPlaceholder', {
-                                count: REFLECT_QUESTION_COUNT_PLACEHOLDER,
-                              })}
-                            </MockDataTag>
+                              count: questionCount,
+                            })}
                           </Typography>
                           <ScoreRow>
                             <ScoreValues>
                               <Typography variant="reflectScore" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                                {t('reflect.percentCorrect', { percent: masteryBefore })}
+                                {t('reflect.percentCorrect', {
+                                  percent: activity.averagePercentCorrectBefore,
+                                })}
                               </Typography>
                               <Typography variant="reflectScore" sx={{ color: 'designSystem.surface.atlanticNavy' }}>→</Typography>
                               <ReflectionTrendValue variant="reflectScore" trend={trend}>
-                                {t('reflect.percentCorrect', { percent: masteryAfter })}
+                                {t('reflect.percentCorrect', {
+                                  percent: activity.averagePercentCorrectAfter,
+                                })}
                               </ReflectionTrendValue>
                             </ScoreValues>
                             <ScoreChange trend={trend}>
                               {trend === 'unchanged'
                                 ? t('reflect.noChange')
-                                : (
-                                  <>
-                                    {t('reflect.averageQuestionsGainPlaceholder', {
-                                      change: formattedQuestionChange,
-                                    })}
-                                    <MockDataTag>
-                                      {t('reflect.questionChangePlaceholder', {
-                                        change: formattedQuestionChange,
-                                      })}
-                                    </MockDataTag>
-                                  </>
-                                )}
+                                : t('reflect.averageQuestionsGain', {
+                                  change: formattedQuestionChange,
+                                })}
                             </ScoreChange>
                           </ScoreRow>
                         </ScoreGroup>

@@ -47,6 +47,18 @@ export class SessionParser {
       postPpqAssessmentId: session.postPpqAssessmentId ?? null,
       pregeneratedNextSteps: session.pregeneratedNextSteps ?? null,
       evaluationResults: session.evaluationResults ?? null,
+      reflectionResults: (session.reflectionResults ?? [])
+        .filter((result): result is NonNullable<typeof result> => result != null)
+        .map((result) => ({
+          activityId: result.activityId ?? null,
+          misconceptionId: result.misconceptionId,
+          questionCount: result.questionCount,
+          averagePercentCorrectBefore: result.averagePercentCorrectBefore,
+          averagePercentCorrectAfter: result.averagePercentCorrectAfter,
+          averageQuestionsCorrectBefore: result.averageQuestionsCorrectBefore,
+          averageQuestionsCorrectAfter: result.averageQuestionsCorrectAfter,
+          improvedStudentCount: result.improvedStudentCount,
+        })),
       createdAt: session.createdAt,
       updatedAt: session.updatedAt,
     }

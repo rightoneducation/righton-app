@@ -260,8 +260,6 @@
   "reflect": {
     "title": "Cómo respondió su clase",
     "subtitle": "Comparamos su primer MIU (antes) con el segundo (después) para la idea errónea en la que se enfocó.",
-    "activitySubtitle": "Análisis de ejemplos resueltos incorrectos",
-    "activityDescription": "Los estudiantes examinan una solución resuelta, identifican el primer paso donde el razonamiento se desvía, explican por qué ocurrió el error y trabajan juntos para corregirlo.",
     "scoreTitle": "Puntaje de MIU 1 → MIU 2",
     "scoreSubtitle": "Porcentaje promedio de respuestas correctas en {{count}} preguntas",
     "addresses": "Aborda:",
@@ -277,9 +275,7 @@
     "improvementSummary": "Mejora de {{improvement}} puntos porcentuales, con {{students}} estudiantes mostrando mejora.",
     "percentCorrect": "{{percent}}%",
     "percentagePointGain": "+{{improvement}} puntos porcentuales",
-    "averageQuestionsGainPlaceholder": "{{change}} preguntas correctas en promedio",
-    "noChange": "Sin cambios",
-    "questionCountPlaceholder": "{{count}} es simulado",
-    "questionChangePlaceholder": "{{change}} es simulado"
+    "averageQuestionsGain": "{{change}} preguntas correctas en promedio",
+    "noChange": "Sin cambios"
   }
 }

@@ -55,12 +55,60 @@ const RunStep = z.object({
 
 // ── Facilitate: one artifact per template ─────────────────────────────────────
 
-function spotTheSlip({ examplesMin, examplesMax }) {
+/**
+ * How an example states its problem.
+ *
+ * Generated as two single-purpose fields: `task`, the instruction alone, and
+ * `math`, the expression alone. Stored (and rendered) as `prompt`, the full
+ * problem, and `problem`, the math shown on the tile. When the model wrote
+ * `prompt` and `problem` directly, the two overlapped: tightening one moved
+ * its content into the other (instructions in `problem`, student work and hints
+ * in `prompt`, the math twice). With one job per field there is nothing to
+ * move, and the stored pair is built from them by toStoredFacilitate.
+ */
+const TASK_MAX = 80;
+// One $…$ span and nothing else: the schema itself leaves no room for words
+// around the math (a bound, not a describe).
+const ONE_EXPRESSION = /^\s*\$[^$]+\$\s*$/;
+const Expression = z.string().regex(ONE_EXPRESSION);
+
+/**
+ * The math as a declared shape. A system is its own variant that needs at least
+ * two expressions, so strict mode cannot produce a "system" with one inequality
+ * (v30 stored "Graph the solution set of the system: $y + x > 2$", its second
+ * inequality missing). The kind comes first, so the model commits to it before
+ * writing anything else; one expression per item also leaves no place for
+ * "\quad\text{and}\quad" between them.
+ */
+const MathStatement = z.discriminatedUnion('kind', [
+  z.object({
+    kind: z.literal('SINGLE'),
+    expressions: z.array(Expression).length(1).describe('The one expression, equation or inequality, e.g. ["$x - 2y \\geq -3$"]'),
+  }),
+  z.object({
+    kind: z.literal('SYSTEM'),
+    expressions: z.array(Expression).min(2).max(3).describe('Every equation or inequality of the system, one per item, e.g. ["$y + x > 2$", "$y \\leq 3x - 2$"]. All of them: the work and the answers may only use what is listed here.'),
+  }),
+]);
+
+function problemFields(mode) {
+  if (mode === 'stored') {
+    return {
+      prompt: z.string().describe('The full problem: the task and its math'),
+      problem: z.string().describe('The math alone, shown on the example tile'),
+    };
+  }
+  return {
+    math: MathStatement.describe('The problem\'s math, with no words. SYSTEM for a system (list every equation or inequality in it), SINGLE otherwise. Never a point or answer choices to pick from.'),
+    task: z.string().max(TASK_MAX).describe('The instruction alone, as a short imperative or question with no trailing punctuation, e.g. "Graph the inequality", "Solve for $x$", "Find a solution of the system". Student-facing: never student work, a description of a response, a hint, or how to solve it. Never a multiple-choice stem ("Which graph…", "Which of the following…"): the student sees no answer choices, so restate the question as an open problem that needs no given value, e.g. "Find a solution of the system" or "Graph the system".'),
+  };
+}
+
+function spotTheSlip({ examplesMin, examplesMax }, mode) {
   return z.object({
     type: z.literal('INCORRECT_WORKED_EXAMPLES'),
     examples: z.array(z.object({
-      prompt: z.string().describe('The full problem statement over the steps, e.g. "Graph the solution to $y < -\\frac{1}{2}x + 3$". The problem itself, never an instruction about the activity, and with no label such as "Problem:".'),
-      problem: z.string().describe('The mathematics from the prompt above with every word removed: only the expression, equation or inequality, never a sentence and never the same text as `prompt`. For the prompt "Graph the inequality: $x - 2y \\geq -3$." write "$x - 2y \\geq -3$"; for a system, the inequalities joined by a comma, e.g. "$y + x > 2$, $y \\leq 3x - 2$". Shown on the example tile.'),
+      ...problemFields(mode),
       slip: z.string().describe('Teacher view only: the slip in 3-6 words, e.g. "Flipped inequality when testing"'),
       steps: z.array(ExampleStep).min(3).max(6).describe('The full worked solution. Annotate correct steps before the slip CORRECT, the FIRST invalid step ERROR, and leave the later steps (consequences of the slip) unannotated.'),
       finalOutcome: z.string().describe('Teacher view only: what the incorrect reasoning arrives at, one sentence'),
@@ -68,12 +116,11 @@ function spotTheSlip({ examplesMin, examplesMax }) {
   });
 }
 
-function favoriteNo({ examplesMin, examplesMax }) {
+function favoriteNo({ examplesMin, examplesMax }, mode) {
   return z.object({
     type: z.literal('FAVORITE_NO'),
     examples: z.array(z.object({
-      prompt: z.string().describe('The full problem statement students work on, e.g. "Solve for $x$: $\\frac{2}{3}x = 8$". The problem itself — never an instruction or a label such as "Problem:", "Here is a student\'s work" or "A student\'s written solution:". Shown in the student view: only the problem, one sentence. No student work, no description of what a student did, and no hint of the error — the work goes in `work`.'),
-      problem: z.string().describe('The mathematics from the prompt above with every word removed: only the expression, equation or inequality, never a sentence and never the same text as `prompt`. For the prompt "Graph the inequality: $x - 2y \\geq -3$." write "$x - 2y \\geq -3$"; for a system, the inequalities joined by a comma, e.g. "$y + x > 2$, $y \\leq 3x - 2$". Shown on the example tile.'),
+      ...problemFields(mode),
       work: z.array(WorkLine).min(2).max(6).describe('The response, line by line. The error must sit inside partly sound reasoning: keep the sound lines marked CORRECT.'),
       notice: z.array(z.object({
         kind: z.enum(['PRESERVE', 'REVISE']),
@@ -84,12 +131,11 @@ function favoriteNo({ examplesMin, examplesMax }) {
   });
 }
 
-function mathDetective({ examplesMin, examplesMax }) {
+function mathDetective({ examplesMin, examplesMax }, mode) {
   return z.object({
     type: z.literal('MATH_DETECTIVE'),
     examples: z.array(z.object({
-      prompt: z.string().describe('The full problem statement the student was solving, e.g. "Solve for $x$: $\\frac{1}{3}(15-10x)=4-\\frac{1}{2}x$". The problem itself — never an instruction about the activity such as "Investigate what went wrong", and with no label such as "Problem:". Shown in the student view: only the problem, one sentence. No student work, no description of what a student did, and no hint of the error — the work goes in `workSummary`.'),
-      problem: z.string().describe('The mathematics from the prompt above with every word removed: only the expression, equation or inequality, never a sentence and never the same text as `prompt`. For the prompt "Graph the inequality: $x - 2y \\geq -3$." write "$x - 2y \\geq -3$"; for a system, the inequalities joined by a comma, e.g. "$y + x > 2$, $y \\leq 3x - 2$". Shown on the example tile.'),
+      ...problemFields(mode),
       workSummary: z.array(WorkLine).min(2).max(5).describe('The response in brief: 2-5 short moves of ONE student\'s attempt. This is the evidence students investigate.'),
       stages: z.array(z.object({
         kind: z.enum(['INVESTIGATE', 'SOLVE', 'GENERALIZE']),
@@ -152,6 +198,51 @@ export const CONTENT_TYPES = Object.keys(FACILITATE_BY_TYPE);
 /** The templates whose artifact is a set of up to three examples. */
 export const EXAMPLE_TYPES = ['INCORRECT_WORKED_EXAMPLES', 'FAVORITE_NO', 'MATH_DETECTIVE'];
 
+/** The generated artifact in its stored shape: each example's task + math → prompt + problem. */
+// A task that asks about a specific point is unanswerable when the point never
+// made it into the math ("Decide whether the point is a solution: $…$"). The
+// prompt asks for problems that need no given value; when one slips through
+// without its point, it becomes a problem a student can still answer.
+// `onFallback` is told each time, so the run can count how often this guard
+// covered for the generator.
+const NAMES_A_POINT = /\b(the|this|that|a specific|the given) point\b/i;
+const IS_A_POINT = /^\s*\$\s*\(.*\)\s*\$\s*$/;
+const ANSWERABLE_FALLBACK = 'Find a solution';
+
+const expressionsOf = (math) => (math?.expressions ?? []).map((e) => String(e).trim());
+
+export function toStoredFacilitate(facilitate, onFallback = () => {}) {
+  if (!EXAMPLE_TYPES.includes(facilitate?.type)) return facilitate;
+  return {
+    ...facilitate,
+    examples: facilitate.examples.map(({ task, math, ...rest }) => {
+      const expressions = expressionsOf(math);
+      const joined = expressions.join(', ');
+      const missingPoint = NAMES_A_POINT.test(task ?? '') && !expressions.some((e) => IS_A_POINT.test(e));
+      if (missingPoint) onFallback({ task, math: joined });
+      const instruction = (missingPoint ? ANSWERABLE_FALLBACK : String(task ?? '')).trim().replace(/[.:?]\s*$/, '');
+      return { problem: joined, prompt: instruction ? `${instruction}: ${joined}` : joined, ...rest };
+    }),
+  };
+}
+
+/**
+ * Generated examples whose instruction names a system but whose math is not one
+ * (declared SINGLE, or fewer than two expressions). The schema forces a SYSTEM to
+ * list two or more; this catches the model declaring SINGLE under "Graph the
+ * system". The handler regenerates the activity once when any are found.
+ */
+const NAMES_A_SYSTEM = /\bsystems?\b/i;
+
+export function incompleteSystems(facilitate) {
+  if (!EXAMPLE_TYPES.includes(facilitate?.type)) return [];
+  return (facilitate.examples ?? []).flatMap(({ task, math }, i) => (
+    NAMES_A_SYSTEM.test(task ?? '') && (math?.kind !== 'SYSTEM' || expressionsOf(math).length < 2)
+      ? [{ example: i + 1, task, math: expressionsOf(math).join(', ') }]
+      : []
+  ));
+}
+
 const DEFAULT_BOUNDS = {
   examplesMin: 1, examplesMax: 3,
   beforeClassMin: 2, beforeClassMax: 3,
@@ -160,16 +251,17 @@ const DEFAULT_BOUNDS = {
   questionCount: 3,
 };
 
-export function facilitateSchemaFor(contentType, bounds = {}) {
+export function facilitateSchemaFor(contentType, bounds = {}, mode = 'generate') {
   const build = FACILITATE_BY_TYPE[contentType];
-  return build ? build({ ...DEFAULT_BOUNDS, ...bounds }) : null;
+  return build ? build({ ...DEFAULT_BOUNDS, ...bounds }, mode) : null;
 }
 
 // ── Call 1: the activity ──────────────────────────────────────────────────────
 
-export function activityPlanSchemaFor(contentType, bounds = {}) {
+/** What call 1 generates (`mode` 'generate'), or the same fields as stored ('stored'). */
+export function activityPlanSchemaFor(contentType, bounds = {}, mode = 'generate') {
   const b = { ...DEFAULT_BOUNDS, ...bounds };
-  const facilitate = facilitateSchemaFor(contentType, b);
+  const facilitate = facilitateSchemaFor(contentType, b, mode);
   if (!facilitate) return null;
   return z.object({
     whyThisActivity: z.string().describe('2-3 teacher-facing sentences: the student need, why this template\'s move fits it, and how the activity addresses it. Not a description of the steps.'),
@@ -227,7 +319,7 @@ export function toStoredDiscussion(draft) {
 /** The full stored content: what the app's ActivityContentModels.ts declares. */
 export function activityContentSchemaFor(contentType, bounds = {}) {
   const b = { ...DEFAULT_BOUNDS, ...bounds };
-  const plan = activityPlanSchemaFor(contentType, b);
+  const plan = activityPlanSchemaFor(contentType, b, 'stored');
   if (!plan) return null;
   return plan.extend({
     schemaVersion: z.literal(CONTENT_VERSION),
@@ -239,32 +331,4 @@ export function activityContentSchemaFor(contentType, bounds = {}) {
       takeaway: z.string(),
     }),
   });
-}
-
-// ── Problems the math reviewer checks ─────────────────────────────────────────
-
-/**
- * The problem statements to send to the single-problem math reviewer, as
- * [path, text] pairs, so each corrected text can be written back in place.
- *
- * Spot the Slip is absent: its examples are reviewed by validateWorkedExamples,
- * problem and work together. Make Your Case is absent on purpose: its claim is
- * meant to be false or only conditionally true, and a reviewer told to "correct
- * errors" would quietly repair the very thing students are asked to argue about.
- */
-export function activityProblems(facilitate) {
-  switch (facilitate?.type) {
-    case 'FAVORITE_NO':
-    case 'MATH_DETECTIVE':
-      return (facilitate.examples ?? []).map((ex, i) => [['examples', i, 'prompt'], ex.prompt]);
-    case 'COMPARE_THE_THINKING':
-      return [[['problem'], facilitate.problem]];
-    default:
-      return [];
-  }
-}
-
-export function writeActivityProblem(facilitate, path, text) {
-  const parent = path.slice(0, -1).reduce((node, key) => node?.[key], facilitate);
-  if (parent) parent[path[path.length - 1]] = text;
 }

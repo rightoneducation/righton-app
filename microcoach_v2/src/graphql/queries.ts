@@ -10,6 +10,7 @@ export const getMicroCoachUser = /* GraphQL */ `
       email
       firstName
       lastName
+      school
       classes {
         items {
           id
@@ -84,6 +85,7 @@ export const listMicroCoachUsers = /* GraphQL */ `
         email
         firstName
         lastName
+        school
         classes {
           items {
             id
@@ -178,6 +180,31 @@ export const getMicroCoachClassroom = /* GraphQL */ `
           }
           pregeneratedNextSteps
           evaluationResults
+          questionStats {
+            questionNumber
+            percentCorrect
+            questionText
+            options {
+              letter
+              text
+              percentChosen
+              isCorrect
+              studentNames
+              __typename
+            }
+            __typename
+          }
+          reflectionResults {
+            activityId
+            misconceptionId
+            questionCount
+            averagePercentCorrectBefore
+            averagePercentCorrectAfter
+            averageQuestionsCorrectBefore
+            averageQuestionsCorrectAfter
+            improvedStudentCount
+            __typename
+          }
           createdAt
           updatedAt
           __typename
@@ -249,6 +276,23 @@ export const listMicroCoachClassrooms = /* GraphQL */ `
             }
             pregeneratedNextSteps
             evaluationResults
+            questionStats {
+              questionNumber
+              percentCorrect
+              questionText
+              __typename
+            }
+            reflectionResults {
+              activityId
+              misconceptionId
+              questionCount
+              averagePercentCorrectBefore
+              averagePercentCorrectAfter
+              averageQuestionsCorrectBefore
+              averageQuestionsCorrectAfter
+              improvedStudentCount
+              __typename
+            }
             createdAt
             updatedAt
             __typename
@@ -405,6 +449,11 @@ export const getMicroCoachSession = /* GraphQL */ `
           detailStatus
           studentWork
           skillContext
+          responseEvidence {
+            questionNumber
+            answers
+            __typename
+          }
           createdAt
           updatedAt
           __typename
@@ -414,6 +463,31 @@ export const getMicroCoachSession = /* GraphQL */ `
       }
       pregeneratedNextSteps
       evaluationResults
+      questionStats {
+        questionNumber
+        percentCorrect
+        questionText
+        options {
+          letter
+          text
+          percentChosen
+          isCorrect
+          studentNames
+          __typename
+        }
+        __typename
+      }
+      reflectionResults {
+        activityId
+        misconceptionId
+        questionCount
+        averagePercentCorrectBefore
+        averagePercentCorrectAfter
+        averageQuestionsCorrectBefore
+        averageQuestionsCorrectAfter
+        improvedStudentCount
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -493,6 +567,11 @@ export const listMicroCoachSessions = /* GraphQL */ `
             detailStatus
             studentWork
             skillContext
+            responseEvidence {
+              questionNumber
+              answers
+              __typename
+            }
             createdAt
             updatedAt
             __typename
@@ -502,6 +581,31 @@ export const listMicroCoachSessions = /* GraphQL */ `
         }
         pregeneratedNextSteps
         evaluationResults
+        questionStats {
+          questionNumber
+          percentCorrect
+          questionText
+          options {
+            letter
+            text
+            percentChosen
+            isCorrect
+            studentNames
+            __typename
+          }
+          __typename
+        }
+        reflectionResults {
+          activityId
+          misconceptionId
+          questionCount
+          averagePercentCorrectBefore
+          averagePercentCorrectAfter
+          averageQuestionsCorrectBefore
+          averageQuestionsCorrectAfter
+          improvedStudentCount
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -620,6 +724,7 @@ export const usersByCognitoId = /* GraphQL */ `
         email
         firstName
         lastName
+        school
         classes {
           items {
             id
@@ -674,6 +779,7 @@ export const usersByEmail = /* GraphQL */ `
         email
         firstName
         lastName
+        school
         classes {
           items {
             id
@@ -728,6 +834,7 @@ export const usersByRole = /* GraphQL */ `
         email
         firstName
         lastName
+        school
         classes {
           items {
             id
@@ -806,6 +913,23 @@ export const microCoachClassroomsByUserId = /* GraphQL */ `
             }
             pregeneratedNextSteps
             evaluationResults
+            questionStats {
+              questionNumber
+              percentCorrect
+              questionText
+              __typename
+            }
+            reflectionResults {
+              activityId
+              misconceptionId
+              questionCount
+              averagePercentCorrectBefore
+              averagePercentCorrectAfter
+              averageQuestionsCorrectBefore
+              averageQuestionsCorrectAfter
+              improvedStudentCount
+              __typename
+            }
             createdAt
             updatedAt
             __typename
@@ -945,6 +1069,11 @@ export const microCoachSessionsByClassId = /* GraphQL */ `
             detailStatus
             studentWork
             skillContext
+            responseEvidence {
+              questionNumber
+              answers
+              __typename
+            }
             createdAt
             updatedAt
             __typename
@@ -954,6 +1083,31 @@ export const microCoachSessionsByClassId = /* GraphQL */ `
         }
         pregeneratedNextSteps
         evaluationResults
+        questionStats {
+          questionNumber
+          percentCorrect
+          questionText
+          options {
+            letter
+            text
+            percentChosen
+            isCorrect
+            studentNames
+            __typename
+          }
+          __typename
+        }
+        reflectionResults {
+          activityId
+          misconceptionId
+          questionCount
+          averagePercentCorrectBefore
+          averagePercentCorrectAfter
+          averageQuestionsCorrectBefore
+          averageQuestionsCorrectAfter
+          improvedStudentCount
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -1149,6 +1303,11 @@ export const getMicroCoachMisconception = /* GraphQL */ `
       detailStatus
       studentWork
       skillContext
+      responseEvidence {
+        questionNumber
+        answers
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -1222,6 +1381,11 @@ export const listMicroCoachMisconceptions = /* GraphQL */ `
         detailStatus
         studentWork
         skillContext
+        responseEvidence {
+          questionNumber
+          answers
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -1302,6 +1466,11 @@ export const microCoachMisconceptionsBySessionId = /* GraphQL */ `
         detailStatus
         studentWork
         skillContext
+        responseEvidence {
+          questionNumber
+          answers
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -1382,6 +1551,11 @@ export const microCoachMisconceptionsByClassId = /* GraphQL */ `
         detailStatus
         studentWork
         skillContext
+        responseEvidence {
+          questionNumber
+          answers
+          __typename
+        }
         createdAt
         updatedAt
         __typename
