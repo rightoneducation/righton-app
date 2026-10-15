@@ -6,6 +6,7 @@ import {
   buildFlowSteps,
   deriveCurrentStep,
   FlowStep,
+  FLOW_ORDER,
   hasChosenActivity,
 } from '../lib/flowProgress';
 import {
@@ -24,7 +25,7 @@ import MathTypography from './MathTypography';
 interface FlowStepperBandProps extends ScreenSizeProps {
   sessions: UseSessionsResult;
   plan: IPlanItemsState;
-  // The step this page belongs to; FlowStepper underlines it.
+  // The step this page belongs to; the track never shows the class behind it.
   page: FlowStep;
 }
 
@@ -45,7 +46,15 @@ export function FlowStepperBand({
     sessions.selectedSession,
     plan.planItems.length > 0,
   );
-  const flowSteps = buildFlowSteps(currentStep, t);
+  // The track follows the teacher: whichever is further along, the class's
+  // saved progress or the page they are on. Saved progress alone never
+  // reaches CHOOSE (deriveCurrentStep), and revisiting an earlier page should
+  // not move the class backwards.
+  const stepIndex = (step: FlowStep) =>
+    step === FlowStep.DONE ? FLOW_ORDER.length : FLOW_ORDER.indexOf(step);
+  const shownStep =
+    stepIndex(page) > stepIndex(currentStep) ? page : currentStep;
+  const flowSteps = buildFlowSteps(shownStep, t);
 
   return (
     <StepperBand screenSize={screenSize}>

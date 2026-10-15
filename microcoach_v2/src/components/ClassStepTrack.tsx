@@ -9,11 +9,13 @@ import { IFlowStep } from '../lib/PipelineModels';
 import { StepState } from '../lib/styledcomponents/DashboardStyledComponents';
 
 // A five-step track: numbered circles joined by a line that fills in
-// accentBlue up to the current step. Done steps show a check; labels sit
-// centred underneath; upcoming steps are grey.
+// accentBlue up to the current step. Every circle shows its number, done
+// ones included (rev2 Stepper); labels sit centred underneath; upcoming steps
+// are grey.
 //   compact: each Weekly Activity Progress card (rev2 WeeklyActivityProgress)
 //   large:   Home's top stepper (rev2 LandingPage), with a 30% navy halo on
-//            the current step; completed steps (and Assess) link to their page
+//            the current step; completed steps (and Assess) link to their page.
+//            The flow pages use it too (FlowStepper), passing `page`.
 // fluid: phones. The track takes its container's width instead of the fixed
 // pitch, and labels wrap, so five steps fit without scrolling the page.
 
@@ -76,6 +78,8 @@ interface ClassStepTrackProps {
   steps?: IFlowStep[];
   size?: StepTrackSize;
   fluid?: boolean;
+  // The step whose page this is, so it never links to itself.
+  page?: FlowStep;
 }
 
 export default function ClassStepTrack({
@@ -83,6 +87,7 @@ export default function ClassStepTrack({
   steps,
   size = 'compact',
   fluid = false,
+  page,
 }: ClassStepTrackProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -139,7 +144,8 @@ export default function ClassStepTrack({
         const state = stateAt(index);
         const color = STATE_COLOR[state];
         const link = steps?.[index];
-        const path = link?.isClickable ? link.path : undefined;
+        const path =
+          link?.isClickable && flowStep !== page ? link.path : undefined;
         const label = t(`dashboard.steps.${flowStep}`);
 
         const content = (
@@ -174,7 +180,7 @@ export default function ClassStepTrack({
                     }),
                 })}
               >
-                {state === 'COMPLETE' ? '✓' : index + 1}
+                {index + 1}
               </Box>
             </Box>
             <Box

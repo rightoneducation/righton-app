@@ -1,7 +1,6 @@
 import { alpha, styled, Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import ButtonBase from '@mui/material/ButtonBase';
 import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import { ScreenSize } from '../MicroCoachModels';
@@ -257,7 +256,6 @@ export const StepperRow = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => ({
   display: 'flex',
-  // Centred so the separators sit level with the labels inside their tabs.
   alignItems: 'center',
   gap: theme.sizing.space2,
   minWidth: 0,
@@ -270,64 +268,6 @@ export const StepperRow = styled(Box, {
 }));
 
 export type StepState = 'COMPLETE' | 'CURRENT' | 'UPCOMING';
-
-// Figma (Dashboard1): every label is the same navy; only the page you are on
-// is marked, by a 3.33px rule running 20px past the label each side and 20 below
-// it. The tab's even 20 inset gives both, and puts the label ~20 below the top
-// of the row, level with the Figma frame.
-const stepItemStyles = (
-  theme: Theme,
-  screenSize: ScreenSize,
-  isMarked: boolean,
-) => ({
-  display: 'flex',
-  // Must not shrink, or the row has nothing to overflow and labels collide.
-  flexShrink: 0,
-  padding: theme.sizing.space4,
-  borderBottom: `3px solid ${
-    isMarked
-      ? theme.palette.designSystem.surface.atlanticNavy
-      : 'transparent'
-  }`,
-  color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.stepLabel,
-  whiteSpace: 'nowrap' as const,
-  ...(screenSize !== ScreenSize.LARGE && { scrollSnapAlign: 'start' }),
-});
-
-const noStepProps = (prop: PropertyKey) =>
-  prop !== 'screenSize' && prop !== 'isMarked';
-
-export const StepItem = styled(Box, {
-  shouldForwardProp: noStepProps,
-})<ScreenSizeProps & { isMarked: boolean }>(
-  ({ theme, screenSize, isMarked }) =>
-    stepItemStyles(theme, screenSize, isMarked),
-);
-
-// A step that links back to its page: same look as StepItem, but a real button
-// so it takes keyboard focus and Enter/Space. The label underlines on hover and
-// focus so it reads as a link.
-export const StepButton = styled(ButtonBase, {
-  shouldForwardProp: noStepProps,
-})<ScreenSizeProps & { isMarked: boolean }>(
-  ({ theme, screenSize, isMarked }) => ({
-    ...stepItemStyles(theme, screenSize, isMarked),
-    '&:hover .step-label, &.Mui-focusVisible .step-label': {
-      textDecoration: 'underline',
-    },
-  }),
-);
-
-// Figma: Rubik 23.3/600, sitting level with the labels' baseline.
-export const StepSeparator = styled(Box)(({ theme }) => ({
-  flexShrink: 0,
-  fontFamily: theme.typography.stepLabel.fontFamily,
-  fontWeight: 600,
-  fontSize: 23,
-  lineHeight: 1,
-  color: theme.palette.designSystem.surface.atlanticNavy,
-}));
 
 // Figma: 229x42, radius 21. Drawn in Open Sans 14/600, which the app does not
 // load; Rubik at the same size and weight stands in.
