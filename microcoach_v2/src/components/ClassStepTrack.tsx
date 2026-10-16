@@ -37,6 +37,9 @@ const GEOMETRY: Record<
   large: { pitch: 159, circleSize: 38, lineWidth: 2, haloSpread: 6, labelSize: 16 },
 };
 
+// The widest first-step label the large track's lead inset leaves room for.
+const FIRST_LABEL_ALLOWANCE = 64;
+
 const Track = styled(Box)({
   position: 'relative',
   display: 'flex',
@@ -118,8 +121,21 @@ export default function ClassStepTrack({
   const lineLength = (count: number) =>
     fluid ? `${count * columnShare}%` : count * pitch;
 
+  // rev2 frames (LandingPage, Stepper) put the first step at the content
+  // edge, but each circle is centred in a pitch-wide column. At large, pull
+  // the track back by the empty part of that first column so the pitch
+  // between circles stays as drawn. The first label is centred under its ring
+  // and can be wider ("Evaluar" ~60), and the stepper row is a scroller that
+  // clips anything left of it, so the pull stops where a 64px label would
+  // touch the edge: the ring lands ~7 in rather than flush.
+  const leadInset =
+    size === 'large' && !fluid ? (pitch - FIRST_LABEL_ALLOWANCE) / 2 : 0;
+  let trackSx;
+  if (fluid) trackSx = { width: '100%' };
+  else if (leadInset > 0) trackSx = { ml: `${-leadInset}px` };
+
   return (
-    <Track sx={fluid ? { width: '100%' } : undefined}>
+    <Track sx={trackSx}>
       <Line
         sx={{
           top: lineTop,

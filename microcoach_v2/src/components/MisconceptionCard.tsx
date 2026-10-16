@@ -97,7 +97,8 @@ export default function MisconceptionCard({
         <MathTypography
           variant="headingMd"
           component="h2"
-          sx={{ color: 'designSystem.surface.atlanticNavy' }}
+          // rev3 PaddingReference: the two-line titles are set 24 apart.
+          sx={{ color: 'designSystem.surface.atlanticNavy', lineHeight: '24px' }}
           text={misconception.title}
         />
         <Tooltip

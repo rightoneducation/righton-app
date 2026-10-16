@@ -29,7 +29,9 @@ export const UnderstandPage = styled(Box, {
   alignItems: 'center',
   width: '100%',
   flexGrow: 1,
-  paddingTop: screenSize === ScreenSize.LARGE ? theme.sizing.space7 : theme.sizing.space6,
+  // rev3 PaddingReference: the stepper sits 48 under the header. Shared by
+  // every flow page, so the stepper holds its height page to page.
+  paddingTop: screenSize === ScreenSize.LARGE ? theme.sizing.space8 : theme.sizing.space6,
   paddingBottom: theme.sizing.space12,
   paddingLeft: pageGutter(theme, screenSize),
   paddingRight: pageGutter(theme, screenSize),
@@ -44,6 +46,36 @@ export const UnderstandColumn = styled(Box)(({ theme }) => ({
   gap: theme.sizing.space8,
   width: '100%',
   maxWidth: theme.sizing.appContentMaxWidth,
+}));
+
+/*
+ * /review below the stepper (rev3 PaddingReference): the title and cards
+ * (ReviewIntro, ~56 apart) over the correct-responses section and the AI
+ * disclaimer (ReviewFooter, 16 apart), the two groups ~74 apart in the
+ * frame (space11, 64, per design call 2026-10-16).
+ * Grouped so each gap has one owner; UnderstandColumn's 48 still spaces the
+ * stepper from all of it.
+ */
+export const ReviewBody = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: screenSize === ScreenSize.LARGE ? theme.sizing.space11 : theme.sizing.space8,
+}));
+
+export const ReviewIntro = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: screenSize === ScreenSize.LARGE ? theme.sizing.space10 : theme.sizing.space8,
+}));
+
+export const ReviewFooter = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space3,
 }));
 
 /** Title + works pill over the subtitle; the banner floats over it. */
@@ -162,7 +194,8 @@ export const MisconceptionCardSurface = styled(Box, {
         alignContent: 'start',
       }
     : { display: 'flex', flexDirection: 'column', gap: theme.sizing.space3 }),
-  padding: theme.sizing.space6,
+  // rev3 PaddingReference: ~36 inside; space7 per design call (2026-10-16).
+  padding: theme.sizing.space7,
   borderRadius: theme.sizing.space6,
   backgroundColor: theme.palette.designSystem.surface.white,
   boxShadow: dashboardCardShadow,
@@ -211,7 +244,8 @@ export const CardBadge = styled(Box, {
     display: 'inline-flex',
     alignItems: 'center',
     minHeight: 36,
-    padding: `0 ${theme.sizing.space2}px`,
+    // Figma (rev2 Misconceptions, rev3 PaddingReference): text 16 in.
+    padding: `0 ${theme.sizing.space3}px`,
     borderRadius: tagRadius,
     backgroundColor: isFocus ? palette.foreground.brightBlue : 'transparent',
     border: isFocus ? 'none' : `${theme.borders.borderWidth}px solid ${palette.foreground.greyAccent}`,
@@ -236,11 +270,11 @@ export const PrevalenceTag = styled(Box)(({ theme }) => ({
   cursor: 'default',
 }));
 
-/** A small caps label over its text (RESPONSE EVIDENCE:, POSSIBLE EXPLANATION:). */
+/** A small caps label over its text (RESPONSE EVIDENCE:, POSSIBLE EXPLANATION:), 8 apart. */
 export const LabelledBlock = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.sizing.space0,
+  gap: theme.sizing.space1,
 }));
 
 export const BlockLabel = styled(Typography)(({ theme }) => ({

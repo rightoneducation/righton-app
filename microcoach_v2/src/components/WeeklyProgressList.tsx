@@ -18,6 +18,7 @@ import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import { formatSchoolWeek } from '../lib/weeks';
 import {
   ActivityList,
+  WeekGroup,
   ActivityCard,
   CardActionButton,
   CardColumn,
@@ -97,13 +98,16 @@ export default function WeeklyProgressList({
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: `${theme.sizing.space10}px`,
+        // Figma (rev2 LandingPage): ~52 from the title to the week heading.
+        gap: `${theme.sizing.space9}px`,
         width: '100%',
         maxWidth: theme.sizing.activityListMaxWidth,
       }}
     >
       <ProgressTitle as="h2">{t('weeklyProgress.title')}</ProgressTitle>
-      <ActivityList>
+      {/* Same shape as Past Activities: the week heading ~20 over its
+          cards (WeekGroup), the cards 12 apart (ActivityList). */}
+      <WeekGroup>
         <WeekSubheading>
           {formatSchoolWeek(
             weekStart,
@@ -140,61 +144,64 @@ export default function WeeklyProgressList({
           {!hasFailed && rows.length === 0 && (
             <CardMessage>{t('weeklyProgress.empty')}</CardMessage>
           )}
-          {!hasFailed &&
-            rows.map((row) => (
-              <ActivityCard key={row.classId} screenSize={screenSize}>
-                {/* Below LARGE the card stacks; this column then spans it so
-                    the fluid track has a width to fill. */}
-                <CardColumn
-                  align="start"
-                  sx={
-                    screenSize === ScreenSize.LARGE
-                      ? undefined
-                      : { alignSelf: 'stretch' }
-                  }
-                >
-                  <CardLine>
-                    <ClassName>{row.className}</ClassName>
-                    <StudentsTag>
-                      {t('weeklyProgress.students', { count: row.studentCount })}
-                    </StudentsTag>
-                  </CardLine>
-                  <ClassStepTrack
-                    step={row.step}
-                    fluid={screenSize === ScreenSize.SMALL}
-                  />
-                </CardColumn>
-                <CardColumn align="end">
-                  <CardMessage>
-                    {t(`weeklyProgress.status.${statusKey(row)}`)}
-                  </CardMessage>
-                  {row.isAwaitingResults ? (
-                    <WaitingPill>{t('weeklyProgress.waiting')}</WaitingPill>
-                  ) : (
-                    <CardActionButton
-                      disableElevation
-                      endIcon={<ArrowForwardIcon />}
-                      onClick={() =>
-                        openClassSession({
-                          classId: row.classId,
-                          sessionId: row.sessionId,
-                          path: STEP_PATH[row.step],
-                          // The upload pre-fills the week it is for.
-                          state:
-                            STEP_PATH[row.step].startsWith('/upload-')
-                              ? { weekStart }
-                              : undefined,
-                        })
-                      }
-                    >
-                      {t(`weeklyProgress.action.${row.step}`)}
-                    </CardActionButton>
-                  )}
-                </CardColumn>
-              </ActivityCard>
-            ))}
+          {!hasFailed && rows.length > 0 && (
+            <ActivityList>
+              {rows.map((row) => (
+                <ActivityCard key={row.classId} screenSize={screenSize}>
+                  {/* Below LARGE the card stacks; this column then spans it so
+                      the fluid track has a width to fill. */}
+                  <CardColumn
+                    align="start"
+                    sx={
+                      screenSize === ScreenSize.LARGE
+                        ? undefined
+                        : { alignSelf: 'stretch' }
+                    }
+                  >
+                    <CardLine>
+                      <ClassName>{row.className}</ClassName>
+                      <StudentsTag>
+                        {t('weeklyProgress.students', { count: row.studentCount })}
+                      </StudentsTag>
+                    </CardLine>
+                    <ClassStepTrack
+                      step={row.step}
+                      fluid={screenSize === ScreenSize.SMALL}
+                    />
+                  </CardColumn>
+                  <CardColumn align="end">
+                    <CardMessage>
+                      {t(`weeklyProgress.status.${statusKey(row)}`)}
+                    </CardMessage>
+                    {row.isAwaitingResults ? (
+                      <WaitingPill>{t('weeklyProgress.waiting')}</WaitingPill>
+                    ) : (
+                      <CardActionButton
+                        disableElevation
+                        endIcon={<ArrowForwardIcon />}
+                        onClick={() =>
+                          openClassSession({
+                            classId: row.classId,
+                            sessionId: row.sessionId,
+                            path: STEP_PATH[row.step],
+                            // The upload pre-fills the week it is for.
+                            state:
+                              STEP_PATH[row.step].startsWith('/upload-')
+                                ? { weekStart }
+                                : undefined,
+                          })
+                        }
+                      >
+                        {t(`weeklyProgress.action.${row.step}`)}
+                      </CardActionButton>
+                    )}
+                  </CardColumn>
+                </ActivityCard>
+              ))}
+            </ActivityList>
+          )}
         </LoadingSlot>
-      </ActivityList>
+      </WeekGroup>
     </Box>
   );
 }

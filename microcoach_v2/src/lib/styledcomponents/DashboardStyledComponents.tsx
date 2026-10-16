@@ -145,10 +145,11 @@ interface SidebarContentProps extends ScreenSizeProps {
 // The sidebar screens' content column: its gap spaces the page's sections and
 // its padding is the page inset. Not clamped itself — each section sets its own
 // max width, so the stepper and card can run wider than the picker column.
-// Figma (v2 Dashboard1-3, LARGE): the dashboard's stepper row starts ~38 under
-// the header and its card ~64 below the stepper; the list pages' title sits
-// ~92 down; the gap from title to list differs per page, so a page can pass
-// its own (contentGap).
+// Figma (rev2 LandingPage, LARGE): the dashboard's stepper ring starts ~62
+// under the header and Weekly Activity Progress sits ~45 below the card (the
+// stepper-to-card gap is DashboardIntro's); the list pages' title sits ~92
+// down; the gap from title to list differs per page, so a page can pass its
+// own (contentGap).
 export const SidebarContent = styled(Box, {
   shouldForwardProp: (prop) =>
     prop !== 'screenSize' && prop !== 'isTitled' && prop !== 'contentGap',
@@ -158,8 +159,8 @@ export const SidebarContent = styled(Box, {
   let paddingTop = theme.sizing.space6;
   let gap = theme.sizing.space6;
   if (isLarge) {
-    paddingTop = isTitled ? theme.sizing.space13 : theme.sizing.space7;
-    gap = contentGap ?? (isTitled ? theme.sizing.space8 : theme.sizing.space11);
+    paddingTop = isTitled ? theme.sizing.space13 : theme.sizing.space11;
+    gap = contentGap ?? theme.sizing.space8;
   }
 
   return {
@@ -170,6 +171,10 @@ export const SidebarContent = styled(Box, {
     gap,
     flexGrow: 1,
     width: '100%',
+    // A flex item defaults to min-width: auto, so without this the column
+    // grows to fit the stepper row (track + My activity, ~1044) and widens
+    // the page past the viewport between 1024 and ~1356.
+    minWidth: 0,
     paddingTop,
     paddingBottom: isLarge ? theme.sizing.space12 : theme.sizing.space8,
     paddingLeft: gutter,
@@ -183,6 +188,22 @@ export const SidebarTitleBand = styled(Box)(({ theme }) => ({
   maxWidth: theme.sizing.dashboardContentMaxWidth,
 }));
 
+// Home: the stepper row over the upload card (Figma rev2 LandingPage: ~78
+// from the step labels to the card). Grouped so that gap stays separate from
+// the page column's, which spaces the card from Weekly Activity Progress.
+export const DashboardIntro = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap:
+    screenSize === ScreenSize.LARGE
+      ? theme.sizing.space12
+      : theme.sizing.space6,
+  width: '100%',
+}));
+
 // Figma (Dashboard1): three stacked soft shadows, offset down and right.
 export const dashboardCardShadow = [
   '5px 8px 9px rgba(0, 0, 0, 0.03)',
@@ -190,9 +211,9 @@ export const dashboardCardShadow = [
   '20px 32px 15px rgba(0, 0, 0, 0.01)',
 ].join(', ');
 
-// Figma (v2 Dashboard1): 1206x542, radius 20, holding the heading, then the
-// pickers and CTA. The two groups sit ~92 apart (space12); each spaces its own
-// items more tightly.
+// Figma (rev2 LandingPage): 1206x542, radius 20, holding the heading, then
+// the pickers and CTA. The two groups sit ~92 apart, between space12 and
+// space13 with neither close; each spaces its own items more tightly.
 export const DashboardCard = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => {
@@ -202,7 +223,7 @@ export const DashboardCard = styled(Box, {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: isLarge ? theme.sizing.space12 : theme.sizing.space6,
+    gap: isLarge ? 92 : theme.sizing.space6,
     width: '100%',
     maxWidth: theme.sizing.dashboardCardMaxWidth,
     padding: isLarge ? theme.sizing.space6 : theme.sizing.space4,
@@ -213,12 +234,12 @@ export const DashboardCard = styled(Box, {
   };
 });
 
-// Title over subtitle (Figma: ~20 between them).
+// Title over subtitle (Figma: ~24 between them).
 export const DashboardHeading = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: theme.sizing.space4,
+  gap: theme.sizing.space5,
   textAlign: 'center',
 }));
 
@@ -231,8 +252,9 @@ export const DashboardForm = styled(Box)(({ theme }) => ({
   width: '100%',
 }));
 
-// Breadcrumb on the left, "My activity" on the right. Below LARGE the two
-// stack, since the five labels alone already overflow the width.
+// The step track on the left, "My activity" on the right. Below LARGE the two
+// stack. At LARGE they wrap the same way once the column is narrower than
+// both (~1044; under ~1356 with the sidebar) rather than overflowing it.
 export const StepperBand = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => {
@@ -241,6 +263,7 @@ export const StepperBand = styled(Box, {
   return {
     display: 'flex',
     flexDirection: isLarge ? 'row' : 'column',
+    flexWrap: isLarge ? 'wrap' : 'nowrap',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     gap: theme.sizing.space4,
@@ -249,9 +272,10 @@ export const StepperBand = styled(Box, {
   };
 });
 
-// At SMALL the five steps are far wider than the viewport, so the row becomes
-// a native touch-drag scroller: overflow-x gives momentum scrolling for free,
-// and scroll-snap settles it on step boundaries.
+// Whenever the column is narrower than the track (always at MEDIUM, and at
+// LARGE from 1024 to ~1106), the row becomes a native touch-drag scroller:
+// overflow-x gives momentum scrolling for free, and scroll-snap settles it on
+// step boundaries. Wider than the track it never scrolls.
 export const StepperRow = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => ({
@@ -259,11 +283,12 @@ export const StepperRow = styled(Box, {
   alignItems: 'center',
   gap: theme.sizing.space2,
   minWidth: 0,
+  maxWidth: '100%',
+  overflowX: 'auto',
+  ...hideScrollbar,
   ...(screenSize !== ScreenSize.LARGE && {
     width: '100%',
-    overflowX: 'auto',
     scrollSnapType: 'x mandatory',
-    ...hideScrollbar,
   }),
 }));
 
@@ -312,12 +337,17 @@ export const PickerRow = styled(Box, {
   return {
     display: 'flex',
     flexDirection: isLarge ? 'row' : 'column',
+    // From 1024 to ~1100 the card is too narrow for the class label and a
+    // readable week select side by side, so the week column wraps under.
+    flexWrap: isLarge ? 'wrap' : 'nowrap',
     alignItems: 'flex-start',
     width: '100%',
     maxWidth: theme.sizing.dashboardContentMaxWidth,
     gap: isLarge ? theme.sizing.space12 : theme.sizing.space6,
   };
 });
+
+const WEEK_SELECT_MIN_WIDTH = 240;
 
 // At LARGE a column either fits its content (class) or takes the rest of the
 // row (`grow`, week). Below LARGE each spans the full width.
@@ -334,7 +364,9 @@ export const PickerColumn = styled(Box, {
     gap: theme.sizing.space3,
     flex,
     width: isLarge ? undefined : '100%',
-    minWidth: 0,
+    // The week column wraps rather than squeezing the select below the
+    // longest week label ("Week 10 (Oct 26-30)").
+    minWidth: isLarge && grow ? WEEK_SELECT_MIN_WIDTH : 0,
   };
 });
 

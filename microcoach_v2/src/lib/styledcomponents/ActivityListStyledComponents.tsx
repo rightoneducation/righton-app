@@ -12,8 +12,8 @@ import { ScreenSize } from '../MicroCoachModels';
 const actionHeight = 42;
 const tagRadius = 4;
 
-// A column of cards, 12 apart (Figma). The page column's gap spaces it from
-// the title above.
+// A column of cards, 12 apart (Figma). A WeekGroup spaces it from its week
+// heading.
 export const ActivityList = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -115,12 +115,17 @@ export const ActivityCard = styled(Box, {
   return {
     display: 'flex',
     flexDirection: isLarge ? 'row' : 'column',
+    // Home's track (495) and the status column don't fit side by side below
+    // ~1300; the status column then wraps under instead of covering step 5.
+    flexWrap: isLarge ? 'wrap' : 'nowrap',
     alignItems: isLarge ? 'center' : 'flex-start',
     justifyContent: 'space-between',
     gap: theme.sizing.space4,
     flexGrow: 1,
     minWidth: 0,
-    padding: isLarge ? theme.sizing.space5 : theme.sizing.space4,
+    // Figma: ~32 inside, top and bottom (148 tall on Home, 128 on Past
+    // Activities).
+    padding: isLarge ? theme.sizing.space6 : theme.sizing.space4,
     borderRadius: theme.sizing.space3,
     backgroundColor: theme.palette.designSystem.surface.white,
     boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
@@ -135,6 +140,9 @@ export const CardColumn = styled(Box, {
   flexDirection: 'column',
   alignItems: align === 'end' ? 'flex-end' : 'flex-start',
   gap: theme.sizing.space2,
+  // The end column takes the rest of its line, so its content stays right-
+  // aligned whether it sits beside the start column or has wrapped under it.
+  flex: align === 'end' ? '1 1 auto' : undefined,
   minWidth: 0,
   textAlign: align === 'end' ? 'right' : 'left',
 }));

@@ -60,6 +60,9 @@ export function FlowStepperBand({
     <StepperBand screenSize={screenSize}>
       <FlowStepper steps={flowSteps} page={page} screenSize={screenSize} />
       <MyActivityButton
+        // The flow pages draw it 160 wide (rev3 PaddingReference); Home's
+        // frame keeps the shared 229.
+        sx={{ minWidth: 160 }}
         disableElevation
         disabled={!hasChosenActivity(currentStep)}
         onClick={() => navigate('/myactivity')}

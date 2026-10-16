@@ -19,6 +19,9 @@ import {
   BannerOverlay,
   CardRow,
   CorrectSection,
+  ReviewBody,
+  ReviewFooter,
+  ReviewIntro,
   QuestionTile,
   ResultsBannerBox,
   TilePercent,
@@ -132,128 +135,134 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
           page={FlowStep.UNDERSTAND}
         />
 
-        <TitleGroup>
-          <TitleRow>
-            <Typography
-              variant="appTitle"
-              component="h1"
-              sx={{ color: 'designSystem.surface.atlanticNavy' }}
-            >
-              {t('review.title')}
-            </Typography>
-            {session?.studentWorksAnalyzed != null && (
-              <WorksPill>
-                {t('review.worksAnalyzed', { count: session.studentWorksAnalyzed })}
-              </WorksPill>
-            )}
-            {miuPdfUrl && (
-              <ViewMiuLink href={miuPdfUrl} target="_blank" rel="noopener noreferrer">
-                <DescriptionOutlinedIcon fontSize="small" aria-hidden />
-                {t('review.viewMiu')}
-              </ViewMiuLink>
-            )}
-          </TitleRow>
-          <Typography
-            variant="uploadLabel"
-            sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {t('review.subtitle')}
-          </Typography>
-          {showBanner && (
-            <BannerOverlay>
-              <ResultsBannerBox role="status">
-                {t('review.banner')}
-                <IconButton
-                  size="small"
-                  aria-label={t('review.dismissBanner')}
-                  onClick={dismissBanner}
-                  sx={{ color: 'designSystem.foreground.mutedGrey' }}
+        <ReviewBody screenSize={screenSize}>
+          <ReviewIntro screenSize={screenSize}>
+            <TitleGroup>
+              <TitleRow>
+                <Typography
+                  variant="appTitle"
+                  component="h1"
+                  sx={{ color: 'designSystem.surface.atlanticNavy' }}
                 >
-                  <CancelIcon fontSize="small" />
-                </IconButton>
-              </ResultsBannerBox>
-            </BannerOverlay>
-          )}
-        </TitleGroup>
+                  {t('review.title')}
+                </Typography>
+                {session?.studentWorksAnalyzed != null && (
+                  <WorksPill>
+                    {t('review.worksAnalyzed', { count: session.studentWorksAnalyzed })}
+                  </WorksPill>
+                )}
+                {miuPdfUrl && (
+                  <ViewMiuLink href={miuPdfUrl} target="_blank" rel="noopener noreferrer">
+                    <DescriptionOutlinedIcon fontSize="small" aria-hidden />
+                    {t('review.viewMiu')}
+                  </ViewMiuLink>
+                )}
+              </TitleRow>
+              <Typography
+                variant="uploadLabel"
+                sx={{ color: 'designSystem.surface.atlanticNavy' }}
+              >
+                {t('review.subtitle')}
+              </Typography>
+              {showBanner && (
+                <BannerOverlay>
+                  <ResultsBannerBox role="status">
+                    {t('review.banner')}
+                    <IconButton
+                      size="small"
+                      aria-label={t('review.dismissBanner')}
+                      onClick={dismissBanner}
+                      sx={{ color: 'designSystem.foreground.mutedGrey' }}
+                    >
+                      <CancelIcon fontSize="small" />
+                    </IconButton>
+                  </ResultsBannerBox>
+                </BannerOverlay>
+              )}
+            </TitleGroup>
 
-        <LoadingSlot
-          isLoading={isLoading}
-          minHeight={screenSize === ScreenSize.LARGE ? CARD_HEIGHT : 0}
-          label={t('review.loading')}
-          skeleton={<MisconceptionCardsSkeleton screenSize={screenSize} />}
-        >
-          {hasFailed ? (
-            <Typography
-              variant="rubikBody"
-              role="alert"
-              sx={{ color: 'designSystem.status.errorStroke' }}
+            <LoadingSlot
+              isLoading={isLoading}
+              minHeight={screenSize === ScreenSize.LARGE ? CARD_HEIGHT : 0}
+              label={t('review.loading')}
+              skeleton={<MisconceptionCardsSkeleton screenSize={screenSize} />}
             >
-              {t('review.loadError')}
-            </Typography>
-          ) : (
-            <CardRow screenSize={screenSize}>
-              {misconceptions.map((misconception) => (
-                <MisconceptionCard
-                  key={misconception.id}
-                  isAligned={screenSize === ScreenSize.LARGE}
-                  misconception={misconception}
-                  onViewDetails={(id, fromEvidence) => setSelected({ id, fromEvidence })}
-                  onSelect={handleSelect}
-                />
-              ))}
-            </CardRow>
-          )}
-        </LoadingSlot>
+              {hasFailed ? (
+                <Typography
+                  variant="rubikBody"
+                  role="alert"
+                  sx={{ color: 'designSystem.status.errorStroke' }}
+                >
+                  {t('review.loadError')}
+                </Typography>
+              ) : (
+                <CardRow screenSize={screenSize}>
+                  {misconceptions.map((misconception) => (
+                    <MisconceptionCard
+                      key={misconception.id}
+                      isAligned={screenSize === ScreenSize.LARGE}
+                      misconception={misconception}
+                      onViewDetails={(id, fromEvidence) => setSelected({ id, fromEvidence })}
+                      onSelect={handleSelect}
+                    />
+                  ))}
+                </CardRow>
+              )}
+            </LoadingSlot>
+          </ReviewIntro>
 
-        {questionStats.length > 0 && (
-          <CorrectSection>
-            <Typography
-              variant="headingLg"
-              component="h2"
-              sx={{ color: 'designSystem.surface.atlanticNavy' }}
-            >
-              {t('review.correctResponsesTitle', { count: questionStats.length })}
-            </Typography>
-            <TileRow>
-              {questionStats.map((stat) => {
-                const label = t('review.questionLabel', { number: stat.questionNumber });
-                return (
-                  <Tooltip
-                    key={stat.questionNumber}
-                    title={
-                      stat.questionText ? (
-                        <>
-                          {`${label}. `}
-                          <MathText text={stat.questionText} inline />
-                        </>
-                      ) : (
-                        ''
-                      )
-                    }
-                    placement="bottom"
-                    arrow
-                    slotProps={continueTooltipSx}
-                  >
-                    <QuestionTile tabIndex={stat.questionText ? 0 : undefined}>
-                      <Typography variant="rubikBody">{label}</Typography>
-                      <TilePercent>{`${Math.round(stat.percentCorrect * 100)}%`}</TilePercent>
-                      <Typography
-                        variant="rubikBody"
-                        sx={{ color: 'designSystem.status.correctGreen' }}
+          <ReviewFooter>
+            {questionStats.length > 0 && (
+              <CorrectSection>
+                <Typography
+                  variant="headingLg"
+                  component="h2"
+                  sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                >
+                  {t('review.correctResponsesTitle', { count: questionStats.length })}
+                </Typography>
+                <TileRow>
+                  {questionStats.map((stat) => {
+                    const label = t('review.questionLabel', { number: stat.questionNumber });
+                    return (
+                      <Tooltip
+                        key={stat.questionNumber}
+                        title={
+                          stat.questionText ? (
+                            <>
+                              {`${label}. `}
+                              <MathText text={stat.questionText} inline />
+                            </>
+                          ) : (
+                            ''
+                          )
+                        }
+                        placement="bottom"
+                        arrow
+                        slotProps={continueTooltipSx}
                       >
-                        {t('review.correct')}
-                      </Typography>
-                    </QuestionTile>
-                  </Tooltip>
-                );
-              })}
-            </TileRow>
-          </CorrectSection>
-        )}
+                        <QuestionTile tabIndex={stat.questionText ? 0 : undefined}>
+                          <Typography variant="rubikBody">{label}</Typography>
+                          <TilePercent>{`${Math.round(stat.percentCorrect * 100)}%`}</TilePercent>
+                          <Typography
+                            variant="rubikBody"
+                            sx={{ color: 'designSystem.status.correctGreen' }}
+                          >
+                            {t('review.correct')}
+                          </Typography>
+                        </QuestionTile>
+                      </Tooltip>
+                    );
+                  })}
+                </TileRow>
+              </CorrectSection>
+            )}
 
-        <Typography variant="bodyText" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-          {t('review.disclaimer')}
-        </Typography>
+            <Typography variant="bodyText" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+              {t('review.disclaimer')}
+            </Typography>
+          </ReviewFooter>
+        </ReviewBody>
       </UnderstandColumn>
 
       <MisconceptionDetailModal
