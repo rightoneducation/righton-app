@@ -121,7 +121,10 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
   }
 
   return (
-    <Box sx={{ position: 'relative' }}>
+    // The PatternDetail overhangs run past the gutter until ~1520px, which
+    // would widen the page. `clip`, not `hidden`, so this isn't a scroll
+    // container (no trackpad scroll, sticky children still work).
+    <Box sx={{ position: 'relative', overflowX: 'clip' }}>
       <HeaderPattern
         screenSize={screenSize}
         src={landingPagePattern}
@@ -170,6 +173,9 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
               screenSize={screenSize}
               disableElevation
               endIcon={<ArrowOutwardIcon sx={{ fontSize: 20 }} />}
+              // Figma puts 74px above the button on desktop: the Stack's 32px
+              // gap plus 42px here. No token on the scale for that.
+              sx={{ mt: isLarge ? '42px' : undefined }}
             >
               {t('hero.getstarted')}
             </GetStartedButton>
