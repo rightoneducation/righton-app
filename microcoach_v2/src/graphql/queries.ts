@@ -203,6 +203,17 @@ export const getMicroCoachClassroom = /* GraphQL */ `query GetMicroCoachClassroo
           }
           __typename
         }
+        reflectionResults {
+          activityId
+          misconceptionId
+          questionCount
+          averagePercentCorrectBefore
+          averagePercentCorrectAfter
+          averageQuestionsCorrectBefore
+          averageQuestionsCorrectAfter
+          improvedStudentCount
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -280,6 +291,17 @@ export const listMicroCoachClassrooms = /* GraphQL */ `query ListMicroCoachClass
             questionNumber
             percentCorrect
             questionText
+            __typename
+          }
+          reflectionResults {
+            activityId
+            misconceptionId
+            questionCount
+            averagePercentCorrectBefore
+            averagePercentCorrectAfter
+            averageQuestionsCorrectBefore
+            averageQuestionsCorrectAfter
+            improvedStudentCount
             __typename
           }
           createdAt
@@ -932,6 +954,17 @@ export const microCoachClassroomsByUserId = /* GraphQL */ `query MicroCoachClass
             questionText
             __typename
           }
+          reflectionResults {
+            activityId
+            misconceptionId
+            questionCount
+            averagePercentCorrectBefore
+            averagePercentCorrectAfter
+            averageQuestionsCorrectBefore
+            averageQuestionsCorrectAfter
+            improvedStudentCount
+            __typename
+          }
           createdAt
           updatedAt
           __typename
@@ -1101,6 +1134,17 @@ export const microCoachSessionsByClassId = /* GraphQL */ `query MicroCoachSessio
           studentNames
           __typename
         }
+        __typename
+      }
+      reflectionResults {
+        activityId
+        misconceptionId
+        questionCount
+        averagePercentCorrectBefore
+        averagePercentCorrectAfter
+        averageQuestionsCorrectBefore
+        averageQuestionsCorrectAfter
+        improvedStudentCount
         __typename
       }
       createdAt

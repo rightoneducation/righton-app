@@ -310,6 +310,17 @@ export const createMicroCoachClassroom = /* GraphQL */ `mutation CreateMicroCoac
           }
           __typename
         }
+        reflectionResults {
+          activityId
+          misconceptionId
+          questionCount
+          averagePercentCorrectBefore
+          averagePercentCorrectAfter
+          averageQuestionsCorrectBefore
+          averageQuestionsCorrectAfter
+          improvedStudentCount
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -420,6 +431,17 @@ export const updateMicroCoachClassroom = /* GraphQL */ `mutation UpdateMicroCoac
           }
           __typename
         }
+        reflectionResults {
+          activityId
+          misconceptionId
+          questionCount
+          averagePercentCorrectBefore
+          averagePercentCorrectAfter
+          averageQuestionsCorrectBefore
+          averageQuestionsCorrectAfter
+          improvedStudentCount
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -528,6 +550,17 @@ export const deleteMicroCoachClassroom = /* GraphQL */ `mutation DeleteMicroCoac
             studentNames
             __typename
           }
+          __typename
+        }
+        reflectionResults {
+          activityId
+          misconceptionId
+          questionCount
+          averagePercentCorrectBefore
+          averagePercentCorrectAfter
+          averageQuestionsCorrectBefore
+          averageQuestionsCorrectAfter
+          improvedStudentCount
           __typename
         }
         createdAt
@@ -732,6 +765,17 @@ export const createMicroCoachSession = /* GraphQL */ `mutation CreateMicroCoachS
       }
       __typename
     }
+    reflectionResults {
+      activityId
+      misconceptionId
+      questionCount
+      averagePercentCorrectBefore
+      averagePercentCorrectAfter
+      averageQuestionsCorrectBefore
+      averageQuestionsCorrectAfter
+      improvedStudentCount
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -856,6 +900,17 @@ export const updateMicroCoachSession = /* GraphQL */ `mutation UpdateMicroCoachS
       }
       __typename
     }
+    reflectionResults {
+      activityId
+      misconceptionId
+      questionCount
+      averagePercentCorrectBefore
+      averagePercentCorrectAfter
+      averageQuestionsCorrectBefore
+      averageQuestionsCorrectAfter
+      improvedStudentCount
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -978,6 +1033,17 @@ export const deleteMicroCoachSession = /* GraphQL */ `mutation DeleteMicroCoachS
         studentNames
         __typename
       }
+      __typename
+    }
+    reflectionResults {
+      activityId
+      misconceptionId
+      questionCount
+      averagePercentCorrectBefore
+      averagePercentCorrectAfter
+      averageQuestionsCorrectBefore
+      averageQuestionsCorrectAfter
+      improvedStudentCount
       __typename
     }
     createdAt

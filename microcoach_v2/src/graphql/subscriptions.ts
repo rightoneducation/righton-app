@@ -309,6 +309,17 @@ export const onCreateMicroCoachClassroom = /* GraphQL */ `subscription OnCreateM
           }
           __typename
         }
+        reflectionResults {
+          activityId
+          misconceptionId
+          questionCount
+          averagePercentCorrectBefore
+          averagePercentCorrectAfter
+          averageQuestionsCorrectBefore
+          averageQuestionsCorrectAfter
+          improvedStudentCount
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -418,6 +429,17 @@ export const onUpdateMicroCoachClassroom = /* GraphQL */ `subscription OnUpdateM
           }
           __typename
         }
+        reflectionResults {
+          activityId
+          misconceptionId
+          questionCount
+          averagePercentCorrectBefore
+          averagePercentCorrectAfter
+          averageQuestionsCorrectBefore
+          averageQuestionsCorrectAfter
+          improvedStudentCount
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -525,6 +547,17 @@ export const onDeleteMicroCoachClassroom = /* GraphQL */ `subscription OnDeleteM
             studentNames
             __typename
           }
+          __typename
+        }
+        reflectionResults {
+          activityId
+          misconceptionId
+          questionCount
+          averagePercentCorrectBefore
+          averagePercentCorrectAfter
+          averageQuestionsCorrectBefore
+          averageQuestionsCorrectAfter
+          improvedStudentCount
           __typename
         }
         createdAt
@@ -725,6 +758,17 @@ export const onCreateMicroCoachSession = /* GraphQL */ `subscription OnCreateMic
       }
       __typename
     }
+    reflectionResults {
+      activityId
+      misconceptionId
+      questionCount
+      averagePercentCorrectBefore
+      averagePercentCorrectAfter
+      averageQuestionsCorrectBefore
+      averageQuestionsCorrectAfter
+      improvedStudentCount
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -848,6 +892,17 @@ export const onUpdateMicroCoachSession = /* GraphQL */ `subscription OnUpdateMic
       }
       __typename
     }
+    reflectionResults {
+      activityId
+      misconceptionId
+      questionCount
+      averagePercentCorrectBefore
+      averagePercentCorrectAfter
+      averageQuestionsCorrectBefore
+      averageQuestionsCorrectAfter
+      improvedStudentCount
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -969,6 +1024,17 @@ export const onDeleteMicroCoachSession = /* GraphQL */ `subscription OnDeleteMic
         studentNames
         __typename
       }
+      __typename
+    }
+    reflectionResults {
+      activityId
+      misconceptionId
+      questionCount
+      averagePercentCorrectBefore
+      averagePercentCorrectAfter
+      averageQuestionsCorrectBefore
+      averageQuestionsCorrectAfter
+      improvedStudentCount
       __typename
     }
     createdAt
