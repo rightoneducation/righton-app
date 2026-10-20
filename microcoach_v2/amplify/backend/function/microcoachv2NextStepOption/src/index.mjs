@@ -298,6 +298,36 @@ export const handler = async (event) => {
   const ActivitySchema = RowFields.merge(planSchema);
   const hasExamples = EXAMPLE_TYPES.includes(contentType);
 
+  // ── Call logging (CloudWatch) ──────────────────────────────────────────────
+  // One line when each model call starts, one every 30 s while it is pending, and
+  // one when it ends with its duration, token usage and finish reason. Two
+  // Math Detective activities ran into the Lambda timeout with nothing logged
+  // after the first second, so a stalled call could not be told from a slow
+  // one, or which of the calls it was. A call still pending at the timeout is
+  // the last "waiting" line; finish_reason "length" on an ended call means it
+  // wrote until its output cap.
+  const startedAt = Date.now();
+  const logTag = `[microcoachNextStepOption] ${template.id} · ${String(misconception.title ?? '').slice(0, 40)}`;
+  const secs = (ms) => `${Math.round(ms / 1000)}s`;
+  const timedCompletion = async (label, params) => {
+    const t0 = Date.now();
+    console.log(`${logTag} · ${label} start (${params.model}, prompt ${params.messages.reduce((n, m) => n + String(m.content ?? '').length, 0)} chars, at ${secs(t0 - startedAt)})`);
+    const heartbeat = setInterval(() => {
+      console.log(`${logTag} · ${label} still waiting after ${secs(Date.now() - t0)} (at ${secs(Date.now() - startedAt)})`);
+    }, 30_000);
+    try {
+      const completion = await openai.chat.completions.create(params);
+      const u = completion?.usage ?? {};
+      console.log(`${logTag} · ${label} end in ${secs(Date.now() - t0)} · finish ${completion?.choices?.[0]?.finish_reason ?? '?'} · tokens in ${u.prompt_tokens ?? '?'} out ${u.completion_tokens ?? '?'} (reasoning ${u.completion_tokens_details?.reasoning_tokens ?? '?'}) · content ${String(completion?.choices?.[0]?.message?.content ?? '').length} chars`);
+      return completion;
+    } catch (err) {
+      console.log(`${logTag} · ${label} failed after ${secs(Date.now() - t0)}: ${err?.message ?? err}`);
+      throw err;
+    } finally {
+      clearInterval(heartbeat);
+    }
+  };
+
   // ── Extract relevant knowledge graph context ───────────────────────────────
   // Find the standard entry matching the misconception's CCSS standard
   const standards = learningScienceData?.standards ?? [];
@@ -567,7 +597,7 @@ ${JSON.stringify(examples.map(e => ({ problem: e.problem, prompt: e.prompt, slip
     const str = (v) => (typeof v === 'string' && v.trim() ? v : null);
 
     try {
-      const completion = await openai.chat.completions.create({
+      const completion = await timedCompletion('validate-worked-examples', {
         model: VALIDATOR_MODEL,
         messages: [
           { role: 'system', content: VALIDATOR_SYSTEM_PROMPT },
@@ -685,7 +715,7 @@ ${MATH_FORMATTING}
 
   /** One structured completion, parsed and sanitized against `schema`. */
   const structuredCall = async (label, model, systemPrompt, userPrompt, schema, name) => {
-    const completion = await openai.chat.completions.create({
+    const completion = await timedCompletion(label, {
       model,
       messages: [
         { role: 'system', content: systemPrompt },
@@ -842,6 +872,7 @@ ${MATH_FORMATTING}
       content,
     };
 
+    console.log(`${logTag} · done in ${secs(Date.now() - startedAt)} · ${durationMinutes} min planned`);
     if (wantTrace) {
       return JSON.stringify({
         ...output,

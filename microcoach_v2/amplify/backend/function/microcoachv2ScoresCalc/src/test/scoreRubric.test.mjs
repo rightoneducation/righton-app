@@ -182,20 +182,40 @@ test('a row missing a metric is ranked on normalized, not penalized on total', (
   assert.equal(out[0].inputOrder, 0);
 });
 
-test('the retained misconception with the widest reach is tagged highest frequency', () => {
+test('highest frequency inside the top 3: tagged there, still 3 carried forward', () => {
   const items = [
     item(full({ studentPercent: 0.18, conceptualDepth: 3, meanConfidence: 4.5 }), 0),
     item(full({ studentPercent: 0.32, conceptualDepth: 3 }), 1),
     item(full({ studentPercent: 0.39, conceptualDepth: 1 }), 2),
-    item(full({ studentPercent: 0.45, conceptualDepth: 0, meanConfidence: 1 }), 3), // widest, but not retained
+    item(full({ studentPercent: 0.2, conceptualDepth: 0, meanConfidence: 1 }), 3),
   ];
   const out = rank(items, rubric.selection);
   const tagged = out.filter((x) => x.isHighestFrequency);
   assert.equal(tagged.length, 1);
   assert.equal(tagged[0].raw.studentPercent, 0.39);
-  assert.equal(tagged[0].retained, true);
-  // A tag only: ranking is unchanged by it.
+  assert.equal(out.filter((x) => x.retained).length, 3);
   assert.deepEqual(out.map((x) => x.priorityRank), [1, 2, 3, 4]);
+});
+
+test('highest frequency outside the top 3: tagged and carried forward as a fourth, after the top 3', () => {
+  const items = [
+    item(full({ studentPercent: 0.18, conceptualDepth: 3, meanConfidence: 4.5 }), 0),
+    item(full({ studentPercent: 0.32, conceptualDepth: 3 }), 1),
+    item(full({ studentPercent: 0.39, conceptualDepth: 1 }), 2),
+    item(full({ studentPercent: 0.1, conceptualDepth: 0, meanConfidence: 1 }), 3),
+    item(full({ studentPercent: 0.45, conceptualDepth: 0, meanConfidence: 1 }), 4), // widest, ranked below the cap
+  ];
+  const out = rank(items, rubric.selection);
+  const tagged = out.filter((x) => x.isHighestFrequency);
+  assert.equal(tagged.length, 1);
+  assert.equal(tagged[0].raw.studentPercent, 0.45);
+  assert.equal(tagged[0].retained, true);
+  assert.equal(tagged[0].isRecommendedFocus, false);
+  assert.ok(tagged[0].priorityRank > rubric.selection.cap);
+  // The top 3 plus it; the one between them is still dropped, and ranks are unchanged.
+  assert.equal(out.filter((x) => x.retained).length, rubric.selection.cap + 1);
+  assert.deepEqual(out.map((x) => x.priorityRank), [1, 2, 3, 4, 5]);
+  assert.equal(out.filter((x) => !x.retained).length, 1);
 });
 
 test('a reach tie for highest frequency goes to the better-ranked misconception', () => {

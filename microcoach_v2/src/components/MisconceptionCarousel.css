@@ -1,0 +1,9 @@
+/* Swiper fixes slide height to the wrapper's; letting slides size to content and
+   their card fill the slide gives every card the tallest card's height. */
+.misconception-swiper .swiper-slide {
+  height: auto;
+}
+
+.misconception-swiper .swiper-slide > * {
+  height: 100%;
+}

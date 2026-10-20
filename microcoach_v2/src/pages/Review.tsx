@@ -11,6 +11,7 @@ import { FlowStep } from '../lib/flowProgress';
 import LoadingSlot from '../components/LoadingSlot';
 import MisconceptionCardsSkeleton from '../components/skeletons/MisconceptionCardsSkeleton';
 import MisconceptionCard from '../components/MisconceptionCard';
+import MisconceptionCarousel from '../components/MisconceptionCarousel';
 import MisconceptionDetailModal, {
   MisconceptionDetailSelection,
 } from '../components/MisconceptionDetailModal';
@@ -40,6 +41,9 @@ import MathText from '../components/MathText';
 
 // One card's height: what the loading spinner holds open (Figma: 544).
 const CARD_HEIGHT = 544;
+// Cards that fit side by side at LARGE (Figma: three 366-wide). More than this —
+// the Highest Frequency misconception carried forward as a fourth — swipe.
+const CARDS_PER_ROW = 3;
 
 // The results banner is a one-time notice per upload: once dismissed for a
 // session it stays dismissed on this device. Storage may be blocked, in which
@@ -108,7 +112,8 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
   const miuPdfUrl: string | null = null;
   const selectedMisconception =
     misconceptions.find((item) => item.id === selected?.id) ?? null;
-  // The pipeline tags the widest-reaching retained misconception; the stored row
+  // The pipeline tags the widest-reaching misconception overall and always carries it
+  // forward (as a fourth card when it is outside the top 3); the stored row
   // keeps its student count, so the tag is worked out here rather than stored.
   // Strictly greater, so a tie stays with the earlier (better-ranked) card.
   const highestFrequencyId = misconceptions.reduce<{ id: string; n: number } | null>(
@@ -132,6 +137,25 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
     setSelected(null);
     navigate(`/review/${misconceptionId}/activities`);
   };
+
+  const isLarge = screenSize === ScreenSize.LARGE;
+  const isCarousel = isLarge && misconceptions.length > CARDS_PER_ROW;
+  const cards = misconceptions.map((misconception) => (
+    <MisconceptionCard
+      key={misconception.id}
+      // The shared-row alignment needs one grid; a swipe strip has a box per card.
+      isAligned={isLarge && !isCarousel}
+      isHighestFrequency={misconception.id === highestFrequencyId}
+      misconception={misconception}
+      onViewDetails={(id, fromEvidence) => setSelected({ id, fromEvidence })}
+      onSelect={handleSelect}
+    />
+  ));
+  const cardLayout = isCarousel ? (
+    <MisconceptionCarousel>{cards}</MisconceptionCarousel>
+  ) : (
+    <CardRow screenSize={screenSize}>{cards}</CardRow>
+  );
 
   return (
     <UnderstandPage screenSize={screenSize}>
@@ -202,18 +226,7 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
               {t('review.loadError')}
             </Typography>
           ) : (
-            <CardRow screenSize={screenSize}>
-              {misconceptions.map((misconception) => (
-                <MisconceptionCard
-                  key={misconception.id}
-                  isAligned={screenSize === ScreenSize.LARGE}
-                  isHighestFrequency={misconception.id === highestFrequencyId}
-                  misconception={misconception}
-                  onViewDetails={(id, fromEvidence) => setSelected({ id, fromEvidence })}
-                  onSelect={handleSelect}
-                />
-              ))}
-            </CardRow>
+            cardLayout
           )}
         </LoadingSlot>
 

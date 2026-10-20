@@ -88,6 +88,15 @@ const GRAPH_SOURCE: 'fixture' | 'live' = (() => {
 // against a full one.
 const ANALYSIS_ONLY = process.argv.includes('--analysis-only');
 
+// `--pin-template <id>` (diagnostics): the first pick of every need becomes that
+// template, so a run exercises it three times — e.g. math-detective while chasing
+// its Lambda timeouts. The second pick is kept as the sibling. Recorded in the
+// manifest as `pinnedTemplate`; a pinned run says nothing about template choice.
+const PIN_TEMPLATE = (() => {
+  const i = process.argv.indexOf('--pin-template');
+  return i > -1 && process.argv[i + 1] && !process.argv[i + 1].startsWith('--') ? process.argv[i + 1] : null;
+})();
+
 async function invokeLambda(functionName: string, payload: unknown): Promise<any> {
   const client = new LambdaClient({ region: process.env.AWS_REGION ?? 'us-east-1' });
   const cmd = new InvokeCommand({
@@ -564,7 +573,8 @@ function buildNextSteps(
       rubric: m.rubric ?? null,
       priorityRank: m.priorityRank ?? null,
       isRecommendedFocus: m.isRecommendedFocus === true,
-      // Of the retained ones, the misconception reaching the most students. A tag;
+      // Of all the misconceptions, the one reaching the most students (carried forward
+      // as a fourth when it is outside the top 3). A tag;
       // the rank above is unaffected.
       isHighestFrequency: m.isHighestFrequency === true,
       retained: m.retained !== false,
@@ -1146,7 +1156,20 @@ async function processClassroom(
   let misconceptionsWithoutActivities = 0;
   const activitiesPerGroup: any[][] = ANALYSIS_ONLY ? misconceptions.map(() => []) : await Promise.all(
     misconceptions.map(async (m: any, i: number) => {
-      const picks: any[] = m.selectedTemplates?.picks ?? [];
+      const selected: any[] = m.selectedTemplates?.picks ?? [];
+      const picks: any[] = PIN_TEMPLATE && selected.length
+        ? [
+          selected.find((p: any) => p.templateId === PIN_TEMPLATE) ?? {
+            templateId: PIN_TEMPLATE,
+            instructionalFit: null,
+            instructionalApproach: null,
+            studentsDo: null,
+            rationale: `Pinned with --pin-template for a diagnostic run, not chosen by template selection.`,
+            distinctFrom: null,
+          },
+          ...selected.filter((p: any) => p.templateId !== PIN_TEMPLATE).slice(0, 1),
+        ]
+        : selected;
       if (!picks.length) {
         misconceptionsWithoutActivities += 1;
         console.log(`  Next steps [${i + 1}/${misconceptions.length}]: ${m.title}... — no template cleared the fit threshold, no activities`);
@@ -1293,6 +1316,7 @@ async function processClassroom(
     needSeparationFlags: needSeparation.flagged,
     needSeparationChecked: needSeparation.checked,
     stoppedAfter: ANALYSIS_ONLY ? 'analysis' : null,
+    pinnedTemplate: PIN_TEMPLATE,
     // Diagnostic, not a correction: when the analysis stage emits a code the graph
     // does not carry, the generation stage silently loses all graph context.
     targetStandardMatched: misconceptions.filter(

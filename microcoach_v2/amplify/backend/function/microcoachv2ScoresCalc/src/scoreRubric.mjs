@@ -169,8 +169,10 @@ export function rank(items, selection) {
     isHighestFrequency: false,
   }));
 
-  // Of the retained ones, the widest reach is tagged. A tag only; the order above
-  // stands. Strictly greater, so a tie keeps the better-ranked misconception.
+  // The widest reach is tagged (among the retained ones, or all of them). The order
+  // above stands. Strictly greater, so a tie keeps the better-ranked misconception.
+  // With `alwaysRetain`, a pick outside the cap is carried forward as well, keeping
+  // its rank, so the teacher always sees it after the top `cap`.
   const rule = selection.highestFrequency;
   if (rule) {
     let pick = null;
@@ -180,7 +182,10 @@ export function rank(items, selection) {
       if (v == null) continue;
       if (!pick || v > pick.raw[rule.input]) pick = item;
     }
-    if (pick) pick.isHighestFrequency = true;
+    if (pick) {
+      pick.isHighestFrequency = true;
+      if (rule.alwaysRetain) pick.retained = true;
+    }
   }
   return ranked;
 }
