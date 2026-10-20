@@ -136,7 +136,9 @@ enum DetailStatus {
   NOT_IN_WIREFRAMES
 }
 
-type MicroCoachMisconception @model @auth(rules: [{ allow: private }, { allow: public, provider: apiKey }]) {
+type MicroCoachMisconception
+  @model
+  @auth(rules: [{ allow: private }, { allow: public, provider: apiKey }]) {
   id: ID!
   sessionId: ID! @index(name: "bySession")
   classId: ID! @index(name: "byClass")
@@ -187,7 +189,37 @@ type ReflectionResult {
   averagePercentCorrectAfter: Float!
   averageQuestionsCorrectBefore: Float!
   averageQuestionsCorrectAfter: Float!
+  # /* its an aggregate but not used in the ui at the moment */
   improvedStudentCount: Int!
+  # Raw student scores support mastery grouping, sorting, and incomplete MIU
+  # participation. A null score means the student did not complete that MIU.
+  studentResults: [ReflectionStudentResult]
+  # Questions are paired between MIU 1 and MIU 2 by question number. since they are similar questions of course
+  questionResults: [ReflectionQuestionResult]
+}
+
+type ReflectionStudentResult {
+  studentId: ID!
+  # Optional because some MIU response data may not include student names.
+  studentName: String
+  questionsCorrectBefore: Int
+  questionsCorrectAfter: Int
+}
+
+type ReflectionQuestionResult {
+  questionNumber: Int!
+  questionText: String!
+  percentCorrectBefore: Float!
+  percentCorrectAfter: Float!
+  beforeAnswers: [ReflectionAnswerResult]
+  afterAnswers: [ReflectionAnswerResult]
+}
+
+type ReflectionAnswerResult {
+  letter: String!
+  text: String!
+  percentChosen: Float!
+  isCorrect: Boolean!
 }
 
 type ResponseEvidence {
@@ -233,7 +265,9 @@ enum ViewMode {
   STUDENT
 }
 
-type MicroCoachActivity @model @auth(rules: [{ allow: private }, { allow: public, provider: apiKey }]) {
+type MicroCoachActivity
+  @model
+  @auth(rules: [{ allow: private }, { allow: public, provider: apiKey }]) {
   id: ID!
   misconceptionId: ID! @index(name: "byMisconception")
   sessionId: ID! @index(name: "bySession")
