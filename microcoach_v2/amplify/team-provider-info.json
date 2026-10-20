@@ -52,7 +52,7 @@
         },
         "microcoachv2NextStepOption": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2NextStepOption-66737565393879527633-build.zip"
+          "s3Key": "amplify-builds/microcoachv2NextStepOption-4c58304a50764b304773-build.zip"
         },
         "microcoachv2RegenEvaluator": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
@@ -68,7 +68,7 @@
         },
         "microcoachv2LLMGenMisconception": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2LLMGenMisconception-774f6d6b64304e4d587a-build.zip"
+          "s3Key": "amplify-builds/microcoachv2LLMGenMisconception-5a37547552696632306e-build.zip"
         },
         "microcoachv2LLMGenInstrNeed": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
@@ -76,11 +76,11 @@
         },
         "microcoachv2LLMSelectTemplate": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2LLMSelectTemplate-75415a4b4e4b5035725a-build.zip"
+          "s3Key": "amplify-builds/microcoachv2LLMSelectTemplate-6a32334e786e48414135-build.zip"
         },
         "microcoachv2ScoresCalc": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2ScoresCalc-4a32504f342b46305275-build.zip"
+          "s3Key": "amplify-builds/microcoachv2ScoresCalc-42484162476849366974-build.zip"
         },
         "microcoachv2bb9ce5a2PreSignup": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",

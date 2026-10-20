@@ -88,6 +88,15 @@ const GRAPH_SOURCE: 'fixture' | 'live' = (() => {
 // against a full one.
 const ANALYSIS_ONLY = process.argv.includes('--analysis-only');
 
+// `--pin-template <id>` (diagnostics): the first pick of every need becomes that
+// template, so a run exercises it three times — e.g. math-detective while chasing
+// its Lambda timeouts. The second pick is kept as the sibling. Recorded in the
+// manifest as `pinnedTemplate`; a pinned run says nothing about template choice.
+const PIN_TEMPLATE = (() => {
+  const i = process.argv.indexOf('--pin-template');
+  return i > -1 && process.argv[i + 1] && !process.argv[i + 1].startsWith('--') ? process.argv[i + 1] : null;
+})();
+
 async function invokeLambda(functionName: string, payload: unknown): Promise<any> {
   const client = new LambdaClient({ region: process.env.AWS_REGION ?? 'us-east-1' });
   const cmd = new InvokeCommand({
@@ -564,6 +573,10 @@ function buildNextSteps(
       rubric: m.rubric ?? null,
       priorityRank: m.priorityRank ?? null,
       isRecommendedFocus: m.isRecommendedFocus === true,
+      // Of all the misconceptions, the one reaching the most students (carried forward
+      // as a fourth when it is outside the top 3). A tag;
+      // the rank above is unaffected.
+      isHighestFrequency: m.isHighestFrequency === true,
       retained: m.retained !== false,
       occurrence: m.occurrence ?? m.rationale?.recurrence ?? null,
       example: m.example ?? null,
@@ -945,7 +958,7 @@ async function processClassroom(
     const scoredByTitle = new Map<string, any>((scoreOut?.scored ?? []).map((x: any) => [String(x.title ?? '').trim(), x]));
     genMisconceptions = genMisconceptions.map((m: any) => {
       const sc = scoredByTitle.get(String(m.title ?? '').trim());
-      if (!sc) return { ...m, rubric: null, priorityRank: null, isRecommendedFocus: false, retained: false };
+      if (!sc) return { ...m, rubric: null, priorityRank: null, isRecommendedFocus: false, isHighestFrequency: false, retained: false };
       return {
         ...m,
         rubric: {
@@ -960,9 +973,12 @@ async function processClassroom(
           missing: sc.missing ?? [],
           inputs: sc.inputs ?? null,
           conceptualDepthWhy: sc.conceptualDepthWhy ?? null,
+          // Each depth call's judgment; the score uses the middle one.
+          conceptualDepthSamples: sc.conceptualDepthSamples ?? null,
         },
         priorityRank: sc.priorityRank,
         isRecommendedFocus: sc.isRecommendedFocus === true,
+        isHighestFrequency: sc.isHighestFrequency === true,
         retained: sc.retained === true,
       };
     });
@@ -974,7 +990,7 @@ async function processClassroom(
     for (const m of [...genMisconceptions, ...droppedMisconceptions]) {
       const r = m.rubric;
       const cells = r ? Object.entries(r.scores).map(([k, v]) => `${k.replace(/[a-z]/g, '')}${v ?? '–'}`).join(' ') : 'unscored';
-      console.log(`    #${m.priorityRank ?? '?'} ${m.title} — ${r ? `${r.total}/${r.maxPossible}` : ''} (${cells})${m.isRecommendedFocus ? ' ★' : ''}${m.retained ? '' : ' (dropped)'}`);
+      console.log(`    #${m.priorityRank ?? '?'} ${m.title} — ${r ? `${r.total}/${r.maxPossible}` : ''} (${cells})${m.isRecommendedFocus ? ' ★' : ''}${m.isHighestFrequency ? ' ◆ highest frequency' : ''}${m.retained ? '' : ' (dropped)'}`);
     }
   }
 
@@ -1140,7 +1156,20 @@ async function processClassroom(
   let misconceptionsWithoutActivities = 0;
   const activitiesPerGroup: any[][] = ANALYSIS_ONLY ? misconceptions.map(() => []) : await Promise.all(
     misconceptions.map(async (m: any, i: number) => {
-      const picks: any[] = m.selectedTemplates?.picks ?? [];
+      const selected: any[] = m.selectedTemplates?.picks ?? [];
+      const picks: any[] = PIN_TEMPLATE && selected.length
+        ? [
+          selected.find((p: any) => p.templateId === PIN_TEMPLATE) ?? {
+            templateId: PIN_TEMPLATE,
+            instructionalFit: null,
+            instructionalApproach: null,
+            studentsDo: null,
+            rationale: `Pinned with --pin-template for a diagnostic run, not chosen by template selection.`,
+            distinctFrom: null,
+          },
+          ...selected.filter((p: any) => p.templateId !== PIN_TEMPLATE).slice(0, 1),
+        ]
+        : selected;
       if (!picks.length) {
         misconceptionsWithoutActivities += 1;
         console.log(`  Next steps [${i + 1}/${misconceptions.length}]: ${m.title}... — no template cleared the fit threshold, no activities`);
@@ -1184,9 +1213,12 @@ async function processClassroom(
       // the calls share a prompt prefix so the second benefits from the cache.
       for (const pick of picks) {
         try {
+          // The other pick for this need, so each activity is built to differ from it.
+          const sibling = picks.find((p: any) => p !== pick);
           const activityInput = {
             ...baseInput,
             selectedTemplate: JSON.stringify(pick),
+            ...(sibling && { siblingPick: JSON.stringify(sibling) }),
             evidence: JSON.stringify(evidence),
             trace: WANT_TRACE,
           };
@@ -1284,6 +1316,7 @@ async function processClassroom(
     needSeparationFlags: needSeparation.flagged,
     needSeparationChecked: needSeparation.checked,
     stoppedAfter: ANALYSIS_ONLY ? 'analysis' : null,
+    pinnedTemplate: PIN_TEMPLATE,
     // Diagnostic, not a correction: when the analysis stage emits a code the graph
     // does not carry, the generation stage silently loses all graph context.
     targetStandardMatched: misconceptions.filter(
@@ -1312,6 +1345,7 @@ async function processClassroom(
     // Rubric stage (4d): which rubric ran, what it picked, and how many it dropped.
     rubricVersion,
     recommendedFocus: nextSteps.find((n: any) => n.isRecommendedFocus)?.title ?? null,
+    highestFrequency: nextSteps.find((n: any) => n.isHighestFrequency)?.title ?? null,
     misconceptionsRetained: genMisconceptions.length,
     misconceptionsDropped: droppedMisconceptions.length,
     // Template selection health: how many needs got two picks, and whether the
@@ -1336,7 +1370,6 @@ async function processClassroom(
     wrongAnswerRefs: nextSteps.reduce((n: number, s: any) => n + (s.wrongAnswers?.length ?? 0), 0),
     studentCountTotals: nextSteps.map((n: any) => ({
       id: n.id, title: n.title, studentCount: n.studentCount, studentPercent: n.studentPercent,
-      frequency: n.frequency,
     })),
   });
   if (manifest) {
@@ -1349,7 +1382,7 @@ async function processClassroom(
     console.log(`    wrong-answer refs on ${manifest.wrongAnswerLinked}/${manifest.misconceptionCount} (${manifest.wrongAnswerRefs} option refs)`);
     for (const s of manifest.studentCountTotals) {
       const n = s.studentCount == null ? 'not linked' : `${s.studentCount} students (${Math.round((s.studentPercent ?? 0) * 100)}%)`;
-      console.log(`      ${s.title}: ${n} · model said "${s.frequency}"`);
+      console.log(`      ${s.title}: ${n}`);
     }
     if (manifest.silentFallbacks.length) {
       console.log(`    ⚠ ${manifest.silentFallbacks.length} silent validator fallback(s) — see manifest.json`);

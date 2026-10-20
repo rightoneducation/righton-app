@@ -27,7 +27,7 @@
  *   trace           boolean — echo `_trace`
  *
  * Output: { ok: true, selections: [{ title, picks: [{ templateId, instructionalFit,
- * instructionalApproach, rationale, distinctFrom }], noFitReason,
+ * instructionalApproach, studentsDo, rationale, distinctFrom }], noFitReason,
  * distinctInstructionalMoves, considered: [{ templateId, whyNot }] }],
  * rejected } — one per need, matched by position then exact title. `instructionalFit`
  * is the Wave 2 doc's 0–3 Instructional Fit scale (§3b, mirrored in util/config.json
@@ -66,6 +66,11 @@ const Pick = z.object({
   templateId: templateIdSchema,
   instructionalFit: z.number().int().min(0).max(3).describe(`0–3 on the Instructional Fit scale given: 3 exceptional, 2 strong, 1 partial, 0 poor. Do not return a pick below ${FIT_THRESHOLD}; leave it out instead.`),
   instructionalApproach: z.string().describe('The instructional move this template would enact for THIS need, as a short phrase — "contrast correct and incorrect interpretations", "investigate the reasoning behind the error". Not the template name, and not a restatement of the need.'),
+  // The move alone left both activities free to land on the same student task
+  // (v32: two activities that both had students find the wrong coefficient and
+  // rewrite). Saying what students do, per pick, is what the activity is then
+  // built to and what the other activity is told to differ from.
+  studentsDo: z.string().describe('What students actually do in this activity, in one concrete sentence: what they look at, and what they produce or decide. With two picks, the two must differ in what students do, not only in the template — e.g. "Pairs test points to find where a classmate\'s shading went wrong and repair it" against "Pairs argue for or against the claim that satisfying one inequality is enough".'),
   rationale: z.string().describe('2-3 sentences: why this template\'s primary instructional move fits THIS need at that level, citing the evidence (linked wrong answers, confidence, conceptual depth, the need text). Name the fit, not the template description.'),
   distinctFrom: z.string().nullable().describe('Only when both picks use the same template: how the second activity would use a meaningfully different problem, context, or mathematical situation. Otherwise null.'),
 });
@@ -116,6 +121,7 @@ A pick scoring below ${FIT_THRESHOLD} is a weak recommendation. Select the templ
 For EACH need, in the same order given:
 - \`picks\`: up to ${TOP_N} templates whose instructional fit is ${FIT_THRESHOLD} or higher, highest first. Judge fit on the template's primary instructional move against the need, the misconception, the student response data, the mathematical content and the lesson context. If only one template clears the threshold, return one. If none does, return an empty list and say why in \`noFitReason\` — never return a weak template to fill the slot. Prefer two different templates when both clear the threshold; use the same template twice only when it is substantially stronger than every alternative, and then say in \`distinctFrom\` how the two activities would differ.
 - \`instructionalApproach\`: for each pick, the instructional move that template would enact for this need, as a short phrase. Two picks may use different templates and still describe the same move; say what each would actually have students do.
+- \`studentsDo\`: for each pick, what students actually do in that activity, in one concrete sentence: what they look at and what they produce or decide. With two picks, make the two genuinely different student experiences — a different problem or representation to work with, a different question to answer, a different thing to produce. If you cannot make them different, the second pick is not adding a recommendation.
 - \`distinctInstructionalMoves\`: with two picks, true only when they ask students to do mathematically different things — different templates alone do not make them distinct. Null when there are fewer than two picks.
 - \`considered\`: every other available template with one sentence on why it is weaker here.
 - \`rationale\` must cite the evidence for THIS need — the linked wrong answers, what students chose, confidence, severity, the need text — not restate the template's description.
@@ -216,6 +222,7 @@ function validateOutput(structured, needs, rightOnAvailable) {
         templateId: p.templateId,
         instructionalFit: p.instructionalFit,
         instructionalApproach: p.instructionalApproach,
+        studentsDo: p.studentsDo ?? null,
         rationale: p.rationale,
         distinctFrom: p.distinctFrom ?? null,
       });

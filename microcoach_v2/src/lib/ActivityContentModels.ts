@@ -22,6 +22,11 @@ export interface IRunStep {
    * Class"), for the teacher to choose between.
    */
   groupings: GroupingKind[];
+  /**
+   * Planned class minutes for the step (generated since 2026-10-19; the
+   * `durations.facilitate` label is their sum). Absent on older activities.
+   */
+  minutes?: number;
 }
 
 /* ── Facilitate: one artifact per template ─────────────────────────────── */
@@ -130,6 +135,12 @@ export type IFacilitateContent =
 export interface IDiscussionQuestion {
   question: string;
   answer: string;
+  /**
+   * Planned minutes to run this question alone. The three are alternatives the
+   * teacher picks from; `durations.discussion` is the longest. Absent on older
+   * activities.
+   */
+  minutes?: number;
 }
 
 export interface IWatchFor {
@@ -147,7 +158,7 @@ export interface IActivityContent {
   howToRun: IRunStep[];
   facilitate: IFacilitateContent;
   discussion: {
-    /** Three. */
+    /** Three alternatives; the teacher runs the one that fits. */
     questions: IDiscussionQuestion[];
     /** One to three: fewer strong sets over more weak ones. */
     watchFors: IWatchFor[];
