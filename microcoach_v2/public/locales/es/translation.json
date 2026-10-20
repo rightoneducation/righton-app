@@ -290,6 +290,7 @@
     "thursday": "Jueves",
     "mockValue": "{{value}} (mock)",
     "mockStudentCount": "{{count}} estudiantes (mock)",
+    "studentCount": "{{count}} estudiantes",
     "mockScore": "{{score}}/{{total}} (mock)",
     "mockScoreChange": "{{change}} (mock)",
     "mockNoChange": "Sin cambios (mock)",

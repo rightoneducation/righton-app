@@ -37,30 +37,20 @@ export const ReflectionDetailHeader = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  minHeight: theme.sizing.space12,
-  padding: `0 ${theme.sizing.space5}px`,
+  minHeight: theme.sizing.space11,
+  padding: `0 ${theme.sizing.space6}px`,
   backgroundColor: theme.palette.designSystem.background.navyBlue,
   color: theme.palette.designSystem.surface.white,
 }));
 
 export const ReflectionDetailBody = styled(Box)(({ theme }) => ({
   display: 'flex',
+  flex: 1,
   flexDirection: 'column',
   gap: theme.sizing.space5,
   padding: theme.sizing.space5,
-  overflowY: 'auto',
-  '&::-webkit-scrollbar': {
-    width: theme.sizing.space1,
-  },
-  '&::-webkit-scrollbar-track': {
-    backgroundColor: theme.palette.designSystem.surface.white,
-  },
-  '&::-webkit-scrollbar-thumb': {
-    borderRadius: theme.sizing.space1,
-    backgroundColor: theme.palette.designSystem.foreground.disabledStroke,
-  },
-  scrollbarColor: `${theme.palette.designSystem.foreground.disabledStroke} ${theme.palette.designSystem.surface.white}`,
-  scrollbarWidth: 'thin',
+  minHeight: 0,
+  overflow: 'hidden',
 }));
 
 export const ReflectionDetailIntro = styled(Box)(({ theme }) => ({
@@ -71,7 +61,9 @@ export const ReflectionDetailIntro = styled(Box)(({ theme }) => ({
 
 export const ReflectionProgressPanel = styled(Box)(({ theme }) => ({
   display: 'flex',
+  flex: 1,
   flexDirection: 'column',
+  minHeight: 0,
   border: theme.borders.subtle,
   borderRadius: theme.sizing.space2,
   overflow: 'hidden',
@@ -82,6 +74,7 @@ export const ReflectionSummaryPanel = styled(Box, {
   shouldForwardProp: forwardScreenSize,
 })<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
   display: 'flex',
+  flexShrink: 0,
   flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
   alignItems: screenSize === ScreenSize.SMALL ? 'flex-start' : 'center',
   gap: theme.sizing.space3,
@@ -107,15 +100,31 @@ export const ReflectionSummaryChange = styled(Box, {
 }));
 
 export const ReflectionPanelDivider = styled(Box)(({ theme }) => ({
+  flexShrink: 0,
   height: theme.borders.borderWidth,
   backgroundColor: theme.palette.designSystem.foreground.greyAccent,
 }));
 
 export const ReflectionProgressBody = styled(Box)(({ theme }) => ({
   display: 'flex',
+  flex: 1,
   flexDirection: 'column',
   gap: theme.sizing.space5,
   padding: theme.sizing.space6,
+  minHeight: 0,
+  overflowY: 'auto',
+  '&::-webkit-scrollbar': {
+    width: theme.sizing.space1,
+  },
+  '&::-webkit-scrollbar-track': {
+    backgroundColor: theme.palette.designSystem.surface.white,
+  },
+  '&::-webkit-scrollbar-thumb': {
+    borderRadius: theme.sizing.space1,
+    backgroundColor: theme.palette.designSystem.foreground.disabledStroke,
+  },
+  scrollbarColor: `${theme.palette.designSystem.foreground.disabledStroke} ${theme.palette.designSystem.surface.white}`,
+  scrollbarWidth: 'thin',
 }));
 
 export const MasteryGroups = styled(Box)(({ theme }) => ({
@@ -171,7 +180,7 @@ export const ReflectionSortRow = styled(Box)(({ theme }) => ({
 
 export const ReflectionSortSelect = styled(Select)(({ theme }) => ({
   minWidth: theme.sizing.reflectDetailSortWidth,
-  height: theme.sizing.space8,
+  height: theme.sizing.space7,
   borderRadius: theme.sizing.space5,
   color: theme.palette.designSystem.surface.white,
   backgroundColor: theme.palette.designSystem.surface.steelBlue,
@@ -182,6 +191,9 @@ export const ReflectionSortSelect = styled(Select)(({ theme }) => ({
   },
   '& .MuiSelect-icon': {
     color: theme.palette.designSystem.surface.white,
+  },
+  '& .MuiSelect-iconOpen': {
+    transform: 'none',
   },
   '& .MuiOutlinedInput-notchedOutline': {
     border: 'none',
@@ -219,7 +231,7 @@ export const StudentResultChip = styled(Box, {
       ? theme.palette.designSystem.background.navyBlue
       : theme.palette.designSystem.surface.skyBlue,
   color: theme.palette.designSystem.surface.white,
-  ...theme.typography.rubikBody,
+  ...theme.typography.smallBodyText,
 }));
 
 export const StudentNamePill = styled(Box, {
@@ -246,13 +258,6 @@ export const StudentResultValue = styled(Typography, {
   whiteSpace: 'nowrap',
 }));
 
-export const MockMarker = styled(Box)(({ theme }) => ({
-  display: 'inline',
-  color: theme.palette.designSystem.foreground.slateGrey,
-  ...theme.typography.microLabel,
-  whiteSpace: 'nowrap',
-}));
-
 export const QuestionResultsSection = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -273,11 +278,11 @@ export const QuestionResultAccordion = styled(Accordion)(({ theme }) => ({
 }));
 
 export const QuestionResultSummary = styled(AccordionSummary)(({ theme }) => ({
-  minHeight: theme.sizing.space12,
+  minHeight: theme.sizing.space13,
   padding: `0 ${theme.sizing.space3}px`,
   color: theme.palette.designSystem.surface.atlanticNavy,
   '&.Mui-expanded': {
-    minHeight: theme.sizing.space12,
+    minHeight: theme.sizing.space13,
   },
   '& .MuiAccordionSummary-content': {
     margin: `${theme.sizing.space2}px 0`,
@@ -286,7 +291,9 @@ export const QuestionResultSummary = styled(AccordionSummary)(({ theme }) => ({
     margin: `${theme.sizing.space2}px 0`,
   },
   '& .MuiAccordionSummary-expandIconWrapper': {
+    alignSelf: 'flex-start',
     marginLeft: theme.sizing.space2,
+    marginTop: theme.sizing.space3,
   },
   '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
     transform: 'none',
@@ -295,13 +302,12 @@ export const QuestionResultSummary = styled(AccordionSummary)(({ theme }) => ({
 
 export const QuestionSummaryContent = styled(Box, {
   shouldForwardProp: forwardScreenSize,
-})<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
+})<{ screenSize: ScreenSize }>(({ theme }) => ({
   display: 'flex',
   flex: 1,
-  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
-  alignItems: screenSize === ScreenSize.SMALL ? 'flex-start' : 'center',
-  justifyContent: 'space-between',
-  gap: theme.sizing.space2,
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  gap: theme.sizing.space1,
 }));
 
 export const QuestionMetricGroup = styled(Box)(({ theme }) => ({

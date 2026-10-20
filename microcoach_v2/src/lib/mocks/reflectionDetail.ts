@@ -186,7 +186,7 @@ export const mockReflectionQuestions: MockReflectionQuestionResult[] = [
   },
   {
     questionNumber: 2,
-    questionText: 'Which boundary line should be used for y < -x + 4?',
+    questionText: 'Which inequality matches the shaded region shown?',
     percentCorrectBefore: 75,
     percentCorrectAfter: 84,
     beforeAnswers: [
@@ -202,9 +202,9 @@ export const mockReflectionQuestions: MockReflectionQuestionResult[] = [
   },
   {
     questionNumber: 3,
-    questionText: 'Which point can be used to test the shaded region?',
-    percentCorrectBefore: 57,
-    percentCorrectAfter: 86,
+    questionText: 'Which inequality matches the shaded region shown?',
+    percentCorrectBefore: 46,
+    percentCorrectAfter: 78,
     beforeAnswers: [
       { id: 'q3-before-a', letter: 'A', text: '(0, 0)', percentChosen: 57, isCorrect: true },
       { id: 'q3-before-b', letter: 'B', text: '(2, 1)', percentChosen: 29, isCorrect: false },
@@ -218,9 +218,9 @@ export const mockReflectionQuestions: MockReflectionQuestionResult[] = [
   },
   {
     questionNumber: 4,
-    questionText: 'What does a dashed boundary line mean?',
-    percentCorrectBefore: 43,
-    percentCorrectAfter: 71,
+    questionText: 'Which inequality matches the shaded region shown?',
+    percentCorrectBefore: 68,
+    percentCorrectAfter: 80,
     beforeAnswers: [
       { id: 'q4-before-a', letter: 'A', text: 'Points on the line are included', percentChosen: 43, isCorrect: false },
       { id: 'q4-before-b', letter: 'B', text: 'Points on the line are excluded', percentChosen: 43, isCorrect: true },

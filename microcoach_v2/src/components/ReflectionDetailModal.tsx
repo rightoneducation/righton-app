@@ -30,7 +30,6 @@ import {
   MasterySection,
   MasterySectionHeader,
   MasteryTitleRow,
-  MockMarker,
   QuestionMetricGroup,
   QuestionResultAccordion,
   QuestionResultDetails,
@@ -57,10 +56,6 @@ import {
 } from '../lib/styledcomponents/ReflectionDetailStyledComponents';
 import { ReflectionTrendValue } from '../lib/styledcomponents/ReflectStyledComponents';
 import { getReflectionTrend } from '../lib/reflectionResults';
-import {
-  MODAL_MAX_WIDTH,
-  MODAL_TOP_OFFSET,
-} from '../lib/styledcomponents/MisconceptionModalStyledComponents';
 
 interface ReflectionDetailModalProps {
   activity: IImplementedActivity | null;
@@ -141,7 +136,7 @@ function StudentGroup({
               {title}
             </Typography>
             <StudentCountChip>
-              {t('reflect.mockStudentCount', { count: students.length })}
+              {t('reflect.studentCount', { count: students.length })}
             </StudentCountChip>
           </MasteryTitleRow>
           <Typography variant="uploadLabel" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
@@ -155,37 +150,46 @@ function StudentGroup({
           <ReflectionSortSelect
             value={sort}
             onChange={handleSortChange}
+            renderValue={() =>
+              sort === 'highestScoring'
+                ? t('reflect.highestScoring')
+                : t('reflect.mostImproved')
+            }
             inputProps={{ 'aria-label': t('reflect.sortStudents') }}
             MenuProps={{
               PaperProps: {
                 sx: {
                   mt: `-${theme.sizing.space1}px`,
+                  width: theme.sizing.reflectDetailSortWidth,
+                  minWidth: `${theme.sizing.reflectDetailSortWidth}px !important`,
                   borderRadius: `0 0 ${theme.sizing.space2}px ${theme.sizing.space2}px`,
                   color: 'designSystem.surface.white',
                   backgroundColor: 'designSystem.surface.steelBlue',
                   boxShadow: 'none',
                   '& .MuiMenuItem-root': {
-                    minHeight: theme.sizing.space7,
+                    minHeight: theme.sizing.space6,
                     mx: `${theme.sizing.space1}px`,
                     my: `${theme.sizing.space0}px`,
                     borderRadius: `${theme.sizing.space0}px`,
-                  },
-                  '& .MuiMenuItem-root.Mui-selected': {
                     backgroundColor: 'designSystem.foreground.fadedNavyBlue',
                   },
-                  '& .MuiMenuItem-root.Mui-selected:hover': {
+                  '& .MuiMenuItem-root:hover': {
                     backgroundColor: 'designSystem.foreground.fadedNavyBlue',
                   },
                 },
               },
             }}
           >
-            <MenuItem value="highestScoring">
-              {t('reflect.highestScoring')}
-            </MenuItem>
-            <MenuItem value="mostImproved">
-              {t('reflect.mostImproved')}
-            </MenuItem>
+            {sort === 'mostImproved' && (
+              <MenuItem value="highestScoring">
+                {t('reflect.highestScoring')}
+              </MenuItem>
+            )}
+            {sort === 'highestScoring' && (
+              <MenuItem value="mostImproved">
+                {t('reflect.mostImproved')}
+              </MenuItem>
+            )}
           </ReflectionSortSelect>
         </ReflectionSortRow>
       </MasterySectionHeader>
@@ -214,17 +218,6 @@ function StudentGroup({
                   {changeLabel}
                 </StudentResultValue>
               )}
-              <Typography
-                variant="microLabel"
-                sx={{
-                  color:
-                    sort === 'highestScoring'
-                      ? 'designSystem.surface.white'
-                      : 'designSystem.foreground.slateGrey',
-                }}
-              >
-                {t('reflect.mockMarker')}
-              </Typography>
             </StudentResultChip>
           );
         })}
@@ -248,7 +241,6 @@ function ResponseRow({ label, answers, screenSize }: ResponseRowProps) {
             )}
           </AnswerResponse>
         ))}
-        <MockMarker>{t('reflect.mockMarker')}</MockMarker>
       </AnswerDistribution>
     </AssessmentResponseRow>
   );
@@ -324,17 +316,17 @@ export default function ReflectionDetailModal({
           display: 'flex',
           alignItems: 'flex-start',
           justifyContent: 'center',
-          padding: theme.sizing.space4,
-          paddingTop: isLarge ? MODAL_TOP_OFFSET : theme.sizing.space4,
+          padding: theme.sizing.space1,
         },
         content: {
           position: 'relative',
           inset: 'auto',
           width: '100%',
-          maxWidth: isLarge ? MODAL_MAX_WIDTH : '100%',
-          maxHeight: isLarge
-            ? `calc(100vh - ${theme.sizing.space14}px)`
-            : `calc(100vh - ${theme.sizing.space7}px)`,
+          maxWidth: isLarge
+            ? theme.sizing.reflectDetailModalMaxWidth
+            : '100%',
+          height: `calc(100vh - ${theme.sizing.space3}px)`,
+          maxHeight: `calc(100vh - ${theme.sizing.space3}px)`,
           display: 'flex',
           flexDirection: 'column',
           padding: 0,
@@ -346,7 +338,7 @@ export default function ReflectionDetailModal({
       }}
     >
       <ReflectionDetailHeader>
-        <Typography variant="smallTitle" sx={{ color: 'designSystem.surface.white' }}>
+        <Typography variant="navTitle2" sx={{ color: 'designSystem.surface.white' }}>
           {t('reflect.detailsTitle')}
         </Typography>
         <IconButton
@@ -360,7 +352,7 @@ export default function ReflectionDetailModal({
 
       <ReflectionDetailBody>
         <ReflectionDetailIntro>
-          <Typography variant="headingLg" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+          <Typography variant="navTitle2" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
             {activity.misconceptionTitle}
           </Typography>
           <Typography variant="uploadLabel" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
@@ -471,18 +463,14 @@ export default function ReflectionDetailModal({
                           <Typography variant="headingMd" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
                             {t('reflect.correctResponses')}
                           </Typography>
-                          <MockMarker>{t('reflect.mockMarker')}</MockMarker>
                         </QuestionMetricGroup>
+                        <Typography variant="uploadLabel" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                          {question.questionText}
+                        </Typography>
                       </QuestionSummaryContent>
                     </QuestionResultSummary>
 
                     <QuestionResultDetails>
-                      <Typography variant="uploadLabel" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                        {question.questionText}{' '}
-                        <MockMarker component="span">
-                          {t('reflect.mockMarker')}
-                        </MockMarker>
-                      </Typography>
                       <Typography
                         variant="rubikBody"
                         sx={{
