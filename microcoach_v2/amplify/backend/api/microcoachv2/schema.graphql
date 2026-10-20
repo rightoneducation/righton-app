@@ -47,10 +47,11 @@ type MicroCoachClassroom @model @auth(rules: [{ allow: private }]) {
   schoolYear: String
 }
 
-# Extend later when student data becomes part of the workflow.
 type MicroCoachStudent @model @auth(rules: [{ allow: private }]) {
   id: ID!
   classId: ID! @index(name: "byClass")
+  responses: [MicroCoachStudentResponse]
+    @hasMany(indexName: "byStudent", fields: ["id"])
   name: String!
   externalId: String
   createdAt: AWSDateTime!
@@ -108,14 +109,52 @@ enum AssessmentType {
   POST_PPQ
 }
 
-# Extend later when pipeline work is ready to hook.
 type MicroCoachAssessment @model @auth(rules: [{ allow: private }]) {
   id: ID!
   classId: ID! @index(name: "byClass")
   sessionId: ID! @index(name: "bySession")
   assessmentCode: String!
+  # will be miu 1 and miu 2 assessment type
   type: AssessmentType!
   weekNumber: Int!
+  # Links the follow-up MIU to the original MIU it reassesses.
+  sourceAssessmentId: ID
+  questions: [AssessmentQuestion]
+  studentResponses: [MicroCoachStudentResponse]
+    @hasMany(indexName: "byAssessment", fields: ["id"])
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type AssessmentQuestion {
+  questionNumber: Int!
+  # Optional until the upload pipeline persists exact question wording.
+  questionText: String
+  correctAnswer: String!
+  answerChoices: [AssessmentAnswerChoice]
+}
+
+type AssessmentAnswerChoice {
+  letter: String!
+  text: String
+}
+
+type MicroCoachStudentResponse @model @auth(rules: [{ allow: private }]) {
+  id: ID!
+  assessmentId: ID! @index(name: "byAssessment")
+  studentId: ID! @index(name: "byStudent")
+  totalScore: Float
+  questionResponses: [AssessmentQuestionResponse]
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type AssessmentQuestionResponse {
+  questionNumber: Int!
+  response: String
+  isCorrect: Boolean!
+  pointsEarned: Float!
+  confidence: Float
 }
 
 enum Badge {
