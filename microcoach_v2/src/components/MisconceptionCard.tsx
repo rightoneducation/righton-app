@@ -19,6 +19,8 @@ import {
   LabelledBlock,
   MisconceptionCardSurface,
   PrevalenceTag,
+  TagRow,
+  HighestFrequencyTag,
 } from '../lib/styledcomponents/UnderstandStyledComponents';
 import { continueTooltipSx } from '../lib/styledcomponents/UploadStyledComponents';
 import MathTypography from './MathTypography';
@@ -52,6 +54,9 @@ interface MisconceptionCardProps {
   onSelect: (misconceptionId: string) => void;
   // Side by side at LARGE: the card shares its rows with its neighbours.
   isAligned: boolean;
+  // Of the cards shown, this one reaches the most students (rubric:
+  // selection.highestFrequency). A tag only; the order is the rubric's.
+  isHighestFrequency?: boolean;
 }
 
 /**
@@ -65,6 +70,7 @@ export default function MisconceptionCard({
   onViewDetails,
   onSelect,
   isAligned,
+  isHighestFrequency = false,
 }: MisconceptionCardProps) {
   const { t } = useTranslation();
   const { isRecommendedFocus } = misconception;
@@ -100,14 +106,26 @@ export default function MisconceptionCard({
           sx={{ color: 'designSystem.surface.atlanticNavy' }}
           text={misconception.title}
         />
-        <Tooltip
-          title={t(`review.prevalenceRange.${misconception.prevalence.level}`)}
-          placement="bottom"
-          arrow
-          slotProps={continueTooltipSx}
-        >
-          <PrevalenceTag tabIndex={0}>{misconception.prevalence.label}</PrevalenceTag>
-        </Tooltip>
+        <TagRow>
+          <Tooltip
+            title={t(`review.prevalenceRange.${misconception.prevalence.level}`)}
+            placement="bottom"
+            arrow
+            slotProps={continueTooltipSx}
+          >
+            <PrevalenceTag tabIndex={0}>{misconception.prevalence.label}</PrevalenceTag>
+          </Tooltip>
+          {isHighestFrequency && (
+            <Tooltip
+              title={t('review.highestFrequencyTooltip')}
+              placement="bottom"
+              arrow
+              slotProps={continueTooltipSx}
+            >
+              <HighestFrequencyTag tabIndex={0}>{t('review.highestFrequency')}</HighestFrequencyTag>
+            </Tooltip>
+          )}
+        </TagRow>
       </CardHeading>
 
       {/* Without evidence the row stays, empty, so the rows below still line up. */}

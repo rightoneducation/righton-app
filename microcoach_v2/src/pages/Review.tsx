@@ -108,6 +108,17 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
   const miuPdfUrl: string | null = null;
   const selectedMisconception =
     misconceptions.find((item) => item.id === selected?.id) ?? null;
+  // The pipeline tags the widest-reaching retained misconception; the stored row
+  // keeps its student count, so the tag is worked out here rather than stored.
+  // Strictly greater, so a tie stays with the earlier (better-ranked) card.
+  const highestFrequencyId = misconceptions.reduce<{ id: string; n: number } | null>(
+    (best, item) => {
+      const n = item.prevalence?.studentsNeedingSupport;
+      if (n == null) return best;
+      return !best || n > best.n ? { id: item.id, n } : best;
+    },
+    null,
+  )?.id;
 
   const dismissBanner = () => {
     if (!sessionId) return;
@@ -196,6 +207,7 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
                 <MisconceptionCard
                   key={misconception.id}
                   isAligned={screenSize === ScreenSize.LARGE}
+                  isHighestFrequency={misconception.id === highestFrequencyId}
                   misconception={misconception}
                   onViewDetails={(id, fromEvidence) => setSelected({ id, fromEvidence })}
                   onSelect={handleSelect}

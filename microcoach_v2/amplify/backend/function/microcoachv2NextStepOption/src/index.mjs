@@ -15,7 +15,10 @@
  *      questions and 1-3 Watch for sets anchored to it.
  *   3. A reasoning-model review against the doc's Mathematical Accuracy and
  *      Coherence Check. Its corrected discussion replaces the draft only when it
- *      reports issues and its output parses; otherwise the draft stands.
+ *      reports issues and its output parses; otherwise the draft stands. The same
+ *      pass checks the artifact's teacher-view labels and notes (✓/✗, verdicts,
+ *      direction words) and returns targeted fixes, applied by id
+ *      (applyLabelFixes); it cannot reach student-facing text or the math.
  *
  * The doc's general guidance lives in util/activityLibrary.json `designGuidance`
  * and is rendered per prompt by formatDesignGuidance, so it is tuned in one place.
@@ -26,7 +29,9 @@
  *                          wrongAnswers: [{ questionNumber, letter, explanation? }],
  *                          instructionalNeed?: { text, evidenceUsed }, evidence? }
  *   selectedTemplate     one pick from LLMSelectTemplate: { templateId,
- *                          instructionalApproach, rationale } (required)
+ *                          instructionalApproach, studentsDo?, rationale } (required)
+ *   siblingPick          optional, the other pick for the same need (same shape):
+ *                          the activity is told what students do there, to differ
  *   learningScienceData  { standards: KgQueryType[] }
  *   evidence             optional { questions: [{ questionNumber, questionText,
  *                          correctAnswer, answerChoices: [{ letter, content,
@@ -49,9 +54,13 @@ import {
   EXAMPLE_TYPES,
   activityPlanSchemaFor,
   discussionDraftSchema,
+  plannedClassMinutes,
+  toStoredDurations,
   toStoredDiscussion,
   toStoredFacilitate,
   incompleteSystems,
+  teacherLabels,
+  applyLabelFixes,
 } from './util/activityContent.mjs';
 import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
@@ -74,12 +83,13 @@ const STRATEGY_TAGS           = nso.strategyTags ?? [];
 // Defaults to all of them: a field that is not in the prompt cannot be ablated,
 // so nothing is filtered before there is evidence to filter on.
 const MAX_LVN_STRATEGY_DETAIL = nso.maxLvnStrategyDetail ?? Infinity;
-const ALLOWED_DURATION_BUCKETS = nso.allowedDurationBuckets ?? [];
 const INCORRECT_EXAMPLE_RULES = nso.incorrectWorkedExampleRules ?? [];
 const INCORRECT_EXAMPLE_FEW_SHOT = nso.incorrectWorkedExampleFewShot ?? [];
 const DESIGN_PRINCIPLES       = nso.designPrinciples ?? [];
 const CLASSROOM_FEASIBILITY   = nso.classroomFeasibility ?? [];
-const PHASE_DURATIONS         = nso.phaseDurations ?? { beforeClass: '5 min', facilitate: '8-10 min', discussion: '3-5 min' };
+// Realistic-pacing guidance for the per-step minute estimates (config, so it reads
+// as part of the prompt's design rather than code).
+const PACING_GUIDANCE         = nso.pacingGuidance ?? [];
 
 // Cardinality, as schema bounds: the one form of guidance the model reliably honours.
 const BOUNDS = {
@@ -90,6 +100,8 @@ const BOUNDS = {
   howToRunMin: nso.activitySteps?.min ?? 4,
   howToRunMax: nso.activitySteps?.max ?? 6,
   questionCount: cdo.questionCount ?? 3,
+  discussionMinutesMin: cdo.minutes?.min ?? 2,
+  discussionMinutesMax: cdo.minutes?.max ?? 5,
   watchForMin: cdo.watchFors?.min ?? 1,
   watchForMax: cdo.watchFors?.max ?? 3,
 };
@@ -105,19 +117,30 @@ const RowFields = z.object({
   targets: z.string().describe('The specific skill this activity builds, in plain skill language (e.g. "Applying integer sign rules in algebraic expressions"). Not ontology IDs.'),
   instructionalMove: z.string().describe('What the teacher concretely does, beginning with a verb, 2-4 sentences, naming the error pattern this activity addresses.'),
   strategyTag: strategyTagSchema.describe(`Exactly one of: ${STRATEGY_TAGS.map((t) => t.name).join(', ')}`),
-  durationMinutes: z.number().int().max(MAX_DURATION).describe(`Class minutes for the activity and closing discussion together, within one of: ${ALLOWED_DURATION_BUCKETS.map((b) => b.label).join(', ')}`),
   aiReasoning: z.string().describe('Internal: why this design enacts the template for this need. Not shown to teachers.'),
 });
 
-const DiscussionDraft = discussionDraftSchema(BOUNDS);
-
-const DiscussionReview = z.object({
-  issues: z.array(z.object({
-    component: z.string().describe('Which part: "takeaway", "question 2", "watch for 1", …'),
-    problem: z.string().describe('What fails the check, and why'),
-  })).describe('Empty when every check passes'),
-  corrected: DiscussionDraft.describe('The discussion with every issue fixed; unchanged when there are none'),
-});
+// Built per activity: each question's minutes are bounded by the discussion time
+// that activity reserved.
+const discussionSchemasFor = (minutesMax) => {
+  const DiscussionDraft = discussionDraftSchema(BOUNDS, minutesMax);
+  const DiscussionReview = z.object({
+    issues: z.array(z.object({
+      component: z.string().describe('Which part: "takeaway", "question 2", "watch for 1", …'),
+      problem: z.string().describe('What fails the check, and why'),
+    })).describe('Empty when every check passes'),
+    corrected: DiscussionDraft.describe('The discussion with every issue fixed; unchanged when there are none'),
+    // The artifact's teacher-view labels and notes are checked in the same pass:
+    // the reviewer already reads the artifact to check the discussion against it.
+    artifactFixes: z.array(z.object({
+      id: z.string().describe('The id of a listed label or teacher note, exactly as listed'),
+      label: z.string().nullable().describe('For a label: the corrected value, one of its allowed values. null for a note.'),
+      text: z.string().nullable().describe('For a teacher note: the corrected note. null for a label.'),
+      problem: z.string().describe('What was wrong, and why'),
+    })).describe('One per artifact label or teacher note that is mathematically wrong. Empty when all are right.'),
+  });
+  return { DiscussionDraft, DiscussionReview };
+};
 
 /**
  * Strip control characters from every string in the generated activity.
@@ -192,6 +215,11 @@ function renderMisconception(misconception) {
 **What the error is**: ${misconception.description}
 ${misconception.learningScienceConnection ? `**Learning science connection**: ${misconception.learningScienceConnection}` : ''}
 **CCSS**: ${misconception.ccssStandard ?? 'unknown'}
+${misconception.evidenceBasis === 'inferred'
+    ? '**Evidence basis**: inferred — this is the most plausible reading of the answers chosen, and other explanations fit the same answers. Treat it as an interpretation to test with students, not a known fact about their thinking.'
+    : misconception.evidenceBasis === 'grounded'
+      ? '**Evidence basis**: grounded — the answer choices themselves support this reading. It is still an interpretation of what students chose: some may have got there another way.'
+      : ''}
 ${answers.length ? `**Linked wrong answers** (observed choices; the reasoning given is an interpretation, not what every student who chose it thought):\n${answers.join('\n')}` : ''}`.trim();
 }
 
@@ -257,6 +285,7 @@ export const handler = async (event) => {
   const classroomContext    = parseMaybe(input.classroomContext, {});
   const contextDataItems    = parseMaybe(input.contextData, []);
   const selectedTemplate    = parseMaybe(input.selectedTemplate);
+  const siblingPick         = input.siblingPick == null ? null : parseMaybe(input.siblingPick);
   const evidence            = parseMaybe(input.evidence, null);
 
   // The template fixes the content shape. RightOn! has no content type (it renders
@@ -468,10 +497,19 @@ ${formatForInfill(template)}
 
 This template is not a label applied after the fact. The activity must follow its classroom flow, its priority grouping pattern and its defining instructional move; an activity that could equally have come from another template has failed.
 ${selectedTemplate.instructionalApproach ? `\nThe move this template was selected to enact for THIS need: ${selectedTemplate.instructionalApproach}` : ''}
+${selectedTemplate.studentsDo ? `What students do in it: ${selectedTemplate.studentsDo}` : ''}
 ${selectedTemplate.rationale ? `Why it was selected: ${selectedTemplate.rationale}` : ''}
+${siblingPick ? `
+## The other recommendation
+The teacher sees this activity next to a second one for the same need: ${templateById(siblingPick.templateId)?.title ?? siblingPick.templateId}${siblingPick.instructionalApproach ? ` (move: ${siblingPick.instructionalApproach})` : ''}.${siblingPick.studentsDo ? ` What students do there: ${siblingPick.studentsDo}` : ''} Two recommendations are worth offering only when they are different experiences for students. Make this one visibly different from it, not just differently labelled: give students a different problem or representation to work with, a different question to answer, and a different thing to produce, and let the closing discussion follow from this activity's own work.
+` : ''}
 
 ## Classroom feasibility
 ${CLASSROOM_FEASIBILITY.map((r) => `- ${r}`).join('\n')}
+
+## Pacing
+The steps and the closing discussion together should take about ${DEFAULT_DURATION} minutes of class, and never more than ${MAX_DURATION}. Plan the minutes as an experienced teacher would for this class, not an ideal pace:
+${PACING_GUIDANCE.map((r) => `- ${r}`).join('\n')}
 
 ${MATH_FORMATTING}
 ${examplesSection}
@@ -490,13 +528,14 @@ Subject: ${classroomContext.subject ?? 'math'} | Class size: ${classroomContext.
 
 ## What to write
 - **whyThisActivity**: 2-3 teacher-facing sentences, per "Why This Activity" above. Draw on the instructional need and why the template was selected; do not mention scores, ranks, rubrics, or the word "template", and do not overstate what the evidence shows.
-- **durations**: \`beforeClass\` is prep outside class time. \`facilitate\` plus \`discussion\` must fit inside ${MAX_DURATION} minutes of class (target ${DEFAULT_DURATION}). Defaults to start from: before class "${PHASE_DURATIONS.beforeClass}", facilitate "${PHASE_DURATIONS.facilitate}", discussion "${PHASE_DURATIONS.discussion}".
+- **minutes** (each howToRun step), **discussionMinutes** and **beforeClassMinutes**: realistic minutes, per Pacing above. The steps' minutes plus discussionMinutes should come to about ${DEFAULT_DURATION} and must be at most ${MAX_DURATION}, which is slack for a class that runs long, not a budget to fill; if they would be over, cut content (fewer steps, a shorter task) rather than shrinking the estimates.
 - **beforeClass.steps**: ${BOUNDS.beforeClassMin}-${BOUNDS.beforeClassMax} concrete things the teacher prepares. **beforeClass.groupingRationale**: 1-2 sentences on why students are grouped this way, from the template's priority grouping pattern.
 - **howToRun**: ${BOUNDS.howToRunMin}-${BOUNDS.howToRunMax} steps following the template's classroom flow. Give each step its grouping; leave \`groupings\` empty for a step that doesn't regroup; use two values only when the teacher chooses between them.${hasExamples ? ' Refer to examples as "Example 1", "Example 2", … and never to more examples than you write.' : ''}
 - ${FACILITATE_INSTRUCTIONS[contentType]()}
-- \`facilitate.type\` must be exactly "${contentType}".${hasExamples ? `
+- \`facilitate.type\` must be exactly "${contentType}".
+- Teacher-view labels (a line's status, a step's annotation or highlight, a strategy's verdict) must agree with the math. Label each line by whether the move it records is right: a line that records only a correct move, such as a solid boundary for $\\leq$, is CORRECT even inside work that goes wrong elsewhere. When teacher-only text names a region or direction (above, below, left, right, upper-left), solve for $y$ first and check the direction against the inequality and the line's slope.${hasExamples ? `
 - Each example uses a different problem: a meaningfully different instance of the same need, so the teacher can choose among them. \`task\` is the instruction alone (e.g. "Graph the inequality"), \`math\` the LaTeX alone, one expression per item: SINGLE for one expression, SYSTEM for a system, listing every equation or inequality in it; they are joined into the problem students see. A system's student work and teacher answers may only use equations and inequalities that \`math\` lists, and an instruction that says "system" needs a SYSTEM. Students see no answer choices, so when a source question is multiple choice, restate it as an open problem they can answer without them and without any given value: a "which point" question becomes "Find a solution of the system", a "which graph" question becomes "Graph the inequality" or "Graph the system".` : ''}
-- **targets**, **instructionalMove**, **strategyTag**${lvnFactors.length ? ' (use the LVN factors above)' : ''}, **durationMinutes**, **aiReasoning**: as described in the schema.
+- **targets**, **instructionalMove**, **strategyTag**${lvnFactors.length ? ' (use the LVN factors above)' : ''}, **aiReasoning**: as described in the schema.
 
 Every problem, step and number must be mathematically correct and complete: real problems drawn from the evidence above, never placeholders. Where the schema marks a field teacher-only, the student-facing fields must not give it away.
 
@@ -582,7 +621,7 @@ ${JSON.stringify(examples.map(e => ({ problem: e.problem, prompt: e.prompt, slip
 
   // ── Call 2: the closing discussion ────────────────────────────────────────
   const discussionPromptFor = (activity) => `
-You are an expert K-12 math instructional coach writing the Closing Discussion for the activity below. The teacher runs it in the last few minutes of a ${MAX_DURATION}-minute activity.
+You are an expert K-12 math instructional coach writing the Closing Discussion for the activity below. The activity reserved ${activity.discussionMinutes} minutes for it at the end of a ${MAX_DURATION}-minute window.
 
 ${formatDesignGuidance(['closingDiscussion', 'mathematicalTakeaway', 'discussionQuestions', 'watchFor', 'evidenceAndInference'])}
 
@@ -598,16 +637,16 @@ ${renderEvidence(evidence)}
 ${template.title} — ${template.primaryMove}
 Why this activity: ${activity.whyThisActivity}
 How it runs:
-${activity.howToRun.map((s, i) => `  ${i + 1}. ${s.title}: ${s.body}`).join('\n')}
+${activity.howToRun.map((s, i) => `  ${i + 1}. ${s.title} (${s.minutes} min): ${s.body}`).join('\n')}
 The artifact students analyze, with teacher-only fields:
 ${JSON.stringify(activity.facilitate, null, 2)}
 
 ---
 
 ## What to write, in this order
-1. **takeaway** — start from the instructional need: what mathematical understanding addresses it? Write that understanding as mathematics, faithful to this activity, and check it is correct and appropriately precise before going on. It anchors everything after it.
-2. **questions** — exactly ${BOUNDS.questionCount}, each building on the takeaway. Tag each with its \`purpose\`; choose the purposes that best support the takeaway rather than one of each. \`answer\` is teacher-facing: the mathematically correct answer, or what to listen for when the question is open.
-3. **watchFors** — ${BOUNDS.watchForMin}-${BOUNDS.watchForMax} sets: fewer strong ones over more weak ones. Ground each in the thinking this activity surfaces, describe the observable move before any interpretation, and do not repeat what a discussion question already does.
+1. **takeaway** — start from the instructional need: what mathematical understanding addresses it? Write that understanding as mathematics, faithful to this activity, and check it is correct and appropriately precise before going on. It anchors everything after it. Keep it to the one central idea, in 1-2 sentences a teacher can land in a few minutes: state it for the kind of problem this activity uses, and leave general formulas, special cases and side conditions (dividing by a negative, a zero coefficient, a vertical line) to the teacher answer of the question they bear on.
+2. **questions** — exactly ${BOUNDS.questionCount}, each building on the takeaway. They are alternatives: the teacher picks the one that best fits the class and runs it alone in the ${activity.discussionMinutes} minutes, so each must stand on its own and be answerable in that time. Give each its realistic \`minutes\` (think time, a few student responses, and the teacher drawing out the point). Tag each with its \`purpose\`; choose the purposes that best support the takeaway rather than one of each. \`answer\` is teacher-facing: the mathematically correct answer, or what to listen for when the question is open.
+3. **watchFors** — ${BOUNDS.watchForMin}-${BOUNDS.watchForMax} sets: fewer strong ones over more weak ones. Ground each in the thinking this activity surfaces, describe the observable move before any interpretation, and do not repeat what a discussion question already does.${misconception.evidenceBasis === 'inferred' ? ' The misconception is inferred, so one Watch for should help the teacher test it: what a student reasoning this way would say or do, what a different route to the same answer would sound like, and a question that tells them apart.' : ''}
 
 Return JSON matching the schema.
 `.trim();
@@ -627,12 +666,19 @@ ${JSON.stringify(activity.facilitate, null, 2)}
 ## The draft Closing Discussion
 ${JSON.stringify(draft, null, 2)}
 
+## The artifact's teacher-view labels and notes
+${teacherLabels(activity.facilitate).map((l) => (l.allowed
+    ? `- ${l.id} = ${l.current} (allowed: ${l.allowed.join(', ')})`
+    : `- ${l.id} (teacher note)`)).join('\n')}
+
 ---
 
 Work through the mathematical accuracy and coherence check above, item by item. Solve every mathematical claim, answer, counterexample and condition yourself rather than trusting the draft. Check each question's premise as well as its answer: an answer that endorses an invalid move under some "condition" is an error, however carefully it is hedged.
 
 - \`issues\`: one entry per failed check, naming the component and what is wrong. Empty when everything passes.
 - \`corrected\`: the discussion with every issue fixed, in the same shape and with the same number of questions. When there are no issues, return the draft unchanged. Do not restyle wording that passes the check.
+- Takeaway focus: the takeaway must be the one central idea in 1-2 sentences. When accuracy needs a condition or special case, do not append it to the takeaway — state the takeaway for the kind of problem the activity uses, and put the qualification in the teacher answer of the question it bears on. A takeaway that bundles conditions or edge cases is an issue to fix.
+- \`artifactFixes\`: check every label and teacher note listed above against the math, as teachers will rely on them to facilitate. Student work is meant to contain the error, so correct the label, never the work: a label is right when it says whether the move its line or step records is right. A line that records only a correct move (a solid boundary for $\\leq$) is CORRECT even inside wrong work. For every direction word in a teacher note (above, below, left, right, upper-left, …), solve for $y$ and check it against the inequality and the line's slope; a note that hedges between directions ("above/right", "lower/upper depends") is wrong when one is correct. Give a label fix as \`label\` with one of its allowed values, a note fix as the whole corrected note in \`text\`. Use only the ids listed. If a fix changes what the discussion should say, fix the discussion too. Empty when everything is right.
 
 ${MATH_FORMATTING}
 `.trim();
@@ -673,8 +719,22 @@ ${MATH_FORMATTING}
       });
       if (stillIncomplete.length < incomplete.length) generated = retried;
     }
+    // A plan whose steps and reserved discussion run past the class window does not
+    // fit the lesson it is for. Regenerate once, keep the shorter plan, and record
+    // both totals so evaluation can see how often this fired.
+    const planned = plannedClassMinutes(generated);
+    if (planned.total > MAX_DURATION) {
+      const retried = await generateActivity();
+      const replanned = plannedClassMinutes(retried);
+      recordSubCall('retry-over-time', null, null, {
+        before: planned, after: replanned, limit: MAX_DURATION, fixed: replanned.total <= MAX_DURATION,
+      });
+      if (replanned.total < planned.total && incompleteSystems(retried.facilitate).length <= incompleteSystems(generated.facilitate).length) {
+        generated = retried;
+      }
+    }
     const {
-      targets, instructionalMove, strategyTag, durationMinutes, aiReasoning, ...activity
+      targets, instructionalMove, strategyTag, aiReasoning, ...activity
     } = generated;
 
     // ── Math accuracy review of the artifact ─────────────────────────────────
@@ -702,11 +762,12 @@ ${MATH_FORMATTING}
       return JSON.stringify({
         templateId: template.id,
         activityType: contentType,
-        targets, instructionalMove, strategyTag, durationMinutes, aiReasoning,
+        targets, instructionalMove, strategyTag, aiReasoning,
+        durationMinutes: plannedClassMinutes(activity).total,
         content: {
           schemaVersion: CONTENT_VERSION,
           whyThisActivity: activity.whyThisActivity,
-          durations: activity.durations,
+          durations: toStoredDurations(activity),
           beforeClass: activity.beforeClass,
           howToRun: activity.howToRun,
           facilitate: activity.facilitate,
@@ -717,6 +778,7 @@ ${MATH_FORMATTING}
     }
 
     // ── Closing discussion, then its review ──────────────────────────────────
+    const { DiscussionDraft, DiscussionReview } = discussionSchemasFor(activity.discussionMinutes);
     const discussionPrompt = discussionPromptFor(activity);
     const draft = await structuredCall(
       'generate-discussion', DISCUSSION_MODEL,
@@ -726,6 +788,7 @@ ${MATH_FORMATTING}
 
     let discussion = draft;
     let review = null;
+    let artifactFixes = null;
     const reviewPrompt = reviewPromptFor(activity, draft);
     try {
       review = await structuredCall(
@@ -735,19 +798,37 @@ ${MATH_FORMATTING}
       // A clean review keeps the draft verbatim: a reviewer with nothing to fix
       // has no business rewording what passed.
       if (review.issues.length > 0) discussion = review.corrected;
+      if (review.artifactFixes.length > 0) {
+        const fixed = applyLabelFixes(activity.facilitate, review.artifactFixes);
+        activity.facilitate = fixed.facilitate;
+        artifactFixes = fixed;
+        recordSubCall('review-artifact-labels', null, null, {
+          proposed: review.artifactFixes.length, applied: fixed.applied, rejected: fixed.rejected,
+        });
+      }
     } catch (err) {
       console.warn('[microcoachNextStepOption] discussion review failed — keeping the draft:', err?.message);
       recordSubCall('review-discussion', REVIEW_MODEL, null, { fellBack: true, reason: err?.message ?? 'error' });
     }
 
+    // The teacher runs one of the three questions, so the class time is the steps
+    // plus the longest question. Over the window means a question outgrew the time
+    // its activity reserved; record it rather than trim what was written.
+    const storedDiscussion = toStoredDiscussion(discussion);
+    const durationMinutes = plannedClassMinutes(activity).steps
+      + Math.max(...storedDiscussion.questions.map((q) => q.minutes ?? 0));
+    if (durationMinutes > MAX_DURATION) {
+      recordSubCall('over-time', null, null, { minutes: durationMinutes, limit: MAX_DURATION });
+    }
+
     const content = {
       schemaVersion: CONTENT_VERSION,
       whyThisActivity: activity.whyThisActivity,
-      durations: activity.durations,
+      durations: toStoredDurations(activity, storedDiscussion.questions),
       beforeClass: activity.beforeClass,
       howToRun: activity.howToRun,
       facilitate: activity.facilitate,
-      discussion: toStoredDiscussion(discussion),
+      discussion: storedDiscussion,
     };
 
     const output = {
@@ -774,7 +855,13 @@ ${MATH_FORMATTING}
           // The question purposes are stripped from the stored content; kept here
           // so a run shows which kinds of question the model chose.
           discussionDraft: draft,
-          discussionReview: review ? { issues: review.issues, applied: review.issues.length > 0 } : null,
+          discussionReview: review ? {
+            issues: review.issues,
+            applied: review.issues.length > 0,
+            artifactFixes: review.artifactFixes,
+            artifactFixesApplied: artifactFixes?.applied ?? [],
+            artifactFixesRejected: artifactFixes?.rejected ?? [],
+          } : null,
           targetStandardMatched: Boolean(targetStandard),
           targetStandardCode: targetStandard?.code ?? null,
           misconceptionStandard: misconception.ccssStandard ?? null,

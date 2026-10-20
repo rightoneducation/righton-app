@@ -85,8 +85,8 @@ export const STAGES: Stage[] = [
     subtitle: "Grade each one on the Wave 2 rubric and pick the Recommended Focus",
     who: 'code',
     where: 'ScoresCalc · misconceptionRubric.json',
-    detail: 'One call over all misconceptions. Scores the measured inputs 0–3 (share of class continuously, reaching 3 at 50%; downstream standards and mean confidence in bands), asks the model for Conceptual Depth 0–3, weights them ×3 / ×1 / ×3 / ×3 into a score out of 30, ranks and keeps the top three. Rank 1 is the Recommended Focus.',
-    out: ['rubric scores + score out of 30', 'priorityRank', 'isRecommendedFocus', 'retained'],
+    detail: 'One call over all misconceptions. Scores the measured inputs 0–3 (share of class continuously, reaching 3 at 50%; downstream standards and mean confidence in bands), asks the model for Conceptual Depth 0–3, weights them ×3 / ×1 / ×3 / ×3 (depth scaled by reach) into a score out of 30, ranks and keeps the top three. Rank 1 is the Recommended Focus; the widest-reaching of the three is tagged Highest Frequency.',
+    out: ['rubric scores + score out of 30', 'priorityRank', 'isRecommendedFocus', 'isHighestFrequency', 'retained'],
   },
   {
     id: 'need',

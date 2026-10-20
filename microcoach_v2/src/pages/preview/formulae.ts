@@ -128,15 +128,15 @@ export const FORMULAE: Formula[] = [
         tex: '\\text{confidence} = 0 \\ (<2), \\ 1 \\ (2\\text{–}3), \\ 2 \\ (3\\text{–}4), \\ 3 \\ (\\geq 4)',
       },
       {
-        text: 'Conceptual depth: the one judged metric. The model reads each misconception against a four-level scale, from a procedural slip (0) to a fundamentally wrong mental model (3), and returns the level with one sentence of justification.',
+        text: 'Conceptual depth: the one judged metric. The model reads each misconception against a four-level scale, from a procedural slip (0) to a fundamentally wrong mental model (3), using a short decision guide (would the student catch it on checking? how far does the wrong idea reach?) with one example per level from other topics. It is judged three times in parallel and the middle value is used, because a single call moved borderline cases a level between calls.',
         tex: '\\text{depth} \\in \\{0, 1, 2, 3\\}',
       },
       {
-        text: 'Weight and add the four: progression counts once, the other three count three times. That gives the score, out of 30. A metric that could not be measured is left out and the maximum shrinks to match, so a misconception whose standard was not in the graph is not penalised against the others.',
-        tex: '\\text{score} = 3 \\times \\text{frequency} + 1 \\times \\text{progression} + 3 \\times \\text{confidence} + 3 \\times \\text{depth}, \\quad \\text{normalized} = \\dfrac{\\text{score}}{\\text{maximum possible}}',
+        text: 'Weight and add: progression counts once, frequency and confidence three times, and depth three times scaled by reach, so depth counts in proportion to the students the misconception reaches and earns its full 9 only at full reach. That gives the score, out of 30. With the other metrics equal, a conceptual misconception outranks a procedural one unless the procedural one reaches more than twice as many students. A metric that could not be measured is left out and the maximum shrinks to match, so a misconception whose standard was not in the graph is not penalised against the others.',
+        tex: '\\text{score} = 3 \\times \\text{frequency} + 1 \\times \\text{progression} + 3 \\times \\text{confidence} + 3 \\times \\text{depth} \\times \\dfrac{\\text{frequency}}{3}, \\quad \\text{normalized} = \\dfrac{\\text{score}}{\\text{maximum possible}}',
       },
       {
-        text: 'Highest normalized score is ranked #1 and is the Recommended Focus. Ties go to the deeper misconception, then the larger share of class, then the higher mean confidence, then the order the model listed them. The top three continue; the rest are kept in the run output with their scores but get no need, templates or activities.',
+        text: 'Highest normalized score is ranked #1 and is the Recommended Focus. Ties go to the deeper misconception, then the larger share of class, then the higher mean confidence, then the order the model listed them. The top three continue; the rest are kept in the run output with their scores but get no need, templates or activities. Of the three, the one reaching the most students is tagged Highest Frequency; the tag does not change the order.',
         tex: '\\text{rank} = \\text{position when sorted by normalized score, highest first}',
       },
     ],
@@ -144,6 +144,7 @@ export const FORMULAE: Formula[] = [
       'Every band, level description, the cap of three and the tiebreak are read from misconceptionRubric.json; the engine does no arithmetic of its own.',
       'Frequency is scored continuously rather than in the doc\'s four bands, because the bands gave 29%, 39% and 43% the same score and ties were settled by the tiebreak rather than by reach. It saturates at 50% because the doc\'s top band begins there: anything above half the class already scores the maximum.',
       'Progression is weighted at a third of the others: only two of its four levels are reachable on the standards fetched here, so at equal weight a one-level difference cancelled a two-level difference in share of class.',
+      'Depth is scaled by reach (rubric wave2-2026-10). Added on its own, depth\'s 9 points equalled the whole reach range, so a conceptual misconception reaching a few students outranked a procedural one reaching several times as many. Scaling keeps the doc\'s weights and the maximum of 30: it is the same as counting each affected student up to twice for a fully conceptual misconception and once for a procedural one.',
       'The doc\'s fifth metric, the Learning Commons Misconception Evaluator score, is a reserved slot (enabled: false) — no integration exists yet — so the maximum today is 30, not 39.',
       'Progression influence is a pilot proxy: the doc counts learning components the standard builds towards; the graph query returns that edge at the standard level only.',
       'The rubric is both the selector here and, per the doc, an evaluation measure. Using it to select means it cannot also serve as an independent judge of misconception quality (doc §2b).',

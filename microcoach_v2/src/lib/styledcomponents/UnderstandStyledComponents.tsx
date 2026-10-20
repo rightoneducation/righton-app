@@ -236,6 +236,29 @@ export const PrevalenceTag = styled(Box)(({ theme }) => ({
   cursor: 'default',
 }));
 
+/** The student-count chip and, on one card, the Highest frequency tag beside it. */
+export const TagRow = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  gap: theme.sizing.space1,
+}));
+
+// Not in Figma yet: the PrevalenceTag shape on the ADDITIONAL badge's hairline, so
+// it reads as a label beside the count rather than a second count.
+export const HighestFrequencyTag = styled(Box)(({ theme }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  minHeight: 30,
+  padding: `0 ${theme.sizing.space2}px`,
+  borderRadius: tagRadius,
+  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.foreground.greyAccent}`,
+  color: theme.palette.designSystem.surface.atlanticNavy,
+  ...theme.typography.placeholderLabel,
+  cursor: 'default',
+  boxSizing: 'border-box',
+}));
+
 /** A small caps label over its text (RESPONSE EVIDENCE:, POSSIBLE EXPLANATION:). */
 export const LabelledBlock = styled(Box)(({ theme }) => ({
   display: 'flex',

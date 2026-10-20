@@ -515,6 +515,7 @@ function RubricBlock({ item, tie }: { item: Rec; tie?: TieNote }) {
               {' · '}
               <span className="p2-rank-inline">#{String(item.priorityRank ?? '—')}</span>
               {item.isRecommendedFocus === true && <span className="p2-focus"> Recommended Focus</span>}
+              {item.isHighestFrequency === true && <span className="p2-focus"> Highest Frequency</span>}
               {!retained && <span className="p2-dropped"> dropped by cap</span>}
             </span>
           }
@@ -803,6 +804,7 @@ function MisconceptionCard({
         <span className={item.isRecommendedFocus === true ? 'p2-rank p2-rank-focus' : 'p2-rank'}>#{rank}</span>
         <span className="p2-card-title">{asStr(item.title) || '(untitled)'}</span>
         {item.isRecommendedFocus === true && <span className="p2-meta p2-focus">Recommended Focus</span>}
+        {item.isHighestFrequency === true && <span className="p2-meta p2-focus">Highest Frequency</span>}
         <ScoreStrip item={item} />
         <TieTag tie={tie} />
       </summary>
@@ -863,7 +865,7 @@ function flowLine(manifest: Rec, misconceptionCount: number): string {
 }
 
 // Where reviewers leave feedback on what this page shows.
-const COMMENTS_DOC = 'https://docs.google.com/document/d/16wNqCum2RTAFdNX5J2VJgm87U06_kE1bdI9syw9J3B8/edit?usp=drive_link';
+const COMMENTS_DOC = 'https://docs.google.com/document/d/11ExH8OtaetBhKIusDSe5iiHWKaWbq4nPqIvQ9bZD4Vo/edit?usp=sharing';
 
 function RunBar({
   runs,

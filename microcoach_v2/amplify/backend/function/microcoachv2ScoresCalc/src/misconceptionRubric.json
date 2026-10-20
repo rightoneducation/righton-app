@@ -1,5 +1,6 @@
 {
-  "version": "wave2-2026-09",
+  "version": "wave2-2026-10",
+  "versionNote": "wave2-2026-10 (2026-10-19): depth counts in proportion to reach (conceptualDepth.scaledBy) and the widest-reaching retained misconception is tagged (selection.highestFrequency). wave2-2026-09: the doc's rubric with continuous frequency and progression at weight 1.",
   "source": {
     "label": "MicroCoach Wave 2 — Recommendation Pipeline, Evaluation Framework, and Evaluation Harness, §3a Misconception Rubric",
     "href": "https://docs.google.com/document/d/1YnGsDBJGAlpy0nyE36nAogB9hl38YLav8TdP6guvdRA/edit?tab=t.0"
@@ -132,7 +133,23 @@
         "2": "The misconception reflects an incorrect or incomplete understanding of an important mathematical concept, although students may still demonstrate partial conceptual understanding.",
         "3": "The misconception reflects a fundamentally incorrect mental model or core mathematical idea that is likely to affect reasoning across multiple problems or contexts."
       },
-      "weight": 3
+      "judgingGuide": {
+        "note": "Added 2026-10-19 so the levels above are applied consistently. The level definitions are the doc's and are unchanged; this is a way of applying them. The examples come from algebra outside the pilot quiz (inequalities and systems), so the guide is not tuned to it. Before: on one fixed input, two of nine misconceptions moved between levels across five calls (0-2 and 0-1).",
+        "steps": [
+          "If the student slowed down and checked their own work, would they likely catch this themselves? Yes: the idea is intact and the error is in carrying out or recording the steps, so score 0 or 1. No: they would check it and still believe it, so score 2 or 3.",
+          "If 0 or 1: does it also show a shaky reading of what a symbol or step means, beyond the execution? No: 0. Yes: 1.",
+          "If 2 or 3: would this wrong idea mislead the student across many different problems and topics, because it concerns a core idea such as what a variable, the equals sign or a solution is? Yes: 3. If it is limited to one concept or one representation: 2."
+        ],
+        "examples": {
+          "0": "While solving 2x + 5 = 17, writes 17 - 5 = 11, then continues correctly.",
+          "1": "On several problems, writes -(x - 3) as -x - 3, distributing to the first term only.",
+          "2": "Believes that when the variables cancel out of an equation, the solution is x = 0.",
+          "3": "Reads a letter as a label for an object (\"3a\" as \"three apples\"), so expressions with variables are misread everywhere."
+        }
+      },
+      "weight": 3,
+      "scaledBy": "frequency",
+      "scaledByNote": "Depth's weighted points are multiplied by frequency's share of its maximum (frequency score / 3), so depth counts in proportion to the students the misconception reaches. Equivalent to frequency × (1 + depth / 3): a fully conceptual misconception counts each affected student twice, a procedural one once. The doc's weights are unchanged and so is the maximum: at full reach depth still adds its 9 points, so reach and depth together top out at 18 of 30. Reason: added independently, depth's 9 points equalled the whole reach range, so a conceptual misconception reaching a few students outranked a procedural one reaching several times as many (v32: 5 students at depth 3 over 8 at depth 0). Scaled, a conceptual misconception outranks a procedural one unless the procedural one reaches more than twice as many students, other metrics equal. Changed 2026-10-19."
     }
   ],
   "selection": {
@@ -148,10 +165,17 @@
       "inputOrder"
     ],
     "tiebreakDescription": "Not specified in the doc. Higher wins at each step; inputOrder is the order the misconceptions were given, so the result is deterministic.",
-    "maxScoreNote": "Each metric scores 0-3 per the doc; the total is the weighted sum, so the maximum is sum(3 x weight) over the ENABLED metrics: 30 as configured (frequency, progression, confidence, depth), or 39 if the LC evaluator is enabled at weight 3. Ranking is on total / maxPossible, so the weights change ordering, not the scale the scores are reported on."
+    "maxScoreNote": "Each metric scores 0-3 per the doc; the total is the weighted sum, so the maximum is sum(3 x weight) over the ENABLED metrics: 30 as configured (frequency, progression, confidence, depth), or 39 if the LC evaluator is enabled at weight 3. A metric with `scaledBy` (depth) reaches its full weight only at the maximum of the metric it is scaled by, so the maximum is unchanged. Ranking is on total / maxPossible, so the weights change ordering, not the scale the scores are reported on.",
+    "highestFrequency": {
+      "input": "studentPercent",
+      "among": "retained",
+      "description": "Of the misconceptions carried forward, the one reaching the most students is tagged Highest Frequency, so the teacher can see which card covers the largest share of the class. A tag only: it does not change the ranking. Ties go to the better-ranked misconception. Added 2026-10-19."
+    }
   },
   "llm": {
     "model": "gpt-5-mini",
-    "description": "One call over all misconceptions returns conceptualDepth 0–3 plus a one-sentence justification each. The level definitions above are the whole scale the model is given."
+    "depthSamples": 3,
+    "description": "Each call covers all misconceptions and returns conceptualDepth 0–3 plus a one-sentence justification each, judged against the level definitions and judgingGuide above. depthSamples calls run in parallel and each misconception takes the middle value (the lower middle when an even number came back), with the justification from a call that gave that value.",
+    "depthSamplesNote": "Added 2026-10-19. With one call, borderline misconceptions moved a level between calls on the same input, so the top 3 changed from call to call (v32's input: three different top 3s in five calls, even with the judgingGuide). Taking the middle of three gave one top 3 across all ten combinations of three samples, on both v32's and v33's inputs."
   }
 }

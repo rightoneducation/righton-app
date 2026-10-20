@@ -80,6 +80,7 @@ function header(manifest: any, retained: any[], swapNote: string | null, guardFi
     `**Summary:** ${manifest.questionCount} questions · ${manifest.distractorCount} distractors · ${manifest.studentCount} students → ${manifest.misconceptionCount} misconceptions scored → top ${manifest.misconceptionsRetained} carried forward → ${manifest.instructionalNeedsGenerated} instructional needs → ${manifest.templatePicks} activity templates → ${manifest.activityCount} activities`,
     '',
     `**Recommended Focus:** ${manifest.recommendedFocus}  `,
+    ...(manifest.highestFrequency ? [`**Highest Frequency:** ${manifest.highestFrequency}  `] : []),
     `**Retained / dropped:** ${manifest.misconceptionsRetained} / ${manifest.misconceptionsDropped} (rubric cap)  `,
     `**Standard matched:** ${manifest.targetStandardMatched}/${manifest.misconceptionCount}  `,
     `**Needs prescribing an activity:** ${needsFlagged}/${manifest.needSeparationChecked ?? retained.length}  `,
@@ -118,22 +119,36 @@ function rubricIntro(scored: any[]): string[] {
     studentConfidence: 'mean 1–5 self-rating on the linked wrong answers',
     conceptualDepth: "model judgement against the rubric's four written levels",
   };
+  const scaledBy = (m: any) => metrics.find((x: any) => x.id === m.scaledBy);
+  // Runs scored under an earlier rubric version keep that version's arithmetic, so
+  // the depth-scaling wording only applies when the run used this file's version.
+  const isCurrent = scored.some((m) => m.rubric?.version === RUBRIC.version);
+  if (isCurrent) describe.conceptualDepth += ', counted in proportion to reach';
   const out = [
     '## Misconceptions',
     '',
     `Scored on the Wave 2 Misconception Rubric. Each factor is scored 0–3, then weighted; the columns below are the weighted contributions, which add up to the **Score** out of ${max}. The highest score is the Recommended Focus and the top ${RUBRIC.selection.cap} are carried into instructional needs and activities.`,
     '',
     ...table(['Factor', 'Measured from', 'Weight', 'Contributes'],
-      metrics.map((m: any) => [m.label, describe[m.id] ?? '—', `×${m.weight}`, `0–${3 * m.weight}`])),
+      metrics.map((m: any) => [
+        m.label,
+        describe[m.id] ?? '—',
+        m.scaledBy && isCurrent ? `×${m.weight}, × ${scaledBy(m)?.label ?? m.scaledBy} share` : `×${m.weight}`,
+        `0–${3 * m.weight}`,
+      ])),
     '',
     `Progression influence is weighted at a third of the others: the count is taken at the standard level in this pilot and only two of its four levels are reachable on the standards fetched here, so at equal weight a one-level difference there cancelled a two-level difference in share of class. The Learning Commons Misconception Evaluator is defined in the rubric but not yet integrated, so the maximum is ${max}. Ties are broken on conceptual depth, then share of class, then mean confidence, then the order the model returned.`,
     '',
+    ...(isCurrent && metrics.some((m: any) => m.scaledBy) ? [
+      "Conceptual depth counts in proportion to reach: its points are multiplied by frequency's share of its maximum, so it earns its full 9 only at full reach. This is the same as counting each affected student up to twice over for a fully conceptual misconception and once for a procedural one. With the other factors equal, a conceptual misconception outranks a procedural one unless the procedural one reaches more than twice as many students. Added independently, depth's 9 points equalled the whole reach range, so a conceptual misconception reaching a few students could outrank a procedural one reaching several times as many.",
+      '',
+    ] : []),
   ];
   const ids = metrics.map((m: any) => m.id);
   out.push(...table(
     ['#', 'Misconception', 'Freq', 'Progression', 'Confidence', 'Depth', 'Score', 'Carried'],
     scored.map((m) => [
-      `${m.priorityRank}${m.isRecommendedFocus ? ' ★' : ''}`,
+      `${m.priorityRank}${m.isRecommendedFocus ? ' ★' : ''}${m.isHighestFrequency ? ' ◆' : ''}`,
       m.title,
       ...ids.map((id: string) => m.rubric?.weighted?.[id] ?? '—'),
       `${round2(m.rubric?.total ?? 0)} / ${m.rubric?.maxPossible ?? max}`,
@@ -147,7 +162,7 @@ function rubricIntro(scored: any[]): string[] {
     seen.set(k, (seen.get(k) ?? 0) + 1);
   }
   const shared = [...seen].filter(([, n]) => n > 1).map(([k]) => k);
-  out.push('', '★ = Recommended Focus.', '');
+  out.push('', `★ = Recommended Focus.${scored.some((m) => m.isHighestFrequency) ? ' ◆ = Highest Frequency: of the misconceptions carried forward, the one reaching the most students. A tag; it does not change the ranking.' : ''}`, '');
   out.push(`A response can be linked to more than one misconception, so these groups are not mutually exclusive and the percentages do not sum to 100%.${shared.length ? ` In this run ${shared.join(', ')} ${shared.length === 1 ? 'is' : 'are'} linked to more than one.` : ''}`, '');
   return out;
 }
@@ -155,7 +170,7 @@ function rubricIntro(scored: any[]): string[] {
 function misconceptionHead(m: any, focus: boolean, dropped: boolean): string[] {
   const std = m.ccssStandards?.targetObjective?.standard;
   return [
-    `### #${m.priorityRank} ${m.title}${focus ? ' — Recommended Focus' : ''}${dropped ? ' (not carried forward)' : ''}`,
+    `### #${m.priorityRank} ${m.title}${[focus && 'Recommended Focus', m.isHighestFrequency && 'Highest Frequency'].filter(Boolean).map((t, i) => (i ? ` · ${t}` : ` — ${t}`)).join('')}${dropped ? ' (not carried forward)' : ''}`,
     '',
     `Selected one or more linked responses: ${m.studentCount} unique students (${pct(m.studentPercent)}) · linked responses: ${m.linkedResponses} · mean confidence: ${m.meanConfidence ?? '—'} of 5 · evidence basis: ${m.evidenceBasis ?? '—'}`,
     '',
@@ -177,12 +192,17 @@ function rubricTable(m: any): string[] {
       ...metrics.map((x: any) => {
         const score = m.rubric?.scores?.[x.id];
         const weighted = m.rubric?.weighted?.[x.id];
-        return [x.label, `${weighted ?? '—'}/${3 * x.weight}`, METRIC_FROM[x.id]?.(m) ?? '—', `${score ?? '—'}/3 × ${x.weight}`];
+        const scaled = x.scaledBy && m.rubric?.version === RUBRIC.version;
+        const by = scaled ? m.rubric?.scores?.[x.scaledBy] : null;
+        const derivation = scaled
+          ? `${score ?? '—'}/3 × ${x.weight} × ${by ?? '—'}/3 reach`
+          : `${score ?? '—'}/3 × ${x.weight}`;
+        return [x.label, `${weighted ?? '—'}/${3 * x.weight}`, METRIC_FROM[x.id]?.(m) ?? '—', derivation];
       }),
       ['**Score**', `**${round2(m.rubric?.total ?? 0)} / ${m.rubric?.maxPossible ?? '—'}**`, `rank #${m.priorityRank}`, ''],
     ]),
     '',
-    `**Depth rationale.** ${m.rubric?.conceptualDepthWhy ?? '—'}`,
+    `**Depth rationale.** ${m.rubric?.conceptualDepthWhy ?? '—'}${m.rubric?.conceptualDepthSamples ? ` (depth calls: ${m.rubric.conceptualDepthSamples.map((d: number | null) => d ?? '–').join(', ')}; the middle one is used)` : ''}`,
     '',
   ];
 }
@@ -213,7 +233,7 @@ function needAndPicks(m: any): string[] {
     '',
   ];
   for (const p of sel.picks ?? []) {
-    out.push(`**${p.templateId}** — instructional fit ${p.instructionalFit}/3  `, `Move: ${p.instructionalApproach}`, '', p.rationale, '');
+    out.push(`**${p.templateId}** — instructional fit ${p.instructionalFit}/3  `, `Move: ${p.instructionalApproach}  `, ...(p.studentsDo ? [`Students: ${p.studentsDo}`] : []), '', p.rationale, '');
   }
   if (sel.noFitReason) out.push(`No fit: ${sel.noFitReason}`, '');
   if ((sel.considered ?? []).length) {
