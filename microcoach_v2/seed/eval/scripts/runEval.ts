@@ -108,6 +108,8 @@ function main(): void {
       const args = ['ts-node', GENERATE, '--fixture', session, '--condition', condition, '--graph', graph];
       if (version !== null) args.push('--version', version);
       if (has('--analysis-only')) args.push('--analysis-only');
+      const pin = arg('--pin-template');
+      if (pin !== null) args.push('--pin-template', pin);
       const result = spawnSync('npx', args, { stdio: 'inherit' });
       // Keep going on failure — one bad session should not cost the whole matrix.
       if (result.status !== 0) failures.push(`${session}/${condition}`);

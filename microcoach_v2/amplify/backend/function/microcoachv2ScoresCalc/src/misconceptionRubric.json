@@ -1,6 +1,6 @@
 {
   "version": "wave2-2026-10",
-  "versionNote": "wave2-2026-10 (2026-10-19): depth counts in proportion to reach (conceptualDepth.scaledBy) and the widest-reaching retained misconception is tagged (selection.highestFrequency). wave2-2026-09: the doc's rubric with continuous frequency and progression at weight 1.",
+  "versionNote": "wave2-2026-10 (2026-10-19): depth counts in proportion to reach (conceptualDepth.scaledBy) and the widest-reaching misconception is tagged (selection.highestFrequency); since 2026-10-20 it is chosen from all misconceptions and carried forward as a fourth when it is outside the top 3. wave2-2026-09: the doc's rubric with continuous frequency and progression at weight 1.",
   "source": {
     "label": "MicroCoach Wave 2 — Recommendation Pipeline, Evaluation Framework, and Evaluation Harness, §3a Misconception Rubric",
     "href": "https://docs.google.com/document/d/1YnGsDBJGAlpy0nyE36nAogB9hl38YLav8TdP6guvdRA/edit?tab=t.0"
@@ -168,8 +168,9 @@
     "maxScoreNote": "Each metric scores 0-3 per the doc; the total is the weighted sum, so the maximum is sum(3 x weight) over the ENABLED metrics: 30 as configured (frequency, progression, confidence, depth), or 39 if the LC evaluator is enabled at weight 3. A metric with `scaledBy` (depth) reaches its full weight only at the maximum of the metric it is scaled by, so the maximum is unchanged. Ranking is on total / maxPossible, so the weights change ordering, not the scale the scores are reported on.",
     "highestFrequency": {
       "input": "studentPercent",
-      "among": "retained",
-      "description": "Of the misconceptions carried forward, the one reaching the most students is tagged Highest Frequency, so the teacher can see which card covers the largest share of the class. A tag only: it does not change the ranking. Ties go to the better-ranked misconception. Added 2026-10-19."
+      "among": "all",
+      "alwaysRetain": true,
+      "description": "Of all the misconceptions scored, the one reaching the most students is tagged Highest Frequency, so the teacher always sees which misconception covers the largest share of the class. If it is already in the top 3 nothing else changes; if not, it is carried forward as a fourth, after the top 3, with its own rank, need and activities. It does not change the ranking or the Recommended Focus. Ties go to the better-ranked misconception. Added 2026-10-19; chosen from all misconceptions and always carried forward since 2026-10-20."
     }
   },
   "llm": {
