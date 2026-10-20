@@ -3,8 +3,8 @@ export type ReflectionDetailSort = 'highestScoring' | 'mostImproved';
 export interface MockReflectionStudentResult {
   id: string;
   displayName: string;
-  questionsCorrectBefore: number;
-  questionsCorrectAfter: number;
+  questionsCorrectBefore: number | null;
+  questionsCorrectAfter: number | null;
 }
 
 export interface MockReflectionAnswerResult {
@@ -162,6 +162,18 @@ export const mockReflectionStudents: MockReflectionStudentResult[] = [
     displayName: 'Jayden',
     questionsCorrectBefore: 1,
     questionsCorrectAfter: 0,
+  },
+  {
+    id: 'student-sam',
+    displayName: 'Sam',
+    questionsCorrectBefore: 4,
+    questionsCorrectAfter: null,
+  },
+  {
+    id: 'student-lee',
+    displayName: 'Lee',
+    questionsCorrectBefore: null,
+    questionsCorrectAfter: 5,
   },
 ];
 

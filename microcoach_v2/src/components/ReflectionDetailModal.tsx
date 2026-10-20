@@ -66,7 +66,7 @@ interface ReflectionDetailModalProps {
 interface StudentGroupProps {
   title: string;
   description: string;
-  students: MockReflectionStudentResult[];
+  students: CompleteReflectionStudentResult[];
   sort: ReflectionDetailSort;
   screenSize: ScreenSize;
   onSortChange: (sort: ReflectionDetailSort) => void;
@@ -80,8 +80,22 @@ interface ResponseRowProps {
 
 const QUESTION_COUNT = 6;
 
+type CompleteReflectionStudentResult = MockReflectionStudentResult & {
+  questionsCorrectBefore: number;
+  questionsCorrectAfter: number;
+};
+
+function hasCompleteResults(
+  student: MockReflectionStudentResult,
+): student is CompleteReflectionStudentResult {
+  return (
+    student.questionsCorrectBefore !== null &&
+    student.questionsCorrectAfter !== null
+  );
+}
+
 function sortStudents(
-  students: MockReflectionStudentResult[],
+  students: CompleteReflectionStudentResult[],
   sort: ReflectionDetailSort,
 ) {
   return [...students].sort((studentA, studentB) => {
@@ -97,7 +111,7 @@ function sortStudents(
   });
 }
 
-function studentTrend(student: MockReflectionStudentResult) {
+function studentTrend(student: CompleteReflectionStudentResult) {
   return getReflectionTrend(
     student.questionsCorrectAfter - student.questionsCorrectBefore,
   );
@@ -264,16 +278,20 @@ export default function ReflectionDetailModal({
 
   const reachedMastery = React.useMemo(
     () =>
-      mockReflectionStudents.filter(
-        (student) => student.questionsCorrectAfter >= 5,
-      ),
+      mockReflectionStudents
+        .filter(hasCompleteResults)
+        .filter((student) => student.questionsCorrectAfter >= 5),
     [],
   );
   const notYetAtMastery = React.useMemo(
     () =>
-      mockReflectionStudents.filter(
-        (student) => student.questionsCorrectAfter <= 4,
-      ),
+      mockReflectionStudents
+        .filter(hasCompleteResults)
+        .filter((student) => student.questionsCorrectAfter <= 4),
+    [],
+  );
+  const incompleteComparisons = React.useMemo(
+    () => mockReflectionStudents.filter((student) => !hasCompleteResults(student)),
     [],
   );
 
@@ -409,6 +427,37 @@ export default function ReflectionDetailModal({
                 screenSize={screenSize}
                 onSortChange={setSupportSort}
               />
+              <MasterySection>
+                <MasteryHeadingGroup>
+                  <MasteryTitleRow>
+                    <Typography variant="headingMd" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                      {t('reflect.incompleteComparison')}
+                    </Typography>
+                    <StudentCountChip>
+                      {t('reflect.studentCount', {
+                        count: incompleteComparisons.length,
+                      })}
+                    </StudentCountChip>
+                  </MasteryTitleRow>
+                  <Typography variant="uploadLabel" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                    {t('reflect.incompleteComparisonDescription')}
+                  </Typography>
+                </MasteryHeadingGroup>
+                <StudentResultList>
+                  {incompleteComparisons.map((student) => (
+                    <StudentResultChip key={student.id} sort="mostImproved">
+                      <StudentNamePill sort="mostImproved">
+                        {student.displayName}
+                      </StudentNamePill>
+                      <StudentResultValue variant="rubikBodyBold" trend="unchanged">
+                        {student.questionsCorrectAfter === null
+                          ? t('reflect.miu1Only')
+                          : t('reflect.miu2Only')}
+                      </StudentResultValue>
+                    </StudentResultChip>
+                  ))}
+                </StudentResultList>
+              </MasterySection>
             </MasteryGroups>
 
             <ReflectionPanelDivider />
