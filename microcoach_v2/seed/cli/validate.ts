@@ -52,8 +52,9 @@ const WATCH_FOR_MIN           = cdo.watchFors?.min ?? 1;
 const WATCH_FOR_MAX           = cdo.watchFors?.max ?? 3;
 const EXAMPLES_MIN            = nso.examples?.min ?? 1;
 const EXAMPLES_MAX            = nso.examples?.max ?? 3;
-const ALLOWED_DURATION_BUCKETS: Array<{ label: string; min: number; max: number }> =
-  nso.allowedDurationBuckets ?? [];
+// Durations are computed from the planned minutes now (2026-10-19), so the check
+// is the class window itself rather than a list of buckets.
+const MAX_DURATION: number = nso.maxDurationMinutes ?? 15;
 const DESIGN_PRINCIPLES: string[] = nso.designPrinciples ?? [];
 
 // source: amplify/backend/function/microcoachv2NextStepOption/src/util/activityContent.mjs
@@ -134,8 +135,8 @@ function parseDurationMinutes(time: string): number | null {
   return m ? parseInt(m[1], 10) : null;
 }
 
-function isInDurationBucket(minutes: number): boolean {
-  return ALLOWED_DURATION_BUCKETS.some(b => minutes >= b.min && minutes <= b.max);
+function isWithinClassWindow(minutes: number): boolean {
+  return minutes > 0 && minutes <= MAX_DURATION;
 }
 
 // ── Test result types ─────────────────────────────────────────────────────────
@@ -264,7 +265,7 @@ function runStructuralChecks(
 
   const durationMinutes = parseDurationMinutes(activity.time ?? '');
   if (durationMinutes !== null) {
-    check('duration in allowed bucket', isInDurationBucket(durationMinutes), `${durationMinutes} min not in any bucket`);
+    check('duration within the class window', isWithinClassWindow(durationMinutes), `${durationMinutes} min, over ${MAX_DURATION}`);
   } else {
     check('duration parseable', false, `could not parse time: "${activity.time}"`);
   }

@@ -72,7 +72,7 @@ const WrongAnswerRef = z.object({
 
 // Key order mirrors parts (a)–(d) of the prompt's output instructions.
 const MisconceptionOut = z.object({
-  description: z.string().describe('(a) The specific conceptual error, tailored to the actual steps required to arrive at it'),
+  description: z.string().describe('(a) The reasoning the chosen answers point to, tailored to the actual steps required to arrive at them — written as the interpretation the evidence supports, tied to what students chose, not as a fact about what they think'),
   title: z.string().describe('(b) A precise title focused on the conceptual error itself'),
   learningScienceConnection: z.string().describe('(c) The mathematical relationship this error breaks — which idea from the standard, its learning components, or its prerequisites the student is not coordinating. A mathematical claim about this error, never a learning-science category.'),
   evidenceBasis: z.enum(['grounded', 'inferred']).describe(
@@ -257,7 +257,9 @@ export function buildPrompt(questions, context, learningScienceData) {
     Two parts, in this order:
     1. \`misconceptions\` — the misconceptions this quiz's wrong answers support
       a. a description of the reasoning that produces the specific wrong values students chose. It must determine those values: if the reasoning you describe would not land a student on the options you list, it is not the misconception behind them.
-         Good: "Writes the solution components in the wrong order, giving (0,5) where the system yields (5,0)."
+         Write it as the interpretation the answers support, starting from what was chosen: the answers are the evidence and the reasoning is the reading of them. Selected answers do not show that every student who chose them reasoned the same way, so never state the reasoning as a fact about what students think or believe. This is not hedging: commit to the one reading, without "often", "may" or "perhaps".
+         Good: "Choosing $(0,5)$ where the system yields $(5,0)$ points to writing the solution components in the wrong order."
+         Not: "Students believe the order of an ordered pair does not matter." — states a belief the answers cannot show.
          Not: "Sets one variable to zero instead of solving the system." — determines neither y = 5 nor y = -5, so it explains neither option.
       b. a precise title naming that reasoning. A plain noun phrase, no parentheticals, no "or".
          Good: "Swapped solution components"

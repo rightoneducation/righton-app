@@ -78,6 +78,8 @@
     "viewMiu": "Ver Mix It Up",
     "viewDetails": "Ver detalles",
     "recommendedFocus": "Enfoque recomendado",
+    "highestFrequency": "Frecuencia más alta",
+    "highestFrequencyTooltip": "De estos conceptos erróneos, este es el que alcanza a más estudiantes.",
     "additional": "Concepto erróneo adicional",
     "focusTooltip": "MicroCoach considera varios factores en conjunto: qué tan extendido está el concepto erróneo, con cuánta seguridad lo sostienen los estudiantes, qué tan importante es la idea matemática para el aprendizaje futuro y la solidez de la evidencia.",
     "focusTooltipLabel": "Por qué este es el enfoque recomendado",
