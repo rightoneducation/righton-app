@@ -13,10 +13,7 @@ import type {
   IMicroCoachReflectionAnswerResult,
   IMicroCoachReflectionStudentResult,
 } from '../api/Models/IMicroCoachSession';
-import {
-  IImplementedActivity,
-  ReflectionDetailSort,
-} from '../lib/PipelineModels';
+import { IImplementedActivity } from '../lib/PipelineModels';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import {
   AnswerDistribution,
@@ -56,7 +53,10 @@ import {
   StudentResultValue,
 } from '../lib/styledcomponents/ReflectionDetailStyledComponents';
 import { ReflectionTrendValue } from '../lib/styledcomponents/ReflectStyledComponents';
-import { getReflectionTrend } from '../lib/reflectionResults';
+import {
+  getReflectionTrend,
+  ReflectionDetailSort,
+} from '../lib/reflectionResults';
 
 interface ReflectionDetailModalProps {
   activity: IImplementedActivity | null;

@@ -248,21 +248,10 @@ const SESSIONS_BY_CLASSROOM = /* GraphQL */ `
         ppqAssessmentId
         postPpqAssessmentId
         pregeneratedNextSteps
-        questionStats {
-          questionNumber
-          questionText
-        }
         misconceptions {
           items {
             id
             title
-            activity {
-              items {
-                id
-                misconceptionId
-                isSelected
-              }
-            }
           }
         }
       }
@@ -283,29 +272,6 @@ const STUDENT_RESPONSES_BY_ASSESSMENT = /* GraphQL */ `
           isCorrect
           pointsEarned
           confidence
-        }
-      }
-    }
-  }
-`;
-
-const GET_ASSESSMENT = /* GraphQL */ `
-  query GetMicroCoachAssessment($id: ID!) {
-    getMicroCoachAssessment(id: $id) {
-      id
-      classId
-      sessionId
-      assessmentCode
-      type
-      weekNumber
-      sourceAssessmentId
-      questions {
-        questionNumber
-        questionText
-        correctAnswer
-        answerChoices {
-          letter
-          text
         }
       }
     }
@@ -336,10 +302,6 @@ const UPDATE_SESSION = /* GraphQL */ `
       id
       postPpqAssessmentId
       pregeneratedNextSteps
-      reflectionResults {
-        activityId
-        misconceptionId
-      }
     }
   }
 `;
@@ -548,36 +510,6 @@ async function main() {
       const postResponses: any[] =
         postData.microCoachStudentResponsesByAssessmentId?.items ?? [];
       console.log(` ✓  ${postResponses.length} responses`);
-
-      // Fetch both assessment definitions so the Reflect calculation can pair
-      // questions and identify the correct answer for each MIU.
-      const beforeAssessmentData = await gql(GET_ASSESSMENT, {
-        id: dbSession.ppqAssessmentId,
-      });
-      const afterAssessmentData = await gql(GET_ASSESSMENT, {
-        id: postPpqAssessmentId,
-      });
-      const beforeAssessment = beforeAssessmentData.getMicroCoachAssessment;
-      const afterAssessment = afterAssessmentData.getMicroCoachAssessment;
-
-      if (!beforeAssessment || !afterAssessment) {
-        console.log(`  ✗ Could not fetch both MIU assessments — cannot compute Reflect results`);
-        continue;
-      }
-
-      const reflectTargets = (dbSession.misconceptions?.items ?? []).flatMap(
-        (misconception: any) =>
-          (misconception.activity?.items ?? [])
-            .filter((activity: any) => activity.isSelected)
-            .map((activity: any) => ({
-              activityId: activity.id,
-              misconceptionId: misconception.id,
-            })),
-      );
-
-      console.log(
-        `  ✓ Reflect inputs ready: ${reflectTargets.length} selected activities`,
-      );
 
       // ── Step 3: Compute per-misconception improvement ─────────────────
 

@@ -6,8 +6,10 @@ import Box from '@mui/material/Box';
 import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import { ScreenSize } from '../MicroCoachModels';
-import { ReflectionDetailSort } from '../PipelineModels';
-import { ReflectionTrend } from '../reflectionResults';
+import {
+  ReflectionDetailSort,
+  ReflectionTrend,
+} from '../reflectionResults';
 
 const forwardScreenSize = (prop: PropertyKey) => prop !== 'screenSize';
 const forwardTrend = (prop: PropertyKey) => prop !== 'trend';

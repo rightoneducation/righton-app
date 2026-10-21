@@ -3,6 +3,7 @@ import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { IImplementedActivity, IReflect } from './PipelineModels';
 
 export type ReflectionTrend = 'improved' | 'declined' | 'unchanged';
+export type ReflectionDetailSort = 'highestScoring' | 'mostImproved';
 
 export function getReflectionTrend(change: number): ReflectionTrend {
   if (change > 0) return 'improved';
