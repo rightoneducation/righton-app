@@ -45,14 +45,13 @@ import {
   FlowStep,
   buildFlowSteps,
   buildPendingFlowSteps,
-  defaultWeekFor,
   deriveCurrentStep,
   hasChosenActivity,
   sessionForWeek,
   sortSessionsLatestFirst,
   stepCta,
 } from '../lib/flowProgress';
-import { formatSchoolWeek, schoolWeeks } from '../lib/weeks';
+import { currentSchoolWeek, formatSchoolWeek, schoolWeeks } from '../lib/weeks';
 
 // Chips shown inline before the rest fold into "More".
 const VISIBLE_CLASS_COUNT = 4;
@@ -118,12 +117,12 @@ export default function Dashboard({
   /*
    * The week drives the page: the stepper and CTA show the selected class's
    * session for that week, Weekly Activity Progress shows every class's, and
-   * the upload is pre-filled with it. Until the teacher picks one it follows
-   * the class's open loop (defaultWeekFor), so a class part-way through last
-   * week's cycle opens on that week rather than starting over.
+   * the upload is pre-filled with it. Until the teacher picks one it is the
+   * current week: an unfinished earlier week moves to Past Activities as
+   * Incomplete rather than holding Home on it (rev4 WeeklyActivity).
    */
   const [pickedWeek, setPickedWeek] = React.useState<string | null>(null);
-  const weekStart = pickedWeek ?? defaultWeekFor(sessionList);
+  const weekStart = pickedWeek ?? currentSchoolWeek();
   const weekSession = sessionForWeek(sessionList, weekStart);
 
   // Review, Select Activity and the rest read the app-wide selected session,

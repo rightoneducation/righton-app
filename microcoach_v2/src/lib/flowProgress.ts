@@ -2,7 +2,7 @@ import { SessionStatus } from '../AWSAPI';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { IFlowStep } from './PipelineModels';
 import { Translate } from './activityMarks';
-import { currentSchoolWeek, schoolWeeks, weekOf } from './weeks';
+import { weekOf } from './weeks';
 
 // Where a class stands in the coaching loop, read off its persisted session.
 // Pure: the dashboard fetches, this decides.
@@ -44,6 +44,9 @@ export function deriveCurrentStep(
     return FlowStep.ASSESS;
   }
   if (session.status === SessionStatus.COMPLETED) return FlowStep.DONE;
+  // MIU 2 is in and the pipeline is still on it: still Reassess, but waiting
+  // (isAwaitingResults). Results arrive as postPpqAssessmentId, below.
+  if (session.status === SessionStatus.REASSESS_INGESTED) return FlowStep.REASSESS;
   if (session.postPpqAssessmentId) return FlowStep.REFLECT;
   if (hasSavedPlan) return FlowStep.REASSESS;
   return FlowStep.UNDERSTAND;
@@ -52,6 +55,18 @@ export function deriveCurrentStep(
 // Whether the class has an activity to show on My Activity: saving a plan is
 // what moves it on to REASSESS. Until then the button is greyed out (rev2
 // LandingPage).
+// Where a class's action button goes for its current step (Home, and Past
+// Activities' cards). The upload covers both the first upload and the
+// reassessment; a finished week opens its results.
+export const RESUME_PATH: Record<FlowStep, string> = {
+  [FlowStep.ASSESS]: '/upload-miu',
+  [FlowStep.UNDERSTAND]: '/review',
+  [FlowStep.CHOOSE]: '/review',
+  [FlowStep.REASSESS]: '/upload-reassess',
+  [FlowStep.REFLECT]: '/reflect',
+  [FlowStep.DONE]: '/reflect',
+};
+
 export function hasChosenActivity(step: FlowStep): boolean {
   return [FlowStep.REASSESS, FlowStep.REFLECT, FlowStep.DONE].includes(step);
 }
@@ -145,16 +160,15 @@ export function sessionForWeek(
   );
 }
 
-// The week Home opens on: the week of the class's latest session while that
-// session's loop is still open (a class mid-way through last week's cycle
-// stays on it), otherwise the current week.
-export function defaultWeekFor(sessions: IMicroCoachSession[]): string {
-  const latest = [...sessions].sort((a, b) =>
-    b.createdAt.localeCompare(a.createdAt),
-  )[0];
-  if (!latest || latest.status === SessionStatus.COMPLETED) {
-    return currentSchoolWeek();
-  }
-  const week = weekOf(latest.createdAt);
-  return schoolWeeks().includes(week) ? week : currentSchoolWeek();
+// The pipeline is working on an upload, MIU 1 or MIU 2: nothing for the
+// teacher to do but wait (rev4 WeeklyActivity stages 2 and 6).
+//
+// TODO(upload-flow rework): nothing sets REASSESS_INGESTED or
+// postPpqAssessmentId yet. See the SessionStatus contract in schema.graphql;
+// until the MIU 2 path writes them, Home stays on "Upload MIU 2 files".
+export function isAwaitingResults(session: IMicroCoachSession | null): boolean {
+  return (
+    session?.status === SessionStatus.DATA_INGESTED ||
+    session?.status === SessionStatus.REASSESS_INGESTED
+  );
 }

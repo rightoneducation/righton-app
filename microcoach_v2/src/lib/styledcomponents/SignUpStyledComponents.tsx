@@ -293,7 +293,7 @@ export const SignUpCta = styled(Button)(({ theme }) => ({
   textTransform: 'none',
   whiteSpace: 'nowrap',
   '&:hover': {
-    backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
+    backgroundColor: theme.palette.designSystem.background.navyBlue,
   },
   '&.Mui-disabled': {
     backgroundColor: theme.palette.designSystem.surface.neutralGray,
@@ -319,7 +319,7 @@ export const SignUpPill = styled(Button)(({ theme }) => ({
   textTransform: 'none',
   whiteSpace: 'nowrap',
   '&:hover': {
-    backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
+    backgroundColor: theme.palette.designSystem.foreground.accentBlue,
   },
 }));
 
@@ -379,7 +379,7 @@ export const ResetButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
   whiteSpace: 'nowrap',
   '&:hover': {
-    backgroundColor: theme.palette.designSystem.background.navyBlue,
+    backgroundColor: theme.palette.designSystem.surface.darkBlue,
   },
 }));
 

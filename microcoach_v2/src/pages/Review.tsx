@@ -231,17 +231,7 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
                   {t('review.loadError')}
                 </Typography>
               ) : (
-                <CardRow screenSize={screenSize}>
-                  {misconceptions.map((misconception) => (
-                    <MisconceptionCard
-                      key={misconception.id}
-                      isAligned={screenSize === ScreenSize.LARGE}
-                      misconception={misconception}
-                      onViewDetails={(id, fromEvidence) => setSelected({ id, fromEvidence })}
-                      onSelect={handleSelect}
-                    />
-                  ))}
-                </CardRow>
+                cardLayout
               )}
             </LoadingSlot>
           </ReviewIntro>

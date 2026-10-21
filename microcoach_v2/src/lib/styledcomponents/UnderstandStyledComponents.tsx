@@ -346,7 +346,7 @@ export const CardButton = styled(Button, {
     ...theme.typography.buttonLabel,
     textTransform: 'none',
     '&:hover': {
-      backgroundColor: palette.surface.atlanticNavy,
+      backgroundColor: isPrimary ? palette.background.navyBlue : palette.foreground.accentBlue,
     },
   };
 });

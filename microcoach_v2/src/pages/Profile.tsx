@@ -5,16 +5,19 @@ import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Typography from '@mui/material/Typography';
+import { alpha, useTheme } from '@mui/material/styles';
 import CancelIcon from '@mui/icons-material/Cancel';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import ConfirmRemoveDialog from '../components/ConfirmRemoveDialog';
 import ProfileSkeleton from '../components/ProfileSkeleton';
 import { IAPIClients } from '../api';
+import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import accountPatternTopLeft from '../images/accountPatternTopLeft.svg';
 import accountPatternBottomRight from '../images/accountPatternBottomRight.svg';
+import removeIcon from '../images/removeIcon.svg';
 import { IUserState } from '../hooks/useUserState';
 import { useConfirmRemove } from '../hooks/useConfirmRemove';
 import { useProfilePictureUrl } from '../hooks/useProfilePictureUrl';
@@ -27,7 +30,11 @@ import { ScreenSize } from '../lib/MicroCoachModels';
 import { schoolFromEmail } from '../lib/schools';
 import {
   AvatarGroup,
+  AddClassButton,
+  ClassDeleteButton,
   ClassList,
+  Toast,
+  ToastSnackbar,
   ClassName,
   ClassRow,
   EditPictureChip,
@@ -37,6 +44,7 @@ import {
   LabelledField,
   PatternCorner,
   ProfileAction,
+  ProfileTextAction,
   ProfileForm,
   ProfileHeading,
   ProfileInput,
@@ -47,12 +55,13 @@ import {
   ProfileSidebar,
   SidebarIdentity,
   SidebarLogOut,
-  SuccessBanner,
   ScreenSizeProps,
 } from '../lib/styledcomponents/ProfileStyledComponents';
+import type { ToastTone } from '../lib/styledcomponents/ProfileStyledComponents';
 
 const NAME_ERROR_ID = 'profile-name-error';
 const PASSWORD_ERROR_ID = 'profile-password-error';
+const ADD_CLASS_ERROR_ID = 'profile-add-class-error';
 
 // Keeps focus on the field rather than letting mousedown move it to the
 // visibility toggle, as the sign-up form's toggle does.
@@ -92,6 +101,15 @@ function PasswordField({
       }}
       endAdornment={
         <InputAdornment position="end">
+          {/* The masked field only holds a placeholder, so there is nothing to
+              reveal: the frame's faded eye-off is a marker, not a toggle. */}
+          {readOnly ? (
+            <VisibilityOff
+              fontSize="small"
+              aria-hidden
+              sx={{ color: 'designSystem.foreground.slateNavy', opacity: 0.6 }}
+            />
+          ) : (
           <IconButton
             size="small"
             edge="end"
@@ -107,17 +125,26 @@ function PasswordField({
               <Visibility fontSize="small" />
             )}
           </IconButton>
+          )}
         </InputAdornment>
       }
     />
   );
 }
 
-type PasswordError = 'REQUIRED' | 'MISMATCH' | 'WRONG_OLD' | 'INVALID' | 'LIMIT' | 'OTHER';
+type PasswordError =
+  | 'REQUIRED'
+  | 'MISMATCH'
+  | 'SAME'
+  | 'WRONG_OLD'
+  | 'INVALID'
+  | 'LIMIT'
+  | 'OTHER';
 
 const PASSWORD_ERROR_KEY: Record<PasswordError, string> = {
   REQUIRED: 'profile.passwordRequired',
   MISMATCH: 'profile.passwordMismatch',
+  SAME: 'profile.passwordSame',
   WRONG_OLD: 'profile.passwordWrongOld',
   INVALID: 'profile.passwordInvalid',
   LIMIT: 'profile.passwordLimit',
@@ -137,29 +164,62 @@ function passwordErrorFrom(error: unknown): PasswordError {
   return 'OTHER';
 }
 
-interface PasswordPanelProps {
-  apiClients: IAPIClients;
-  onChanged: () => void;
+// Not about any one field, so they go to the toast rather than under the form.
+const TOAST_PASSWORD_ERRORS: PasswordError[] = ['LIMIT', 'OTHER'];
+
+// The rules the reset screen lists. Cognito only enforces the length
+// (passwordPolicyCharacters is empty), so they are checked here too, or the
+// list would promise more than is enforced.
+const PASSWORD_RULE_KEYS = ['reset.ruleLength', 'reset.ruleLetter', 'reset.ruleNumber'];
+function meetsPasswordRules(password: string): boolean {
+  return password.length >= 8 && /[A-Za-z]/.test(password) && /\d/.test(password);
 }
 
+interface PasswordPanelProps {
+  apiClients: IAPIClients;
+}
+
+const EMPTY_PASSWORD_FIELDS = { old: '', next: '', confirm: '' };
+// Success is a notice, not a blocker, so it closes itself; errors wait.
+const SUCCESS_TOAST_MS = 6000;
+
 /**
- * Password, changed in place (Account5): the masked field and Change Password,
- * then old / new / re-enter and Done. Cognito checks the old password and the
- * policy; only the three-filled and the match checks happen here.
+ * Password, changed in place (rev4 ChangePassword_1/2): the masked field and
+ * Change Password, then old / new / re-enter with the rules shown up front,
+ * and Save password or Cancel. Cognito checks the old password; the filled,
+ * rules, same-as-old and match checks happen here first. The outcome is a
+ * toast at the top of the page.
  */
-function PasswordPanel({ apiClients, onChanged }: PasswordPanelProps) {
+function PasswordPanel({ apiClients }: PasswordPanelProps) {
   const { t } = useTranslation();
+  const theme = useTheme();
   const [isEditing, setIsEditing] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
-  const [fields, setFields] = React.useState({ old: '', next: '', confirm: '' });
+  const [fields, setFields] = React.useState(EMPTY_PASSWORD_FIELDS);
   const [error, setError] = React.useState<PasswordError | null>(null);
+  const [toast, setToast] = React.useState<ToastTone | null>(null);
 
   const setField = (key: keyof typeof fields) => (value: string) =>
     setFields((current) => ({ ...current, [key]: value }));
 
-  const handleDone = async () => {
+  const handleCancel = () => {
+    setFields(EMPTY_PASSWORD_FIELDS);
+    setError(null);
+    setIsEditing(false);
+  };
+
+  const handleSave = async () => {
+    setToast(null);
     if (!fields.old || !fields.next || !fields.confirm) {
       setError('REQUIRED');
+      return;
+    }
+    if (!meetsPasswordRules(fields.next)) {
+      setError('INVALID');
+      return;
+    }
+    if (fields.next === fields.old) {
+      setError('SAME');
       return;
     }
     if (fields.next !== fields.confirm) {
@@ -170,15 +230,42 @@ function PasswordPanel({ apiClients, onChanged }: PasswordPanelProps) {
     setError(null);
     try {
       await apiClients.auth.awsUpdatePassword(fields.old, fields.next);
-      setFields({ old: '', next: '', confirm: '' });
+      setFields(EMPTY_PASSWORD_FIELDS);
       setIsEditing(false);
-      onChanged();
+      setToast('success');
     } catch (caught) {
       console.error('Could not change the password', caught);
-      setError(passwordErrorFrom(caught));
+      const reason = passwordErrorFrom(caught);
+      setError(reason);
+      if (TOAST_PASSWORD_ERRORS.includes(reason)) setToast('error');
     }
     setIsSaving(false);
   };
+
+  // Lives outside the form so it outlasts the collapse after a save.
+  const toastSnackbar = (
+    <ToastSnackbar
+      open={toast !== null}
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      autoHideDuration={toast === 'success' ? SUCCESS_TOAST_MS : null}
+      onClose={(event, reason) => {
+        if (reason !== 'clickaway') setToast(null);
+      }}
+    >
+      <Toast tone={toast ?? 'success'} role={toast === 'error' ? 'alert' : 'status'}>
+        {toast === 'error' && error
+          ? t(PASSWORD_ERROR_KEY[error])
+          : t('profile.passwordChanged')}
+        <IconButton
+          size="small"
+          aria-label={t('profile.dismiss')}
+          onClick={() => setToast(null)}
+        >
+          <CancelIcon sx={{ fontSize: 20, color: 'designSystem.foreground.disabledStroke' }} />
+        </IconButton>
+      </Toast>
+    </ToastSnackbar>
+  );
 
   if (!isEditing) {
     return (
@@ -187,11 +274,13 @@ function PasswordPanel({ apiClients, onChanged }: PasswordPanelProps) {
         <ProfileAction disableElevation onClick={() => setIsEditing(true)}>
           {t('profile.changePassword')}
         </ProfileAction>
+        {toastSnackbar}
       </>
     );
   }
 
   const isMismatch = error === 'MISMATCH';
+  const inlineError = error && !TOAST_PASSWORD_ERRORS.includes(error) ? error : null;
   return (
     <>
       <LabelledField>
@@ -214,9 +303,22 @@ function PasswordPanel({ apiClients, onChanged }: PasswordPanelProps) {
           value={fields.next}
           onChange={setField('next')}
           isError={
-            isMismatch || error === 'INVALID' || (error === 'REQUIRED' && !fields.next)
+            isMismatch ||
+            error === 'INVALID' ||
+            error === 'SAME' ||
+            (error === 'REQUIRED' && !fields.next)
           }
         />
+        <Box sx={{ color: 'designSystem.surface.ashyGray' }}>
+          <Typography variant="rubikBody">{t('reset.rulesTitle')}</Typography>
+          <Box component="ul" sx={{ m: 0, pl: `${theme.sizing.space4}px` }}>
+            {PASSWORD_RULE_KEYS.map((key) => (
+              <Typography key={key} component="li" variant="rubikBody">
+                {t(key)}
+              </Typography>
+            ))}
+          </Box>
+        </Box>
       </LabelledField>
       <LabelledField>
         <Typography variant="headingSm" sx={{ color: 'designSystem.surface.black' }}>
@@ -229,26 +331,178 @@ function PasswordPanel({ apiClients, onChanged }: PasswordPanelProps) {
           isError={isMismatch || (error === 'REQUIRED' && !fields.confirm)}
         />
       </LabelledField>
-      {error && (
+      {inlineError && (
         <Typography
           id={PASSWORD_ERROR_ID}
           variant="rubikBody"
           role="alert"
           sx={{ color: 'designSystem.status.errorStroke' }}
         >
-          {t(PASSWORD_ERROR_KEY[error])}
+          {t(PASSWORD_ERROR_KEY[inlineError])}
         </Typography>
       )}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: `${theme.sizing.space3}px` }}>
+        <ProfileAction
+          disableElevation
+          disabled={isSaving}
+          aria-busy={isSaving}
+          onClick={handleSave}
+        >
+          {isSaving ? (
+            <CircularProgress size={16} color="inherit" aria-label={t('profile.saving')} />
+          ) : (
+            t('profile.savePassword')
+          )}
+        </ProfileAction>
+        <ProfileTextAction disableElevation disabled={isSaving} onClick={handleCancel}>
+          {t('profile.cancel')}
+        </ProfileTextAction>
+      </Box>
+      {toastSnackbar}
+    </>
+  );
+}
+
+/**
+ * "+ Add a class" (rev4 UserAccount_1): opens a name field as a new row, as
+ * signup does. Enter or "Add class" creates the class; Escape or the close
+ * tile drops the row. A failed create keeps the name so it can be retried.
+ */
+function AddClassPanel({ apiClients }: { apiClients: IAPIClients }) {
+  const { t } = useTranslation();
+  const { userProfile, classrooms, selectedClassroomId } = useMicroCoachDataState();
+  const dispatch = useMicroCoachDataDispatch();
+  const [draftName, setDraftName] = React.useState<string | null>(null);
+  const [isAdding, setIsAdding] = React.useState(false);
+  const [hasError, setHasError] = React.useState(false);
+  // The toast can be dismissed while the field stays marked until a retry.
+  const [isToastOpen, setIsToastOpen] = React.useState(false);
+  // A held or repeated Enter can commit twice; this lets only one through.
+  const isAddingRef = React.useRef(false);
+
+  const close = () => {
+    setDraftName(null);
+    setHasError(false);
+    setIsToastOpen(false);
+  };
+
+  const commit = async () => {
+    const name = draftName?.trim() ?? '';
+    if (!name) {
+      close();
+      return;
+    }
+    if (isAddingRef.current) return;
+    isAddingRef.current = true;
+    setIsAdding(true);
+    setHasError(false);
+    setIsToastOpen(false);
+    let created: IMicroCoachClassroom | null = null;
+    try {
+      if (userProfile?.id) {
+        created = await apiClients.classroom.createClassroom({
+          userId: userProfile.id,
+          name,
+          grade: null,
+          state: null,
+          schoolYear: null,
+        } as IMicroCoachClassroom);
+      }
+    } catch (error) {
+      console.error('Could not add the class', error);
+    }
+    isAddingRef.current = false;
+    setIsAdding(false);
+    if (!created) {
+      setHasError(true);
+      setIsToastOpen(true);
+      return;
+    }
+    dispatch({ type: 'SET_CLASSROOMS', payload: [...classrooms, created] });
+    if (!selectedClassroomId) {
+      dispatch({ type: 'SET_SELECTED_CLASSROOM_ID', payload: created.id });
+    }
+    close();
+  };
+
+  if (draftName === null) {
+    return (
+      <AddClassButton disableElevation onClick={() => setDraftName('')}>
+        {t('profile.addClass')}
+      </AddClassButton>
+    );
+  }
+
+  return (
+    <>
+      <ClassRow>
+        <ProfileInput
+          autoFocus
+          value={draftName}
+          readOnly={isAdding}
+          isError={hasError}
+          placeholder={t('profile.addClassPlaceholder')}
+          onChange={(event) => setDraftName(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault();
+              commit();
+            } else if (event.key === 'Escape') {
+              close();
+            }
+          }}
+          inputProps={{
+            'aria-label': t('profile.addClassPlaceholder'),
+            'aria-invalid': hasError,
+            'aria-describedby': hasError ? ADD_CLASS_ERROR_ID : undefined,
+          }}
+        />
+        <ClassDeleteButton
+          aria-label={t('profile.cancelAddClass')}
+          onClick={close}
+          disabled={isAdding}
+        >
+          <CloseIcon fontSize="small" sx={{ color: 'designSystem.surface.atlanticNavy' }} />
+        </ClassDeleteButton>
+      </ClassRow>
+      {/* Not dismissed by clicking elsewhere, so a stray click can't hide
+          the only sign the class wasn't saved. */}
+      <ToastSnackbar
+        open={isToastOpen}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        onClose={(event, reason) => {
+          if (reason !== 'clickaway') setIsToastOpen(false);
+        }}
+      >
+        <Toast tone="error" role="alert">
+          <span id={ADD_CLASS_ERROR_ID}>{t('profile.addClassError')}</span>
+          <IconButton
+            size="small"
+            aria-label={t('profile.dismiss')}
+            onClick={() => setIsToastOpen(false)}
+          >
+            <CancelIcon sx={{ fontSize: 20, color: 'designSystem.foreground.disabledStroke' }} />
+          </IconButton>
+        </Toast>
+      </ToastSnackbar>
       <ProfileAction
         disableElevation
-        disabled={isSaving}
-        aria-busy={isSaving}
-        onClick={handleDone}
+        disabled={!draftName.trim() || isAdding}
+        aria-busy={isAdding}
+        onClick={commit}
+        // Greyed out until there is a name, as Home's My activity button is.
+        sx={(theme) => ({
+          alignSelf: 'flex-start',
+          '&.Mui-disabled': {
+            backgroundColor: alpha(theme.palette.designSystem.surface.ashyGray, 0.5),
+            color: theme.palette.designSystem.surface.white,
+          },
+        })}
       >
-        {isSaving ? (
+        {isAdding ? (
           <CircularProgress size={16} color="inherit" aria-label={t('profile.saving')} />
         ) : (
-          t('profile.done')
+          t('profile.addClassSubmit')
         )}
       </ProfileAction>
     </>
@@ -300,7 +554,6 @@ export default function Profile({
   const [showFieldErrors, setShowFieldErrors] = React.useState(false);
   const [isSavingProfile, setIsSavingProfile] = React.useState(false);
   const [hasSaveFailed, setHasSaveFailed] = React.useState(false);
-  const [isPasswordChanged, setIsPasswordChanged] = React.useState(false);
   const pictureInputRef = React.useRef<HTMLInputElement>(null);
   const [isUploadingPicture, setIsUploadingPicture] = React.useState(false);
   const [pictureError, setPictureError] = React.useState<PictureError | null>(null);
@@ -495,31 +748,6 @@ export default function Profile({
         </>
       )}
 
-      {isPasswordChanged && (
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 24,
-            left: 0,
-            right: 0,
-            display: 'flex',
-            justifyContent: 'center',
-            zIndex: 2,
-          }}
-        >
-          <SuccessBanner role="status">
-            {t('profile.passwordChanged')}
-            <IconButton
-              size="small"
-              aria-label={t('profile.dismiss')}
-              onClick={() => setIsPasswordChanged(false)}
-              sx={{ color: 'designSystem.foreground.mutedGrey' }}
-            >
-              <CancelIcon fontSize="small" />
-            </IconButton>
-          </SuccessBanner>
-        </Box>
-      )}
 
       <ProfileLayout screenSize={screenSize}>
         <ProfileSidebar screenSize={screenSize}>
@@ -647,37 +875,33 @@ export default function Profile({
 
           <ProfileSection>
             <ProfileSectionTitle>{t('profile.yourClasses')}</ProfileSectionTitle>
-            {classrooms.length === 0 ? (
+            {classrooms.length === 0 && (
               <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.ashyGray' }}>
                 {t('profile.noClasses')}
               </Typography>
-            ) : (
-              <ClassList>
-                {classrooms.map((classroom) => (
-                  <ClassRow key={classroom.id}>
-                    <ClassName>{classroom.name}</ClassName>
-                    <IconButton
-                      aria-label={t('profile.deleteClass', { name: classroom.name })}
-                      onClick={() =>
-                        remove.ask({ id: classroom.id, className: classroom.name })
-                      }
-                      sx={{ color: 'designSystem.surface.atlanticNavy' }}
-                    >
-                      <DeleteOutlineIcon fontSize="small" />
-                    </IconButton>
-                  </ClassRow>
-                ))}
-              </ClassList>
             )}
+            <ClassList>
+              {classrooms.map((classroom) => (
+                <ClassRow key={classroom.id}>
+                  <ClassName>{classroom.name}</ClassName>
+                  <ClassDeleteButton
+                    aria-label={t('profile.deleteClass', { name: classroom.name })}
+                    onClick={() =>
+                      remove.ask({ id: classroom.id, className: classroom.name })
+                    }
+                  >
+                    <img src={removeIcon} alt="" />
+                  </ClassDeleteButton>
+                </ClassRow>
+              ))}
+              <AddClassPanel apiClients={apiClients} />
+            </ClassList>
           </ProfileSection>
 
           {isFederated !== true && (
             <ProfileSection>
               <ProfileSectionTitle>{t('profile.password')}</ProfileSectionTitle>
-              <PasswordPanel
-                apiClients={apiClients}
-                onChanged={() => setIsPasswordChanged(true)}
-              />
+              <PasswordPanel apiClients={apiClients} />
             </ProfileSection>
           )}
         </ProfileForm>

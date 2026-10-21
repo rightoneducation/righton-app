@@ -503,7 +503,9 @@ export const NavPill = styled(Button, {
   '& .MuiButton-startIcon, & .MuiButton-endIcon': { margin: 0 },
   gap: theme.sizing.space2,
   '&:hover': {
-    backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
+    backgroundColor: isPrimary
+      ? theme.palette.designSystem.background.navyBlue
+      : theme.palette.designSystem.foreground.accentBlue,
   },
 }));
 

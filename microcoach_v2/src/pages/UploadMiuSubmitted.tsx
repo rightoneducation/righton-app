@@ -106,25 +106,21 @@ export default function UploadMiuSubmitted(props: UploadStepProps) {
             gap: `${theme.sizing.space3}px`,
           }}
         >
+          {/* rev4 Upload_FileSubmitted: Home is the way on, since another
+              class's upload and this week's progress both start there. */}
           <GhostAction
             disableElevation
             startIcon={<ArrowBackIcon fontSize="small" />}
-            onClick={() => navigate('/dashboard')}
-          >
-            {t('upload.backHome')}
-          </GhostAction>
-          <GhostAction
-            disableElevation
             onClick={() => setIsConfirming(true)}
           >
             {t('upload.startOver')}
           </GhostAction>
           <SignUpCta
             disableElevation
-            onClick={actions.startNewClassroom}
-            sx={{ maxWidth: 262 }}
+            onClick={() => navigate('/dashboard')}
+            sx={{ width: 'auto' }}
           >
-            {t('upload.newClassroom')}
+            {t('upload.backToHome')}
           </SignUpCta>
         </Box>
       </ContentRow>

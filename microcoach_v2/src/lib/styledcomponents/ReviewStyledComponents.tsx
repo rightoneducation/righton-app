@@ -139,7 +139,9 @@ export const CardCta = styled(Button, {
   ...theme.typography.buttonLabel,
   textTransform: 'none',
   '&:hover': {
-    backgroundColor: theme.palette.designSystem.surface.darkBlue,
+    backgroundColor: isFocus
+      ? theme.palette.designSystem.surface.atlanticNavy
+      : theme.palette.designSystem.foreground.accentBlue,
   },
 }));
 

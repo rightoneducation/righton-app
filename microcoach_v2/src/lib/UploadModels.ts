@@ -91,8 +91,6 @@ export interface IUploadActions {
   submit: () => Promise<boolean>;
   // Cancels the submission: removes the uploaded files, back to an empty form.
   startOver: () => Promise<void>;
-  // A fresh form for another class; the current submission stays as it is.
-  startNewClassroom: () => void;
 }
 
 export interface UploadStepProps {

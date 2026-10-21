@@ -3,9 +3,9 @@ import { IAPIClients } from '../api';
 import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import { IMicroCoachSavedPlan } from '../api/Models/IMicroCoachSavedPlan';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
-import { SessionStatus } from '../AWSAPI';
 import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
-import { deriveCurrentStep, sessionForWeek } from '../lib/flowProgress';
+import { deriveCurrentStep, isAwaitingResults, sessionForWeek } from '../lib/flowProgress';
+import { weekOf } from '../lib/weeks';
 import { IPastActivity, IWeeklyClassProgress } from '../lib/ActivityListModels';
 
 export interface UseClassActivityResult {
@@ -42,7 +42,7 @@ function weekRows(perClass: ClassRecord[], weekStart: string): IWeeklyClassProgr
       className: classroom.name,
       studentCount,
       step: deriveCurrentStep(session, hasSavedPlan),
-      isAwaitingResults: session?.status === SessionStatus.DATA_INGESTED,
+      isAwaitingResults: isAwaitingResults(session),
     };
   });
 }
@@ -62,22 +62,24 @@ async function loadClassActivity(
     }),
   );
 
-  const completed = perClass.flatMap(({ classroom, sessions, studentCount, plans }) =>
-    sessions
-      .filter((session) => session.status === SessionStatus.COMPLETED)
-      .map((session) => ({
+  // Every session, finished or not: an unfinished one reads Incomplete and
+  // resumes at its step (rev4 PastActivities_IncompleteException).
+  const pastSessions = perClass.flatMap(({ classroom, sessions, studentCount, plans }) =>
+    sessions.map((session) => {
+      const plan = plans.find((saved) => saved.sessionId === session.id);
+      return {
         session,
         classroom,
         studentCount,
-        activityId:
-          plans.find((plan) => plan.sessionId === session.id)?.items[0]?.id ??
-          null,
-      })),
+        activityId: plan?.items[0]?.id ?? null,
+        step: deriveCurrentStep(session, !!plan),
+      };
+    }),
   );
 
   // One lookup per distinct activity. A failed lookup only blanks that name.
   const activityIds = Array.from(
-    new Set(completed.flatMap((row) => (row.activityId ? [row.activityId] : []))),
+    new Set(pastSessions.flatMap((row) => (row.activityId ? [row.activityId] : []))),
   );
   const titles = new Map(
     await Promise.all(
@@ -90,13 +92,16 @@ async function loadClassActivity(
     ),
   );
 
-  const past = completed.map(({ session, classroom, studentCount, activityId }) => ({
+  const past = pastSessions.map(({ session, classroom, studentCount, activityId, step }) => ({
     id: session.id,
     classId: classroom.id,
     className: classroom.name,
     studentCount,
     activityName: activityId ? (titles.get(activityId) ?? null) : null,
     completedAt: session.updatedAt,
+    step,
+    isAwaitingResults: isAwaitingResults(session),
+    weekStart: weekOf(session.createdAt),
   }));
 
   return { perClass, past };

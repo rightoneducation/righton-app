@@ -3,6 +3,8 @@ import {
   IPastActivity,
   groupPastActivities,
 } from './ActivityListModels';
+import { FlowStep } from './flowProgress';
+import { weekOf } from './weeks';
 
 const row = (
   id: string,
@@ -16,6 +18,9 @@ const row = (
   studentCount: 24,
   activityName,
   completedAt,
+  step: FlowStep.DONE,
+  isAwaitingResults: false,
+  weekStart: weekOf(completedAt),
 });
 
 // Week 8 = Oct 12-16, Week 9 = Oct 19-23 (2026). Midday UTC keeps every

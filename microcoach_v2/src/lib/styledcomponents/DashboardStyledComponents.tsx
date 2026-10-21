@@ -309,7 +309,7 @@ export const MyActivityButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
   whiteSpace: 'nowrap',
   '&:hover': {
-    backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
+    backgroundColor: theme.palette.designSystem.foreground.accentBlue,
   },
   // rev2 LandingPage: greyed out (#666666 at 50%; ashyGray, 7 off) until the
   // class has a chosen activity.
@@ -469,7 +469,7 @@ export const DashboardCta = styled(Button)(({ theme }) => ({
   textTransform: 'none',
   whiteSpace: 'nowrap',
   '&:hover': {
-    backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
+    backgroundColor: theme.palette.designSystem.background.navyBlue,
   },
   // Disabled only while the next step is still loading (it shows a spinner):
   // keep the button's own colours, dimmed, rather than MUI's grey.

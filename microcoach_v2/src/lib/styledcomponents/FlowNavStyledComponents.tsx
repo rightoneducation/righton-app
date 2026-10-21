@@ -46,6 +46,6 @@ export const FlowNavAction = styled(Button)(({ theme }) => ({
   textTransform: 'none',
   whiteSpace: 'nowrap',
   '&:hover': {
-    backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
+    backgroundColor: theme.palette.designSystem.foreground.accentBlue,
   },
 }));

@@ -12,7 +12,7 @@ import { UseClassroomsResult } from '../hooks/useClassrooms';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { useClassActivity } from '../hooks/useClassActivity';
 import { useOpenClassSession } from '../hooks/useOpenClassSession';
-import { FlowStep } from '../lib/flowProgress';
+import { RESUME_PATH } from '../lib/flowProgress';
 import { IWeeklyClassProgress } from '../lib/ActivityListModels';
 import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import { formatSchoolWeek } from '../lib/weeks';
@@ -31,17 +31,6 @@ import {
   WeekSubheading,
   ScreenSizeProps,
 } from '../lib/styledcomponents/ActivityListStyledComponents';
-
-// Where each step's action goes. The upload covers both the first upload and
-// the reassessment; a finished week opens its results.
-const STEP_PATH: Record<FlowStep, string> = {
-  [FlowStep.ASSESS]: '/upload-miu',
-  [FlowStep.UNDERSTAND]: '/review',
-  [FlowStep.CHOOSE]: '/review',
-  [FlowStep.REASSESS]: '/upload-reassess',
-  [FlowStep.REFLECT]: '/reflect',
-  [FlowStep.DONE]: '/reflect',
-};
 
 // One card's height: what the loading spinner holds open.
 const CARD_HEIGHT = 148;
@@ -183,10 +172,10 @@ export default function WeeklyProgressList({
                           openClassSession({
                             classId: row.classId,
                             sessionId: row.sessionId,
-                            path: STEP_PATH[row.step],
+                            path: RESUME_PATH[row.step],
                             // The upload pre-fills the week it is for.
                             state:
-                              STEP_PATH[row.step].startsWith('/upload-')
+                              RESUME_PATH[row.step].startsWith('/upload-')
                                 ? { weekStart }
                                 : undefined,
                           })

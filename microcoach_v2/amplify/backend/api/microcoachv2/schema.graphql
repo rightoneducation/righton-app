@@ -60,8 +60,16 @@ type MicroCoachStudent @model @auth(rules: [{ allow: private }]) {
   updatedAt: AWSDateTime!
 }
 
+# A session's place in the loop. The pipeline owns these transitions:
+#   MIU 1 submitted          -> DATA_INGESTED     (Home: waiting)
+#   MIU 1 analysed           -> GENERATED
+#   MIU 2 submitted          -> REASSESS_INGESTED (Home: waiting)
+#   MIU 2 analysed           -> GENERATED, with postPpqAssessmentId set
+#                               (Home: View results)
+#   Reflect done             -> COMPLETED
 enum SessionStatus {
   DATA_INGESTED
+  REASSESS_INGESTED
   GENERATED
   COMPLETED
 }
@@ -79,7 +87,7 @@ type MicroCoachSession @model @auth(rules: [{ allow: private }]) {
   weekNumber: Int
   topic: String
   ccssStandards: [String]
-  status: SessionStatus # DATA_INGESTED | GENERATED | COMPLETED
+  status: SessionStatus # DATA_INGESTED | REASSESS_INGESTED | GENERATED | COMPLETED
   publishStatus: PublishStatus # "DRAFT" | "PUBLISHED"
   studentWorksAnalyzed: Int
   studentsWithStrongUnderstanding: Int

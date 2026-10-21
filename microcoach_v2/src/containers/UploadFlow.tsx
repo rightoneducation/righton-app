@@ -133,10 +133,6 @@ export default function UploadFlow({
       setUpload((s) => emptyUploadState(s.classId, s.weekStart));
       navigate(basePath, { replace: true });
     },
-    startNewClassroom: () => {
-      setUpload((s) => emptyUploadState('', s.weekStart));
-      navigate(basePath);
-    },
   };
 
   const stepProps: UploadStepProps = {
