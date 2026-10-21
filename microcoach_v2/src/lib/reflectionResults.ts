@@ -58,7 +58,7 @@ function buildLegacyReflectionResults(
   misconceptions: IMicroCoachMisconception[],
 ): IImplementedActivity[] {
   return parseLegacyNextSteps(session.pregeneratedNextSteps)
-    .map((nextStep) => {
+    .map((nextStep): IImplementedActivity | null => {
       const results = nextStep.postPpqResults;
       if (
         results?.hasResults === false ||
@@ -126,6 +126,8 @@ function buildLegacyReflectionResults(
           (results.classMasteryAfter / 100) * questionCount,
         ),
         improvedStudentCount: results.improvedCount,
+        studentResults: [],
+        questionResults: [],
       };
     })
     .filter(
@@ -165,6 +167,8 @@ export default function buildReflectionResults(
         averageQuestionsCorrectBefore: result.averageQuestionsCorrectBefore,
         averageQuestionsCorrectAfter: result.averageQuestionsCorrectAfter,
         improvedStudentCount: result.improvedStudentCount,
+        studentResults: result.studentResults,
+        questionResults: result.questionResults,
       };
     },
   );

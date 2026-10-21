@@ -1,4 +1,8 @@
 import type { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
+import type {
+  IMicroCoachReflectionQuestionResult,
+  IMicroCoachReflectionStudentResult,
+} from '../api/Models/IMicroCoachSession';
 
 export type PrevalenceLevel = 'FEW' | 'SOME' | 'MOST';
 
@@ -370,6 +374,8 @@ export interface IImplementedActivity {
   averageQuestionsCorrectBefore: number;
   averageQuestionsCorrectAfter: number;
   improvedStudentCount: number;
+  studentResults: IMicroCoachReflectionStudentResult[];
+  questionResults: IMicroCoachReflectionQuestionResult[];
 }
 
 export interface IReflect {
