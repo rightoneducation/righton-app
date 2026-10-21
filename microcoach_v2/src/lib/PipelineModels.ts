@@ -378,6 +378,8 @@ export interface IImplementedActivity {
   questionResults: IMicroCoachReflectionQuestionResult[];
 }
 
+export type ReflectionDetailSort = 'highestScoring' | 'mostImproved';
+
 export interface IReflect {
   implementedActivities: IImplementedActivity[];
 }

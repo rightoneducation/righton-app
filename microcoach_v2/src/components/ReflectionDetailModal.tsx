@@ -9,15 +9,15 @@ import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Modal from 'react-modal';
-import { IImplementedActivity } from '../lib/PipelineModels';
-import { ScreenSize } from '../lib/MicroCoachModels';
+import type {
+  IMicroCoachReflectionAnswerResult,
+  IMicroCoachReflectionStudentResult,
+} from '../api/Models/IMicroCoachSession';
 import {
-  MockReflectionAnswerResult,
-  MockReflectionStudentResult,
+  IImplementedActivity,
   ReflectionDetailSort,
-  mockReflectionQuestions,
-  mockReflectionStudents,
-} from '../lib/mocks/reflectionDetail';
+} from '../lib/PipelineModels';
+import { ScreenSize } from '../lib/MicroCoachModels';
 import {
   AnswerDistribution,
   AnswerResponse,
@@ -67,6 +67,8 @@ interface StudentGroupProps {
   title: string;
   description: string;
   students: CompleteReflectionStudentResult[];
+  studentCount: number;
+  questionCount: number;
   sort: ReflectionDetailSort;
   screenSize: ScreenSize;
   onSortChange: (sort: ReflectionDetailSort) => void;
@@ -74,24 +76,83 @@ interface StudentGroupProps {
 
 interface ResponseRowProps {
   label: string;
-  answers: MockReflectionAnswerResult[];
+  answers: IMicroCoachReflectionAnswerResult[];
   screenSize: ScreenSize;
 }
 
-const QUESTION_COUNT = 6;
+type DisplayReflectionStudentResult = IMicroCoachReflectionStudentResult & {
+  displayName: string;
+};
 
-type CompleteReflectionStudentResult = MockReflectionStudentResult & {
+type CompleteReflectionStudentResult = DisplayReflectionStudentResult & {
   questionsCorrectBefore: number;
   questionsCorrectAfter: number;
 };
 
-function hasCompleteResults(
-  student: MockReflectionStudentResult,
-): student is CompleteReflectionStudentResult {
+function hasCompleteResults<
+  StudentResult extends IMicroCoachReflectionStudentResult,
+>(student: StudentResult): student is StudentResult & {
+  questionsCorrectBefore: number;
+  questionsCorrectAfter: number;
+} {
   return (
     student.questionsCorrectBefore !== null &&
     student.questionsCorrectAfter !== null
   );
+}
+
+function splitStudentName(studentName: string) {
+  const normalizedName = studentName.replace(/\s+/g, ' ').trim();
+  const commaIndex = normalizedName.indexOf(',');
+  const displayOrderName =
+    commaIndex >= 0
+      ? `${normalizedName.slice(commaIndex + 1)} ${normalizedName.slice(0, commaIndex)}`.replace(
+        /\s+/g,
+        ' ',
+      ).trim()
+      : normalizedName;
+  const [firstName, ...lastNameParts] = displayOrderName.split(' ');
+
+  return {
+    firstName,
+    lastName: lastNameParts.join(' '),
+  };
+}
+
+function addStudentDisplayNames<
+  StudentResult extends IMicroCoachReflectionStudentResult,
+>(students: StudentResult[]): Array<StudentResult & { displayName: string }> {
+  const namedStudents = students.flatMap((student) => {
+    const studentName = student.studentName?.trim();
+    if (!studentName) return [];
+
+    return [{ student, ...splitStudentName(studentName) }];
+  });
+  const firstNameCounts = namedStudents.reduce<Map<string, number>>(
+    (counts, student) => {
+      const normalizedFirstName = student.firstName.toLocaleLowerCase();
+      counts.set(
+        normalizedFirstName,
+        (counts.get(normalizedFirstName) ?? 0) + 1,
+      );
+      return counts;
+    },
+    new Map(),
+  );
+
+  return namedStudents.map(({ student, firstName, lastName }) => {
+    const hasDuplicateFirstName =
+      (firstNameCounts.get(firstName.toLocaleLowerCase()) ?? 0) > 1;
+    const lastInitial = lastName.charAt(0).toLocaleUpperCase();
+
+    return {
+      ...student,
+      displayName:
+        hasDuplicateFirstName && lastInitial
+          ? `${firstName} ${lastInitial}.`
+          : firstName,
+    };
+  });
 }
 
 function sortStudents(
@@ -126,6 +187,8 @@ function StudentGroup({
   title,
   description,
   students,
+  studentCount,
+  questionCount,
   sort,
   screenSize,
   onSortChange,
@@ -150,7 +213,7 @@ function StudentGroup({
               {title}
             </Typography>
             <StudentCountChip>
-              {t('reflect.studentCount', { count: students.length })}
+              {t('reflect.studentCount', { count: studentCount })}
             </StudentCountChip>
           </MasteryTitleRow>
           <Typography variant="uploadLabel" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
@@ -212,14 +275,14 @@ function StudentGroup({
         {sortedStudents.map((student) => {
           const change =
             student.questionsCorrectAfter - student.questionsCorrectBefore;
-          const score = `${student.questionsCorrectAfter}/${QUESTION_COUNT}`;
+          const score = `${student.questionsCorrectAfter}/${questionCount}`;
           const changeLabel = formatStudentChange(
             change,
             t('reflect.noChange'),
           );
 
           return (
-            <StudentResultChip key={student.id} sort={sort}>
+            <StudentResultChip key={student.studentId} sort={sort}>
               <StudentNamePill sort={sort}>
                 {student.displayName}
                 {sort === 'highestScoring' ? ` ${score}` : ''}
@@ -248,7 +311,7 @@ function ResponseRow({ label, answers, screenSize }: ResponseRowProps) {
       <AssessmentLabel>{label}</AssessmentLabel>
       <AnswerDistribution>
         {answers.map((answer) => (
-          <AnswerResponse key={answer.id}>
+          <AnswerResponse key={answer.letter}>
             <span>{`${answer.letter}. ${answer.percentChosen}%`}</span>
             {answer.isCorrect && (
               <CorrectAnswerText>{t('reflect.correct')}</CorrectAnswerText>
@@ -276,24 +339,38 @@ export default function ReflectionDetailModal({
     () => new Set([1]),
   );
 
-  const reachedMastery = React.useMemo(
-    () =>
-      mockReflectionStudents
-        .filter(hasCompleteResults)
-        .filter((student) => student.questionsCorrectAfter >= 5),
-    [],
-  );
-  const notYetAtMastery = React.useMemo(
-    () =>
-      mockReflectionStudents
-        .filter(hasCompleteResults)
-        .filter((student) => student.questionsCorrectAfter <= 4),
-    [],
-  );
-  const incompleteComparisons = React.useMemo(
-    () => mockReflectionStudents.filter((student) => !hasCompleteResults(student)),
-    [],
-  );
+  const studentGroups = React.useMemo(() => {
+    const studentResults = activity?.studentResults ?? [];
+    const questionCount = activity?.questionCount ?? 0;
+    const masteryThreshold = Math.max(questionCount - 1, 0);
+    const completeStudents = studentResults.filter(hasCompleteResults);
+    const namedStudents = addStudentDisplayNames(studentResults);
+    const namedCompleteStudents = namedStudents.filter(hasCompleteResults);
+    const reachedMasteryResults = completeStudents.filter(
+      (student) => student.questionsCorrectAfter >= masteryThreshold,
+    );
+    const notYetAtMasteryResults = completeStudents.filter(
+      (student) => student.questionsCorrectAfter < masteryThreshold,
+    );
+    const incompleteResults = studentResults.filter(
+      (student) => !hasCompleteResults(student),
+    );
+
+    return {
+      reachedMastery: namedCompleteStudents.filter(
+        (student) => student.questionsCorrectAfter >= masteryThreshold,
+      ),
+      reachedMasteryCount: reachedMasteryResults.length,
+      notYetAtMastery: namedCompleteStudents.filter(
+        (student) => student.questionsCorrectAfter < masteryThreshold,
+      ),
+      notYetAtMasteryCount: notYetAtMasteryResults.length,
+      incompleteComparisons: namedStudents.filter(
+        (student) => !hasCompleteResults(student),
+      ),
+      incompleteComparisonCount: incompleteResults.length,
+    };
+  }, [activity]);
 
   const handleClose = () => {
     setMasterySort('highestScoring');
@@ -414,7 +491,9 @@ export default function ReflectionDetailModal({
               <StudentGroup
                 title={t('reflect.reachedMastery')}
                 description={t('reflect.reachedMasteryDescription')}
-                students={reachedMastery}
+                students={studentGroups.reachedMastery}
+                studentCount={studentGroups.reachedMasteryCount}
+                questionCount={activity.questionCount}
                 sort={masterySort}
                 screenSize={screenSize}
                 onSortChange={setMasterySort}
@@ -422,7 +501,9 @@ export default function ReflectionDetailModal({
               <StudentGroup
                 title={t('reflect.notYetAtMastery')}
                 description={t('reflect.notYetAtMasteryDescription')}
-                students={notYetAtMastery}
+                students={studentGroups.notYetAtMastery}
+                studentCount={studentGroups.notYetAtMasteryCount}
+                questionCount={activity.questionCount}
                 sort={supportSort}
                 screenSize={screenSize}
                 onSortChange={setSupportSort}
@@ -435,7 +516,7 @@ export default function ReflectionDetailModal({
                     </Typography>
                     <StudentCountChip>
                       {t('reflect.studentCount', {
-                        count: incompleteComparisons.length,
+                        count: studentGroups.incompleteComparisonCount,
                       })}
                     </StudentCountChip>
                   </MasteryTitleRow>
@@ -444,8 +525,11 @@ export default function ReflectionDetailModal({
                   </Typography>
                 </MasteryHeadingGroup>
                 <StudentResultList>
-                  {incompleteComparisons.map((student) => (
-                    <StudentResultChip key={student.id} sort="mostImproved">
+                  {studentGroups.incompleteComparisons.map((student) => (
+                    <StudentResultChip
+                      key={student.studentId}
+                      sort="mostImproved"
+                    >
                       <StudentNamePill sort="mostImproved">
                         {student.displayName}
                       </StudentNamePill>
@@ -463,7 +547,7 @@ export default function ReflectionDetailModal({
             <ReflectionPanelDivider />
 
             <QuestionResultsSection>
-              {mockReflectionQuestions.map((question) => {
+              {activity.questionResults.map((question) => {
                 const isExpanded = expandedQuestions.has(
                   question.questionNumber,
                 );
