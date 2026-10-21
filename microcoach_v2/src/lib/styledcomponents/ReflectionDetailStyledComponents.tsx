@@ -127,6 +127,16 @@ export const ReflectionProgressBody = styled(Box)(({ theme }) => ({
   scrollbarWidth: 'thin',
 }));
 
+export const ReflectionUnavailableState = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flex: 1,
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: theme.sizing.space13,
+  padding: theme.sizing.space5,
+  textAlign: 'center',
+}));
+
 export const MasteryGroups = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',

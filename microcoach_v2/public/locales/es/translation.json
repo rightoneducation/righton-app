@@ -270,6 +270,7 @@
     "detailsFor": "Resultados para {{title}}",
     "closeDetails": "Cerrar detalles de resultados",
     "detailsSubtitle": "Resultados de la clase en ambos Mix It Ups",
+    "detailsUnavailable": "Los datos detallados de comparación no están disponibles para esta sesión.",
     "reachedMastery": "Alcanzó el dominio",
     "reachedMasteryDescription": "5–6 preguntas correctas en MIU 2",
     "notYetAtMastery": "Aún no alcanza el dominio",

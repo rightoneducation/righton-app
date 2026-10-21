@@ -48,6 +48,7 @@ import {
   ReflectionSummaryChange,
   ReflectionSummaryPanel,
   ReflectionSummaryScores,
+  ReflectionUnavailableState,
   StudentCountChip,
   StudentNamePill,
   StudentResultChip,
@@ -389,6 +390,8 @@ export default function ReflectionDetailModal({
     activity.averagePercentCorrectAfter -
       activity.averagePercentCorrectBefore,
   );
+  const hasDetailedResults =
+    activity.studentResults.length > 0 && activity.questionResults.length > 0;
 
   const toggleQuestion = (questionNumber: number, isExpanded: boolean) => {
     setExpandedQuestions((current) => {
@@ -487,7 +490,18 @@ export default function ReflectionDetailModal({
           <ReflectionPanelDivider />
 
           <ReflectionProgressBody>
-            <MasteryGroups>
+            {!hasDetailedResults ? (
+              <ReflectionUnavailableState>
+                <Typography
+                  variant="rubikBody"
+                  sx={{ color: 'designSystem.surface.ashyGray' }}
+                >
+                  {t('reflect.detailsUnavailable')}
+                </Typography>
+              </ReflectionUnavailableState>
+            ) : (
+              <>
+                <MasteryGroups>
               <StudentGroup
                 title={t('reflect.reachedMastery')}
                 description={t('reflect.reachedMasteryDescription')}
@@ -542,12 +556,12 @@ export default function ReflectionDetailModal({
                   ))}
                 </StudentResultList>
               </MasterySection>
-            </MasteryGroups>
+                </MasteryGroups>
 
-            <ReflectionPanelDivider />
+                <ReflectionPanelDivider />
 
-            <QuestionResultsSection>
-              {activity.questionResults.map((question) => {
+                <QuestionResultsSection>
+                  {activity.questionResults.map((question) => {
                 const isExpanded = expandedQuestions.has(
                   question.questionNumber,
                 );
@@ -628,8 +642,10 @@ export default function ReflectionDetailModal({
                     </QuestionResultDetails>
                   </QuestionResultAccordion>
                 );
-              })}
-            </QuestionResultsSection>
+                  })}
+                </QuestionResultsSection>
+              </>
+            )}
           </ReflectionProgressBody>
         </ReflectionProgressPanel>
       </ReflectionDetailBody>

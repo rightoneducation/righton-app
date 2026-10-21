@@ -270,6 +270,7 @@
     "detailsFor": "Results for {{title}}",
     "closeDetails": "Close results details",
     "detailsSubtitle": "Class results across both Mix It Ups",
+    "detailsUnavailable": "Detailed comparison data isn't available for this session.",
     "reachedMastery": "Reached mastery",
     "reachedMasteryDescription": "5–6 questions correct on MIU 2",
     "notYetAtMastery": "Not yet at mastery",
