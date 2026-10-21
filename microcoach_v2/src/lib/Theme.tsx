@@ -115,6 +115,10 @@ const designSystemColors = {
     uploadingStroke: '#4A6FA5',
     error: '#FFF3F3',
     errorStroke: '#E42F2F',
+    // rev4 UserAccount_NewClassFails: the toast is #F06586 at 30%, flattened
+    // over the page background so the title it floats over can't show
+    // through. errorTint is 17 off on green, so it doesn't stand in.
+    errorToast: '#F7CFDA',
     // Misconception detail: students who need support, students who understood,
     // and the prerequisite-gap standard codes.
     needsSupport: '#F49F82',
@@ -274,6 +278,13 @@ const designSystemTypography = {
     fontSize: '12px',
     lineHeight: 'normal',
   },
+  // Landing (rev4 FrontPage_Mobile): the pilot caveat under Get started.
+  smallNote: {
+    fontFamily: poppins,
+    fontWeight: 400,
+    fontSize: '12px',
+    lineHeight: 'normal',
+  },
   appTitle: {
     fontFamily: rubik,
     fontWeight: 600,
@@ -429,6 +440,14 @@ const designSystemTypography = {
     fontSize: '32px',
     lineHeight: 'normal',
   },
+  // Past Activities' empty state: "No past activities yet!" (rev4).
+  emptyStateTitle: {
+    fontFamily: rubik,
+    fontWeight: 600,
+    fontSize: '32px',
+    lineHeight: 'normal',
+    letterSpacing: '-0.02em',
+  },
   // Account Settings: "Account Created" and the field labels.
   labelSmBold: {
     fontFamily: poppins,
@@ -566,6 +585,7 @@ declare module '@mui/material/styles' {
     titleLight: CSSProperties;
     xsLabel: CSSProperties;
     microLabel: CSSProperties;
+    smallNote: CSSProperties;
     appTitle: CSSProperties;
     rubikBody: CSSProperties;
     rubikBodyBold: CSSProperties;
@@ -590,6 +610,7 @@ declare module '@mui/material/styles' {
     outcomeLabel: CSSProperties;
     displayBold: CSSProperties;
     headingXl: CSSProperties;
+    emptyStateTitle: CSSProperties;
     labelSmBold: CSSProperties;
     bodyLg: CSSProperties;
     subheadingLg: CSSProperties;
@@ -614,6 +635,7 @@ declare module '@mui/material/styles' {
     titleLight?: CSSProperties;
     xsLabel?: CSSProperties;
     microLabel?: CSSProperties;
+    smallNote?: CSSProperties;
     appTitle?: CSSProperties;
     rubikBody?: CSSProperties;
     rubikBodyBold?: CSSProperties;
@@ -638,6 +660,7 @@ declare module '@mui/material/styles' {
     outcomeLabel?: CSSProperties;
     displayBold?: CSSProperties;
     headingXl?: CSSProperties;
+    emptyStateTitle?: CSSProperties;
     labelSmBold?: CSSProperties;
     bodyLg?: CSSProperties;
     subheadingLg?: CSSProperties;
@@ -663,6 +686,7 @@ declare module '@mui/material/Typography' {
     titleLight: true;
     xsLabel: true;
     microLabel: true;
+    smallNote: true;
     appTitle: true;
     rubikBody: true;
     rubikBodyBold: true;
@@ -687,6 +711,7 @@ declare module '@mui/material/Typography' {
     outcomeLabel: true;
     displayBold: true;
     headingXl: true;
+    emptyStateTitle: true;
     labelSmBold: true;
     bodyLg: true;
     subheadingLg: true;
@@ -728,6 +753,21 @@ const Theme = createTheme({
     designSystem: designSystemColors,
   },
   components: {
+    // Hover lightens a button's own fill with a faint white layer. Filled
+    // buttons keep their resting colour on hover so this layer shows through
+    // instead of MUI's default hover tint replacing the fill.
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          '@media (hover: hover)': {
+            '&:hover': {
+              backgroundImage:
+                'linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1))',
+            },
+          },
+        },
+      },
+    },
     MuiTypography: {
       defaultProps: {
         variantMapping: {
@@ -747,6 +787,7 @@ const Theme = createTheme({
           smallPopupLabel: 'p',
           xsLabel: 'p',
           microLabel: 'p',
+          smallNote: 'p',
           appTitle: 'p',
           rubikBody: 'p',
           rubikBodyBold: 'p',
@@ -771,6 +812,7 @@ const Theme = createTheme({
           outcomeLabel: 'p',
           displayBold: 'p',
           headingXl: 'p',
+          emptyStateTitle: 'p',
           labelSmBold: 'p',
           bodyLg: 'p',
           subheadingLg: 'p',
@@ -798,6 +840,7 @@ const Theme = createTheme({
     titleLight: { ...designSystemTypography.titleLight },
     xsLabel: { ...designSystemTypography.xsLabel },
     microLabel: { ...designSystemTypography.microLabel },
+    smallNote: { ...designSystemTypography.smallNote },
     appTitle: { ...designSystemTypography.appTitle },
     rubikBody: { ...designSystemTypography.rubikBody },
     rubikBodyBold: { ...designSystemTypography.rubikBodyBold },
@@ -822,6 +865,7 @@ const Theme = createTheme({
     outcomeLabel: { ...designSystemTypography.outcomeLabel },
     displayBold: { ...designSystemTypography.displayBold },
     headingXl: { ...designSystemTypography.headingXl },
+    emptyStateTitle: { ...designSystemTypography.emptyStateTitle },
     labelSmBold: { ...designSystemTypography.labelSmBold },
     bodyLg: { ...designSystemTypography.bodyLg },
     subheadingLg: { ...designSystemTypography.subheadingLg },

@@ -247,7 +247,9 @@ export const CardAction = styled(Button, {
   textTransform: 'none',
   whiteSpace: 'nowrap',
   '&:hover': {
-    backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
+    backgroundColor: isPrimary
+      ? theme.palette.designSystem.background.navyBlue
+      : theme.palette.designSystem.foreground.accentBlue,
   },
 }));
 

@@ -11,9 +11,10 @@ import { ScreenSize } from '../MicroCoachModels';
 
 const actionHeight = 42;
 const tagRadius = 4;
+const emptyStateMaxWidth = 835;
 
-// A column of cards, 12 apart (Figma). The page column's gap spaces it from
-// the title above.
+// A column of cards, 12 apart (Figma). A WeekGroup spaces it from its week
+// heading.
 export const ActivityList = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -115,12 +116,17 @@ export const ActivityCard = styled(Box, {
   return {
     display: 'flex',
     flexDirection: isLarge ? 'row' : 'column',
+    // Home's track (495) and the status column don't fit side by side below
+    // ~1300; the status column then wraps under instead of covering step 5.
+    flexWrap: isLarge ? 'wrap' : 'nowrap',
     alignItems: isLarge ? 'center' : 'flex-start',
     justifyContent: 'space-between',
     gap: theme.sizing.space4,
     flexGrow: 1,
     minWidth: 0,
-    padding: isLarge ? theme.sizing.space5 : theme.sizing.space4,
+    // Figma: ~32 inside, top and bottom (148 tall on Home, 128 on Past
+    // Activities).
+    padding: isLarge ? theme.sizing.space6 : theme.sizing.space4,
     borderRadius: theme.sizing.space3,
     backgroundColor: theme.palette.designSystem.surface.white,
     boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
@@ -135,6 +141,9 @@ export const CardColumn = styled(Box, {
   flexDirection: 'column',
   alignItems: align === 'end' ? 'flex-end' : 'flex-start',
   gap: theme.sizing.space2,
+  // The end column takes the rest of its line, so its content stays right-
+  // aligned whether it sits beside the start column or has wrapped under it.
+  flex: align === 'end' ? '1 1 auto' : undefined,
   minWidth: 0,
   textAlign: align === 'end' ? 'right' : 'left',
 }));
@@ -172,6 +181,57 @@ export const CardMessage = styled(Typography)(({ theme }) => ({
   color: theme.palette.designSystem.surface.atlanticNavy,
 }));
 
+// Past Activities with nothing completed (rev4 PastActivitiesException): the
+// Landing papers graphic, a heading over a line of copy, and a way back Home,
+// on the same white card as ActivityCard. Figma: 835 wide, ~32 inside, ~42
+// above the button, ~30 between the graphic and the heading.
+export const EmptyState = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  alignSelf: 'center',
+  gap: theme.sizing.space7,
+  width: '100%',
+  maxWidth: emptyStateMaxWidth,
+  padding: theme.sizing.space6,
+  borderRadius: theme.sizing.space3,
+  backgroundColor: theme.palette.designSystem.surface.white,
+  boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
+  boxSizing: 'border-box',
+  textAlign: 'center',
+}));
+
+export const EmptyStateContent = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: theme.sizing.space6,
+}));
+
+// Figma: ~9 between the heading and its copy.
+export const EmptyStateText = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: theme.sizing.space1,
+  color: theme.palette.designSystem.surface.atlanticNavy,
+}));
+
+// Figma: 135x42 rx21, navy fill. The label is #F6F7F8, 9 off white; white
+// stands in, there being no nearer token.
+export const EmptyStateButton = styled(Button)(({ theme }) => ({
+  height: actionHeight,
+  padding: `0 ${theme.sizing.space5}px`,
+  borderRadius: actionHeight / 2,
+  backgroundColor: theme.palette.designSystem.background.navyBlue,
+  color: theme.palette.designSystem.surface.white,
+  ...theme.typography.buttonLabel,
+  textTransform: 'none',
+  '&:hover': {
+    backgroundColor: theme.palette.designSystem.background.navyBlue,
+  },
+}));
+
 // Figma: "24 students", 27 tall, radius 4, skyBlue, Poppins 12/500 navy.
 export const StudentsTag = styled(Box)(({ theme }) => ({
   display: 'inline-flex',
@@ -194,6 +254,11 @@ export const CompletedTag = styled(StudentsTag)(({ theme }) => ({
   color: theme.palette.designSystem.surface.white,
 }));
 
+// rev4 PastActivities_IncompleteException: the same tag in #375EF9.
+export const IncompleteTag = styled(CompletedTag)(({ theme }) => ({
+  backgroundColor: theme.palette.designSystem.foreground.brightBlue,
+}));
+
 // Figma: 42 tall navy pill, Rubik 16/500 in #F6F7F8 (offWhite, 9 off), with a
 // trailing arrow or chevron.
 export const CardActionButton = styled(Button)(({ theme }) => ({
@@ -208,7 +273,7 @@ export const CardActionButton = styled(Button)(({ theme }) => ({
   whiteSpace: 'nowrap',
   '& .MuiButton-endIcon': { marginLeft: theme.sizing.space2 },
   '&:hover': {
-    backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
+    backgroundColor: theme.palette.designSystem.background.navyBlue,
   },
 }));
 

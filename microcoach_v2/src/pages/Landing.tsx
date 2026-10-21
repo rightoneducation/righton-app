@@ -64,7 +64,7 @@ const GetStartedButton = styled(Button, {
   ...theme.typography.mediumLabel,
   textTransform: 'none',
   '&:hover': {
-    backgroundColor: theme.palette.designSystem.surface.darkBlue,
+    backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
   },
 }));
 
@@ -120,8 +120,25 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
     return <LandingSkeleton screenSize={screenSize} />;
   }
 
+  const getStartedButton = (
+    <GetStartedButton
+      onClick={handleGetStarted}
+      screenSize={screenSize}
+      disableElevation
+      endIcon={<ArrowOutwardIcon sx={{ fontSize: 20 }} />}
+      // Figma puts 74px above the button on desktop: the Stack's 32px
+      // gap plus 42px here. No token on the scale for that.
+      sx={{ mt: isLarge ? '42px' : undefined }}
+    >
+      {t('hero.getstarted')}
+    </GetStartedButton>
+  );
+
   return (
-    <Box sx={{ position: 'relative' }}>
+    // The PatternDetail overhangs run past the gutter until ~1520px, which
+    // would widen the page. `clip`, not `hidden`, so this isn't a scroll
+    // container (no trackpad scroll, sticky children still work).
+    <Box sx={{ position: 'relative', overflowX: 'clip' }}>
       <HeaderPattern
         screenSize={screenSize}
         src={landingPagePattern}
@@ -165,14 +182,21 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
             >
               {t('hero.body')}
             </Typography>
-            <GetStartedButton
-              onClick={handleGetStarted}
-              screenSize={screenSize}
-              disableElevation
-              endIcon={<ArrowOutwardIcon sx={{ fontSize: 20 }} />}
-            >
-              {t('hero.getstarted')}
-            </GetStartedButton>
+            {screenSize === ScreenSize.SMALL ? (
+              // rev4 FrontPage_Mobile: the pilot caveat sits ~12 under the
+              // button, phones only.
+              <Stack sx={{ gap: `${theme.sizing.space2}px` }}>
+                {getStartedButton}
+                <Typography
+                  variant="smallNote"
+                  sx={{ textAlign: 'center', color: 'designSystem.surface.black' }}
+                >
+                  {t('hero.desktopNote')}
+                </Typography>
+              </Stack>
+            ) : (
+              getStartedButton
+            )}
           </Stack>
 
           <Box
@@ -185,7 +209,7 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
             {/* Figma: 640x594 at 1920, 648x601 at 744, 353x327 at 393. */}
             <ImageWithSkeleton
               src={heroClassroom}
-              alt="Two students working through a worksheet at their desk"
+              alt={t('hero.imageAlt')}
               borderRadius={`${theme.sizing.heroImageRadius}px`}
               sx={{
                 width: '100%',

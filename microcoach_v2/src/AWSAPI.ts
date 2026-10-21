@@ -150,6 +150,7 @@ export type MicroCoachSession = {
 
 export enum SessionStatus {
   DATA_INGESTED = "DATA_INGESTED",
+  REASSESS_INGESTED = "REASSESS_INGESTED",
   GENERATED = "GENERATED",
   COMPLETED = "COMPLETED",
 }

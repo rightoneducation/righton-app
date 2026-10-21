@@ -106,24 +106,26 @@
   "hero": {
     "title": "Vea cómo piensa toda su clase.",
     "body": "MicroCoach identifica patrones de conceptos erróneos en su clase y sugiere próximos pasos, en minutos.",
-    "getstarted": "Empezar"
+    "getstarted": "Empezar",
+    "desktopNote": "MicroCoach está optimizado para computadoras portátiles y de escritorio durante el piloto de la Ola 2.",
+    "imageAlt": "Dos estudiantes resolviendo una hoja de trabajo en su escritorio"
   },
   "howItWorks": {
     "title": "Cómo funciona",
     "step1": {
       "label": "Paso 1",
-      "title": "Suba sus archivos",
-      "body": "Suba su clave de respuestas y las respuestas de los estudiantes de cualquier prueba o evaluación"
+      "title": "Suba su Mix It Up",
+      "body": "Suba su clave de respuestas y las respuestas de los estudiantes de su Mix It Up."
     },
     "step2": {
       "label": "Paso 2",
-      "title": "Vea qué entendió mal su clase",
-      "body": "MicroCoach analiza cada respuesta y agrupa a los estudiantes según lo que entendieron mal, no solo según lo que respondieron incorrectamente"
+      "title": "Comprenda el razonamiento de sus estudiantes",
+      "body": "MicroCoach analiza cada respuesta y agrupa a los estudiantes según lo que entendieron mal, no solo según lo que respondieron incorrectamente."
     },
     "step3": {
       "label": "Paso 3",
-      "title": "Planifique su siguiente paso",
-      "body": "Para cada concepto erróneo, MicroCoach sugiere próximos pasos específicos. Elija lo que mejor se adapte a su clase y vuelva a enseñar"
+      "title": "Elija su próxima actividad",
+      "body": "Para cada concepto erróneo, MicroCoach sugiere próximos pasos específicos. Elija lo que mejor se adapte a su clase y vuelva a enseñar."
     },
     "step4": {
       "label": "Paso 4",
@@ -179,7 +181,7 @@
     "students": "{{count}} estudiantes",
     "waiting": "Esperando a MicroCoach...",
     "status": {
-      "ASSESS": "Comprende el pensamiento de tus estudiantes",
+      "ASSESS": "Evalúa los datos de respuestas MIU de tu clase",
       "AWAITING": "Analizando los archivos MIU, recibirás los resultados por correo en 48 horas",
       "UNDERSTAND": "Comprende los conceptos erróneos antes de elegir una actividad",
       "CHOOSE": "Selecciona tu próxima actividad",
@@ -208,7 +210,10 @@
     "sortNewest": "Fecha: más recientes primero",
     "sortOldest": "Fecha: más antiguas primero",
     "sortClass": "Por clase: A-Z",
-    "empty": "Aún no hay actividades completadas.",
+    "emptyTitle": "¡Aún no hay actividades anteriores!",
+    "emptyBody": "Completa tu primera actividad de MicroCoach y podrás revisarla aquí.",
+    "backToHome": "Volver al inicio",
+    "incomplete": "Incompleta",
     "untitled": "Actividad"
   },
   "signup": {
@@ -291,14 +296,21 @@
     "deleteClassTitle": "¿Eliminar esta clase?",
     "deleteClassBody": "Esto elimina {{className}} de tu cuenta. No se puede deshacer.",
     "deleteClassError": "No se pudo eliminar la clase. Inténtalo de nuevo.",
+    "addClass": "+ Añadir una clase",
+    "addClassPlaceholder": "Escribe el nombre de la clase",
+    "addClassSubmit": "Añadir clase",
+    "addClassError": "No se añadió tu clase. Algo salió mal.",
+    "cancelAddClass": "Cancelar añadir una clase",
     "oldPassword": "Vuelve a ingresar tu contraseña anterior",
     "newPassword": "Ingresa tu nueva contraseña",
     "confirmPassword": "Vuelve a ingresar tu nueva contraseña",
-    "done": "Listo",
     "saving": "Guardando",
     "saveError": "No pudimos guardar tus cambios. Inténtalo de nuevo.",
     "passwordRequired": "Completa los tres campos de contraseña.",
     "passwordMismatch": "Las nuevas contraseñas no coinciden.",
+    "passwordSame": "Tu nueva contraseña debe ser diferente de la anterior.",
+    "savePassword": "Guardar contraseña",
+    "cancel": "Cancelar",
     "passwordWrongOld": "Tu contraseña anterior es incorrecta.",
     "passwordInvalid": "La nueva contraseña no cumple con los requisitos.",
     "passwordLimit": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
@@ -333,6 +345,7 @@
     "bothToContinue": "Sube ambos archivos para continuar",
     "selectClassToContinue": "Selecciona una clase para continuar",
     "backHome": "Volver al inicio",
+    "backToHome": "Volver al inicio",
     "continue": "Continuar",
     "reviewTitle": "Revisar y enviar",
     "reviewBody": "Confirma que subiste los archivos correctos de Ejemplar MIU y Respuestas MIU para la clase y la semana indicadas.\nUna vez enviados, MicroCoach comenzará a analizar tus archivos.",
@@ -346,13 +359,11 @@
     "submittedTitle": "Archivos enviados correctamente",
     "submittedBody": "MicroCoach está analizando tus archivos.\nRecibirás un resumen de los patrones de conceptos erróneos de tu clase y los próximos pasos sugeridos en un plazo de 24 horas.",
     "startOver": "Empezar de nuevo",
-    "newClassroom": "Subir otra clase",
     "startOverTitle": "¿Empezar de nuevo con otros archivos?",
     "startOverBody": "Si subiste los archivos equivocados, vuelve a subirlos.\nSi no, ya terminaste. Te enviaremos tus resultados en un plazo de 24 horas.",
     "startOverConfirm": "Sí, empezar de nuevo",
     "startOverKeep": "Conservar mi envío",
-    "close": "Cerrar",
-    "teacherPlaceholder": "Selecciona tu nombre y correo"
+    "close": "Cerrar"
   },
   "reflect": {
     "title": "Próximos pasos que implementó",

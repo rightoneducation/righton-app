@@ -12,7 +12,6 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { SkeletonPill } from '../components/skeletons/SkeletonParts';
-import { AssessmentType } from '../AWSAPI';
 import ContentRow from '../components/ContentRow';
 import {
   IUploadFile,
@@ -229,27 +228,17 @@ function FileSlotCard({
  */
 export default function UploadMiu({
   screenSize,
-  kind,
   basePath,
   upload,
   actions,
   classrooms,
   areClassesLoading,
-  teacher,
 }: UploadStepProps) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
   const isI18nReady = useI18nReady();
   const isLarge = screenSize === ScreenSize.LARGE;
-  // Reassess (Upload2 frame) adds the teacher as a third field and runs on
-  // the full-width column; the first upload keeps the narrow two-field form.
-  const isReassess = kind === AssessmentType.POST_PPQ;
-  const teacherLabel = teacher
-    ? [[teacher.firstName, teacher.lastName].filter(Boolean).join(' '), teacher.email]
-        .filter(Boolean)
-        .join(' · ')
-    : '';
 
   const classId = upload.classId ?? '';
   const hasClass = classrooms.some((classroom) => classroom.id === classId);
@@ -264,7 +253,7 @@ export default function UploadMiu({
   return (
     <UploadLayout screenSize={screenSize}>
       <ContentRow
-        narrow={!isReassess}
+        narrow
         screenSize={screenSize}
         sx={{
           display: 'flex',
@@ -296,30 +285,6 @@ export default function UploadMiu({
             </Typography>
             <UploadCard>
               <SetupRow screenSize={screenSize}>
-                {isReassess && (
-                  <SetupField>
-                    <Typography
-                      variant="smallTitle"
-                      component="label"
-                      htmlFor="upload-teacher"
-                      sx={{ color: 'designSystem.surface.darkBlue' }}
-                    >
-                      {t('upload.teacher')}
-                    </Typography>
-                    {/* Only the signed-in teacher uploads for themselves, so
-                        this confirms who rather than offering a choice. */}
-                    <SetupSelect
-                      id="upload-teacher"
-                      isEmpty={!teacher}
-                      value={teacher ? teacher.id : ''}
-                      displayEmpty
-                      disabled={!teacher}
-                      renderValue={() => teacherLabel || t('upload.teacherPlaceholder')}
-                    >
-                      {teacher && <MenuItem value={teacher.id}>{teacherLabel}</MenuItem>}
-                    </SetupSelect>
-                  </SetupField>
-                )}
                 <SetupField>
                   <Typography
                     variant="smallTitle"

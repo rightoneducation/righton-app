@@ -106,24 +106,26 @@
   "hero": {
     "title": "See how your whole class is thinking.",
     "body": "MicroCoach identifies misconception patterns across your class and suggests next steps, in minutes.",
-    "getstarted": "Get started"
+    "getstarted": "Get started",
+    "desktopNote": "MicroCoach is optimized for laptop and desktop use during the Wave 2 pilot.",
+    "imageAlt": "Two students working through a worksheet at their desk"
   },
   "howItWorks": {
     "title": "How it works",
     "step1": {
       "label": "Step 1",
-      "title": "Upload your files",
-      "body": "Upload your answer key and student responses from any quiz or assessment"
+      "title": "Upload your Mix It Up",
+      "body": "Upload your answer key and student responses from your Mix It Up."
     },
     "step2": {
       "label": "Step 2",
-      "title": "See what your class misunderstood",
-      "body": "MicroCoach analyzes every response and groups students by what they misunderstood, not just what they got wrong"
+      "title": "Understand your students' thinking",
+      "body": "MicroCoach analyzes every response and groups students by what they misunderstood, not just what they got wrong."
     },
     "step3": {
       "label": "Step 3",
-      "title": "Plan your next move",
-      "body": "For each misconception, MicroCoach suggests targeted next steps. Pick what fits your class and get back to teaching"
+      "title": "Choose your next activity",
+      "body": "For each misconception, MicroCoach suggests targeted next steps. Pick what fits your class and get back to teaching."
     },
     "step4": {
       "label": "Step 4",
@@ -179,7 +181,7 @@
     "students": "{{count}} students",
     "waiting": "Waiting on MicroCoach...",
     "status": {
-      "ASSESS": "Understand your students’ thinking",
+      "ASSESS": "Assess your class MIU response data",
       "AWAITING": "Analyzing MIU files, expect email results within 48 hours",
       "UNDERSTAND": "Understand misconceptions before choosing an activity",
       "CHOOSE": "Select your next activity",
@@ -208,7 +210,10 @@
     "sortNewest": "Date: Newest first",
     "sortOldest": "Date: Oldest first",
     "sortClass": "By class: A-Z",
-    "empty": "No completed activities yet.",
+    "emptyTitle": "No past activities yet!",
+    "emptyBody": "Complete your first MicroCoach activity and you’ll be able to review it here.",
+    "backToHome": "Back to Home",
+    "incomplete": "Incomplete",
     "untitled": "Activity"
   },
   "signup": {
@@ -291,14 +296,21 @@
     "deleteClassTitle": "Delete this class?",
     "deleteClassBody": "This removes {{className}} from your account. This can't be undone.",
     "deleteClassError": "That class couldn't be deleted. Please try again.",
+    "addClass": "+ Add a class",
+    "addClassPlaceholder": "Enter class name",
+    "addClassSubmit": "Add class",
+    "addClassError": "Your class wasn’t added. Something went wrong.",
+    "cancelAddClass": "Cancel adding a class",
     "oldPassword": "Re-enter your old password",
     "newPassword": "Enter your new password",
     "confirmPassword": "Re-enter your new password",
-    "done": "Done",
     "saving": "Saving",
     "saveError": "We couldn't save your changes. Try again.",
     "passwordRequired": "Fill in all three password fields.",
     "passwordMismatch": "Your new passwords don't match.",
+    "passwordSame": "Your new password must be different from your old one.",
+    "savePassword": "Save password",
+    "cancel": "Cancel",
     "passwordWrongOld": "Your old password is incorrect.",
     "passwordInvalid": "That new password doesn't meet the password requirements.",
     "passwordLimit": "Too many attempts. Please wait a few minutes and try again.",
@@ -333,6 +345,7 @@
     "bothToContinue": "Upload both files to continue",
     "selectClassToContinue": "Select a class to continue",
     "backHome": "Back to homepage",
+    "backToHome": "Back to home",
     "continue": "Continue",
     "reviewTitle": "Review and submit",
     "reviewBody": "Please confirm you’ve uploaded the correct MIU Exemplar and MIU Responses files for the intended class and week.\nOnce submitted, MicroCoach will begin analyzing your files.",
@@ -346,13 +359,11 @@
     "submittedTitle": "Files submitted successfully",
     "submittedBody": "MicroCoach is analyzing your files.\nYou’ll receive a summary of your class’s misconception patterns and suggested next steps within 24 hours.",
     "startOver": "Start over",
-    "newClassroom": "Upload new classroom",
     "startOverTitle": "Start over with new files?",
     "startOverBody": "If the wrong files were uploaded, go ahead and re-upload.\nOtherwise, you're all set. We'll send your results within 24 hours.",
     "startOverConfirm": "Yes, start over",
     "startOverKeep": "Keep my submission",
-    "close": "Close",
-    "teacherPlaceholder": "Select your name and email"
+    "close": "Close"
   },
   "reflect": {
     "title": "Next Steps You Implemented",

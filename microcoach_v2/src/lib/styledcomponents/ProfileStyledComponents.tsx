@@ -1,7 +1,9 @@
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
+import Snackbar from '@mui/material/Snackbar';
 import Typography from '@mui/material/Typography';
 import { ScreenSize } from '../MicroCoachModels';
 import { pageGutter } from '../../components/ContentRow';
@@ -19,6 +21,9 @@ const AVATAR_SIZE = 169;
 const chipRadius = 18;
 const fieldHeight = 42;
 const fieldRadius = 9;
+const deleteTileWidth = 44;
+const deleteTileHeight = 45;
+const toastMinHeight = 59;
 
 export const ProfilePage = styled(Box, {
   shouldForwardProp: noScreenSize,
@@ -264,6 +269,90 @@ export const ClassRow = styled(Box)(({ theme }) => ({
   width: '100%',
 }));
 
+// rev4 UserAccount_1: the filled trash on a 44x45 white tile, rx 16, beside
+// each class. White can't lighten, so hover goes sky blue like the page's
+// other white buttons.
+export const ClassDeleteButton = styled(IconButton)(({ theme }) => ({
+  flexShrink: 0,
+  width: deleteTileWidth,
+  height: deleteTileHeight,
+  borderRadius: theme.sizing.space3,
+  backgroundColor: theme.palette.designSystem.surface.white,
+  '&:hover': {
+    backgroundColor: theme.palette.designSystem.surface.skyBlue,
+  },
+}));
+
+// rev4 UserAccount_1: "+ Add a class" under the list, a class row's field
+// spanning the delete column too.
+export const AddClassButton = styled(Button)(({ theme }) => ({
+  width: '100%',
+  minHeight: fieldHeight,
+  borderRadius: fieldRadius,
+  backgroundColor: theme.palette.designSystem.surface.white,
+  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.foreground.greyAccent}`,
+  color: theme.palette.designSystem.surface.black,
+  ...theme.typography.rubikBody,
+  fontWeight: 600,
+  textTransform: 'none',
+  '&:hover': {
+    backgroundColor: theme.palette.designSystem.surface.skyBlue,
+  },
+}));
+
+// rev4 UserAccount_NewClassFails / ChangePassword_2: the toast floats ~40
+// below the header, centred over the content column rather than the window.
+export const ToastSnackbar = styled(Snackbar)(({ theme }) => ({
+  [theme.breakpoints.up('xs')]: {
+    top: theme.sizing.headerHeight + theme.sizing.space7,
+  },
+  [theme.breakpoints.up('lg')]: {
+    left: `calc(50% + ${SIDEBAR_WIDTH / 2}px)`,
+  },
+}));
+
+export type ToastTone = 'success' | 'error';
+
+// Figma: ~470x59 rx20 on a hairline border, Rubik 16 bold navy ~20 in, a grey
+// close circle at the right. Success is lightGreen on success; an error is
+// the pink wash on errorStroke.
+export const Toast = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'tone',
+})<{ tone: ToastTone }>(({ theme, tone }) => {
+  const { status } = theme.palette.designSystem;
+  const isError = tone === 'error';
+
+  return {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.sizing.space3,
+    minHeight: toastMinHeight,
+    padding: `0 ${theme.sizing.space2}px 0 ${theme.sizing.space4}px`,
+    borderRadius: theme.sizing.space4,
+    backgroundColor: isError ? status.errorToast : status.lightGreen,
+    border: `${theme.borders.borderWidth}px solid ${isError ? status.errorStroke : status.success}`,
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+    color: theme.palette.designSystem.surface.atlanticNavy,
+    ...theme.typography.rubikBody,
+    fontWeight: 700,
+    boxSizing: 'border-box',
+  };
+});
+
+// A quiet text action beside a ProfileAction (password Cancel).
+export const ProfileTextAction = styled(Button)(({ theme }) => ({
+  minHeight: 36,
+  padding: `0 ${theme.sizing.space2}px`,
+  backgroundColor: 'transparent',
+  color: theme.palette.designSystem.surface.atlanticNavy,
+  ...theme.typography.buttonLabelSmLight,
+  textTransform: 'none',
+  '&:hover': {
+    backgroundColor: 'transparent',
+    textDecoration: 'underline',
+  },
+}));
+
 export const ClassList = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -298,22 +387,8 @@ export const ProfileAction = styled(Button)(({ theme }) => ({
   textTransform: 'none',
   whiteSpace: 'nowrap',
   '&:hover': {
-    backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
+    backgroundColor: theme.palette.designSystem.foreground.accentBlue,
   },
-}));
-
-/** Figma (Account6): a light-green banner with a navy bold message and an ×. */
-export const SuccessBanner = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.sizing.space3,
-  padding: `${theme.sizing.space2}px ${theme.sizing.space4}px`,
-  borderRadius: theme.sizing.space2,
-  backgroundColor: theme.palette.designSystem.status.lightGreen,
-  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.status.success}`,
-  color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.rubikBodyBold,
-  boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
 }));
 
 export type { ScreenSizeProps };

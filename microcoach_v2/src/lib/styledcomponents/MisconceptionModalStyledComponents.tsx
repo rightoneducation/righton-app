@@ -169,7 +169,7 @@ export const ModalCtaButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
   whiteSpace: 'nowrap',
   '&:hover': {
-    backgroundColor: theme.palette.designSystem.background.navyBlue,
+    backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
   },
 }));
 

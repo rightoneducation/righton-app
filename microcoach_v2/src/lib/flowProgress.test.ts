@@ -5,9 +5,9 @@ import {
   FlowStep,
   buildFlowSteps,
   buildPendingFlowSteps,
-  defaultWeekFor,
   deriveCurrentStep,
   hasChosenActivity,
+  isAwaitingResults,
   sessionForWeek,
   sortSessionsLatestFirst,
   stepCta,
@@ -48,6 +48,12 @@ describe('deriveCurrentStep', () => {
     expect(
       deriveCurrentStep(session({ status: SessionStatus.DATA_INGESTED }), true),
     ).toBe(FlowStep.ASSESS);
+  });
+
+  it('is REASSESS while the MIU 2 files are still being analyzed', () => {
+    expect(
+      deriveCurrentStep(session({ status: SessionStatus.REASSESS_INGESTED }), true),
+    ).toBe(FlowStep.REASSESS);
   });
 
   it('is UNDERSTAND once results are in and no plan is saved', () => {
@@ -186,28 +192,14 @@ describe('sessionForWeek', () => {
   });
 });
 
-describe('defaultWeekFor', () => {
-  beforeEach(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date(2026, 9, 21, 12));
-  });
-  afterEach(() => jest.useRealTimers());
-
-  it('opens on the week of an open loop', () => {
-    expect(defaultWeekFor([session({ createdAt: '2026-10-14T15:00:00.000Z' })])).toBe(
-      '2026-10-12',
-    );
+describe('isAwaitingResults', () => {
+  it('waits on either upload while the pipeline has it', () => {
+    expect(isAwaitingResults(session({ status: SessionStatus.DATA_INGESTED }))).toBe(true);
+    expect(isAwaitingResults(session({ status: SessionStatus.REASSESS_INGESTED }))).toBe(true);
   });
 
-  it('opens on the current week once the latest loop is complete', () => {
-    expect(
-      defaultWeekFor([
-        session({ status: SessionStatus.COMPLETED, createdAt: '2026-10-14T15:00:00.000Z' }),
-      ]),
-    ).toBe('2026-10-19');
-  });
-
-  it('opens on the current week with no sessions', () => {
-    expect(defaultWeekFor([])).toBe('2026-10-19');
+  it('does not wait once results are in, or with no session', () => {
+    expect(isAwaitingResults(session())).toBe(false);
+    expect(isAwaitingResults(null)).toBe(false);
   });
 });

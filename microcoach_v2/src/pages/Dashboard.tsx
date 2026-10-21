@@ -17,6 +17,7 @@ import {
   SidebarContent,
   DashboardCard,
   DashboardHeading,
+  DashboardIntro,
   DashboardForm,
   StepperBand,
   StepperRow,
@@ -44,14 +45,13 @@ import {
   FlowStep,
   buildFlowSteps,
   buildPendingFlowSteps,
-  defaultWeekFor,
   deriveCurrentStep,
   hasChosenActivity,
   sessionForWeek,
   sortSessionsLatestFirst,
   stepCta,
 } from '../lib/flowProgress';
-import { formatSchoolWeek, schoolWeeks } from '../lib/weeks';
+import { currentSchoolWeek, formatSchoolWeek, schoolWeeks } from '../lib/weeks';
 
 // Chips shown inline before the rest fold into "More".
 const VISIBLE_CLASS_COUNT = 4;
@@ -117,12 +117,12 @@ export default function Dashboard({
   /*
    * The week drives the page: the stepper and CTA show the selected class's
    * session for that week, Weekly Activity Progress shows every class's, and
-   * the upload is pre-filled with it. Until the teacher picks one it follows
-   * the class's open loop (defaultWeekFor), so a class part-way through last
-   * week's cycle opens on that week rather than starting over.
+   * the upload is pre-filled with it. Until the teacher picks one it is the
+   * current week: an unfinished earlier week moves to Past Activities as
+   * Incomplete rather than holding Home on it (rev4 WeeklyActivity).
    */
   const [pickedWeek, setPickedWeek] = React.useState<string | null>(null);
-  const weekStart = pickedWeek ?? defaultWeekFor(sessionList);
+  const weekStart = pickedWeek ?? currentSchoolWeek();
   const weekSession = sessionForWeek(sessionList, weekStart);
 
   // Review, Select Activity and the rest read the app-wide selected session,
@@ -200,167 +200,169 @@ export default function Dashboard({
       <SidebarContent screenSize={screenSize}>
         {isI18nReady && (
           <>
-            <StepperBand screenSize={screenSize}>
-              {/* rev2 LandingPage: the circle track, not the flow pages'
-                  breadcrumb. On phones it fits the width; at medium
-                  StepperRow scrolls it sideways. */}
-              <StepperRow screenSize={screenSize}>
-                <ClassStepTrack
-                  steps={flowSteps}
-                  size="large"
-                  fluid={screenSize === ScreenSize.SMALL}
-                />
-              </StepperRow>
-              <MyActivityButton
-                disableElevation
-                disabled={!canOpenMyActivity}
-                onClick={() => navigate('/myactivity')}
-              >
-                {t('dashboard.myActivity')}
-              </MyActivityButton>
-            </StepperBand>
-
-            <DashboardCard screenSize={screenSize}>
-              <DashboardHeading>
-                <Typography
-                  variant="h1"
-                  sx={{ color: 'designSystem.surface.atlanticNavy' }}
+            <DashboardIntro screenSize={screenSize}>
+              <StepperBand screenSize={screenSize}>
+                {/* rev2 LandingPage: the circle track, not the flow pages'
+                    breadcrumb. On phones it fits the width; at medium
+                    StepperRow scrolls it sideways. */}
+                <StepperRow screenSize={screenSize}>
+                  <ClassStepTrack
+                    steps={flowSteps}
+                    size="large"
+                    fluid={screenSize === ScreenSize.SMALL}
+                  />
+                </StepperRow>
+                <MyActivityButton
+                  disableElevation
+                  disabled={!canOpenMyActivity}
+                  onClick={() => navigate('/myactivity')}
                 >
-                  {t(hasUploads === true ? 'dashboard.titleReturning' : 'dashboard.title')}
-                </Typography>
+                  {t('dashboard.myActivity')}
+                </MyActivityButton>
+              </StepperBand>
 
-                <Typography
-                  variant="smallTitle"
-                  sx={{
-                    color: 'designSystem.surface.atlanticNavy',
-                    whiteSpace: 'pre-line',
-                  }}
-                >
-                  {t('dashboard.subtitle')}
-                </Typography>
-              </DashboardHeading>
+              <DashboardCard screenSize={screenSize}>
+                <DashboardHeading>
+                  <Typography
+                    variant="h1"
+                    sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                  >
+                    {t(hasUploads === true ? 'dashboard.titleReturning' : 'dashboard.title')}
+                  </Typography>
 
-              <DashboardForm>
-                <PickerRow screenSize={screenSize}>
-                  <PickerColumn screenSize={screenSize}>
-                    <PickerLabel screenSize={screenSize}>
-                      {t(
-                        classesKnown && !classesFailed && !hasClasses
-                          ? 'dashboard.noClassesTitle'
-                          : 'dashboard.classPrompt',
-                      )}
-                    </PickerLabel>
-                    <LoadingSlot
-                      isLoading={!classesKnown}
-                      minHeight={CHIP_ROW_HEIGHT}
-                      label={t('dashboard.loadingClasses')}
-                      skeleton={
-                        <ChipWrap>
-                          {[0, 1, 2].map((chip) => (
-                            <SkeletonPill key={chip} width={CHIP_SKELETON_WIDTH} height={CHIP_ROW_HEIGHT} />
-                          ))}
-                        </ChipWrap>
-                      }
-                    >
-                      {classesFailed && (
-                        <PickerNote
-                          role="alert"
-                          sx={{ color: 'designSystem.status.errorStroke' }}
-                        >
-                          {t('dashboard.classesError')}
-                        </PickerNote>
-                      )}
-                      {!classesFailed && hasClasses && (
-                        <ChipWrap>
-                          {inlineClasses.map((classroom) => (
-                            <ClassChip
-                              key={classroom.id}
-                              isActive={classroom.id === selectedClassId}
-                              aria-pressed={classroom.id === selectedClassId}
-                              onClick={() => selectClass(classroom.id)}
-                            >
-                              {classroom.name}
-                            </ClassChip>
-                          ))}
-                          {overflowClasses.length > 0 && (
-                            <ClassChip
-                              isActive={false}
-                              isMore
-                              endIcon={<KeyboardArrowDownIcon />}
-                              aria-haspopup="menu"
-                              onClick={(event) => setMoreAnchor(event.currentTarget)}
-                            >
-                              {t('dashboard.moreClasses')}
-                            </ClassChip>
-                          )}
-                          <Menu
-                            anchorEl={moreAnchor}
-                            open={!!moreAnchor}
-                            onClose={() => setMoreAnchor(null)}
+                  <Typography
+                    variant="smallTitle"
+                    sx={{
+                      color: 'designSystem.surface.atlanticNavy',
+                      whiteSpace: 'pre-line',
+                    }}
+                  >
+                    {t('dashboard.subtitle')}
+                  </Typography>
+                </DashboardHeading>
+
+                <DashboardForm>
+                  <PickerRow screenSize={screenSize}>
+                    <PickerColumn screenSize={screenSize}>
+                      <PickerLabel screenSize={screenSize}>
+                        {t(
+                          classesKnown && !classesFailed && !hasClasses
+                            ? 'dashboard.noClassesTitle'
+                            : 'dashboard.classPrompt',
+                        )}
+                      </PickerLabel>
+                      <LoadingSlot
+                        isLoading={!classesKnown}
+                        minHeight={CHIP_ROW_HEIGHT}
+                        label={t('dashboard.loadingClasses')}
+                        skeleton={
+                          <ChipWrap>
+                            {[0, 1, 2].map((chip) => (
+                              <SkeletonPill key={chip} width={CHIP_SKELETON_WIDTH} height={CHIP_ROW_HEIGHT} />
+                            ))}
+                          </ChipWrap>
+                        }
+                      >
+                        {classesFailed && (
+                          <PickerNote
+                            role="alert"
+                            sx={{ color: 'designSystem.status.errorStroke' }}
                           >
-                            {overflowClasses.map((classroom) => (
-                              <MenuItem
+                            {t('dashboard.classesError')}
+                          </PickerNote>
+                        )}
+                        {!classesFailed && hasClasses && (
+                          <ChipWrap>
+                            {inlineClasses.map((classroom) => (
+                              <ClassChip
                                 key={classroom.id}
-                                onClick={() => {
-                                  selectClass(classroom.id);
-                                  setMoreAnchor(null);
-                                }}
+                                isActive={classroom.id === selectedClassId}
+                                aria-pressed={classroom.id === selectedClassId}
+                                onClick={() => selectClass(classroom.id)}
                               >
                                 {classroom.name}
-                              </MenuItem>
+                              </ClassChip>
                             ))}
-                          </Menu>
-                        </ChipWrap>
-                      )}
-                      {/* Classes are added in Account Settings now (design note,
-                          v2 Dashboard1), so the empty state points there. */}
-                      {!classesFailed && !hasClasses && (
-                        <PickerNote
-                          sx={{ color: 'designSystem.surface.atlanticNavy' }}
-                        >
-                          {t('dashboard.noClassesHint')}{' '}
-                          <Link component={RouterLink} to="/profile">
-                            {t('dashboard.accountSettingsLink')}
-                          </Link>
-                        </PickerNote>
-                      )}
-                    </LoadingSlot>
-                  </PickerColumn>
+                            {overflowClasses.length > 0 && (
+                              <ClassChip
+                                isActive={false}
+                                isMore
+                                endIcon={<KeyboardArrowDownIcon />}
+                                aria-haspopup="menu"
+                                onClick={(event) => setMoreAnchor(event.currentTarget)}
+                              >
+                                {t('dashboard.moreClasses')}
+                              </ClassChip>
+                            )}
+                            <Menu
+                              anchorEl={moreAnchor}
+                              open={!!moreAnchor}
+                              onClose={() => setMoreAnchor(null)}
+                            >
+                              {overflowClasses.map((classroom) => (
+                                <MenuItem
+                                  key={classroom.id}
+                                  onClick={() => {
+                                    selectClass(classroom.id);
+                                    setMoreAnchor(null);
+                                  }}
+                                >
+                                  {classroom.name}
+                                </MenuItem>
+                              ))}
+                            </Menu>
+                          </ChipWrap>
+                        )}
+                        {/* Classes are added in Account Settings now (design note,
+                            v2 Dashboard1), so the empty state points there. */}
+                        {!classesFailed && !hasClasses && (
+                          <PickerNote
+                            sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                          >
+                            {t('dashboard.noClassesHint')}{' '}
+                            <Link component={RouterLink} to="/profile">
+                              {t('dashboard.accountSettingsLink')}
+                            </Link>
+                          </PickerNote>
+                        )}
+                      </LoadingSlot>
+                    </PickerColumn>
 
-                  <PickerColumn screenSize={screenSize} grow>
-                    <PickerLabel screenSize={screenSize}>
-                      {t('dashboard.weekLabel')}
-                    </PickerLabel>
-                    <WeekSelect
-                      value={weekStart}
-                      onChange={(event) => setPickedWeek(event.target.value)}
-                      inputProps={{ 'aria-label': t('dashboard.weekLabel') }}
+                    <PickerColumn screenSize={screenSize} grow>
+                      <PickerLabel screenSize={screenSize}>
+                        {t('dashboard.weekLabel')}
+                      </PickerLabel>
+                      <WeekSelect
+                        value={weekStart}
+                        onChange={(event) => setPickedWeek(event.target.value)}
+                        inputProps={{ 'aria-label': t('dashboard.weekLabel') }}
+                      >
+                        {schoolWeeks().map((week) => (
+                          <MenuItem key={week} value={week}>
+                            {formatSchoolWeek(week, t, i18n.language)}
+                          </MenuItem>
+                        ))}
+                      </WeekSelect>
+                    </PickerColumn>
+                  </PickerRow>
+
+                  {/* Until the step is known, a skeleton of the button holds its place. */}
+                  {showCta && isCtaLoading && (
+                    <Box
+                      role="status"
+                      aria-busy
+                      aria-label={t('dashboard.loadingNextStep')}
+                      sx={{ width: '100%', maxWidth: 440 }}
                     >
-                      {schoolWeeks().map((week) => (
-                        <MenuItem key={week} value={week}>
-                          {formatSchoolWeek(week, t, i18n.language)}
-                        </MenuItem>
-                      ))}
-                    </WeekSelect>
-                  </PickerColumn>
-                </PickerRow>
-
-                {/* Until the step is known, a skeleton of the button holds its place. */}
-                {showCta && isCtaLoading && (
-                  <Box
-                    role="status"
-                    aria-busy
-                    aria-label={t('dashboard.loadingNextStep')}
-                    sx={{ width: '100%', maxWidth: 440 }}
-                  >
-                    <SkeletonPill width="100%" height={58} />
-                  </Box>
-                )}
-                {showCta && !isCtaLoading && (
-                  <DashboardCta onClick={handleCta}>{t(cta.labelKey)}</DashboardCta>
-                )}
-              </DashboardForm>
-            </DashboardCard>
+                      <SkeletonPill width="100%" height={58} />
+                    </Box>
+                  )}
+                  {showCta && !isCtaLoading && (
+                    <DashboardCta onClick={handleCta}>{t(cta.labelKey)}</DashboardCta>
+                  )}
+                </DashboardForm>
+              </DashboardCard>
+            </DashboardIntro>
 
             {/* rev2 LandingPage: This Week now lives below the upload card. */}
             <WeeklyProgressList

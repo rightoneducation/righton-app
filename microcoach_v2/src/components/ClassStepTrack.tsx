@@ -9,11 +9,13 @@ import { IFlowStep } from '../lib/PipelineModels';
 import { StepState } from '../lib/styledcomponents/DashboardStyledComponents';
 
 // A five-step track: numbered circles joined by a line that fills in
-// accentBlue up to the current step. Done steps show a check; labels sit
-// centred underneath; upcoming steps are grey.
+// accentBlue up to the current step. Every circle shows its number, done
+// ones included (rev2 Stepper); labels sit centred underneath; upcoming steps
+// are grey.
 //   compact: each Weekly Activity Progress card (rev2 WeeklyActivityProgress)
 //   large:   Home's top stepper (rev2 LandingPage), with a 30% navy halo on
-//            the current step; completed steps (and Assess) link to their page
+//            the current step; completed steps (and Assess) link to their page.
+//            The flow pages use it too (FlowStepper), passing `page`.
 // fluid: phones. The track takes its container's width instead of the fixed
 // pitch, and labels wrap, so five steps fit without scrolling the page.
 
@@ -34,6 +36,9 @@ const GEOMETRY: Record<
   // Figma: 38px circles in a 50.75px halo, ~159 apart, on a 2px line.
   large: { pitch: 159, circleSize: 38, lineWidth: 2, haloSpread: 6, labelSize: 16 },
 };
+
+// The widest first-step label the large track's lead inset leaves room for.
+const FIRST_LABEL_ALLOWANCE = 64;
 
 const Track = styled(Box)({
   position: 'relative',
@@ -76,6 +81,8 @@ interface ClassStepTrackProps {
   steps?: IFlowStep[];
   size?: StepTrackSize;
   fluid?: boolean;
+  // The step whose page this is, so it never links to itself.
+  page?: FlowStep;
 }
 
 export default function ClassStepTrack({
@@ -83,6 +90,7 @@ export default function ClassStepTrack({
   steps,
   size = 'compact',
   fluid = false,
+  page,
 }: ClassStepTrackProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -113,8 +121,21 @@ export default function ClassStepTrack({
   const lineLength = (count: number) =>
     fluid ? `${count * columnShare}%` : count * pitch;
 
+  // rev2 frames (LandingPage, Stepper) put the first step at the content
+  // edge, but each circle is centred in a pitch-wide column. At large, pull
+  // the track back by the empty part of that first column so the pitch
+  // between circles stays as drawn. The first label is centred under its ring
+  // and can be wider ("Evaluar" ~60), and the stepper row is a scroller that
+  // clips anything left of it, so the pull stops where a 64px label would
+  // touch the edge: the ring lands ~7 in rather than flush.
+  const leadInset =
+    size === 'large' && !fluid ? (pitch - FIRST_LABEL_ALLOWANCE) / 2 : 0;
+  let trackSx;
+  if (fluid) trackSx = { width: '100%' };
+  else if (leadInset > 0) trackSx = { ml: `${-leadInset}px` };
+
   return (
-    <Track sx={fluid ? { width: '100%' } : undefined}>
+    <Track sx={trackSx}>
       <Line
         sx={{
           top: lineTop,
@@ -139,7 +160,8 @@ export default function ClassStepTrack({
         const state = stateAt(index);
         const color = STATE_COLOR[state];
         const link = steps?.[index];
-        const path = link?.isClickable ? link.path : undefined;
+        const path =
+          link?.isClickable && flowStep !== page ? link.path : undefined;
         const label = t(`dashboard.steps.${flowStep}`);
 
         const content = (
@@ -174,7 +196,7 @@ export default function ClassStepTrack({
                     }),
                 })}
               >
-                {state === 'COMPLETE' ? '✓' : index + 1}
+                {index + 1}
               </Box>
             </Box>
             <Box

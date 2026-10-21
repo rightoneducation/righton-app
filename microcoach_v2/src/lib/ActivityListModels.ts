@@ -16,7 +16,7 @@ export interface IWeeklyClassProgress {
   isAwaitingResults: boolean;
 }
 
-/** One completed session (v2 Dashboard3). */
+/** One session, finished or not (v2 Dashboard3, rev4 Incomplete). */
 export interface IPastActivity {
   // The session's id.
   id: string;
@@ -25,8 +25,15 @@ export interface IPastActivity {
   studentCount: number;
   // The saved plan's first activity; null when it has none or the lookup failed.
   activityName: string | null;
-  // The session's updatedAt: nothing records completion itself.
+  // The session's updatedAt: nothing records completion itself. For an
+  // unfinished session, when it was last worked on.
   completedAt: string;
+  // DONE once completed; otherwise where the session stopped.
+  step: FlowStep;
+  // Files are in but the pipeline has not reported back yet.
+  isAwaitingResults: boolean;
+  // The week the session is for, which an upload pre-fills.
+  weekStart: string;
 }
 
 export enum ActivitySortOrder {
