@@ -265,6 +265,7 @@ export const createMicroCoachClassroom = /* GraphQL */ `mutation CreateMicroCoac
             assessmentCode
             type
             weekNumber
+            sourceAssessmentId
             createdAt
             updatedAt
             __typename
@@ -319,6 +320,20 @@ export const createMicroCoachClassroom = /* GraphQL */ `mutation CreateMicroCoac
           averageQuestionsCorrectBefore
           averageQuestionsCorrectAfter
           improvedStudentCount
+          studentResults {
+            studentId
+            studentName
+            questionsCorrectBefore
+            questionsCorrectAfter
+            __typename
+          }
+          questionResults {
+            questionNumber
+            questionText
+            percentCorrectBefore
+            percentCorrectAfter
+            __typename
+          }
           __typename
         }
         createdAt
@@ -332,6 +347,19 @@ export const createMicroCoachClassroom = /* GraphQL */ `mutation CreateMicroCoac
       items {
         id
         classId
+        responses {
+          items {
+            id
+            assessmentId
+            studentId
+            totalScore
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
         name
         externalId
         createdAt
@@ -386,6 +414,7 @@ export const updateMicroCoachClassroom = /* GraphQL */ `mutation UpdateMicroCoac
             assessmentCode
             type
             weekNumber
+            sourceAssessmentId
             createdAt
             updatedAt
             __typename
@@ -440,6 +469,20 @@ export const updateMicroCoachClassroom = /* GraphQL */ `mutation UpdateMicroCoac
           averageQuestionsCorrectBefore
           averageQuestionsCorrectAfter
           improvedStudentCount
+          studentResults {
+            studentId
+            studentName
+            questionsCorrectBefore
+            questionsCorrectAfter
+            __typename
+          }
+          questionResults {
+            questionNumber
+            questionText
+            percentCorrectBefore
+            percentCorrectAfter
+            __typename
+          }
           __typename
         }
         createdAt
@@ -453,6 +496,19 @@ export const updateMicroCoachClassroom = /* GraphQL */ `mutation UpdateMicroCoac
       items {
         id
         classId
+        responses {
+          items {
+            id
+            assessmentId
+            studentId
+            totalScore
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
         name
         externalId
         createdAt
@@ -507,6 +563,7 @@ export const deleteMicroCoachClassroom = /* GraphQL */ `mutation DeleteMicroCoac
             assessmentCode
             type
             weekNumber
+            sourceAssessmentId
             createdAt
             updatedAt
             __typename
@@ -561,6 +618,20 @@ export const deleteMicroCoachClassroom = /* GraphQL */ `mutation DeleteMicroCoac
           averageQuestionsCorrectBefore
           averageQuestionsCorrectAfter
           improvedStudentCount
+          studentResults {
+            studentId
+            studentName
+            questionsCorrectBefore
+            questionsCorrectAfter
+            __typename
+          }
+          questionResults {
+            questionNumber
+            questionText
+            percentCorrectBefore
+            percentCorrectAfter
+            __typename
+          }
           __typename
         }
         createdAt
@@ -574,6 +645,19 @@ export const deleteMicroCoachClassroom = /* GraphQL */ `mutation DeleteMicroCoac
       items {
         id
         classId
+        responses {
+          items {
+            id
+            assessmentId
+            studentId
+            totalScore
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
         name
         externalId
         createdAt
@@ -603,6 +687,27 @@ export const createMicroCoachStudent = /* GraphQL */ `mutation CreateMicroCoachS
   createMicroCoachStudent(input: $input, condition: $condition) {
     id
     classId
+    responses {
+      items {
+        id
+        assessmentId
+        studentId
+        totalScore
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          pointsEarned
+          confidence
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     name
     externalId
     createdAt
@@ -621,6 +726,27 @@ export const updateMicroCoachStudent = /* GraphQL */ `mutation UpdateMicroCoachS
   updateMicroCoachStudent(input: $input, condition: $condition) {
     id
     classId
+    responses {
+      items {
+        id
+        assessmentId
+        studentId
+        totalScore
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          pointsEarned
+          confidence
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     name
     externalId
     createdAt
@@ -639,6 +765,27 @@ export const deleteMicroCoachStudent = /* GraphQL */ `mutation DeleteMicroCoachS
   deleteMicroCoachStudent(input: $input, condition: $condition) {
     id
     classId
+    responses {
+      items {
+        id
+        assessmentId
+        studentId
+        totalScore
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          pointsEarned
+          confidence
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     name
     externalId
     createdAt
@@ -678,6 +825,31 @@ export const createMicroCoachSession = /* GraphQL */ `mutation CreateMicroCoachS
         assessmentCode
         type
         weekNumber
+        sourceAssessmentId
+        questions {
+          questionNumber
+          questionText
+          correctAnswer
+          answerChoices {
+            letter
+            text
+            __typename
+          }
+          __typename
+        }
+        studentResponses {
+          items {
+            id
+            assessmentId
+            studentId
+            totalScore
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -774,6 +946,34 @@ export const createMicroCoachSession = /* GraphQL */ `mutation CreateMicroCoachS
       averageQuestionsCorrectBefore
       averageQuestionsCorrectAfter
       improvedStudentCount
+      studentResults {
+        studentId
+        studentName
+        questionsCorrectBefore
+        questionsCorrectAfter
+        __typename
+      }
+      questionResults {
+        questionNumber
+        questionText
+        percentCorrectBefore
+        percentCorrectAfter
+        beforeAnswers {
+          letter
+          text
+          percentChosen
+          isCorrect
+          __typename
+        }
+        afterAnswers {
+          letter
+          text
+          percentChosen
+          isCorrect
+          __typename
+        }
+        __typename
+      }
       __typename
     }
     createdAt
@@ -813,6 +1013,31 @@ export const updateMicroCoachSession = /* GraphQL */ `mutation UpdateMicroCoachS
         assessmentCode
         type
         weekNumber
+        sourceAssessmentId
+        questions {
+          questionNumber
+          questionText
+          correctAnswer
+          answerChoices {
+            letter
+            text
+            __typename
+          }
+          __typename
+        }
+        studentResponses {
+          items {
+            id
+            assessmentId
+            studentId
+            totalScore
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -909,6 +1134,34 @@ export const updateMicroCoachSession = /* GraphQL */ `mutation UpdateMicroCoachS
       averageQuestionsCorrectBefore
       averageQuestionsCorrectAfter
       improvedStudentCount
+      studentResults {
+        studentId
+        studentName
+        questionsCorrectBefore
+        questionsCorrectAfter
+        __typename
+      }
+      questionResults {
+        questionNumber
+        questionText
+        percentCorrectBefore
+        percentCorrectAfter
+        beforeAnswers {
+          letter
+          text
+          percentChosen
+          isCorrect
+          __typename
+        }
+        afterAnswers {
+          letter
+          text
+          percentChosen
+          isCorrect
+          __typename
+        }
+        __typename
+      }
       __typename
     }
     createdAt
@@ -948,6 +1201,31 @@ export const deleteMicroCoachSession = /* GraphQL */ `mutation DeleteMicroCoachS
         assessmentCode
         type
         weekNumber
+        sourceAssessmentId
+        questions {
+          questionNumber
+          questionText
+          correctAnswer
+          answerChoices {
+            letter
+            text
+            __typename
+          }
+          __typename
+        }
+        studentResponses {
+          items {
+            id
+            assessmentId
+            studentId
+            totalScore
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -1044,6 +1322,34 @@ export const deleteMicroCoachSession = /* GraphQL */ `mutation DeleteMicroCoachS
       averageQuestionsCorrectBefore
       averageQuestionsCorrectAfter
       improvedStudentCount
+      studentResults {
+        studentId
+        studentName
+        questionsCorrectBefore
+        questionsCorrectAfter
+        __typename
+      }
+      questionResults {
+        questionNumber
+        questionText
+        percentCorrectBefore
+        percentCorrectAfter
+        beforeAnswers {
+          letter
+          text
+          percentChosen
+          isCorrect
+          __typename
+        }
+        afterAnswers {
+          letter
+          text
+          percentChosen
+          isCorrect
+          __typename
+        }
+        __typename
+      }
       __typename
     }
     createdAt
@@ -1066,6 +1372,39 @@ export const createMicroCoachAssessment = /* GraphQL */ `mutation CreateMicroCoa
     assessmentCode
     type
     weekNumber
+    sourceAssessmentId
+    questions {
+      questionNumber
+      questionText
+      correctAnswer
+      answerChoices {
+        letter
+        text
+        __typename
+      }
+      __typename
+    }
+    studentResponses {
+      items {
+        id
+        assessmentId
+        studentId
+        totalScore
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          pointsEarned
+          confidence
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -1086,6 +1425,39 @@ export const updateMicroCoachAssessment = /* GraphQL */ `mutation UpdateMicroCoa
     assessmentCode
     type
     weekNumber
+    sourceAssessmentId
+    questions {
+      questionNumber
+      questionText
+      correctAnswer
+      answerChoices {
+        letter
+        text
+        __typename
+      }
+      __typename
+    }
+    studentResponses {
+      items {
+        id
+        assessmentId
+        studentId
+        totalScore
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          pointsEarned
+          confidence
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -1106,6 +1478,39 @@ export const deleteMicroCoachAssessment = /* GraphQL */ `mutation DeleteMicroCoa
     assessmentCode
     type
     weekNumber
+    sourceAssessmentId
+    questions {
+      questionNumber
+      questionText
+      correctAnswer
+      answerChoices {
+        letter
+        text
+        __typename
+      }
+      __typename
+    }
+    studentResponses {
+      items {
+        id
+        assessmentId
+        studentId
+        totalScore
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          pointsEarned
+          confidence
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -1114,6 +1519,84 @@ export const deleteMicroCoachAssessment = /* GraphQL */ `mutation DeleteMicroCoa
 ` as GeneratedMutation<
   APITypes.DeleteMicroCoachAssessmentMutationVariables,
   APITypes.DeleteMicroCoachAssessmentMutation
+>;
+export const createMicroCoachStudentResponse = /* GraphQL */ `mutation CreateMicroCoachStudentResponse(
+  $input: CreateMicroCoachStudentResponseInput!
+  $condition: ModelMicroCoachStudentResponseConditionInput
+) {
+  createMicroCoachStudentResponse(input: $input, condition: $condition) {
+    id
+    assessmentId
+    studentId
+    totalScore
+    questionResponses {
+      questionNumber
+      response
+      isCorrect
+      pointsEarned
+      confidence
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateMicroCoachStudentResponseMutationVariables,
+  APITypes.CreateMicroCoachStudentResponseMutation
+>;
+export const updateMicroCoachStudentResponse = /* GraphQL */ `mutation UpdateMicroCoachStudentResponse(
+  $input: UpdateMicroCoachStudentResponseInput!
+  $condition: ModelMicroCoachStudentResponseConditionInput
+) {
+  updateMicroCoachStudentResponse(input: $input, condition: $condition) {
+    id
+    assessmentId
+    studentId
+    totalScore
+    questionResponses {
+      questionNumber
+      response
+      isCorrect
+      pointsEarned
+      confidence
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateMicroCoachStudentResponseMutationVariables,
+  APITypes.UpdateMicroCoachStudentResponseMutation
+>;
+export const deleteMicroCoachStudentResponse = /* GraphQL */ `mutation DeleteMicroCoachStudentResponse(
+  $input: DeleteMicroCoachStudentResponseInput!
+  $condition: ModelMicroCoachStudentResponseConditionInput
+) {
+  deleteMicroCoachStudentResponse(input: $input, condition: $condition) {
+    id
+    assessmentId
+    studentId
+    totalScore
+    questionResponses {
+      questionNumber
+      response
+      isCorrect
+      pointsEarned
+      confidence
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteMicroCoachStudentResponseMutationVariables,
+  APITypes.DeleteMicroCoachStudentResponseMutation
 >;
 export const createMicroCoachSavedPlan = /* GraphQL */ `mutation CreateMicroCoachSavedPlan(
   $input: CreateMicroCoachSavedPlanInput!

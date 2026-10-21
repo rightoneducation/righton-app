@@ -158,6 +158,7 @@ export const getMicroCoachClassroom = /* GraphQL */ `query GetMicroCoachClassroo
             assessmentCode
             type
             weekNumber
+            sourceAssessmentId
             createdAt
             updatedAt
             __typename
@@ -212,6 +213,20 @@ export const getMicroCoachClassroom = /* GraphQL */ `query GetMicroCoachClassroo
           averageQuestionsCorrectBefore
           averageQuestionsCorrectAfter
           improvedStudentCount
+          studentResults {
+            studentId
+            studentName
+            questionsCorrectBefore
+            questionsCorrectAfter
+            __typename
+          }
+          questionResults {
+            questionNumber
+            questionText
+            percentCorrectBefore
+            percentCorrectAfter
+            __typename
+          }
           __typename
         }
         createdAt
@@ -225,6 +240,19 @@ export const getMicroCoachClassroom = /* GraphQL */ `query GetMicroCoachClassroo
       items {
         id
         classId
+        responses {
+          items {
+            id
+            assessmentId
+            studentId
+            totalScore
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
         name
         externalId
         createdAt
@@ -315,6 +343,10 @@ export const listMicroCoachClassrooms = /* GraphQL */ `query ListMicroCoachClass
         items {
           id
           classId
+          responses {
+            nextToken
+            __typename
+          }
           name
           externalId
           createdAt
@@ -344,6 +376,27 @@ export const getMicroCoachStudent = /* GraphQL */ `query GetMicroCoachStudent($i
   getMicroCoachStudent(id: $id) {
     id
     classId
+    responses {
+      items {
+        id
+        assessmentId
+        studentId
+        totalScore
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          pointsEarned
+          confidence
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     name
     externalId
     createdAt
@@ -368,6 +421,27 @@ export const listMicroCoachStudents = /* GraphQL */ `query ListMicroCoachStudent
     items {
       id
       classId
+      responses {
+        items {
+          id
+          assessmentId
+          studentId
+          totalScore
+          questionResponses {
+            questionNumber
+            response
+            isCorrect
+            pointsEarned
+            confidence
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       name
       externalId
       createdAt
@@ -407,6 +481,31 @@ export const getMicroCoachSession = /* GraphQL */ `query GetMicroCoachSession($i
         assessmentCode
         type
         weekNumber
+        sourceAssessmentId
+        questions {
+          questionNumber
+          questionText
+          correctAnswer
+          answerChoices {
+            letter
+            text
+            __typename
+          }
+          __typename
+        }
+        studentResponses {
+          items {
+            id
+            assessmentId
+            studentId
+            totalScore
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -503,6 +602,34 @@ export const getMicroCoachSession = /* GraphQL */ `query GetMicroCoachSession($i
       averageQuestionsCorrectBefore
       averageQuestionsCorrectAfter
       improvedStudentCount
+      studentResults {
+        studentId
+        studentName
+        questionsCorrectBefore
+        questionsCorrectAfter
+        __typename
+      }
+      questionResults {
+        questionNumber
+        questionText
+        percentCorrectBefore
+        percentCorrectAfter
+        beforeAnswers {
+          letter
+          text
+          percentChosen
+          isCorrect
+          __typename
+        }
+        afterAnswers {
+          letter
+          text
+          percentChosen
+          isCorrect
+          __typename
+        }
+        __typename
+      }
       __typename
     }
     createdAt
@@ -548,6 +675,17 @@ export const listMicroCoachSessions = /* GraphQL */ `query ListMicroCoachSession
           assessmentCode
           type
           weekNumber
+          sourceAssessmentId
+          questions {
+            questionNumber
+            questionText
+            correctAnswer
+            __typename
+          }
+          studentResponses {
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
           __typename
@@ -623,6 +761,34 @@ export const listMicroCoachSessions = /* GraphQL */ `query ListMicroCoachSession
         averageQuestionsCorrectBefore
         averageQuestionsCorrectAfter
         improvedStudentCount
+        studentResults {
+          studentId
+          studentName
+          questionsCorrectBefore
+          questionsCorrectAfter
+          __typename
+        }
+        questionResults {
+          questionNumber
+          questionText
+          percentCorrectBefore
+          percentCorrectAfter
+          beforeAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          afterAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          __typename
+        }
         __typename
       }
       createdAt
@@ -645,6 +811,39 @@ export const getMicroCoachAssessment = /* GraphQL */ `query GetMicroCoachAssessm
     assessmentCode
     type
     weekNumber
+    sourceAssessmentId
+    questions {
+      questionNumber
+      questionText
+      correctAnswer
+      answerChoices {
+        letter
+        text
+        __typename
+      }
+      __typename
+    }
+    studentResponses {
+      items {
+        id
+        assessmentId
+        studentId
+        totalScore
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          pointsEarned
+          confidence
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -671,6 +870,39 @@ export const listMicroCoachAssessments = /* GraphQL */ `query ListMicroCoachAsse
       assessmentCode
       type
       weekNumber
+      sourceAssessmentId
+      questions {
+        questionNumber
+        questionText
+        correctAnswer
+        answerChoices {
+          letter
+          text
+          __typename
+        }
+        __typename
+      }
+      studentResponses {
+        items {
+          id
+          assessmentId
+          studentId
+          totalScore
+          questionResponses {
+            questionNumber
+            response
+            isCorrect
+            pointsEarned
+            confidence
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -682,6 +914,64 @@ export const listMicroCoachAssessments = /* GraphQL */ `query ListMicroCoachAsse
 ` as GeneratedQuery<
   APITypes.ListMicroCoachAssessmentsQueryVariables,
   APITypes.ListMicroCoachAssessmentsQuery
+>;
+export const getMicroCoachStudentResponse = /* GraphQL */ `query GetMicroCoachStudentResponse($id: ID!) {
+  getMicroCoachStudentResponse(id: $id) {
+    id
+    assessmentId
+    studentId
+    totalScore
+    questionResponses {
+      questionNumber
+      response
+      isCorrect
+      pointsEarned
+      confidence
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetMicroCoachStudentResponseQueryVariables,
+  APITypes.GetMicroCoachStudentResponseQuery
+>;
+export const listMicroCoachStudentResponses = /* GraphQL */ `query ListMicroCoachStudentResponses(
+  $filter: ModelMicroCoachStudentResponseFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listMicroCoachStudentResponses(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      assessmentId
+      studentId
+      totalScore
+      questionResponses {
+        questionNumber
+        response
+        isCorrect
+        pointsEarned
+        confidence
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListMicroCoachStudentResponsesQueryVariables,
+  APITypes.ListMicroCoachStudentResponsesQuery
 >;
 export const getMicroCoachSavedPlan = /* GraphQL */ `query GetMicroCoachSavedPlan($id: ID!) {
   getMicroCoachSavedPlan(id: $id) {
@@ -976,6 +1266,10 @@ export const microCoachClassroomsByUserId = /* GraphQL */ `query MicroCoachClass
         items {
           id
           classId
+          responses {
+            nextToken
+            __typename
+          }
           name
           externalId
           createdAt
@@ -1018,6 +1312,27 @@ export const microCoachStudentsByClassId = /* GraphQL */ `query MicroCoachStuden
     items {
       id
       classId
+      responses {
+        items {
+          id
+          assessmentId
+          studentId
+          totalScore
+          questionResponses {
+            questionNumber
+            response
+            isCorrect
+            pointsEarned
+            confidence
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       name
       externalId
       createdAt
@@ -1070,6 +1385,17 @@ export const microCoachSessionsByClassId = /* GraphQL */ `query MicroCoachSessio
           assessmentCode
           type
           weekNumber
+          sourceAssessmentId
+          questions {
+            questionNumber
+            questionText
+            correctAnswer
+            __typename
+          }
+          studentResponses {
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
           __typename
@@ -1145,6 +1471,34 @@ export const microCoachSessionsByClassId = /* GraphQL */ `query MicroCoachSessio
         averageQuestionsCorrectBefore
         averageQuestionsCorrectAfter
         improvedStudentCount
+        studentResults {
+          studentId
+          studentName
+          questionsCorrectBefore
+          questionsCorrectAfter
+          __typename
+        }
+        questionResults {
+          questionNumber
+          questionText
+          percentCorrectBefore
+          percentCorrectAfter
+          beforeAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          afterAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          __typename
+        }
         __typename
       }
       createdAt
@@ -1180,6 +1534,39 @@ export const microCoachAssessmentsByClassId = /* GraphQL */ `query MicroCoachAss
       assessmentCode
       type
       weekNumber
+      sourceAssessmentId
+      questions {
+        questionNumber
+        questionText
+        correctAnswer
+        answerChoices {
+          letter
+          text
+          __typename
+        }
+        __typename
+      }
+      studentResponses {
+        items {
+          id
+          assessmentId
+          studentId
+          totalScore
+          questionResponses {
+            questionNumber
+            response
+            isCorrect
+            pointsEarned
+            confidence
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -1213,6 +1600,39 @@ export const microCoachAssessmentsBySessionId = /* GraphQL */ `query MicroCoachA
       assessmentCode
       type
       weekNumber
+      sourceAssessmentId
+      questions {
+        questionNumber
+        questionText
+        correctAnswer
+        answerChoices {
+          letter
+          text
+          __typename
+        }
+        __typename
+      }
+      studentResponses {
+        items {
+          id
+          assessmentId
+          studentId
+          totalScore
+          questionResponses {
+            questionNumber
+            response
+            isCorrect
+            pointsEarned
+            confidence
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -1224,6 +1644,84 @@ export const microCoachAssessmentsBySessionId = /* GraphQL */ `query MicroCoachA
 ` as GeneratedQuery<
   APITypes.MicroCoachAssessmentsBySessionIdQueryVariables,
   APITypes.MicroCoachAssessmentsBySessionIdQuery
+>;
+export const microCoachStudentResponsesByAssessmentId = /* GraphQL */ `query MicroCoachStudentResponsesByAssessmentId(
+  $assessmentId: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelMicroCoachStudentResponseFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  microCoachStudentResponsesByAssessmentId(
+    assessmentId: $assessmentId
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      assessmentId
+      studentId
+      totalScore
+      questionResponses {
+        questionNumber
+        response
+        isCorrect
+        pointsEarned
+        confidence
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.MicroCoachStudentResponsesByAssessmentIdQueryVariables,
+  APITypes.MicroCoachStudentResponsesByAssessmentIdQuery
+>;
+export const microCoachStudentResponsesByStudentId = /* GraphQL */ `query MicroCoachStudentResponsesByStudentId(
+  $studentId: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelMicroCoachStudentResponseFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  microCoachStudentResponsesByStudentId(
+    studentId: $studentId
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      assessmentId
+      studentId
+      totalScore
+      questionResponses {
+        questionNumber
+        response
+        isCorrect
+        pointsEarned
+        confidence
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.MicroCoachStudentResponsesByStudentIdQueryVariables,
+  APITypes.MicroCoachStudentResponsesByStudentIdQuery
 >;
 export const microCoachSavedPlansByClassId = /* GraphQL */ `query MicroCoachSavedPlansByClassId(
   $classId: ID!

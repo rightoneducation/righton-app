@@ -92,12 +92,7 @@ type MicroCoachSession @model @auth(rules: [{ allow: private }]) {
     @hasMany(indexName: "bySession", fields: ["id"])
   pregeneratedNextSteps: AWSJSON
   evaluationResults: AWSJSON
-  # Class % correct per MIU question (the Review screen's "Correct responses"
-  # tiles), with the question text for the tile's tooltip.
   questionStats: [QuestionStat]
-  # Deterministic comparison between the original and follow-up MIUs. The
-  # qualitative analysis added by the Reflect generation task can extend this
-  # embedded result without making the UI parse pregeneratedNextSteps AWSJSON.
   reflectionResults: [ReflectionResult]
 
   createdAt: AWSDateTime!
@@ -128,7 +123,6 @@ type MicroCoachAssessment @model @auth(rules: [{ allow: private }]) {
 
 type AssessmentQuestion {
   questionNumber: Int!
-  # Optional until the upload pipeline persists exact question wording.
   questionText: String
   correctAnswer: String!
   answerChoices: [AssessmentAnswerChoice]
