@@ -21,6 +21,7 @@ import {
   SkillRowList,
   SkillRowSurface,
   SkillTone,
+  SkillName,
   SkillToggle,
 } from '../lib/styledcomponents/MisconceptionModalStyledComponents';
 import MathText from './MathText';
@@ -33,6 +34,13 @@ interface SkillRowProps {
   tone: SkillTone;
   learningComponents?: string[];
 }
+
+// Design note: the focus skill's name stays on one line, the others on two.
+const SKILL_NAME_LINES: Record<SkillTone, number> = {
+  focus: 1,
+  prerequisite: 2,
+  upcoming: 2,
+};
 
 /**
  * One skill: its code chip (the ⓘ explains the code's domain in plain
@@ -75,7 +83,9 @@ function SkillRow({ skill, tone, learningComponents = [] }: SkillRowProps) {
           aria-controls={detailId}
           onClick={() => setIsOpen((open) => !open)}
         >
-          <MathText text={skill.name ?? skill.code} inline />
+          <SkillName lines={isOpen ? null : SKILL_NAME_LINES[tone]}>
+            <MathText text={skill.name ?? skill.code} inline />
+          </SkillName>
           <Chevron fontSize="small" />
         </SkillToggle>
       </SkillRowHead>

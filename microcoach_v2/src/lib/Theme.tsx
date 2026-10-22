@@ -115,6 +115,10 @@ const designSystemColors = {
     uploadingStroke: '#4A6FA5',
     error: '#FFF3F3',
     errorStroke: '#E42F2F',
+    // An invalid input's outline (rev5 ChangePasswordError): central_v2's and
+    // networking's `error` red. 20 off errorStroke on red, so it doesn't reuse it;
+    // the message text under the label stays errorStroke, as drawn.
+    fieldErrorStroke: '#D0254D',
     // rev4 UserAccount_NewClassFails: the toast is #F06586 at 30%, flattened
     // over the page background so the title it floats over can't show
     // through. errorTint is 17 off on green, so it doesn't stand in.

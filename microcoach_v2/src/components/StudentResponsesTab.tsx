@@ -8,6 +8,7 @@ import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception
 import { IQuestionStat } from '../api/Models/IMicroCoachSession';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import { formatResponseEvidence } from './MisconceptionCard';
+import { displayNames } from '../lib/studentNames';
 import {
   ErrorBlock,
   ErrorTagChip,
@@ -73,6 +74,29 @@ export default function StudentResponsesTab({
     .map((item) => questionStats.find((stat) => stat.questionNumber === item.questionNumber))
     .filter((stat): stat is IQuestionStat => !!stat && stat.options.length > 0);
 
+  // An upload without names still has percentages; with no names anywhere,
+  // "Show students" has nothing to show, so it's left out.
+  const hasNames = citedQuestions.some((stat) =>
+    stat.options.some((option) => option.studentNames.length > 0),
+  );
+  // Judged across every name in the modal, so a student reads the same way
+  // under each question.
+  const nameFor = displayNames(
+    citedQuestions.flatMap((stat) => stat.options.flatMap((option) => option.studentNames)),
+  );
+
+  // Opened from a card's evidence line: the flagged options start open, and
+  // the first of them is scrolled into view rather than left below the fold.
+  const firstOpenKey = citedQuestions
+    .flatMap((stat) =>
+      stat.options.map((option) => optionKey(stat.questionNumber, option.letter.toUpperCase())),
+    )
+    .find((key) => initialOpenKeys.includes(key));
+  const firstOpenRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    firstOpenRef.current?.scrollIntoView({ block: 'start' });
+  }, []);
+
   const toggle = (key: string) =>
     setOpenKeys((current) => {
       const next = new Set(current);
@@ -126,7 +150,11 @@ export default function StudentResponsesTab({
                   const isFlagged = flagged.has(key);
                   const panelId = `responders-${key.replace(':', '-')}`;
                   return (
-                    <OptionUnit key={key} isFlagged={isFlagged}>
+                    <OptionUnit
+                      key={key}
+                      isFlagged={isFlagged}
+                      ref={key === firstOpenKey ? firstOpenRef : undefined}
+                    >
                       <OptionRow screenSize={screenSize}>
                         <OptionText>
                           <span>
@@ -149,9 +177,11 @@ export default function StudentResponsesTab({
                         {option.percentChosen != null && (
                           <OptionPercent>{`${Math.round(option.percentChosen * 100)}%`}</OptionPercent>
                         )}
+                        {hasNames && (
                         <ShowStudentsButton
                           aria-expanded={isOpen}
                           aria-controls={panelId}
+                          disabled={option.percentChosen === 0}
                           onClick={() => toggle(key)}
                         >
                           {t(isOpen ? 'misconceptionModal.hideStudents' : 'misconceptionModal.showStudents')}
@@ -161,12 +191,15 @@ export default function StudentResponsesTab({
                             <KeyboardArrowRightIcon fontSize="small" />
                           )}
                         </ShowStudentsButton>
+                        )}
                       </OptionRow>
-                      <Collapse in={isOpen} unmountOnExit>
+                      <Collapse in={hasNames && isOpen} unmountOnExit>
                         <ResponderGroup id={panelId}>
                           {option.studentNames.length > 0 ? (
                             option.studentNames.map((name) => (
-                              <ResponderPill key={name}>{name}</ResponderPill>
+                              <ResponderPill key={name} title={name}>
+                                {nameFor.get(name.trim()) ?? name}
+                              </ResponderPill>
                             ))
                           ) : (
                             <Typography variant="microLabel" sx={{ color: 'designSystem.background.navyBlue' }}>

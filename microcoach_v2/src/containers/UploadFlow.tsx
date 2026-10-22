@@ -1,8 +1,19 @@
-import React, { useState } from 'react';
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  Navigate,
+  useBlocker,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 import { IAPIClients } from '../api';
 import { AssessmentType } from '../AWSAPI';
-import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
+import {
+  MicroCoachDataStatus,
+  ScreenSize,
+  UserStatusType,
+} from '../lib/MicroCoachModels';
 import {
   IUploadActions,
   IUploadState,
@@ -15,6 +26,7 @@ import {
 import { currentSchoolWeek, schoolWeeks } from '../lib/weeks';
 import { UseClassroomsResult } from '../hooks/useClassrooms';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import UploadConfirmDialog from '../components/UploadConfirmDialog';
 import UploadMiu from '../pages/UploadMiu';
 import UploadMiuReview from '../pages/UploadMiuReview';
 import UploadMiuSubmitted from '../pages/UploadMiuSubmitted';
@@ -42,10 +54,11 @@ export default function UploadFlow({
   classrooms,
   kind,
 }: UploadFlowProps) {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const step = useParams()['*'] ?? '';
-  const { userProfile } = useMicroCoachDataState();
+  const { userProfile, userStatus } = useMicroCoachDataState();
   const basePath = UPLOAD_BASE_PATH[kind];
 
   // Class and week arrive pre-filled from the dashboard: the class through the
@@ -148,6 +161,51 @@ export default function UploadFlow({
     teacher: userProfile,
   };
 
+  // rev5 Upload_Leave*: leaving the setup page asks first, worded by how far
+  // the teacher got. Continue to the review stays inside the flow, so it is
+  // not a leave; the review and submitted steps have no frame, so they don't
+  // ask.
+  const isExemplarReady = isFileReady(upload.exemplar);
+  const isResponsesReady = isFileReady(upload.responses);
+  const readyCount = Number(isExemplarReady) + Number(isResponsesReady);
+  let leaveVariant: 'none' | 'partial' | 'ready' = 'ready';
+  if (readyCount === 0) leaveVariant = 'none';
+  else if (readyCount === 1) leaveVariant = 'partial';
+  // Logging out signs out first, then navigates; that navigation must not
+  // stop to ask about an upload the teacher can no longer finish.
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      userStatus === UserStatusType.LOGGEDIN &&
+      currentLocation.pathname === basePath &&
+      !nextLocation.pathname.startsWith(basePath),
+  );
+  // A refresh or a closed tab can't be caught by the router, and browsers
+  // only offer their own prompt for it; ask whenever a file would be lost.
+  const hasPickedFile = !!upload.exemplar?.file || !!upload.responses?.file;
+  useEffect(() => {
+    if (!hasPickedFile || upload.submission) return undefined;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+    };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [hasPickedFile, upload.submission]);
+
+  const leaveDialog = (
+    <UploadConfirmDialog
+      open={blocker.state === 'blocked'}
+      title={t(`upload.leave.${leaveVariant}.title`)}
+      body={t(`upload.leave.${leaveVariant}.body`, {
+        added: t(isExemplarReady ? 'upload.exemplar' : 'upload.responses'),
+        missing: t(isExemplarReady ? 'upload.responses' : 'upload.exemplar'),
+      })}
+      confirmLabel={t('upload.leave.confirm')}
+      keepLabel={t(`upload.leave.${leaveVariant}.keep`)}
+      onConfirm={() => blocker.proceed?.()}
+      onKeep={() => blocker.reset?.()}
+    />
+  );
+
   // Each later step needs what the one before it produced; reached without
   // it (a refresh, a pasted URL), start the flow from the top.
   if (step === 'review') {
@@ -164,5 +222,10 @@ export default function UploadFlow({
       <Navigate to={basePath} replace />
     );
   }
-  return <UploadMiu {...stepProps} />;
+  return (
+    <>
+      <UploadMiu {...stepProps} />
+      {leaveDialog}
+    </>
+  );
 }

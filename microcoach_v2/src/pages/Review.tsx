@@ -36,6 +36,11 @@ import {
   ScreenSizeProps,
 } from '../lib/styledcomponents/UnderstandStyledComponents';
 import { continueTooltipSx } from '../lib/styledcomponents/UploadStyledComponents';
+import {
+  EmptyState,
+  EmptyStateButton,
+  EmptyStateText,
+} from '../lib/styledcomponents/ActivityListStyledComponents';
 import { useI18nReady } from '../hooks/readiness';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { UseSessionsResult } from '../hooks/useSessions';
@@ -230,9 +235,23 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
                 >
                   {t('review.loadError')}
                 </Typography>
-              ) : (
-                cardLayout
+              ) : null}
+              {/* Nothing surfaced (most students answered correctly): say so
+                  and offer the way back, rather than an empty card area. */}
+              {!hasFailed && misconceptions.length === 0 && (
+                <EmptyState>
+                  <EmptyStateText>
+                    <Typography variant="emptyStateTitle">
+                      {t('review.noMisconceptionsTitle')}
+                    </Typography>
+                    <Typography variant="h4">{t('review.noMisconceptionsBody')}</Typography>
+                  </EmptyStateText>
+                  <EmptyStateButton disableElevation onClick={() => navigate('/dashboard')}>
+                    {t('pastActivities.backToHome')}
+                  </EmptyStateButton>
+                </EmptyState>
               )}
+              {!hasFailed && misconceptions.length > 0 && cardLayout}
             </LoadingSlot>
           </ReviewIntro>
 

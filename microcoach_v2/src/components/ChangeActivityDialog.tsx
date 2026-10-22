@@ -16,6 +16,9 @@ interface ChangeActivityDialogProps {
   open: boolean;
   onCancel: () => void;
   onConfirm: () => void;
+  // Replaces the default "you'll go back to Select Activity" line, for callers
+  // already on that page.
+  body?: string;
 }
 
 /**
@@ -27,6 +30,7 @@ export default function ChangeActivityDialog({
   open,
   onCancel,
   onConfirm,
+  body,
 }: ChangeActivityDialogProps) {
   const { t } = useTranslation();
 
@@ -79,7 +83,7 @@ export default function ChangeActivityDialog({
             {t('activityFlow.changeDialog.question')}
           </Typography>
           <Typography id="change-activity-body" variant="uploadLabel">
-            {t('activityFlow.changeDialog.body')}
+            {body ?? t('activityFlow.changeDialog.body')}
           </Typography>
         </ConfirmText>
         <ConfirmActions>

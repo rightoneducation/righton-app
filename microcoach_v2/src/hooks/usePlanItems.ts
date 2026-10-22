@@ -271,12 +271,10 @@ export function usePlanItems(
         ...item,
         id: item.activityId ?? item.id,
       };
+      // One focus per session: a new choice replaces the saved activity,
+      // whichever misconception it was for. Completed items stay.
       const nextItems = [
-        ...planItems.filter(
-          (planItem) =>
-            planItem.status !== 'SAVED' ||
-            planItem.misconceptionId !== item.misconceptionId,
-        ),
+        ...planItems.filter((planItem) => planItem.status !== 'SAVED'),
         normalizedItem,
       ];
       dispatch({ type: 'SAVE_PLAN_ITEM', payload: normalizedItem });

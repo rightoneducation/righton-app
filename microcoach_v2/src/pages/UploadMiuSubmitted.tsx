@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ContentRow from '../components/ContentRow';
-import StartOverDialog from '../components/StartOverDialog';
+import UploadConfirmDialog from '../components/UploadConfirmDialog';
 import UploadSummaryCard from '../components/UploadSummaryCard';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import { UploadStepProps } from '../lib/UploadModels';
@@ -124,8 +124,12 @@ export default function UploadMiuSubmitted(props: UploadStepProps) {
           </SignUpCta>
         </Box>
       </ContentRow>
-      <StartOverDialog
+      <UploadConfirmDialog
         open={isConfirming}
+        title={t('upload.startOverTitle')}
+        body={t('upload.startOverBody')}
+        confirmLabel={t('upload.startOverConfirm')}
+        keepLabel={t('upload.startOverKeep')}
         isWorking={isStartingOver}
         onKeep={() => setIsConfirming(false)}
         onConfirm={handleStartOver}

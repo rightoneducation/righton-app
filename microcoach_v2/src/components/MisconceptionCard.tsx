@@ -143,9 +143,17 @@ export default function MisconceptionCard({
 
       <LabelledBlock>
         <BlockLabel>{t('review.possibleExplanation')}</BlockLabel>
+        {/* Design note: explanations stop at 5 lines so the cards stay even;
+            View details has the rest. */}
         <MathTypography
           variant="rubikBody"
-          sx={{ color: 'designSystem.surface.atlanticNavy' }}
+          sx={{
+            color: 'designSystem.surface.atlanticNavy',
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 5,
+            overflow: 'hidden',
+          }}
           text={[misconception.description, misconception.consequence]
             .filter(Boolean)
             .join(' ')}
