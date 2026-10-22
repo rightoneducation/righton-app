@@ -302,6 +302,31 @@ export const createMicroCoachClassroom = /* GraphQL */ `
             }
             __typename
           }
+          reflectionResults {
+            activityId
+            misconceptionId
+            questionCount
+            averagePercentCorrectBefore
+            averagePercentCorrectAfter
+            averageQuestionsCorrectBefore
+            averageQuestionsCorrectAfter
+            improvedStudentCount
+            studentResults {
+              studentId
+              studentName
+              questionsCorrectBefore
+              questionsCorrectAfter
+              __typename
+            }
+            questionResults {
+              questionNumber
+              questionText
+              percentCorrectBefore
+              percentCorrectAfter
+              __typename
+            }
+            __typename
+          }
           createdAt
           updatedAt
           __typename
@@ -410,6 +435,31 @@ export const updateMicroCoachClassroom = /* GraphQL */ `
             }
             __typename
           }
+          reflectionResults {
+            activityId
+            misconceptionId
+            questionCount
+            averagePercentCorrectBefore
+            averagePercentCorrectAfter
+            averageQuestionsCorrectBefore
+            averageQuestionsCorrectAfter
+            improvedStudentCount
+            studentResults {
+              studentId
+              studentName
+              questionsCorrectBefore
+              questionsCorrectAfter
+              __typename
+            }
+            questionResults {
+              questionNumber
+              questionText
+              percentCorrectBefore
+              percentCorrectAfter
+              __typename
+            }
+            __typename
+          }
           createdAt
           updatedAt
           __typename
@@ -514,6 +564,31 @@ export const deleteMicroCoachClassroom = /* GraphQL */ `
               percentChosen
               isCorrect
               studentNames
+              __typename
+            }
+            __typename
+          }
+          reflectionResults {
+            activityId
+            misconceptionId
+            questionCount
+            averagePercentCorrectBefore
+            averagePercentCorrectAfter
+            averageQuestionsCorrectBefore
+            averageQuestionsCorrectAfter
+            improvedStudentCount
+            studentResults {
+              studentId
+              studentName
+              questionsCorrectBefore
+              questionsCorrectAfter
+              __typename
+            }
+            questionResults {
+              questionNumber
+              questionText
+              percentCorrectBefore
+              percentCorrectAfter
               __typename
             }
             __typename
@@ -712,6 +787,45 @@ export const createMicroCoachSession = /* GraphQL */ `
         }
         __typename
       }
+      reflectionResults {
+        activityId
+        misconceptionId
+        questionCount
+        averagePercentCorrectBefore
+        averagePercentCorrectAfter
+        averageQuestionsCorrectBefore
+        averageQuestionsCorrectAfter
+        improvedStudentCount
+        studentResults {
+          studentId
+          studentName
+          questionsCorrectBefore
+          questionsCorrectAfter
+          __typename
+        }
+        questionResults {
+          questionNumber
+          questionText
+          percentCorrectBefore
+          percentCorrectAfter
+          beforeAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          afterAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -834,6 +948,45 @@ export const updateMicroCoachSession = /* GraphQL */ `
         }
         __typename
       }
+      reflectionResults {
+        activityId
+        misconceptionId
+        questionCount
+        averagePercentCorrectBefore
+        averagePercentCorrectAfter
+        averageQuestionsCorrectBefore
+        averageQuestionsCorrectAfter
+        improvedStudentCount
+        studentResults {
+          studentId
+          studentName
+          questionsCorrectBefore
+          questionsCorrectAfter
+          __typename
+        }
+        questionResults {
+          questionNumber
+          questionText
+          percentCorrectBefore
+          percentCorrectAfter
+          beforeAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          afterAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -952,6 +1105,45 @@ export const deleteMicroCoachSession = /* GraphQL */ `
           percentChosen
           isCorrect
           studentNames
+          __typename
+        }
+        __typename
+      }
+      reflectionResults {
+        activityId
+        misconceptionId
+        questionCount
+        averagePercentCorrectBefore
+        averagePercentCorrectAfter
+        averageQuestionsCorrectBefore
+        averageQuestionsCorrectAfter
+        improvedStudentCount
+        studentResults {
+          studentId
+          studentName
+          questionsCorrectBefore
+          questionsCorrectAfter
+          __typename
+        }
+        questionResults {
+          questionNumber
+          questionText
+          percentCorrectBefore
+          percentCorrectAfter
+          beforeAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          afterAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
           __typename
         }
         __typename

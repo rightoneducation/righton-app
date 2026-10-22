@@ -105,6 +105,7 @@ type MicroCoachSession @model @auth(rules: [{ allow: private }]) {
   # Class % correct per MIU question (the Review screen's "Correct responses"
   # tiles), with the question text for the tile's tooltip.
   questionStats: [QuestionStat]
+  reflectionResults: [ReflectionResult]
 
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
@@ -184,6 +185,47 @@ type QuestionOption {
   percentChosen: Float
   isCorrect: Boolean
   studentNames: [String]
+}
+
+type ReflectionResult {
+  activityId: ID
+  misconceptionId: ID!
+  questionCount: Int!
+  averagePercentCorrectBefore: Float!
+  averagePercentCorrectAfter: Float!
+  averageQuestionsCorrectBefore: Float!
+  averageQuestionsCorrectAfter: Float!
+  # /* its an aggregate but not used in the ui at the moment */
+  improvedStudentCount: Int!
+  # Raw student scores support mastery grouping, sorting, and incomplete MIU
+  # participation. A null score means the student did not complete that MIU.
+  studentResults: [ReflectionStudentResult]
+  # Questions are paired between MIU 1 and MIU 2 by question number. since they are similar questions of course
+  questionResults: [ReflectionQuestionResult]
+}
+
+type ReflectionStudentResult {
+  studentId: ID!
+  # Optional because some MIU response data may not include student names.
+  studentName: String
+  questionsCorrectBefore: Int
+  questionsCorrectAfter: Int
+}
+
+type ReflectionQuestionResult {
+  questionNumber: Int!
+  questionText: String!
+  percentCorrectBefore: Float!
+  percentCorrectAfter: Float!
+  beforeAnswers: [ReflectionAnswerResult]
+  afterAnswers: [ReflectionAnswerResult]
+}
+
+type ReflectionAnswerResult {
+  letter: String!
+  text: String!
+  percentChosen: Float!
+  isCorrect: Boolean!
 }
 
 type ResponseEvidence {
