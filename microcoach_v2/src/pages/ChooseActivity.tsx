@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import ActivityCard from '../components/ActivityCard';
+import ChangeActivityDialog from '../components/ChangeActivityDialog';
 import { FlowStepperBand, MisconceptionSelectedBar } from '../components/FlowHeader';
 import { FlowStep } from '../lib/flowProgress';
 import LoadingSlot from '../components/LoadingSlot';
@@ -53,6 +54,8 @@ export default function ChooseActivity({
   const isI18nReady = useI18nReady();
   const { misconceptionId } = useParams();
   const { misconceptions, misconceptionsStatus } = useMicroCoachDataState();
+  const [pendingActivity, setPendingActivity] =
+    React.useState<IMicroCoachActivity | null>(null);
 
   if (!isI18nReady) return null;
 
@@ -68,10 +71,21 @@ export default function ChooseActivity({
     return <Navigate to="/review" replace />;
   }
 
-  const handleSelect = (activity: IMicroCoachActivity) => {
+  const commitActivity = (activity: IMicroCoachActivity) => {
     if (!misconception) return;
     saveActivity(planItemFor(misconception, activity));
     navigate('/myactivity');
+  };
+
+  // The teacher came back and picked a different misconception: choosing here
+  // replaces the activity already saved for the other one, so confirm first.
+  // (Changing within the same misconception was confirmed on My Activity.)
+  const savedForOther = plan.planItems.find(
+    (item) => item.status === 'SAVED' && item.misconceptionId !== misconceptionId,
+  );
+  const handleSelect = (activity: IMicroCoachActivity) => {
+    if (savedForOther) setPendingActivity(activity);
+    else commitActivity(activity);
   };
 
   return (
@@ -131,6 +145,15 @@ export default function ChooseActivity({
           )}
         </LoadingSlot>
       </UnderstandColumn>
+      <ChangeActivityDialog
+        open={pendingActivity !== null}
+        body={t('chooseActivity.replaceBody')}
+        onCancel={() => setPendingActivity(null)}
+        onConfirm={() => {
+          if (pendingActivity) commitActivity(pendingActivity);
+          setPendingActivity(null);
+        }}
+      />
     </UnderstandPage>
   );
 }

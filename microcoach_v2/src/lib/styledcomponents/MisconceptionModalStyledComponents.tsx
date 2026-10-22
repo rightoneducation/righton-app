@@ -284,6 +284,8 @@ export const ShowStudentsButton = styled(ButtonBase)(({ theme }) => ({
   color: theme.palette.designSystem.background.navyBlue,
   ...theme.typography.smallBodyText,
   '&:hover, &.Mui-focusVisible': { textDecoration: 'underline' },
+  // Design note: an option nobody picked (0%) greys "Show students" out.
+  '&.Mui-disabled': { color: theme.palette.designSystem.foreground.disabledStroke },
 }));
 
 /* ── Fallback errors list (sessions written before per-option data) ──────── */
@@ -351,6 +353,11 @@ export const ResponderPill = styled(Box)(({ theme }) => ({
   color: theme.palette.designSystem.background.cream,
   ...theme.typography.microLabel,
   whiteSpace: 'nowrap',
+  // Backstop for a very long name: the pill ends in an ellipsis rather than
+  // overrunning the row.
+  maxWidth: '100%',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
 }));
 
 export const ResponderGroup = styled(Box)(({ theme }) => ({
@@ -475,6 +482,24 @@ export const SkillToggle = styled(ButtonBase)(({ theme }) => ({
 }));
 
 /** The expanded description (and, for the focus skill, its components). */
+// A skill's name inside its toggle (design note: the focus skill never wraps
+// to a second line, the others never to a third). Unclamped while the row is
+// open, so the full name is there to read.
+export const SkillName = styled('span', {
+  shouldForwardProp: (prop) => prop !== 'lines',
+})<{ lines: number | null }>(({ lines }) => ({
+  flex: '1 1 auto',
+  minWidth: 0,
+  ...(lines
+    ? {
+        display: '-webkit-box',
+        WebkitBoxOrient: 'vertical',
+        WebkitLineClamp: lines,
+        overflow: 'hidden',
+      }
+    : {}),
+}));
+
 export const SkillDetail = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',

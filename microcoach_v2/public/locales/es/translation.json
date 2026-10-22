@@ -30,6 +30,7 @@
     "makeYourCasePositions": "Argumentos previstos"
   },
   "chooseActivity": {
+    "replaceBody": "Esto reemplazará la actividad que guardaste para otro concepto erróneo.",
     "selected": "Concepto erróneo seleccionado:",
     "change": "Cambiar",
     "title": "Selecciona tu próxima actividad",
@@ -70,6 +71,8 @@
     "domainTooltipLabel": "Qué abarca {{code}}"
   },
   "review": {
+    "noMisconceptionsTitle": "No se encontraron conceptos erróneos",
+    "noMisconceptionsBody": "La mayoría de tus estudiantes respondió correctamente, así que esta vez no hay nada en qué enfocarse.",
     "banner": "Los resultados de tu clase están listos: mira los patrones en el pensamiento de tus estudiantes y los próximos pasos que puedes tomar.",
     "dismissBanner": "Descartar",
     "title": "Comprenda el pensamiento de sus estudiantes",
@@ -300,6 +303,7 @@
     "addClassPlaceholder": "Escribe el nombre de la clase",
     "addClassSubmit": "Añadir clase",
     "addClassError": "No se añadió tu clase. Algo salió mal.",
+    "addClassDuplicate": "Ya tienes una clase llamada {{name}}.",
     "cancelAddClass": "Cancelar añadir una clase",
     "oldPassword": "Vuelve a ingresar tu contraseña anterior",
     "newPassword": "Ingresa tu nueva contraseña",
@@ -307,11 +311,11 @@
     "saving": "Guardando",
     "saveError": "No pudimos guardar tus cambios. Inténtalo de nuevo.",
     "passwordRequired": "Completa los tres campos de contraseña.",
-    "passwordMismatch": "Las nuevas contraseñas no coinciden.",
+    "passwordMismatch": "Tu contraseña no coincide",
     "passwordSame": "Tu nueva contraseña debe ser diferente de la anterior.",
-    "savePassword": "Guardar contraseña",
+    "done": "Listo",
     "cancel": "Cancelar",
-    "passwordWrongOld": "Tu contraseña anterior es incorrecta.",
+    "passwordWrongOld": "Tu contraseña no coincide",
     "passwordInvalid": "La nueva contraseña no cumple con los requisitos.",
     "passwordLimit": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
     "passwordError": "No se pudo cambiar tu contraseña. Inténtalo de nuevo.",
@@ -363,6 +367,24 @@
     "startOverBody": "Si subiste los archivos equivocados, vuelve a subirlos.\nSi no, ya terminaste. Te enviaremos tus resultados en un plazo de 24 horas.",
     "startOverConfirm": "Sí, empezar de nuevo",
     "startOverKeep": "Conservar mi envío",
+    "leave": {
+      "confirm": "Salir de todos modos",
+      "none": {
+        "title": "¿Salir sin subir archivos?",
+        "body": "Tu clase y semana no se guardarán. Puedes comenzar una nueva carga en cualquier momento desde Inicio.",
+        "keep": "Seguir subiendo"
+      },
+      "partial": {
+        "title": "Tu carga no está terminada.",
+        "body": "Agregaste el {{added}}, pero aún falta el archivo {{missing}}. Si sales ahora, tendrás que subir ambos archivos de nuevo.",
+        "keep": "Terminar de subir"
+      },
+      "ready": {
+        "title": "Estás a un paso.",
+        "body": "Ambos archivos están agregados, pero aún no se han enviado. Haz clic en Continuar para enviarlos a MicroCoach. Si sales ahora, tus archivos no se guardarán.",
+        "keep": "Volver y enviar"
+      }
+    },
     "close": "Cerrar"
   },
   "reflect": {

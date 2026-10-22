@@ -60,31 +60,43 @@ const SecondaryAction = styled(Button)(({ theme }) => ({
   '&:hover': { backgroundColor: 'transparent', textDecoration: 'underline' },
 }));
 
-interface StartOverDialogProps {
+interface UploadConfirmDialogProps {
   open: boolean;
-  isWorking: boolean;
+  title: string;
+  body: string;
+  // The "←" text action on the left: the step being confirmed.
+  confirmLabel: string;
+  // The filled, default action on the right: stay where you are.
+  keepLabel: string;
+  // While the confirmed action runs, both buttons and the X are disabled.
+  isWorking?: boolean;
   onKeep: () => void;
   onConfirm: () => void;
 }
 
 /**
- * Upload notes (Upload6): "Yes, start over" cancels the submission and clears
- * the files; "Keep my submission" or the X closes and changes nothing. Keeping
- * the submission is the filled, default action.
+ * The upload flow's confirmation (Upload6 start over; rev5 leaving the upload
+ * page). The left "←" action confirms; the filled button, the X and the
+ * backdrop keep things as they are, so staying is always the default.
  */
-export default function StartOverDialog({
+export default function UploadConfirmDialog({
   open,
-  isWorking,
+  title,
+  body,
+  confirmLabel,
+  keepLabel,
+  isWorking = false,
   onKeep,
   onConfirm,
-}: StartOverDialogProps) {
+}: UploadConfirmDialogProps) {
   const { t } = useTranslation();
+  const titleId = React.useId();
 
   return (
     <Dialog
       open={open}
       onClose={isWorking ? undefined : onKeep}
-      aria-labelledby="start-over-title"
+      aria-labelledby={titleId}
       maxWidth={false}
       slotProps={{
         backdrop: { sx: { bgcolor: 'designSystem.background.scrimLight' } },
@@ -120,12 +132,12 @@ export default function StartOverDialog({
             <ErrorIcon sx={{ fontSize: 28 }} />
           </Badge>
           <Typography
-            id="start-over-title"
+            id={titleId}
             variant="navTitle2"
             component="h2"
             sx={{ color: 'designSystem.surface.nearBlack' }}
           >
-            {t('upload.startOverTitle')}
+            {title}
           </Typography>
           <Typography
             variant="bodyText"
@@ -134,7 +146,7 @@ export default function StartOverDialog({
               whiteSpace: 'pre-line',
             }}
           >
-            {t('upload.startOverBody')}
+            {body}
           </Typography>
         </DialogText>
         <DialogActionsRow>
@@ -150,7 +162,7 @@ export default function StartOverDialog({
               )
             }
           >
-            {t('upload.startOverConfirm')}
+            {confirmLabel}
           </SecondaryAction>
           <UploadPill
             disableElevation
@@ -158,7 +170,7 @@ export default function StartOverDialog({
             disabled={isWorking}
             autoFocus
           >
-            {t('upload.startOverKeep')}
+            {keepLabel}
           </UploadPill>
         </DialogActionsRow>
       </DialogBody>

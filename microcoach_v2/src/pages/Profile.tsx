@@ -5,12 +5,12 @@ import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Typography from '@mui/material/Typography';
-import { alpha, useTheme } from '@mui/material/styles';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import AvatarContent from '../components/AvatarContent';
 import ConfirmRemoveDialog from '../components/ConfirmRemoveDialog';
 import ProfileSkeleton from '../components/ProfileSkeleton';
 import { IAPIClients } from '../api';
@@ -18,6 +18,7 @@ import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import accountPatternTopLeft from '../images/accountPatternTopLeft.svg';
 import accountPatternBottomRight from '../images/accountPatternBottomRight.svg';
 import removeIcon from '../images/removeIcon.svg';
+import errorIcon from '../images/errorIcon.svg';
 import { IUserState } from '../hooks/useUserState';
 import { useConfirmRemove } from '../hooks/useConfirmRemove';
 import { useProfilePictureUrl } from '../hooks/useProfilePictureUrl';
@@ -31,6 +32,7 @@ import { schoolFromEmail } from '../lib/schools';
 import {
   AvatarGroup,
   AddClassButton,
+  AddClassSubmit,
   ClassDeleteButton,
   ClassList,
   Toast,
@@ -44,7 +46,10 @@ import {
   LabelledField,
   PatternCorner,
   ProfileAction,
-  ProfileTextAction,
+  ProfileActionPrimary,
+  PasswordActions,
+  PasswordFieldGroup,
+  PasswordRules,
   ProfileForm,
   ProfileHeading,
   ProfileInput,
@@ -58,10 +63,14 @@ import {
   ScreenSizeProps,
 } from '../lib/styledcomponents/ProfileStyledComponents';
 import type { ToastTone } from '../lib/styledcomponents/ProfileStyledComponents';
+import { FieldErrorIcon } from '../lib/styledcomponents/SignUpStyledComponents';
 
 const NAME_ERROR_ID = 'profile-name-error';
-const PASSWORD_ERROR_ID = 'profile-password-error';
 const ADD_CLASS_ERROR_ID = 'profile-add-class-error';
+const ADD_CLASS_DUPLICATE_ID = 'profile-add-class-duplicate';
+
+// Class names compare trimmed and case-blind: "justice " is Justice.
+const normaliseClassName = (name: string) => name.trim().toLowerCase();
 
 // Keeps focus on the field rather than letting mousedown move it to the
 // visibility toggle, as the sign-up form's toggle does.
@@ -71,64 +80,74 @@ const suppressDefault = (event: React.MouseEvent<HTMLButtonElement>) =>
 interface PasswordFieldProps {
   label: string;
   value: string;
-  onChange?: (value: string) => void;
-  readOnly?: boolean;
-  isError?: boolean;
+  onChange: (value: string) => void;
+  // The message to show, already translated; none means the field is valid.
+  error?: string;
+  // Under the label, above the input (the new password's rules).
+  children?: React.ReactNode;
 }
 
-/** A password field with the frame's eye toggle (Account1/5). */
-function PasswordField({
-  label,
-  value,
-  onChange,
-  readOnly,
-  isError,
-}: PasswordFieldProps) {
+/**
+ * A labelled password field (rev5 ChangePasswordError): the label, any error
+ * in small red text, then the input. An invalid field trades its eye toggle
+ * for central_v2's error marker, as drawn.
+ */
+function PasswordField({ label, value, onChange, error, children }: PasswordFieldProps) {
   const { t } = useTranslation();
+  const errorId = React.useId();
   const [isShown, setIsShown] = React.useState(false);
 
   return (
-    <ProfileInput
-      type={isShown ? 'text' : 'password'}
-      value={value}
-      readOnly={readOnly}
-      isError={isError}
-      onChange={(event) => onChange?.(event.target.value)}
-      inputProps={{
-        'aria-label': label,
-        'aria-invalid': isError,
-        'aria-describedby': isError ? PASSWORD_ERROR_ID : undefined,
-      }}
-      endAdornment={
-        <InputAdornment position="end">
-          {/* The masked field only holds a placeholder, so there is nothing to
-              reveal: the frame's faded eye-off is a marker, not a toggle. */}
-          {readOnly ? (
-            <VisibilityOff
-              fontSize="small"
-              aria-hidden
-              sx={{ color: 'designSystem.foreground.slateNavy', opacity: 0.6 }}
-            />
-          ) : (
-          <IconButton
-            size="small"
-            edge="end"
-            aria-label={t(isShown ? 'signup.hidePassword' : 'signup.showPassword')}
-            onClick={() => setIsShown((shown) => !shown)}
-            onMouseDown={suppressDefault}
-            onMouseUp={suppressDefault}
-            sx={{ color: 'designSystem.foreground.slateNavy' }}
-          >
-            {isShown ? (
-              <VisibilityOff fontSize="small" />
+    <PasswordFieldGroup>
+      <Typography variant="headingSm" sx={{ color: 'designSystem.surface.black' }}>
+        {label}
+      </Typography>
+      {error && (
+        <Typography
+          id={errorId}
+          variant="microLabel"
+          role="alert"
+          sx={{ color: 'designSystem.status.errorStroke' }}
+        >
+          {error}
+        </Typography>
+      )}
+      {children}
+      <ProfileInput
+        type={isShown ? 'text' : 'password'}
+        value={value}
+        isError={!!error}
+        onChange={(event) => onChange(event.target.value)}
+        inputProps={{
+          'aria-label': label,
+          'aria-invalid': !!error,
+          'aria-describedby': error ? errorId : undefined,
+        }}
+        endAdornment={
+          <InputAdornment position="end">
+            {error ? (
+              <FieldErrorIcon src={errorIcon} alt="" />
             ) : (
-              <Visibility fontSize="small" />
+              <IconButton
+                size="small"
+                edge="end"
+                aria-label={t(isShown ? 'signup.hidePassword' : 'signup.showPassword')}
+                onClick={() => setIsShown((shown) => !shown)}
+                onMouseDown={suppressDefault}
+                onMouseUp={suppressDefault}
+                sx={{ color: 'designSystem.foreground.slateNavy' }}
+              >
+                {isShown ? (
+                  <VisibilityOff fontSize="small" />
+                ) : (
+                  <Visibility fontSize="small" />
+                )}
+              </IconButton>
             )}
-          </IconButton>
-          )}
-        </InputAdornment>
-      }
-    />
+          </InputAdornment>
+        }
+      />
+    </PasswordFieldGroup>
   );
 }
 
@@ -164,9 +183,6 @@ function passwordErrorFrom(error: unknown): PasswordError {
   return 'OTHER';
 }
 
-// Not about any one field, so they go to the toast rather than under the form.
-const TOAST_PASSWORD_ERRORS: PasswordError[] = ['LIMIT', 'OTHER'];
-
 // The rules the reset screen lists. Cognito only enforces the length
 // (passwordPolicyCharacters is empty), so they are checked here too, or the
 // list would promise more than is enforced.
@@ -179,67 +195,100 @@ interface PasswordPanelProps {
   apiClients: IAPIClients;
 }
 
-const EMPTY_PASSWORD_FIELDS = { old: '', next: '', confirm: '' };
+type PasswordFields = { old: string; next: string; confirm: string };
+type PasswordFieldErrors = Partial<Record<keyof PasswordFields, PasswordError>>;
+
+const EMPTY_PASSWORD_FIELDS: PasswordFields = { old: '', next: '', confirm: '' };
 // Success is a notice, not a blocker, so it closes itself; errors wait.
 const SUCCESS_TOAST_MS = 6000;
 
+// The checks central_v2's NewPasswordInputs runs as the teacher types: the
+// rules, then same-as-old, on the new password; a match on the re-entry.
+// Empty fields only count once Done has been tried.
+function checkPasswordFields(
+  fields: PasswordFields,
+  requireAll: boolean,
+): PasswordFieldErrors {
+  const errors: PasswordFieldErrors = {};
+  if (!fields.old && requireAll) errors.old = 'REQUIRED';
+  if (!fields.next) {
+    if (requireAll) errors.next = 'REQUIRED';
+  } else if (!meetsPasswordRules(fields.next)) {
+    errors.next = 'INVALID';
+  } else if (fields.old && fields.next === fields.old) {
+    errors.next = 'SAME';
+  }
+  if (!fields.confirm) {
+    if (requireAll) errors.confirm = 'REQUIRED';
+  } else if (fields.confirm !== fields.next) {
+    errors.confirm = 'MISMATCH';
+  }
+  return errors;
+}
+
 /**
- * Password, changed in place (rev4 ChangePassword_1/2): the masked field and
- * Change Password, then old / new / re-enter with the rules shown up front,
- * and Save password or Cancel. Cognito checks the old password; the filled,
- * rules, same-as-old and match checks happen here first. The outcome is a
- * toast at the top of the page.
+ * Password (rev4 ChangePassword_1/2, rev5 ChangePasswordError): Change
+ * Password opens old / new / re-enter, with the rules shown up front and each
+ * field's error under its label. Fields are checked as they change, and again
+ * on Done; Cognito then checks the old password. The outcome is a toast at
+ * the top of the page.
  */
 function PasswordPanel({ apiClients }: PasswordPanelProps) {
   const { t } = useTranslation();
-  const theme = useTheme();
   const [isEditing, setIsEditing] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
   const [fields, setFields] = React.useState(EMPTY_PASSWORD_FIELDS);
-  const [error, setError] = React.useState<PasswordError | null>(null);
+  const [errors, setErrors] = React.useState<PasswordFieldErrors>({});
+  const [hasTriedSave, setHasTriedSave] = React.useState(false);
   const [toast, setToast] = React.useState<ToastTone | null>(null);
+  const [toastError, setToastError] = React.useState<PasswordError | null>(null);
 
-  const setField = (key: keyof typeof fields) => (value: string) =>
-    setFields((current) => ({ ...current, [key]: value }));
+  const setField = (key: keyof PasswordFields) => (value: string) => {
+    const next = { ...fields, [key]: value };
+    setFields(next);
+    // A wrong old password is Cognito's answer, so it stands until the old
+    // password itself is edited.
+    const keepWrongOld = key !== 'old' && errors.old === 'WRONG_OLD';
+    setErrors({
+      ...checkPasswordFields(next, hasTriedSave),
+      ...(keepWrongOld ? { old: 'WRONG_OLD' } : {}),
+    });
+  };
 
   const handleCancel = () => {
     setFields(EMPTY_PASSWORD_FIELDS);
-    setError(null);
+    setErrors({});
+    setHasTriedSave(false);
     setIsEditing(false);
   };
 
-  const handleSave = async () => {
+  const handleDone = async () => {
     setToast(null);
-    if (!fields.old || !fields.next || !fields.confirm) {
-      setError('REQUIRED');
-      return;
-    }
-    if (!meetsPasswordRules(fields.next)) {
-      setError('INVALID');
-      return;
-    }
-    if (fields.next === fields.old) {
-      setError('SAME');
-      return;
-    }
-    if (fields.next !== fields.confirm) {
-      setError('MISMATCH');
-      return;
-    }
+    setHasTriedSave(true);
+    const found = checkPasswordFields(fields, true);
+    setErrors(found);
+    if (Object.keys(found).length > 0) return;
     setIsSaving(true);
-    setError(null);
     try {
       await apiClients.auth.awsUpdatePassword(fields.old, fields.next);
-      setFields(EMPTY_PASSWORD_FIELDS);
-      setIsEditing(false);
+      handleCancel();
       setToast('success');
     } catch (caught) {
       console.error('Could not change the password', caught);
       const reason = passwordErrorFrom(caught);
-      setError(reason);
-      if (TOAST_PASSWORD_ERRORS.includes(reason)) setToast('error');
+      if (reason === 'WRONG_OLD') setErrors({ old: reason });
+      else if (reason === 'INVALID') setErrors({ next: reason });
+      else {
+        setToastError(reason);
+        setToast('error');
+      }
     }
     setIsSaving(false);
+  };
+
+  const errorText = (key: keyof PasswordFields) => {
+    const error = errors[key];
+    return error ? t(PASSWORD_ERROR_KEY[error]) : undefined;
   };
 
   // Lives outside the form so it outlasts the collapse after a save.
@@ -253,8 +302,8 @@ function PasswordPanel({ apiClients }: PasswordPanelProps) {
       }}
     >
       <Toast tone={toast ?? 'success'} role={toast === 'error' ? 'alert' : 'status'}>
-        {toast === 'error' && error
-          ? t(PASSWORD_ERROR_KEY[error])
+        {toast === 'error' && toastError
+          ? t(PASSWORD_ERROR_KEY[toastError])
           : t('profile.passwordChanged')}
         <IconButton
           size="small"
@@ -267,10 +316,10 @@ function PasswordPanel({ apiClients }: PasswordPanelProps) {
     </ToastSnackbar>
   );
 
+  // rev5: no masked field; the section is just the button until it opens.
   if (!isEditing) {
     return (
       <>
-        <PasswordField label={t('profile.password')} value="*******" readOnly />
         <ProfileAction disableElevation onClick={() => setIsEditing(true)}>
           {t('profile.changePassword')}
         </ProfileAction>
@@ -279,85 +328,49 @@ function PasswordPanel({ apiClients }: PasswordPanelProps) {
     );
   }
 
-  const isMismatch = error === 'MISMATCH';
-  const inlineError = error && !TOAST_PASSWORD_ERRORS.includes(error) ? error : null;
   return (
     <>
-      <LabelledField>
-        <Typography variant="headingSm" sx={{ color: 'designSystem.surface.black' }}>
-          {t('profile.oldPassword')}
-        </Typography>
-        <PasswordField
-          label={t('profile.oldPassword')}
-          value={fields.old}
-          onChange={setField('old')}
-          isError={error === 'WRONG_OLD' || (error === 'REQUIRED' && !fields.old)}
-        />
-      </LabelledField>
-      <LabelledField>
-        <Typography variant="headingSm" sx={{ color: 'designSystem.surface.black' }}>
-          {t('profile.newPassword')}
-        </Typography>
-        <PasswordField
-          label={t('profile.newPassword')}
-          value={fields.next}
-          onChange={setField('next')}
-          isError={
-            isMismatch ||
-            error === 'INVALID' ||
-            error === 'SAME' ||
-            (error === 'REQUIRED' && !fields.next)
-          }
-        />
-        <Box sx={{ color: 'designSystem.surface.ashyGray' }}>
-          <Typography variant="rubikBody">{t('reset.rulesTitle')}</Typography>
-          <Box component="ul" sx={{ m: 0, pl: `${theme.sizing.space4}px` }}>
-            {PASSWORD_RULE_KEYS.map((key) => (
-              <Typography key={key} component="li" variant="rubikBody">
-                {t(key)}
-              </Typography>
-            ))}
-          </Box>
-        </Box>
-      </LabelledField>
-      <LabelledField>
-        <Typography variant="headingSm" sx={{ color: 'designSystem.surface.black' }}>
-          {t('profile.confirmPassword')}
-        </Typography>
-        <PasswordField
-          label={t('profile.confirmPassword')}
-          value={fields.confirm}
-          onChange={setField('confirm')}
-          isError={isMismatch || (error === 'REQUIRED' && !fields.confirm)}
-        />
-      </LabelledField>
-      {inlineError && (
-        <Typography
-          id={PASSWORD_ERROR_ID}
-          variant="rubikBody"
-          role="alert"
-          sx={{ color: 'designSystem.status.errorStroke' }}
-        >
-          {t(PASSWORD_ERROR_KEY[inlineError])}
-        </Typography>
-      )}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: `${theme.sizing.space3}px` }}>
-        <ProfileAction
+      <PasswordField
+        label={t('profile.oldPassword')}
+        value={fields.old}
+        onChange={setField('old')}
+        error={errorText('old')}
+      />
+      <PasswordField
+        label={t('profile.newPassword')}
+        value={fields.next}
+        onChange={setField('next')}
+        error={errorText('next')}
+      >
+        <PasswordRules>
+          {PASSWORD_RULE_KEYS.map((key) => (
+            <li key={key}>{t(key)}</li>
+          ))}
+        </PasswordRules>
+      </PasswordField>
+      <PasswordField
+        label={t('profile.confirmPassword')}
+        value={fields.confirm}
+        onChange={setField('confirm')}
+        error={errorText('confirm')}
+      />
+      <PasswordActions>
+        <ProfileAction disableElevation disabled={isSaving} onClick={handleCancel}>
+          {t('profile.cancel')}
+        </ProfileAction>
+        <ProfileActionPrimary
           disableElevation
           disabled={isSaving}
           aria-busy={isSaving}
-          onClick={handleSave}
+          onClick={handleDone}
         >
           {isSaving ? (
             <CircularProgress size={16} color="inherit" aria-label={t('profile.saving')} />
           ) : (
-            t('profile.savePassword')
+            t('profile.done')
           )}
-        </ProfileAction>
-        <ProfileTextAction disableElevation disabled={isSaving} onClick={handleCancel}>
-          {t('profile.cancel')}
-        </ProfileTextAction>
-      </Box>
+        </ProfileActionPrimary>
+      </PasswordActions>
       {toastSnackbar}
     </>
   );
@@ -386,12 +399,21 @@ function AddClassPanel({ apiClients }: { apiClients: IAPIClients }) {
     setIsToastOpen(false);
   };
 
+  // Checked as the teacher types, against the classes already loaded for them.
+  const isDuplicate =
+    !!draftName?.trim() &&
+    classrooms.some(
+      (classroom) => normaliseClassName(classroom.name) === normaliseClassName(draftName),
+    );
+
   const commit = async () => {
     const name = draftName?.trim() ?? '';
     if (!name) {
       close();
       return;
     }
+    // Enter reaches here without the button, so the guard lives here too.
+    if (isDuplicate) return;
     if (isAddingRef.current) return;
     isAddingRef.current = true;
     setIsAdding(true);
@@ -440,7 +462,7 @@ function AddClassPanel({ apiClients }: { apiClients: IAPIClients }) {
           autoFocus
           value={draftName}
           readOnly={isAdding}
-          isError={hasError}
+          isError={hasError || isDuplicate}
           placeholder={t('profile.addClassPlaceholder')}
           onChange={(event) => setDraftName(event.target.value)}
           onKeyDown={(event) => {
@@ -453,8 +475,10 @@ function AddClassPanel({ apiClients }: { apiClients: IAPIClients }) {
           }}
           inputProps={{
             'aria-label': t('profile.addClassPlaceholder'),
-            'aria-invalid': hasError,
-            'aria-describedby': hasError ? ADD_CLASS_ERROR_ID : undefined,
+            'aria-invalid': hasError || isDuplicate,
+            'aria-describedby': isDuplicate
+              ? ADD_CLASS_DUPLICATE_ID
+              : (hasError && ADD_CLASS_ERROR_ID) || undefined,
           }}
         />
         <ClassDeleteButton
@@ -465,6 +489,16 @@ function AddClassPanel({ apiClients }: { apiClients: IAPIClients }) {
           <CloseIcon fontSize="small" sx={{ color: 'designSystem.surface.atlanticNavy' }} />
         </ClassDeleteButton>
       </ClassRow>
+      {isDuplicate && (
+        <Typography
+          id={ADD_CLASS_DUPLICATE_ID}
+          variant="microLabel"
+          role="alert"
+          sx={{ color: 'designSystem.status.errorStroke' }}
+        >
+          {t('profile.addClassDuplicate', { name: draftName.trim() })}
+        </Typography>
+      )}
       {/* Not dismissed by clicking elsewhere, so a stray click can't hide
           the only sign the class wasn't saved. */}
       <ToastSnackbar
@@ -485,26 +519,18 @@ function AddClassPanel({ apiClients }: { apiClients: IAPIClients }) {
           </IconButton>
         </Toast>
       </ToastSnackbar>
-      <ProfileAction
+      <AddClassSubmit
         disableElevation
-        disabled={!draftName.trim() || isAdding}
+        disabled={!draftName.trim() || isDuplicate || isAdding}
         aria-busy={isAdding}
         onClick={commit}
-        // Greyed out until there is a name, as Home's My activity button is.
-        sx={(theme) => ({
-          alignSelf: 'flex-start',
-          '&.Mui-disabled': {
-            backgroundColor: alpha(theme.palette.designSystem.surface.ashyGray, 0.5),
-            color: theme.palette.designSystem.surface.white,
-          },
-        })}
       >
         {isAdding ? (
           <CircularProgress size={16} color="inherit" aria-label={t('profile.saving')} />
         ) : (
           t('profile.addClassSubmit')
         )}
-      </ProfileAction>
+      </AddClassSubmit>
     </>
   );
 }
@@ -754,16 +780,7 @@ export default function Profile({
           <SidebarIdentity>
             <AvatarGroup>
               <InitialsAvatar aria-hidden>
-                {pictureUrl ? (
-                  <Box
-                    component="img"
-                    src={pictureUrl}
-                    alt=""
-                    sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
-                ) : (
-                  initials
-                )}
+                <AvatarContent url={pictureUrl} initials={initials} />
               </InitialsAvatar>
               <input
                 ref={pictureInputRef}

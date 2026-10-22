@@ -1,4 +1,4 @@
-import { styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -241,7 +241,7 @@ export const ProfileInput = styled(InputBase, {
   const palette = theme.palette.designSystem;
   let borderColor = palette.foreground.greyAccent;
   if (isLocked) borderColor = palette.foreground.codeStrokeFilled;
-  if (isError) borderColor = palette.status.errorStroke;
+  if (isError) borderColor = palette.status.fieldErrorStroke;
 
   return {
     width: '100%',
@@ -256,7 +256,7 @@ export const ProfileInput = styled(InputBase, {
     boxSizing: 'border-box',
     '& input': { padding: 0 },
     '&.Mui-focused': {
-      borderColor: isError ? palette.status.errorStroke : palette.foreground.accentBlue,
+      borderColor: isError ? palette.status.fieldErrorStroke : palette.foreground.accentBlue,
     },
   };
 });
@@ -339,19 +339,35 @@ export const Toast = styled(Box, {
   };
 });
 
-// A quiet text action beside a ProfileAction (password Cancel).
-export const ProfileTextAction = styled(Button)(({ theme }) => ({
-  minHeight: 36,
-  padding: `0 ${theme.sizing.space2}px`,
-  backgroundColor: 'transparent',
-  color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.buttonLabelSmLight,
-  textTransform: 'none',
-  '&:hover': {
-    backgroundColor: 'transparent',
-    textDecoration: 'underline',
-  },
+// rev5 ChangePasswordError: a password field's label, error line, rules and
+// input, ~12 apart (LabelledField's 4 is the name fields' spacing).
+export const PasswordFieldGroup = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space2,
+  width: '100%',
 }));
+
+// The new password's rules, always shown: Rubik 12 black, a disc list indented
+// 18 as central_v2's PasswordRequirementsList is, ~8 between lines.
+export const PasswordRules = styled('ul')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space1,
+  margin: 0,
+  paddingLeft: 18,
+  listStyleType: 'disc',
+  color: theme.palette.designSystem.surface.black,
+  ...theme.typography.microLabel,
+}));
+
+// rev5 ChangePasswordError: Cancel then Done, ~20 apart.
+export const PasswordActions = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.sizing.space4,
+}));
+
 
 export const ClassList = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -388,6 +404,25 @@ export const ProfileAction = styled(Button)(({ theme }) => ({
   whiteSpace: 'nowrap',
   '&:hover': {
     backgroundColor: theme.palette.designSystem.foreground.accentBlue,
+  },
+}));
+
+// "Add class" under a new class's name: hugs its label, and greys out until
+// there is a name, as Home's My activity button does. A styled component
+// rather than `sx`: on this styled(Button) the sx callback never applied.
+export const AddClassSubmit = styled(ProfileAction)(({ theme }) => ({
+  alignSelf: 'flex-start',
+  '&.Mui-disabled': {
+    backgroundColor: alpha(theme.palette.designSystem.surface.ashyGray, 0.5),
+    color: theme.palette.designSystem.surface.white,
+  },
+}));
+
+// rev5 ChangePasswordError's Done: ProfileAction in navy.
+export const ProfileActionPrimary = styled(ProfileAction)(({ theme }) => ({
+  backgroundColor: theme.palette.designSystem.background.navyBlue,
+  '&:hover': {
+    backgroundColor: theme.palette.designSystem.background.navyBlue,
   },
 }));
 

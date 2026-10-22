@@ -20,6 +20,7 @@ import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import ContentRow from './ContentRow';
 import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import AvatarContent from './AvatarContent';
 
 /**
  * `app` is the in-app chrome (newexports/Wireframe2,3,5): the 362-wide
@@ -348,16 +349,7 @@ export default function Header({
                   aria-expanded={!!accountAnchor}
                   onClick={(event) => setAccountAnchor(event.currentTarget)}
                 >
-                  {profilePictureUrl ? (
-                    <Box
-                      component="img"
-                      src={profilePictureUrl}
-                      alt=""
-                      sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                  ) : (
-                    initials
-                  )}
+                  <AvatarContent url={profilePictureUrl} initials={initials} />
                 </InitialsAvatar>
                 <Menu
                   anchorEl={accountAnchor}

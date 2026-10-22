@@ -30,6 +30,7 @@
     "makeYourCasePositions": "Anticipated arguments"
   },
   "chooseActivity": {
+    "replaceBody": "This will replace the activity you saved for another misconception.",
     "selected": "Misconception selected:",
     "change": "Change",
     "title": "Select your next-step activity",
@@ -70,6 +71,8 @@
     "domainTooltipLabel": "What {{code}} covers"
   },
   "review": {
+    "noMisconceptionsTitle": "No misconceptions found",
+    "noMisconceptionsBody": "Most of your students answered correctly, so there’s nothing to focus on this time.",
     "banner": "Your class results are in — see patterns in your students' thinking and next steps you can take.",
     "dismissBanner": "Dismiss",
     "title": "Understand Your Students' Thinking",
@@ -300,6 +303,7 @@
     "addClassPlaceholder": "Enter class name",
     "addClassSubmit": "Add class",
     "addClassError": "Your class wasn’t added. Something went wrong.",
+    "addClassDuplicate": "You already have a class named {{name}}.",
     "cancelAddClass": "Cancel adding a class",
     "oldPassword": "Re-enter your old password",
     "newPassword": "Enter your new password",
@@ -307,11 +311,11 @@
     "saving": "Saving",
     "saveError": "We couldn't save your changes. Try again.",
     "passwordRequired": "Fill in all three password fields.",
-    "passwordMismatch": "Your new passwords don't match.",
+    "passwordMismatch": "Your password doesn’t match",
     "passwordSame": "Your new password must be different from your old one.",
-    "savePassword": "Save password",
+    "done": "Done",
     "cancel": "Cancel",
-    "passwordWrongOld": "Your old password is incorrect.",
+    "passwordWrongOld": "Your password doesn’t match",
     "passwordInvalid": "That new password doesn't meet the password requirements.",
     "passwordLimit": "Too many attempts. Please wait a few minutes and try again.",
     "passwordError": "Your password couldn't be changed. Please try again.",
@@ -363,6 +367,24 @@
     "startOverBody": "If the wrong files were uploaded, go ahead and re-upload.\nOtherwise, you're all set. We'll send your results within 24 hours.",
     "startOverConfirm": "Yes, start over",
     "startOverKeep": "Keep my submission",
+    "leave": {
+      "confirm": "Leave anyway",
+      "none": {
+        "title": "Leave without uploading?",
+        "body": "Your class and week won’t be saved. You can start a new upload anytime from Home.",
+        "keep": "Keep uploading"
+      },
+      "partial": {
+        "title": "Your upload isn’t finished.",
+        "body": "You’ve added the {{added}}, but the {{missing}} file is still missing. If you leave now, you’ll need to upload both files again.",
+        "keep": "Finish uploading"
+      },
+      "ready": {
+        "title": "You’re one step away.",
+        "body": "Both files are added, but they haven’t been submitted yet. Click Continue to send them to MicroCoach. If you leave now, your files won’t be saved.",
+        "keep": "Go back and submit"
+      }
+    },
     "close": "Close"
   },
   "reflect": {
