@@ -505,6 +505,8 @@ const sizing = {
   reflectContextMinHeight: 96,
   reflectDetailsButtonWidth: 163,
   reflectDetailsButtonHeight: 37,
+  reflectDetailModalMaxWidth: 936,
+  reflectDetailSortWidth: 166,
   flowActionMinWidth: 160,
   flowActionHeight: 36,
   reflectHomeActionWidth: 131,

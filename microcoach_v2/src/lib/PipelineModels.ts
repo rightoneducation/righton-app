@@ -1,4 +1,8 @@
 import type { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
+import type {
+  IMicroCoachReflectionQuestionResult,
+  IMicroCoachReflectionStudentResult,
+} from '../api/Models/IMicroCoachSession';
 
 export type PrevalenceLevel = 'FEW' | 'SOME' | 'MOST';
 
@@ -360,12 +364,18 @@ export interface ISession {
 export interface IImplementedActivity {
   id: string;
   title: string;
+  subtitle: string;
+  description: string;
   skillCode: string;
   misconceptionTitle: string;
-  /** Percentages the frame states outright; nothing here is derived. */
-  masteryBefore: number;
-  masteryAfter: number;
-  studentsImproved: number;
+  questionCount: number;
+  averagePercentCorrectBefore: number;
+  averagePercentCorrectAfter: number;
+  averageQuestionsCorrectBefore: number;
+  averageQuestionsCorrectAfter: number;
+  improvedStudentCount: number;
+  studentResults: IMicroCoachReflectionStudentResult[];
+  questionResults: IMicroCoachReflectionQuestionResult[];
 }
 
 export interface IReflect {

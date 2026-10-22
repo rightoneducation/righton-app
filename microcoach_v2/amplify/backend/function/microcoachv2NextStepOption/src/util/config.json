@@ -25,15 +25,15 @@
       "max": 3
     },
     "examplesNote": "Spot the Slip, My Favorite No and Math Detective only. The doc asks for up to 3 examples that meaningfully support the need, with the teacher choosing which to use, so fewer is allowed. Enforced as .min/.max on the examples array in activityContent.mjs.",
-    "phaseDurations": {
-      "beforeClass": "5 min",
-      "facilitate": "8-10 min",
-      "discussion": "3-5 min"
-    },
     "closingDiscussion": {
       "model": "gpt-5-mini",
       "reviewModel": "gpt-5-mini",
       "questionCount": 3,
+      "minutes": {
+        "min": 2,
+        "max": 5,
+        "note": "Class minutes the activity reserves for the closing discussion. The three questions are alternatives the teacher picks from, so each must fit this time on its own. Added 2026-10-19."
+      },
       "watchFors": {
         "min": 1,
         "max": 3
@@ -41,22 +41,17 @@
       "note": "Written by its own call from the instructional need and the finished artifact, takeaway first (the doc's need → takeaway → questions + Watch for order), then reviewed by reviewModel against the doc's accuracy and coherence check. The guidance text itself lives in activityLibrary.json designGuidance.",
       "reviewModelNote": "gpt-5-mini, not the o3-mini the problem validators use: on 2026-10-08 o3-mini passed a discussion answer claiming that multiplying only one side of an equation can preserve equality. Switched with the user's approval."
     },
-    "allowedDurationBuckets": [
-      {
-        "label": "5–10 min",
-        "min": 5,
-        "max": 10
-      },
-      {
-        "label": "10–15 min",
-        "min": 10,
-        "max": 15
-      }
-    ],
     "designPrinciples": [
       "Misconception-driven: The activity must directly address the identified cognitive error — not provide generic practice on the standard.",
       "Error-first instruction: Students must encounter and analyze incorrect reasoning before seeing the correct method.",
       "Connection to student responses: The activity must reference or build on the specific error patterns observed in the class data (e.g. the core misconception, or a 'Favorite No' the teacher could highlight)."
+    ],
+    "pacingGuidance": [
+      "Students take longer than an adult to do the math: reading the problem, working it, and checking it each take real time, so a single task worked in pairs is rarely under 3 minutes.",
+      "Pair or small-group talk needs time to start and to wrap up; a share-out takes about a minute for each student or pair the teacher calls on.",
+      "Every change of grouping or of materials costs time; count it in the step where it happens.",
+      "The examples are alternatives for the teacher to choose from. Plan the time to run one with the class; the others are spares, not extra rounds.",
+      "If the plan does not fit, cut content: fewer steps, one example, a shorter share-out. Never shrink an estimate to make the total fit."
     ],
     "classroomFeasibility": [
       "Require minimal setup — activity should be implementable within 30–60 seconds of classroom transition.",
@@ -131,11 +126,8 @@
     ],
     "validator": {
       "model": "o3-mini",
-      "systemPrompt": "You are a math accuracy reviewer. Output only valid JSON.",
-      "problemReviewInstructions": "Return ONLY the problem itself, as a student would see it written on the board. If the mathematics is wrong, return the corrected problem; if it is already correct, return it unchanged, byte for byte. Do not add the answer, the diagnosis, a list of corrections, bracketed notes, teaching guidance, or any sentence describing what you changed — several of these activities ask students to find the error themselves, and including it destroys the activity. Keep the length close to the original. Return JSON: { \"problem\": \"<corrected or original problem>\" }"
+      "systemPrompt": "You are a math accuracy reviewer. Output only valid JSON."
     },
-    "durationNote": "Teachers have a 10-15 minute window for the activity and its closing discussion (Wave 2 doc, Activity Timing); 15 is the hard ceiling and the target sits below it. Prep before class is outside that window.",
-    "problemGrowthLimit": 1.5,
-    "problemGrowthLimitNote": "Ceiling on how much longer the math reviewer's corrected problem may be than the original before the result is discarded and the original kept. The reviewer once returned 2,135 characters of lesson, bracketed answers and commentary about its own edit in place of a ~520-character problem. Falls back loudly: the reason lands in the run's sub-call record."
+    "durationNote": "Teachers have a 10-15 minute window for the activity and its closing discussion (Wave 2 doc, Activity Timing); 15 is the hard ceiling and the target sits below it. Prep before class is outside that window."
   }
 }

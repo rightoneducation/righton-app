@@ -1,13 +1,9 @@
-/**
- * Parses a session's AWSJSON next-step results and builds the data displayed
- * by Reflect. This stays outside the page because it also validates the raw
- * JSON and joins each result with its backend misconception and activity.
- */
 import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { IImplementedActivity, IReflect } from './PipelineModels';
 
 export type ReflectionTrend = 'improved' | 'declined' | 'unchanged';
+export type ReflectionDetailSort = 'highestScoring' | 'mostImproved';
 
 export function getReflectionTrend(change: number): ReflectionTrend {
   if (change > 0) return 'improved';
@@ -15,48 +11,55 @@ export function getReflectionTrend(change: number): ReflectionTrend {
   return 'unchanged';
 }
 
-interface PostPpqResults {
+interface LegacyPostPpqResults {
   hasResults?: boolean;
+  questionCount?: number;
   classMasteryBefore?: number;
   classMasteryAfter?: number;
   improvedCount?: number;
 }
 
-interface GeneratedMove {
+interface LegacyGeneratedMove {
   id?: string;
   title?: string;
+  summary?: string;
+  instructionalMove?: string;
 }
 
-interface GeneratedNextStep {
+interface LegacyNextStep {
   id?: string;
   sourceMisconceptionId?: string | null;
   title?: string;
   ccssStandards?: {
     targetObjective?: { standard?: string };
   };
-  moveOptions?: GeneratedMove[];
-  postPpqResults?: PostPpqResults;
+  moveOptions?: LegacyGeneratedMove[];
+  questionErrorRates?: unknown[];
+  ppqQuestions?: unknown[];
+  postPpqResults?: LegacyPostPpqResults;
 }
 
-function parseNextSteps(value: unknown): GeneratedNextStep[] {
+function parseLegacyNextSteps(value: unknown): LegacyNextStep[] {
   if (!value) return [];
 
   try {
     const parsed: unknown = typeof value === 'string' ? JSON.parse(value) : value;
-    return Array.isArray(parsed) ? (parsed as GeneratedNextStep[]) : [];
+    return Array.isArray(parsed) ? (parsed as LegacyNextStep[]) : [];
   } catch {
     return [];
   }
 }
 
-export default function buildReflectionResults(
-  session: IMicroCoachSession | null,
+function toOneDecimal(value: number): number {
+  return Math.round(value * 10) / 10;
+}
+
+function buildLegacyReflectionResults(
+  session: IMicroCoachSession,
   misconceptions: IMicroCoachMisconception[],
-): IReflect {
-  const implementedActivities = parseNextSteps(
-    session?.pregeneratedNextSteps ?? null,
-  )
-    .map((nextStep) => {
+): IImplementedActivity[] {
+  return parseLegacyNextSteps(session.pregeneratedNextSteps)
+    .map((nextStep): IImplementedActivity | null => {
       const results = nextStep.postPpqResults;
       if (
         results?.hasResults === false ||
@@ -81,6 +84,11 @@ export default function buildReflectionResults(
         misconception?.nextStepActivities[0] ??
         null;
       const generatedMove = nextStep.moveOptions?.[0];
+      const questionCount =
+        results.questionCount ??
+        nextStep.questionErrorRates?.length ??
+        nextStep.ppqQuestions?.length ??
+        0;
 
       return {
         id:
@@ -89,26 +97,91 @@ export default function buildReflectionResults(
           nextStep.id ??
           nextStep.sourceMisconceptionId ??
           nextStep.title ??
-          'reflection-result',
+          'legacy-reflection-result',
         title:
           activity?.title ??
           activity?.routine.name ??
           generatedMove?.title ??
           nextStep.title ??
           '',
+        subtitle:
+          activity?.routine.subtitle.trim() ||
+          generatedMove?.instructionalMove?.trim() ||
+          '',
+        description:
+          activity?.routine.description.trim() ||
+          generatedMove?.summary?.trim() ||
+          '',
         skillCode:
           misconception?.skillContext?.focusSkill.code ??
           nextStep.ccssStandards?.targetObjective?.standard ??
           '',
         misconceptionTitle: misconception?.titleCased ?? nextStep.title ?? '',
-        masteryBefore: results.classMasteryBefore,
-        masteryAfter: results.classMasteryAfter,
-        studentsImproved: results.improvedCount,
+        questionCount,
+        averagePercentCorrectBefore: results.classMasteryBefore,
+        averagePercentCorrectAfter: results.classMasteryAfter,
+        averageQuestionsCorrectBefore: toOneDecimal(
+          (results.classMasteryBefore / 100) * questionCount,
+        ),
+        averageQuestionsCorrectAfter: toOneDecimal(
+          (results.classMasteryAfter / 100) * questionCount,
+        ),
+        improvedStudentCount: results.improvedCount,
+        studentResults: [],
+        questionResults: [],
       };
     })
     .filter(
       (activity): activity is IImplementedActivity => activity !== null,
     );
+}
 
-  return { implementedActivities };
+export default function buildReflectionResults(
+  session: IMicroCoachSession | null,
+  misconceptions: IMicroCoachMisconception[],
+): IReflect {
+  const implementedActivities = (session?.reflectionResults ?? []).map(
+    (result, index): IImplementedActivity => {
+      const misconception =
+        misconceptions.find((item) => item.id === result.misconceptionId) ??
+        null;
+      const activity =
+        misconception?.nextStepActivities.find(
+          (item) => item.id === result.activityId,
+        ) ??
+        misconception?.nextStepActivities.find((item) => item.isSelected) ??
+        misconception?.nextStepActivities[0] ??
+        null;
+
+      return {
+        id:
+          result.activityId ??
+          `${result.misconceptionId}-reflection-result-${index}`,
+        title: activity?.title ?? activity?.routine.name ?? '',
+        subtitle: activity?.routine.subtitle.trim() ?? '',
+        description: activity?.routine.description.trim() ?? '',
+        skillCode: misconception?.skillContext?.focusSkill.code ?? '',
+        misconceptionTitle: misconception?.titleCased ?? '',
+        questionCount: result.questionCount,
+        averagePercentCorrectBefore: result.averagePercentCorrectBefore,
+        averagePercentCorrectAfter: result.averagePercentCorrectAfter,
+        averageQuestionsCorrectBefore: result.averageQuestionsCorrectBefore,
+        averageQuestionsCorrectAfter: result.averageQuestionsCorrectAfter,
+        improvedStudentCount: result.improvedStudentCount,
+        studentResults: result.studentResults,
+        questionResults: result.questionResults,
+      };
+    },
+  );
+
+  if (implementedActivities.length > 0 || !session) {
+    return { implementedActivities };
+  }
+
+  return {
+    implementedActivities: buildLegacyReflectionResults(
+      session,
+      misconceptions,
+    ),
+  };
 }
