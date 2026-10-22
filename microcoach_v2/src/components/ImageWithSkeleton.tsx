@@ -21,8 +21,9 @@ interface ImageWithSkeletonProps {
  * so `onLoad` would never fire and the skeleton would be permanent. Keeping it
  * mounted also means the request starts as soon as this component mounts.
  *
- * `onError` settles too, so a broken URL shows the (empty) image slot rather
- * than a skeleton that shimmers forever.
+ * A failed load stops the shimmer but keeps the placeholder, and the <img>
+ * stays invisible, so a broken URL shows a quiet grey slot rather than the
+ * browser's broken-image icon. Screen readers still get the alt text.
  */
 export default function ImageWithSkeleton({
   src,
@@ -31,13 +32,13 @@ export default function ImageWithSkeleton({
   borderRadius,
   className,
 }: ImageWithSkeletonProps) {
-  const [settled, setSettled] = useState(false);
+  const [status, setStatus] = useState<'loading' | 'loaded' | 'failed'>('loading');
 
   return (
     <Box sx={{ position: 'relative', width: '100%' }} className={className}>
-      {!settled && (
+      {status !== 'loaded' && (
         <Skeleton
-          animation="wave"
+          animation={status === 'failed' ? false : 'wave'}
           variant="rounded"
           sx={{
             position: 'absolute',
@@ -52,11 +53,11 @@ export default function ImageWithSkeleton({
         component="img"
         src={src}
         alt={alt}
-        onLoad={() => setSettled(true)}
-        onError={() => setSettled(true)}
+        onLoad={() => setStatus('loaded')}
+        onError={() => setStatus('failed')}
         sx={{
           display: 'block',
-          opacity: settled ? 1 : 0,
+          opacity: status === 'loaded' ? 1 : 0,
           transition: 'opacity 200ms ease-in',
           ...sx,
         }}

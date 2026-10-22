@@ -32,12 +32,16 @@ export enum ScreenType {
   DASHBOARD,
   REVIEW,
   CHOOSE_ACTIVITY,
-  MY_PLAN,
+  MY_ACTIVITY,
   ACTIVITY_DETAIL,
   PROFILE,
-  // Likewise `upload-rtd/*` — both steps are UploadFlow.
-  UPLOAD_RTD,
+  // Likewise `upload-miu/*` — both steps are UploadFlow.
+  UPLOAD_MIU,
+  // `upload-reassess/*`: the same UploadFlow, for the upload after the activity.
+  UPLOAD_REASSESS,
   REFLECT,
+  // The sidebar's other destination, beside DASHBOARD.
+  PAST_ACTIVITIES,
 }
 
 // Resolved once from useMediaQuery at the top of a page and drilled down, so

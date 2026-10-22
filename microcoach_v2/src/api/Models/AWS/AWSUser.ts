@@ -23,6 +23,8 @@ export type AWSUser = {
   email: string
   firstName?: string | null
   lastName?: string | null
+  school?: string | null
+  profilePicPath?: string | null
   role: AWSUserRole
   createdAt: string
   updatedAt: string

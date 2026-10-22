@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { band, linearSaturating, scoreOne, rank } from '../scoreRubric.mjs';
+import { band, linearSaturating, scoreOne, rank, middleValue } from '../scoreRubric.mjs';
 
 const rubric = JSON.parse(readFileSync(new URL('../misconceptionRubric.json', import.meta.url), 'utf8'));
 const metric = (id) => rubric.metrics.find((m) => m.id === id);
@@ -60,11 +60,12 @@ test('a full row reports 0-3 scores and a weighted total out of 30', () => {
   assert.deepEqual(r.scores, {
     frequency: 1.8, learningProgressionInfluence: 1, studentConfidence: 2, conceptualDepth: 2,
   });
-  // Weighted 3/1/3/3: 5.4 + 1 + 6 + 6.
+  // Weighted 3/1/3/3, depth scaled by frequency's share (1.8 / 3 = 0.6):
+  // 5.4 + 1 + 6 + 6 × 0.6.
   assert.deepEqual(r.weighted, {
-    frequency: 5.4, learningProgressionInfluence: 1, studentConfidence: 6, conceptualDepth: 6,
+    frequency: 5.4, learningProgressionInfluence: 1, studentConfidence: 6, conceptualDepth: 3.6,
   });
-  assert.equal(r.total, 18.4);
+  assert.equal(r.total, 16);
   assert.equal(r.maxPossible, 30);
   assert.deepEqual(r.missing, []);
   assert.equal('lcMisconceptionEvalScore' in r.scores, false);
@@ -96,7 +97,7 @@ test('a null input is missing, not zero, and drops its own weight from the max',
   assert.deepEqual(r.missing, ['learningProgressionInfluence']);
   // Progression's weight is 1, so the max falls 30 → 27, not by an average share.
   assert.equal(r.maxPossible, 27);
-  assert.equal(r.total, 17.4);
+  assert.equal(r.total, 15);
 });
 
 test('LC transform applies when the metric is enabled', () => {
@@ -105,6 +106,48 @@ test('LC transform applies when the metric is enabled', () => {
   assert.equal(r.scores.lcMisconceptionEvalScore, 2.4);
   // Enabling it at weight 3 lifts the maximum 30 → 39.
   assert.equal(r.maxPossible, 39);
+});
+
+// Depth scales reach (misconceptionRubric.json, conceptualDepth.scaledBy). With the
+// other metrics equal, a conceptual misconception outranks a procedural one unless
+// the procedural one reaches more than twice as many students.
+const pct = (students) => students / 28;
+const sameOtherwise = (over) => full({ downstreamCount: 1, meanConfidence: 3.5, ...over });
+
+test('depth counts in proportion to reach, up to its full weight at the reach maximum', () => {
+  const atMax = scoreOne(sameOtherwise({ studentPercent: 0.5, conceptualDepth: 3 }), rubric);
+  assert.equal(atMax.weighted.conceptualDepth, 9);
+  // Frequency 9 + progression 1 + confidence 6 (2 × 3) + depth 9 = 25.
+  assert.equal(atMax.total, 25);
+  const tiny = scoreOne(sameOtherwise({ studentPercent: 0.05, conceptualDepth: 3 }), rubric);
+  assert.ok(Math.abs(tiny.weighted.conceptualDepth - 0.9) < 1e-9, `got ${tiny.weighted.conceptualDepth}`);
+  assert.equal(scoreOne(sameOtherwise({ conceptualDepth: 0 }), rubric).weighted.conceptualDepth, 0);
+});
+
+test('a close call still goes to the conceptual misconception (6 students vs 8)', () => {
+  const conceptual = scoreOne(sameOtherwise({ studentPercent: pct(6), conceptualDepth: 3 }), rubric);
+  const procedural = scoreOne(sameOtherwise({ studentPercent: pct(8), conceptualDepth: 0 }), rubric);
+  assert.ok(conceptual.total > procedural.total, `${conceptual.total} vs ${procedural.total}`);
+});
+
+test('a much more common procedural misconception beats a rare conceptual one (5 vs 11)', () => {
+  const conceptual = scoreOne(sameOtherwise({ studentPercent: pct(5), conceptualDepth: 3 }), rubric);
+  const procedural = scoreOne(sameOtherwise({ studentPercent: pct(11), conceptualDepth: 0 }), rubric);
+  assert.ok(procedural.total > conceptual.total, `${procedural.total} vs ${conceptual.total}`);
+});
+
+test('the crossover is twice the students: 5 vs 10 ties, 5 vs 11 does not', () => {
+  const conceptual = scoreOne(sameOtherwise({ studentPercent: pct(5), conceptualDepth: 3 }), rubric);
+  const twice = scoreOne(sameOtherwise({ studentPercent: pct(10), conceptualDepth: 0 }), rubric);
+  assert.ok(Math.abs(conceptual.total - twice.total) < 1e-9, `${conceptual.total} vs ${twice.total}`);
+});
+
+test('depth is missing when there is no reach to scale it by', () => {
+  const r = scoreOne(full({ studentPercent: null }), rubric);
+  assert.deepEqual(r.missing, ['frequency', 'conceptualDepth']);
+  assert.equal(r.weighted.conceptualDepth, null);
+  assert.equal(r.scores.conceptualDepth, 2); // the judgment is still reported
+  assert.equal(r.maxPossible, 30 - 9 - 9);
 });
 
 const item = (raw, inputOrder) => ({ ...scoreOne(raw, rubric), raw, inputOrder });
@@ -137,4 +180,59 @@ test('a row missing a metric is ranked on normalized, not penalized on total', (
   ];
   const out = rank(items, rubric.selection);
   assert.equal(out[0].inputOrder, 0);
+});
+
+test('highest frequency inside the top 3: tagged there, still 3 carried forward', () => {
+  const items = [
+    item(full({ studentPercent: 0.18, conceptualDepth: 3, meanConfidence: 4.5 }), 0),
+    item(full({ studentPercent: 0.32, conceptualDepth: 3 }), 1),
+    item(full({ studentPercent: 0.39, conceptualDepth: 1 }), 2),
+    item(full({ studentPercent: 0.2, conceptualDepth: 0, meanConfidence: 1 }), 3),
+  ];
+  const out = rank(items, rubric.selection);
+  const tagged = out.filter((x) => x.isHighestFrequency);
+  assert.equal(tagged.length, 1);
+  assert.equal(tagged[0].raw.studentPercent, 0.39);
+  assert.equal(out.filter((x) => x.retained).length, 3);
+  assert.deepEqual(out.map((x) => x.priorityRank), [1, 2, 3, 4]);
+});
+
+test('highest frequency outside the top 3: tagged and carried forward as a fourth, after the top 3', () => {
+  const items = [
+    item(full({ studentPercent: 0.18, conceptualDepth: 3, meanConfidence: 4.5 }), 0),
+    item(full({ studentPercent: 0.32, conceptualDepth: 3 }), 1),
+    item(full({ studentPercent: 0.39, conceptualDepth: 1 }), 2),
+    item(full({ studentPercent: 0.1, conceptualDepth: 0, meanConfidence: 1 }), 3),
+    item(full({ studentPercent: 0.45, conceptualDepth: 0, meanConfidence: 1 }), 4), // widest, ranked below the cap
+  ];
+  const out = rank(items, rubric.selection);
+  const tagged = out.filter((x) => x.isHighestFrequency);
+  assert.equal(tagged.length, 1);
+  assert.equal(tagged[0].raw.studentPercent, 0.45);
+  assert.equal(tagged[0].retained, true);
+  assert.equal(tagged[0].isRecommendedFocus, false);
+  assert.ok(tagged[0].priorityRank > rubric.selection.cap);
+  // The top 3 plus it; the one between them is still dropped, and ranks are unchanged.
+  assert.equal(out.filter((x) => x.retained).length, rubric.selection.cap + 1);
+  assert.deepEqual(out.map((x) => x.priorityRank), [1, 2, 3, 4, 5]);
+  assert.equal(out.filter((x) => !x.retained).length, 1);
+});
+
+test('a reach tie for highest frequency goes to the better-ranked misconception', () => {
+  const items = [
+    item(full({ studentPercent: 0.3, conceptualDepth: 1 }), 0),
+    item(full({ studentPercent: 0.3, conceptualDepth: 3 }), 1),
+  ];
+  const out = rank(items, rubric.selection);
+  assert.equal(out[0].inputOrder, 1);
+  assert.equal(out[0].isHighestFrequency, true);
+  assert.equal(out[1].isHighestFrequency, false);
+});
+
+test('depth takes the middle of the calls, never rounding a split up', () => {
+  assert.equal(middleValue([2, 1, 2]), 2);
+  assert.equal(middleValue([0, 3, 1]), 1);
+  assert.equal(middleValue([1, null, 2]), 1);   // a call that judged nothing is ignored; even count → lower
+  assert.equal(middleValue([3]), 3);
+  assert.equal(middleValue([null, null]), null);
 });

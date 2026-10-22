@@ -88,6 +88,15 @@ const GRAPH_SOURCE: 'fixture' | 'live' = (() => {
 // against a full one.
 const ANALYSIS_ONLY = process.argv.includes('--analysis-only');
 
+// `--pin-template <id>` (diagnostics): the first pick of every need becomes that
+// template, so a run exercises it three times — e.g. math-detective while chasing
+// its Lambda timeouts. The second pick is kept as the sibling. Recorded in the
+// manifest as `pinnedTemplate`; a pinned run says nothing about template choice.
+const PIN_TEMPLATE = (() => {
+  const i = process.argv.indexOf('--pin-template');
+  return i > -1 && process.argv[i + 1] && !process.argv[i + 1].startsWith('--') ? process.argv[i + 1] : null;
+})();
+
 async function invokeLambda(functionName: string, payload: unknown): Promise<any> {
   const client = new LambdaClient({ region: process.env.AWS_REGION ?? 'us-east-1' });
   const cmd = new InvokeCommand({
@@ -415,46 +424,47 @@ function getStudentGroups(
  * The activity templates' identity fields, for IMicroCoachActivity.routine.
  *
  * source: amplify/backend/function/microcoachv2LLMSelectTemplate/src/util/activityLibrary.json
- * (`id`, `title`, `primaryMoveLong`, `description` per template). Hand-copied
+ * (`id`, `title`, `primaryMove`, `description` per template), matching the app's
+ * activityTemplates i18n copy. Hand-copied
  * because seed/ cannot import from amplify/ — same reason TEMPLATE_CONTENT_TYPE
  * is duplicated in Preview.tsx.
  */
 const ROUTINES: Record<string, { name: string; subtitle: string; description: string }> = {
   'spot-the-slip': {
     name: 'Spot the Slip',
-    subtitle: 'Incorrect Worked Example Analysis',
+    subtitle: 'Locate the breakdown',
     description:
       'Students examine a worked solution, identify the first step where the reasoning goes off track, explain why the step is invalid, and work together to correct the error.',
   },
   'my-favorite-no': {
     name: 'My Favorite No',
-    subtitle: 'Student Thinking Analysis',
+    subtitle: 'Preserve and build on productive thinking',
     description:
-      'The teacher selects one incorrect response that contains sound reasoning alongside the error, and the class works out what is right in it before naming what went wrong.',
+      'Students analyze a meaningful incorrect answer that reveals a mathematical idea worth preserving or building on. They discuss why the response might seem reasonable, identify what the reasoning gets right, and revise it while keeping what is mathematically useful.',
   },
   'compare-the-thinking': {
     name: 'Compare the Thinking',
-    subtitle: 'Compare Strategies & Representations',
+    subtitle: 'Examine meaningful contrasts',
     description:
-      'Students compare two different approaches to the same problem and decide which reasoning holds up, surfacing what each approach assumes.',
+      'Students compare two meaningfully different solution strategies or representations and examine the reasoning, strengths, limitations, and important mathematical differences between them.',
   },
   'math-detective': {
     name: 'Math Detective',
-    subtitle: 'Investigate & Solve',
+    subtitle: 'Investigate underlying issues',
     description:
-      'Students work through a sequence of diagnostic questions to locate the source of an error, treating the wrong answer as evidence to investigate.',
+      'Students become “math detectives” by investigating an incorrect solution, identifying the underlying mathematical issue, revising the reasoning, and checking whether the revision works.',
   },
   'make-your-case': {
     name: 'Make Your Case',
-    subtitle: 'Mathematical Justification',
+    subtitle: 'Articulate and justify claims',
     description:
-      'Students take a position on a mathematical claim, build an argument from evidence, then revisit the claim and name what settles it.',
+      'Students make or evaluate a mathematical claim, articulate their thinking, build a case for it using evidence and reasoning, and consider whether the evidence and reasoning support the claim.',
   },
   righton: {
     name: 'RightOn!',
-    subtitle: 'Interactive Student Thinking & Discussion',
+    subtitle: 'Surface thinking through interaction',
     description:
-      'Students play through the RightOn game, answering and then discussing the reasoning behind their peers\' answers.',
+      'Students interact with a targeted mathematical task designed with plausible distractors, reveal their thinking through their responses, confidence and hints, and discuss popular incorrect answers.',
   },
 };
 
@@ -480,12 +490,6 @@ function titleCase(value: string): string {
       return word.charAt(0).toUpperCase() + word.slice(1);
     })
     .join('');
-}
-
-function formatLabel(f: string): string {
-  return (
-    ({ whole_class: 'Whole class', split_class: 'Split class' } as Record<string, string>)[f] ?? f
-  );
 }
 
 function buildNextSteps(
@@ -569,6 +573,10 @@ function buildNextSteps(
       rubric: m.rubric ?? null,
       priorityRank: m.priorityRank ?? null,
       isRecommendedFocus: m.isRecommendedFocus === true,
+      // Of all the misconceptions, the one reaching the most students (carried forward
+      // as a fourth when it is outside the top 3). A tag;
+      // the rank above is unaffected.
+      isHighestFrequency: m.isHighestFrequency === true,
       retained: m.retained !== false,
       occurrence: m.occurrence ?? m.rationale?.recurrence ?? null,
       example: m.example ?? null,
@@ -602,101 +610,45 @@ function buildNextSteps(
       studentGroups: extras.studentGroups ?? { buildingUnderstanding: [], understoodConcept: [] },
       wrongAnswerExplanations: extras.wrongAnswerExplanations ?? [],
       correctAnswerSolution: extras.correctAnswerSolution ?? [],
+      // Short names for the focus, prerequisite and upcoming skills, from the need
+      // stage; the writer (publish-run-v2.ts) puts them on the skill context.
+      skillNames: m.skillNames ?? [],
       moveOptions: activityList.map((activity, j) => {
         const routine = ROUTINES[activity.templateId];
-        const contentType = activity.phases?.activity?.type ?? null;
+        const durationLabel = activity.durationMinutes ? `${activity.durationMinutes} min` : null;
 
         return {
           id: `nextstep-move-ai-${i + 1}-${j + 1}`,
-          title: activity.title,
-          titleCased: activity.title ? titleCase(activity.title) : null,
-          // `time` and `format` stay: validate.ts parses the one and checks the
-          // other against VALID_FORMATS, and Preview.tsx reads `time`. The
-          // IMicroCoachActivity fields below are additive, not replacements.
-          time: `${activity.durationMinutes} min`,
-          format: formatLabel(activity.format),
+          templateId: activity.templateId,
+          title: routine?.name ?? null,
+          // `time` stays: validate.ts parses it and Preview.tsx reads it.
+          time: durationLabel,
           durationMinutes: activity.durationMinutes ?? null,
-          durationLabel: `${activity.durationMinutes} min`,
-          // The template's own identity, looked up rather than asked for. The
-          // model used to echo it back as `activityStructure`, which is how a
-          // literal CRLF ended up inside a template name in v19.
-          routine: routine
-            ? { id: `routine-${activity.templateId}`, ...routine }
-            : null,
-          grouping: activity.format
-            ? { level: String(activity.format).toUpperCase(), label: formatLabel(activity.format).toLowerCase() }
-            : null,
-          activityType: contentType,
-          // COMPLETE only when there is typed content for the UI to render; a
-          // prose-only generation (RightOn!, or no template) is PARTIAL.
-          detailStatus: contentType ? 'COMPLETE' : 'PARTIAL',
+          durationLabel,
+          routine: routine ? { id: `routine-${activity.templateId}`, ...routine } : null,
+          activityType: activity.activityType ?? null,
+          // COMPLETE only when there is Wave 2 content for the app to render.
+          detailStatus: activity.content ? 'COMPLETE' : 'PARTIAL',
           // Selection is the teacher's, made in the UI; nothing here picks for them.
           isSelected: false,
           selectLabel: 'Selected activity',
-          summary: activity.summary,
           targets: activity.targets ?? null,
-          mathematicalTakeaway: activity.mathematicalTakeaway ?? null,
-          // The typed activity content the frontend renders, keyed by
-          // phases.activity.type. Null when the template had no content type.
-          phases: activity.phases ?? null,
           instructionalMove: activity.instructionalMove ?? null,
           strategyTag: activity.strategyTag ?? null,
-          aiReasoning: activity.aiReasoning,
+          aiReasoning: activity.aiReasoning ?? null,
+          // The Wave 2 content (src/lib/ActivityContentModels.ts, schemaVersion 2):
+          // stored as the activity row's `phases`.
+          content: activity.content ?? null,
+          // From the trace (eval runs only): which kind of question each discussion
+          // question is, and what the accuracy review found. For /preview.
+          questionPurposes: activity._trace?.discussionDraft?.questions?.map((q: any) => q.purpose) ?? null,
+          discussionReview: activity._trace?.discussionReview ?? null,
         };
       }),
     };
   });
 }
 
-/**
- * Inject real student names into phases.beforeClass.groupFormation.
- * The model generates group criteria (label + description); we assign students
- * deterministically by score rank so every student appears in exactly one group.
- * Groups are assumed to be ordered from lowest to highest performance
- * (Group A = weakest, last group = strongest) — post-analyze.ts takes every
- * group but the last as its "needs help" cohort, so that order is load-bearing.
- *
- * This used to write to tabs.studentGroupings, which nothing in src/ read, while
- * groupFormation — the path BeforeClassPhase actually renders — was hardcoded
- * null. Same sort and split; only the destination changed.
- */
-function injectStudentsIntoGroups(
-  activity: any,
-  studentData: Array<{ name: string; score: number }>,
-): any {
-  const groupFormation = activity?.phases?.beforeClass?.groupFormation;
-  const groups: any[] = groupFormation?.groups;
-  if (!groups?.length || !studentData.length) return activity;
-
-  // Sort students lowest score → highest score
-  const sorted = [...studentData].sort((a, b) => a.score - b.score || a.name.localeCompare(b.name));
-
-  // Divide students as evenly as possible across groups (lowest scores → first group)
-  const n = groups.length;
-  const base = Math.floor(sorted.length / n);
-  const remainder = sorted.length % n;
-  let offset = 0;
-  const assigned = groups.map((_: any, i: number) => {
-    const size = base + (i < remainder ? 1 : 0);
-    const slice = sorted.slice(offset, offset + size).map(s => s.name);
-    offset += size;
-    return slice;
-  });
-
-  return {
-    ...activity,
-    phases: {
-      ...activity.phases,
-      beforeClass: {
-        ...activity.phases.beforeClass,
-        groupFormation: {
-          ...groupFormation,
-          groups: groups.map((g: any, i: number) => ({ ...g, students: assigned[i] ?? [] })),
-        },
-      },
-    },
-  };
-}
 
 function parseJson(raw: any): any {
   return typeof raw === 'string' ? JSON.parse(raw) : raw;
@@ -1006,7 +958,7 @@ async function processClassroom(
     const scoredByTitle = new Map<string, any>((scoreOut?.scored ?? []).map((x: any) => [String(x.title ?? '').trim(), x]));
     genMisconceptions = genMisconceptions.map((m: any) => {
       const sc = scoredByTitle.get(String(m.title ?? '').trim());
-      if (!sc) return { ...m, rubric: null, priorityRank: null, isRecommendedFocus: false, retained: false };
+      if (!sc) return { ...m, rubric: null, priorityRank: null, isRecommendedFocus: false, isHighestFrequency: false, retained: false };
       return {
         ...m,
         rubric: {
@@ -1021,9 +973,12 @@ async function processClassroom(
           missing: sc.missing ?? [],
           inputs: sc.inputs ?? null,
           conceptualDepthWhy: sc.conceptualDepthWhy ?? null,
+          // Each depth call's judgment; the score uses the middle one.
+          conceptualDepthSamples: sc.conceptualDepthSamples ?? null,
         },
         priorityRank: sc.priorityRank,
         isRecommendedFocus: sc.isRecommendedFocus === true,
+        isHighestFrequency: sc.isHighestFrequency === true,
         retained: sc.retained === true,
       };
     });
@@ -1035,7 +990,7 @@ async function processClassroom(
     for (const m of [...genMisconceptions, ...droppedMisconceptions]) {
       const r = m.rubric;
       const cells = r ? Object.entries(r.scores).map(([k, v]) => `${k.replace(/[a-z]/g, '')}${v ?? '–'}`).join(' ') : 'unscored';
-      console.log(`    #${m.priorityRank ?? '?'} ${m.title} — ${r ? `${r.total}/${r.maxPossible}` : ''} (${cells})${m.isRecommendedFocus ? ' ★' : ''}${m.retained ? '' : ' (dropped)'}`);
+      console.log(`    #${m.priorityRank ?? '?'} ${m.title} — ${r ? `${r.total}/${r.maxPossible}` : ''} (${cells})${m.isRecommendedFocus ? ' ★' : ''}${m.isHighestFrequency ? ' ◆ highest frequency' : ''}${m.retained ? '' : ' (dropped)'}`);
     }
   }
 
@@ -1072,7 +1027,7 @@ async function processClassroom(
   const needByTitle = new Map<string, any>((needOut?.needs ?? []).map((n: any) => [String(n.title ?? '').trim(), n]));
   misconceptions = genMisconceptions.map((m: any, i: number) => {
     const n = needOut?.needs?.[i]?.title === m.title ? needOut.needs[i] : needByTitle.get(String(m.title ?? '').trim());
-    return n ? { ...m, instructionalNeed: n.instructionalNeed, rationale: n.rationale } : m;
+    return n ? { ...m, instructionalNeed: n.instructionalNeed, rationale: n.rationale, skillNames: n.skillNames ?? [] } : m;
   });
   console.log(` ✓  need on ${misconceptions.filter((m: any) => m.instructionalNeed).length}/${misconceptions.length}${needOut?.rejected?.length ? ` (${needOut.rejected.length} rejected)` : ''}${needOut?.missing?.length ? ` (${needOut.missing.length} missing)` : ''}`);
   instructionalNeedsMissing = needOut?.missing ?? [];
@@ -1201,7 +1156,20 @@ async function processClassroom(
   let misconceptionsWithoutActivities = 0;
   const activitiesPerGroup: any[][] = ANALYSIS_ONLY ? misconceptions.map(() => []) : await Promise.all(
     misconceptions.map(async (m: any, i: number) => {
-      const picks: any[] = m.selectedTemplates?.picks ?? [];
+      const selected: any[] = m.selectedTemplates?.picks ?? [];
+      const picks: any[] = PIN_TEMPLATE && selected.length
+        ? [
+          selected.find((p: any) => p.templateId === PIN_TEMPLATE) ?? {
+            templateId: PIN_TEMPLATE,
+            instructionalFit: null,
+            instructionalApproach: null,
+            studentsDo: null,
+            rationale: `Pinned with --pin-template for a diagnostic run, not chosen by template selection.`,
+            distinctFrom: null,
+          },
+          ...selected.filter((p: any) => p.templateId !== PIN_TEMPLATE).slice(0, 1),
+        ]
+        : selected;
       if (!picks.length) {
         misconceptionsWithoutActivities += 1;
         console.log(`  Next steps [${i + 1}/${misconceptions.length}]: ${m.title}... — no template cleared the fit threshold, no activities`);
@@ -1221,25 +1189,43 @@ async function processClassroom(
         classroomContext: JSON.stringify(classroomContext),
         ...(relevant.length > 0 && { contextData: JSON.stringify(relevant) }),
       };
-      const sd = misconceptionExtras[i]?.studentData ?? [];
+      // The linked questions with their options and how many students chose each:
+      // the multiple-choice evidence the activity and its discussion are built from.
+      const linkedNumbers = new Set<number>((m.wrongAnswers ?? []).map((w: any) => Number(w.questionNumber)));
+      const evidence = {
+        questions: (augmentedPpq?.questions ?? [])
+          .filter((q: any) => linkedNumbers.has(Number(q.questionNumber)))
+          .map((q: any) => ({
+            questionNumber: q.questionNumber,
+            questionText: q.questionText ?? null,
+            correctAnswer: q.correctAnswer ?? null,
+            answerChoices: (q.answerChoices ?? []).map((o: any) => ({
+              letter: o.letter,
+              content: o.content ?? null,
+              isCorrect: o.isCorrect ?? false,
+              studentCount: wrongAnswerDist[q.questionNumber]?.[String(o.letter).toUpperCase()] ?? null,
+            })),
+          })),
+      };
       const resultList: any[] = [];
 
       // Sequential rather than parallel within a misconception: cheap to keep, and
       // the calls share a prompt prefix so the second benefits from the cache.
       for (const pick of picks) {
         try {
+          // The other pick for this need, so each activity is built to differ from it.
+          const sibling = picks.find((p: any) => p !== pick);
           const activityInput = {
             ...baseInput,
             selectedTemplate: JSON.stringify(pick),
+            ...(sibling && { siblingPick: JSON.stringify(sibling) }),
+            evidence: JSON.stringify(evidence),
             trace: WANT_TRACE,
           };
           const raw = await invokeLambda(`microcoachv2NextStepOption-${AMPLIFY_ENV}`, { input: activityInput });
           const parsed = parseJson(raw);
           capture.recordCall(`activity-${i + 1}-${pick.templateId}`, activityInput, parsed);
-          resultList.push({
-            ...injectStudentsIntoGroups(parsed, sd),
-            templateId: pick.templateId,
-          });
+          resultList.push({ ...parsed, templateId: pick.templateId });
         } catch (err) {
           console.error(`\n    ✗ ${pick.templateId}: ${err}`);
         }
@@ -1330,6 +1316,7 @@ async function processClassroom(
     needSeparationFlags: needSeparation.flagged,
     needSeparationChecked: needSeparation.checked,
     stoppedAfter: ANALYSIS_ONLY ? 'analysis' : null,
+    pinnedTemplate: PIN_TEMPLATE,
     // Diagnostic, not a correction: when the analysis stage emits a code the graph
     // does not carry, the generation stage silently loses all graph context.
     targetStandardMatched: misconceptions.filter(
@@ -1358,6 +1345,7 @@ async function processClassroom(
     // Rubric stage (4d): which rubric ran, what it picked, and how many it dropped.
     rubricVersion,
     recommendedFocus: nextSteps.find((n: any) => n.isRecommendedFocus)?.title ?? null,
+    highestFrequency: nextSteps.find((n: any) => n.isHighestFrequency)?.title ?? null,
     misconceptionsRetained: genMisconceptions.length,
     misconceptionsDropped: droppedMisconceptions.length,
     // Template selection health: how many needs got two picks, and whether the
@@ -1382,7 +1370,6 @@ async function processClassroom(
     wrongAnswerRefs: nextSteps.reduce((n: number, s: any) => n + (s.wrongAnswers?.length ?? 0), 0),
     studentCountTotals: nextSteps.map((n: any) => ({
       id: n.id, title: n.title, studentCount: n.studentCount, studentPercent: n.studentPercent,
-      frequency: n.frequency,
     })),
   });
   if (manifest) {
@@ -1395,7 +1382,7 @@ async function processClassroom(
     console.log(`    wrong-answer refs on ${manifest.wrongAnswerLinked}/${manifest.misconceptionCount} (${manifest.wrongAnswerRefs} option refs)`);
     for (const s of manifest.studentCountTotals) {
       const n = s.studentCount == null ? 'not linked' : `${s.studentCount} students (${Math.round((s.studentPercent ?? 0) * 100)}%)`;
-      console.log(`      ${s.title}: ${n} · model said "${s.frequency}"`);
+      console.log(`      ${s.title}: ${n}`);
     }
     if (manifest.silentFallbacks.length) {
       console.log(`    ⚠ ${manifest.silentFallbacks.length} silent validator fallback(s) — see manifest.json`);

@@ -16,8 +16,8 @@
  *   trace                boolean — echo `_trace` (resolved prompt, model, usage)
  *
  * Output: { ok: true, rubricVersion, rubric, scored: [{ title, scores, total, maxPossible,
- * normalized, missing, conceptualDepthWhy, priorityRank, isRecommendedFocus,
- * retained }] } in ranked order. On failure: { ok: false, error: { message } }.
+ * normalized, missing, conceptualDepthWhy, conceptualDepthSamples, priorityRank,
+ * isRecommendedFocus, retained, isHighestFrequency }] } in ranked order. On failure: { ok: false, error: { message } }.
  */
 
 import { loadSecret } from './util/loadsecrets.mjs';
@@ -25,7 +25,7 @@ import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
 import { readFileSync } from 'node:fs';
-import { scoreOne, rank } from './scoreRubric.mjs';
+import { scoreOne, rank, middleValue } from './scoreRubric.mjs';
 import { matchStandard } from './util/ccssCode.mjs';
 import { matchByTitle } from './util/matchByTitle.mjs';
 
@@ -34,6 +34,7 @@ import { matchByTitle } from './util/matchByTitle.mjs';
 const rubric = JSON.parse(readFileSync(new URL('./misconceptionRubric.json', import.meta.url), 'utf8'));
 
 const MODEL = rubric.llm?.model ?? 'gpt-5-mini';
+const DEPTH_SAMPLES = Math.max(1, rubric.llm?.depthSamples ?? 1);
 const DEPTH = rubric.metrics.find((m) => m.id === 'conceptualDepth');
 
 // ── Schema ────────────────────────────────────────────────────────────────────
@@ -65,6 +66,17 @@ function buildPrompt(misconceptions) {
     .sort((a, b) => Number(b[0]) - Number(a[0]))
     .map(([score, text]) => `- **${score}** — ${text}`)
     .join('\n');
+  const guide = DEPTH.judgingGuide;
+  const guideText = guide
+    ? `
+## How to decide
+Use only the misconception as described. Work through these in order:
+${guide.steps.map((s, i) => `${i + 1}. ${s}`).join('\n')}
+
+Examples from other topics, to calibrate the levels only (do not compare the misconceptions below to them by topic):
+${Object.entries(guide.examples).map(([score, text]) => `- **${score}** — ${text}`).join('\n')}
+`
+    : '';
   return `
 You are an expert K-12 math instructional coach. For each misconception below, judge its CONCEPTUAL DEPTH on the scale given. Judge only that: prevalence, student confidence and progression influence are measured elsewhere and must not affect this score. Do not rank, rename, merge or re-identify the misconceptions.
 
@@ -73,7 +85,7 @@ ${DEPTH.description}
 
 Scale:
 ${scale}
-
+${guideText}
 ## Misconceptions
 ${misconceptions.map(formatMisconception).join('\n\n')}
 
@@ -105,6 +117,14 @@ function matchDepths(structured, misconceptions) {
   return { depths: out, rejected, positionMatches };
 }
 
+// Token counts added across the depth calls, for the trace.
+function sumUsage(usages) {
+  const present = usages.filter(Boolean);
+  if (!present.length) return null;
+  const add = (k) => present.reduce((sum, u) => sum + (u[k] ?? 0), 0);
+  return { prompt_tokens: add('prompt_tokens'), completion_tokens: add('completion_tokens'), total_tokens: add('total_tokens') };
+}
+
 // One log event, readable as a block in CloudWatch.
 function formatScoreLog(scored) {
   const ids = rubric.metrics.filter((m) => m.enabled !== false).map((m) => m.id);
@@ -116,7 +136,8 @@ function formatScoreLog(scored) {
   for (const s of scored) {
     const parts = ids.map((id) => `${abbr(id)}${s.scores[id] ?? '–'}`).join(' ');
     const tag = s.isRecommendedFocus ? ' ★ Recommended Focus' : s.retained ? '' : ' (dropped)';
-    lines.push(`#${s.priorityRank} ${s.title} — ${s.total}/${s.maxPossible} (${parts})${tag}`);
+    const samples = s.conceptualDepthSamples ? ` depth calls [${s.conceptualDepthSamples.map((d) => d ?? '–').join(',')}]` : '';
+    lines.push(`#${s.priorityRank} ${s.title} — ${s.total}/${s.maxPossible} (${parts})${tag}${samples}`);
     if (s.missing.length) lines.push(`   missing: ${s.missing.join(', ')}`);
   }
   return lines.join('\n');
@@ -156,18 +177,37 @@ export const handler = async (event) => {
     if (!apiKey) throw new Error('Secret must contain openai_api, OPENAI_API_KEY, or API');
     const openai = new OpenAI({ apiKey });
 
+    // Depth is judged DEPTH_SAMPLES times in parallel and each misconception takes the
+    // middle value (rubric llm.depthSamples): one call moved borderline cases a level
+    // between calls on the same input. A failed call is tolerated while one succeeds.
     const userContent = buildPrompt(misconceptions);
-    const completion = await openai.chat.completions.create({
-      model: MODEL,
-      messages: [
-        { role: 'system', content: 'You are an expert K-12 math instructional coach. Output exclusively valid JSON.' },
-        { role: 'user', content: userContent },
-      ],
-      response_format: zodResponseFormat(DepthResponse, 'conceptualDepth'),
+    const judgeOnce = async () => {
+      const completion = await openai.chat.completions.create({
+        model: MODEL,
+        messages: [
+          { role: 'system', content: 'You are an expert K-12 math instructional coach. Output exclusively valid JSON.' },
+          { role: 'user', content: userContent },
+        ],
+        response_format: zodResponseFormat(DepthResponse, 'conceptualDepth'),
+      });
+      const raw = completion.choices[0]?.message?.content;
+      if (!raw) throw new Error('Empty completion content');
+      return { ...matchDepths(DepthResponse.parse(JSON.parse(raw)), misconceptions), usage: completion.usage ?? null };
+    };
+    const settled = await Promise.allSettled(Array.from({ length: DEPTH_SAMPLES }, judgeOnce));
+    const calls = settled.filter((s) => s.status === 'fulfilled').map((s) => s.value);
+    const failedCalls = settled.filter((s) => s.status === 'rejected').map((s) => String(s.reason?.message ?? s.reason));
+    if (!calls.length) throw new Error(`All ${DEPTH_SAMPLES} depth calls failed: ${failedCalls.join('; ')}`);
+    if (failedCalls.length) console.warn(`[microcoachv2ScoresCalc] ${failedCalls.length} of ${DEPTH_SAMPLES} depth call(s) failed: ${failedCalls.join('; ')}`);
+
+    const depths = misconceptions.map((_, i) => {
+      const samples = calls.map((c) => c.depths[i]?.conceptualDepth ?? null);
+      const value = middleValue(samples);
+      const why = calls.find((c) => c.depths[i]?.conceptualDepth === value)?.depths[i]?.why ?? null;
+      return value == null ? null : { conceptualDepth: value, why, samples };
     });
-    const raw = completion.choices[0]?.message?.content;
-    if (!raw) throw new Error('Empty completion content');
-    const { depths, rejected, positionMatches } = matchDepths(DepthResponse.parse(JSON.parse(raw)), misconceptions);
+    const rejected = calls.flatMap((c, n) => c.rejected.map((r) => ({ ...r, call: n + 1 })));
+    const positionMatches = calls.reduce((sum, c) => sum + c.positionMatches, 0);
 
     const items = misconceptions.map((m, i) => {
       const rawInputs = {
@@ -183,6 +223,8 @@ export const handler = async (event) => {
         inputOrder: i,
         title: m.title,
         conceptualDepthWhy: depths[i]?.why ?? null,
+        // Every call's judgment, so a reader can see when the middle value was a split.
+        conceptualDepthSamples: depths[i]?.samples ?? null,
       };
     });
     const scored = rank(items, rubric.selection).map(({ raw: r, inputOrder, ...rest }) => ({ ...rest, inputs: r }));
@@ -208,10 +250,11 @@ export const handler = async (event) => {
         _trace: {
           resolvedPrompt: userContent,
           model: MODEL,
-          usage: completion.usage ?? null,
+          usage: sumUsage(calls.map((c) => c.usage)),
           graphStandardCodes: graphStandards.map((x) => x.code),
           canonicalMatches,
-          subCalls: [{ label: 'conceptual-depth', model: MODEL, usage: completion.usage ?? null, fellBack: false }],
+          subCalls: calls.map((c, n) => ({ label: `conceptual-depth-${n + 1}`, model: MODEL, usage: c.usage, fellBack: false })),
+          failedCalls,
         },
       }),
     });

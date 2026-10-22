@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import Modal from 'react-modal';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -10,6 +11,12 @@ import './i18n';
 
 // Configure Amplify (Cognito + Google OAuth) once, before anything renders.
 configureAmplify();
+
+// react-modal needs to know the app root so it can mark it aria-hidden while a
+// modal is open. Without this it warns and leaves the background readable by
+// screen readers — the other apps in the monorepo skip it. Set here rather
+// than in App so importing App (as App.test does) doesn't need a #root.
+Modal.setAppElement('#root');
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,

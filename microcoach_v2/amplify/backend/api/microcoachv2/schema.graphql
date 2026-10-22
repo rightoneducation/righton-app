@@ -28,6 +28,9 @@ type MicroCoachUser
   lastName: String
   # Derived from the email domain at sign-up; read-only in the app.
   school: String
+  # S3 path of the teacher's profile picture (private/<identity>/profile/...);
+  # null shows their initials. Same field and pattern as central_v2's User.
+  profilePicPath: String
   classes: [MicroCoachClassroom] @hasMany(indexName: "byUser", fields: ["id"])
   role: UserRole! @index(name: "byRole", queryField: "usersByRole")
   createdAt: AWSDateTime!
@@ -47,19 +50,26 @@ type MicroCoachClassroom @model @auth(rules: [{ allow: private }]) {
   schoolYear: String
 }
 
+# Extend later when student data becomes part of the workflow.
 type MicroCoachStudent @model @auth(rules: [{ allow: private }]) {
   id: ID!
   classId: ID! @index(name: "byClass")
-  responses: [MicroCoachStudentResponse]
-    @hasMany(indexName: "byStudent", fields: ["id"])
   name: String!
   externalId: String
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
 
+# A session's place in the loop. The pipeline owns these transitions:
+#   MIU 1 submitted          -> DATA_INGESTED     (Home: waiting)
+#   MIU 1 analysed           -> GENERATED
+#   MIU 2 submitted          -> REASSESS_INGESTED (Home: waiting)
+#   MIU 2 analysed           -> GENERATED, with postPpqAssessmentId set
+#                               (Home: View results)
+#   Reflect done             -> COMPLETED
 enum SessionStatus {
   DATA_INGESTED
+  REASSESS_INGESTED
   GENERATED
   COMPLETED
 }
@@ -77,7 +87,7 @@ type MicroCoachSession @model @auth(rules: [{ allow: private }]) {
   weekNumber: Int
   topic: String
   ccssStandards: [String]
-  status: SessionStatus # DATA_INGESTED | GENERATED | COMPLETED
+  status: SessionStatus # DATA_INGESTED | REASSESS_INGESTED | GENERATED | COMPLETED
   publishStatus: PublishStatus # "DRAFT" | "PUBLISHED"
   studentWorksAnalyzed: Int
   studentsWithStrongUnderstanding: Int
@@ -92,6 +102,8 @@ type MicroCoachSession @model @auth(rules: [{ allow: private }]) {
     @hasMany(indexName: "bySession", fields: ["id"])
   pregeneratedNextSteps: AWSJSON
   evaluationResults: AWSJSON
+  # Class % correct per MIU question (the Review screen's "Correct responses"
+  # tiles), with the question text for the tile's tooltip.
   questionStats: [QuestionStat]
   reflectionResults: [ReflectionResult]
 
@@ -104,51 +116,14 @@ enum AssessmentType {
   POST_PPQ
 }
 
+# Extend later when pipeline work is ready to hook.
 type MicroCoachAssessment @model @auth(rules: [{ allow: private }]) {
   id: ID!
   classId: ID! @index(name: "byClass")
   sessionId: ID! @index(name: "bySession")
   assessmentCode: String!
-  # will be miu 1 and miu 2 assessment type
   type: AssessmentType!
   weekNumber: Int!
-  # Links the follow-up MIU to the original MIU it reassesses.
-  sourceAssessmentId: ID
-  questions: [AssessmentQuestion]
-  studentResponses: [MicroCoachStudentResponse]
-    @hasMany(indexName: "byAssessment", fields: ["id"])
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
-}
-
-type AssessmentQuestion {
-  questionNumber: Int!
-  questionText: String
-  correctAnswer: String!
-  answerChoices: [AssessmentAnswerChoice]
-}
-
-type AssessmentAnswerChoice {
-  letter: String!
-  text: String
-}
-
-type MicroCoachStudentResponse @model @auth(rules: [{ allow: private }]) {
-  id: ID!
-  assessmentId: ID! @index(name: "byAssessment")
-  studentId: ID! @index(name: "byStudent")
-  totalScore: Float
-  questionResponses: [AssessmentQuestionResponse]
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
-}
-
-type AssessmentQuestionResponse {
-  questionNumber: Int!
-  response: String
-  isCorrect: Boolean!
-  pointsEarned: Float!
-  confidence: Float
 }
 
 enum Badge {
@@ -169,9 +144,7 @@ enum DetailStatus {
   NOT_IN_WIREFRAMES
 }
 
-type MicroCoachMisconception
-  @model
-  @auth(rules: [{ allow: private }, { allow: public, provider: apiKey }]) {
+type MicroCoachMisconception @model @auth(rules: [{ allow: private }, { allow: public, provider: apiKey }]) {
   id: ID!
   sessionId: ID! @index(name: "bySession")
   classId: ID! @index(name: "byClass")
@@ -298,9 +271,7 @@ enum ViewMode {
   STUDENT
 }
 
-type MicroCoachActivity
-  @model
-  @auth(rules: [{ allow: private }, { allow: public, provider: apiKey }]) {
+type MicroCoachActivity @model @auth(rules: [{ allow: private }, { allow: public, provider: apiKey }]) {
   id: ID!
   misconceptionId: ID! @index(name: "byMisconception")
   sessionId: ID! @index(name: "bySession")

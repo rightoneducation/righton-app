@@ -1,5 +1,6 @@
 import { AWSActivity } from "../Models/AWS/AWSActivity";
-import { IActivityPhases, IRoutine } from "../../lib/PipelineModels";
+import { IRoutine } from "../../lib/PipelineModels";
+import { toActivityContent } from "../../lib/ActivityContentModels";
 import { IMicroCoachActivity } from "../Models/IMicroCoachActivity";
 import { isNullOrUndefined } from "../util/util";
 
@@ -48,8 +49,10 @@ export class ActivityParser {
       targets: activity.targets ?? null,
       instructionalMove: activity.instructionalMove ?? null,
       strategyTag: activity.strategyTag ?? null,
-      phases: activity.phases
-        ? JSON.parse(activity.phases) as IActivityPhases
+      // Rows in the older pipeline shape parse to null rather than to a
+      // content object the pages would misread.
+      content: activity.phases
+        ? toActivityContent(JSON.parse(activity.phases))
         : null,
     }
 

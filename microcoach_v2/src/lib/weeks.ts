@@ -29,25 +29,85 @@ export function startOfWeek(date: Date): Date {
   return monday;
 }
 
-/** This week's Monday, then the `count - 1` Mondays before it. */
-export function recentWeeks(count = 4, from: Date = new Date()): string[] {
-  const thisMonday = startOfWeek(from);
-  return Array.from({ length: count }, (unused, i) => {
-    const monday = new Date(thisMonday);
-    monday.setDate(thisMonday.getDate() - 7 * i);
+// The school year's numbered weeks, as the dashboard and upload label them:
+// Week 1 is the week of Aug 24 2026, Week 18 the week of Dec 21 (the last of
+// 2026). Extend these when the calendar runs past the end of the year.
+const SCHOOL_YEAR_START = '2026-08-24';
+const SCHOOL_WEEK_COUNT = 18;
+
+/** Every school week's Monday, Week 1 first. */
+export function schoolWeeks(): string[] {
+  const first = fromKey(SCHOOL_YEAR_START);
+  return Array.from({ length: SCHOOL_WEEK_COUNT }, (unused, i) => {
+    const monday = new Date(first);
+    monday.setDate(first.getDate() + 7 * i);
     return toKey(monday);
   });
 }
 
-/** "Week of Oct 5" / "Semana del 5 oct". */
-export function formatWeekLabel(
-  key: string,
+/** 1-based. Days are counted rather than ms divided, so DST cannot skew it. */
+export function schoolWeekNumber(key: string): number {
+  const first = fromKey(SCHOOL_YEAR_START);
+  const monday = fromKey(key);
+  const days = Math.round(
+    (Date.UTC(monday.getFullYear(), monday.getMonth(), monday.getDate()) -
+      Date.UTC(first.getFullYear(), first.getMonth(), first.getDate())) /
+      86400000,
+  );
+  return Math.floor(days / 7) + 1;
+}
+
+/** The school week containing `now`, clamped to Week 1 / the last week. */
+export function currentSchoolWeek(now: Date = new Date()): string {
+  const weeks = schoolWeeks();
+  const index = schoolWeekNumber(toKey(startOfWeek(now))) - 1;
+  return weeks[Math.min(Math.max(index, 0), weeks.length - 1)];
+}
+
+/** Monday to Friday: "Oct 19-23", or "Sep 28 - Oct 2" across a month. */
+export function formatWeekRange(key: string, language: string): string {
+  const monday = fromKey(key);
+  const friday = new Date(monday);
+  friday.setDate(monday.getDate() + 4);
+  const month = (date: Date) =>
+    date.toLocaleDateString(language, { month: 'short' });
+  if (monday.getMonth() === friday.getMonth()) {
+    return `${month(monday)} ${monday.getDate()}-${friday.getDate()}`;
+  }
+  return `${month(monday)} ${monday.getDate()} - ${month(friday)} ${friday.getDate()}`;
+}
+
+/** "Week 9 (Oct 19-23)", or the "Week 9: Oct 19-23" heading via `key`. */
+export function formatSchoolWeek(
+  weekKey: string,
   t: Translate,
   language: string,
+  labelKey = 'dashboard.weekOption',
 ): string {
-  const date = fromKey(key).toLocaleDateString(language, {
+  return t(labelKey, {
+    number: schoolWeekNumber(weekKey),
+    range: formatWeekRange(weekKey, language),
+  });
+}
+
+/**
+ * A local Date for a `YYYY-MM-DD` day or a full ISO timestamp. A bare day is
+ * built from parts (see the note at the top); a timestamp carries its own
+ * zone, so `new Date` reads it correctly and lands on the local day.
+ */
+function toLocalDate(value: string): Date {
+  return value.length > 10 ? new Date(value) : fromKey(value);
+}
+
+/** The Monday key of the week `value` (a day or a timestamp) falls in. */
+export function weekOf(value: string): string {
+  return toKey(startOfWeek(toLocalDate(value)));
+}
+
+/** "Oct 22" for a day or a timestamp, in local time. */
+export function formatShortDate(value: string, language: string): string {
+  return toLocalDate(value).toLocaleDateString(language, {
     month: 'short',
     day: 'numeric',
   });
-  return t('upload.weekOf', { date });
 }

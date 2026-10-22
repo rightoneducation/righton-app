@@ -51,4 +51,3 @@ export default function MathTypography({ text, suffix, ...props }: MathTypograph
   );
 }
 
-MathTypography.defaultProps = { suffix: undefined };

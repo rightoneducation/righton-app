@@ -9,6 +9,7 @@ export type CreateMicroCoachUserInput = {
   firstName?: string | null,
   lastName?: string | null,
   school?: string | null,
+  profilePicPath?: string | null,
   role: UserRole,
   createdAt?: string | null,
   updatedAt?: string | null,
@@ -26,6 +27,7 @@ export type ModelMicroCoachUserConditionInput = {
   firstName?: ModelStringInput | null,
   lastName?: ModelStringInput | null,
   school?: ModelStringInput | null,
+  profilePicPath?: ModelStringInput | null,
   role?: ModelUserRoleInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
@@ -87,6 +89,7 @@ export type MicroCoachUser = {
   firstName?: string | null,
   lastName?: string | null,
   school?: string | null,
+  profilePicPath?: string | null,
   classes?: ModelMicroCoachClassroomConnection | null,
   role: UserRole,
   createdAt: string,
@@ -148,6 +151,7 @@ export type MicroCoachSession = {
 
 export enum SessionStatus {
   DATA_INGESTED = "DATA_INGESTED",
+  REASSESS_INGESTED = "REASSESS_INGESTED",
   GENERATED = "GENERATED",
   COMPLETED = "COMPLETED",
 }
@@ -173,9 +177,6 @@ export type MicroCoachAssessment = {
   assessmentCode: string,
   type: AssessmentType,
   weekNumber: number,
-  sourceAssessmentId?: string | null,
-  questions?:  Array<AssessmentQuestion | null > | null,
-  studentResponses?: ModelMicroCoachStudentResponseConnection | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -185,46 +186,6 @@ export enum AssessmentType {
   POST_PPQ = "POST_PPQ",
 }
 
-
-export type AssessmentQuestion = {
-  __typename: "AssessmentQuestion",
-  questionNumber: number,
-  questionText?: string | null,
-  correctAnswer: string,
-  answerChoices?:  Array<AssessmentAnswerChoice | null > | null,
-};
-
-export type AssessmentAnswerChoice = {
-  __typename: "AssessmentAnswerChoice",
-  letter: string,
-  text?: string | null,
-};
-
-export type ModelMicroCoachStudentResponseConnection = {
-  __typename: "ModelMicroCoachStudentResponseConnection",
-  items:  Array<MicroCoachStudentResponse | null >,
-  nextToken?: string | null,
-};
-
-export type MicroCoachStudentResponse = {
-  __typename: "MicroCoachStudentResponse",
-  id: string,
-  assessmentId: string,
-  studentId: string,
-  totalScore?: number | null,
-  questionResponses?:  Array<AssessmentQuestionResponse | null > | null,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type AssessmentQuestionResponse = {
-  __typename: "AssessmentQuestionResponse",
-  questionNumber: number,
-  response?: string | null,
-  isCorrect: boolean,
-  pointsEarned: number,
-  confidence?: number | null,
-};
 
 export type ModelMicroCoachMisconceptionConnection = {
   __typename: "ModelMicroCoachMisconceptionConnection",
@@ -412,7 +373,6 @@ export type MicroCoachStudent = {
   __typename: "MicroCoachStudent",
   id: string,
   classId: string,
-  responses?: ModelMicroCoachStudentResponseConnection | null,
   name: string,
   externalId?: string | null,
   createdAt: string,
@@ -426,6 +386,7 @@ export type UpdateMicroCoachUserInput = {
   firstName?: string | null,
   lastName?: string | null,
   school?: string | null,
+  profilePicPath?: string | null,
   role?: UserRole | null,
   createdAt?: string | null,
   updatedAt?: string | null,
@@ -453,8 +414,6 @@ export type ModelMicroCoachClassroomConditionInput = {
   and?: Array< ModelMicroCoachClassroomConditionInput | null > | null,
   or?: Array< ModelMicroCoachClassroomConditionInput | null > | null,
   not?: ModelMicroCoachClassroomConditionInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
 };
 
 export type ModelIDInput = {
@@ -675,22 +634,6 @@ export type CreateMicroCoachAssessmentInput = {
   assessmentCode: string,
   type: AssessmentType,
   weekNumber: number,
-  sourceAssessmentId?: string | null,
-  questions?: Array< AssessmentQuestionInput | null > | null,
-  createdAt?: string | null,
-  updatedAt?: string | null,
-};
-
-export type AssessmentQuestionInput = {
-  questionNumber: number,
-  questionText?: string | null,
-  correctAnswer: string,
-  answerChoices?: Array< AssessmentAnswerChoiceInput | null > | null,
-};
-
-export type AssessmentAnswerChoiceInput = {
-  letter: string,
-  text?: string | null,
 };
 
 export type ModelMicroCoachAssessmentConditionInput = {
@@ -699,9 +642,6 @@ export type ModelMicroCoachAssessmentConditionInput = {
   assessmentCode?: ModelStringInput | null,
   type?: ModelAssessmentTypeInput | null,
   weekNumber?: ModelIntInput | null,
-  sourceAssessmentId?: ModelIDInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   and?: Array< ModelMicroCoachAssessmentConditionInput | null > | null,
   or?: Array< ModelMicroCoachAssessmentConditionInput | null > | null,
   not?: ModelMicroCoachAssessmentConditionInput | null,
@@ -719,68 +659,9 @@ export type UpdateMicroCoachAssessmentInput = {
   assessmentCode?: string | null,
   type?: AssessmentType | null,
   weekNumber?: number | null,
-  sourceAssessmentId?: string | null,
-  questions?: Array< AssessmentQuestionInput | null > | null,
-  createdAt?: string | null,
-  updatedAt?: string | null,
 };
 
 export type DeleteMicroCoachAssessmentInput = {
-  id: string,
-};
-
-export type CreateMicroCoachStudentResponseInput = {
-  id?: string | null,
-  assessmentId: string,
-  studentId: string,
-  totalScore?: number | null,
-  questionResponses?: Array< AssessmentQuestionResponseInput | null > | null,
-  createdAt?: string | null,
-  updatedAt?: string | null,
-};
-
-export type AssessmentQuestionResponseInput = {
-  questionNumber: number,
-  response?: string | null,
-  isCorrect: boolean,
-  pointsEarned: number,
-  confidence?: number | null,
-};
-
-export type ModelMicroCoachStudentResponseConditionInput = {
-  assessmentId?: ModelIDInput | null,
-  studentId?: ModelIDInput | null,
-  totalScore?: ModelFloatInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
-  and?: Array< ModelMicroCoachStudentResponseConditionInput | null > | null,
-  or?: Array< ModelMicroCoachStudentResponseConditionInput | null > | null,
-  not?: ModelMicroCoachStudentResponseConditionInput | null,
-};
-
-export type ModelFloatInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-};
-
-export type UpdateMicroCoachStudentResponseInput = {
-  id: string,
-  assessmentId?: string | null,
-  studentId?: string | null,
-  totalScore?: number | null,
-  questionResponses?: Array< AssessmentQuestionResponseInput | null > | null,
-  createdAt?: string | null,
-  updatedAt?: string | null,
-};
-
-export type DeleteMicroCoachStudentResponseInput = {
   id: string,
 };
 
@@ -1329,6 +1210,7 @@ export type ModelMicroCoachUserFilterInput = {
   firstName?: ModelStringInput | null,
   lastName?: ModelStringInput | null,
   school?: ModelStringInput | null,
+  profilePicPath?: ModelStringInput | null,
   role?: ModelUserRoleInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
@@ -1350,8 +1232,6 @@ export type ModelMicroCoachClassroomFilterInput = {
   grade?: ModelIntInput | null,
   state?: ModelStringInput | null,
   schoolYear?: ModelStringInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   and?: Array< ModelMicroCoachClassroomFilterInput | null > | null,
   or?: Array< ModelMicroCoachClassroomFilterInput | null > | null,
   not?: ModelMicroCoachClassroomFilterInput | null,
@@ -1401,24 +1281,9 @@ export type ModelMicroCoachAssessmentFilterInput = {
   assessmentCode?: ModelStringInput | null,
   type?: ModelAssessmentTypeInput | null,
   weekNumber?: ModelIntInput | null,
-  sourceAssessmentId?: ModelIDInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
   and?: Array< ModelMicroCoachAssessmentFilterInput | null > | null,
   or?: Array< ModelMicroCoachAssessmentFilterInput | null > | null,
   not?: ModelMicroCoachAssessmentFilterInput | null,
-};
-
-export type ModelMicroCoachStudentResponseFilterInput = {
-  id?: ModelIDInput | null,
-  assessmentId?: ModelIDInput | null,
-  studentId?: ModelIDInput | null,
-  totalScore?: ModelFloatInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
-  and?: Array< ModelMicroCoachStudentResponseFilterInput | null > | null,
-  or?: Array< ModelMicroCoachStudentResponseFilterInput | null > | null,
-  not?: ModelMicroCoachStudentResponseFilterInput | null,
 };
 
 export type ModelMicroCoachSavedPlanFilterInput = {
@@ -1542,12 +1407,12 @@ export type ModelSubscriptionMicroCoachUserFilterInput = {
   firstName?: ModelSubscriptionStringInput | null,
   lastName?: ModelSubscriptionStringInput | null,
   school?: ModelSubscriptionStringInput | null,
+  profilePicPath?: ModelSubscriptionStringInput | null,
   role?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionMicroCoachUserFilterInput | null > | null,
   or?: Array< ModelSubscriptionMicroCoachUserFilterInput | null > | null,
-  cognitoId?: ModelStringInput | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -1587,8 +1452,6 @@ export type ModelSubscriptionMicroCoachClassroomFilterInput = {
   grade?: ModelSubscriptionIntInput | null,
   state?: ModelSubscriptionStringInput | null,
   schoolYear?: ModelSubscriptionStringInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionMicroCoachClassroomFilterInput | null > | null,
   or?: Array< ModelSubscriptionMicroCoachClassroomFilterInput | null > | null,
 };
@@ -1647,34 +1510,8 @@ export type ModelSubscriptionMicroCoachAssessmentFilterInput = {
   assessmentCode?: ModelSubscriptionStringInput | null,
   type?: ModelSubscriptionStringInput | null,
   weekNumber?: ModelSubscriptionIntInput | null,
-  sourceAssessmentId?: ModelSubscriptionIDInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionMicroCoachAssessmentFilterInput | null > | null,
   or?: Array< ModelSubscriptionMicroCoachAssessmentFilterInput | null > | null,
-};
-
-export type ModelSubscriptionMicroCoachStudentResponseFilterInput = {
-  id?: ModelSubscriptionIDInput | null,
-  assessmentId?: ModelSubscriptionIDInput | null,
-  studentId?: ModelSubscriptionIDInput | null,
-  totalScore?: ModelSubscriptionFloatInput | null,
-  createdAt?: ModelSubscriptionStringInput | null,
-  updatedAt?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionMicroCoachStudentResponseFilterInput | null > | null,
-  or?: Array< ModelSubscriptionMicroCoachStudentResponseFilterInput | null > | null,
-};
-
-export type ModelSubscriptionFloatInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  in?: Array< number | null > | null,
-  notIn?: Array< number | null > | null,
 };
 
 export type ModelSubscriptionMicroCoachSavedPlanFilterInput = {
@@ -1782,6 +1619,7 @@ export type CreateMicroCoachUserMutation = {
     firstName?: string | null,
     lastName?: string | null,
     school?: string | null,
+    profilePicPath?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -1856,6 +1694,7 @@ export type UpdateMicroCoachUserMutation = {
     firstName?: string | null,
     lastName?: string | null,
     school?: string | null,
+    profilePicPath?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -1930,6 +1769,7 @@ export type DeleteMicroCoachUserMutation = {
     firstName?: string | null,
     lastName?: string | null,
     school?: string | null,
+    profilePicPath?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -2029,7 +1869,6 @@ export type CreateMicroCoachClassroomMutation = {
             assessmentCode: string,
             type: AssessmentType,
             weekNumber: number,
-            sourceAssessmentId?: string | null,
             createdAt: string,
             updatedAt: string,
           } | null >,
@@ -2109,19 +1948,6 @@ export type CreateMicroCoachClassroomMutation = {
         __typename: "MicroCoachStudent",
         id: string,
         classId: string,
-        responses?:  {
-          __typename: "ModelMicroCoachStudentResponseConnection",
-          items:  Array< {
-            __typename: "MicroCoachStudentResponse",
-            id: string,
-            assessmentId: string,
-            studentId: string,
-            totalScore?: number | null,
-            createdAt: string,
-            updatedAt: string,
-          } | null >,
-          nextToken?: string | null,
-        } | null,
         name: string,
         externalId?: string | null,
         createdAt: string,
@@ -2177,7 +2003,6 @@ export type UpdateMicroCoachClassroomMutation = {
             assessmentCode: string,
             type: AssessmentType,
             weekNumber: number,
-            sourceAssessmentId?: string | null,
             createdAt: string,
             updatedAt: string,
           } | null >,
@@ -2257,19 +2082,6 @@ export type UpdateMicroCoachClassroomMutation = {
         __typename: "MicroCoachStudent",
         id: string,
         classId: string,
-        responses?:  {
-          __typename: "ModelMicroCoachStudentResponseConnection",
-          items:  Array< {
-            __typename: "MicroCoachStudentResponse",
-            id: string,
-            assessmentId: string,
-            studentId: string,
-            totalScore?: number | null,
-            createdAt: string,
-            updatedAt: string,
-          } | null >,
-          nextToken?: string | null,
-        } | null,
         name: string,
         externalId?: string | null,
         createdAt: string,
@@ -2325,7 +2137,6 @@ export type DeleteMicroCoachClassroomMutation = {
             assessmentCode: string,
             type: AssessmentType,
             weekNumber: number,
-            sourceAssessmentId?: string | null,
             createdAt: string,
             updatedAt: string,
           } | null >,
@@ -2405,19 +2216,6 @@ export type DeleteMicroCoachClassroomMutation = {
         __typename: "MicroCoachStudent",
         id: string,
         classId: string,
-        responses?:  {
-          __typename: "ModelMicroCoachStudentResponseConnection",
-          items:  Array< {
-            __typename: "MicroCoachStudentResponse",
-            id: string,
-            assessmentId: string,
-            studentId: string,
-            totalScore?: number | null,
-            createdAt: string,
-            updatedAt: string,
-          } | null >,
-          nextToken?: string | null,
-        } | null,
         name: string,
         externalId?: string | null,
         createdAt: string,
@@ -2444,27 +2242,6 @@ export type CreateMicroCoachStudentMutation = {
     __typename: "MicroCoachStudent",
     id: string,
     classId: string,
-    responses?:  {
-      __typename: "ModelMicroCoachStudentResponseConnection",
-      items:  Array< {
-        __typename: "MicroCoachStudentResponse",
-        id: string,
-        assessmentId: string,
-        studentId: string,
-        totalScore?: number | null,
-        questionResponses?:  Array< {
-          __typename: "AssessmentQuestionResponse",
-          questionNumber: number,
-          response?: string | null,
-          isCorrect: boolean,
-          pointsEarned: number,
-          confidence?: number | null,
-        } | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
     name: string,
     externalId?: string | null,
     createdAt: string,
@@ -2482,27 +2259,6 @@ export type UpdateMicroCoachStudentMutation = {
     __typename: "MicroCoachStudent",
     id: string,
     classId: string,
-    responses?:  {
-      __typename: "ModelMicroCoachStudentResponseConnection",
-      items:  Array< {
-        __typename: "MicroCoachStudentResponse",
-        id: string,
-        assessmentId: string,
-        studentId: string,
-        totalScore?: number | null,
-        questionResponses?:  Array< {
-          __typename: "AssessmentQuestionResponse",
-          questionNumber: number,
-          response?: string | null,
-          isCorrect: boolean,
-          pointsEarned: number,
-          confidence?: number | null,
-        } | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
     name: string,
     externalId?: string | null,
     createdAt: string,
@@ -2520,27 +2276,6 @@ export type DeleteMicroCoachStudentMutation = {
     __typename: "MicroCoachStudent",
     id: string,
     classId: string,
-    responses?:  {
-      __typename: "ModelMicroCoachStudentResponseConnection",
-      items:  Array< {
-        __typename: "MicroCoachStudentResponse",
-        id: string,
-        assessmentId: string,
-        studentId: string,
-        totalScore?: number | null,
-        questionResponses?:  Array< {
-          __typename: "AssessmentQuestionResponse",
-          questionNumber: number,
-          response?: string | null,
-          isCorrect: boolean,
-          pointsEarned: number,
-          confidence?: number | null,
-        } | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
     name: string,
     externalId?: string | null,
     createdAt: string,
@@ -2581,31 +2316,6 @@ export type CreateMicroCoachSessionMutation = {
         assessmentCode: string,
         type: AssessmentType,
         weekNumber: number,
-        sourceAssessmentId?: string | null,
-        questions?:  Array< {
-          __typename: "AssessmentQuestion",
-          questionNumber: number,
-          questionText?: string | null,
-          correctAnswer: string,
-          answerChoices?:  Array< {
-            __typename: "AssessmentAnswerChoice",
-            letter: string,
-            text?: string | null,
-          } | null > | null,
-        } | null > | null,
-        studentResponses?:  {
-          __typename: "ModelMicroCoachStudentResponseConnection",
-          items:  Array< {
-            __typename: "MicroCoachStudentResponse",
-            id: string,
-            assessmentId: string,
-            studentId: string,
-            totalScore?: number | null,
-            createdAt: string,
-            updatedAt: string,
-          } | null >,
-          nextToken?: string | null,
-        } | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -2768,31 +2478,6 @@ export type UpdateMicroCoachSessionMutation = {
         assessmentCode: string,
         type: AssessmentType,
         weekNumber: number,
-        sourceAssessmentId?: string | null,
-        questions?:  Array< {
-          __typename: "AssessmentQuestion",
-          questionNumber: number,
-          questionText?: string | null,
-          correctAnswer: string,
-          answerChoices?:  Array< {
-            __typename: "AssessmentAnswerChoice",
-            letter: string,
-            text?: string | null,
-          } | null > | null,
-        } | null > | null,
-        studentResponses?:  {
-          __typename: "ModelMicroCoachStudentResponseConnection",
-          items:  Array< {
-            __typename: "MicroCoachStudentResponse",
-            id: string,
-            assessmentId: string,
-            studentId: string,
-            totalScore?: number | null,
-            createdAt: string,
-            updatedAt: string,
-          } | null >,
-          nextToken?: string | null,
-        } | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -2955,31 +2640,6 @@ export type DeleteMicroCoachSessionMutation = {
         assessmentCode: string,
         type: AssessmentType,
         weekNumber: number,
-        sourceAssessmentId?: string | null,
-        questions?:  Array< {
-          __typename: "AssessmentQuestion",
-          questionNumber: number,
-          questionText?: string | null,
-          correctAnswer: string,
-          answerChoices?:  Array< {
-            __typename: "AssessmentAnswerChoice",
-            letter: string,
-            text?: string | null,
-          } | null > | null,
-        } | null > | null,
-        studentResponses?:  {
-          __typename: "ModelMicroCoachStudentResponseConnection",
-          items:  Array< {
-            __typename: "MicroCoachStudentResponse",
-            id: string,
-            assessmentId: string,
-            studentId: string,
-            totalScore?: number | null,
-            createdAt: string,
-            updatedAt: string,
-          } | null >,
-          nextToken?: string | null,
-        } | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -3123,39 +2783,6 @@ export type CreateMicroCoachAssessmentMutation = {
     assessmentCode: string,
     type: AssessmentType,
     weekNumber: number,
-    sourceAssessmentId?: string | null,
-    questions?:  Array< {
-      __typename: "AssessmentQuestion",
-      questionNumber: number,
-      questionText?: string | null,
-      correctAnswer: string,
-      answerChoices?:  Array< {
-        __typename: "AssessmentAnswerChoice",
-        letter: string,
-        text?: string | null,
-      } | null > | null,
-    } | null > | null,
-    studentResponses?:  {
-      __typename: "ModelMicroCoachStudentResponseConnection",
-      items:  Array< {
-        __typename: "MicroCoachStudentResponse",
-        id: string,
-        assessmentId: string,
-        studentId: string,
-        totalScore?: number | null,
-        questionResponses?:  Array< {
-          __typename: "AssessmentQuestionResponse",
-          questionNumber: number,
-          response?: string | null,
-          isCorrect: boolean,
-          pointsEarned: number,
-          confidence?: number | null,
-        } | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3175,39 +2802,6 @@ export type UpdateMicroCoachAssessmentMutation = {
     assessmentCode: string,
     type: AssessmentType,
     weekNumber: number,
-    sourceAssessmentId?: string | null,
-    questions?:  Array< {
-      __typename: "AssessmentQuestion",
-      questionNumber: number,
-      questionText?: string | null,
-      correctAnswer: string,
-      answerChoices?:  Array< {
-        __typename: "AssessmentAnswerChoice",
-        letter: string,
-        text?: string | null,
-      } | null > | null,
-    } | null > | null,
-    studentResponses?:  {
-      __typename: "ModelMicroCoachStudentResponseConnection",
-      items:  Array< {
-        __typename: "MicroCoachStudentResponse",
-        id: string,
-        assessmentId: string,
-        studentId: string,
-        totalScore?: number | null,
-        questionResponses?:  Array< {
-          __typename: "AssessmentQuestionResponse",
-          questionNumber: number,
-          response?: string | null,
-          isCorrect: boolean,
-          pointsEarned: number,
-          confidence?: number | null,
-        } | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3227,114 +2821,6 @@ export type DeleteMicroCoachAssessmentMutation = {
     assessmentCode: string,
     type: AssessmentType,
     weekNumber: number,
-    sourceAssessmentId?: string | null,
-    questions?:  Array< {
-      __typename: "AssessmentQuestion",
-      questionNumber: number,
-      questionText?: string | null,
-      correctAnswer: string,
-      answerChoices?:  Array< {
-        __typename: "AssessmentAnswerChoice",
-        letter: string,
-        text?: string | null,
-      } | null > | null,
-    } | null > | null,
-    studentResponses?:  {
-      __typename: "ModelMicroCoachStudentResponseConnection",
-      items:  Array< {
-        __typename: "MicroCoachStudentResponse",
-        id: string,
-        assessmentId: string,
-        studentId: string,
-        totalScore?: number | null,
-        questionResponses?:  Array< {
-          __typename: "AssessmentQuestionResponse",
-          questionNumber: number,
-          response?: string | null,
-          isCorrect: boolean,
-          pointsEarned: number,
-          confidence?: number | null,
-        } | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateMicroCoachStudentResponseMutationVariables = {
-  input: CreateMicroCoachStudentResponseInput,
-  condition?: ModelMicroCoachStudentResponseConditionInput | null,
-};
-
-export type CreateMicroCoachStudentResponseMutation = {
-  createMicroCoachStudentResponse?:  {
-    __typename: "MicroCoachStudentResponse",
-    id: string,
-    assessmentId: string,
-    studentId: string,
-    totalScore?: number | null,
-    questionResponses?:  Array< {
-      __typename: "AssessmentQuestionResponse",
-      questionNumber: number,
-      response?: string | null,
-      isCorrect: boolean,
-      pointsEarned: number,
-      confidence?: number | null,
-    } | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateMicroCoachStudentResponseMutationVariables = {
-  input: UpdateMicroCoachStudentResponseInput,
-  condition?: ModelMicroCoachStudentResponseConditionInput | null,
-};
-
-export type UpdateMicroCoachStudentResponseMutation = {
-  updateMicroCoachStudentResponse?:  {
-    __typename: "MicroCoachStudentResponse",
-    id: string,
-    assessmentId: string,
-    studentId: string,
-    totalScore?: number | null,
-    questionResponses?:  Array< {
-      __typename: "AssessmentQuestionResponse",
-      questionNumber: number,
-      response?: string | null,
-      isCorrect: boolean,
-      pointsEarned: number,
-      confidence?: number | null,
-    } | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteMicroCoachStudentResponseMutationVariables = {
-  input: DeleteMicroCoachStudentResponseInput,
-  condition?: ModelMicroCoachStudentResponseConditionInput | null,
-};
-
-export type DeleteMicroCoachStudentResponseMutation = {
-  deleteMicroCoachStudentResponse?:  {
-    __typename: "MicroCoachStudentResponse",
-    id: string,
-    assessmentId: string,
-    studentId: string,
-    totalScore?: number | null,
-    questionResponses?:  Array< {
-      __typename: "AssessmentQuestionResponse",
-      questionNumber: number,
-      response?: string | null,
-      isCorrect: boolean,
-      pointsEarned: number,
-      confidence?: number | null,
-    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4058,6 +3544,7 @@ export type GetMicroCoachUserQuery = {
     firstName?: string | null,
     lastName?: string | null,
     school?: string | null,
+    profilePicPath?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -4135,6 +3622,7 @@ export type ListMicroCoachUsersQuery = {
       firstName?: string | null,
       lastName?: string | null,
       school?: string | null,
+      profilePicPath?: string | null,
       classes?:  {
         __typename: "ModelMicroCoachClassroomConnection",
         items:  Array< {
@@ -4204,7 +3692,6 @@ export type GetMicroCoachClassroomQuery = {
             assessmentCode: string,
             type: AssessmentType,
             weekNumber: number,
-            sourceAssessmentId?: string | null,
             createdAt: string,
             updatedAt: string,
           } | null >,
@@ -4284,19 +3771,6 @@ export type GetMicroCoachClassroomQuery = {
         __typename: "MicroCoachStudent",
         id: string,
         classId: string,
-        responses?:  {
-          __typename: "ModelMicroCoachStudentResponseConnection",
-          items:  Array< {
-            __typename: "MicroCoachStudentResponse",
-            id: string,
-            assessmentId: string,
-            studentId: string,
-            totalScore?: number | null,
-            createdAt: string,
-            updatedAt: string,
-          } | null >,
-          nextToken?: string | null,
-        } | null,
         name: string,
         externalId?: string | null,
         createdAt: string,
@@ -4383,10 +3857,6 @@ export type ListMicroCoachClassroomsQuery = {
           __typename: "MicroCoachStudent",
           id: string,
           classId: string,
-          responses?:  {
-            __typename: "ModelMicroCoachStudentResponseConnection",
-            nextToken?: string | null,
-          } | null,
           name: string,
           externalId?: string | null,
           createdAt: string,
@@ -4414,27 +3884,6 @@ export type GetMicroCoachStudentQuery = {
     __typename: "MicroCoachStudent",
     id: string,
     classId: string,
-    responses?:  {
-      __typename: "ModelMicroCoachStudentResponseConnection",
-      items:  Array< {
-        __typename: "MicroCoachStudentResponse",
-        id: string,
-        assessmentId: string,
-        studentId: string,
-        totalScore?: number | null,
-        questionResponses?:  Array< {
-          __typename: "AssessmentQuestionResponse",
-          questionNumber: number,
-          response?: string | null,
-          isCorrect: boolean,
-          pointsEarned: number,
-          confidence?: number | null,
-        } | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
     name: string,
     externalId?: string | null,
     createdAt: string,
@@ -4455,27 +3904,6 @@ export type ListMicroCoachStudentsQuery = {
       __typename: "MicroCoachStudent",
       id: string,
       classId: string,
-      responses?:  {
-        __typename: "ModelMicroCoachStudentResponseConnection",
-        items:  Array< {
-          __typename: "MicroCoachStudentResponse",
-          id: string,
-          assessmentId: string,
-          studentId: string,
-          totalScore?: number | null,
-          questionResponses?:  Array< {
-            __typename: "AssessmentQuestionResponse",
-            questionNumber: number,
-            response?: string | null,
-            isCorrect: boolean,
-            pointsEarned: number,
-            confidence?: number | null,
-          } | null > | null,
-          createdAt: string,
-          updatedAt: string,
-        } | null >,
-        nextToken?: string | null,
-      } | null,
       name: string,
       externalId?: string | null,
       createdAt: string,
@@ -4517,31 +3945,6 @@ export type GetMicroCoachSessionQuery = {
         assessmentCode: string,
         type: AssessmentType,
         weekNumber: number,
-        sourceAssessmentId?: string | null,
-        questions?:  Array< {
-          __typename: "AssessmentQuestion",
-          questionNumber: number,
-          questionText?: string | null,
-          correctAnswer: string,
-          answerChoices?:  Array< {
-            __typename: "AssessmentAnswerChoice",
-            letter: string,
-            text?: string | null,
-          } | null > | null,
-        } | null > | null,
-        studentResponses?:  {
-          __typename: "ModelMicroCoachStudentResponseConnection",
-          items:  Array< {
-            __typename: "MicroCoachStudentResponse",
-            id: string,
-            assessmentId: string,
-            studentId: string,
-            totalScore?: number | null,
-            createdAt: string,
-            updatedAt: string,
-          } | null >,
-          nextToken?: string | null,
-        } | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -4707,17 +4110,6 @@ export type ListMicroCoachSessionsQuery = {
           assessmentCode: string,
           type: AssessmentType,
           weekNumber: number,
-          sourceAssessmentId?: string | null,
-          questions?:  Array< {
-            __typename: "AssessmentQuestion",
-            questionNumber: number,
-            questionText?: string | null,
-            correctAnswer: string,
-          } | null > | null,
-          studentResponses?:  {
-            __typename: "ModelMicroCoachStudentResponseConnection",
-            nextToken?: string | null,
-          } | null,
           createdAt: string,
           updatedAt: string,
         } | null >,
@@ -4841,39 +4233,6 @@ export type GetMicroCoachAssessmentQuery = {
     assessmentCode: string,
     type: AssessmentType,
     weekNumber: number,
-    sourceAssessmentId?: string | null,
-    questions?:  Array< {
-      __typename: "AssessmentQuestion",
-      questionNumber: number,
-      questionText?: string | null,
-      correctAnswer: string,
-      answerChoices?:  Array< {
-        __typename: "AssessmentAnswerChoice",
-        letter: string,
-        text?: string | null,
-      } | null > | null,
-    } | null > | null,
-    studentResponses?:  {
-      __typename: "ModelMicroCoachStudentResponseConnection",
-      items:  Array< {
-        __typename: "MicroCoachStudentResponse",
-        id: string,
-        assessmentId: string,
-        studentId: string,
-        totalScore?: number | null,
-        questionResponses?:  Array< {
-          __typename: "AssessmentQuestionResponse",
-          questionNumber: number,
-          response?: string | null,
-          isCorrect: boolean,
-          pointsEarned: number,
-          confidence?: number | null,
-        } | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4896,93 +4255,6 @@ export type ListMicroCoachAssessmentsQuery = {
       assessmentCode: string,
       type: AssessmentType,
       weekNumber: number,
-      sourceAssessmentId?: string | null,
-      questions?:  Array< {
-        __typename: "AssessmentQuestion",
-        questionNumber: number,
-        questionText?: string | null,
-        correctAnswer: string,
-        answerChoices?:  Array< {
-          __typename: "AssessmentAnswerChoice",
-          letter: string,
-          text?: string | null,
-        } | null > | null,
-      } | null > | null,
-      studentResponses?:  {
-        __typename: "ModelMicroCoachStudentResponseConnection",
-        items:  Array< {
-          __typename: "MicroCoachStudentResponse",
-          id: string,
-          assessmentId: string,
-          studentId: string,
-          totalScore?: number | null,
-          questionResponses?:  Array< {
-            __typename: "AssessmentQuestionResponse",
-            questionNumber: number,
-            response?: string | null,
-            isCorrect: boolean,
-            pointsEarned: number,
-            confidence?: number | null,
-          } | null > | null,
-          createdAt: string,
-          updatedAt: string,
-        } | null >,
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetMicroCoachStudentResponseQueryVariables = {
-  id: string,
-};
-
-export type GetMicroCoachStudentResponseQuery = {
-  getMicroCoachStudentResponse?:  {
-    __typename: "MicroCoachStudentResponse",
-    id: string,
-    assessmentId: string,
-    studentId: string,
-    totalScore?: number | null,
-    questionResponses?:  Array< {
-      __typename: "AssessmentQuestionResponse",
-      questionNumber: number,
-      response?: string | null,
-      isCorrect: boolean,
-      pointsEarned: number,
-      confidence?: number | null,
-    } | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListMicroCoachStudentResponsesQueryVariables = {
-  filter?: ModelMicroCoachStudentResponseFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListMicroCoachStudentResponsesQuery = {
-  listMicroCoachStudentResponses?:  {
-    __typename: "ModelMicroCoachStudentResponseConnection",
-    items:  Array< {
-      __typename: "MicroCoachStudentResponse",
-      id: string,
-      assessmentId: string,
-      studentId: string,
-      totalScore?: number | null,
-      questionResponses?:  Array< {
-        __typename: "AssessmentQuestionResponse",
-        questionNumber: number,
-        response?: string | null,
-        isCorrect: boolean,
-        pointsEarned: number,
-        confidence?: number | null,
-      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -5055,6 +4327,7 @@ export type UsersByCognitoIdQuery = {
       firstName?: string | null,
       lastName?: string | null,
       school?: string | null,
+      profilePicPath?: string | null,
       classes?:  {
         __typename: "ModelMicroCoachClassroomConnection",
         items:  Array< {
@@ -5105,6 +4378,7 @@ export type UsersByEmailQuery = {
       firstName?: string | null,
       lastName?: string | null,
       school?: string | null,
+      profilePicPath?: string | null,
       classes?:  {
         __typename: "ModelMicroCoachClassroomConnection",
         items:  Array< {
@@ -5155,6 +4429,7 @@ export type UsersByRoleQuery = {
       firstName?: string | null,
       lastName?: string | null,
       school?: string | null,
+      profilePicPath?: string | null,
       classes?:  {
         __typename: "ModelMicroCoachClassroomConnection",
         items:  Array< {
@@ -5258,10 +4533,6 @@ export type MicroCoachClassroomsByUserIdQuery = {
           __typename: "MicroCoachStudent",
           id: string,
           classId: string,
-          responses?:  {
-            __typename: "ModelMicroCoachStudentResponseConnection",
-            nextToken?: string | null,
-          } | null,
           name: string,
           externalId?: string | null,
           createdAt: string,
@@ -5295,27 +4566,6 @@ export type MicroCoachStudentsByClassIdQuery = {
       __typename: "MicroCoachStudent",
       id: string,
       classId: string,
-      responses?:  {
-        __typename: "ModelMicroCoachStudentResponseConnection",
-        items:  Array< {
-          __typename: "MicroCoachStudentResponse",
-          id: string,
-          assessmentId: string,
-          studentId: string,
-          totalScore?: number | null,
-          questionResponses?:  Array< {
-            __typename: "AssessmentQuestionResponse",
-            questionNumber: number,
-            response?: string | null,
-            isCorrect: boolean,
-            pointsEarned: number,
-            confidence?: number | null,
-          } | null > | null,
-          createdAt: string,
-          updatedAt: string,
-        } | null >,
-        nextToken?: string | null,
-      } | null,
       name: string,
       externalId?: string | null,
       createdAt: string,
@@ -5363,17 +4613,6 @@ export type MicroCoachSessionsByClassIdQuery = {
           assessmentCode: string,
           type: AssessmentType,
           weekNumber: number,
-          sourceAssessmentId?: string | null,
-          questions?:  Array< {
-            __typename: "AssessmentQuestion",
-            questionNumber: number,
-            questionText?: string | null,
-            correctAnswer: string,
-          } | null > | null,
-          studentResponses?:  {
-            __typename: "ModelMicroCoachStudentResponseConnection",
-            nextToken?: string | null,
-          } | null,
           createdAt: string,
           updatedAt: string,
         } | null >,
@@ -5503,39 +4742,6 @@ export type MicroCoachAssessmentsByClassIdQuery = {
       assessmentCode: string,
       type: AssessmentType,
       weekNumber: number,
-      sourceAssessmentId?: string | null,
-      questions?:  Array< {
-        __typename: "AssessmentQuestion",
-        questionNumber: number,
-        questionText?: string | null,
-        correctAnswer: string,
-        answerChoices?:  Array< {
-          __typename: "AssessmentAnswerChoice",
-          letter: string,
-          text?: string | null,
-        } | null > | null,
-      } | null > | null,
-      studentResponses?:  {
-        __typename: "ModelMicroCoachStudentResponseConnection",
-        items:  Array< {
-          __typename: "MicroCoachStudentResponse",
-          id: string,
-          assessmentId: string,
-          studentId: string,
-          totalScore?: number | null,
-          questionResponses?:  Array< {
-            __typename: "AssessmentQuestionResponse",
-            questionNumber: number,
-            response?: string | null,
-            isCorrect: boolean,
-            pointsEarned: number,
-            confidence?: number | null,
-          } | null > | null,
-          createdAt: string,
-          updatedAt: string,
-        } | null >,
-        nextToken?: string | null,
-      } | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -5562,103 +4768,6 @@ export type MicroCoachAssessmentsBySessionIdQuery = {
       assessmentCode: string,
       type: AssessmentType,
       weekNumber: number,
-      sourceAssessmentId?: string | null,
-      questions?:  Array< {
-        __typename: "AssessmentQuestion",
-        questionNumber: number,
-        questionText?: string | null,
-        correctAnswer: string,
-        answerChoices?:  Array< {
-          __typename: "AssessmentAnswerChoice",
-          letter: string,
-          text?: string | null,
-        } | null > | null,
-      } | null > | null,
-      studentResponses?:  {
-        __typename: "ModelMicroCoachStudentResponseConnection",
-        items:  Array< {
-          __typename: "MicroCoachStudentResponse",
-          id: string,
-          assessmentId: string,
-          studentId: string,
-          totalScore?: number | null,
-          questionResponses?:  Array< {
-            __typename: "AssessmentQuestionResponse",
-            questionNumber: number,
-            response?: string | null,
-            isCorrect: boolean,
-            pointsEarned: number,
-            confidence?: number | null,
-          } | null > | null,
-          createdAt: string,
-          updatedAt: string,
-        } | null >,
-        nextToken?: string | null,
-      } | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type MicroCoachStudentResponsesByAssessmentIdQueryVariables = {
-  assessmentId: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelMicroCoachStudentResponseFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type MicroCoachStudentResponsesByAssessmentIdQuery = {
-  microCoachStudentResponsesByAssessmentId?:  {
-    __typename: "ModelMicroCoachStudentResponseConnection",
-    items:  Array< {
-      __typename: "MicroCoachStudentResponse",
-      id: string,
-      assessmentId: string,
-      studentId: string,
-      totalScore?: number | null,
-      questionResponses?:  Array< {
-        __typename: "AssessmentQuestionResponse",
-        questionNumber: number,
-        response?: string | null,
-        isCorrect: boolean,
-        pointsEarned: number,
-        confidence?: number | null,
-      } | null > | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null >,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type MicroCoachStudentResponsesByStudentIdQueryVariables = {
-  studentId: string,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelMicroCoachStudentResponseFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type MicroCoachStudentResponsesByStudentIdQuery = {
-  microCoachStudentResponsesByStudentId?:  {
-    __typename: "ModelMicroCoachStudentResponseConnection",
-    items:  Array< {
-      __typename: "MicroCoachStudentResponse",
-      id: string,
-      assessmentId: string,
-      studentId: string,
-      totalScore?: number | null,
-      questionResponses?:  Array< {
-        __typename: "AssessmentQuestionResponse",
-        questionNumber: number,
-        response?: string | null,
-        isCorrect: boolean,
-        pointsEarned: number,
-        confidence?: number | null,
-      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null >,
@@ -6463,6 +5572,7 @@ export type OnCreateMicroCoachUserSubscription = {
     firstName?: string | null,
     lastName?: string | null,
     school?: string | null,
+    profilePicPath?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -6537,6 +5647,7 @@ export type OnUpdateMicroCoachUserSubscription = {
     firstName?: string | null,
     lastName?: string | null,
     school?: string | null,
+    profilePicPath?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -6611,6 +5722,7 @@ export type OnDeleteMicroCoachUserSubscription = {
     firstName?: string | null,
     lastName?: string | null,
     school?: string | null,
+    profilePicPath?: string | null,
     classes?:  {
       __typename: "ModelMicroCoachClassroomConnection",
       items:  Array< {
@@ -6709,7 +5821,6 @@ export type OnCreateMicroCoachClassroomSubscription = {
             assessmentCode: string,
             type: AssessmentType,
             weekNumber: number,
-            sourceAssessmentId?: string | null,
             createdAt: string,
             updatedAt: string,
           } | null >,
@@ -6789,19 +5900,6 @@ export type OnCreateMicroCoachClassroomSubscription = {
         __typename: "MicroCoachStudent",
         id: string,
         classId: string,
-        responses?:  {
-          __typename: "ModelMicroCoachStudentResponseConnection",
-          items:  Array< {
-            __typename: "MicroCoachStudentResponse",
-            id: string,
-            assessmentId: string,
-            studentId: string,
-            totalScore?: number | null,
-            createdAt: string,
-            updatedAt: string,
-          } | null >,
-          nextToken?: string | null,
-        } | null,
         name: string,
         externalId?: string | null,
         createdAt: string,
@@ -6856,7 +5954,6 @@ export type OnUpdateMicroCoachClassroomSubscription = {
             assessmentCode: string,
             type: AssessmentType,
             weekNumber: number,
-            sourceAssessmentId?: string | null,
             createdAt: string,
             updatedAt: string,
           } | null >,
@@ -6936,19 +6033,6 @@ export type OnUpdateMicroCoachClassroomSubscription = {
         __typename: "MicroCoachStudent",
         id: string,
         classId: string,
-        responses?:  {
-          __typename: "ModelMicroCoachStudentResponseConnection",
-          items:  Array< {
-            __typename: "MicroCoachStudentResponse",
-            id: string,
-            assessmentId: string,
-            studentId: string,
-            totalScore?: number | null,
-            createdAt: string,
-            updatedAt: string,
-          } | null >,
-          nextToken?: string | null,
-        } | null,
         name: string,
         externalId?: string | null,
         createdAt: string,
@@ -7003,7 +6087,6 @@ export type OnDeleteMicroCoachClassroomSubscription = {
             assessmentCode: string,
             type: AssessmentType,
             weekNumber: number,
-            sourceAssessmentId?: string | null,
             createdAt: string,
             updatedAt: string,
           } | null >,
@@ -7083,19 +6166,6 @@ export type OnDeleteMicroCoachClassroomSubscription = {
         __typename: "MicroCoachStudent",
         id: string,
         classId: string,
-        responses?:  {
-          __typename: "ModelMicroCoachStudentResponseConnection",
-          items:  Array< {
-            __typename: "MicroCoachStudentResponse",
-            id: string,
-            assessmentId: string,
-            studentId: string,
-            totalScore?: number | null,
-            createdAt: string,
-            updatedAt: string,
-          } | null >,
-          nextToken?: string | null,
-        } | null,
         name: string,
         externalId?: string | null,
         createdAt: string,
@@ -7121,27 +6191,6 @@ export type OnCreateMicroCoachStudentSubscription = {
     __typename: "MicroCoachStudent",
     id: string,
     classId: string,
-    responses?:  {
-      __typename: "ModelMicroCoachStudentResponseConnection",
-      items:  Array< {
-        __typename: "MicroCoachStudentResponse",
-        id: string,
-        assessmentId: string,
-        studentId: string,
-        totalScore?: number | null,
-        questionResponses?:  Array< {
-          __typename: "AssessmentQuestionResponse",
-          questionNumber: number,
-          response?: string | null,
-          isCorrect: boolean,
-          pointsEarned: number,
-          confidence?: number | null,
-        } | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
     name: string,
     externalId?: string | null,
     createdAt: string,
@@ -7158,27 +6207,6 @@ export type OnUpdateMicroCoachStudentSubscription = {
     __typename: "MicroCoachStudent",
     id: string,
     classId: string,
-    responses?:  {
-      __typename: "ModelMicroCoachStudentResponseConnection",
-      items:  Array< {
-        __typename: "MicroCoachStudentResponse",
-        id: string,
-        assessmentId: string,
-        studentId: string,
-        totalScore?: number | null,
-        questionResponses?:  Array< {
-          __typename: "AssessmentQuestionResponse",
-          questionNumber: number,
-          response?: string | null,
-          isCorrect: boolean,
-          pointsEarned: number,
-          confidence?: number | null,
-        } | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
     name: string,
     externalId?: string | null,
     createdAt: string,
@@ -7195,27 +6223,6 @@ export type OnDeleteMicroCoachStudentSubscription = {
     __typename: "MicroCoachStudent",
     id: string,
     classId: string,
-    responses?:  {
-      __typename: "ModelMicroCoachStudentResponseConnection",
-      items:  Array< {
-        __typename: "MicroCoachStudentResponse",
-        id: string,
-        assessmentId: string,
-        studentId: string,
-        totalScore?: number | null,
-        questionResponses?:  Array< {
-          __typename: "AssessmentQuestionResponse",
-          questionNumber: number,
-          response?: string | null,
-          isCorrect: boolean,
-          pointsEarned: number,
-          confidence?: number | null,
-        } | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
     name: string,
     externalId?: string | null,
     createdAt: string,
@@ -7255,31 +6262,6 @@ export type OnCreateMicroCoachSessionSubscription = {
         assessmentCode: string,
         type: AssessmentType,
         weekNumber: number,
-        sourceAssessmentId?: string | null,
-        questions?:  Array< {
-          __typename: "AssessmentQuestion",
-          questionNumber: number,
-          questionText?: string | null,
-          correctAnswer: string,
-          answerChoices?:  Array< {
-            __typename: "AssessmentAnswerChoice",
-            letter: string,
-            text?: string | null,
-          } | null > | null,
-        } | null > | null,
-        studentResponses?:  {
-          __typename: "ModelMicroCoachStudentResponseConnection",
-          items:  Array< {
-            __typename: "MicroCoachStudentResponse",
-            id: string,
-            assessmentId: string,
-            studentId: string,
-            totalScore?: number | null,
-            createdAt: string,
-            updatedAt: string,
-          } | null >,
-          nextToken?: string | null,
-        } | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -7441,31 +6423,6 @@ export type OnUpdateMicroCoachSessionSubscription = {
         assessmentCode: string,
         type: AssessmentType,
         weekNumber: number,
-        sourceAssessmentId?: string | null,
-        questions?:  Array< {
-          __typename: "AssessmentQuestion",
-          questionNumber: number,
-          questionText?: string | null,
-          correctAnswer: string,
-          answerChoices?:  Array< {
-            __typename: "AssessmentAnswerChoice",
-            letter: string,
-            text?: string | null,
-          } | null > | null,
-        } | null > | null,
-        studentResponses?:  {
-          __typename: "ModelMicroCoachStudentResponseConnection",
-          items:  Array< {
-            __typename: "MicroCoachStudentResponse",
-            id: string,
-            assessmentId: string,
-            studentId: string,
-            totalScore?: number | null,
-            createdAt: string,
-            updatedAt: string,
-          } | null >,
-          nextToken?: string | null,
-        } | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -7627,31 +6584,6 @@ export type OnDeleteMicroCoachSessionSubscription = {
         assessmentCode: string,
         type: AssessmentType,
         weekNumber: number,
-        sourceAssessmentId?: string | null,
-        questions?:  Array< {
-          __typename: "AssessmentQuestion",
-          questionNumber: number,
-          questionText?: string | null,
-          correctAnswer: string,
-          answerChoices?:  Array< {
-            __typename: "AssessmentAnswerChoice",
-            letter: string,
-            text?: string | null,
-          } | null > | null,
-        } | null > | null,
-        studentResponses?:  {
-          __typename: "ModelMicroCoachStudentResponseConnection",
-          items:  Array< {
-            __typename: "MicroCoachStudentResponse",
-            id: string,
-            assessmentId: string,
-            studentId: string,
-            totalScore?: number | null,
-            createdAt: string,
-            updatedAt: string,
-          } | null >,
-          nextToken?: string | null,
-        } | null,
         createdAt: string,
         updatedAt: string,
       } | null >,
@@ -7794,39 +6726,6 @@ export type OnCreateMicroCoachAssessmentSubscription = {
     assessmentCode: string,
     type: AssessmentType,
     weekNumber: number,
-    sourceAssessmentId?: string | null,
-    questions?:  Array< {
-      __typename: "AssessmentQuestion",
-      questionNumber: number,
-      questionText?: string | null,
-      correctAnswer: string,
-      answerChoices?:  Array< {
-        __typename: "AssessmentAnswerChoice",
-        letter: string,
-        text?: string | null,
-      } | null > | null,
-    } | null > | null,
-    studentResponses?:  {
-      __typename: "ModelMicroCoachStudentResponseConnection",
-      items:  Array< {
-        __typename: "MicroCoachStudentResponse",
-        id: string,
-        assessmentId: string,
-        studentId: string,
-        totalScore?: number | null,
-        questionResponses?:  Array< {
-          __typename: "AssessmentQuestionResponse",
-          questionNumber: number,
-          response?: string | null,
-          isCorrect: boolean,
-          pointsEarned: number,
-          confidence?: number | null,
-        } | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -7845,39 +6744,6 @@ export type OnUpdateMicroCoachAssessmentSubscription = {
     assessmentCode: string,
     type: AssessmentType,
     weekNumber: number,
-    sourceAssessmentId?: string | null,
-    questions?:  Array< {
-      __typename: "AssessmentQuestion",
-      questionNumber: number,
-      questionText?: string | null,
-      correctAnswer: string,
-      answerChoices?:  Array< {
-        __typename: "AssessmentAnswerChoice",
-        letter: string,
-        text?: string | null,
-      } | null > | null,
-    } | null > | null,
-    studentResponses?:  {
-      __typename: "ModelMicroCoachStudentResponseConnection",
-      items:  Array< {
-        __typename: "MicroCoachStudentResponse",
-        id: string,
-        assessmentId: string,
-        studentId: string,
-        totalScore?: number | null,
-        questionResponses?:  Array< {
-          __typename: "AssessmentQuestionResponse",
-          questionNumber: number,
-          response?: string | null,
-          isCorrect: boolean,
-          pointsEarned: number,
-          confidence?: number | null,
-        } | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -7896,111 +6762,6 @@ export type OnDeleteMicroCoachAssessmentSubscription = {
     assessmentCode: string,
     type: AssessmentType,
     weekNumber: number,
-    sourceAssessmentId?: string | null,
-    questions?:  Array< {
-      __typename: "AssessmentQuestion",
-      questionNumber: number,
-      questionText?: string | null,
-      correctAnswer: string,
-      answerChoices?:  Array< {
-        __typename: "AssessmentAnswerChoice",
-        letter: string,
-        text?: string | null,
-      } | null > | null,
-    } | null > | null,
-    studentResponses?:  {
-      __typename: "ModelMicroCoachStudentResponseConnection",
-      items:  Array< {
-        __typename: "MicroCoachStudentResponse",
-        id: string,
-        assessmentId: string,
-        studentId: string,
-        totalScore?: number | null,
-        questionResponses?:  Array< {
-          __typename: "AssessmentQuestionResponse",
-          questionNumber: number,
-          response?: string | null,
-          isCorrect: boolean,
-          pointsEarned: number,
-          confidence?: number | null,
-        } | null > | null,
-        createdAt: string,
-        updatedAt: string,
-      } | null >,
-      nextToken?: string | null,
-    } | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateMicroCoachStudentResponseSubscriptionVariables = {
-  filter?: ModelSubscriptionMicroCoachStudentResponseFilterInput | null,
-};
-
-export type OnCreateMicroCoachStudentResponseSubscription = {
-  onCreateMicroCoachStudentResponse?:  {
-    __typename: "MicroCoachStudentResponse",
-    id: string,
-    assessmentId: string,
-    studentId: string,
-    totalScore?: number | null,
-    questionResponses?:  Array< {
-      __typename: "AssessmentQuestionResponse",
-      questionNumber: number,
-      response?: string | null,
-      isCorrect: boolean,
-      pointsEarned: number,
-      confidence?: number | null,
-    } | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateMicroCoachStudentResponseSubscriptionVariables = {
-  filter?: ModelSubscriptionMicroCoachStudentResponseFilterInput | null,
-};
-
-export type OnUpdateMicroCoachStudentResponseSubscription = {
-  onUpdateMicroCoachStudentResponse?:  {
-    __typename: "MicroCoachStudentResponse",
-    id: string,
-    assessmentId: string,
-    studentId: string,
-    totalScore?: number | null,
-    questionResponses?:  Array< {
-      __typename: "AssessmentQuestionResponse",
-      questionNumber: number,
-      response?: string | null,
-      isCorrect: boolean,
-      pointsEarned: number,
-      confidence?: number | null,
-    } | null > | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteMicroCoachStudentResponseSubscriptionVariables = {
-  filter?: ModelSubscriptionMicroCoachStudentResponseFilterInput | null,
-};
-
-export type OnDeleteMicroCoachStudentResponseSubscription = {
-  onDeleteMicroCoachStudentResponse?:  {
-    __typename: "MicroCoachStudentResponse",
-    id: string,
-    assessmentId: string,
-    studentId: string,
-    totalScore?: number | null,
-    questionResponses?:  Array< {
-      __typename: "AssessmentQuestionResponse",
-      questionNumber: number,
-      response?: string | null,
-      isCorrect: boolean,
-      pointsEarned: number,
-      confidence?: number | null,
-    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,

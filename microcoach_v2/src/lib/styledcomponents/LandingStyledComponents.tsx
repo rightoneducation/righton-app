@@ -29,6 +29,49 @@ export const StepPanel = styled(Box, {
   boxSizing: 'border-box',
 }));
 
+// The step cards: three per row at LARGE (Figma: 416 wide, ~28 apart, steps 4
+// and 5 wrapping under 1 and 2), one per row below that.
+export const StepGrid = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => {
+  const isLarge = screenSize === ScreenSize.LARGE;
+
+  return {
+    position: 'relative',
+    display: 'flex',
+    flexDirection: isLarge ? 'row' : 'column',
+    flexWrap: isLarge ? 'wrap' : 'nowrap',
+    alignItems: 'stretch',
+    gap: isLarge ? theme.sizing.space5 : theme.sizing.space4,
+  };
+});
+
+const STEPS_PER_ROW = 3;
+
+// A "Step N" label over its card (Figma: ~40 between).
+export const StepColumn = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => {
+  const isLarge = screenSize === ScreenSize.LARGE;
+  const gutters = (STEPS_PER_ROW - 1) * theme.sizing.space5;
+
+  return {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.sizing.space7,
+    flex: '0 0 auto',
+    width: isLarge ? `calc((100% - ${gutters}px) / ${STEPS_PER_ROW})` : '100%',
+    minWidth: 0,
+  };
+});
+
+// Card title over its body (Figma: ~20 between).
+export const StepCardText = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space4,
+}));
+
 // Figma: rx 32, inset 32 at 1920 and 24 on both smaller frames. Only the
 // desktop row needs a height floor to keep the three columns even; the mobile
 // and tablet cards are content-sized (518/557/536 and 518/540/540).
@@ -37,6 +80,9 @@ export const StepCard = styled(Box, {
 })<ScreenSizeProps>(({ theme, screenSize }) => ({
   display: 'flex',
   flexDirection: 'column',
+  // The least space between the text and the illustration, which is pushed
+  // to the bottom of the card.
+  gap: theme.sizing.space6,
   flexGrow: 1,
   minHeight: screenSize === ScreenSize.LARGE ? 518 : undefined,
   backgroundColor: theme.palette.designSystem.background.offWhite,

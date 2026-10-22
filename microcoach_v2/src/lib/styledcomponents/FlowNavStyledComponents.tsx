@@ -31,7 +31,7 @@ export const FlowTabSeparator = styled(Box)(({ theme }) => ({
   ...theme.typography.navTab,
   fontWeight: 600,
   letterSpacing: 'normal',
-  color: theme.palette.designSystem.foreground.mutedGrey,
+  color: theme.palette.designSystem.surface.atlanticNavy,
   userSelect: 'none',
 }));
 
@@ -56,6 +56,6 @@ export const FlowNavAction = styled(Button, {
   textTransform: 'none',
   whiteSpace: 'nowrap',
   '&:hover': {
-    backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
+    backgroundColor: theme.palette.designSystem.foreground.accentBlue,
   },
 }));

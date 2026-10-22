@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
+  Navigate,
   Route,
   RouterProvider,
   Outlet,
@@ -10,7 +11,6 @@ import {
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import Modal from 'react-modal';
 import { APIClients, AppType, Environment } from './api';
 import Theme from './lib/Theme';
 import { GOOGLE_OAUTH_CLIENT_ID, ScreenType } from './lib/MicroCoachModels';
@@ -38,11 +38,6 @@ import { MicroCoachDataProvider } from './lib/context/MicroCoachDataContext';
  * where the resolver can also reach useNavigate, and reaches the screens through
  * the Outlet.
  */
-// react-modal needs to know the app root so it can mark it aria-hidden while a
-// modal is open. Without this it warns and leaves the background readable by
-// screen readers — the other apps in the monorepo skip it.
-Modal.setAppElement('#root');
-
 function RootLayout({ apiClients }: { apiClients: APIClients }) {
   const user = useUserState(apiClients);
   // On-load session restore: without it a refresh comes up signed out and the
@@ -129,6 +124,15 @@ function App() {
               element={<AppSwitch currentScreen={ScreenType.DASHBOARD} />}
             />
             <Route
+              path="this-week"
+              // This Week merged into Home (rev2 LandingPage).
+              element={<Navigate to="/dashboard" replace />}
+            />
+            <Route
+              path="past-activities"
+              element={<AppSwitch currentScreen={ScreenType.PAST_ACTIVITIES} />}
+            />
+            <Route
               path="review"
               element={<AppSwitch currentScreen={ScreenType.REVIEW} />}
             />
@@ -136,13 +140,23 @@ function App() {
               path="review/:misconceptionId/activities"
               element={<AppSwitch currentScreen={ScreenType.CHOOSE_ACTIVITY} />}
             />
+            {/* Without a phase, ActivityFlow redirects to Before class. */}
             <Route
-              path="activity/:activityId"
+              path="activity/:activityId/:phase?"
               element={<AppSwitch currentScreen={ScreenType.ACTIVITY_DETAIL} />}
             />
             <Route
+              path="upload-miu/*"
+              element={<AppSwitch currentScreen={ScreenType.UPLOAD_MIU} />}
+            />
+            <Route
+              path="upload-reassess/*"
+              element={<AppSwitch currentScreen={ScreenType.UPLOAD_REASSESS} />}
+            />
+            {/* The upload was /upload-rtd before the MIU rename. */}
+            <Route
               path="upload-rtd/*"
-              element={<AppSwitch currentScreen={ScreenType.UPLOAD_RTD} />}
+              element={<Navigate to="/upload-miu" replace />}
             />
             <Route
               path="reflect"
@@ -157,9 +171,11 @@ function App() {
               element={<AppSwitch currentScreen={ScreenType.CHANGE_PASSWORD} />}
             />
             <Route
-              path="myplan"
-              element={<AppSwitch currentScreen={ScreenType.MY_PLAN} />}
+              path="myactivity"
+              element={<AppSwitch currentScreen={ScreenType.MY_ACTIVITY} />}
             />
+            {/* My Activity was /myplan before the rename. */}
+            <Route path="myplan" element={<Navigate to="/myactivity" replace />} />
             {/*
               Scratchpad for reviewing eval pipeline output. Deliberately not
               routed through AppSwitch/AuthGuard — it reads the TEMPORARY
@@ -167,6 +183,8 @@ function App() {
               protect.
             */}
             <Route path="preview" element={<Preview />} />
+            {/* Any other URL goes to the landing page instead of the router's error page. */}
+            <Route path="*" element={<Navigate to="/" replace />} />
         </Route>,
       ),
     );

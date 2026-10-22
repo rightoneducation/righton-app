@@ -1,0 +1,139 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ContentRow from '../components/ContentRow';
+import UploadConfirmDialog from '../components/UploadConfirmDialog';
+import UploadSummaryCard from '../components/UploadSummaryCard';
+import { ScreenSize } from '../lib/MicroCoachModels';
+import { UploadStepProps } from '../lib/UploadModels';
+import { SignUpCta } from '../lib/styledcomponents/SignUpStyledComponents';
+import {
+  GhostAction,
+  UploadLayout,
+} from '../lib/styledcomponents/UploadStyledComponents';
+import { useI18nReady } from '../hooks/readiness';
+
+/**
+ * Files submitted (Figma Upload5): the analysis has started. "Back to
+ * homepage" leaves it running (rev2 design note; no frame, so it sits first
+ * in the action row, as on the upload step). "Start over"
+ * confirms, then cancels this submission; "Upload new classroom" starts a fresh
+ * upload and leaves this one running.
+ */
+export default function UploadMiuSubmitted(props: UploadStepProps) {
+  const { screenSize, actions } = props;
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const isI18nReady = useI18nReady();
+  const isLarge = screenSize === ScreenSize.LARGE;
+  const [isConfirming, setIsConfirming] = React.useState(false);
+  const [isStartingOver, setIsStartingOver] = React.useState(false);
+
+  if (!isI18nReady) return null;
+
+  const handleStartOver = async () => {
+    setIsStartingOver(true);
+    await actions.startOver();
+  };
+
+  return (
+    <UploadLayout screenSize={screenSize}>
+      <ContentRow
+        screenSize={screenSize}
+        columnWidth={theme.sizing.reviewContentMaxWidth}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: `${theme.sizing.space11}px`,
+          pt: `${isLarge ? theme.sizing.space14 : theme.sizing.space8}px`,
+          pb: `${theme.sizing.space12}px`,
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: `${theme.sizing.space5}px`,
+            textAlign: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: `${theme.sizing.space6}px`,
+            }}
+          >
+            <Typography
+              variant="h1"
+              sx={{ color: 'designSystem.surface.atlanticNavy' }}
+            >
+              {t('upload.submittedTitle')}
+            </Typography>
+            {/* Figma: a 44px green check beside the title. */}
+            <CheckCircleIcon
+              aria-hidden
+              sx={{ fontSize: 44, color: 'designSystem.status.success', flexShrink: 0 }}
+            />
+          </Box>
+          <Typography
+            variant="bodyLg"
+            sx={{
+              color: 'designSystem.surface.ashyGray',
+              letterSpacing: '0.05em',
+              whiteSpace: 'pre-line',
+            }}
+          >
+            {t('upload.submittedBody')}
+          </Typography>
+        </Box>
+
+        <UploadSummaryCard {...props} />
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: isLarge ? 'row' : 'column',
+            alignItems: 'center',
+            gap: `${theme.sizing.space3}px`,
+          }}
+        >
+          {/* rev4 Upload_FileSubmitted: Home is the way on, since another
+              class's upload and this week's progress both start there. */}
+          <GhostAction
+            disableElevation
+            startIcon={<ArrowBackIcon fontSize="small" />}
+            onClick={() => setIsConfirming(true)}
+          >
+            {t('upload.startOver')}
+          </GhostAction>
+          <SignUpCta
+            disableElevation
+            onClick={() => navigate('/dashboard')}
+            sx={{ width: 'auto' }}
+          >
+            {t('upload.backToHome')}
+          </SignUpCta>
+        </Box>
+      </ContentRow>
+      <UploadConfirmDialog
+        open={isConfirming}
+        title={t('upload.startOverTitle')}
+        body={t('upload.startOverBody')}
+        confirmLabel={t('upload.startOverConfirm')}
+        keepLabel={t('upload.startOverKeep')}
+        isWorking={isStartingOver}
+        onKeep={() => setIsConfirming(false)}
+        onConfirm={handleStartOver}
+      />
+    </UploadLayout>
+  );
+}

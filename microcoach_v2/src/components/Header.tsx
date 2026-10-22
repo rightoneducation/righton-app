@@ -4,7 +4,10 @@ import { Link as RouterLink } from 'react-router-dom';
 import { styled, Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button, { ButtonProps } from '@mui/material/Button';
+import ButtonBase from '@mui/material/ButtonBase';
+import Divider from '@mui/material/Divider';
 import Link, { LinkProps } from '@mui/material/Link';
+import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Skeleton from '@mui/material/Skeleton';
@@ -12,33 +15,44 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import ContentRow from './ContentRow';
 import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
-import { avatarIcons, DEFAULT_AVATAR_INDEX } from '../images/avatars';
+import AvatarContent from './AvatarContent';
 
 /**
- * `profile` is the app chrome as the profile frame draws it: the identity
- * presented as an avatar and a name rather than name-and-email, and no class
- * switcher. Every other in-app frame (newexports/Wireframe2,3,5) draws the
- * 362-wide name-and-email pill beside the 180-wide class select, so this is a
- * second app variant rather than a change to the first.
+ * `app` is the in-app chrome (newexports/Wireframe2,3,5): the 362-wide
+ * name-and-email pill beside the 180-wide class select.
  *
  * `signup` is the wizard's own chrome: the frames draw the brand alone on
  * every step but the last, since offering a Sign Up link to someone already
  * signing up makes no sense. Its final step still shows an identity, but that
  * comes from the LOGGEDIN branch rather than the variant.
+ *
+ * `avatar` is the chrome of the sidebar screens, the MIU upload and Account
+ * Settings: the identity shrinks to an initials avatar and the class switcher
+ * goes, since those screens pick the class in the page. The frames draw no
+ * log out control, so the avatar opens the account menu from the previous
+ * dashboard frame (OldDashboard1: Account Settings, then Log out).
  */
-export type HeaderVariant = 'public' | 'signup' | 'app' | 'profile';
+export type HeaderVariant = 'public' | 'signup' | 'app' | 'avatar';
 
 interface HeaderProps {
   screenSize: ScreenSize;
   variant?: HeaderVariant;
+  // Avatar variant only: also show the class switcher (the flow screens).
+  showClassSwitcher?: boolean;
   onLogOut?: () => void;
   classrooms?: IMicroCoachClassroom[];
   selectedClassroomId?: string | null;
   onSelectClassroom?: (classroomId: string) => void;
+  // The teacher's picture for the avatar; initials when null.
+  profilePictureUrl?: string | null;
+  // The class list has not answered yet: the switcher shows its shape rather
+  // than "No classes yet".
+  areClassesLoading?: boolean;
 }
 
 // styled() erases MUI's polymorphic `component` prop, so re-declare it here to
@@ -141,45 +155,6 @@ const IdentityPill = styled(Box)<RouterExtras>(({ theme }) => ({
   textOverflow: 'ellipsis',
 }));
 
-/*
- * Figma (profile): 180x44, holding the avatar and the name alone.
- *
- * 180 is a floor rather than the width: the frame measured it against "Mr.
- * Anderson", and the name this actually renders is the full display name, which
- * does not fit. Growing beats ellipsising a name at this length.
- */
-const AvatarIdentityPill = styled(Box)<RouterExtras>(({ theme }) => ({
-  ...identityPillBase(theme),
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.sizing.space2,
-  minWidth: 180,
-  minHeight: 44,
-  padding: `0 ${theme.sizing.space3 + 2}px`,
-  ...theme.typography.buttonLabel,
-  textDecoration: 'none',
-}));
-
-// Figma: 28.7x35.4, rx 6.7 — the sidebar plate at header scale, and clipping
-// the same art, so it takes the same treatment.
-const HeaderAvatar = styled(Box)(({ theme }) => ({
-  width: 29,
-  height: 35,
-  flexShrink: 0,
-  overflow: 'hidden',
-  borderRadius: 7,
-  backgroundColor: theme.palette.designSystem.surface.avatarPlate,
-  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.offWhite}`,
-  boxSizing: 'border-box',
-}));
-
-const HeaderAvatarImage = styled('img')({
-  display: 'block',
-  width: '100%',
-  height: '100%',
-  objectFit: 'cover',
-});
-
 const ClassSelect = styled(Select<string>, {
   shouldForwardProp: (prop) => prop !== 'screenSize',
 })<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
@@ -203,6 +178,35 @@ const ClassSelect = styled(Select<string>, {
   },
 }));
 
+// Figma (Dashboard1): a 56px skyBlue circle holding the initials.
+const InitialsAvatar = styled(ButtonBase)(({ theme }) => ({
+  width: 56,
+  height: 56,
+  flexShrink: 0,
+  borderRadius: '50%',
+  // A picture fills the circle instead of the initials.
+  overflow: 'hidden',
+  backgroundColor: theme.palette.designSystem.foreground.skyBlue,
+  color: theme.palette.designSystem.background.navyBlue,
+  ...theme.typography.smallTitle,
+  letterSpacing: '-0.02em',
+  '&.Mui-focusVisible': {
+    outline: `2px solid ${theme.palette.designSystem.surface.white}`,
+    outlineOffset: 2,
+  },
+}));
+
+// Figma (OldDashboard1): 244 wide, accentBlue, radius 8, a white hairline
+// between Account Settings and the outlined Log out pill.
+const accountMenuPaperSx = {
+  width: 244,
+  mt: 1,
+  borderRadius: '8px',
+  bgcolor: 'designSystem.foreground.accentBlue',
+  color: 'designSystem.surface.white',
+  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+};
+
 // Skeleton inherits its colour from the surrounding text colour, which is
 // invisible against the navy bar.
 const authSkeletonSx = { bgcolor: 'designSystem.background.fadedWhiteVeil' };
@@ -210,10 +214,13 @@ const authSkeletonSx = { bgcolor: 'designSystem.background.fadedWhiteVeil' };
 export default function Header({
   screenSize,
   variant = 'public',
+  showClassSwitcher = false,
   onLogOut,
   classrooms = [],
   selectedClassroomId = null,
   onSelectClassroom,
+  profilePictureUrl = null,
+  areClassesLoading = false,
 }: HeaderProps) {
   const { t } = useTranslation();
   const { userStatus, userProfile } = useMicroCoachDataState();
@@ -230,9 +237,17 @@ export default function Header({
     .join(' ');
   const teacherEmail = userProfile?.email || '';
 
-  // Both app variants share the nav block; only its contents differ.
-  const isProfileChrome = variant === 'profile';
-  const usesAppNav = variant === 'app' || isProfileChrome;
+  const initials = [userProfile?.firstName, userProfile?.lastName]
+    .map((part) => part?.trim().charAt(0) ?? '')
+    .join('')
+    .toUpperCase();
+  const [accountAnchor, setAccountAnchor] = React.useState<HTMLElement | null>(
+    null,
+  );
+
+  // Every app variant shares the nav block; only its contents differ.
+  const isAvatarChrome = variant === 'avatar';
+  const usesAppNav = variant === 'app' || isAvatarChrome;
 
   const isCompactBrand = usesAppNav && screenSize === ScreenSize.SMALL;
 
@@ -244,6 +259,42 @@ export default function Header({
     if (usesAppNav || variant === 'signup') return 'appTitle';
     return 'navTitle';
   })();
+
+  // The app variant always shows it; the avatar variant does on the
+  // Understand-to-Reflect flow screens (showClassSwitcher).
+  const classSwitcher = areClassesLoading ? (
+    <Skeleton
+      animation="wave"
+      variant="rounded"
+      width={screenSize === ScreenSize.SMALL ? 140 : 180}
+      height={44}
+      aria-label={t('header.classSwitcher')}
+      sx={{ ...authSkeletonSx, borderRadius: `${appPillRadius}px` }}
+    />
+  ) : (
+    <ClassSelect
+      screenSize={screenSize}
+      value={selectedClassroomId ?? ''}
+      displayEmpty
+      disabled={classrooms.length === 0 || !onSelectClassroom}
+      renderValue={(classroomId) =>
+        classrooms.find(
+          (classroom) => classroom.id === classroomId,
+        )?.name ?? t('header.noClasses')
+      }
+      IconComponent={KeyboardArrowDownIcon}
+      onChange={(event) =>
+        onSelectClassroom?.(event.target.value)
+      }
+      inputProps={{ 'aria-label': t('header.classSwitcher') }}
+    >
+      {classrooms.map((classroom) => (
+        <MenuItem key={classroom.id} value={classroom.id}>
+          {classroom.name}
+        </MenuItem>
+      ))}
+    </ClassSelect>
+  );
 
   return (
     <HeaderBar component="header">
@@ -280,7 +331,7 @@ export default function Header({
             spacing={2}
             sx={{ justifyContent: 'flex-end', minWidth: 0 }}
           >
-            {isResolvingAuth ? (
+            {isResolvingAuth && (
               <Skeleton
                 animation="wave"
                 variant="rounded"
@@ -288,7 +339,55 @@ export default function Header({
                 height={44}
                 sx={{ ...authSkeletonSx, borderRadius: `${appPillRadius}px` }}
               />
-            ) : (
+            )}
+            {!isResolvingAuth && isAvatarChrome && (
+              <>
+                {showClassSwitcher && classSwitcher}
+                <InitialsAvatar
+                  aria-label={t('header.accountMenu')}
+                  aria-haspopup="menu"
+                  aria-expanded={!!accountAnchor}
+                  onClick={(event) => setAccountAnchor(event.currentTarget)}
+                >
+                  <AvatarContent url={profilePictureUrl} initials={initials} />
+                </InitialsAvatar>
+                <Menu
+                  anchorEl={accountAnchor}
+                  open={!!accountAnchor}
+                  onClose={() => setAccountAnchor(null)}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  slotProps={{ paper: { sx: accountMenuPaperSx } }}
+                >
+                  <MenuItem
+                    component={RouterLink}
+                    to="/profile"
+                    onClick={() => setAccountAnchor(null)}
+                    sx={{ gap: 1, typography: 'rubikBody' }}
+                  >
+                    <SettingsOutlinedIcon fontSize="small" />
+                    {t('profile.title')}
+                  </MenuItem>
+                  <Divider
+                    sx={{ mx: 2, borderColor: 'designSystem.surface.white' }}
+                  />
+                  <Box sx={{ px: 3, py: 1.5 }}>
+                    <LogOutButton
+                      fullWidth
+                      disableElevation
+                      onClick={() => {
+                        setAccountAnchor(null);
+                        onLogOut?.();
+                      }}
+                      startIcon={<LogoutIcon fontSize="small" />}
+                    >
+                      {t('profile.logOut')}
+                    </LogOutButton>
+                  </Box>
+                </Menu>
+              </>
+            )}
+            {!isResolvingAuth && !isAvatarChrome && (
               <>
                 {screenSize === ScreenSize.LARGE && (
                   <>
@@ -301,56 +400,19 @@ export default function Header({
                     </LogOutButton>
                     {/* The frame gives no separate control for reaching the
                         profile, so the identity itself is the way in. */}
-                    {isProfileChrome ? (
-                      <AvatarIdentityPill component={RouterLink} to="/profile">
-                        <HeaderAvatar>
-                          <HeaderAvatarImage
-                            src={avatarIcons[DEFAULT_AVATAR_INDEX]}
-                            alt=""
-                          />
-                        </HeaderAvatar>
+                    <IdentityPill
+                      component={RouterLink}
+                      to="/profile"
+                      sx={{ textDecoration: 'none' }}
+                    >
+                      <Box component="span" sx={{ fontWeight: 500 }}>
                         {teacherName}
-                      </AvatarIdentityPill>
-                    ) : (
-                      <IdentityPill
-                        component={RouterLink}
-                        to="/profile"
-                        sx={{ textDecoration: 'none' }}
-                      >
-                        <Box component="span" sx={{ fontWeight: 500 }}>
-                          {teacherName}
-                        </Box>
-                        {` • ${teacherEmail}`}
-                      </IdentityPill>
-                    )}
+                      </Box>
+                      {` • ${teacherEmail}`}
+                    </IdentityPill>
                   </>
                 )}
-                {/* The profile frame carries no class switcher; every other
-                    in-app frame does. */}
-                {!isProfileChrome && (
-                  <ClassSelect
-                    screenSize={screenSize}
-                    value={selectedClassroomId ?? ''}
-                    displayEmpty
-                    disabled={classrooms.length === 0 || !onSelectClassroom}
-                    renderValue={(classroomId) =>
-                      classrooms.find(
-                        (classroom) => classroom.id === classroomId,
-                      )?.name ?? t('header.noClasses')
-                    }
-                    IconComponent={KeyboardArrowDownIcon}
-                    onChange={(event) =>
-                      onSelectClassroom?.(event.target.value)
-                    }
-                    inputProps={{ 'aria-label': t('header.classSwitcher') }}
-                  >
-                    {classrooms.map((classroom) => (
-                      <MenuItem key={classroom.id} value={classroom.id}>
-                        {classroom.name}
-                      </MenuItem>
-                    ))}
-                  </ClassSelect>
-                )}
+                {classSwitcher}
               </>
             )}
           </Stack>

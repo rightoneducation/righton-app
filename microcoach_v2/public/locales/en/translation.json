@@ -5,7 +5,8 @@
     "signup": "Sign Up",
     "login": "Login",
     "classSwitcher": "Select a class",
-    "noClasses": "No classes yet"
+    "noClasses": "No classes yet",
+    "accountMenu": "Account menu"
   },
   "common": {
     "needHelp": "Need help"
@@ -17,25 +18,14 @@
     "reassess": "Reassess",
     "reflect": "Reflect",
     "home": "Home",
-    "myPlan": "My Plan",
+    "myActivity": "My Activity",
     "myActivities": "My Activities",
     "myLessonPlan": "My Lesson Plan"
   },
   "activityDetail": {
-    "back": "Back to activity choices",
-    "beforeClass": "Before class",
-    "activity": "Activity",
-    "facilitation": "Facilitation",
-    "discussion": "Discussion",
     "teacherView": "Teacher",
     "studentView": "Student",
-    "exportPdf": "Export PDF",
-    "next": "Next: {{phase}}",
-    "saveToPlan": "Save to Lesson Plan",
     "noContent": "This step isn't available for this activity yet.",
-    "printSubtitle": "Prepared for: {{misconception}}",
-    "exporting": "Preparing PDF…",
-    "page": "Page",
     "stepNumber": "Step {{number}}",
     "stepCorrect": "(Correct)",
     "stepError": "← (Error: {{note}})",
@@ -43,94 +33,130 @@
     "makeYourCasePositions": "Anticipated arguments"
   },
   "chooseActivity": {
-    "back": "Back to misconceptions",
-    "addressing": "Addressing misconception: {{title}}",
-    "title": "Choose your next instructional move",
-    "subheading": "Select the activity that best fits your class",
-    "subtitleLabel": "Subtitle",
-    "descriptionLabel": "Description",
+    "replaceBody": "This will replace the activity you saved for another misconception.",
+    "selected": "Misconception selected:",
+    "change": "Change",
+    "title": "Select your next-step activity",
+    "subheading": "Choose the activity that best fits your class",
+    "groupingSequence": "Grouping, in order",
+    "grouping": {
+      "INDIVIDUAL": "Individual",
+      "PAIRS": "Pairs",
+      "WHOLE_CLASS": "Whole Class"
+    },
+    "whyTitle": "Why this activity?",
+    "howToRunTitle": "How to run it",
+    "viewDetails": "View activity details",
     "selectActivity": "Select activity",
-    "selectedActivity": "Selected activity",
-    "howToRun": "How to run it"
-  },
-  "myPlan": {
-    "back": "Back to choosing activity",
-    "title": "Your saved activity",
-    "subheading": "Activities saved for Algebra 1 - Period 2. Open an activity to prepare, then mark it done after class.",
-    "changeActivity": "Change activity",
-    "completed": "Completed",
-    "openDetails": "Open activity details",
-    "markAsDone": "Mark as done",
-    "remove": "Remove",
-    "empty": "No activities saved yet. Choose one from a misconception's next steps.",
-    "statActivities": "Activities run",
-    "statActivitiesValue": "{{count}} completed",
-    "statUpload": "Upload RTD files",
-    "statUploadValue": "Your next action",
-    "statProgress": "View progress",
-    "statProgressValue": "Unlocks after upload",
-    "promptTitle": "Upload RTD files to track progress",
-    "promptBody": "You’ve marked activities as complete. Upload RTD files now so MicroCoach can analyze student results and surface learning gaps.",
-    "promptCta": "Upload RTD Files"
+    "loading": "Loading activities",
+    "loadError": "We couldn't load the activities for this misconception. Refresh the page to try again."
   },
   "misconceptionModal": {
     "close": "Close",
-    "studentWork": "Student work",
-    "skillContext": "Skill context",
-    "errorsByFrequency": "Errors in order of frequency",
-    "studentCount": "{{count}} students:",
     "chooseActivity": "Choose activity",
-    "noStudentWork": "Student work for this misconception isn't available yet.",
-    "noSkillContext": "Skill context for this misconception isn't available yet."
+    "noStudentWork": "Student responses for this misconception aren't available yet.",
+    "noSkillContext": "Related skills for this misconception aren't available yet.",
+    "title": "Misconception Details",
+    "studentResponses": "Student Responses",
+    "relatedSkills": "Related Skills",
+    "evidenceNote": "MicroCoach highlighted these responses because they may indicate the misconception described below.",
+    "howStudentsResponded": "How students responded",
+    "correctAnswer": "Correct answer",
+    "possibleMistake": "Possible mistake",
+    "showStudents": "Show students",
+    "hideStudents": "Hide students",
+    "noStudents": "No students chose this answer.",
+    "relatedSkillsIntro": "How these skills connect to what came before and what's ahead. These are possible instructional connections, not confirmed causes.",
+    "focusSkill": "Focus Skill",
+    "prerequisiteGaps": "Prerequisite Gaps",
+    "upcomingSkills": "Upcoming Skills",
+    "noneIdentified": "None identified.",
+    "domainTooltipLabel": "What {{code}} covers"
   },
   "review": {
-    "banner": "Your class results are in — see what your students misunderstood and next steps you can take",
+    "noMisconceptionsTitle": "No misconceptions found",
+    "noMisconceptionsBody": "Most of your students answered correctly, so there’s nothing to focus on this time.",
+    "banner": "Your class results are in — see patterns in your students' thinking and next steps you can take.",
     "dismissBanner": "Dismiss",
     "title": "Understand Your Students' Thinking",
-    "subtitle": "Insights and misconception patterns from your classroom data",
+    "subtitle": "MicroCoach surfaces misconception patterns in your students' responses, along with possible explanations for the thinking behind them.",
     "worksAnalyzed": "{{count}} student works analyzed",
-    "worksAnalyzedUnavailable": "Student works analyzed: Not available",
+    "viewMiu": "View Mix It Up",
     "viewDetails": "View details",
-    "strongUnderstanding": "{{count}} Students showed strong understanding",
-    "strongUnderstandingUnavailable": "Students showing strong understanding: Not available"
+    "recommendedFocus": "Recommended focus",
+    "highestFrequency": "Highest frequency",
+    "highestFrequencyTooltip": "Of all the misconceptions found, this one reaches the most students.",
+    "showMisconceptions": "Show misconceptions {{from}}–{{to}} of {{count}}",
+    "additional": "Additional misconception",
+    "focusTooltip": "MicroCoach looks at several factors in combination: how widespread the misconception is, how confidently students hold it, how important the underlying math idea is for future learning, and the strength of the supporting evidence.",
+    "focusTooltipLabel": "Why this is the recommended focus",
+    "prevalenceRange": {
+      "MOST": "≥50% of students",
+      "SOME": "20–49% of students",
+      "FEW": "Fewer than 20% of students"
+    },
+    "responseEvidence": "Response evidence:",
+    "possibleExplanation": "Possible explanation:",
+    "evidenceQuestion": "Q{{number}}, {{answers}}",
+    "evidenceAnswer_one": "Answer {{list}}",
+    "evidenceAnswer_other": "Answers {{list}}",
+    "and": "&",
+    "select": "Select",
+    "correctResponsesTitle": "Correct responses across the {{count}} Mix It Up questions",
+    "correct": "Correct",
+    "questionLabel": "Q{{number}}",
+    "disclaimer": "MicroCoach uses AI to identify patterns in your students' MIU responses. Use these insights as a starting point, and review them alongside the underlying questions and student responses.",
+    "loading": "Loading misconceptions",
+    "loadError": "We couldn't load this week's misconceptions. Refresh the page to try again."
   },
   "hero": {
     "title": "See how your whole class is thinking.",
     "body": "MicroCoach identifies misconception patterns across your class and suggests next steps, in minutes.",
-    "getstarted": "Get started"
+    "getstarted": "Get started",
+    "desktopNote": "MicroCoach is optimized for laptop and desktop use during the Wave 2 pilot.",
+    "imageAlt": "Two students working through a worksheet at their desk"
   },
   "howItWorks": {
     "title": "How it works",
     "step1": {
       "label": "Step 1",
-      "title": "Upload your files",
-      "body": "Upload your answer key and student responses from any quiz or assessment"
+      "title": "Upload your Mix It Up",
+      "body": "Upload your answer key and student responses from your Mix It Up."
     },
     "step2": {
       "label": "Step 2",
-      "title": "See what your class misunderstood",
-      "body": "MicroCoach analyzes every response and groups students by what they misunderstood, not just what they got wrong"
+      "title": "Understand your students' thinking",
+      "body": "MicroCoach analyzes every response and groups students by what they misunderstood, not just what they got wrong."
     },
     "step3": {
       "label": "Step 3",
-      "title": "Plan your next move",
-      "body": "For each misconception, MicroCoach suggests targeted next steps. Pick what fits your class and get back to teaching"
+      "title": "Choose your next activity",
+      "body": "For each misconception, MicroCoach suggests targeted next steps. Pick what fits your class and get back to teaching."
+    },
+    "step4": {
+      "label": "Step 4",
+      "title": "Reassess",
+      "body": "After you've taught the activity, upload the second Mix It Up so MicroCoach can see how your students responded."
+    },
+    "step5": {
+      "label": "Step 5",
+      "title": "Reflect on what changed",
+      "body": "Compare before and after to see which students moved forward and who still needs support."
     }
   },
   "footer": {
     "copyright": "Copyright © 2026 RightOn Education. All rights reserved.",
     "privacypolicy": "Privacy Policy"
   },
-  "home": {
-    "banner": "Your class results are in — review misconception patterns and recommended activities",
-    "dismissBanner": "Dismiss",
-    "title": "Welcome back to MicroCoach",
-    "subtitle": "Review misconception patterns in your students’ thinking\nto identify opportunities to strengthen understanding.",
+  "dashboard": {
+    "title": "Welcome to MicroCoach",
+    "titleReturning": "Welcome back to MicroCoach",
+    "subtitle": "Upload your Monday MIU files to better understand\nstudent thinking and receive recommended next steps.",
     "classPrompt": "Which class are you working with today?",
     "moreClasses": "More",
     "weekLabel": "Week",
     "cta": {
-      "ASSESS": "Upload student results",
+      "ASSESS": "Upload Monday MIU files for analysis",
       "UNDERSTAND": "Review misconception patterns",
       "REASSESS": "Upload reassessment results",
       "REFLECT": "Reflect on impact"
@@ -138,20 +164,63 @@
     "steps": {
       "ASSESS": "Assess",
       "UNDERSTAND": "Understand",
-      "CHOOSE": "Choose activity",
+      "CHOOSE": "Select Activity",
       "REASSESS": "Reassess",
-      "REFLECT": "Reflect on impact"
+      "REFLECT": "Reflect"
     },
-    "noClassesTitle": "Add your first class to get started",
-    "addClassPlaceholder": "Class name",
-    "addClass": "Add class",
-    "addClassError": "That class could not be saved. Please try again.",
+    "noClassesTitle": "Add your classes to get started",
     "sidebar": {
-      "home": "Home",
-      "thisWeek": "This Week",
-      "pastInsights": "Past Insights"
+      "dashboard": "Home",
+      "pastActivities": "Past Activities"
     },
-    "weekNumber": "Week {{number}}"
+    "myActivity": "My activity",
+    "noClassesHint": "Classes are added in Account Settings.",
+    "accountSettingsLink": "Go to Account Settings",
+    "weekOption": "Week {{number}} ({{range}})",
+    "classesError": "We couldn't load your classes. Refresh the page to try again.",
+    "loadingClasses": "Loading your classes",
+    "loadingNextStep": "Loading your next step"
+  },
+  "weeklyProgress": {
+    "title": "Weekly Activity Progress",
+    "weekHeading": "Week {{number}}: {{range}}",
+    "students": "{{count}} students",
+    "waiting": "Waiting on MicroCoach...",
+    "status": {
+      "ASSESS": "Assess your class MIU response data",
+      "AWAITING": "Analyzing MIU files, expect email results within 48 hours",
+      "UNDERSTAND": "Understand misconceptions before choosing an activity",
+      "CHOOSE": "Select your next activity",
+      "REASSESS": "See how student understanding has changed",
+      "REFLECT": "See how student understanding has changed",
+      "DONE": "This week's activity is complete"
+    },
+    "action": {
+      "ASSESS": "Upload MIU 1 files",
+      "UNDERSTAND": "Review misconceptions",
+      "CHOOSE": "View activities",
+      "REASSESS": "Upload MIU 2 files",
+      "REFLECT": "View results",
+      "DONE": "View data"
+    },
+    "empty": "No classes yet. Add your classes in Account Settings."
+  },
+  "pastActivities": {
+    "title": "Past Activities",
+    "weekHeading": "Week {{number}}: {{range}}",
+    "students": "{{count}} students",
+    "completed": "Completed {{date}}",
+    "viewData": "View data",
+    "sort": "Sort",
+    "sortLabel": "Sort activities",
+    "sortNewest": "Date: Newest first",
+    "sortOldest": "Date: Oldest first",
+    "sortClass": "By class: A-Z",
+    "emptyTitle": "No past activities yet!",
+    "emptyBody": "Complete your first MicroCoach activity and you’ll be able to review it here.",
+    "backToHome": "Back to Home",
+    "incomplete": "Incomplete",
+    "untitled": "Activity"
   },
   "signup": {
     "welcome": "Welcome to MicroCoach",
@@ -183,7 +252,7 @@
     "removeClass": "Remove class",
     "selectTitle": "Select your teacher name and class to get started",
     "more": "More",
-    "upload": "Upload PPQ files for analysis",
+    "upload": "Upload MIU files for analysis",
     "showPassword": "Show password",
     "hidePassword": "Hide password",
     "codeError": "That code isn't right. Check your email and try again.",
@@ -210,52 +279,116 @@
   "profile": {
     "title": "Account Settings",
     "sectionTitle": "Profile Information",
-    "firstName": "First name",
-    "lastName": "Last name",
+    "firstName": "First Name",
+    "lastName": "Last Name",
     "email": "Email",
     "emailNote": "(Note: email cannot be edited)",
     "password": "Password",
     "editPicture": "Edit Picture",
+    "pictureTypeError": "Choose a PNG, JPG, GIF or WebP image.",
+    "pictureSizeError": "Choose an image under 5MB.",
+    "pictureUploadError": "We couldn't save your picture. Try again.",
     "editInformation": "Edit Information",
     "save": "Save",
     "changePassword": "Change Password",
     "accountCreated": "Account Created",
-    "uploadsMade": "Uploads Made:",
     "logOut": "Log out",
-    "nameRequired": "Enter both a first and last name."
+    "nameRequired": "Enter both a first and last name.",
+    "school": "School",
+    "schoolNote": "(Note: school name cannot be edited)",
+    "yourClasses": "Your Classes",
+    "noClasses": "No classes yet.",
+    "deleteClass": "Delete {{name}}",
+    "deleteClassTitle": "Delete this class?",
+    "deleteClassBody": "This removes {{className}} from your account. This can't be undone.",
+    "deleteClassError": "That class couldn't be deleted. Please try again.",
+    "addClass": "+ Add a class",
+    "addClassPlaceholder": "Enter class name",
+    "addClassSubmit": "Add class",
+    "addClassError": "Your class wasn’t added. Something went wrong.",
+    "addClassDuplicate": "You already have a class named {{name}}.",
+    "cancelAddClass": "Cancel adding a class",
+    "oldPassword": "Re-enter your old password",
+    "newPassword": "Enter your new password",
+    "confirmPassword": "Re-enter your new password",
+    "saving": "Saving",
+    "saveError": "We couldn't save your changes. Try again.",
+    "passwordRequired": "Fill in all three password fields.",
+    "passwordMismatch": "Your password doesn’t match",
+    "passwordSame": "Your new password must be different from your old one.",
+    "done": "Done",
+    "cancel": "Cancel",
+    "passwordWrongOld": "Your password doesn’t match",
+    "passwordInvalid": "That new password doesn't meet the password requirements.",
+    "passwordLimit": "Too many attempts. Please wait a few minutes and try again.",
+    "passwordError": "Your password couldn't be changed. Please try again.",
+    "passwordChanged": "Your password has been changed successfully",
+    "dismiss": "Dismiss"
   },
   "upload": {
     "setupTitle": "Step 1: Set up your class",
-    "teacher": "Teacher",
     "class": "Class",
+    "classPlaceholder": "Select class",
+    "noClasses": "No classes yet",
     "week": "Week",
+    "weekPlaceholder": "Select week",
+    "weekOption": "Week {{number}}: {{range}}",
     "uploadTitle": "Step 2: Upload files",
     "uploadSubtitle": "Upload both files below to continue",
-    "exemplar": "RTD Exemplar",
+    "exemplar": "MIU Exemplar",
     "exemplarNote": "· Solution steps & distractor rationale",
-    "responses": "RTD Responses",
+    "responses": "MIU Responses",
     "responsesNote": "· Graded student work for full class",
     "dropHint": "Upload a file or drag and drop it here",
     "formatDocx": ".docx format · up to 5MB",
     "formatXlsx": ".xlsx format · up to 5MB",
     "uploadFile": "Upload file",
     "replaceFile": "Replace file",
+    "removeFile": "Remove {{name}}",
     "completed": "Completed",
     "error": "Error",
-    "errorFormat": "Unsupported file format · Please upload a .docx file",
+    "errorFormat": "Unsupported file format · Please upload a {{extension}} file",
+    "errorSize": "File is larger than 5MB · Please upload a smaller file",
     "bothToContinue": "Upload both files to continue",
+    "selectClassToContinue": "Select a class to continue",
     "backHome": "Back to homepage",
+    "backToHome": "Back to home",
     "continue": "Continue",
     "reviewTitle": "Review and submit",
-    "reviewBody": "Please confirm you’ve uploaded the correct RTD Exemplar and Responses files for the intended class and week. Once submitted, MicroCoach will begin analyzing your files.",
+    "reviewBody": "Please confirm you’ve uploaded the correct MIU Exemplar and MIU Responses files for the intended class and week.\nOnce submitted, MicroCoach will begin analyzing your files.",
     "uploaded": "UPLOADED",
-    "ppqExemplar": "PPQ Exemplar",
-    "ppqResponses": "PPQ Responses",
+    "teacher": "Teacher",
     "backToUpload": "Back to upload",
     "submit": "Submit files for analysis",
-    "weekOf": "Week of {{date}}",
-    "noClass": "No class selected",
-    "addClassHint": "Add a class on the dashboard to start an upload."
+    "submitting": "Submitting your files",
+    "submitErrorUpload": "We couldn't upload your files. Please try again.",
+    "submitErrorAnalysis": "Your files couldn't be sent for analysis. Please try again, or contact support if this keeps happening.",
+    "submittedTitle": "Files submitted successfully",
+    "submittedBody": "MicroCoach is analyzing your files.\nYou’ll receive a summary of your class’s misconception patterns and suggested next steps within 24 hours.",
+    "startOver": "Start over",
+    "startOverTitle": "Start over with new files?",
+    "startOverBody": "If the wrong files were uploaded, go ahead and re-upload.\nOtherwise, you're all set. We'll send your results within 24 hours.",
+    "startOverConfirm": "Yes, start over",
+    "startOverKeep": "Keep my submission",
+    "leave": {
+      "confirm": "Leave anyway",
+      "none": {
+        "title": "Leave without uploading?",
+        "body": "Your class and week won’t be saved. You can start a new upload anytime from Home.",
+        "keep": "Keep uploading"
+      },
+      "partial": {
+        "title": "Your upload isn’t finished.",
+        "body": "You’ve added the {{added}}, but the {{missing}} file is still missing. If you leave now, you’ll need to upload both files again.",
+        "keep": "Finish uploading"
+      },
+      "ready": {
+        "title": "You’re one step away.",
+        "body": "Both files are added, but they haven’t been submitted yet. Click Continue to send them to MicroCoach. If you leave now, your files won’t be saved.",
+        "keep": "Go back and submit"
+      }
+    },
+    "close": "Close"
   },
   "reflect": {
     "title": "How Your Class Responded",
@@ -302,5 +435,167 @@
     "percentagePointGain": "+{{improvement}} percentage points",
     "averageQuestionsGain": "{{change}} questions correct on average",
     "noChange": "No change"
+  },
+  "activityList": {
+    "loading": "Loading your classes' activity",
+    "loadError": "We couldn't load your classes' activity. Refresh the page to try again.",
+    "removeTitle": "Remove this session?",
+    "removeBody": "This deletes {{className}}'s session and its results. This can't be undone.",
+    "removeError": "That session couldn't be removed. Please try again.",
+    "remove": "Remove",
+    "cancel": "Cancel"
+  },
+  "activityFlow": {
+    "loading": "Loading the activity",
+    "loadError": "We couldn't load this activity. Refresh the page to try again.",
+    "changeActivity": "Change activity",
+    "phasesLabel": "Activity steps",
+    "phases": {
+      "beforeClass": "Before class",
+      "facilitate": "Facilitate activity",
+      "discussion": "Closing discussion"
+    },
+    "beforeClass": {
+      "title": "To do before class",
+      "subtitle": "Steps to prepare the activity",
+      "groupingTitle": "Grouping for this activity"
+    },
+    "facilitate": {
+      "title": "How to run it",
+      "subtitle": "Steps to facilitate the activity",
+      "examplesTitle": "Incorrect worked examples",
+      "viewLabel": "Choose a view",
+      "teacherView": "Teacher View",
+      "studentView": "Student View",
+      "viewNote": "Teacher view shows answers and teaching notes. Student view shows only what you'll share with students.",
+      "exportTeacher": "Export Teacher PDF",
+      "exportStudent": "Export Student PDF",
+      "exporting": "Preparing PDF…",
+      "exampleLabel": "Example {{number}}",
+      "ofTotal": "of {{total}}",
+      "slip": "Slip",
+      "final": "Final:",
+      "prev": "Prev",
+      "next": "Next",
+      "problem": "Problem",
+      "strategyVerdict": {
+        "CORRECT": "Correct approach",
+        "INCORRECT": "Wrong approach",
+        "STRONGER": "More Sophisticated Approach"
+      },
+      "claim": "Claim",
+      "claimOption": {
+        "TRUE": "A. True",
+        "FALSE": "B. False",
+        "CONDITIONAL": "C. It depends"
+      },
+      "voteOption": {
+        "YES": "A. Yes",
+        "NO": "B. No",
+        "UNDECIDED": "C. Undecided"
+      },
+      "why": "Why?",
+      "examplesToBringIn": "Examples to bring in",
+      "exampleAnswer": "Answer: {{answer}}",
+      "argumentsTitle": "Arguments to anticipate",
+      "argumentStance": {
+        "SUPPORT": "Supports the claim",
+        "CHALLENGE": "Challenges the claim"
+      },
+      "stepsToFollow": "Steps to follow",
+      "examplesToTry": "Examples to try",
+      "stage": {
+        "INVESTIGATE": "Investigate — where did the reasoning break?",
+        "SOLVE": "Solve — rewrite the faulty step",
+        "GENERALIZE": "Generalize — write the rule that prevents this"
+      },
+      "askStudents": "Ask students",
+      "stageAnswer": {
+        "INVESTIGATE": "Expected answer",
+        "SOLVE": "Corrected step",
+        "GENERALIZE": "Target rule (write on board)"
+      },
+      "anonymousResponse": "Anonymous student response",
+      "studentWork": "Student’s work",
+      "whatToNotice": "What to notice"
+    },
+    "discussion": {
+      "title": "Discussion questions",
+      "subtitle": "Questions to ask at the close of class",
+      "answer": "Answer",
+      "watchFor": "Watch for",
+      "watchForLabel": "Watch for {{number}}",
+      "tryAsking": "Try asking",
+      "respondWith": "Respond with",
+      "takeaway": "Mathematical Takeaway"
+    },
+    "nav": {
+      "backChoices": "Back: Activity choices",
+      "nextFacilitate": "Next: Facilitate activity",
+      "backBeforeClass": "Back: Before class",
+      "nextDiscussion": "Next: Closing discussion",
+      "backFacilitate": "Back: Facilitate activity",
+      "selectActivity": "Select this activity",
+      "goToMyActivity": "Go to My Activity"
+    },
+    "changeDialog": {
+      "title": "Change activity",
+      "close": "Close",
+      "question": "Are you sure you want to change your selected activity?",
+      "body": "You will be directed back to the “Select your next-step activity” page.",
+      "cancel": "Cancel",
+      "confirm": "Yes, change activity"
+    },
+    "pdf": {
+      "teacherLabel": "Facilitate activity",
+      "studentLabel": "Student Activity Handout",
+      "misconception": "Misconception:",
+      "teacherExamples": "Incorrect Worked examples - Examples to show the class",
+      "markCorrect": "(correct)",
+      "markIncorrect": "(incorrect)"
+    },
+    "noContent": "This activity's content isn't available yet. Choose another activity or check back later.",
+    "or": "or"
+  },
+  "myActivity": {
+    "title": "My Activity",
+    "intro": "Review the activity you’ve saved for your class. After running the activity, upload your Thursday MIU files so MicroCoach can help track student progress over time",
+    "uploadMiu": "Upload MIU files",
+    "loading": "Loading your saved activity",
+    "loadError": "We couldn't load your saved activity. Refresh the page to try again.",
+    "saveError": "We couldn't save your activity. Go back and select it again.",
+    "empty": "No activity saved yet. Choose one from a misconception's next-step activities."
+  },
+  "activityTemplates": {
+    "INCORRECT_WORKED_EXAMPLES": {
+      "name": "Spot the Slip",
+      "subtitle": "Locate the breakdown",
+      "description": "Students examine a worked solution, identify the first step where the reasoning goes off track, explain why the step is invalid, and work together to correct the error.",
+      "artifactTitle": "Incorrect worked examples"
+    },
+    "FAVORITE_NO": {
+      "name": "My Favorite No",
+      "subtitle": "Preserve and build on productive thinking",
+      "description": "Students analyze a meaningful incorrect answer that reveals a mathematical idea worth preserving or building on. They discuss why the response might seem reasonable, identify what the reasoning gets right, and revise it while keeping what is mathematically useful.",
+      "artifactTitle": "Student thinking analysis examples"
+    },
+    "MATH_DETECTIVE": {
+      "name": "Math Detective",
+      "subtitle": "Investigate underlying issues",
+      "description": "Students become “math detectives” by investigating an incorrect solution, identifying the underlying mathematical issue, revising the reasoning, and checking whether the revision works.",
+      "artifactTitle": "Student thinking analysis examples"
+    },
+    "COMPARE_THE_THINKING": {
+      "name": "Compare the Thinking",
+      "subtitle": "Examine meaningful contrasts",
+      "description": "Students compare two meaningfully different solution strategies or representations and examine the reasoning, strengths, limitations, and important mathematical differences between them.",
+      "artifactTitle": "Strategies to compare - Examples to show the class"
+    },
+    "MAKE_YOUR_CASE": {
+      "name": "Make Your Case",
+      "subtitle": "Articulate and justify claims",
+      "description": "Students make or evaluate a mathematical claim, articulate their thinking, build a case for it using evidence and reasoning, and consider whether the evidence and reasoning support the claim.",
+      "artifactTitle": "The claim - Example to show the class"
+    }
   }
 }

@@ -1,8 +1,7 @@
 import React, { ReactElement, useEffect } from 'react';
 import { Navigate, useMatch, useSearchParams } from 'react-router-dom';
-import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
+import { UserStatusType } from '../lib/MicroCoachModels';
 import { IUserState } from '../hooks/useUserState';
-import LandingSkeleton from '../components/LandingSkeleton';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 
 interface AuthGuardProps {
@@ -10,7 +9,6 @@ interface AuthGuardProps {
   handleLogOut: () => void;
   setUserStatus: IUserState['setUserStatus'];
   setUserErrorString: IUserState['setUserErrorString'];
-  screenSize: ScreenSize;
   /**
    * Whether this screen's content actually depends on knowing who the user is.
    * Public screens render immediately while the check is still in flight —
@@ -28,15 +26,15 @@ export default function AuthGuard({
   handleLogOut,
   setUserStatus,
   setUserErrorString,
-  screenSize,
   requiresAuth,
 }: AuthGuardProps) {
   const { userStatus } = useMicroCoachDataState();
   const [search] = useSearchParams();
 
-  const isLandingPage = Boolean(useMatch('/'));
   const isAuthPage = Boolean(useMatch('/auth'));
   const isLoginPage = Boolean(useMatch('/login'));
+  // `end` so only / itself matches, not every route under it.
+  const isLandingPage = Boolean(useMatch({ path: '/', end: true }));
   /*
    * Exact match on purpose: `/signup` is the wizard's entry, not the whole
    * flow. Every redirect below must target a location that satisfies its own
@@ -92,12 +90,13 @@ export default function AuthGuard({
     case UserStatusType.INCOMPLETE:
       return <Navigate to="/" replace />;
     case UserStatusType.LOADING:
-      // Public screens render straight away — nothing on them depends on the
-      // answer, and holding them would stall their own loading too. Only
-      // screens whose content is the auth state wait, and those are small
-      // centred cards where a blank beat beats a wrong-shaped skeleton.
-      if (!requiresAuth) return children;
-      return isLandingPage ? <LandingSkeleton screenSize={screenSize} /> : null;
+      // Every screen renders while the session resolves. Public screens do not
+      // depend on the answer. In-app screens show their static parts and their
+      // skeletons: their data hooks wait on the user id, so nothing loads or
+      // redirects until it is known (every redirect waits on a READY answer).
+      // A signed-out visitor is sent to / once the answer is LOGGEDOUT. This
+      // used to hold in-app screens blank for the whole check.
+      return children;
     case UserStatusType.LOGGEDOUT:
       // In-app screens need an account; send the visitor to the landing page.
       // `/` is public, so this redirect cannot loop, and `replace` keeps Back
@@ -106,9 +105,10 @@ export default function AuthGuard({
       return children;
     case UserStatusType.LOGGEDIN:
     default:
-      // Signed in → keep users off the auth pages, into the app. /dashboard
-      // matches none of these, so the redirect cannot loop.
-      return isAuthPage || isLoginPage || isSignupPage ? (
+      // Signed in → keep users off the auth pages and the marketing page,
+      // into the app. /dashboard matches none of these, so the redirect
+      // cannot loop.
+      return isAuthPage || isLoginPage || isSignupPage || isLandingPage ? (
         <Navigate to="/dashboard" replace />
       ) : (
         children

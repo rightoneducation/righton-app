@@ -5,7 +5,8 @@
     "signup": "Registrarse",
     "login": "Iniciar sesión",
     "classSwitcher": "Seleccione una clase",
-    "noClasses": "Aún no hay clases"
+    "noClasses": "Aún no hay clases",
+    "accountMenu": "Menú de la cuenta"
   },
   "common": {
     "needHelp": "¿Necesita ayuda?"
@@ -17,25 +18,14 @@
     "reassess": "Reevaluar",
     "reflect": "Reflexionar",
     "home": "Inicio",
-    "myPlan": "Mi plan",
+    "myActivity": "Mi actividad",
     "myActivities": "Mis actividades",
     "myLessonPlan": "Mi plan de clase"
   },
   "activityDetail": {
-    "back": "Volver a las opciones de actividad",
-    "beforeClass": "Antes de clase",
-    "activity": "Actividad",
-    "facilitation": "Facilitación",
-    "discussion": "Discusión",
     "teacherView": "Docente",
     "studentView": "Estudiante",
-    "exportPdf": "Exportar PDF",
-    "next": "Siguiente: {{phase}}",
-    "saveToPlan": "Guardar en el plan de clase",
     "noContent": "Este paso aún no está disponible para esta actividad.",
-    "printSubtitle": "Preparado para: {{misconception}}",
-    "exporting": "Preparando PDF…",
-    "page": "Página",
     "stepNumber": "Paso {{number}}",
     "stepCorrect": "(Correcto)",
     "stepError": "← (Error: {{note}})",
@@ -43,94 +33,130 @@
     "makeYourCasePositions": "Argumentos previstos"
   },
   "chooseActivity": {
-    "back": "Volver a los conceptos erróneos",
-    "addressing": "Abordando el concepto erróneo: {{title}}",
-    "title": "Elija su próxima acción instructiva",
-    "subheading": "Seleccione la actividad que mejor se adapte a su clase",
-    "subtitleLabel": "Subtítulo",
-    "descriptionLabel": "Descripción",
-    "selectActivity": "Elegir actividad",
-    "selectedActivity": "Actividad elegida",
-    "howToRun": "Cómo realizarla"
-  },
-  "myPlan": {
-    "back": "Volver a elegir actividad",
-    "title": "Su actividad guardada",
-    "subheading": "Actividades guardadas para Álgebra 1 - Período 2. Abra una actividad para prepararla y márquela como hecha después de la clase.",
-    "changeActivity": "Cambiar actividad",
-    "completed": "Completadas",
-    "openDetails": "Abrir detalles de la actividad",
-    "markAsDone": "Marcar como hecha",
-    "remove": "Quitar",
-    "empty": "Aún no hay actividades guardadas. Elija una en los próximos pasos de un concepto erróneo.",
-    "statActivities": "Actividades realizadas",
-    "statActivitiesValue": "{{count}} completadas",
-    "statUpload": "Subir archivos RTD",
-    "statUploadValue": "Su siguiente acción",
-    "statProgress": "Ver progreso",
-    "statProgressValue": "Se activa tras la carga",
-    "promptTitle": "Suba archivos RTD para seguir el progreso",
-    "promptBody": "Ha marcado actividades como completadas. Suba los archivos RTD para que MicroCoach analice los resultados y detecte brechas de aprendizaje.",
-    "promptCta": "Subir archivos RTD"
+    "replaceBody": "Esto reemplazará la actividad que guardaste para otro concepto erróneo.",
+    "selected": "Concepto erróneo seleccionado:",
+    "change": "Cambiar",
+    "title": "Selecciona tu próxima actividad",
+    "subheading": "Elige la actividad que mejor se adapte a tu clase",
+    "groupingSequence": "Agrupación, en orden",
+    "grouping": {
+      "INDIVIDUAL": "Individual",
+      "PAIRS": "Parejas",
+      "WHOLE_CLASS": "Toda la clase"
+    },
+    "whyTitle": "¿Por qué esta actividad?",
+    "howToRunTitle": "Cómo llevarla a cabo",
+    "viewDetails": "Ver detalles de la actividad",
+    "selectActivity": "Seleccionar actividad",
+    "loading": "Cargando actividades",
+    "loadError": "No pudimos cargar las actividades de este concepto erróneo. Actualiza la página para intentarlo de nuevo."
   },
   "misconceptionModal": {
     "close": "Cerrar",
-    "studentWork": "Trabajo de los estudiantes",
-    "skillContext": "Contexto de la destreza",
-    "errorsByFrequency": "Errores por orden de frecuencia",
-    "studentCount": "{{count}} estudiantes:",
     "chooseActivity": "Elegir actividad",
-    "noStudentWork": "El trabajo de los estudiantes para este concepto erróneo aún no está disponible.",
-    "noSkillContext": "El contexto de la destreza para este concepto erróneo aún no está disponible."
+    "noStudentWork": "Las respuestas de los estudiantes para este concepto erróneo aún no están disponibles.",
+    "noSkillContext": "Las destrezas relacionadas con este concepto erróneo aún no están disponibles.",
+    "title": "Detalles del concepto erróneo",
+    "studentResponses": "Respuestas de los estudiantes",
+    "relatedSkills": "Destrezas relacionadas",
+    "evidenceNote": "MicroCoach resaltó estas respuestas porque podrían indicar el concepto erróneo que se describe abajo.",
+    "howStudentsResponded": "Cómo respondieron los estudiantes",
+    "correctAnswer": "Respuesta correcta",
+    "possibleMistake": "Posible error",
+    "showStudents": "Mostrar estudiantes",
+    "hideStudents": "Ocultar estudiantes",
+    "noStudents": "Ningún estudiante eligió esta respuesta.",
+    "relatedSkillsIntro": "Cómo se conectan estas destrezas con lo que vino antes y lo que viene. Son posibles conexiones de enseñanza, no causas confirmadas.",
+    "focusSkill": "Destreza principal",
+    "prerequisiteGaps": "Brechas en requisitos previos",
+    "upcomingSkills": "Próximas destrezas",
+    "noneIdentified": "No se identificó ninguna.",
+    "domainTooltipLabel": "Qué abarca {{code}}"
   },
   "review": {
-    "banner": "Los resultados de su clase están listos: vea qué entendieron mal sus estudiantes y los próximos pasos que puede tomar",
+    "noMisconceptionsTitle": "No se encontraron conceptos erróneos",
+    "noMisconceptionsBody": "La mayoría de tus estudiantes respondió correctamente, así que esta vez no hay nada en qué enfocarse.",
+    "banner": "Los resultados de tu clase están listos: mira los patrones en el pensamiento de tus estudiantes y los próximos pasos que puedes tomar.",
     "dismissBanner": "Descartar",
     "title": "Comprenda el pensamiento de sus estudiantes",
-    "subtitle": "Perspectivas y patrones de conceptos erróneos de los datos de su clase",
+    "subtitle": "MicroCoach muestra patrones de conceptos erróneos en las respuestas de tus estudiantes, junto con posibles explicaciones del razonamiento detrás de ellos.",
     "worksAnalyzed": "{{count}} trabajos de estudiantes analizados",
-    "worksAnalyzedUnavailable": "Trabajos de estudiantes analizados: No disponible",
+    "viewMiu": "Ver Mix It Up",
     "viewDetails": "Ver detalles",
-    "strongUnderstanding": "{{count}} estudiantes mostraron una comprensión sólida",
-    "strongUnderstandingUnavailable": "Estudiantes con comprensión sólida: No disponible"
+    "recommendedFocus": "Enfoque recomendado",
+    "highestFrequency": "Frecuencia más alta",
+    "highestFrequencyTooltip": "De todos los conceptos erróneos encontrados, este es el que alcanza a más estudiantes.",
+    "showMisconceptions": "Mostrar conceptos erróneos {{from}}–{{to}} de {{count}}",
+    "additional": "Concepto erróneo adicional",
+    "focusTooltip": "MicroCoach considera varios factores en conjunto: qué tan extendido está el concepto erróneo, con cuánta seguridad lo sostienen los estudiantes, qué tan importante es la idea matemática para el aprendizaje futuro y la solidez de la evidencia.",
+    "focusTooltipLabel": "Por qué este es el enfoque recomendado",
+    "prevalenceRange": {
+      "MOST": "≥50% de los estudiantes",
+      "SOME": "20–49% de los estudiantes",
+      "FEW": "Menos del 20% de los estudiantes"
+    },
+    "responseEvidence": "Evidencia en las respuestas:",
+    "possibleExplanation": "Posible explicación:",
+    "evidenceQuestion": "P{{number}}, {{answers}}",
+    "evidenceAnswer_one": "Respuesta {{list}}",
+    "evidenceAnswer_other": "Respuestas {{list}}",
+    "and": "y",
+    "select": "Seleccionar",
+    "correctResponsesTitle": "Respuestas correctas en las {{count}} preguntas de Mix It Up",
+    "correct": "Correctas",
+    "questionLabel": "P{{number}}",
+    "disclaimer": "MicroCoach usa IA para identificar patrones en las respuestas MIU de tus estudiantes. Usa estas ideas como punto de partida y revísalas junto con las preguntas y las respuestas de los estudiantes.",
+    "loading": "Cargando conceptos erróneos",
+    "loadError": "No pudimos cargar los conceptos erróneos de esta semana. Actualiza la página para intentarlo de nuevo."
   },
   "hero": {
     "title": "Vea cómo piensa toda su clase.",
     "body": "MicroCoach identifica patrones de conceptos erróneos en su clase y sugiere próximos pasos, en minutos.",
-    "getstarted": "Empezar"
+    "getstarted": "Empezar",
+    "desktopNote": "MicroCoach está optimizado para computadoras portátiles y de escritorio durante el piloto de la Ola 2.",
+    "imageAlt": "Dos estudiantes resolviendo una hoja de trabajo en su escritorio"
   },
   "howItWorks": {
     "title": "Cómo funciona",
     "step1": {
       "label": "Paso 1",
-      "title": "Suba sus archivos",
-      "body": "Suba su clave de respuestas y las respuestas de los estudiantes de cualquier prueba o evaluación"
+      "title": "Suba su Mix It Up",
+      "body": "Suba su clave de respuestas y las respuestas de los estudiantes de su Mix It Up."
     },
     "step2": {
       "label": "Paso 2",
-      "title": "Vea qué entendió mal su clase",
-      "body": "MicroCoach analiza cada respuesta y agrupa a los estudiantes según lo que entendieron mal, no solo según lo que respondieron incorrectamente"
+      "title": "Comprenda el razonamiento de sus estudiantes",
+      "body": "MicroCoach analiza cada respuesta y agrupa a los estudiantes según lo que entendieron mal, no solo según lo que respondieron incorrectamente."
     },
     "step3": {
       "label": "Paso 3",
-      "title": "Planifique su siguiente paso",
-      "body": "Para cada concepto erróneo, MicroCoach sugiere próximos pasos específicos. Elija lo que mejor se adapte a su clase y vuelva a enseñar"
+      "title": "Elija su próxima actividad",
+      "body": "Para cada concepto erróneo, MicroCoach sugiere próximos pasos específicos. Elija lo que mejor se adapte a su clase y vuelva a enseñar."
+    },
+    "step4": {
+      "label": "Paso 4",
+      "title": "Reevalúa",
+      "body": "Después de enseñar la actividad, sube el segundo Mix It Up para que MicroCoach vea cómo respondieron tus estudiantes."
+    },
+    "step5": {
+      "label": "Paso 5",
+      "title": "Reflexiona sobre lo que cambió",
+      "body": "Compara el antes y el después para ver qué estudiantes avanzaron y quiénes aún necesitan apoyo."
     }
   },
   "footer": {
     "copyright": "Copyright © 2026 RightOn Education. Todos los derechos reservados.",
     "privacypolicy": "Política de Privacidad"
   },
-  "home": {
-    "banner": "Los resultados de tu clase están listos: revisa los patrones de conceptos erróneos y las actividades recomendadas",
-    "dismissBanner": "Descartar",
-    "title": "Bienvenido de nuevo a MicroCoach",
-    "subtitle": "Revisa los patrones de conceptos erróneos en el pensamiento de tus estudiantes\npara identificar oportunidades de fortalecer la comprensión.",
+  "dashboard": {
+    "title": "Bienvenido a MicroCoach",
+    "titleReturning": "Bienvenido de nuevo a MicroCoach",
+    "subtitle": "Sube tus archivos MIU del lunes para comprender mejor\nel pensamiento de tus estudiantes y recibir los próximos pasos recomendados.",
     "classPrompt": "¿Con qué clase trabajas hoy?",
     "moreClasses": "Más",
     "weekLabel": "Semana",
     "cta": {
-      "ASSESS": "Subir resultados de los estudiantes",
+      "ASSESS": "Sube los archivos MIU del lunes para analizar",
       "UNDERSTAND": "Revisar patrones de conceptos erróneos",
       "REASSESS": "Subir resultados de la reevaluación",
       "REFLECT": "Reflexionar sobre el impacto"
@@ -138,20 +164,63 @@
     "steps": {
       "ASSESS": "Evaluar",
       "UNDERSTAND": "Comprender",
-      "CHOOSE": "Elegir actividad",
+      "CHOOSE": "Seleccionar actividad",
       "REASSESS": "Reevaluar",
-      "REFLECT": "Reflexionar sobre el impacto"
+      "REFLECT": "Reflexionar"
     },
-    "noClassesTitle": "Agrega tu primera clase para comenzar",
-    "addClassPlaceholder": "Nombre de la clase",
-    "addClass": "Agregar clase",
-    "addClassError": "No se pudo guardar la clase. Inténtalo de nuevo.",
+    "noClassesTitle": "Agrega tus clases para comenzar",
     "sidebar": {
-      "home": "Inicio",
-      "thisWeek": "Esta semana",
-      "pastInsights": "Información anterior"
+      "dashboard": "Inicio",
+      "pastActivities": "Actividades anteriores"
     },
-    "weekNumber": "Semana {{number}}"
+    "myActivity": "Mi actividad",
+    "noClassesHint": "Las clases se agregan en Configuración de la cuenta.",
+    "accountSettingsLink": "Ir a Configuración de la cuenta",
+    "weekOption": "Semana {{number}} ({{range}})",
+    "classesError": "No pudimos cargar tus clases. Actualiza la página para intentarlo de nuevo.",
+    "loadingClasses": "Cargando tus clases",
+    "loadingNextStep": "Cargando tu próximo paso"
+  },
+  "weeklyProgress": {
+    "title": "Progreso semanal de actividades",
+    "weekHeading": "Semana {{number}}: {{range}}",
+    "students": "{{count}} estudiantes",
+    "waiting": "Esperando a MicroCoach...",
+    "status": {
+      "ASSESS": "Evalúa los datos de respuestas MIU de tu clase",
+      "AWAITING": "Analizando los archivos MIU, recibirás los resultados por correo en 48 horas",
+      "UNDERSTAND": "Comprende los conceptos erróneos antes de elegir una actividad",
+      "CHOOSE": "Selecciona tu próxima actividad",
+      "REASSESS": "Observa cómo ha cambiado la comprensión de tus estudiantes",
+      "REFLECT": "Observa cómo ha cambiado la comprensión de tus estudiantes",
+      "DONE": "La actividad de esta semana está completa"
+    },
+    "action": {
+      "ASSESS": "Subir archivos MIU 1",
+      "UNDERSTAND": "Revisar conceptos erróneos",
+      "CHOOSE": "Ver actividades",
+      "REASSESS": "Subir archivos MIU 2",
+      "REFLECT": "Ver resultados",
+      "DONE": "Ver datos"
+    },
+    "empty": "Aún no hay clases. Agrega tus clases en Configuración de la cuenta."
+  },
+  "pastActivities": {
+    "title": "Actividades anteriores",
+    "weekHeading": "Semana {{number}}: {{range}}",
+    "students": "{{count}} estudiantes",
+    "completed": "Completado el {{date}}",
+    "viewData": "Ver datos",
+    "sort": "Ordenar",
+    "sortLabel": "Ordenar actividades",
+    "sortNewest": "Fecha: más recientes primero",
+    "sortOldest": "Fecha: más antiguas primero",
+    "sortClass": "Por clase: A-Z",
+    "emptyTitle": "¡Aún no hay actividades anteriores!",
+    "emptyBody": "Completa tu primera actividad de MicroCoach y podrás revisarla aquí.",
+    "backToHome": "Volver al inicio",
+    "incomplete": "Incompleta",
+    "untitled": "Actividad"
   },
   "signup": {
     "welcome": "Bienvenido a MicroCoach",
@@ -183,7 +252,7 @@
     "removeClass": "Quitar clase",
     "selectTitle": "Seleccione su nombre y su clase para comenzar",
     "more": "Más",
-    "upload": "Suba archivos PPQ para analizar",
+    "upload": "Suba archivos MIU para analizar",
     "showPassword": "Mostrar contraseña",
     "hidePassword": "Ocultar contraseña",
     "codeError": "Ese código no es correcto. Revise su correo e inténtelo de nuevo.",
@@ -216,46 +285,110 @@
     "emailNote": "(Nota: el correo no se puede editar)",
     "password": "Contraseña",
     "editPicture": "Editar foto",
+    "pictureTypeError": "Elige una imagen PNG, JPG, GIF o WebP.",
+    "pictureSizeError": "Elige una imagen de menos de 5 MB.",
+    "pictureUploadError": "No pudimos guardar tu foto. Inténtalo de nuevo.",
     "editInformation": "Editar información",
     "save": "Guardar",
     "changePassword": "Cambiar contraseña",
     "accountCreated": "Cuenta creada",
-    "uploadsMade": "Cargas realizadas:",
     "logOut": "Cerrar sesión",
-    "nameRequired": "Introduce un nombre y un apellido."
+    "nameRequired": "Introduce un nombre y un apellido.",
+    "school": "Escuela",
+    "schoolNote": "(Nota: el nombre de la escuela no se puede editar)",
+    "yourClasses": "Tus clases",
+    "noClasses": "Aún no hay clases.",
+    "deleteClass": "Eliminar {{name}}",
+    "deleteClassTitle": "¿Eliminar esta clase?",
+    "deleteClassBody": "Esto elimina {{className}} de tu cuenta. No se puede deshacer.",
+    "deleteClassError": "No se pudo eliminar la clase. Inténtalo de nuevo.",
+    "addClass": "+ Añadir una clase",
+    "addClassPlaceholder": "Escribe el nombre de la clase",
+    "addClassSubmit": "Añadir clase",
+    "addClassError": "No se añadió tu clase. Algo salió mal.",
+    "addClassDuplicate": "Ya tienes una clase llamada {{name}}.",
+    "cancelAddClass": "Cancelar añadir una clase",
+    "oldPassword": "Vuelve a ingresar tu contraseña anterior",
+    "newPassword": "Ingresa tu nueva contraseña",
+    "confirmPassword": "Vuelve a ingresar tu nueva contraseña",
+    "saving": "Guardando",
+    "saveError": "No pudimos guardar tus cambios. Inténtalo de nuevo.",
+    "passwordRequired": "Completa los tres campos de contraseña.",
+    "passwordMismatch": "Tu contraseña no coincide",
+    "passwordSame": "Tu nueva contraseña debe ser diferente de la anterior.",
+    "done": "Listo",
+    "cancel": "Cancelar",
+    "passwordWrongOld": "Tu contraseña no coincide",
+    "passwordInvalid": "La nueva contraseña no cumple con los requisitos.",
+    "passwordLimit": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
+    "passwordError": "No se pudo cambiar tu contraseña. Inténtalo de nuevo.",
+    "passwordChanged": "Tu contraseña se cambió correctamente",
+    "dismiss": "Cerrar"
   },
   "upload": {
-    "setupTitle": "Paso 1: Configure su clase",
-    "teacher": "Docente",
+    "setupTitle": "Paso 1: Configura tu clase",
     "class": "Clase",
+    "classPlaceholder": "Selecciona una clase",
+    "noClasses": "Aún no hay clases",
     "week": "Semana",
-    "uploadTitle": "Paso 2: Suba los archivos",
-    "uploadSubtitle": "Suba ambos archivos para continuar",
-    "exemplar": "Ejemplar RTD",
+    "weekPlaceholder": "Selecciona la semana",
+    "weekOption": "Semana {{number}}: {{range}}",
+    "uploadTitle": "Paso 2: Sube los archivos",
+    "uploadSubtitle": "Sube ambos archivos para continuar",
+    "exemplar": "Ejemplar MIU",
     "exemplarNote": "· Pasos de solución y justificación de distractores",
-    "responses": "Respuestas RTD",
+    "responses": "Respuestas MIU",
     "responsesNote": "· Trabajo calificado de toda la clase",
-    "dropHint": "Suba un archivo o arrástrelo aquí",
-    "formatDocx": "formato .docx · hasta 5 MB",
-    "formatXlsx": "formato .xlsx · hasta 5 MB",
+    "dropHint": "Sube un archivo o arrástralo y suéltalo aquí",
+    "formatDocx": "Formato .docx · hasta 5MB",
+    "formatXlsx": "Formato .xlsx · hasta 5MB",
     "uploadFile": "Subir archivo",
     "replaceFile": "Reemplazar archivo",
+    "removeFile": "Quitar {{name}}",
     "completed": "Completado",
     "error": "Error",
-    "errorFormat": "Formato no admitido · Suba un archivo .docx",
-    "bothToContinue": "Suba ambos archivos para continuar",
+    "errorFormat": "Formato de archivo no compatible · Sube un archivo {{extension}}",
+    "errorSize": "El archivo supera los 5MB · Sube un archivo más pequeño",
+    "bothToContinue": "Sube ambos archivos para continuar",
+    "selectClassToContinue": "Selecciona una clase para continuar",
     "backHome": "Volver al inicio",
+    "backToHome": "Volver al inicio",
     "continue": "Continuar",
     "reviewTitle": "Revisar y enviar",
-    "reviewBody": "Confirme que subió los archivos correctos de Ejemplar y Respuestas RTD para la clase y la semana previstas. Una vez enviados, MicroCoach comenzará a analizarlos.",
-    "uploaded": "SUBIDOS",
-    "ppqExemplar": "Ejemplar PPQ",
-    "ppqResponses": "Respuestas PPQ",
+    "reviewBody": "Confirma que subiste los archivos correctos de Ejemplar MIU y Respuestas MIU para la clase y la semana indicadas.\nUna vez enviados, MicroCoach comenzará a analizar tus archivos.",
+    "uploaded": "SUBIDO",
+    "teacher": "Docente",
     "backToUpload": "Volver a subir",
     "submit": "Enviar archivos para análisis",
-    "weekOf": "Semana del {{date}}",
-    "noClass": "Ninguna clase seleccionada",
-    "addClassHint": "Agrega una clase en el panel para comenzar a subir archivos."
+    "submitting": "Enviando tus archivos",
+    "submitErrorUpload": "No pudimos subir tus archivos. Inténtalo de nuevo.",
+    "submitErrorAnalysis": "No se pudieron enviar tus archivos para el análisis. Inténtalo de nuevo o contacta a soporte si el problema continúa.",
+    "submittedTitle": "Archivos enviados correctamente",
+    "submittedBody": "MicroCoach está analizando tus archivos.\nRecibirás un resumen de los patrones de conceptos erróneos de tu clase y los próximos pasos sugeridos en un plazo de 24 horas.",
+    "startOver": "Empezar de nuevo",
+    "startOverTitle": "¿Empezar de nuevo con otros archivos?",
+    "startOverBody": "Si subiste los archivos equivocados, vuelve a subirlos.\nSi no, ya terminaste. Te enviaremos tus resultados en un plazo de 24 horas.",
+    "startOverConfirm": "Sí, empezar de nuevo",
+    "startOverKeep": "Conservar mi envío",
+    "leave": {
+      "confirm": "Salir de todos modos",
+      "none": {
+        "title": "¿Salir sin subir archivos?",
+        "body": "Tu clase y semana no se guardarán. Puedes comenzar una nueva carga en cualquier momento desde Inicio.",
+        "keep": "Seguir subiendo"
+      },
+      "partial": {
+        "title": "Tu carga no está terminada.",
+        "body": "Agregaste el {{added}}, pero aún falta el archivo {{missing}}. Si sales ahora, tendrás que subir ambos archivos de nuevo.",
+        "keep": "Terminar de subir"
+      },
+      "ready": {
+        "title": "Estás a un paso.",
+        "body": "Ambos archivos están agregados, pero aún no se han enviado. Haz clic en Continuar para enviarlos a MicroCoach. Si sales ahora, tus archivos no se guardarán.",
+        "keep": "Volver y enviar"
+      }
+    },
+    "close": "Cerrar"
   },
   "reflect": {
     "title": "Cómo respondió su clase",
@@ -302,5 +435,167 @@
     "percentagePointGain": "+{{improvement}} puntos porcentuales",
     "averageQuestionsGain": "{{change}} preguntas correctas en promedio",
     "noChange": "Sin cambios"
+  },
+  "activityList": {
+    "loading": "Cargando la actividad de tus clases",
+    "loadError": "No pudimos cargar la actividad de tus clases. Actualiza la página para intentarlo de nuevo.",
+    "removeTitle": "¿Eliminar esta sesión?",
+    "removeBody": "Esto elimina la sesión de {{className}} y sus resultados. No se puede deshacer.",
+    "removeError": "No se pudo eliminar la sesión. Inténtalo de nuevo.",
+    "remove": "Eliminar",
+    "cancel": "Cancelar"
+  },
+  "activityFlow": {
+    "loading": "Cargando la actividad",
+    "loadError": "No pudimos cargar esta actividad. Actualiza la página para intentarlo de nuevo.",
+    "changeActivity": "Cambiar actividad",
+    "phasesLabel": "Pasos de la actividad",
+    "phases": {
+      "beforeClass": "Antes de la clase",
+      "facilitate": "Facilitar la actividad",
+      "discussion": "Discusión de cierre"
+    },
+    "beforeClass": {
+      "title": "Por hacer antes de la clase",
+      "subtitle": "Pasos para preparar la actividad",
+      "groupingTitle": "Agrupación para esta actividad"
+    },
+    "facilitate": {
+      "title": "Cómo llevarla a cabo",
+      "subtitle": "Pasos para facilitar la actividad",
+      "examplesTitle": "Ejemplos resueltos incorrectos",
+      "viewLabel": "Elige una vista",
+      "teacherView": "Vista docente",
+      "studentView": "Vista estudiante",
+      "viewNote": "La vista docente muestra respuestas y notas de enseñanza. La vista estudiante muestra solo lo que compartirás con tus estudiantes.",
+      "exportTeacher": "Exportar PDF docente",
+      "exportStudent": "Exportar PDF estudiante",
+      "exporting": "Preparando PDF…",
+      "exampleLabel": "Ejemplo {{number}}",
+      "ofTotal": "de {{total}}",
+      "slip": "Desliz",
+      "final": "Final:",
+      "prev": "Anterior",
+      "next": "Siguiente",
+      "problem": "Problema",
+      "strategyVerdict": {
+        "CORRECT": "Enfoque correcto",
+        "INCORRECT": "Enfoque incorrecto",
+        "STRONGER": "Enfoque más sofisticado"
+      },
+      "claim": "Afirmación",
+      "claimOption": {
+        "TRUE": "A. Verdadero",
+        "FALSE": "B. Falso",
+        "CONDITIONAL": "C. Depende"
+      },
+      "voteOption": {
+        "YES": "A. Sí",
+        "NO": "B. No",
+        "UNDECIDED": "C. No estoy seguro"
+      },
+      "why": "¿Por qué?",
+      "examplesToBringIn": "Ejemplos para presentar",
+      "exampleAnswer": "Respuesta: {{answer}}",
+      "argumentsTitle": "Argumentos que pueden surgir",
+      "argumentStance": {
+        "SUPPORT": "Apoya la afirmación",
+        "CHALLENGE": "Cuestiona la afirmación"
+      },
+      "stepsToFollow": "Pasos a seguir",
+      "examplesToTry": "Ejemplos para probar",
+      "stage": {
+        "INVESTIGATE": "Investigar: ¿dónde falló el razonamiento?",
+        "SOLVE": "Resolver: reescribe el paso equivocado",
+        "GENERALIZE": "Generalizar: escribe la regla que lo evita"
+      },
+      "askStudents": "Pregunta a tus estudiantes",
+      "stageAnswer": {
+        "INVESTIGATE": "Respuesta esperada",
+        "SOLVE": "Paso corregido",
+        "GENERALIZE": "Regla objetivo (escríbela en la pizarra)"
+      },
+      "anonymousResponse": "Respuesta anónima de un estudiante",
+      "studentWork": "Trabajo del estudiante",
+      "whatToNotice": "Qué observar"
+    },
+    "discussion": {
+      "title": "Preguntas de discusión",
+      "subtitle": "Preguntas para el cierre de la clase",
+      "answer": "Respuesta",
+      "watchFor": "Presta atención a",
+      "watchForLabel": "Presta atención a {{number}}",
+      "tryAsking": "Intenta preguntar",
+      "respondWith": "Responde con",
+      "takeaway": "Idea matemática clave"
+    },
+    "nav": {
+      "backChoices": "Atrás: Opciones de actividad",
+      "nextFacilitate": "Siguiente: Facilitar la actividad",
+      "backBeforeClass": "Atrás: Antes de la clase",
+      "nextDiscussion": "Siguiente: Discusión de cierre",
+      "backFacilitate": "Atrás: Facilitar la actividad",
+      "selectActivity": "Seleccionar esta actividad",
+      "goToMyActivity": "Ir a Mi actividad"
+    },
+    "changeDialog": {
+      "title": "Cambiar actividad",
+      "close": "Cerrar",
+      "question": "¿Seguro que quieres cambiar la actividad seleccionada?",
+      "body": "Volverás a la página “Selecciona tu actividad de siguiente paso”.",
+      "cancel": "Cancelar",
+      "confirm": "Sí, cambiar actividad"
+    },
+    "pdf": {
+      "teacherLabel": "Facilitar la actividad",
+      "studentLabel": "Hoja de actividad para estudiantes",
+      "misconception": "Concepto erróneo:",
+      "teacherExamples": "Ejemplos resueltos incorrectos - Ejemplos para mostrar a la clase",
+      "markCorrect": "(correcto)",
+      "markIncorrect": "(incorrecto)"
+    },
+    "noContent": "El contenido de esta actividad aún no está disponible. Elige otra actividad o vuelve más tarde.",
+    "or": "o"
+  },
+  "myActivity": {
+    "title": "Mi actividad",
+    "intro": "Revisa la actividad que guardaste para tu clase. Después de realizarla, sube los archivos MIU del jueves para que MicroCoach pueda seguir el progreso de tus estudiantes a lo largo del tiempo",
+    "uploadMiu": "Subir archivos MIU",
+    "loading": "Cargando tu actividad guardada",
+    "loadError": "No pudimos cargar tu actividad guardada. Actualiza la página para intentarlo de nuevo.",
+    "saveError": "No pudimos guardar tu actividad. Vuelve atrás y selecciónala de nuevo.",
+    "empty": "Aún no has guardado ninguna actividad. Elige una de las actividades de siguiente paso de un concepto erróneo."
+  },
+  "activityTemplates": {
+    "INCORRECT_WORKED_EXAMPLES": {
+      "name": "Encuentra el desliz",
+      "subtitle": "Localiza dónde falla el razonamiento",
+      "description": "Los estudiantes examinan una solución resuelta, identifican el primer paso en que el razonamiento se desvía, explican por qué ese paso no es válido y trabajan juntos para corregir el error.",
+      "artifactTitle": "Ejemplos resueltos incorrectos"
+    },
+    "FAVORITE_NO": {
+      "name": "Mi “no” favorito",
+      "subtitle": "Conserva y aprovecha el pensamiento productivo",
+      "description": "Los estudiantes analizan una respuesta incorrecta significativa que revela una idea matemática que vale la pena conservar o desarrollar. Comentan por qué la respuesta podría parecer razonable, identifican qué hace bien el razonamiento y lo revisan conservando lo que es matemáticamente útil.",
+      "artifactTitle": "Ejemplos de análisis del pensamiento estudiantil"
+    },
+    "MATH_DETECTIVE": {
+      "name": "Detective matemático",
+      "subtitle": "Investiga los problemas de fondo",
+      "description": "Los estudiantes se convierten en “detectives matemáticos”: investigan una solución incorrecta, identifican el problema matemático de fondo, revisan el razonamiento y comprueban si la revisión funciona.",
+      "artifactTitle": "Ejemplos de análisis del pensamiento estudiantil"
+    },
+    "COMPARE_THE_THINKING": {
+      "name": "Compara el razonamiento",
+      "subtitle": "Examina contrastes significativos",
+      "description": "Los estudiantes comparan dos estrategias o representaciones de solución significativamente distintas y examinan el razonamiento, las fortalezas, las limitaciones y las diferencias matemáticas importantes entre ellas.",
+      "artifactTitle": "Estrategias para comparar - Ejemplos para mostrar a la clase"
+    },
+    "MAKE_YOUR_CASE": {
+      "name": "Defiende tu postura",
+      "subtitle": "Articula y justifica afirmaciones",
+      "description": "Los estudiantes formulan o evalúan una afirmación matemática, expresan su razonamiento, construyen argumentos con evidencia y razonamiento, y consideran si la evidencia respalda la afirmación.",
+      "artifactTitle": "La afirmación - Ejemplo para mostrar a la clase"
+    }
   }
 }

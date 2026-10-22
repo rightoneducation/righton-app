@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useTranslation } from 'react-i18next';
 import {
   Rec,
   RunIndexEntry,
@@ -14,10 +15,13 @@ import {
 } from './shared';
 import { FORMULAE } from './formulae';
 import MathText from '../../components/MathText';
-import ActivityPhase from '../../components/phases/ActivityPhase';
-import BeforeClassPhase from '../../components/phases/BeforeClassPhase';
-import StepListPhase from '../../components/phases/StepListPhase';
-import { IActivityContent, IActivityPhases, IPhaseStep } from '../../lib/PipelineModels';
+import BeforeClassView from '../../components/activityFlow/BeforeClassView';
+import DiscussionView from '../../components/activityFlow/DiscussionView';
+import FacilitateView from '../../components/activityFlow/FacilitateView';
+import { useScreenSize } from '../../hooks/useScreenSize';
+import { IActivityContent, toActivityContent } from '../../lib/ActivityContentModels';
+import { activityTemplateCopy } from '../../lib/activityTemplates';
+import { ActivityType } from '../../lib/PipelineModels';
 import { STAGES, GROUPS, Stage, Who, Origin } from './pipeline';
 
 /**
@@ -25,9 +29,9 @@ import { STAGES, GROUPS, Stage, Who, Origin } from './pipeline';
  *
  * Presents the pipeline itself: the stages in the current iteration, every formula they
  * apply (and whether code or the model applies it), then each misconception
- * from the selected run collapsed to the three things the pipeline produced for
- * it — the misconception, the instructional need with the inputs that ranked
- * it, and the activity templates selected.
+ * from the selected run collapsed to what the pipeline produced for it — the
+ * misconception with its rubric, the instructional need, the activity templates
+ * selected, and the activities generated for them.
  *
  * The pipeline diagram and formulae are static: they describe the code on this
  * branch, not the run's version tag. The run supplies the misconceptions.
@@ -132,7 +136,7 @@ function Formulae() {
     <section className="p2-section p2-section-wide">
       <h2 className="p2-h2">Formulae</h2>
       <p className="p2-lede">
-        Every computation between the response rows and the selected template, in the same boxes as the pipeline
+        Every computation from the response rows to the generated activity, in the same boxes as the pipeline
         above. Constants are as written in the source named on each card.
       </p>
       <ol className="p2-flow p2-flow-static">
@@ -178,7 +182,7 @@ function Formulae() {
               );
             }),
           );
-          // Boxes with nothing to compute (fetch-only, under construction) are left out.
+          // Boxes with nothing to compute (fetch-only) are left out.
           if (cards.length === 0) return null;
           return (
             <li className="p2-group" key={g.id}>
@@ -260,7 +264,7 @@ function EvidenceCount({ item }: { item: Rec }) {
 }
 
 function MisconceptionBlock({ item }: { item: Rec }) {
-  const refs = asArray(item.wrongAnswers).map((w) => `Q${String(w.questionNumber)}·${asStr(w.letter)}`);
+  const wrongAnswers = asArray(item.wrongAnswers);
   const ccss = asRec(item.ccssStandards);
   const target = ccss ? asRec(ccss.targetObjective) : null;
   return (
@@ -273,7 +277,48 @@ function MisconceptionBlock({ item }: { item: Rec }) {
         )}
       </p>
       <Row k="selected one or more linked responses" v={<EvidenceCount item={item} />} />
-      <Row k="wrong answers" v={<Chips items={refs} />} />
+      <Row
+        k="wrong answers linked"
+        v={
+          wrongAnswers.length === 0 ? (
+            <span className="p2-nil">—</span>
+          ) : (
+            // Each linked option with the stage's explanation of what its value
+            // shows: how the link was justified, not just which options.
+            <ul className="p2-list">
+              {wrongAnswers.map((w) => {
+                const ref = `Q${String(w.questionNumber)}·${asStr(w.letter)}`;
+                return (
+                  <li key={ref}>
+                    <span className="p2-mono">{ref}</span>
+                    {asStr(w.explanation) !== '' && (
+                      <>
+                        {' — '}
+                        <MathText text={asStr(w.explanation)} inline />
+                      </>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )
+        }
+      />
+      {asStr(item.evidenceBasis) !== '' && (
+        <Row
+          k="evidence basis"
+          v={
+            <span>
+              {asStr(item.evidenceBasis)}
+              <span className="p2-row-k">
+                {asStr(item.evidenceBasis) === 'grounded'
+                  ? ' · the option content supports this reading'
+                  : ' · the most plausible of several readings'}
+              </span>
+            </span>
+          }
+        />
+      )}
       {target && <Row k="standard" v={<span className="p2-mono">{asStr(target.standard)}</span>} />}
       {asStr(item.learningScienceConnection) !== '' && (
         <Row k="learning science" v={<span>{asStr(item.learningScienceConnection)}</span>} />
@@ -370,9 +415,9 @@ function ScoreStrip({ item }: { item: Rec }) {
   const rubric = asRec(item.rubric);
   if (!rubric || typeof rubric.total !== 'number' || typeof rubric.maxPossible !== 'number') return null;
   return (
-    <span className="p2-meta p2-meta-scores" title="misconception rubric total">
+    <span className="p2-meta p2-meta-scores" title="misconception rubric score">
       <span className="p2-mono p2-score-total">
-        {rubric.total}/{rubric.maxPossible}
+        {rubric.total} / {rubric.maxPossible}
       </span>
     </span>
   );
@@ -461,15 +506,16 @@ function RubricBlock({ item, tie }: { item: Rec; tie?: TieNote }) {
           );
         })}
         <Row
-          k="→ total"
+          k="→ score"
           v={
             <span>
               <span className="p2-mono p2-rubric-points p2-rubric-total">
-                {total == null || max == null ? '—' : `${total} of ${max}`}
+                {total == null || max == null ? '—' : `${total} / ${max}`}
               </span>
               {' · '}
               <span className="p2-rank-inline">#{String(item.priorityRank ?? '—')}</span>
               {item.isRecommendedFocus === true && <span className="p2-focus"> Recommended Focus</span>}
+              {item.isHighestFrequency === true && <span className="p2-focus"> Highest Frequency</span>}
               {!retained && <span className="p2-dropped"> dropped by cap</span>}
             </span>
           }
@@ -501,7 +547,27 @@ function NeedBlock({ item }: { item: Rec }) {
             <MathText text={asStr(need.text)} />
           </p>
           <Row k="teacher role" v={<span>{asStr(need.teacherRole) || '—'}</span>} />
+          {asStrings(need.evidenceUsed).length > 0 && (
+            <Row
+              k="evidence used"
+              v={
+                <ul className="p2-list">
+                  {asStrings(need.evidenceUsed).map((e) => (
+                    <li key={e}>
+                      <MathText text={e} inline />
+                    </li>
+                  ))}
+                </ul>
+              }
+            />
+          )}
         </>
+      )}
+      {asArray(item.skillNames).length > 0 && (
+        <Row
+          k="skill names"
+          v={<Chips items={asArray(item.skillNames).map((sk) => `${asStr(sk.code)} · ${asStr(sk.name)}`)} />}
+        />
       )}
       {r && (
         <div className="p2-inputs">
@@ -548,57 +614,45 @@ const TEMPLATE_CONTENT_TYPE: Record<string, string> = {
   'make-your-case': 'MAKE_YOUR_CASE',
 };
 
-const KNOWN_CONTENT_TYPES = [
-  'INCORRECT_WORKED_EXAMPLES',
-  'FAVORITE_NO',
-  'COMPARE_THE_THINKING',
-  'MULTIPLE_REPRESENTATIONS',
-  'MATH_DETECTIVE',
-  'MAKE_YOUR_CASE',
-];
-
 /**
- * The generated activity for one pick, rendered through the real component the
- * app uses rather than a preview-only imitation — if it renders here it renders
- * there.
+ * One generated activity, rendered through the same views the app's activity
+ * pages use (Before class, Facilitate activity, Closing discussion), so what
+ * shows here is what teachers will see. A second implementation would drift,
+ * and not drifting is the point of this page.
  *
- * The run is read through loose `Rec` types on purpose, so the cast into
- * `IActivityContent` happens here and only after `type` is checked against the
- * known set. An unrecognised type means the generator produced something the UI
- * has no case for, which is worth saying out loud rather than rendering blank.
+ * `content` is the Wave 2 shape (src/lib/ActivityContentModels.ts). Runs from
+ * before it carry `phases` instead; those say so rather than rendering blank.
+ * Each phase is collapsible so a run can be read activity by activity.
  */
-/**
- * One generated activity, all four phases.
- *
- * Takes the whole `phases` object rather than just `phases.activity`, which is what
- * it used to receive: the before-class checklist, the facilitation steps, the closing
- * questions and the group cards were all generated and none of them reached this
- * page, so an activity read as a quarter of itself and generation looked gappy when
- * it was not.
- *
- * Renders through the same components ActivityDetail uses, so what shows here is what
- * the app shows — a second implementation would drift, and not drifting is the whole
- * point of this page. The order differs from the app and the PDF on purpose: those
- * run before-class first, and here the activity body leads because it is the thing
- * under review.
- *
- * Every phase is gated on presence. Runs before v20 have `beforeClass` and the rest
- * as null, and those runs still need to be readable.
- */
-function GeneratedActivity({ phases, templateId, time }: { phases: Rec | null; templateId: string; time: string }) {
-  const activity = asRec(phases?.activity ?? null);
-  const type = asStr(activity?.type ?? null);
-  const known = activity != null && KNOWN_CONTENT_TYPES.includes(type);
+function GeneratedActivity({
+  move,
+  templateId,
+  misconceptionTitle,
+}: {
+  move: Rec | null;
+  templateId: string;
+  misconceptionTitle: string;
+}) {
+  const { t } = useTranslation();
+  const screenSize = useScreenSize();
+  const content: IActivityContent | null = move ? toActivityContent(move.content) : null;
+  const activityType = content?.facilitate.type ?? null;
+  const copy = activityType ? activityTemplateCopy(activityType as ActivityType, t) : null;
+  const purposes = Array.isArray(move?.questionPurposes) ? (move?.questionPurposes as unknown[]).map(String) : [];
+  const review = move ? asRec(move.discussionReview ?? null) : null;
+  const issues = review ? asArray(review.issues) : [];
 
-  const beforeClass = asRec(phases?.beforeClass ?? null);
-  const facilitation = asRec(phases?.facilitation ?? null);
-  const discussion = asRec(phases?.discussion ?? null);
-  const steps = (rec: Rec | null, key: string) => {
-    const rows = rec ? asArray(rec[key]) : [];
-    return rows.length ? (rows as unknown as IPhaseStep[]) : null;
-  };
-  const facilitationSteps = steps(facilitation, 'steps');
-  const discussionQuestions = steps(discussion, 'questions');
+  const phase = (label: string, body: React.ReactNode) => (
+    <details className="p2-activity-phase">
+      <summary className="p2-phase-head">
+        <span className="p2-chevron" aria-hidden="true">
+          ▸
+        </span>
+        <span className="p2-block-label">{label}</span>
+      </summary>
+      <div className="p2-activity-body">{body}</div>
+    </details>
+  );
 
   return (
     <details className="p2-activity-row">
@@ -607,90 +661,61 @@ function GeneratedActivity({ phases, templateId, time }: { phases: Rec | null; t
           ▸
         </span>
         <span className="p2-block-label">Activity</span>
-        <span className="p2-activity-title">
-          {asStr(activity?.title ?? null) === '' ? (
-            '(untitled)'
-          ) : (
-            <MathText text={asStr(activity?.title ?? null)} inline />
-          )}
-        </span>
+        <span className="p2-activity-title">{copy ? `${copy.name} — ${copy.subtitle}` : '(no content)'}</span>
         <span className="p2-pick-id">{templateId}</span>
-        {type !== '' && <span className="p2-mono p2-activity-type">{type}</span>}
-        {time !== '' && <span className="p2-meta">{time}</span>}
+        {move && asStr(move.time) !== '' && <span className="p2-meta">{asStr(move.time)}</span>}
       </summary>
 
-      {/* Phases in the order a teacher meets them, matching ActivityDetail and the
-          PDF. The casts are this page's usual ones: it reads an arbitrary archived
-          run as Rec, and the components take the typed shapes. */}
-      {beforeClass && (
-        <details className="p2-activity-phase">
-          <summary className="p2-phase-head">
-            <span className="p2-chevron" aria-hidden="true">
-              ▸
-            </span>
-            <span className="p2-block-label">Before class</span>
-          </summary>
-          <div className="p2-activity-body">
-            <BeforeClassPhase
-              beforeClass={beforeClass as unknown as IActivityPhases['beforeClass']}
-            />
-          </div>
-        </details>
-      )}
-
-      <details className="p2-activity-phase">
-        <summary className="p2-phase-head">
-          <span className="p2-chevron" aria-hidden="true">
-            ▸
+      {!content || !copy ? (
+        <p className="p2-text">
+          <span className="p2-nofit">
+            {move == null
+              ? 'No activity was generated for this template.'
+              : 'This run predates the Wave 2 content shape, so the app cannot render it.'}
           </span>
-          <span className="p2-block-label">Activity</span>
-          {!known && <span className="p2-nofit">not renderable</span>}
-        </summary>
-        {known ? (
-          /* ActivityPhase brings its own teacher/student toggle for the types that
-             support one, so this wrapper adds no controls of its own. */
-          <div className="p2-activity-body">
-            <ActivityPhase content={activity as unknown as IActivityContent} />
-          </div>
-        ) : (
+        </p>
+      ) : (
+        <>
           <p className="p2-text">
-            <span className="p2-nofit">
-              {activity == null
-                ? 'No activity was generated for this template.'
-                : `Unrecognised activity type ${type === '' ? '(missing)' : `"${type}"`} — nothing in the app renders this.`}
+            <MathText text={content.whyThisActivity} />
+          </p>
+          {move && asStr(move.targets) !== '' && <Row k="targets" v={<MathText text={asStr(move.targets)} inline />} />}
+          {move && asStr(move.instructionalMove) !== '' && (
+            <Row k="instructional move" v={<MathText text={asStr(move.instructionalMove)} inline />} />
+          )}
+          {move && asStr(move.strategyTag) !== '' && <Row k="strategy" v={<span>{asStr(move.strategyTag)}</span>} />}
+          {phase('Before class', <BeforeClassView content={content} />)}
+          {phase(
+            'Facilitate activity',
+            <FacilitateView
+              content={content}
+              template={copy}
+              misconceptionTitle={misconceptionTitle}
+              screenSize={screenSize}
+            />,
+          )}
+          {phase('Closing discussion', <DiscussionView content={content} screenSize={screenSize} />)}
+          <p className="p2-text">
+            <span className="p2-meta">
+              Question purposes: {purposes.length ? purposes.join(' · ') : 'not recorded'}
+            </span>
+            {' · '}
+            <span className={issues.length ? 'p2-nofit' : 'p2-meta'}>
+              {review == null
+                ? 'accuracy review: not recorded'
+                : `accuracy review: ${issues.length ? `${issues.length} issue(s) fixed` : 'no issues'}`}
             </span>
           </p>
-        )}
-      </details>
-
-      {facilitationSteps && (
-        <details className="p2-activity-phase">
-          <summary className="p2-phase-head">
-            <span className="p2-chevron" aria-hidden="true">
-              ▸
-            </span>
-            <span className="p2-block-label">Facilitation</span>
-          </summary>
-          <div className="p2-activity-body">
-            <StepListPhase title={asStr(facilitation?.title ?? null)} steps={facilitationSteps} />
-          </div>
-        </details>
-      )}
-
-      {/* `asColumns` is deliberately not passed: three questions across read fine at
-          the app's content width and are cramped in this page's column. */}
-      {discussionQuestions && (
-        <details className="p2-activity-phase">
-          <summary className="p2-phase-head">
-            <span className="p2-chevron" aria-hidden="true">
-              ▸
-            </span>
-            <span className="p2-block-label">Discussion</span>
-          </summary>
-          <div className="p2-activity-body">
-            <StepListPhase title={asStr(discussion?.title ?? null)} steps={discussionQuestions} />
-          </div>
-        </details>
+          {issues.length > 0 && (
+            <ul className="p2-text">
+              {issues.map((issue) => (
+                <li key={`${asStr(issue.component)}-${asStr(issue.problem).slice(0, 24)}`}>
+                  <strong>{asStr(issue.component)}</strong>: <MathText text={asStr(issue.problem)} inline />
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
       )}
     </details>
   );
@@ -721,7 +746,7 @@ function TemplateBlock({ item }: { item: Rec }) {
     );
   }
   return (
-    <Block label="Activity selected" hint="LLMSelectTemplate · top two templates">
+    <Block label="Activity selected" hint="LLMSelectTemplate · up to two templates">
       {picks.length === 1 && (
         <p className="p2-text">
           <span className="p2-nofit">Only one template cleared the threshold.</span>
@@ -740,7 +765,6 @@ function TemplateBlock({ item }: { item: Rec }) {
                 <span className={typeof pick.instructionalFit === 'number' && pick.instructionalFit >= 2 ? 'p2-fit p2-fit-strong' : 'p2-fit'}>
                   {typeof pick.instructionalFit === 'number' ? `fit ${pick.instructionalFit}/3` : asStr(pick.fit) || '?'}
                 </span>
-                {pick.belowThreshold === true && <span className="p2-fit p2-fit-below">below threshold</span>}
               </div>
               <div className="p2-text">
                 <MathText text={asStr(pick.rationale)} />
@@ -780,6 +804,7 @@ function MisconceptionCard({
         <span className={item.isRecommendedFocus === true ? 'p2-rank p2-rank-focus' : 'p2-rank'}>#{rank}</span>
         <span className="p2-card-title">{asStr(item.title) || '(untitled)'}</span>
         {item.isRecommendedFocus === true && <span className="p2-meta p2-focus">Recommended Focus</span>}
+        {item.isHighestFrequency === true && <span className="p2-meta p2-focus">Highest Frequency</span>}
         <ScoreStrip item={item} />
         <TieTag tie={tie} />
       </summary>
@@ -795,19 +820,17 @@ function MisconceptionCard({
         {asArray(asRec(item.selectedTemplates)?.picks ?? null).map((pick) => {
           const templateId = asStr(pick.templateId);
           const want = TEMPLATE_CONTENT_TYPE[templateId];
-          const activityOf = (mo: Rec): Rec | null => {
-            const phases = asRec(mo.phases);
-            return phases ? asRec(phases.activity ?? null) : null;
-          };
-          const hit = want
-            ? asArray(item.moveOptions).find((mo) => asStr(activityOf(mo)?.type ?? null) === want)
-            : undefined;
+          const moves = asArray(item.moveOptions);
+          // By template id first; older runs only carry the content type.
+          const hit =
+            moves.find((mo) => asStr(mo.templateId) === templateId) ??
+            (want ? moves.find((mo) => asStr(mo.activityType) === want) : undefined);
           return (
             <GeneratedActivity
               key={templateId}
               templateId={templateId}
-              phases={hit ? asRec(hit.phases) : null}
-              time={hit ? asStr(hit.time) : ''}
+              move={hit ?? null}
+              misconceptionTitle={asStr(item.title)}
             />
           );
         })}
@@ -835,13 +858,14 @@ function flowLine(manifest: Rec, misconceptionCount: number): string {
   const stages = [
     `${mis} misconceptions`,
     needs !== null && `${needs} instructional needs (1 each)`,
-    picks !== null && `${picks} activity templates (2 each)`,
+    picks !== null && `${picks} activity templates (up to 2 each)`,
+    num('activityCount') !== null && `${num('activityCount')} activities`,
   ].filter(Boolean);
   return [input.join(' · '), ...stages].filter((s) => s !== '').join('  →  ');
 }
 
 // Where reviewers leave feedback on what this page shows.
-const COMMENTS_DOC = 'https://docs.google.com/document/d/1d4oYPquSkR8XVKbzVMil-Ux_PiyGELHIHyTgooFv5rc/edit?usp=drive_link';
+const COMMENTS_DOC = 'https://docs.google.com/document/d/11ExH8OtaetBhKIusDSe5iiHWKaWbq4nPqIvQ9bZD4Vo/edit?usp=sharing';
 
 function RunBar({
   runs,
@@ -863,6 +887,14 @@ function RunBar({
   onCollapseAll: () => void;
 }) {
   const missing = asArray(manifest.instructionalNeedsMissing);
+  // In-pipeline guards that fired (seed/eval exportEvalOutputs → guardFires).
+  // Runs from before the field existed say so rather than claiming none.
+  const guardFires = Array.isArray(manifest.guardFires) ? asArray(manifest.guardFires) : null;
+  let guardText = 'not recorded';
+  if (guardFires && guardFires.length === 0) guardText = 'none';
+  if (guardFires && guardFires.length > 0) {
+    guardText = `${guardFires.length} (${guardFires.map((g) => asStr(g.label)).join(', ')})`;
+  }
   const stat = (label: string, value: React.ReactNode) => (
     <span className="p2-stat" key={label}>
       <span className="p2-stat-k">{label}</span>
@@ -906,6 +938,12 @@ function RunBar({
       <div className="p2-bar-row p2-stats">
         {stat('version', asStr(manifest.version) || 'untagged')}
         {stat('condition', String(manifest.condition ?? '—'))}
+        {stat('guards fired', guardText)}
+        {typeof manifest.needSeparationChecked === 'number' &&
+          stat(
+            'needs prescribing an activity',
+            `${asArray(manifest.needSeparationFlags).length}/${manifest.needSeparationChecked}`,
+          )}
         <span className="p2-flowline">{flowLine(manifest, count)}</span>
       </div>
       {missing.length > 0 && (
@@ -1015,6 +1053,8 @@ const STYLES = `
   margin-bottom: 6px; word-break: break-word; }
 .p2-notes { margin: 0; padding-left: 16px; font-size: 11px; color: #4b535c; }
 .p2-notes li { margin-bottom: 3px; }
+.p2-list { margin: 0; padding-left: 16px; font-size: 13px; }
+.p2-list li { margin-bottom: 4px; }
 
 /* misconception cards */
 .p2-card { background: #fff; border: 1px solid #dfe3e8; border-radius: 8px; margin-bottom: 10px; }
@@ -1066,7 +1106,6 @@ const STYLES = `
 .p2-fit { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; background: #eceff3;
   color: #4b535c; border-radius: 4px; padding: 1px 6px; }
 .p2-fit-strong { background: #e5edff; color: #2f5bd0; }
-.p2-fit-below { background: #fdecec; color: #b3261e; margin-left: 4px; }
 .p2-nofit { color: #9a5b00; font-weight: 600; }
 .p2-rubric-row { display: inline-flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .p2-rubric-points { font-size: 13px; font-weight: 700; color: #2c3238; min-width: 62px; display: inline-block; }

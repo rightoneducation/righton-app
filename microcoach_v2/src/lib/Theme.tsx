@@ -23,6 +23,21 @@ const designSystemColors = {
     fadedWhiteVeil: '#FFFFFF2E',
     // black at 50% — the modal backdrop.
     scrim: '#00000080',
+    // black at 30% — the upload flow's Start over modal backdrop (Upload6).
+    scrimLight: '#0000004D',
+    // The sidebar screens' page (Dashboard, This Week, Past Activities). 5 off
+    // offWhite at its widest channel, but cool where offWhite is warm — the
+    // redesign's whole move away from cream — so it stays its own value.
+    coolWhite: '#FAFDFE',
+    // The sidebar. Earlier frames drew accentBlue at 80% over cream; the
+    // redesign flattens that composite into one solid.
+    sidebarBlue: '#6D8BB7',
+    // lightBlue at 20% — the active sidebar tab.
+    sidebarActive: '#CADDE833',
+    // The tiled background band behind the sidebar screens, drawn at 30%.
+    // 18 and 15 off accentBlue and periwinkle, so neither reuses them.
+    patternBlue: '#3878AC',
+    patternMist: '#B4D2E1',
   },
   foreground: {
     base: '#FFFFFF',
@@ -73,6 +88,9 @@ const designSystemColors = {
     darkBlue: '#02215F',
     secondary: '#FFFDFB',
     black: '#000000',
+    // The Start over modal's title (Upload6): 23 off black at its widest
+    // channel, so it does not reuse it.
+    nearBlack: '#171717',
     white: '#FFFFFF',
     neutralGray: '#E4E3E2',
     skyBlue: '#EAF7FE',
@@ -88,12 +106,23 @@ const designSystemColors = {
   status: {
     base: '#FFFFFF',
     success: '#3EBF8F',
+    // The "Correct" label on Review's question tiles: 37 off success at its
+    // widest channel, so it does not reuse it.
+    correctGreen: '#199072',
     lightGreen: '#ECFFE3',
     uploading: '#DFEDF3',
     uploadingIcon: '#375EF9',
     uploadingStroke: '#4A6FA5',
     error: '#FFF3F3',
     errorStroke: '#E42F2F',
+    // An invalid input's outline (rev5 ChangePasswordError): central_v2's and
+    // networking's `error` red. 20 off errorStroke on red, so it doesn't reuse it;
+    // the message text under the label stays errorStroke, as drawn.
+    fieldErrorStroke: '#D0254D',
+    // rev4 UserAccount_NewClassFails: the toast is #F06586 at 30%, flattened
+    // over the page background so the title it floats over can't show
+    // through. errorTint is 17 off on green, so it doesn't stand in.
+    errorToast: '#F7CFDA',
     // Misconception detail: students who need support, students who understood,
     // and the prerequisite-gap standard codes.
     needsSupport: '#F49F82',
@@ -260,6 +289,13 @@ const designSystemTypography = {
     fontSize: '12px',
     lineHeight: 'normal',
   },
+  // Landing (rev4 FrontPage_Mobile): the pilot caveat under Get started.
+  smallNote: {
+    fontFamily: poppins,
+    fontWeight: 400,
+    fontSize: '12px',
+    lineHeight: 'normal',
+  },
   appTitle: {
     fontFamily: rubik,
     fontWeight: 600,
@@ -312,17 +348,13 @@ const designSystemTypography = {
     lineHeight: 'normal',
     letterSpacing: '-0.02em',
   },
+  // The dashboard's breadcrumb stepper (Dashboard1).
   stepLabel: {
     fontFamily: rubik,
-    fontWeight: 500,
-    fontSize: '20px',
+    fontWeight: 700,
+    fontSize: '18px',
     lineHeight: 'normal',
-  },
-  stepNumber: {
-    fontFamily: rubik,
-    fontWeight: 500,
-    fontSize: '26px',
-    lineHeight: 'normal',
+    letterSpacing: '-0.02em',
   },
   formLabel: {
     fontFamily: rubik,
@@ -427,6 +459,28 @@ const designSystemTypography = {
     fontSize: '40px',
     lineHeight: 'normal',
   },
+  // Account Settings: the name on the navy card (Account1).
+  headingXl: {
+    fontFamily: poppins,
+    fontWeight: 700,
+    fontSize: '32px',
+    lineHeight: 'normal',
+  },
+  // Past Activities' empty state: "No past activities yet!" (rev4).
+  emptyStateTitle: {
+    fontFamily: rubik,
+    fontWeight: 600,
+    fontSize: '32px',
+    lineHeight: 'normal',
+    letterSpacing: '-0.02em',
+  },
+  // Account Settings: "Account Created" and the field labels.
+  labelSmBold: {
+    fontFamily: poppins,
+    fontWeight: 600,
+    fontSize: '14px',
+    lineHeight: 'normal',
+  },
   // The review step's body copy and its "UPLOADED" heading — headingLg is
   // already Poppins 600/24, so these are its 400 and 500 weights.
   bodyLg: {
@@ -496,11 +550,16 @@ const sizing = {
   // Review and submit runs narrower than the rest of the flow: Figma insets it
   // to x 502..1418, so the column is the card.
   reviewContentMaxWidth: 916,
-  // Home is its own column: Figma splits 858 into 357 chips + 98 + 403 select.
-  // The stepper and banner deliberately break out of that column.
-  homeContentMaxWidth: 858,
-  stepperMaxWidth: 1050,
-  bannerMaxWidth: 770,
+  // The dashboard is its own column: Figma splits 858 into 357 chips + 98 + 403 select.
+  // The stepper row and the card around it break out of that column: Figma
+  // (dashboard/v2 Dashboard1) runs both across x 383..1589.
+  dashboardContentMaxWidth: 858,
+  stepperMaxWidth: 1206,
+  // The white card holding title, pickers and CTA (v2 Dashboard1: 1206 wide).
+  dashboardCardMaxWidth: 1206,
+  // Home's Weekly Activity Progress and Past Activities: the card list
+  // (rev2 frames: 1172, no side tile since delete was dropped).
+  activityListMaxWidth: 1172,
   reflectCardMinHeight: 432,
   reflectContextMinHeight: 96,
   reflectDetailsButtonWidth: 163,
@@ -562,6 +621,7 @@ declare module '@mui/material/styles' {
     titleLight: CSSProperties;
     xsLabel: CSSProperties;
     microLabel: CSSProperties;
+    smallNote: CSSProperties;
     appTitle: CSSProperties;
     rubikBody: CSSProperties;
     rubikBodyBold: CSSProperties;
@@ -570,7 +630,6 @@ declare module '@mui/material/styles' {
     buttonLabelSm: CSSProperties;
     buttonLabelSmLight: CSSProperties;
     stepLabel: CSSProperties;
-    stepNumber: CSSProperties;
     formLabel: CSSProperties;
     ctaLabel: CSSProperties;
     planSubheading: CSSProperties;
@@ -588,6 +647,9 @@ declare module '@mui/material/styles' {
     stepChipLabel: CSSProperties;
     outcomeLabel: CSSProperties;
     displayBold: CSSProperties;
+    headingXl: CSSProperties;
+    emptyStateTitle: CSSProperties;
+    labelSmBold: CSSProperties;
     bodyLg: CSSProperties;
     subheadingLg: CSSProperties;
     submissionLabelLight: CSSProperties;
@@ -611,6 +673,7 @@ declare module '@mui/material/styles' {
     titleLight?: CSSProperties;
     xsLabel?: CSSProperties;
     microLabel?: CSSProperties;
+    smallNote?: CSSProperties;
     appTitle?: CSSProperties;
     rubikBody?: CSSProperties;
     rubikBodyBold?: CSSProperties;
@@ -619,7 +682,6 @@ declare module '@mui/material/styles' {
     buttonLabelSm?: CSSProperties;
     buttonLabelSmLight?: CSSProperties;
     stepLabel?: CSSProperties;
-    stepNumber?: CSSProperties;
     formLabel?: CSSProperties;
     ctaLabel?: CSSProperties;
     planSubheading?: CSSProperties;
@@ -637,6 +699,9 @@ declare module '@mui/material/styles' {
     stepChipLabel?: CSSProperties;
     outcomeLabel?: CSSProperties;
     displayBold?: CSSProperties;
+    headingXl?: CSSProperties;
+    emptyStateTitle?: CSSProperties;
+    labelSmBold?: CSSProperties;
     bodyLg?: CSSProperties;
     subheadingLg?: CSSProperties;
     submissionLabelLight?: CSSProperties;
@@ -661,6 +726,7 @@ declare module '@mui/material/Typography' {
     titleLight: true;
     xsLabel: true;
     microLabel: true;
+    smallNote: true;
     appTitle: true;
     rubikBody: true;
     rubikBodyBold: true;
@@ -669,7 +735,6 @@ declare module '@mui/material/Typography' {
     buttonLabelSm: true;
     buttonLabelSmLight: true;
     stepLabel: true;
-    stepNumber: true;
     formLabel: true;
     ctaLabel: true;
     planSubheading: true;
@@ -687,6 +752,9 @@ declare module '@mui/material/Typography' {
     stepChipLabel: true;
     outcomeLabel: true;
     displayBold: true;
+    headingXl: true;
+    emptyStateTitle: true;
+    labelSmBold: true;
     bodyLg: true;
     subheadingLg: true;
     submissionLabelLight: true;
@@ -727,6 +795,21 @@ const Theme = createTheme({
     designSystem: designSystemColors,
   },
   components: {
+    // Hover lightens a button's own fill with a faint white layer. Filled
+    // buttons keep their resting colour on hover so this layer shows through
+    // instead of MUI's default hover tint replacing the fill.
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          '@media (hover: hover)': {
+            '&:hover': {
+              backgroundImage:
+                'linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1))',
+            },
+          },
+        },
+      },
+    },
     MuiTypography: {
       defaultProps: {
         variantMapping: {
@@ -746,6 +829,7 @@ const Theme = createTheme({
           smallPopupLabel: 'p',
           xsLabel: 'p',
           microLabel: 'p',
+          smallNote: 'p',
           appTitle: 'p',
           rubikBody: 'p',
           rubikBodyBold: 'p',
@@ -754,7 +838,6 @@ const Theme = createTheme({
           buttonLabelSm: 'p',
           buttonLabelSmLight: 'p',
           stepLabel: 'p',
-          stepNumber: 'p',
           formLabel: 'p',
           ctaLabel: 'p',
           planSubheading: 'p',
@@ -772,6 +855,9 @@ const Theme = createTheme({
           stepChipLabel: 'p',
           outcomeLabel: 'p',
           displayBold: 'p',
+          headingXl: 'p',
+          emptyStateTitle: 'p',
+          labelSmBold: 'p',
           bodyLg: 'p',
           subheadingLg: 'p',
           submissionLabelLight: 'p',
@@ -798,6 +884,7 @@ const Theme = createTheme({
     titleLight: { ...designSystemTypography.titleLight },
     xsLabel: { ...designSystemTypography.xsLabel },
     microLabel: { ...designSystemTypography.microLabel },
+    smallNote: { ...designSystemTypography.smallNote },
     appTitle: { ...designSystemTypography.appTitle },
     rubikBody: { ...designSystemTypography.rubikBody },
     rubikBodyBold: { ...designSystemTypography.rubikBodyBold },
@@ -806,7 +893,6 @@ const Theme = createTheme({
     buttonLabelSm: { ...designSystemTypography.buttonLabelSm },
     buttonLabelSmLight: { ...designSystemTypography.buttonLabelSmLight },
     stepLabel: { ...designSystemTypography.stepLabel },
-    stepNumber: { ...designSystemTypography.stepNumber },
     formLabel: { ...designSystemTypography.formLabel },
     ctaLabel: { ...designSystemTypography.ctaLabel },
     planSubheading: { ...designSystemTypography.planSubheading },
@@ -824,6 +910,9 @@ const Theme = createTheme({
     stepChipLabel: { ...designSystemTypography.stepChipLabel },
     outcomeLabel: { ...designSystemTypography.outcomeLabel },
     displayBold: { ...designSystemTypography.displayBold },
+    headingXl: { ...designSystemTypography.headingXl },
+    emptyStateTitle: { ...designSystemTypography.emptyStateTitle },
+    labelSmBold: { ...designSystemTypography.labelSmBold },
     bodyLg: { ...designSystemTypography.bodyLg },
     subheadingLg: { ...designSystemTypography.subheadingLg },
     submissionLabelLight: { ...designSystemTypography.submissionLabelLight },

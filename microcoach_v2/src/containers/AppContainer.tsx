@@ -34,18 +34,29 @@ const BodyContainer = styled(Box)({
 interface AppContainerProps {
   children: ReactNode;
   headerVariant?: HeaderVariant;
+  // Avatar header only: add the class switcher (the flow screens).
+  showClassSwitcher?: boolean;
   showFooter?: boolean;
+  // The floating Need help button; the Account frames draw none.
+  showHelp?: boolean;
   onLogOut?: () => void;
   classrooms?: IMicroCoachClassroom[];
   selectedClassroomId?: string | null;
   onSelectClassroom?: (classroomId: string) => void;
+  // The teacher's picture for the header avatar; initials when null.
+  profilePictureUrl?: string | null;
+  areClassesLoading?: boolean;
 }
 
 export default function AppContainer({
   children,
   headerVariant = 'public',
+  showClassSwitcher = false,
   showFooter = true,
+  showHelp = true,
   onLogOut,
+  profilePictureUrl = null,
+  areClassesLoading = false,
   classrooms,
   selectedClassroomId,
   onSelectClassroom,
@@ -57,13 +68,18 @@ export default function AppContainer({
       <Header
         screenSize={screenSize}
         variant={headerVariant}
+        showClassSwitcher={showClassSwitcher}
         onLogOut={onLogOut}
         classrooms={classrooms}
         selectedClassroomId={selectedClassroomId}
         onSelectClassroom={onSelectClassroom}
+        profilePictureUrl={profilePictureUrl}
+        areClassesLoading={areClassesLoading}
       />
       <BodyContainer component="main">{children}</BodyContainer>
-      {headerVariant === 'app' && <NeedHelpButton />}
+      {showHelp && (headerVariant === 'app' || headerVariant === 'avatar') && (
+        <NeedHelpButton />
+      )}
       {showFooter && <Footer screenSize={screenSize} />}
     </ScreenContainer>
   );

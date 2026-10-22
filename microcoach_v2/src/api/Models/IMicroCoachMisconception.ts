@@ -6,6 +6,12 @@ import type {
 } from "../../lib/PipelineModels";
 import type { IMicroCoachActivity } from "./IMicroCoachActivity";
 
+/** One question and the wrong answers on it that point to a misconception. */
+export interface IResponseEvidence {
+  questionNumber: number;
+  answers: string[];
+}
+
 export interface IMicroCoachMisconception {
   id: string;
   rank: number;
@@ -21,4 +27,5 @@ export interface IMicroCoachMisconception {
   nextStepActivities: IMicroCoachActivity[];
   studentWork: IStudentWork | null;
   skillContext: ISkillContext | null;
+  responseEvidence: IResponseEvidence[];
 }

@@ -31,12 +31,13 @@ export function flowTabPath(
 ): string {
   switch (tabId) {
     case 'assess':
+      return '/upload-miu';
     case 'reassess':
-      return '/upload-rtd';
+      return '/upload-reassess';
     case 'understand':
       return '/review';
     case 'select-activity':
-      return hasSavedActivity ? '/myplan' : '/review';
+      return hasSavedActivity ? '/myactivity' : '/review';
     case 'reflect':
     default:
       return '/reflect';
@@ -54,7 +55,7 @@ interface FlowNavProps extends ScreenSizeProps {
 export default function FlowNav({
   screenSize,
   activeTabId,
-  actionLabelKey = 'flowNav.myPlan',
+  actionLabelKey = 'flowNav.myActivity',
   compactAction = false,
   onTabSelect,
   onAction,

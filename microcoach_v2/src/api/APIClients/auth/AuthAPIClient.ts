@@ -11,6 +11,7 @@ import {
   resendSignUpCode,
   confirmResetPassword,
   updateUserAttributes,
+  updatePassword,
   decodeJWT,
   SignInOutput,
   ResendSignUpCodeOutput,
@@ -62,6 +63,20 @@ export class AuthAPIClient implements IAuthAPIClient {
   async getCurrentSession(): Promise<AuthSession> {
     const session = await fetchAuthSession();
     return session;
+  }
+
+  /*
+   * True for an account that signs in through Google. Cognito stamps an
+   * `identities` claim on federated users' ID tokens; a native email/password
+   * account has none, and only those have a password to change.
+   */
+  async isFederatedUser(): Promise<boolean> {
+    const session = await fetchAuthSession();
+    return !!session.tokens?.idToken?.payload?.identities;
+  }
+
+  async awsUpdatePassword(oldPassword: string, newPassword: string): Promise<void> {
+    await updatePassword({ oldPassword, newPassword });
   }
 
   async updateCognitoUsername(newUsername: string): Promise<void> {

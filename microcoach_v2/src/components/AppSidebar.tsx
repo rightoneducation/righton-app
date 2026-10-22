@@ -1,7 +1,6 @@
 import React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
 import { ISidebarItem } from '../lib/PipelineModels';
 import { ScreenSize } from '../lib/MicroCoachModels';
@@ -9,12 +8,11 @@ import {
   Sidebar,
   SidebarItem,
   SidebarSelect,
-} from '../lib/styledcomponents/HomeStyledComponents';
+} from '../lib/styledcomponents/DashboardStyledComponents';
 
 const icons: Record<string, React.ReactNode> = {
-  home: <HomeOutlinedIcon fontSize="small" />,
-  'this-week': <CalendarTodayOutlinedIcon fontSize="small" />,
-  'past-insights': <HistoryOutlinedIcon fontSize="small" />,
+  dashboard: <HomeOutlinedIcon fontSize="small" />,
+  'past-activities': <HistoryOutlinedIcon fontSize="small" />,
 };
 
 interface AppSidebarProps {
@@ -53,6 +51,7 @@ export default function AppSidebar({
         <SidebarItem
           key={item.id}
           isActive={item.isActive}
+          screenSize={screenSize}
           startIcon={icons[item.id]}
           onClick={() => onSelect(item.id)}
           aria-current={item.isActive ? 'page' : undefined}

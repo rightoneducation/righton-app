@@ -8,6 +8,7 @@
  *   1. Uploads POST_PPQ Assessment + StudentResponse records (idempotent)
  *   2. Compares pre/post performance per misconception
  *   3. Attaches postPpqResults to each gap group in pregeneratedNextSteps
+ *   4. Updates Misconception.postPpqImprovement
  *
  * It does NOT run cleanup, upload, or generate — existing data is preserved.
  */
@@ -219,11 +220,11 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
 // ── GraphQL queries & mutations ─────────────────────────────────────────────
 
 const LIST_CLASSROOMS = /* GraphQL */ `
-  query ListMicroCoachClassrooms {
-    listMicroCoachClassrooms(limit: 1000) {
+  query ListClassrooms {
+    listClassrooms {
       items {
         id
-        name
+        classroomName
         grade
         students {
           items {
@@ -238,11 +239,11 @@ const LIST_CLASSROOMS = /* GraphQL */ `
 `;
 
 const SESSIONS_BY_CLASSROOM = /* GraphQL */ `
-  query MicroCoachSessionsByClassId($classId: ID!) {
-    microCoachSessionsByClassId(classId: $classId, limit: 1000) {
+  query SessionsByClassroomId($classroomId: ID!) {
+    sessionsByClassroomId(classroomId: $classroomId) {
       items {
         id
-        classId
+        classroomId
         sessionLabel
         weekNumber
         ppqAssessmentId
@@ -252,6 +253,10 @@ const SESSIONS_BY_CLASSROOM = /* GraphQL */ `
           items {
             id
             title
+            ccssStandard
+            evidence {
+              source
+            }
           }
         }
       }
@@ -260,8 +265,8 @@ const SESSIONS_BY_CLASSROOM = /* GraphQL */ `
 `;
 
 const STUDENT_RESPONSES_BY_ASSESSMENT = /* GraphQL */ `
-  query MicroCoachStudentResponsesByAssessmentId($assessmentId: ID!) {
-    microCoachStudentResponsesByAssessmentId(assessmentId: $assessmentId, limit: 1000) {
+  query StudentResponsesByAssessmentId($assessmentId: ID!) {
+    studentResponsesByAssessmentId(assessmentId: $assessmentId, limit: 1000) {
       items {
         id
         studentId
@@ -270,7 +275,6 @@ const STUDENT_RESPONSES_BY_ASSESSMENT = /* GraphQL */ `
           questionNumber
           response
           isCorrect
-          pointsEarned
           confidence
         }
       }
@@ -279,30 +283,36 @@ const STUDENT_RESPONSES_BY_ASSESSMENT = /* GraphQL */ `
 `;
 
 const CREATE_ASSESSMENT = /* GraphQL */ `
-  mutation CreateMicroCoachAssessment($input: CreateMicroCoachAssessmentInput!) {
-    createMicroCoachAssessment(input: $input) { id }
+  mutation CreateAssessment($input: CreateAssessmentInput!) {
+    createAssessment(input: $input) { id }
   }
 `;
 
 const CREATE_STUDENT_RESPONSE = /* GraphQL */ `
-  mutation CreateMicroCoachStudentResponse($input: CreateMicroCoachStudentResponseInput!) {
-    createMicroCoachStudentResponse(input: $input) { id }
+  mutation CreateStudentResponse($input: CreateStudentResponseInput!) {
+    createStudentResponse(input: $input) { id }
   }
 `;
 
 const DELETE_STUDENT_RESPONSE = /* GraphQL */ `
-  mutation DeleteMicroCoachStudentResponse($input: DeleteMicroCoachStudentResponseInput!) {
-    deleteMicroCoachStudentResponse(input: $input) { id }
+  mutation DeleteStudentResponse($input: DeleteStudentResponseInput!) {
+    deleteStudentResponse(input: $input) { id }
   }
 `;
 
 const UPDATE_SESSION = /* GraphQL */ `
-  mutation UpdateMicroCoachSession($input: UpdateMicroCoachSessionInput!) {
-    updateMicroCoachSession(input: $input) {
+  mutation UpdateSession($input: UpdateSessionInput!) {
+    updateSession(input: $input) {
       id
       postPpqAssessmentId
       pregeneratedNextSteps
     }
+  }
+`;
+
+const UPDATE_MISCONCEPTION = /* GraphQL */ `
+  mutation UpdateMisconception($input: UpdateMisconceptionInput!) {
+    updateMisconception(input: $input) { id postPpqImprovement }
   }
 `;
 
@@ -324,15 +334,12 @@ async function main() {
 
   // Fetch all classrooms from DB
   const classroomsData = await gql(LIST_CLASSROOMS);
-  const dbClassrooms: any[] =
-    classroomsData.listMicroCoachClassrooms?.items ?? [];
+  const dbClassrooms: any[] = classroomsData.listClassrooms?.items ?? [];
 
   for (const config of classroomConfigs) {
     console.log(`── ${config.key} ──`);
 
-    const dbClassroom = dbClassrooms.find(
-      (c: any) => c.name === config.name,
-    );
+    const dbClassroom = dbClassrooms.find((c: any) => c.classroomName === config.name);
     if (!dbClassroom) {
       console.log(`  ✗ Classroom "${config.name}" not found in DB — skipping`);
       continue;
@@ -354,11 +361,8 @@ async function main() {
     }
 
     // Fetch sessions
-    const sessionsData = await gql(SESSIONS_BY_CLASSROOM, {
-      classId: dbClassroom.id,
-    });
-    const dbSessions: any[] =
-      sessionsData.microCoachSessionsByClassId?.items ?? [];
+    const sessionsData = await gql(SESSIONS_BY_CLASSROOM, { classroomId: dbClassroom.id });
+    const dbSessions: any[] = sessionsData.sessionsByClassroomId?.items ?? [];
 
     for (const sessionConfig of config.sessions) {
       if (!sessionConfig.postPpqFile) continue;
@@ -396,8 +400,7 @@ async function main() {
       // Check if existing POST_PPQ data has actual question responses
       if (postPpqAssessmentId) {
         const checkData = await gql(STUDENT_RESPONSES_BY_ASSESSMENT, { assessmentId: postPpqAssessmentId });
-        const checkItems: any[] =
-          checkData.microCoachStudentResponsesByAssessmentId?.items ?? [];
+        const checkItems: any[] = checkData.studentResponsesByAssessmentId?.items ?? [];
         const hasQrs = checkItems.some((sr: any) => (sr.questionResponses ?? []).length > 0);
         if (hasQrs) {
           console.log(`  POST_PPQ already uploaded (${postPpqAssessmentId}) with valid data — skipping upload`);
@@ -417,6 +420,7 @@ async function main() {
             await gql(CREATE_STUDENT_RESPONSE, {
               input: {
                 assessmentId: postPpqAssessmentId,
+                assessmentStudentResponsesId: postPpqAssessmentId,
                 studentId,
                 totalScore: student.totalScore,
                 questionResponses: student.questionResponses.map((qr) => ({
@@ -435,14 +439,22 @@ async function main() {
         }
       } else {
         const assessmentInput: Record<string, any> = {
-          classId: dbClassroom.id,
+          classroomId: dbClassroom.id,
           sessionId: dbSession.id,
+          sessionAssessmentsId: dbSession.id,
           assessmentCode: postPpqData.assessmentCode || 'POST_PPQ_UNKNOWN',
           type: 'POST_PPQ',
           weekNumber: postPpqData.weekNumber || sessionConfig.weekNumber,
+          topic: sessionConfig.topic,
+          ccssStandards: postPpqData.ccssStandards.length > 0 ? postPpqData.ccssStandards : sessionConfig.ccssStandards,
+          classPercentCorrect: postPpqData.classPercentCorrect,
           questions: postPpqData.questionMeta.map((q) => ({
             questionNumber: q.questionNumber,
+            questionType: 'MC',
             correctAnswer: q.correctAnswer,
+            pointValue: 1,
+            ccssStandard: q.ccssStandard,
+            classPercentCorrect: q.classPercentCorrect,
           })),
         };
         if (dbSession.ppqAssessmentId) {
@@ -451,7 +463,7 @@ async function main() {
 
         process.stdout.write(`  Creating POST_PPQ assessment...`);
         const assessmentResult = await gql(CREATE_ASSESSMENT, { input: assessmentInput });
-        postPpqAssessmentId = assessmentResult.createMicroCoachAssessment.id;
+        postPpqAssessmentId = assessmentResult.createAssessment.id;
         console.log(` ✓  id: ${postPpqAssessmentId}`);
 
         // Upload student responses
@@ -465,6 +477,7 @@ async function main() {
           await gql(CREATE_STUDENT_RESPONSE, {
             input: {
               assessmentId: postPpqAssessmentId,
+              assessmentStudentResponsesId: postPpqAssessmentId,
               studentId,
               totalScore: student.totalScore,
               questionResponses: student.questionResponses.map((qr) => ({
@@ -499,16 +512,14 @@ async function main() {
       const ppqData = await gql(STUDENT_RESPONSES_BY_ASSESSMENT, {
         assessmentId: dbSession.ppqAssessmentId,
       });
-      const ppqResponses: any[] =
-        ppqData.microCoachStudentResponsesByAssessmentId?.items ?? [];
+      const ppqResponses: any[] = ppqData.studentResponsesByAssessmentId?.items ?? [];
       console.log(` ✓  ${ppqResponses.length} responses`);
 
       process.stdout.write(`  Fetching POST_PPQ responses...`);
       const postData = await gql(STUDENT_RESPONSES_BY_ASSESSMENT, {
         assessmentId: postPpqAssessmentId,
       });
-      const postResponses: any[] =
-        postData.microCoachStudentResponsesByAssessmentId?.items ?? [];
+      const postResponses: any[] = postData.studentResponsesByAssessmentId?.items ?? [];
       console.log(` ✓  ${postResponses.length} responses`);
 
       // ── Step 3: Compute per-misconception improvement ─────────────────
@@ -581,36 +592,45 @@ async function main() {
           continue;
         }
 
-        // ── "Before" set: students from activity Groups A + B (all except last group) ──
-        // Groups are ordered weakest → strongest by injectStudentsIntoGroups.
-        // Last group = "Ready to Generalize" (understood). All others need help.
-        const allGroups: any[] = [];
+        // ── "Before" set: the students who needed help on this misconception ──
+        // Wave 2 activities carry no severity groups, so the set comes from the
+        // misconception's own studentGroups (computed from the PPQ responses on its
+        // linked questions). Older Wave 1 output grouped students inside the
+        // activity, weakest first, with the last group the ones who understood;
+        // that is still read when a run has it.
+        let beforeNames = new Set<string>();
+        let allGroupStudentNames = new Set<string>();
+        let understoodNames: string[] = [];
+        let groupsUsedLabel = '';
+        const legacyGroups: any[] = [];
         for (const move of (matchingGapGroup.moveOptions ?? [])) {
           const groups = move?.phases?.beforeClass?.groupFormation?.groups;
           if (Array.isArray(groups) && groups.length > 0) {
-            allGroups.push(...groups);
+            legacyGroups.push(...groups);
             break; // use the first activity that has groupings
           }
         }
-
-        if (allGroups.length < 2) {
-          console.log(`    ⚠ ${misconception.title}: no student groupings found on activity — skipping`);
-          continue;
-        }
-
-        // All groups except the last = students needing help before intervention
-        const needHelpGroups = allGroups.slice(0, -1);
-        const beforeNames = new Set<string>();
-        for (const group of needHelpGroups) {
-          for (const name of (group.students ?? [])) {
-            beforeNames.add(name);
+        if (legacyGroups.length >= 2) {
+          const needHelpGroups = legacyGroups.slice(0, -1);
+          beforeNames = new Set(needHelpGroups.flatMap((g: any) => (g.students ?? []) as string[]));
+          allGroupStudentNames = new Set(legacyGroups.flatMap((g: any) => (g.students ?? []) as string[]));
+          understoodNames = legacyGroups[legacyGroups.length - 1].students ?? [];
+          groupsUsedLabel = needHelpGroups.map((g: any) => g.name ?? g.label).join(', ');
+        } else {
+          const studentGroups = matchingGapGroup.studentGroups ?? {};
+          const building: string[] = studentGroups.buildingUnderstanding ?? [];
+          const understood: string[] = studentGroups.understoodConcept ?? [];
+          if (!building.length) {
+            console.log(`    ⚠ ${misconception.title}: no students recorded as needing support — skipping`);
+            continue;
           }
+          beforeNames = new Set(building);
+          allGroupStudentNames = new Set([...building, ...understood]);
+          understoodNames = understood;
+          groupsUsedLabel = 'buildingUnderstanding';
         }
 
         // Students in the class roster who were absent from PPQ (not in any group) but took POST_PPQ
-        const allGroupStudentNames = new Set<string>(
-          allGroups.flatMap((g: any) => (g.students ?? []) as string[])
-        );
         const absentPostStudents = students.filter((s: any) => {
           const displayName = normalizeName(s.name);
           return !allGroupStudentNames.has(s.name) && !allGroupStudentNames.has(displayName)
@@ -618,7 +638,7 @@ async function main() {
         });
 
         console.log(`    ${misconception.title}:`);
-        console.log(`      Groups used: ${needHelpGroups.map((g: any) => g.name).join(', ')} (${beforeNames.size} students)`);
+        console.log(`      Needing support before: ${groupsUsedLabel} (${beforeNames.size} students)`);
         if (absentPostStudents.length > 0) {
           console.log(`      Absent from PPQ but took POST_PPQ: ${absentPostStudents.map((s: any) => normalizeName(s.name)).join(', ')}`);
         }
@@ -649,9 +669,8 @@ async function main() {
           }
         }
 
-        // Check for newly surfaced: students in the last group (understood) who now score < threshold
-        const understoodGroup = allGroups[allGroups.length - 1];
-        for (const name of (understoodGroup.students ?? [])) {
+        // Check for newly surfaced: students who had understood but now score < threshold
+        for (const name of understoodNames) {
           const studentId = nameToStudentId.get(name);
           if (!studentId) continue;
 
@@ -696,7 +715,7 @@ async function main() {
         const afterCount = studentsStillNeedHelp.length + studentsNewlySurfaced.length;
 
         // Comparable = grouped students who took POST_PPQ + absent DB students who took it + unmatched students with responses
-        const allGroupStudents = allGroups.flatMap((g: any) => g.students ?? []);
+        const allGroupStudents = [...allGroupStudentNames];
         const groupComparable = allGroupStudents.filter((name: string) => {
           const id = nameToStudentId.get(name);
           return id && postPpqStudentIds.has(id);
@@ -768,6 +787,17 @@ async function main() {
       });
       console.log(` ✓  (${matched}/${misconceptionResults.length} matched)`);
 
+      // ── Step 5: Update Misconception.postPpqImprovement ───────────────
+
+      for (const result of misconceptionResults) {
+        await gql(UPDATE_MISCONCEPTION, {
+          input: {
+            id: result.misconceptionId,
+            postPpqImprovement: result.improvementPct,
+          },
+        });
+      }
+      console.log(`  ✓ Updated postPpqImprovement on ${misconceptionResults.length} misconceptions`);
     }
 
     console.log();

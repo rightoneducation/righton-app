@@ -1,191 +1,322 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
-import AppContentRow from '../components/AppContentRow';
-import FlowNav, { FlowTabId, flowTabPath } from '../components/FlowNav';
+import CancelIcon from '@mui/icons-material/Cancel';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import { FlowStepperBand } from '../components/FlowHeader';
+import { FlowStep } from '../lib/flowProgress';
+import LoadingSlot from '../components/LoadingSlot';
+import MisconceptionCardsSkeleton from '../components/skeletons/MisconceptionCardsSkeleton';
 import MisconceptionCard from '../components/MisconceptionCard';
-import MisconceptionDetailModal from '../components/MisconceptionDetailModal';
-import ReviewSkeleton from '../components/ReviewSkeleton';
+import MisconceptionCarousel from '../components/MisconceptionCarousel';
+import MisconceptionDetailModal, {
+  MisconceptionDetailSelection,
+} from '../components/MisconceptionDetailModal';
 import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import {
-  ResultsBanner,
-  CountChip,
-  StrongUnderstandingBar,
+  BannerOverlay,
+  CardRow,
+  CorrectSection,
+  ReviewBody,
+  ReviewFooter,
+  ReviewIntro,
+  QuestionTile,
+  ResultsBannerBox,
+  TilePercent,
+  TileRow,
+  TitleGroup,
+  TitleRow,
+  UnderstandColumn,
+  UnderstandPage,
+  ViewMiuLink,
+  WorksPill,
   ScreenSizeProps,
-} from '../lib/styledcomponents/ReviewStyledComponents';
-import { useAllReady, useI18nReady } from '../hooks/readiness';
+} from '../lib/styledcomponents/UnderstandStyledComponents';
+import { continueTooltipSx } from '../lib/styledcomponents/UploadStyledComponents';
+import {
+  EmptyState,
+  EmptyStateButton,
+  EmptyStateText,
+} from '../lib/styledcomponents/ActivityListStyledComponents';
+import { useI18nReady } from '../hooks/readiness';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import { UseSessionsResult } from '../hooks/useSessions';
+import { IPlanItemsState } from '../hooks/usePlanItems';
+import MathText from '../components/MathText';
+
+// One card's height: what the loading spinner holds open (Figma: 544).
+const CARD_HEIGHT = 544;
+// Cards that fit side by side at LARGE (Figma: three 366-wide). More than this —
+// the Highest Frequency misconception carried forward as a fourth — swipe.
+const CARDS_PER_ROW = 3;
+
+// The results banner is a one-time notice per upload: once dismissed for a
+// session it stays dismissed on this device. Storage may be blocked, in which
+// case it simply shows again next visit.
+const bannerKey = (sessionId: string) => `microcoach.resultsSeen.${sessionId}`;
+
+function readBannerSeen(sessionId: string | null): boolean {
+  if (!sessionId) return true;
+  try {
+    return window.localStorage.getItem(bannerKey(sessionId)) === 'true';
+  } catch {
+    return false;
+  }
+}
+
+function writeBannerSeen(sessionId: string) {
+  try {
+    window.localStorage.setItem(bannerKey(sessionId), 'true');
+  } catch {
+    // Blocked storage only means the banner can return; nothing else depends on it.
+  }
+}
 
 interface ReviewProps extends ScreenSizeProps {
   sessions: UseSessionsResult;
+  plan: IPlanItemsState;
 }
 
-export default function Review({ screenSize, sessions }: ReviewProps) {
+/**
+ * Understand Your Students' Thinking (microcoach-assets/Misconceptions): the
+ * misconceptions the pipeline surfaced for the selected session, one to pick
+ * as this week's focus, and how the class did on each MIU question.
+ *
+ * The page renders at once; only the cards wait on the misconceptions query.
+ * The per-question tiles and the response evidence render when the session
+ * and misconceptions carry them (questionStats / responseEvidence).
+ */
+export default function Review({ screenSize, sessions, plan }: ReviewProps) {
   const { t } = useTranslation();
-  const theme = useTheme();
   const navigate = useNavigate();
-  const isLarge = screenSize === ScreenSize.LARGE;
-
-  const { misconceptions, misconceptionsStatus, planItems } =
-    useMicroCoachDataState();
+  const isI18nReady = useI18nReady();
+  const { misconceptions, misconceptionsStatus } = useMicroCoachDataState();
   const session = sessions.selectedSession;
-  const dataReady = misconceptionsStatus === MicroCoachDataStatus.READY;
-  const isReady = useAllReady(useI18nReady(), dataReady);
+  const sessionId = session?.id ?? null;
 
-  const [isBannerOpen, setIsBannerOpen] = React.useState(true);
-  const [selectedId, setSelectedId] = React.useState<string | null>(null);
+  const [selected, setSelected] = React.useState<MisconceptionDetailSelection | null>(null);
+  // Keyed on the session so switching class shows that session's banner state.
+  const [dismissedFor, setDismissedFor] = React.useState<string | null>(null);
 
-  if (!isReady) {
-    return <ReviewSkeleton screenSize={screenSize} />;
-  }
+  if (!isI18nReady) return null;
 
-  const handleViewDetails = (misconceptionId: string) => {
-    setSelectedId(misconceptionId);
+  const isLoading =
+    misconceptionsStatus === MicroCoachDataStatus.LOADING ||
+    misconceptionsStatus === MicroCoachDataStatus.IDLE;
+  const hasFailed = misconceptionsStatus === MicroCoachDataStatus.ERROR;
+  const showBanner =
+    !!sessionId &&
+    misconceptions.length > 0 &&
+    dismissedFor !== sessionId &&
+    !readBannerSeen(sessionId);
+
+  const questionStats = session?.questionStats ?? [];
+  // The MIU PDF behind "View Mix It Up" (rev2 Misconceptions). No session or
+  // assessment field holds one yet (the schema is the intern's workstream), so
+  // the link stays hidden until one does; point this at that field.
+  const miuPdfUrl: string | null = null;
+  const selectedMisconception =
+    misconceptions.find((item) => item.id === selected?.id) ?? null;
+  // The pipeline tags the widest-reaching misconception overall and always carries it
+  // forward (as a fourth card when it is outside the top 3); the stored row
+  // keeps its student count, so the tag is worked out here rather than stored.
+  // Strictly greater, so a tie stays with the earlier (better-ranked) card.
+  const highestFrequencyId = misconceptions.reduce<{ id: string; n: number } | null>(
+    (best, item) => {
+      const n = item.prevalence?.studentsNeedingSupport;
+      if (n == null) return best;
+      return !best || n > best.n ? { id: item.id, n } : best;
+    },
+    null,
+  )?.id;
+
+  const dismissBanner = () => {
+    if (!sessionId) return;
+    writeBannerSeen(sessionId);
+    setDismissedFor(sessionId);
   };
 
-  const handleChooseActivity = (misconceptionId: string) => {
+  const handleSelect = (misconceptionId: string) => {
     // Close before navigating so react-modal runs its own close path and
     // restores #root's aria-hidden, rather than being torn down mid-flight.
-    setSelectedId(null);
+    setSelected(null);
     navigate(`/review/${misconceptionId}/activities`);
   };
 
-  const selectedMisconception =
-    misconceptions.find((item) => item.id === selectedId) ?? null;
-
-  const handleTabSelect = (tabId: FlowTabId) => {
-    if (tabId === 'understand') return;
-    navigate(flowTabPath(tabId, planItems.length > 0));
-  };
-
-  const handleAction = () => {
-    navigate('/myplan');
-  };
+  const isLarge = screenSize === ScreenSize.LARGE;
+  const isCarousel = isLarge && misconceptions.length > CARDS_PER_ROW;
+  const cards = misconceptions.map((misconception) => (
+    <MisconceptionCard
+      key={misconception.id}
+      // The shared-row alignment needs one grid; a swipe strip has a box per card.
+      isAligned={isLarge && !isCarousel}
+      isHighestFrequency={misconception.id === highestFrequencyId}
+      misconception={misconception}
+      onViewDetails={(id, fromEvidence) => setSelected({ id, fromEvidence })}
+      onSelect={handleSelect}
+    />
+  ));
+  const cardLayout = isCarousel ? (
+    <MisconceptionCarousel>{cards}</MisconceptionCarousel>
+  ) : (
+    <CardRow screenSize={screenSize}>{cards}</CardRow>
+  );
 
   return (
-    <AppContentRow
-      screenSize={screenSize}
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: `${theme.sizing.space6}px`,
-        pt: isLarge ? `${theme.sizing.space8}px` : `${theme.sizing.space6}px`,
-        pb: isLarge ? `${theme.sizing.space14}px` : `${theme.sizing.space11}px`,
-      }}
-    >
-      <FlowNav
-        screenSize={screenSize}
-        activeTabId="understand"
-        onTabSelect={handleTabSelect}
-        onAction={handleAction}
-      />
+    <UnderstandPage screenSize={screenSize}>
+      <UnderstandColumn>
+        <FlowStepperBand
+          screenSize={screenSize}
+          sessions={sessions}
+          plan={plan}
+          page={FlowStep.UNDERSTAND}
+        />
 
-      {isBannerOpen && (
-        <ResultsBanner
-          elevation={3}
-          sx={{ alignSelf: isLarge ? 'center' : 'stretch' }}
-        >
-          <Typography
-            variant="rubikBodyBold"
-            sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {t('review.banner')}
-          </Typography>
-          <IconButton
-            size="small"
-            aria-label={t('review.dismissBanner')}
-            onClick={() => setIsBannerOpen(false)}
-            sx={{ ml: 'auto', color: 'designSystem.surface.ashyGray' }}
-          >
-            <CloseIcon sx={{ fontSize: 18 }} />
-          </IconButton>
-        </ResultsBanner>
-      )}
+        <ReviewBody screenSize={screenSize}>
+          <ReviewIntro screenSize={screenSize}>
+            <TitleGroup>
+              <TitleRow>
+                <Typography
+                  variant="appTitle"
+                  component="h1"
+                  sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                >
+                  {t('review.title')}
+                </Typography>
+                {session?.studentWorksAnalyzed != null && (
+                  <WorksPill>
+                    {t('review.worksAnalyzed', { count: session.studentWorksAnalyzed })}
+                  </WorksPill>
+                )}
+                {miuPdfUrl && (
+                  <ViewMiuLink href={miuPdfUrl} target="_blank" rel="noopener noreferrer">
+                    <DescriptionOutlinedIcon fontSize="small" aria-hidden />
+                    {t('review.viewMiu')}
+                  </ViewMiuLink>
+                )}
+              </TitleRow>
+              <Typography
+                variant="uploadLabel"
+                sx={{ color: 'designSystem.surface.atlanticNavy' }}
+              >
+                {t('review.subtitle')}
+              </Typography>
+              {showBanner && (
+                <BannerOverlay>
+                  <ResultsBannerBox role="status">
+                    {t('review.banner')}
+                    <IconButton
+                      size="small"
+                      aria-label={t('review.dismissBanner')}
+                      onClick={dismissBanner}
+                      sx={{ color: 'designSystem.foreground.mutedGrey' }}
+                    >
+                      <CancelIcon fontSize="small" />
+                    </IconButton>
+                  </ResultsBannerBox>
+                </BannerOverlay>
+              )}
+            </TitleGroup>
 
-      <Box>
-        <Typography
-          variant="appTitle"
-          sx={{
-            color: 'designSystem.surface.atlanticNavy',
-            mb: `${theme.sizing.space2}px`,
-          }}
-        >
-          {t('review.title')}
-        </Typography>
+            <LoadingSlot
+              isLoading={isLoading}
+              minHeight={screenSize === ScreenSize.LARGE ? CARD_HEIGHT : 0}
+              label={t('review.loading')}
+              skeleton={<MisconceptionCardsSkeleton screenSize={screenSize} />}
+            >
+              {hasFailed ? (
+                <Typography
+                  variant="rubikBody"
+                  role="alert"
+                  sx={{ color: 'designSystem.status.errorStroke' }}
+                >
+                  {t('review.loadError')}
+                </Typography>
+              ) : null}
+              {/* Nothing surfaced (most students answered correctly): say so
+                  and offer the way back, rather than an empty card area. */}
+              {!hasFailed && misconceptions.length === 0 && (
+                <EmptyState>
+                  <EmptyStateText>
+                    <Typography variant="emptyStateTitle">
+                      {t('review.noMisconceptionsTitle')}
+                    </Typography>
+                    <Typography variant="h4">{t('review.noMisconceptionsBody')}</Typography>
+                  </EmptyStateText>
+                  <EmptyStateButton disableElevation onClick={() => navigate('/dashboard')}>
+                    {t('pastActivities.backToHome')}
+                  </EmptyStateButton>
+                </EmptyState>
+              )}
+              {!hasFailed && misconceptions.length > 0 && cardLayout}
+            </LoadingSlot>
+          </ReviewIntro>
 
-        <Stack
-          direction={isLarge ? 'row' : 'column'}
-          alignItems={isLarge ? 'center' : 'flex-start'}
-          spacing={`${theme.sizing.space2}px`}
-        >
-          <Typography
-            variant="uploadLabel"
-            sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {t('review.subtitle')}
-          </Typography>
-          <CountChip>
-            {session?.studentWorksAnalyzed == null
-              ? t('review.worksAnalyzedUnavailable')
-              : t('review.worksAnalyzed', {
-                  count: session.studentWorksAnalyzed,
-                })}
-          </CountChip>
-        </Stack>
-      </Box>
+          <ReviewFooter>
+            {questionStats.length > 0 && (
+              <CorrectSection>
+                <Typography
+                  variant="headingLg"
+                  component="h2"
+                  sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                >
+                  {t('review.correctResponsesTitle', { count: questionStats.length })}
+                </Typography>
+                <TileRow>
+                  {questionStats.map((stat) => {
+                    const label = t('review.questionLabel', { number: stat.questionNumber });
+                    return (
+                      <Tooltip
+                        key={stat.questionNumber}
+                        title={
+                          stat.questionText ? (
+                            <>
+                              {`${label}. `}
+                              <MathText text={stat.questionText} inline />
+                            </>
+                          ) : (
+                            ''
+                          )
+                        }
+                        placement="bottom"
+                        arrow
+                        slotProps={continueTooltipSx}
+                      >
+                        <QuestionTile tabIndex={stat.questionText ? 0 : undefined}>
+                          <Typography variant="rubikBody">{label}</Typography>
+                          <TilePercent>{`${Math.round(stat.percentCorrect * 100)}%`}</TilePercent>
+                          <Typography
+                            variant="rubikBody"
+                            sx={{ color: 'designSystem.status.correctGreen' }}
+                          >
+                            {t('review.correct')}
+                          </Typography>
+                        </QuestionTile>
+                      </Tooltip>
+                    );
+                  })}
+                </TileRow>
+              </CorrectSection>
+            )}
 
-      <Stack
-        direction={isLarge ? 'row' : 'column'}
-        spacing={
-          isLarge ? `${theme.sizing.space8}px` : `${theme.sizing.space5}px`
-        }
-        alignItems="stretch"
-      >
-        {misconceptions.map((misconception) => (
-          <Box
-            key={misconception.id}
-            sx={{
-              flex: '1 1 0',
-              minWidth: 0,
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <MisconceptionCard
-              misconception={misconception}
-              screenSize={screenSize}
-              onViewDetails={handleViewDetails}
-            />
-          </Box>
-        ))}
-      </Stack>
-
-      <StrongUnderstandingBar elevation={4}>
-        <Typography
-          variant="headingMd"
-          sx={{ color: 'designSystem.surface.atlanticNavy' }}
-        >
-          {session?.studentsWithStrongUnderstanding == null
-            ? t('review.strongUnderstandingUnavailable')
-            : t('review.strongUnderstanding', {
-                count: session.studentsWithStrongUnderstanding,
-              })}
-        </Typography>
-      </StrongUnderstandingBar>
+            <Typography variant="bodyText" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+              {t('review.disclaimer')}
+            </Typography>
+          </ReviewFooter>
+        </ReviewBody>
+      </UnderstandColumn>
 
       <MisconceptionDetailModal
         misconception={selectedMisconception}
+        showNames={selected?.fromEvidence ?? false}
+        questionStats={questionStats}
         screenSize={screenSize}
-        onClose={() => setSelectedId(null)}
-        onChooseActivity={handleChooseActivity}
+        onClose={() => setSelected(null)}
+        onChooseActivity={handleSelect}
       />
-    </AppContentRow>
+    </UnderstandPage>
   );
 }

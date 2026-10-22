@@ -1,104 +1,112 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { IMicroCoachActivity } from '../api/Models/IMicroCoachActivity';
+import { ScreenSize } from '../lib/MicroCoachModels';
+import MathTypography from './MathTypography';
+import { activityTemplateCopy } from '../lib/activityTemplates';
+import { GroupingSequenceChips } from './GroupingChips';
 import {
-  ActivityCard as CardSurface,
-  DurationChip,
-  GroupingChip,
-  MetaSeparator,
+  ActivityCardSurface,
   CardAction,
   CardActionRow,
+  CardHeader,
+  CardSection,
+  DurationChip,
+  NameRow,
+  RunStep,
+  RunSteps,
+  StepBadge,
   ScreenSizeProps,
 } from '../lib/styledcomponents/ChooseActivityStyledComponents';
 
 interface ActivityCardProps extends ScreenSizeProps {
   activity: IMicroCoachActivity;
-  /** Owned by the page, not read off the activity — selection is page state. */
-  isSelected: boolean;
-  onSelect: (activityId: string) => void;
-  onHowToRun: (activityId: string) => void;
+  onViewDetails: (activityId: string) => void;
+  onSelect: (activity: IMicroCoachActivity) => void;
 }
 
+// An empty row keeps a missing section's place, so the rows below line up.
+function RowPlaceholder() {
+  return <span aria-hidden />;
+}
+
+/**
+ * One next-step activity (Figma: SelectActivity): the template's name and
+ * instructional move, the grouping sequence, why MicroCoach chose it, and the
+ * run-of-show. An activity without Wave 2 content shows only the template's
+ * own copy.
+ */
 export default function ActivityCard({
   activity,
-  isSelected,
   screenSize,
+  onViewDetails,
   onSelect,
-  onHowToRun,
 }: ActivityCardProps) {
   const { t } = useTranslation();
-  const { routine } = activity;
+  const template = activityTemplateCopy(activity.activityType, t);
+  const { content } = activity;
+  // Side by side at LARGE: the card shares its rows with its neighbours.
+  const isAligned = screenSize === ScreenSize.LARGE;
 
   return (
-    <CardSurface elevation={4} screenSize={screenSize} isSelected={isSelected}>
-      <Typography
-        variant="headingMd"
-        sx={{ color: 'designSystem.surface.atlanticNavy' }}
-      >
-        {routine.name}
-      </Typography>
+    <ActivityCardSurface isAligned={isAligned}>
+      <CardHeader isAligned={isAligned}>
+        <NameRow>
+          <Typography
+            variant="headingLg"
+            component="h2"
+            sx={{ color: 'designSystem.surface.atlanticNavy' }}
+          >
+            {template.name}
+          </Typography>
+          {activity.durationLabel && <DurationChip>{activity.durationLabel}</DurationChip>}
+        </NameRow>
+        <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+          {template.subtitle}
+        </Typography>
+        {content ? (
+          <GroupingSequenceChips steps={content.howToRun} />
+        ) : (
+          isAligned && <RowPlaceholder />
+        )}
+      </CardHeader>
 
-      {(activity.durationLabel || activity.grouping) && (
-        <Stack direction="row" alignItems="center" spacing={1}>
-          {activity.durationLabel && (
-            <DurationChip>{activity.durationLabel}</DurationChip>
-          )}
-          {activity.durationLabel && activity.grouping && (
-            <MetaSeparator aria-hidden>|</MetaSeparator>
-          )}
-          {activity.grouping && (
-            <GroupingChip>{activity.grouping.label}</GroupingChip>
-          )}
-        </Stack>
+      <CardSection>
+        <Typography variant="headingSm" component="h3">
+          {t('chooseActivity.whyTitle')}
+        </Typography>
+        <MathTypography
+          variant="smallBodyText"
+          text={content?.whyThisActivity ?? template.description}
+        />
+      </CardSection>
+
+      {!content && isAligned && <RowPlaceholder />}
+      {content && (
+        <CardSection>
+          <Typography variant="headingSm" component="h3">
+            {t('chooseActivity.howToRunTitle')}
+          </Typography>
+          <RunSteps screenSize={screenSize}>
+            {content.howToRun.map((step, index) => (
+              <RunStep key={step.title}>
+                <StepBadge aria-hidden>{index + 1}</StepBadge>
+                <MathTypography variant="microLabel" component="span" text={step.title} />
+              </RunStep>
+            ))}
+          </RunSteps>
+        </CardSection>
       )}
 
-      <Typography
-        variant="headingSm"
-        sx={{ color: 'designSystem.surface.atlanticNavy' }}
-      >
-        {t('chooseActivity.subtitleLabel')}
-      </Typography>
-      <Typography
-        variant="rubikBody"
-        sx={{ color: 'designSystem.surface.atlanticNavy' }}
-      >
-        {routine.subtitle}
-      </Typography>
-
-      <Typography
-        variant="headingSm"
-        sx={{ color: 'designSystem.surface.atlanticNavy' }}
-      >
-        {t('chooseActivity.descriptionLabel')}
-      </Typography>
-      <Typography
-        variant="rubikBody"
-        sx={{ color: 'designSystem.surface.atlanticNavy' }}
-      >
-        {routine.description}
-      </Typography>
-
       <CardActionRow>
-        <CardAction
-          tone={isSelected ? 'disabled' : 'secondary'}
-          disableElevation
-          disabled={isSelected}
-          onClick={() => onSelect(activity.id)}
-        >
-          {isSelected
-            ? t('chooseActivity.selectedActivity')
-            : t('chooseActivity.selectActivity')}
+        <CardAction disableElevation onClick={() => onViewDetails(activity.id)}>
+          {t('chooseActivity.viewDetails')}
         </CardAction>
-        <CardAction
-          tone="primary"
-          disableElevation
-          onClick={() => onHowToRun(activity.id)}
-        >
-          {t('chooseActivity.howToRun')}
+        <CardAction isPrimary disableElevation onClick={() => onSelect(activity)}>
+          {t('chooseActivity.selectActivity')}
         </CardAction>
       </CardActionRow>
-    </CardSurface>
+    </ActivityCardSurface>
   );
 }

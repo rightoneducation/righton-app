@@ -49,9 +49,11 @@ export function useMisconceptions(
         );
         if (cancelled) return;
 
+        // The query returns rows in storage order; screens list them by the
+        // pipeline's rank, so the recommended focus (rank 1) comes first.
         dispatch({
           type: 'SET_MISCONCEPTIONS',
-          payload: misconceptionsWithActivities,
+          payload: [...misconceptionsWithActivities].sort((a, b) => a.rank - b.rank),
         });
         dispatch({
           type: 'SET_MISCONCEPTIONS_STATUS',

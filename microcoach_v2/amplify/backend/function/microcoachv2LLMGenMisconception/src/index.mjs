@@ -72,7 +72,7 @@ const WrongAnswerRef = z.object({
 
 // Key order mirrors parts (a)–(d) of the prompt's output instructions.
 const MisconceptionOut = z.object({
-  description: z.string().describe('(a) The specific conceptual error, tailored to the actual steps required to arrive at it'),
+  description: z.string().describe('(a) The reasoning the chosen answers point to, tailored to the actual steps required to arrive at them — written as the interpretation the evidence supports, tied to what students chose, not as a fact about what they think'),
   title: z.string().describe('(b) A precise title focused on the conceptual error itself'),
   learningScienceConnection: z.string().describe('(c) The mathematical relationship this error breaks — which idea from the standard, its learning components, or its prerequisites the student is not coordinating. A mathematical claim about this error, never a learning-science category.'),
   evidenceBasis: z.enum(['grounded', 'inferred']).describe(
@@ -141,6 +141,64 @@ function formatQuestion(q) {
   return `${header}\n${stem}\n${rows.join('\n')}`;
 }
 
+// ── LaTeX in the output ───────────────────────────────────────────────────────
+// Copied from microcoachv2NextStepOption/src/index.mjs (each Lambda is its own
+// package): the descriptions and explanations now carry LaTeX, and the same
+// JSON-escape damage ("\\frac" parsed into a form feed + "rac") applies here.
+/**
+ * Strip control characters from every string in the generated activity.
+ *
+ * The model reaches for them as invisible separators when a field asks for an
+ * "inline sequence". Nothing renders them, so the page looks right while the bytes
+ * travel on into the PDF and the database. Tabs and newlines are kept.
+ */
+const CONTROL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F​-‍﻿]/g;
+
+/**
+ * Put back LaTeX commands that JSON parsing turned into control characters.
+ *
+ * When the model writes a command with a single backslash inside its JSON
+ * ("\rightarrow", "\frac", "\times", "\beta", "\neq"), the backslash and the
+ * first letter form a valid JSON escape, so parsing yields a carriage return,
+ * form feed, tab, backspace or newline followed by the rest of the command
+ * ("ightarrow", "rac"). Run 10-09 v29 stored "12ightarrow 3y" this way. A carriage
+ * return, tab, form feed or backspace directly before a letter is never intended
+ * in this content, so it is restored wherever it appears. A newline before a
+ * letter is ordinary prose outside math, so it is restored only inside $…$.
+ * Must run before CONTROL_CHARS, which would otherwise delete the form feed and
+ * backspace and leave "rac" and "egin" with nothing to show what they were.
+ */
+const LOST_ESCAPE_LETTER = { '\r': 'r', '\t': 't', '\f': 'f', '\b': 'b' };
+
+function restoreLostEscapes(text) {
+  return text
+    .replace(/[\r\t\f\b](?=[a-zA-Z])/g, (c) => `\\${LOST_ESCAPE_LETTER[c]}`)
+    .replace(/\$\$[^$]*\$\$|\$[^$]*\$/g, (span) => span.replace(/\n(?=[a-zA-Z])/g, '\\n'));
+}
+
+function sanitizeStrings(value) {
+  if (typeof value === 'string') {
+    // Two or more backslashes before a letter or a space are an over-escaped command,
+    // which LaTeX reads as a line break rather than the command meant. Strings
+    // with a begin-environment (cases, aligned) keep theirs: there it is the row break.
+    const cleaned = restoreLostEscapes(value).replace(CONTROL_CHARS, '');
+    const unescaped = /\\begin\{/.test(cleaned) ? cleaned : cleaned.replace(/\\{2,}(?=[a-zA-Z ])/g, '\\');
+    return unescaped.replace(/ {2,}/g, ' ').trim();
+  }
+  if (Array.isArray(value)) return value.map(sanitizeStrings);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, sanitizeStrings(v)]));
+  }
+  return value;
+}
+
+// The activity prompts' math rule (NextStepOption MATH_FORMATTING), scoped to
+// the fields the app renders as math. Titles stay plain words: they are short
+// noun phrases, and the admission checks read them for "(" and "or".
+const MATH_FORMATTING = `## Math formatting
+- In descriptions, wrong-answer explanations and question texts, use LaTeX for every mathematical expression: $...$ inline, $$...$$ for a standalone equation. Never use Unicode math symbols (≤ ≥ ≠ × ÷ √ π ½ ²) or caret/underscore notation outside the delimiters. Fractions are $\\frac{a}{b}$, inequalities $\\leq$ / $\\geq$, multiplication $\\times$. Write each command with ONE backslash: never \\\\ (a line break) or \\  (a forced space). Plain prose stays plain English — only the math goes inside delimiters.
+- Titles contain no math and no LaTeX: plain words only.`;
+
 export function buildPrompt(questions, context, learningScienceData) {
   const examples = STYLE_EXAMPLES.map((e) => `- ${e}`).join('\n');
   const learningScienceSection = formatLearningScience(learningScienceData);
@@ -177,6 +235,8 @@ export function buildPrompt(questions, context, learningScienceData) {
     - Match the register of these real examples:
     ${examples}
 
+    ${MATH_FORMATTING}
+
     ## Grounding rules
     - Infer the most plausible mathematical misconception supported by the response pattern and the question content. Do not assume an incorrect answer corresponds to a single known misconception: a distractor can be reached by more than one route, and the Wave 2 answer key says which option is correct without saying what any distractor represents.
     - When several readings fit the same option, pick the one its value actually supports and say what in the value supports it. If two readings genuinely fit, give two misconceptions — never one that hedges between them. A description offering alternatives ("sets a variable to zero, or another arbitrary value", "substitutes wrongly or omits y") is two misconceptions written as one.
@@ -197,7 +257,9 @@ export function buildPrompt(questions, context, learningScienceData) {
     Two parts, in this order:
     1. \`misconceptions\` — the misconceptions this quiz's wrong answers support
       a. a description of the reasoning that produces the specific wrong values students chose. It must determine those values: if the reasoning you describe would not land a student on the options you list, it is not the misconception behind them.
-         Good: "Writes the solution components in the wrong order, giving (0,5) where the system yields (5,0)."
+         Write it as the interpretation the answers support, starting from what was chosen: the answers are the evidence and the reasoning is the reading of them. Selected answers do not show that every student who chose them reasoned the same way, so never state the reasoning as a fact about what students think or believe. This is not hedging: commit to the one reading, without "often", "may" or "perhaps".
+         Good: "Choosing $(0,5)$ where the system yields $(5,0)$ points to writing the solution components in the wrong order."
+         Not: "Students believe the order of an ordered pair does not matter." — states a belief the answers cannot show.
          Not: "Sets one variable to zero instead of solving the system." — determines neither y = 5 nor y = -5, so it explains neither option.
       b. a precise title naming that reasoning. A plain noun phrase, no parentheticals, no "or".
          Good: "Swapped solution components"
@@ -462,7 +524,8 @@ export const handler = async (event) => {
 
     const raw = completion.choices[0]?.message?.content;
     if (!raw) throw new Error('Empty completion content');
-    const structured = GenResponseForSession.parse(JSON.parse(raw));
+    // LaTeX commands parsed into control characters are put back before validation.
+    const structured = GenResponseForSession.parse(sanitizeStrings(JSON.parse(raw)));
     const { misconceptions, questions: validated, rejected, admissionFlags } = validateOutput(structured, questions);
 
     console.log(formatMisconceptionLog(misconceptions));

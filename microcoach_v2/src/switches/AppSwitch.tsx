@@ -1,12 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ScreenType } from '../lib/MicroCoachModels';
+import { MicroCoachDataStatus, ScreenType } from '../lib/MicroCoachModels';
+import { AssessmentType } from '../AWSAPI';
 import { useAppOutletContext } from '../hooks/useAppOutletContext';
 import { useLogOut } from '../hooks/useAuthActions';
 import { useScreenSize } from '../hooks/useScreenSize';
+import { useProfilePictureUrl } from '../hooks/useProfilePictureUrl';
 import AppContainer from '../containers/AppContainer';
 import { HeaderVariant } from '../components/Header';
-import TemplateDebugMenu from '../components/TemplateDebugMenu';
 import AuthGuard from '../containers/AuthGuard';
 import Landing from '../pages/Landing';
 import Login from '../pages/Login';
@@ -14,10 +15,11 @@ import SignUpWizard from '../containers/SignUpWizard';
 import ResetPassword from '../pages/ResetPassword';
 import AuthCallback from '../pages/AuthCallback';
 import Dashboard from '../pages/Dashboard';
+import PastActivities from '../pages/PastActivities';
 import Review from '../pages/Review';
 import ChooseActivity from '../pages/ChooseActivity';
-import MyPlan from '../pages/MyPlan';
-import ActivityDetail from '../pages/ActivityDetail';
+import MyActivity from '../pages/MyActivity';
+import ActivityFlow from '../pages/ActivityFlow';
 import Profile from '../pages/Profile';
 import UploadFlow from '../containers/UploadFlow';
 import Reflect from '../pages/Reflect';
@@ -49,7 +51,8 @@ const PUBLIC_SCREENS = new Set<ScreenType>([
   // validateUser before the message appeared.
   ScreenType.AUTH,
   // Every in-app screen is deliberately absent: they need a signed-in user, so
-  // AuthGuard holds them during LOADING and sends a signed-out visitor to /.
+  // AuthGuard sends a signed-out visitor to /. During LOADING they render
+  // their skeletons while the session resolves.
 ]);
 
 // The wizard's own chrome: brand only, no auth links to a flow you are in.
@@ -63,26 +66,41 @@ const SIGNUP_SCREENS = new Set<ScreenType>([
   ScreenType.AUTH,
 ]);
 
-/*
- * The profile frame draws the app header differently from every other in-app
- * frame: identity as avatar-and-name, and no class switcher. CHANGE_PASSWORD
- * has no frame of its own, but it is entered from the profile — flipping the
- * pill and re-adding the switcher mid-flow would read as a glitch.
- */
-const PROFILE_CHROME_SCREENS = new Set<ScreenType>([
+// Screens whose header is the initials avatar and its account menu (HeaderVariant
+// `avatar`): the sidebar screens, the MIU upload flow and Account Settings.
+// CHANGE_PASSWORD has no frame of its own; it is entered from the account
+// page, so it keeps that page's header.
+const AVATAR_HEADER_SCREENS = new Set<ScreenType>([
   ScreenType.PROFILE,
   ScreenType.CHANGE_PASSWORD,
+  ScreenType.DASHBOARD,
+  ScreenType.PAST_ACTIVITIES,
+  ScreenType.UPLOAD_MIU,
+]);
+
+// The Understand-to-Reflect flow: the avatar header plus the class switcher,
+// so a teacher can jump between classes mid-flow (Misconceptions frames).
+const FLOW_SCREENS = new Set<ScreenType>([
+  ScreenType.REVIEW,
+  ScreenType.CHOOSE_ACTIVITY,
+  ScreenType.ACTIVITY_DETAIL,
+  ScreenType.MY_ACTIVITY,
+  // Reached from My Activity's Upload MIU files; Upload2 draws the switcher.
+  ScreenType.UPLOAD_REASSESS,
+  ScreenType.REFLECT,
 ]);
 
 const APP_CHROME_SCREENS = new Set<ScreenType>([
   ScreenType.PROFILE,
   ScreenType.CHANGE_PASSWORD,
-  ScreenType.UPLOAD_RTD,
+  ScreenType.UPLOAD_MIU,
+  ScreenType.UPLOAD_REASSESS,
   ScreenType.REFLECT,
   ScreenType.DASHBOARD,
+  ScreenType.PAST_ACTIVITIES,
   ScreenType.REVIEW,
   ScreenType.CHOOSE_ACTIVITY,
-  ScreenType.MY_PLAN,
+  ScreenType.MY_ACTIVITY,
   ScreenType.ACTIVITY_DETAIL,
 ]);
 
@@ -93,11 +111,16 @@ interface AppSwitchProps {
 export default function AppSwitch({ currentScreen }: AppSwitchProps) {
   const { apiClients, user, classrooms, sessions, plan } =
     useAppOutletContext();
-  const { saveActivity, markPlanItemDone, removePlanItem } = plan;
+  const { saveActivity } = plan;
 
   const screenSize = useScreenSize();
   const { handleLogOut } = useLogOut(apiClients, user);
   const navigate = useNavigate();
+  // The header avatar shows the teacher's picture when they have one.
+  const profilePictureUrl = useProfilePictureUrl(
+    apiClients,
+    user.userProfile?.profilePicPath,
+  );
 
   /*
    * This used to clear the reducer by hand and never call handleLogOut, so the
@@ -164,20 +187,54 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
         />
       );
       break;
+    case ScreenType.PAST_ACTIVITIES:
+      screenComponent = (
+        <PastActivities
+          apiClients={apiClients}
+          screenSize={screenSize}
+          classrooms={classrooms}
+          sessions={sessions}
+        />
+      );
+      break;
     case ScreenType.REVIEW:
-      screenComponent = <Review screenSize={screenSize} sessions={sessions} />;
+      screenComponent = (
+        <Review screenSize={screenSize} sessions={sessions} plan={plan} />
+      );
       break;
     case ScreenType.CHOOSE_ACTIVITY:
       screenComponent = (
-        <ChooseActivity screenSize={screenSize} saveActivity={saveActivity} />
+        <ChooseActivity
+          screenSize={screenSize}
+          sessions={sessions}
+          plan={plan}
+          saveActivity={saveActivity}
+        />
       );
       break;
     case ScreenType.ACTIVITY_DETAIL:
-      screenComponent = <ActivityDetail screenSize={screenSize} />;
+      screenComponent = (
+        <ActivityFlow screenSize={screenSize} sessions={sessions} plan={plan} />
+      );
       break;
-    case ScreenType.UPLOAD_RTD:
-      screenComponent = <UploadFlow screenSize={screenSize} />;
+    case ScreenType.UPLOAD_MIU:
+    case ScreenType.UPLOAD_REASSESS: {
+      const kind =
+        currentScreen === ScreenType.UPLOAD_REASSESS
+          ? AssessmentType.POST_PPQ
+          : AssessmentType.PPQ;
+      screenComponent = (
+        <UploadFlow
+          // Keyed so moving between the two uploads starts a fresh form.
+          key={kind}
+          kind={kind}
+          apiClients={apiClients}
+          screenSize={screenSize}
+          classrooms={classrooms}
+        />
+      );
       break;
+    }
     case ScreenType.REFLECT:
       screenComponent = <Reflect screenSize={screenSize} />;
       break;
@@ -187,16 +244,13 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
           apiClients={apiClients}
           screenSize={screenSize}
           updateUserProfile={user.updateUserProfile}
+          onLogOut={handleHeaderLogOut}
         />
       );
       break;
-    case ScreenType.MY_PLAN:
+    case ScreenType.MY_ACTIVITY:
       screenComponent = (
-        <MyPlan
-          screenSize={screenSize}
-          markPlanItemDone={markPlanItemDone}
-          removePlanItem={removePlanItem}
-        />
+        <MyActivity screenSize={screenSize} sessions={sessions} plan={plan} />
       );
       break;
     case ScreenType.LANDING:
@@ -210,7 +264,9 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
   const isSignUp = SIGNUP_SCREENS.has(currentScreen);
 
   let headerVariant: HeaderVariant = 'public';
-  if (PROFILE_CHROME_SCREENS.has(currentScreen)) headerVariant = 'profile';
+  if (AVATAR_HEADER_SCREENS.has(currentScreen) || FLOW_SCREENS.has(currentScreen)) {
+    headerVariant = 'avatar';
+  }
   else if (usesAppChrome) headerVariant = 'app';
   else if (isSignUp) headerVariant = 'signup';
 
@@ -221,21 +277,27 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       classrooms={classrooms.classrooms}
       selectedClassroomId={classrooms.selectedClassroomId}
       onSelectClassroom={classrooms.selectClassroom}
+      profilePictureUrl={profilePictureUrl}
+      areClassesLoading={
+        classrooms.status === MicroCoachDataStatus.LOADING ||
+        classrooms.status === MicroCoachDataStatus.IDLE
+      }
       // The sign-up frames carry no footer either.
       showFooter={!usesAppChrome && !isSignUp}
+      showClassSwitcher={FLOW_SCREENS.has(currentScreen)}
+      showHelp={
+        currentScreen !== ScreenType.PROFILE &&
+        currentScreen !== ScreenType.CHANGE_PASSWORD
+      }
     >
       <AuthGuard
         handleLogOut={handleLogOut}
         setUserStatus={user.setUserStatus}
         setUserErrorString={user.setUserErrorString}
-        screenSize={screenSize}
         requiresAuth={!PUBLIC_SCREENS.has(currentScreen)}
       >
         {screenComponent}
       </AuthGuard>
-      {/* Review scaffolding — remove with TemplateDebugMenu once the activity
-          screen is backed by real data. */}
-      {currentScreen === ScreenType.ACTIVITY_DETAIL && <TemplateDebugMenu />}
     </AppContainer>
   );
 }

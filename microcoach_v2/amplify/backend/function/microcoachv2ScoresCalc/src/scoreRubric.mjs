@@ -50,6 +50,14 @@ const enabled = (rubric) => rubric.metrics.filter((m) => m.enabled !== false);
 // problem the continuous scale exists to avoid.
 const round2 = (n) => Math.round(n * 100) / 100;
 
+function scoreMetric(metric, value) {
+  if (metric.scale) return linearSaturating(value, metric.scale);
+  if (metric.bands) return band(value, metric.bands);
+  if (metric.transform) return (value * metric.transform.multiply) / metric.transform.divide;
+  // A model-judged metric arrives already on the 0–3 scale.
+  return value;
+}
+
 /**
  * One misconception → { scores, weighted, total, maxPossible, normalized, missing }.
  *
@@ -58,6 +66,11 @@ const round2 = (n) => Math.round(n * 100) / 100;
  * WEIGHTED sum and `maxPossible` the weighted maximum over the metrics that were
  * actually scored, so a missing metric shrinks the denominator by its own weight
  * rather than by an average.
+ *
+ * A metric with `scaledBy` (depth) has its weighted points multiplied by the named
+ * metric's share of its maximum, so it counts in proportion to that metric. It
+ * still adds its full weight to `maxPossible`: at the other metric's maximum it
+ * earns all of it. With nothing to scale by, it is missing too.
  */
 export function scoreOne(raw, rubric) {
   const scores = {};
@@ -66,29 +79,28 @@ export function scoreOne(raw, rubric) {
   let total = 0;
   let maxPossible = 0;
 
-  for (const metric of enabled(rubric)) {
-    const weight = metric.weight ?? 1;
+  // Every unweighted score first, since a scaled metric reads another's.
+  const metrics = enabled(rubric);
+  const unweighted = {};
+  for (const metric of metrics) {
     const value = raw?.[metric.input];
-    if (value == null) {
-      scores[metric.id] = null;
+    unweighted[metric.id] = value == null ? null : scoreMetric(metric, value);
+  }
+
+  for (const metric of metrics) {
+    const weight = metric.weight ?? 1;
+    const score = unweighted[metric.id];
+    const scaleBy = metric.scaledBy ? unweighted[metric.scaledBy] : 1;
+    if (score == null || scaleBy == null) {
+      scores[metric.id] = score == null ? null : round2(score);
       weighted[metric.id] = null;
       missing.push(metric.id);
       continue;
     }
-    let score;
-    if (metric.scale) {
-      score = linearSaturating(value, metric.scale);
-    } else if (metric.bands) {
-      score = band(value, metric.bands);
-    } else if (metric.transform) {
-      score = (value * metric.transform.multiply) / metric.transform.divide;
-    } else {
-      // A model-judged metric arrives already on the 0–3 scale.
-      score = value;
-    }
+    const share = metric.scaledBy ? scaleBy / 3 : 1;
     scores[metric.id] = round2(score);
-    weighted[metric.id] = round2(score * weight);
-    total += score * weight;
+    weighted[metric.id] = round2(score * weight * share);
+    total += score * weight * share;
     maxPossible += 3 * weight;
   }
 
@@ -102,6 +114,17 @@ export function scoreOne(raw, rubric) {
   };
 }
 
+/**
+ * The middle of several depth judgments for one misconception, ignoring calls that
+ * returned nothing for it. With an even count it takes the lower middle, so a
+ * split never rounds depth up. null when no call judged it.
+ */
+export function middleValue(values) {
+  const v = values.filter((x) => x != null).sort((a, b) => a - b);
+  if (!v.length) return null;
+  return v[Math.floor((v.length - 1) / 2)];
+}
+
 // Descending, nulls last.
 const cmpDesc = (a, b) => {
   if (a == null && b == null) return 0;
@@ -112,7 +135,7 @@ const cmpDesc = (a, b) => {
 
 /**
  * Order scored misconceptions and stamp priorityRank / isRecommendedFocus /
- * retained. Each item is `{ ...scoreOne(), raw, inputOrder }`. Ranking uses
+ * retained / isHighestFrequency. Each item is `{ ...scoreOne(), raw, inputOrder }`. Ranking uses
  * `selection.rankOn` (normalized or total), then walks `selection.tiebreak`,
  * where a key is looked up on the raw inputs first and the metric scores second,
  * and `inputOrder` is ascending so the result is deterministic.
@@ -138,10 +161,31 @@ export function rank(items, selection) {
     return 0;
   };
 
-  return [...items].sort(cmp).map((item, i) => ({
+  const ranked = [...items].sort(cmp).map((item, i) => ({
     ...item,
     priorityRank: i + 1,
     isRecommendedFocus: i === 0,
     retained: i < cap,
+    isHighestFrequency: false,
   }));
+
+  // The widest reach is tagged (among the retained ones, or all of them). The order
+  // above stands. Strictly greater, so a tie keeps the better-ranked misconception.
+  // With `alwaysRetain`, a pick outside the cap is carried forward as well, keeping
+  // its rank, so the teacher always sees it after the top `cap`.
+  const rule = selection.highestFrequency;
+  if (rule) {
+    let pick = null;
+    for (const item of ranked) {
+      if (rule.among === 'retained' && !item.retained) continue;
+      const v = item.raw?.[rule.input];
+      if (v == null) continue;
+      if (!pick || v > pick.raw[rule.input]) pick = item;
+    }
+    if (pick) {
+      pick.isHighestFrequency = true;
+      if (rule.alwaysRetain) pick.retained = true;
+    }
+  }
+  return ranked;
 }
