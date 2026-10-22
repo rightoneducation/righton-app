@@ -1,0 +1,42 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:3000",
+      "localStorage": [
+        {
+          "name": "i18nextLng",
+          "value": "en"
+        },
+        {
+          "name": "CognitoIdentityServiceProvider.2mcar4noktdk6n6esqulcj8mdf.c4887468-00c1-7036-661f-dd0a0527104f.accessToken",
+          "value": "eyJraWQiOiJPa245c0ZvR0JSY0ZzSGZOZ1VwazdVR2RjTDBjL2pxTDgvT2NpM01yM1c4PSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJjNDg4NzQ2OC0wMGMxLTcwMzYtNjYxZi1kZDBhMDUyNzEwNGYiLCJpc3MiOiJodHRwczovL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tL3VzLWVhc3QtMV9TOHptOUhHblgiLCJjbGllbnRfaWQiOiIybWNhcjRub2t0ZGs2bjZlc3F1bGNqOG1kZiIsIm9yaWdpbl9qdGkiOiIyYTFkOWE5ZS03YzI4LTQ1N2ItYjIxZi1iMTkxYWI3NDUyNGEiLCJldmVudF9pZCI6ImQ4MzdiMDQ2LTdiYTctNGY4ZC1iOTk3LTRjZjg1MTQ4ZjQwMSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3OTE5NDM1OTksImV4cCI6MTc5MTk0NzE5OSwiaWF0IjoxNzkxOTQzNTk5LCJqdGkiOiJjZTc4YjU4Yy05YmM4LTRiYWEtYThlYS0zMTBmNmViODY2Y2EiLCJ1c2VybmFtZSI6ImM0ODg3NDY4LTAwYzEtNzAzNi02NjFmLWRkMGEwNTI3MTA0ZiJ9.OH_6ZkxtFUCXG9L4dQGq_hbKnYrJWtwQKRmSDOz6RYXj38rVhPeSKx1ROCMio_XZ3I1Sj27nIRiGacR6r__npHNpvIo0cqJVdjVJUHeODhMhlqZAf2zyB6w69PtPf6mfb62jxLn1Rhl7XA8VA9oobi9tt2JIgP0B1L4urgxZwpJoCNT70Bf7cQVqUJtwILr3g2uGBaYkBSqunGl4WqF5wBxkT-MWLcGV4wrlJrAbfeFbef_ovFOAxhywpOs0Dlkhd28OHTJhUXP8SkFul_sGiJx3D0vTAYqoFxMVufutdESq6lPskBDHv0Z8809BvyG2R1Niq9UuIPANP4FeQw3_NQ"
+        },
+        {
+          "name": "CognitoIdentityServiceProvider.2mcar4noktdk6n6esqulcj8mdf.LastAuthUser",
+          "value": "c4887468-00c1-7036-661f-dd0a0527104f"
+        },
+        {
+          "name": "CognitoIdentityServiceProvider.2mcar4noktdk6n6esqulcj8mdf.c4887468-00c1-7036-661f-dd0a0527104f.idToken",
+          "value": "eyJraWQiOiIyS3lyeWhCbFhOWlBzMnlxYVVOYmxtUmhYUng4OUdKSGRtRlY4M1NpU2FVPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJjNDg4NzQ2OC0wMGMxLTcwMzYtNjYxZi1kZDBhMDUyNzEwNGYiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6Ly9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbS91cy1lYXN0LTFfUzh6bTlIR25YIiwiY29nbml0bzp1c2VybmFtZSI6ImM0ODg3NDY4LTAwYzEtNzAzNi02NjFmLWRkMGEwNTI3MTA0ZiIsIm9yaWdpbl9qdGkiOiIyYTFkOWE5ZS03YzI4LTQ1N2ItYjIxZi1iMTkxYWI3NDUyNGEiLCJhdWQiOiIybWNhcjRub2t0ZGs2bjZlc3F1bGNqOG1kZiIsImV2ZW50X2lkIjoiZDgzN2IwNDYtN2JhNy00ZjhkLWI5OTctNGNmODUxNDhmNDAxIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE3OTE5NDM1OTksIm5pY2tuYW1lIjoiZHJld2poYXJ0QGdtYWlsLmNvbSIsImV4cCI6MTc5MTk0NzE5OSwiaWF0IjoxNzkxOTQzNTk5LCJqdGkiOiI0YzgyNzlhNS05YmExLTQ0Y2YtYjNjNC0yYzBmOTM1ODdkNGQiLCJlbWFpbCI6ImRyZXdqaGFydEBnbWFpbC5jb20ifQ.xOm0hpNkAF6h3Oe1Dnwd3u-Cygv0yqffnkWAIP_YN2SPIBQzJyEoNzznX709JiHVBthQ3ll-LhBctqattv5_0EIfUe3EUWQprLnQt8zfQjaHcYhzZErINPP502Ytk-n0dz5gfOFMk4TmH18piSPG8je8lX0jLxi0C6tZQLfs26eWHUC1SAi_G9pp3Roo6ZDWJZeEvq7J9fedKLe8QLE6QgtSFu0UglicKFbbH1VbLete4iIR5APIyiH0z8SVr_yBBK-YB0O2LDAVXmZmh-VtkYHd7Dw9POus6Pxyd9WJr2T0ZA-l8DFGBFfUH5G5AtwozzWv-T8GOpzcWXs6dynW_w"
+        },
+        {
+          "name": "microcoach_userprofile",
+          "value": "{\"id\":\"a2272c9c-3226-467b-8312-e635f7b32c11\",\"cognitoId\":\"c4887468-00c1-7036-661f-dd0a0527104f\",\"email\":\"drewjhart@gmail.com\",\"firstName\":\"Drew\",\"lastName\":\"Hart\",\"school\":null,\"classes\":[],\"role\":\"TEACHER\",\"createdAt\":\"2026-10-04T09:01:56.618Z\",\"updatedAt\":\"2026-10-04T09:01:56.618Z\"}"
+        },
+        {
+          "name": "CognitoIdentityServiceProvider.2mcar4noktdk6n6esqulcj8mdf.c4887468-00c1-7036-661f-dd0a0527104f.refreshToken",
+          "value": "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.1Fq4VIl04KwvnZV2uZKYujNr6pMXMrdySYCLoSDaPO4vV9tn1lR5CVZpz-K6YR7ex8nuXOmil3AWRyttzsRjXcGhKMuCa0qGGuwQJs58CnKulbX1IKyt1IysVrSb0v-6U4nfKwChHTV4oXmostSXSuDfcUaF9YDE71whlW84x8Jhx8H4VWNd7ZvYoWphL3uBC3VRDcG1hckNiLmQa3fFVny6vvFzE6YqDbuP5HOZpxXp5IXkrhnl8vx__L8NdrGQ6SCPP-RYPlJSfp8-71jeQ7qRX98ZCzifK0VVDh290d6DJOsLYOJ15u-1Nvb4ki7uSwT5rg_RI95aP403i5S3LQ.ivI_VDCBSlOcNmcr.CIiTh_vDlCEjRb6mMHjPhuhhyndpqwc4ytenxzGVEgfe9F-n9JVlD-JEEQ2k3_tKxwZeF1oXUg0agrqIaQOz3ONAXZWairfurkDIDunFqw7tqOpHo5vYZFzVltTRmY6a_RmrMskE-hW9NmCFGQh8WvDqfhV92JVj49Qy1Tdw5yRXL78lKQ_XPbgVnKIuDCCv8SAKX4NeA-xjaLya3duHNheYQTB1PDkDLRDa4v34MEloCJc0LkXYfPZzRmHMF6m_s6hfs3aUce7NCy8v4SvMY-5CTz206hMq0jQoIbr_9V-jSVjWBEVBMbTmIjgvHjojXuFRngAq8stFIbao5FWrlsFSDVUdLB9221wW7Q2gmnaskDLMbrfg4KerX2q9W74-E8DhUL5Ko-HQGdUrcr2PI3ncgRLsAReH9NtCMramzzHT5TKUpipBqu6Wn9yfjdoc3vFHIid24uBZlYoTaedPe1v--XKG3wE2vlQb57aFP3m-tw_ET-iVXy9th48tQEEl88c9-jXVptP_LpXkHRafWEr4ljMHCdQSnvgXOH0oFk3CPvLpvwZEFkU7jdmKZxM0KXPjAntNIHBYLy1FQ4iV7_DZiM61Nz6Bv8Fw8nVQM5nA16xoZ3SW0VTzUBOMieFK8mQNUD5a9BiPPXXbccUzvUQAScLLMxGa9zCiLpf4dUN707Bz9ynN6mBBcWWeldk7oc2LnUL8raXos4d3qapiflmTd0aDGBrPYeXDk4Pua6d_03MiVfU5XoLPZYArK1y0xXz3PO_1_kofvKBCbWF8bVfE3HJabGkqHp_Pq0V1_GsngtJrSZW9tayyV8TZ4JC5zmhX6BNfCAZay9S88DJEBjGPUFjP9hEgbWshLb4iRl5uVgGpVDMzUK2kSixBqPYvmOT0uQQnia0VOYIV5cWTWPAlods5I044pmwF0qbD761x1Xds94Upo-mM18VGhUVW04XJtsHvZtnhclTcumybujETPUwOV5vkvb0b_k09Q3GXv4qeoXs7F3fhZvz2SNDseNb-3u5zzezBNhTGJvE9MEFf3_UZJEega9Avni8tJaC7anTyXbzaPLkZH88mh5fhpnbRh0OUejd6fGjrsCBqna5a940OZOKxS2l_vki20ptyKGCASjxjLlfSovc2FwWfRlnqQA9HDKf-A1FX6KpUgQVlofTJiO0nqKleJ2TUhHkenQBq6xoVk0Bwu40XU4IssdpOEy0PM9au_M_UPjKGSmpsqRkT2GsRD8y9T5fhHYi1uqqj9mNBGehyzU-0iO-3oTMSU4iglyh89anETpLT1gSpZF_XTf2hpU2UmpkQzLgvcx8HF1ca.iYa03nPsCzkDfoziVnhDrA"
+        },
+        {
+          "name": "CognitoIdentityServiceProvider.2mcar4noktdk6n6esqulcj8mdf.c4887468-00c1-7036-661f-dd0a0527104f.signInDetails",
+          "value": "{\"loginId\":\"drewjhart@gmail.com\",\"authFlowType\":\"USER_SRP_AUTH\"}"
+        },
+        {
+          "name": "CognitoIdentityServiceProvider.2mcar4noktdk6n6esqulcj8mdf.c4887468-00c1-7036-661f-dd0a0527104f.clockDrift",
+          "value": "-610"
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,27 @@
-import { PublishStatus, SessionStatus } from "../../AWSAPI";
+import { PublishStatus, SessionStatus } from '../../AWSAPI';
+
+export interface IMicroCoachReflectionStudentResult {
+  studentId: string;
+  studentName: string | null;
+  questionsCorrectBefore: number | null;
+  questionsCorrectAfter: number | null;
+}
+
+export interface IMicroCoachReflectionAnswerResult {
+  letter: string;
+  text: string;
+  percentChosen: number;
+  isCorrect: boolean;
+}
+
+export interface IMicroCoachReflectionQuestionResult {
+  questionNumber: number;
+  questionText: string;
+  percentCorrectBefore: number;
+  percentCorrectAfter: number;
+  beforeAnswers: IMicroCoachReflectionAnswerResult[];
+  afterAnswers: IMicroCoachReflectionAnswerResult[];
+}
 
 export interface IMicroCoachReflectionResult {
   activityId: string | null;
@@ -9,6 +32,8 @@ export interface IMicroCoachReflectionResult {
   averageQuestionsCorrectBefore: number;
   averageQuestionsCorrectAfter: number;
   improvedStudentCount: number;
+  studentResults: IMicroCoachReflectionStudentResult[];
+  questionResults: IMicroCoachReflectionQuestionResult[];
 }
 
 export interface IMicroCoachSession {

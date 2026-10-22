@@ -59,8 +59,6 @@ export function useClassrooms(
           payload: MicroCoachDataStatus.READY,
         });
       } catch (error) {
-        // TEMP debug: surface swallowed load errors
-        console.error('[useClassrooms] load failed', error);
         if (cancelled) return;
 
         dispatch({

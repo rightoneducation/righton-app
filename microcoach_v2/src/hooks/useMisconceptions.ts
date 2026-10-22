@@ -58,8 +58,6 @@ export function useMisconceptions(
           payload: MicroCoachDataStatus.READY,
         });
       } catch (error) {
-        // TEMP debug: surface swallowed load errors
-        console.error('[useMisconceptions] load failed', error);
         if (cancelled) return;
 
         dispatch({

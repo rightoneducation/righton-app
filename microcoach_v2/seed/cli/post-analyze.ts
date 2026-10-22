@@ -8,7 +8,6 @@
  *   1. Uploads POST_PPQ Assessment + StudentResponse records (idempotent)
  *   2. Compares pre/post performance per misconception
  *   3. Attaches postPpqResults to each gap group in pregeneratedNextSteps
- *   4. Updates Misconception.postPpqImprovement
  *
  * It does NOT run cleanup, upload, or generate — existing data is preserved.
  */
@@ -220,11 +219,11 @@ function parseExcelFile(filePath: string): ParsedAssessmentData {
 // ── GraphQL queries & mutations ─────────────────────────────────────────────
 
 const LIST_CLASSROOMS = /* GraphQL */ `
-  query ListClassrooms {
-    listClassrooms {
+  query ListMicroCoachClassrooms {
+    listMicroCoachClassrooms(limit: 1000) {
       items {
         id
-        classroomName
+        name
         grade
         students {
           items {
@@ -239,11 +238,11 @@ const LIST_CLASSROOMS = /* GraphQL */ `
 `;
 
 const SESSIONS_BY_CLASSROOM = /* GraphQL */ `
-  query SessionsByClassroomId($classroomId: ID!) {
-    sessionsByClassroomId(classroomId: $classroomId) {
+  query MicroCoachSessionsByClassId($classId: ID!) {
+    microCoachSessionsByClassId(classId: $classId, limit: 1000) {
       items {
         id
-        classroomId
+        classId
         sessionLabel
         weekNumber
         ppqAssessmentId
@@ -253,10 +252,6 @@ const SESSIONS_BY_CLASSROOM = /* GraphQL */ `
           items {
             id
             title
-            ccssStandard
-            evidence {
-              source
-            }
           }
         }
       }
@@ -265,8 +260,8 @@ const SESSIONS_BY_CLASSROOM = /* GraphQL */ `
 `;
 
 const STUDENT_RESPONSES_BY_ASSESSMENT = /* GraphQL */ `
-  query StudentResponsesByAssessmentId($assessmentId: ID!) {
-    studentResponsesByAssessmentId(assessmentId: $assessmentId, limit: 1000) {
+  query MicroCoachStudentResponsesByAssessmentId($assessmentId: ID!) {
+    microCoachStudentResponsesByAssessmentId(assessmentId: $assessmentId, limit: 1000) {
       items {
         id
         studentId
@@ -275,6 +270,7 @@ const STUDENT_RESPONSES_BY_ASSESSMENT = /* GraphQL */ `
           questionNumber
           response
           isCorrect
+          pointsEarned
           confidence
         }
       }
@@ -283,36 +279,30 @@ const STUDENT_RESPONSES_BY_ASSESSMENT = /* GraphQL */ `
 `;
 
 const CREATE_ASSESSMENT = /* GraphQL */ `
-  mutation CreateAssessment($input: CreateAssessmentInput!) {
-    createAssessment(input: $input) { id }
+  mutation CreateMicroCoachAssessment($input: CreateMicroCoachAssessmentInput!) {
+    createMicroCoachAssessment(input: $input) { id }
   }
 `;
 
 const CREATE_STUDENT_RESPONSE = /* GraphQL */ `
-  mutation CreateStudentResponse($input: CreateStudentResponseInput!) {
-    createStudentResponse(input: $input) { id }
+  mutation CreateMicroCoachStudentResponse($input: CreateMicroCoachStudentResponseInput!) {
+    createMicroCoachStudentResponse(input: $input) { id }
   }
 `;
 
 const DELETE_STUDENT_RESPONSE = /* GraphQL */ `
-  mutation DeleteStudentResponse($input: DeleteStudentResponseInput!) {
-    deleteStudentResponse(input: $input) { id }
+  mutation DeleteMicroCoachStudentResponse($input: DeleteMicroCoachStudentResponseInput!) {
+    deleteMicroCoachStudentResponse(input: $input) { id }
   }
 `;
 
 const UPDATE_SESSION = /* GraphQL */ `
-  mutation UpdateSession($input: UpdateSessionInput!) {
-    updateSession(input: $input) {
+  mutation UpdateMicroCoachSession($input: UpdateMicroCoachSessionInput!) {
+    updateMicroCoachSession(input: $input) {
       id
       postPpqAssessmentId
       pregeneratedNextSteps
     }
-  }
-`;
-
-const UPDATE_MISCONCEPTION = /* GraphQL */ `
-  mutation UpdateMisconception($input: UpdateMisconceptionInput!) {
-    updateMisconception(input: $input) { id postPpqImprovement }
   }
 `;
 
@@ -334,12 +324,15 @@ async function main() {
 
   // Fetch all classrooms from DB
   const classroomsData = await gql(LIST_CLASSROOMS);
-  const dbClassrooms: any[] = classroomsData.listClassrooms?.items ?? [];
+  const dbClassrooms: any[] =
+    classroomsData.listMicroCoachClassrooms?.items ?? [];
 
   for (const config of classroomConfigs) {
     console.log(`── ${config.key} ──`);
 
-    const dbClassroom = dbClassrooms.find((c: any) => c.classroomName === config.name);
+    const dbClassroom = dbClassrooms.find(
+      (c: any) => c.name === config.name,
+    );
     if (!dbClassroom) {
       console.log(`  ✗ Classroom "${config.name}" not found in DB — skipping`);
       continue;
@@ -361,8 +354,11 @@ async function main() {
     }
 
     // Fetch sessions
-    const sessionsData = await gql(SESSIONS_BY_CLASSROOM, { classroomId: dbClassroom.id });
-    const dbSessions: any[] = sessionsData.sessionsByClassroomId?.items ?? [];
+    const sessionsData = await gql(SESSIONS_BY_CLASSROOM, {
+      classId: dbClassroom.id,
+    });
+    const dbSessions: any[] =
+      sessionsData.microCoachSessionsByClassId?.items ?? [];
 
     for (const sessionConfig of config.sessions) {
       if (!sessionConfig.postPpqFile) continue;
@@ -400,7 +396,8 @@ async function main() {
       // Check if existing POST_PPQ data has actual question responses
       if (postPpqAssessmentId) {
         const checkData = await gql(STUDENT_RESPONSES_BY_ASSESSMENT, { assessmentId: postPpqAssessmentId });
-        const checkItems: any[] = checkData.studentResponsesByAssessmentId?.items ?? [];
+        const checkItems: any[] =
+          checkData.microCoachStudentResponsesByAssessmentId?.items ?? [];
         const hasQrs = checkItems.some((sr: any) => (sr.questionResponses ?? []).length > 0);
         if (hasQrs) {
           console.log(`  POST_PPQ already uploaded (${postPpqAssessmentId}) with valid data — skipping upload`);
@@ -420,7 +417,6 @@ async function main() {
             await gql(CREATE_STUDENT_RESPONSE, {
               input: {
                 assessmentId: postPpqAssessmentId,
-                assessmentStudentResponsesId: postPpqAssessmentId,
                 studentId,
                 totalScore: student.totalScore,
                 questionResponses: student.questionResponses.map((qr) => ({
@@ -439,22 +435,14 @@ async function main() {
         }
       } else {
         const assessmentInput: Record<string, any> = {
-          classroomId: dbClassroom.id,
+          classId: dbClassroom.id,
           sessionId: dbSession.id,
-          sessionAssessmentsId: dbSession.id,
           assessmentCode: postPpqData.assessmentCode || 'POST_PPQ_UNKNOWN',
           type: 'POST_PPQ',
           weekNumber: postPpqData.weekNumber || sessionConfig.weekNumber,
-          topic: sessionConfig.topic,
-          ccssStandards: postPpqData.ccssStandards.length > 0 ? postPpqData.ccssStandards : sessionConfig.ccssStandards,
-          classPercentCorrect: postPpqData.classPercentCorrect,
           questions: postPpqData.questionMeta.map((q) => ({
             questionNumber: q.questionNumber,
-            questionType: 'MC',
             correctAnswer: q.correctAnswer,
-            pointValue: 1,
-            ccssStandard: q.ccssStandard,
-            classPercentCorrect: q.classPercentCorrect,
           })),
         };
         if (dbSession.ppqAssessmentId) {
@@ -463,7 +451,7 @@ async function main() {
 
         process.stdout.write(`  Creating POST_PPQ assessment...`);
         const assessmentResult = await gql(CREATE_ASSESSMENT, { input: assessmentInput });
-        postPpqAssessmentId = assessmentResult.createAssessment.id;
+        postPpqAssessmentId = assessmentResult.createMicroCoachAssessment.id;
         console.log(` ✓  id: ${postPpqAssessmentId}`);
 
         // Upload student responses
@@ -477,7 +465,6 @@ async function main() {
           await gql(CREATE_STUDENT_RESPONSE, {
             input: {
               assessmentId: postPpqAssessmentId,
-              assessmentStudentResponsesId: postPpqAssessmentId,
               studentId,
               totalScore: student.totalScore,
               questionResponses: student.questionResponses.map((qr) => ({
@@ -512,14 +499,16 @@ async function main() {
       const ppqData = await gql(STUDENT_RESPONSES_BY_ASSESSMENT, {
         assessmentId: dbSession.ppqAssessmentId,
       });
-      const ppqResponses: any[] = ppqData.studentResponsesByAssessmentId?.items ?? [];
+      const ppqResponses: any[] =
+        ppqData.microCoachStudentResponsesByAssessmentId?.items ?? [];
       console.log(` ✓  ${ppqResponses.length} responses`);
 
       process.stdout.write(`  Fetching POST_PPQ responses...`);
       const postData = await gql(STUDENT_RESPONSES_BY_ASSESSMENT, {
         assessmentId: postPpqAssessmentId,
       });
-      const postResponses: any[] = postData.studentResponsesByAssessmentId?.items ?? [];
+      const postResponses: any[] =
+        postData.microCoachStudentResponsesByAssessmentId?.items ?? [];
       console.log(` ✓  ${postResponses.length} responses`);
 
       // ── Step 3: Compute per-misconception improvement ─────────────────
@@ -779,17 +768,6 @@ async function main() {
       });
       console.log(` ✓  (${matched}/${misconceptionResults.length} matched)`);
 
-      // ── Step 5: Update Misconception.postPpqImprovement ───────────────
-
-      for (const result of misconceptionResults) {
-        await gql(UPDATE_MISCONCEPTION, {
-          input: {
-            id: result.misconceptionId,
-            postPpqImprovement: result.improvementPct,
-          },
-        });
-      }
-      console.log(`  ✓ Updated postPpqImprovement on ${misconceptionResults.length} misconceptions`);
     }
 
     console.log();

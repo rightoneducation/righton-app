@@ -1,16 +1,18 @@
-import { IMicroCoachSession } from "../Models/IMicroCoachSession";
-import { AWSSession } from "../Models/AWS/AWSSession";
-import { isNullOrUndefined } from "../util/util";
+import { IMicroCoachSession } from '../Models/IMicroCoachSession';
+import { AWSSession } from '../Models/AWS/AWSSession';
+import { isNullOrUndefined } from '../util/util';
 import {
   CreateMicroCoachSessionInput,
   UpdateMicroCoachSessionInput,
-} from "../../AWSAPI";
+} from '../../AWSAPI';
 
 type MicroCoachSessionMutationInput = CreateMicroCoachSessionInput &
   UpdateMicroCoachSessionInput;
 
 export class SessionParser {
-  static parseIMicroCoachSessionfromAWSSession(session: AWSSession): IMicroCoachSession {
+  static parseIMicroCoachSessionfromAWSSession(
+    session: AWSSession,
+  ): IMicroCoachSession {
     if (
       isNullOrUndefined(session.id) ||
       isNullOrUndefined(session.classId) ||
@@ -18,7 +20,7 @@ export class SessionParser {
       isNullOrUndefined(session.updatedAt)
     ) {
       throw new Error(
-        "Session has null field for the attributes that are not nullable",
+        'Session has null field for the attributes that are not nullable',
       );
     }
 
@@ -48,7 +50,9 @@ export class SessionParser {
       pregeneratedNextSteps: session.pregeneratedNextSteps ?? null,
       evaluationResults: session.evaluationResults ?? null,
       reflectionResults: (session.reflectionResults ?? [])
-        .filter((result): result is NonNullable<typeof result> => result != null)
+        .filter(
+          (result): result is NonNullable<typeof result> => result != null,
+        )
         .map((result) => ({
           activityId: result.activityId ?? null,
           misconceptionId: result.misconceptionId,
@@ -58,12 +62,56 @@ export class SessionParser {
           averageQuestionsCorrectBefore: result.averageQuestionsCorrectBefore,
           averageQuestionsCorrectAfter: result.averageQuestionsCorrectAfter,
           improvedStudentCount: result.improvedStudentCount,
+          studentResults: (result.studentResults ?? [])
+            .filter(
+              (student): student is NonNullable<typeof student> =>
+                student != null,
+            )
+            .map((student) => ({
+              studentId: student.studentId,
+              studentName: student.studentName ?? null,
+              questionsCorrectBefore: student.questionsCorrectBefore ?? null,
+              questionsCorrectAfter: student.questionsCorrectAfter ?? null,
+            })),
+          questionResults: (result.questionResults ?? [])
+            .filter(
+              (question): question is NonNullable<typeof question> =>
+                question != null,
+            )
+            .map((question) => ({
+              questionNumber: question.questionNumber,
+              questionText: question.questionText,
+              percentCorrectBefore: question.percentCorrectBefore,
+              percentCorrectAfter: question.percentCorrectAfter,
+              beforeAnswers: (question.beforeAnswers ?? [])
+                .filter(
+                  (answer): answer is NonNullable<typeof answer> =>
+                    answer != null,
+                )
+                .map((answer) => ({
+                  letter: answer.letter,
+                  text: answer.text,
+                  percentChosen: answer.percentChosen,
+                  isCorrect: answer.isCorrect,
+                })),
+              afterAnswers: (question.afterAnswers ?? [])
+                .filter(
+                  (answer): answer is NonNullable<typeof answer> =>
+                    answer != null,
+                )
+                .map((answer) => ({
+                  letter: answer.letter,
+                  text: answer.text,
+                  percentChosen: answer.percentChosen,
+                  isCorrect: answer.isCorrect,
+                })),
+            })),
         })),
       createdAt: session.createdAt,
       updatedAt: session.updatedAt,
-    }
+    };
 
-    return parsedSession
+    return parsedSession;
   }
 
   static parseAWSSessionInputfromIMicroCoachSession(

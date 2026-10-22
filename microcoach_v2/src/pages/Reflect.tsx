@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import AppContentRow from '../components/AppContentRow';
 import FlowNav, { FlowTabId, flowTabPath } from '../components/FlowNav';
 import ReflectionDetailModal from '../components/ReflectionDetailModal';
+import ReflectSkeleton from '../components/ReflectSkeleton';
 import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import { IImplementedActivity } from '../lib/PipelineModels';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
@@ -36,7 +37,6 @@ import { useAllReady, useI18nReady } from '../hooks/readiness';
 import { getReflectionTrend } from '../lib/reflectionResults';
 
 type ReflectProps = ScreenSizeProps;
-
 export default function Reflect({ screenSize }: ReflectProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -48,7 +48,7 @@ export default function Reflect({ screenSize }: ReflectProps) {
   const dataReady = status === MicroCoachDataStatus.READY;
   const isReady = useAllReady(useI18nReady(), dataReady);
 
-  if (!isReady) return null;
+  if (!isReady) return <ReflectSkeleton screenSize={screenSize} />;
 
   const handleTabSelect = (tabId: FlowTabId) => {
     if (tabId === 'reflect') return;
