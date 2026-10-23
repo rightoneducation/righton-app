@@ -302,9 +302,8 @@
     "deleteClassTitle": "¿Eliminar esta clase?",
     "deleteClassBody": "Esto elimina {{className}} de tu cuenta. No se puede deshacer.",
     "deleteClassError": "No se pudo eliminar la clase. Inténtalo de nuevo.",
-    "addClass": "+ Añadir una clase",
-    "addClassPlaceholder": "Escribe el nombre de la clase",
-    "addClassSubmit": "Añadir clase",
+    "addClass": "Añadir otra clase",
+    "addClassPlaceholder": "Escribe el nombre de la clase (p. ej., Justice)",
     "addClassError": "No se añadió tu clase. Algo salió mal.",
     "addClassDuplicate": "Ya tienes una clase llamada {{name}}.",
     "cancelAddClass": "Cancelar añadir una clase",
@@ -393,7 +392,7 @@
   "reflect": {
     "title": "Cómo respondió su clase",
     "subtitle": "Comparamos su primer MIU (antes) con el segundo (después) para la idea errónea en la que se enfocó.",
-    "scoreTitle": "Puntaje de MIU 1 → MIU 2",
+    "scoreTitle": "Puntaje de MIX IT UP 1 → MIX IT UP 2",
     "scoreSubtitle": "Porcentaje promedio de respuestas correctas en {{count}} preguntas",
     "addresses": "Aborda:",
     "mastery": "Mejora del dominio de la clase",
@@ -570,30 +569,35 @@
     "INCORRECT_WORKED_EXAMPLES": {
       "name": "Encuentra el desliz",
       "subtitle": "Localiza dónde falla el razonamiento",
+      "reflectSubtitle": "Análisis de ejemplos resueltos con errores",
       "description": "Los estudiantes examinan una solución resuelta, identifican el primer paso en que el razonamiento se desvía, explican por qué ese paso no es válido y trabajan juntos para corregir el error.",
       "artifactTitle": "Ejemplos resueltos incorrectos"
     },
     "FAVORITE_NO": {
       "name": "Mi “no” favorito",
       "subtitle": "Conserva y aprovecha el pensamiento productivo",
+      "reflectSubtitle": "Análisis del pensamiento estudiantil",
       "description": "Los estudiantes analizan una respuesta incorrecta significativa que revela una idea matemática que vale la pena conservar o desarrollar. Comentan por qué la respuesta podría parecer razonable, identifican qué hace bien el razonamiento y lo revisan conservando lo que es matemáticamente útil.",
       "artifactTitle": "Ejemplos de análisis del pensamiento estudiantil"
     },
     "MATH_DETECTIVE": {
       "name": "Detective matemático",
       "subtitle": "Investiga los problemas de fondo",
+      "reflectSubtitle": "Investigar y resolver",
       "description": "Los estudiantes se convierten en “detectives matemáticos”: investigan una solución incorrecta, identifican el problema matemático de fondo, revisan el razonamiento y comprueban si la revisión funciona.",
       "artifactTitle": "Ejemplos de análisis del pensamiento estudiantil"
     },
     "COMPARE_THE_THINKING": {
       "name": "Compara el razonamiento",
       "subtitle": "Examina contrastes significativos",
+      "reflectSubtitle": "Comparación de estrategias lado a lado",
       "description": "Los estudiantes comparan dos estrategias o representaciones de solución significativamente distintas y examinan el razonamiento, las fortalezas, las limitaciones y las diferencias matemáticas importantes entre ellas.",
       "artifactTitle": "Estrategias para comparar - Ejemplos para mostrar a la clase"
     },
     "MAKE_YOUR_CASE": {
       "name": "Defiende tu postura",
       "subtitle": "Articula y justifica afirmaciones",
+      "reflectSubtitle": "Argumentar una afirmación con evidencia matemática",
       "description": "Los estudiantes formulan o evalúan una afirmación matemática, expresan su razonamiento, construyen argumentos con evidencia y razonamiento, y consideran si la evidencia respalda la afirmación.",
       "artifactTitle": "La afirmación - Ejemplo para mostrar a la clase"
     }

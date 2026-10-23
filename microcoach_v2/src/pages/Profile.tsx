@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Typography from '@mui/material/Typography';
 import CancelIcon from '@mui/icons-material/Cancel';
-import CloseIcon from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -31,6 +31,7 @@ import { ScreenSize } from '../lib/MicroCoachModels';
 import { schoolFromEmail } from '../lib/schools';
 import {
   AvatarGroup,
+  AddClassActions,
   AddClassButton,
   AddClassSubmit,
   ClassDeleteButton,
@@ -377,9 +378,9 @@ function PasswordPanel({ apiClients }: PasswordPanelProps) {
 }
 
 /**
- * "+ Add a class" (rev4 UserAccount_1): opens a name field as a new row, as
- * signup does. Enter or "Add class" creates the class; Escape or the close
- * tile drops the row. A failed create keeps the name so it can be retried.
+ * "+ Add another class" (rev5 AddAClass): opens a name field as a new row, as
+ * signup does. Enter or Done creates the class; Escape or the row's trash
+ * drops it. A failed create keeps the name so it can be retried.
  */
 function AddClassPanel({ apiClients }: { apiClients: IAPIClients }) {
   const { t } = useTranslation();
@@ -447,13 +448,18 @@ function AddClassPanel({ apiClients }: { apiClients: IAPIClients }) {
     close();
   };
 
-  if (draftName === null) {
-    return (
-      <AddClassButton disableElevation onClick={() => setDraftName('')}>
-        {t('profile.addClass')}
-      </AddClassButton>
-    );
-  }
+  const addAnotherButton = (
+    <AddClassButton
+      disableElevation
+      startIcon={<AddIcon />}
+      disabled={draftName !== null}
+      onClick={() => setDraftName('')}
+    >
+      {t('profile.addClass')}
+    </AddClassButton>
+  );
+
+  if (draftName === null) return addAnotherButton;
 
   return (
     <>
@@ -486,7 +492,7 @@ function AddClassPanel({ apiClients }: { apiClients: IAPIClients }) {
           onClick={close}
           disabled={isAdding}
         >
-          <CloseIcon fontSize="small" sx={{ color: 'designSystem.surface.atlanticNavy' }} />
+          <img src={removeIcon} alt="" />
         </ClassDeleteButton>
       </ClassRow>
       {isDuplicate && (
@@ -519,18 +525,21 @@ function AddClassPanel({ apiClients }: { apiClients: IAPIClients }) {
           </IconButton>
         </Toast>
       </ToastSnackbar>
-      <AddClassSubmit
-        disableElevation
-        disabled={!draftName.trim() || isDuplicate || isAdding}
-        aria-busy={isAdding}
-        onClick={commit}
-      >
-        {isAdding ? (
-          <CircularProgress size={16} color="inherit" aria-label={t('profile.saving')} />
-        ) : (
-          t('profile.addClassSubmit')
-        )}
-      </AddClassSubmit>
+      <AddClassActions>
+        <AddClassSubmit
+          disableElevation
+          disabled={!draftName.trim() || isDuplicate || isAdding}
+          aria-busy={isAdding}
+          onClick={commit}
+        >
+          {isAdding ? (
+            <CircularProgress size={16} color="inherit" aria-label={t('profile.saving')} />
+          ) : (
+            t('profile.done')
+          )}
+        </AddClassSubmit>
+        {addAnotherButton}
+      </AddClassActions>
     </>
   );
 }

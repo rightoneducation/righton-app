@@ -100,6 +100,10 @@ export class SessionParser {
             .map((question) => ({
               questionNumber: question.questionNumber,
               questionText: question.questionText,
+              beforeQuestionText: question.beforeQuestionText ?? null,
+              afterQuestionText: question.afterQuestionText ?? null,
+              beforeStandard: question.beforeStandard ?? null,
+              afterStandard: question.afterStandard ?? null,
               percentCorrectBefore: question.percentCorrectBefore,
               percentCorrectAfter: question.percentCorrectAfter,
               beforeAnswers: (question.beforeAnswers ?? [])

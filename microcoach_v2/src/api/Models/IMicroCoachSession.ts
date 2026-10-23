@@ -17,6 +17,10 @@ export interface IMicroCoachReflectionAnswerResult {
 export interface IMicroCoachReflectionQuestionResult {
   questionNumber: number;
   questionText: string;
+  beforeQuestionText: string | null;
+  afterQuestionText: string | null;
+  beforeStandard: string | null;
+  afterStandard: string | null;
   percentCorrectBefore: number;
   percentCorrectAfter: number;
   beforeAnswers: IMicroCoachReflectionAnswerResult[];

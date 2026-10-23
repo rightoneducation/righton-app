@@ -115,7 +115,9 @@ export default function Reflect({ screenSize }: ReflectProps) {
                           {activity.title}
                         </Typography>
                         <Typography variant="uploadLabel" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                          {activity.subtitle}
+                          {activity.activityType
+                            ? t(`activityTemplates.${activity.activityType}.reflectSubtitle`)
+                            : activity.subtitle}
                         </Typography>
                       </ReflectionCardHeading>
                       <ReflectionInset>
@@ -149,13 +151,13 @@ export default function Reflect({ screenSize }: ReflectProps) {
                             <ScoreValues>
                               <Typography variant="reflectScore" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
                                 {t('reflect.percentCorrect', {
-                                  percent: activity.averagePercentCorrectBefore,
+                                  percent: Math.round(activity.averagePercentCorrectBefore),
                                 })}
                               </Typography>
                               <Typography variant="reflectScore" sx={{ color: 'designSystem.surface.atlanticNavy' }}>→</Typography>
                               <ReflectionTrendValue variant="reflectScore" trend={trend}>
                                 {t('reflect.percentCorrect', {
-                                  percent: activity.averagePercentCorrectAfter,
+                                  percent: Math.round(activity.averagePercentCorrectAfter),
                                 })}
                               </ReflectionTrendValue>
                             </ScoreValues>

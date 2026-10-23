@@ -215,6 +215,13 @@ type ReflectionStudentResult {
 type ReflectionQuestionResult {
   questionNumber: Int!
   questionText: String!
+  # MIU 1 and MIU 2 ask different questions on the same number, each tagged
+  # with the standard it assesses (rev5 ReflectGroup2). Nullable: whether the
+  # uploads carry a standard per question is still open with the client.
+  beforeQuestionText: String
+  afterQuestionText: String
+  beforeStandard: String
+  afterStandard: String
   percentCorrectBefore: Float!
   percentCorrectAfter: Float!
   beforeAnswers: [ReflectionAnswerResult]

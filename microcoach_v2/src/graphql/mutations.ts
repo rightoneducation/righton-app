@@ -321,6 +321,10 @@ export const createMicroCoachClassroom = /* GraphQL */ `
             questionResults {
               questionNumber
               questionText
+              beforeQuestionText
+              afterQuestionText
+              beforeStandard
+              afterStandard
               percentCorrectBefore
               percentCorrectAfter
               __typename
@@ -454,6 +458,10 @@ export const updateMicroCoachClassroom = /* GraphQL */ `
             questionResults {
               questionNumber
               questionText
+              beforeQuestionText
+              afterQuestionText
+              beforeStandard
+              afterStandard
               percentCorrectBefore
               percentCorrectAfter
               __typename
@@ -587,6 +595,10 @@ export const deleteMicroCoachClassroom = /* GraphQL */ `
             questionResults {
               questionNumber
               questionText
+              beforeQuestionText
+              afterQuestionText
+              beforeStandard
+              afterStandard
               percentCorrectBefore
               percentCorrectAfter
               __typename
@@ -806,6 +818,10 @@ export const createMicroCoachSession = /* GraphQL */ `
         questionResults {
           questionNumber
           questionText
+          beforeQuestionText
+          afterQuestionText
+          beforeStandard
+          afterStandard
           percentCorrectBefore
           percentCorrectAfter
           beforeAnswers {
@@ -967,6 +983,10 @@ export const updateMicroCoachSession = /* GraphQL */ `
         questionResults {
           questionNumber
           questionText
+          beforeQuestionText
+          afterQuestionText
+          beforeStandard
+          afterStandard
           percentCorrectBefore
           percentCorrectAfter
           beforeAnswers {
@@ -1128,6 +1148,10 @@ export const deleteMicroCoachSession = /* GraphQL */ `
         questionResults {
           questionNumber
           questionText
+          beforeQuestionText
+          afterQuestionText
+          beforeStandard
+          afterStandard
           percentCorrectBefore
           percentCorrectAfter
           beforeAnswers {
