@@ -16,6 +16,7 @@ export interface ReflectionAssessmentAnswerChoice {
 export interface ReflectionAssessmentQuestion {
   questionNumber: number;
   questionText?: string | null;
+  standard?: string | null;
   correctAnswer: string;
   answerChoices?: ReflectionAssessmentAnswerChoice[] | null;
 }
@@ -60,6 +61,10 @@ export interface ReflectionAnswerResult {
 export interface ReflectionQuestionResult {
   questionNumber: number;
   questionText: string;
+  beforeQuestionText: string | null;
+  afterQuestionText: string | null;
+  beforeStandard: string | null;
+  afterStandard: string | null;
   percentCorrectBefore: number;
   percentCorrectAfter: number;
   beforeAnswers: ReflectionAnswerResult[];
@@ -427,6 +432,10 @@ export default function buildReflectionResults({
       return {
         questionNumber,
         questionText,
+        beforeQuestionText: before.questionText?.trim() || null,
+        afterQuestionText: after.questionText?.trim() || null,
+        beforeStandard: before.standard?.trim() || null,
+        afterStandard: after.standard?.trim() || null,
         percentCorrectBefore: roundToOneDecimal(
           (correctBefore / matchedBefore.length) * 100,
         ),

@@ -19,8 +19,9 @@ function detailTrendColor(theme: Theme, trend: ReflectionTrend) {
   if (trend === 'improved') {
     return theme.palette.designSystem.status.reflectionImprovement;
   }
+  // rev5 draws a drop as #D0254D, the same red as fieldErrorStroke.
   if (trend === 'declined') {
-    return theme.palette.designSystem.status.errorStroke;
+    return theme.palette.designSystem.status.fieldErrorStroke;
   }
   return theme.palette.designSystem.surface.atlanticNavy;
 }
@@ -39,8 +40,8 @@ export const ReflectionDetailHeader = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  minHeight: theme.sizing.space11,
-  padding: `0 ${theme.sizing.space6}px`,
+  minHeight: theme.sizing.reflectDetailHeaderHeight,
+  padding: `0 ${theme.sizing.space5}px`,
   backgroundColor: theme.palette.designSystem.background.navyBlue,
   color: theme.palette.designSystem.surface.white,
 }));
@@ -80,7 +81,7 @@ export const ReflectionSummaryPanel = styled(Box, {
   flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
   alignItems: screenSize === ScreenSize.SMALL ? 'flex-start' : 'center',
   gap: theme.sizing.space3,
-  padding: theme.sizing.space4,
+  padding: `${theme.sizing.space4}px ${theme.sizing.space3}px`,
 }));
 
 export const ReflectionSummaryScores = styled(Box)(({ theme }) => ({
@@ -94,11 +95,11 @@ export const ReflectionSummaryChange = styled(Box, {
   shouldForwardProp: forwardTrend,
 })<{ trend: ReflectionTrend }>(({ theme, trend }) => ({
   flexShrink: 0,
-  padding: `${theme.sizing.space0}px ${theme.sizing.space1}px`,
+  padding: theme.sizing.space0,
   borderRadius: theme.sizing.space0,
   backgroundColor: detailTrendBackground(theme, trend),
   color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.rubikBodyBold,
+  ...theme.typography.reflectChipLabel,
 }));
 
 export const ReflectionPanelDivider = styled(Box)(({ theme }) => ({
@@ -175,12 +176,16 @@ export const MasteryTitleRow = styled(Box)(({ theme }) => ({
 }));
 
 export const StudentCountChip = styled(Box)(({ theme }) => ({
-  padding: `${theme.sizing.space1}px ${theme.sizing.space2}px`,
+  display: 'flex',
+  alignItems: 'center',
+  boxSizing: 'border-box',
+  height: theme.sizing.reflectCountChipHeight,
+  padding: `0 ${theme.sizing.space2}px`,
   border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.navyBlue}`,
   borderRadius: theme.sizing.space2,
   color: theme.palette.designSystem.surface.atlanticNavy,
   backgroundColor: theme.palette.designSystem.surface.white,
-  ...theme.typography.rubikBody,
+  ...theme.typography.smallBodyText,
 }));
 
 export const ReflectionSortRow = styled(Box)(({ theme }) => ({
@@ -192,11 +197,11 @@ export const ReflectionSortRow = styled(Box)(({ theme }) => ({
 
 export const ReflectionSortSelect = styled(Select)(({ theme }) => ({
   minWidth: theme.sizing.reflectDetailSortWidth,
-  height: theme.sizing.space7,
+  height: theme.sizing.reflectDetailSortHeight,
   borderRadius: theme.sizing.space5,
   color: theme.palette.designSystem.surface.white,
   backgroundColor: theme.palette.designSystem.surface.steelBlue,
-  ...theme.typography.rubikBody,
+  ...theme.typography.microLabel,
   '& .MuiSelect-select': {
     paddingTop: theme.sizing.space1,
     paddingBottom: theme.sizing.space1,
@@ -221,7 +226,8 @@ export const ReflectionSortSelect = styled(Select)(({ theme }) => ({
 export const StudentResultList = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
-  gap: theme.sizing.space1,
+  columnGap: theme.sizing.space2,
+  rowGap: theme.sizing.space1,
 }));
 
 export const StudentResultChip = styled(Box, {
@@ -243,7 +249,7 @@ export const StudentResultChip = styled(Box, {
       ? theme.palette.designSystem.background.navyBlue
       : theme.palette.designSystem.surface.skyBlue,
   color: theme.palette.designSystem.surface.white,
-  ...theme.typography.smallBodyText,
+  ...theme.typography.microLabel,
 }));
 
 export const StudentNamePill = styled(Box, {
@@ -266,7 +272,8 @@ export const StudentResultValue = styled(Typography, {
   shouldForwardProp: forwardTrend,
 })<{ trend: ReflectionTrend }>(({ theme, trend }) => ({
   color: detailTrendColor(theme, trend),
-  ...theme.typography.rubikBodyBold,
+  ...theme.typography.microLabel,
+  fontWeight: 500,
   whiteSpace: 'nowrap',
 }));
 
@@ -277,7 +284,7 @@ export const QuestionResultsSection = styled(Box)(({ theme }) => ({
 }));
 
 export const QuestionResultAccordion = styled(Accordion)(({ theme }) => ({
-  borderRadius: `${theme.sizing.space2}px !important`,
+  borderRadius: `${theme.sizing.space3}px !important`,
   boxShadow: 'none',
   overflow: 'hidden',
   backgroundColor: theme.palette.designSystem.surface.skyBlue,
@@ -291,7 +298,7 @@ export const QuestionResultAccordion = styled(Accordion)(({ theme }) => ({
 
 export const QuestionResultSummary = styled(AccordionSummary)(({ theme }) => ({
   minHeight: theme.sizing.space13,
-  padding: `0 ${theme.sizing.space3}px`,
+  padding: `0 ${theme.sizing.space2}px`,
   color: theme.palette.designSystem.surface.atlanticNavy,
   '&.Mui-expanded': {
     minHeight: theme.sizing.space13,
@@ -334,7 +341,7 @@ export const QuestionToggle = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   gap: theme.sizing.space0,
   color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.rubikBodyBold,
+  ...theme.typography.reflectChipLabel,
   whiteSpace: 'nowrap',
 }));
 
@@ -342,13 +349,28 @@ export const QuestionResultDetails = styled(AccordionDetails)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.sizing.space3,
-  padding: `0 ${theme.sizing.space3}px ${theme.sizing.space4}px`,
+  padding: `0 ${theme.sizing.space2}px ${theme.sizing.space3}px`,
   color: theme.palette.designSystem.surface.atlanticNavy,
 }));
 
 export const AssessmentResponseList = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
+  gap: theme.sizing.space2,
+}));
+
+// One MIU in an expanded question: its own question (with the standard it
+// assesses) above that MIU's answer distribution.
+export const AssessmentBlock = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space2,
+}));
+
+export const AssessmentQuestionRow = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'center',
   gap: theme.sizing.space2,
 }));
 
@@ -362,13 +384,16 @@ export const AssessmentResponseRow = styled(Box, {
 }));
 
 export const AssessmentLabel = styled(Box)(({ theme }) => ({
-  minWidth: theme.sizing.space13,
-  padding: `${theme.sizing.space2}px ${theme.sizing.space3}px`,
+  display: 'flex',
+  flexShrink: 0,
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: theme.sizing.reflectMiuLabelWidth,
+  height: theme.sizing.reflectMiuLabelHeight,
   borderRadius: theme.sizing.space0,
   backgroundColor: theme.palette.designSystem.foreground.brightBlue,
   color: theme.palette.designSystem.surface.white,
-  textAlign: 'center',
-  ...theme.typography.uploadLabel,
+  ...theme.typography.bodyText,
 }));
 
 export const AnswerDistribution = styled(Box)(({ theme }) => ({
@@ -383,11 +408,11 @@ export const AnswerResponse = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   gap: theme.sizing.space0,
   color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.rubikBody,
+  ...theme.typography.smallBodyText,
   whiteSpace: 'nowrap',
 }));
 
 export const CorrectAnswerText = styled(Box)(({ theme }) => ({
   color: theme.palette.designSystem.status.reflectionImprovement,
-  ...theme.typography.rubikBody,
+  ...theme.typography.smallBodyText,
 }));

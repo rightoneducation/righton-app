@@ -16,7 +16,7 @@ export const FlowTab = styled(ButtonBase, {
   ...theme.typography.navTab,
   color: isActive
     ? theme.palette.designSystem.surface.atlanticNavy
-    : theme.palette.designSystem.foreground.mutedGrey,
+    : theme.palette.designSystem.surface.ashyGray,
   borderBottom: `2px solid ${
     isActive ? theme.palette.designSystem.background.navyBlue : 'transparent'
   }`,
@@ -38,6 +38,12 @@ export const FlowTabSeparator = styled(Box)(({ theme }) => ({
 interface CompactActionProps {
   compact?: boolean;
 }
+
+// FlowNav's own separator: rev5 greys it with the inactive tabs. The shared
+// FlowTabSeparator stays navy for the sign-up stepper.
+export const FlowNavSeparator = styled(FlowTabSeparator)(({ theme }) => ({
+  color: theme.palette.designSystem.surface.ashyGray,
+}));
 
 export const FlowNavAction = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'compact',

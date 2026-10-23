@@ -215,6 +215,10 @@ export const getMicroCoachClassroom = /* GraphQL */ `
             questionResults {
               questionNumber
               questionText
+              beforeQuestionText
+              afterQuestionText
+              beforeStandard
+              afterStandard
               percentCorrectBefore
               percentCorrectAfter
               __typename
@@ -512,6 +516,10 @@ export const getMicroCoachSession = /* GraphQL */ `
         questionResults {
           questionNumber
           questionText
+          beforeQuestionText
+          afterQuestionText
+          beforeStandard
+          afterStandard
           percentCorrectBefore
           percentCorrectAfter
           beforeAnswers {
@@ -658,6 +666,10 @@ export const listMicroCoachSessions = /* GraphQL */ `
           questionResults {
             questionNumber
             questionText
+            beforeQuestionText
+            afterQuestionText
+            beforeStandard
+            afterStandard
             percentCorrectBefore
             percentCorrectAfter
             beforeAnswers {
@@ -1191,6 +1203,10 @@ export const microCoachSessionsByClassId = /* GraphQL */ `
           questionResults {
             questionNumber
             questionText
+            beforeQuestionText
+            afterQuestionText
+            beforeStandard
+            afterStandard
             percentCorrectBefore
             percentCorrectAfter
             beforeAnswers {

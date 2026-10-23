@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import {
   FlowTab,
-  FlowTabSeparator,
+  FlowNavSeparator,
   FlowNavAction,
 } from '../lib/styledcomponents/FlowNavStyledComponents';
 import { ScreenSizeProps } from '../lib/styledcomponents/LandingStyledComponents';
@@ -88,7 +88,7 @@ export default function FlowNav({
       >
         {FLOW_TABS.map((tab, index) => (
           <React.Fragment key={tab.id}>
-            {index > 0 && <FlowTabSeparator aria-hidden>&gt;</FlowTabSeparator>}
+            {index > 0 && <FlowNavSeparator aria-hidden>&gt;</FlowNavSeparator>}
             <FlowTab
               isActive={tab.id === activeTabId}
               aria-current={tab.id === activeTabId ? 'page' : undefined}

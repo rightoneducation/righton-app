@@ -22,7 +22,7 @@ export const ReflectPage = styled(Box)(({ theme }) => ({
 export const ReflectPageContent = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: `${theme.sizing.space5}px`,
+  gap: `${theme.sizing.space7}px`,
   position: 'relative',
   zIndex: 1,
 }));
@@ -36,7 +36,7 @@ export const ReflectHeading = styled(Box)(({ theme }) => ({
 export const ReflectResultsSection = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: `${theme.sizing.space11}px`,
+  gap: `${theme.sizing.space10}px`,
 }));
 
 export const ReflectionCardList = styled(Box)(({ theme }) => ({
@@ -56,7 +56,7 @@ export const ReflectionCard = styled(Paper, {
     screenSize === ScreenSize.LARGE
       ? `${theme.sizing.reflectCardMinHeight}px`
       : undefined,
-  padding: `${theme.sizing.space4}px`,
+  padding: `${theme.sizing.space3}px`,
   borderRadius: `${theme.sizing.sectionRadius}px`,
   backgroundColor: theme.palette.designSystem.surface.white,
   boxSizing: 'border-box',
@@ -113,7 +113,7 @@ export const ReflectionResults = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
-  gap: `${theme.sizing.space7}px`,
+  gap: `${theme.sizing.space6}px`,
 }));
 
 export const ScoreGroup = styled(Box)(({ theme }) => ({

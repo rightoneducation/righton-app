@@ -393,7 +393,7 @@
   "reflect": {
     "title": "How Your Class Responded",
     "subtitle": "Comparing your first MIU (before) with the second (after) for the misconception you focused on.",
-    "scoreTitle": "MIU 1 → MIU 2 Score",
+    "scoreTitle": "MIX IT UP 1 → MIX IT UP 2 Score",
     "scoreSubtitle": "Average percent correct across {{count}} questions",
     "addresses": "Addresses:",
     "mastery": "Class mastery improvement",
@@ -570,30 +570,35 @@
     "INCORRECT_WORKED_EXAMPLES": {
       "name": "Spot the Slip",
       "subtitle": "Locate the breakdown",
+      "reflectSubtitle": "Incorrect worked example analysis",
       "description": "Students examine a worked solution, identify the first step where the reasoning goes off track, explain why the step is invalid, and work together to correct the error.",
       "artifactTitle": "Incorrect worked examples"
     },
     "FAVORITE_NO": {
       "name": "My Favorite No",
       "subtitle": "Preserve and build on productive thinking",
+      "reflectSubtitle": "Student thinking analysis",
       "description": "Students analyze a meaningful incorrect answer that reveals a mathematical idea worth preserving or building on. They discuss why the response might seem reasonable, identify what the reasoning gets right, and revise it while keeping what is mathematically useful.",
       "artifactTitle": "Student thinking analysis examples"
     },
     "MATH_DETECTIVE": {
       "name": "Math Detective",
       "subtitle": "Investigate underlying issues",
+      "reflectSubtitle": "Investigate and solve",
       "description": "Students become “math detectives” by investigating an incorrect solution, identifying the underlying mathematical issue, revising the reasoning, and checking whether the revision works.",
       "artifactTitle": "Student thinking analysis examples"
     },
     "COMPARE_THE_THINKING": {
       "name": "Compare the Thinking",
       "subtitle": "Examine meaningful contrasts",
+      "reflectSubtitle": "Side-by-side strategy comparison",
       "description": "Students compare two meaningfully different solution strategies or representations and examine the reasoning, strengths, limitations, and important mathematical differences between them.",
       "artifactTitle": "Strategies to compare - Examples to show the class"
     },
     "MAKE_YOUR_CASE": {
       "name": "Make Your Case",
       "subtitle": "Articulate and justify claims",
+      "reflectSubtitle": "Argue a claim with mathematical evidence",
       "description": "Students make or evaluate a mathematical claim, articulate their thinking, build a case for it using evidence and reasoning, and consider whether the evidence and reasoning support the claim.",
       "artifactTitle": "The claim - Example to show the class"
     }

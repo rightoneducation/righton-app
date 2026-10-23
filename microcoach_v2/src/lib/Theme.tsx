@@ -409,6 +409,26 @@ const designSystemTypography = {
       fontSize: '32px',
     },
   },
+  // rev5 Class Progress Details: the summary scores, the group headings and
+  // the small Poppins labels (gain chip, Show/Hide details).
+  reflectDetailScore: {
+    fontFamily: poppins,
+    fontWeight: 600,
+    fontSize: '32px',
+    lineHeight: 'normal',
+  },
+  reflectGroupTitle: {
+    fontFamily: rubik,
+    fontWeight: 600,
+    fontSize: '16px',
+    lineHeight: 'normal',
+  },
+  reflectChipLabel: {
+    fontFamily: poppins,
+    fontWeight: 600,
+    fontSize: '12px',
+    lineHeight: 'normal',
+  },
   statusLabel: {
     fontFamily: poppins,
     fontWeight: 500,
@@ -564,8 +584,13 @@ const sizing = {
   reflectContextMinHeight: 96,
   reflectDetailsButtonWidth: 163,
   reflectDetailsButtonHeight: 37,
-  reflectDetailModalMaxWidth: 936,
-  reflectDetailSortWidth: 166,
+  reflectDetailModalMaxWidth: 800,
+  reflectDetailHeaderHeight: 61,
+  reflectDetailSortWidth: 128,
+  reflectDetailSortHeight: 30,
+  reflectCountChipHeight: 31,
+  reflectMiuLabelWidth: 70,
+  reflectMiuLabelHeight: 34,
   flowActionMinWidth: 160,
   flowActionHeight: 36,
   reflectHomeActionWidth: 131,
@@ -639,6 +664,9 @@ declare module '@mui/material/styles' {
     headingLg: CSSProperties;
     reflectSectionTitle: CSSProperties;
     reflectScore: CSSProperties;
+    reflectDetailScore: CSSProperties;
+    reflectGroupTitle: CSSProperties;
+    reflectChipLabel: CSSProperties;
     statusLabel: CSSProperties;
     smallBodyText: CSSProperties;
     headingMdBold: CSSProperties;
@@ -691,6 +719,9 @@ declare module '@mui/material/styles' {
     headingLg?: CSSProperties;
     reflectSectionTitle?: CSSProperties;
     reflectScore?: CSSProperties;
+    reflectDetailScore?: CSSProperties;
+    reflectGroupTitle?: CSSProperties;
+    reflectChipLabel?: CSSProperties;
     statusLabel?: CSSProperties;
     smallBodyText?: CSSProperties;
     headingMdBold?: CSSProperties;
@@ -744,6 +775,9 @@ declare module '@mui/material/Typography' {
     headingLg: true;
     reflectSectionTitle: true;
     reflectScore: true;
+    reflectDetailScore: true;
+    reflectGroupTitle: true;
+    reflectChipLabel: true;
     statusLabel: true;
     smallBodyText: true;
     headingMdBold: true;
@@ -847,6 +881,9 @@ const Theme = createTheme({
           headingLg: 'p',
           reflectSectionTitle: 'p',
           reflectScore: 'p',
+          reflectDetailScore: 'p',
+          reflectGroupTitle: 'p',
+          reflectChipLabel: 'p',
           statusLabel: 'p',
           smallBodyText: 'p',
           headingMdBold: 'p',
@@ -902,6 +939,9 @@ const Theme = createTheme({
     headingLg: { ...designSystemTypography.headingLg },
     reflectSectionTitle: { ...designSystemTypography.reflectSectionTitle },
     reflectScore: { ...designSystemTypography.reflectScore },
+    reflectDetailScore: { ...designSystemTypography.reflectDetailScore },
+    reflectGroupTitle: { ...designSystemTypography.reflectGroupTitle },
+    reflectChipLabel: { ...designSystemTypography.reflectChipLabel },
     statusLabel: { ...designSystemTypography.statusLabel },
     smallBodyText: { ...designSystemTypography.smallBodyText },
     headingMdBold: { ...designSystemTypography.headingMdBold },

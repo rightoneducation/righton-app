@@ -18,7 +18,9 @@ import { ScreenSize } from '../lib/MicroCoachModels';
 import {
   AnswerDistribution,
   AnswerResponse,
+  AssessmentBlock,
   AssessmentLabel,
+  AssessmentQuestionRow,
   AssessmentResponseList,
   AssessmentResponseRow,
   CorrectAnswerText,
@@ -52,7 +54,10 @@ import {
   StudentResultList,
   StudentResultValue,
 } from '../lib/styledcomponents/ReflectionDetailStyledComponents';
-import { ReflectionTrendValue } from '../lib/styledcomponents/ReflectStyledComponents';
+import {
+  ReflectionTrendValue,
+  ReflectSkillCodeChip,
+} from '../lib/styledcomponents/ReflectStyledComponents';
 import {
   getReflectionTrend,
   ReflectionDetailSort,
@@ -77,6 +82,8 @@ interface StudentGroupProps {
 
 interface ResponseRowProps {
   label: string;
+  questionText: string | null;
+  standard: string | null;
   answers: IMicroCoachReflectionAnswerResult[];
   screenSize: ScreenSize;
 }
@@ -210,19 +217,19 @@ function StudentGroup({
       <MasterySectionHeader screenSize={screenSize}>
         <MasteryHeadingGroup>
           <MasteryTitleRow>
-            <Typography variant="headingMd" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+            <Typography variant="reflectGroupTitle" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
               {title}
             </Typography>
             <StudentCountChip>
               {t('reflect.studentCount', { count: studentCount })}
             </StudentCountChip>
           </MasteryTitleRow>
-          <Typography variant="uploadLabel" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+          <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
             {description}
           </Typography>
         </MasteryHeadingGroup>
         <ReflectionSortRow>
-          <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+          <Typography variant="microLabel" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
             {t('reflect.sortBy')}
           </Typography>
           <ReflectionSortSelect
@@ -290,7 +297,7 @@ function StudentGroup({
               </StudentNamePill>
               {sort === 'mostImproved' && (
                 <StudentResultValue
-                  variant="rubikBodyBold"
+                  variant="microLabel"
                   trend={studentTrend(student)}
                 >
                   {changeLabel}
@@ -304,23 +311,39 @@ function StudentGroup({
   );
 }
 
-function ResponseRow({ label, answers, screenSize }: ResponseRowProps) {
+function ResponseRow({
+  label,
+  questionText,
+  standard,
+  answers,
+  screenSize,
+}: ResponseRowProps) {
   const { t } = useTranslation();
 
   return (
-    <AssessmentResponseRow screenSize={screenSize}>
-      <AssessmentLabel>{label}</AssessmentLabel>
-      <AnswerDistribution>
-        {answers.map((answer) => (
-          <AnswerResponse key={answer.letter}>
-            <span>{`${answer.letter}. ${answer.percentChosen}%`}</span>
-            {answer.isCorrect && (
-              <CorrectAnswerText>{t('reflect.correct')}</CorrectAnswerText>
-            )}
-          </AnswerResponse>
-        ))}
-      </AnswerDistribution>
-    </AssessmentResponseRow>
+    <AssessmentBlock>
+      {questionText && (
+        <AssessmentQuestionRow>
+          {standard && <ReflectSkillCodeChip>{standard}</ReflectSkillCodeChip>}
+          <Typography variant="bodyText" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+            {questionText}
+          </Typography>
+        </AssessmentQuestionRow>
+      )}
+      <AssessmentResponseRow screenSize={screenSize}>
+        <AssessmentLabel>{label}</AssessmentLabel>
+        <AnswerDistribution>
+          {answers.map((answer) => (
+            <AnswerResponse key={answer.letter}>
+              <span>{`${answer.letter}. ${Math.round(answer.percentChosen)}%`}</span>
+              {answer.isCorrect && (
+                <CorrectAnswerText>{t('reflect.correct')}</CorrectAnswerText>
+              )}
+            </AnswerResponse>
+          ))}
+        </AnswerDistribution>
+      </AssessmentResponseRow>
+    </AssessmentBlock>
   );
 }
 
@@ -412,9 +435,11 @@ export default function ReflectionDetailModal({
           backgroundColor: theme.palette.designSystem.background.scrim,
           zIndex: theme.zIndex.modal,
           display: 'flex',
-          alignItems: 'flex-start',
+          alignItems: isLarge ? 'center' : 'flex-start',
           justifyContent: 'center',
-          padding: theme.sizing.space1,
+          padding: isLarge
+            ? `${theme.sizing.space11}px ${theme.sizing.space1}px`
+            : theme.sizing.space1,
         },
         content: {
           position: 'relative',
@@ -423,8 +448,10 @@ export default function ReflectionDetailModal({
           maxWidth: isLarge
             ? theme.sizing.reflectDetailModalMaxWidth
             : '100%',
-          height: `calc(100vh - ${theme.sizing.space3}px)`,
-          maxHeight: `calc(100vh - ${theme.sizing.space3}px)`,
+          // rev5 draws the modal at its content's height, not full-screen;
+          // past the viewport the progress panel scrolls.
+          height: isLarge ? 'auto' : `calc(100vh - ${theme.sizing.space3}px)`,
+          maxHeight: isLarge ? '100%' : `calc(100vh - ${theme.sizing.space3}px)`,
           display: 'flex',
           flexDirection: 'column',
           padding: 0,
@@ -436,7 +463,7 @@ export default function ReflectionDetailModal({
       }}
     >
       <ReflectionDetailHeader>
-        <Typography variant="navTitle2" sx={{ color: 'designSystem.surface.white' }}>
+        <Typography variant="bodyLg" sx={{ color: 'designSystem.surface.white' }}>
           {t('reflect.detailsTitle')}
         </Typography>
         <IconButton
@@ -450,10 +477,10 @@ export default function ReflectionDetailModal({
 
       <ReflectionDetailBody>
         <ReflectionDetailIntro>
-          <Typography variant="navTitle2" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+          <Typography variant="headingLg" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
             {activity.misconceptionTitle}
           </Typography>
-          <Typography variant="uploadLabel" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+          <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
             {t('reflect.detailsSubtitle')}
           </Typography>
         </ReflectionDetailIntro>
@@ -461,21 +488,21 @@ export default function ReflectionDetailModal({
         <ReflectionProgressPanel>
           <ReflectionSummaryPanel screenSize={screenSize}>
             <ReflectionSummaryScores>
-              <Typography variant="appTitle" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+              <Typography variant="reflectDetailScore" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
                 {t('reflect.percentCorrect', {
-                  percent: activity.averagePercentCorrectBefore,
+                  percent: Math.round(activity.averagePercentCorrectBefore),
                 })}
               </Typography>
-              <Typography variant="appTitle" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+              <Typography variant="reflectDetailScore" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
                 →
               </Typography>
-              <ReflectionTrendValue variant="appTitle" trend={summaryTrend}>
+              <ReflectionTrendValue variant="reflectDetailScore" trend={summaryTrend}>
                 {t('reflect.percentCorrect', {
-                  percent: activity.averagePercentCorrectAfter,
+                  percent: Math.round(activity.averagePercentCorrectAfter),
                 })}
               </ReflectionTrendValue>
             </ReflectionSummaryScores>
-            <Typography variant="rubikBodyBold" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+            <Typography variant="rubikSubBold" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
               {t('reflect.scoreSubtitle', { count: activity.questionCount })}
             </Typography>
             <ReflectionSummaryChange trend={summaryTrend}>
@@ -525,7 +552,7 @@ export default function ReflectionDetailModal({
               <MasterySection>
                 <MasteryHeadingGroup>
                   <MasteryTitleRow>
-                    <Typography variant="headingMd" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                    <Typography variant="reflectGroupTitle" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
                       {t('reflect.incompleteComparison')}
                     </Typography>
                     <StudentCountChip>
@@ -534,7 +561,7 @@ export default function ReflectionDetailModal({
                       })}
                     </StudentCountChip>
                   </MasteryTitleRow>
-                  <Typography variant="uploadLabel" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
+                  <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
                     {t('reflect.incompleteComparisonDescription')}
                   </Typography>
                 </MasteryHeadingGroup>
@@ -547,7 +574,7 @@ export default function ReflectionDetailModal({
                       <StudentNamePill sort="mostImproved">
                         {student.displayName}
                       </StudentNamePill>
-                      <StudentResultValue variant="rubikBodyBold" trend="unchanged">
+                      <StudentResultValue variant="microLabel" trend="unchanged">
                         {student.questionsCorrectAfter === null
                           ? t('reflect.miu1Only')
                           : t('reflect.miu2Only')}
@@ -599,27 +626,24 @@ export default function ReflectionDetailModal({
                             {`Q${question.questionNumber}`}
                           </Typography>
                           <Typography variant="headingMd" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                            {`${question.percentCorrectBefore}%`}
+                            {`${Math.round(question.percentCorrectBefore)}%`}
                           </Typography>
                           <Typography variant="headingMd" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
                             →
                           </Typography>
                           <ReflectionTrendValue variant="headingMd" trend={trend}>
-                            {`${question.percentCorrectAfter}%`}
+                            {`${Math.round(question.percentCorrectAfter)}%`}
                           </ReflectionTrendValue>
                           <Typography variant="headingMd" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
                             {t('reflect.correctResponses')}
                           </Typography>
                         </QuestionMetricGroup>
-                        <Typography variant="uploadLabel" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                          {question.questionText}
-                        </Typography>
                       </QuestionSummaryContent>
                     </QuestionResultSummary>
 
                     <QuestionResultDetails>
                       <Typography
-                        variant="rubikBody"
+                        variant="smallBodyText"
                         sx={{
                           color: 'designSystem.surface.atlanticNavy',
                           textTransform: 'uppercase',
@@ -630,11 +654,19 @@ export default function ReflectionDetailModal({
                       <AssessmentResponseList>
                         <ResponseRow
                           label={t('reflect.miu1')}
+                          // Results written before the per-MIU fields carry
+                          // only questionText, which is MIU 1's.
+                          questionText={
+                            question.beforeQuestionText ?? question.questionText
+                          }
+                          standard={question.beforeStandard}
                           answers={question.beforeAnswers}
                           screenSize={screenSize}
                         />
                         <ResponseRow
                           label={t('reflect.miu2')}
+                          questionText={question.afterQuestionText}
+                          standard={question.afterStandard}
                           answers={question.afterAnswers}
                           screenSize={screenSize}
                         />

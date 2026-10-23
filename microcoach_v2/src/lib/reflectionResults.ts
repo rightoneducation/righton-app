@@ -104,6 +104,7 @@ function buildLegacyReflectionResults(
           generatedMove?.title ??
           nextStep.title ??
           '',
+        activityType: activity?.activityType ?? null,
         subtitle:
           activity?.routine.subtitle.trim() ||
           generatedMove?.instructionalMove?.trim() ||
@@ -158,6 +159,7 @@ export default function buildReflectionResults(
           result.activityId ??
           `${result.misconceptionId}-reflection-result-${index}`,
         title: activity?.title ?? activity?.routine.name ?? '',
+        activityType: activity?.activityType ?? null,
         subtitle: activity?.routine.subtitle.trim() ?? '',
         description: activity?.routine.description.trim() ?? '',
         skillCode: misconception?.skillContext?.focusSkill.code ?? '',

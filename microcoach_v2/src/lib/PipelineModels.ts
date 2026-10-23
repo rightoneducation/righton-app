@@ -367,6 +367,8 @@ export interface ISession {
 export interface IImplementedActivity {
   id: string;
   title: string;
+  // Picks the template's Reflect subtitle; null when the activity is gone.
+  activityType: ActivityType | null;
   subtitle: string;
   description: string;
   skillCode: string;
