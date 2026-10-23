@@ -283,23 +283,6 @@ export const ClassDeleteButton = styled(IconButton)(({ theme }) => ({
   },
 }));
 
-// rev4 UserAccount_1: "+ Add a class" under the list, a class row's field
-// spanning the delete column too.
-export const AddClassButton = styled(Button)(({ theme }) => ({
-  width: '100%',
-  minHeight: fieldHeight,
-  borderRadius: fieldRadius,
-  backgroundColor: theme.palette.designSystem.surface.white,
-  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.foreground.greyAccent}`,
-  color: theme.palette.designSystem.surface.black,
-  ...theme.typography.rubikBody,
-  fontWeight: 600,
-  textTransform: 'none',
-  '&:hover': {
-    backgroundColor: theme.palette.designSystem.surface.skyBlue,
-  },
-}));
-
 // rev4 UserAccount_NewClassFails / ChangePassword_2: the toast floats ~40
 // below the header, centred over the content column rather than the window.
 export const ToastSnackbar = styled(Snackbar)(({ theme }) => ({
@@ -407,23 +390,44 @@ export const ProfileAction = styled(Button)(({ theme }) => ({
   },
 }));
 
-// "Add class" under a new class's name: hugs its label, and greys out until
-// there is a name, as Home's My activity button does. A styled component
-// rather than `sx`: on this styled(Button) the sx callback never applied.
-export const AddClassSubmit = styled(ProfileAction)(({ theme }) => ({
-  alignSelf: 'flex-start',
-  '&.Mui-disabled': {
-    backgroundColor: alpha(theme.palette.designSystem.surface.ashyGray, 0.5),
-    color: theme.palette.designSystem.surface.white,
-  },
-}));
-
 // rev5 ChangePasswordError's Done: ProfileAction in navy.
 export const ProfileActionPrimary = styled(ProfileAction)(({ theme }) => ({
   backgroundColor: theme.palette.designSystem.background.navyBlue,
   '&:hover': {
     backgroundColor: theme.palette.designSystem.background.navyBlue,
   },
+}));
+
+// rev5 AddAClass: "+ Add another class" under the list, a steel-blue pill.
+// Greyed out while a new class's field is open, so only one can be open.
+// Styled components rather than `sx`: on this styled(Button) the sx callback
+// never applied.
+export const AddClassButton = styled(ProfileAction)(({ theme }) => ({
+  alignSelf: 'flex-start',
+  gap: theme.sizing.space1,
+  '&.Mui-disabled': {
+    backgroundColor: alpha(theme.palette.designSystem.surface.ashyGray, 0.5),
+    color: theme.palette.designSystem.surface.white,
+  },
+}));
+
+// Done under a new class's field: navy once there is a name, grey until then.
+// rev5 draws its label at 16, a size up from the pill beside it.
+export const AddClassSubmit = styled(ProfileActionPrimary)(({ theme }) => ({
+  padding: `0 ${theme.sizing.space5}px`,
+  ...theme.typography.rubikBody,
+  '&.Mui-disabled': {
+    backgroundColor: alpha(theme.palette.designSystem.surface.ashyGray, 0.5),
+    color: theme.palette.designSystem.surface.white,
+  },
+}));
+
+// Done and the greyed "+ Add another class", side by side under the field.
+export const AddClassActions = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  gap: theme.sizing.space4,
 }));
 
 export type { ScreenSizeProps };
