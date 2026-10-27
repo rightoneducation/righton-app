@@ -23,6 +23,7 @@ import {
   MisconceptionBand,
   MisconceptionBandHead,
   MyActivityActions,
+  MyActivityBody,
   MyActivityCardSurface,
   MyActivityHeading,
   MyActivityList,
@@ -182,13 +183,7 @@ export default function MyActivity({ screenSize, sessions, plan }: MyActivityPro
           page={FlowStep.CHOOSE}
         />
 
-        <MyActivityHeading>
-          <Typography variant="appTitle" component="h1">
-            {t('myActivity.title')}
-          </Typography>
-          <Typography variant="uploadLabel">{t('myActivity.intro')}</Typography>
-        </MyActivityHeading>
-
+        {/* Above the heading, so the heading-to-card gap stays the frame's. */}
         {saveFailed && (
           <Typography
             variant="rubikBody"
@@ -199,14 +194,23 @@ export default function MyActivity({ screenSize, sessions, plan }: MyActivityPro
           </Typography>
         )}
 
-        <LoadingSlot
-          isLoading={isLoading}
-          minHeight={CARD_HEIGHT}
-          label={t('myActivity.loading')}
-          skeleton={<SavedActivitySkeleton />}
-        >
-          {content}
-        </LoadingSlot>
+        <MyActivityBody>
+          <MyActivityHeading>
+            <Typography variant="appTitle" component="h1">
+              {t('myActivity.title')}
+            </Typography>
+            <Typography variant="uploadLabel">{t('myActivity.intro')}</Typography>
+          </MyActivityHeading>
+
+          <LoadingSlot
+            isLoading={isLoading}
+            minHeight={CARD_HEIGHT}
+            label={t('myActivity.loading')}
+            skeleton={<SavedActivitySkeleton />}
+          >
+            {content}
+          </LoadingSlot>
+        </MyActivityBody>
       </ActivityFlowColumn>
 
       <ChangeActivityDialog

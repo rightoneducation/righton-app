@@ -139,6 +139,7 @@ export type MicroCoachSession = {
   studentIdsNeedingSupport?: Array< string | null > | null,
   ppqAssessmentId?: string | null,
   postPpqAssessmentId?: string | null,
+  selectedMisconceptionId?: string | null,
   assessments?: ModelMicroCoachAssessmentConnection | null,
   misconceptions?: ModelMicroCoachMisconceptionConnection | null,
   pregeneratedNextSteps?: string | null,
@@ -510,6 +511,7 @@ export type CreateMicroCoachSessionInput = {
   studentIdsNeedingSupport?: Array< string | null > | null,
   ppqAssessmentId?: string | null,
   postPpqAssessmentId?: string | null,
+  selectedMisconceptionId?: string | null,
   pregeneratedNextSteps?: string | null,
   evaluationResults?: string | null,
   questionStats?: Array< QuestionStatInput | null > | null,
@@ -588,6 +590,7 @@ export type ModelMicroCoachSessionConditionInput = {
   studentIdsNeedingSupport?: ModelIDInput | null,
   ppqAssessmentId?: ModelIDInput | null,
   postPpqAssessmentId?: ModelIDInput | null,
+  selectedMisconceptionId?: ModelIDInput | null,
   pregeneratedNextSteps?: ModelStringInput | null,
   evaluationResults?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
@@ -623,6 +626,7 @@ export type UpdateMicroCoachSessionInput = {
   studentIdsNeedingSupport?: Array< string | null > | null,
   ppqAssessmentId?: string | null,
   postPpqAssessmentId?: string | null,
+  selectedMisconceptionId?: string | null,
   pregeneratedNextSteps?: string | null,
   evaluationResults?: string | null,
   questionStats?: Array< QuestionStatInput | null > | null,
@@ -1273,6 +1277,7 @@ export type ModelMicroCoachSessionFilterInput = {
   studentIdsNeedingSupport?: ModelIDInput | null,
   ppqAssessmentId?: ModelIDInput | null,
   postPpqAssessmentId?: ModelIDInput | null,
+  selectedMisconceptionId?: ModelIDInput | null,
   pregeneratedNextSteps?: ModelStringInput | null,
   evaluationResults?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
@@ -1503,6 +1508,7 @@ export type ModelSubscriptionMicroCoachSessionFilterInput = {
   studentIdsNeedingSupport?: ModelSubscriptionIDInput | null,
   ppqAssessmentId?: ModelSubscriptionIDInput | null,
   postPpqAssessmentId?: ModelSubscriptionIDInput | null,
+  selectedMisconceptionId?: ModelSubscriptionIDInput | null,
   pregeneratedNextSteps?: ModelSubscriptionStringInput | null,
   evaluationResults?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
@@ -1653,6 +1659,7 @@ export type CreateMicroCoachUserMutation = {
             studentIdsNeedingSupport?: Array< string | null > | null,
             ppqAssessmentId?: string | null,
             postPpqAssessmentId?: string | null,
+            selectedMisconceptionId?: string | null,
             pregeneratedNextSteps?: string | null,
             evaluationResults?: string | null,
             createdAt: string,
@@ -1728,6 +1735,7 @@ export type UpdateMicroCoachUserMutation = {
             studentIdsNeedingSupport?: Array< string | null > | null,
             ppqAssessmentId?: string | null,
             postPpqAssessmentId?: string | null,
+            selectedMisconceptionId?: string | null,
             pregeneratedNextSteps?: string | null,
             evaluationResults?: string | null,
             createdAt: string,
@@ -1803,6 +1811,7 @@ export type DeleteMicroCoachUserMutation = {
             studentIdsNeedingSupport?: Array< string | null > | null,
             ppqAssessmentId?: string | null,
             postPpqAssessmentId?: string | null,
+            selectedMisconceptionId?: string | null,
             pregeneratedNextSteps?: string | null,
             evaluationResults?: string | null,
             createdAt: string,
@@ -1867,6 +1876,7 @@ export type CreateMicroCoachClassroomMutation = {
         studentIdsNeedingSupport?: Array< string | null > | null,
         ppqAssessmentId?: string | null,
         postPpqAssessmentId?: string | null,
+        selectedMisconceptionId?: string | null,
         assessments?:  {
           __typename: "ModelMicroCoachAssessmentConnection",
           items:  Array< {
@@ -2005,6 +2015,7 @@ export type UpdateMicroCoachClassroomMutation = {
         studentIdsNeedingSupport?: Array< string | null > | null,
         ppqAssessmentId?: string | null,
         postPpqAssessmentId?: string | null,
+        selectedMisconceptionId?: string | null,
         assessments?:  {
           __typename: "ModelMicroCoachAssessmentConnection",
           items:  Array< {
@@ -2143,6 +2154,7 @@ export type DeleteMicroCoachClassroomMutation = {
         studentIdsNeedingSupport?: Array< string | null > | null,
         ppqAssessmentId?: string | null,
         postPpqAssessmentId?: string | null,
+        selectedMisconceptionId?: string | null,
         assessments?:  {
           __typename: "ModelMicroCoachAssessmentConnection",
           items:  Array< {
@@ -2326,6 +2338,7 @@ export type CreateMicroCoachSessionMutation = {
     studentIdsNeedingSupport?: Array< string | null > | null,
     ppqAssessmentId?: string | null,
     postPpqAssessmentId?: string | null,
+    selectedMisconceptionId?: string | null,
     assessments?:  {
       __typename: "ModelMicroCoachAssessmentConnection",
       items:  Array< {
@@ -2492,6 +2505,7 @@ export type UpdateMicroCoachSessionMutation = {
     studentIdsNeedingSupport?: Array< string | null > | null,
     ppqAssessmentId?: string | null,
     postPpqAssessmentId?: string | null,
+    selectedMisconceptionId?: string | null,
     assessments?:  {
       __typename: "ModelMicroCoachAssessmentConnection",
       items:  Array< {
@@ -2658,6 +2672,7 @@ export type DeleteMicroCoachSessionMutation = {
     studentIdsNeedingSupport?: Array< string | null > | null,
     ppqAssessmentId?: string | null,
     postPpqAssessmentId?: string | null,
+    selectedMisconceptionId?: string | null,
     assessments?:  {
       __typename: "ModelMicroCoachAssessmentConnection",
       items:  Array< {
@@ -3602,6 +3617,7 @@ export type GetMicroCoachUserQuery = {
             studentIdsNeedingSupport?: Array< string | null > | null,
             ppqAssessmentId?: string | null,
             postPpqAssessmentId?: string | null,
+            selectedMisconceptionId?: string | null,
             pregeneratedNextSteps?: string | null,
             evaluationResults?: string | null,
             createdAt: string,
@@ -3714,6 +3730,7 @@ export type GetMicroCoachClassroomQuery = {
         studentIdsNeedingSupport?: Array< string | null > | null,
         ppqAssessmentId?: string | null,
         postPpqAssessmentId?: string | null,
+        selectedMisconceptionId?: string | null,
         assessments?:  {
           __typename: "ModelMicroCoachAssessmentConnection",
           items:  Array< {
@@ -3855,6 +3872,7 @@ export type ListMicroCoachClassroomsQuery = {
           studentIdsNeedingSupport?: Array< string | null > | null,
           ppqAssessmentId?: string | null,
           postPpqAssessmentId?: string | null,
+          selectedMisconceptionId?: string | null,
           assessments?:  {
             __typename: "ModelMicroCoachAssessmentConnection",
             nextToken?: string | null,
@@ -3971,6 +3989,7 @@ export type GetMicroCoachSessionQuery = {
     studentIdsNeedingSupport?: Array< string | null > | null,
     ppqAssessmentId?: string | null,
     postPpqAssessmentId?: string | null,
+    selectedMisconceptionId?: string | null,
     assessments?:  {
       __typename: "ModelMicroCoachAssessmentConnection",
       items:  Array< {
@@ -4140,6 +4159,7 @@ export type ListMicroCoachSessionsQuery = {
       studentIdsNeedingSupport?: Array< string | null > | null,
       ppqAssessmentId?: string | null,
       postPpqAssessmentId?: string | null,
+      selectedMisconceptionId?: string | null,
       assessments?:  {
         __typename: "ModelMicroCoachAssessmentConnection",
         items:  Array< {
@@ -4539,6 +4559,7 @@ export type MicroCoachClassroomsByUserIdQuery = {
           studentIdsNeedingSupport?: Array< string | null > | null,
           ppqAssessmentId?: string | null,
           postPpqAssessmentId?: string | null,
+          selectedMisconceptionId?: string | null,
           assessments?:  {
             __typename: "ModelMicroCoachAssessmentConnection",
             nextToken?: string | null,
@@ -4647,6 +4668,7 @@ export type MicroCoachSessionsByClassIdQuery = {
       studentIdsNeedingSupport?: Array< string | null > | null,
       ppqAssessmentId?: string | null,
       postPpqAssessmentId?: string | null,
+      selectedMisconceptionId?: string | null,
       assessments?:  {
         __typename: "ModelMicroCoachAssessmentConnection",
         items:  Array< {
@@ -5646,6 +5668,7 @@ export type OnCreateMicroCoachUserSubscription = {
             studentIdsNeedingSupport?: Array< string | null > | null,
             ppqAssessmentId?: string | null,
             postPpqAssessmentId?: string | null,
+            selectedMisconceptionId?: string | null,
             pregeneratedNextSteps?: string | null,
             evaluationResults?: string | null,
             createdAt: string,
@@ -5721,6 +5744,7 @@ export type OnUpdateMicroCoachUserSubscription = {
             studentIdsNeedingSupport?: Array< string | null > | null,
             ppqAssessmentId?: string | null,
             postPpqAssessmentId?: string | null,
+            selectedMisconceptionId?: string | null,
             pregeneratedNextSteps?: string | null,
             evaluationResults?: string | null,
             createdAt: string,
@@ -5796,6 +5820,7 @@ export type OnDeleteMicroCoachUserSubscription = {
             studentIdsNeedingSupport?: Array< string | null > | null,
             ppqAssessmentId?: string | null,
             postPpqAssessmentId?: string | null,
+            selectedMisconceptionId?: string | null,
             pregeneratedNextSteps?: string | null,
             evaluationResults?: string | null,
             createdAt: string,
@@ -5859,6 +5884,7 @@ export type OnCreateMicroCoachClassroomSubscription = {
         studentIdsNeedingSupport?: Array< string | null > | null,
         ppqAssessmentId?: string | null,
         postPpqAssessmentId?: string | null,
+        selectedMisconceptionId?: string | null,
         assessments?:  {
           __typename: "ModelMicroCoachAssessmentConnection",
           items:  Array< {
@@ -5996,6 +6022,7 @@ export type OnUpdateMicroCoachClassroomSubscription = {
         studentIdsNeedingSupport?: Array< string | null > | null,
         ppqAssessmentId?: string | null,
         postPpqAssessmentId?: string | null,
+        selectedMisconceptionId?: string | null,
         assessments?:  {
           __typename: "ModelMicroCoachAssessmentConnection",
           items:  Array< {
@@ -6133,6 +6160,7 @@ export type OnDeleteMicroCoachClassroomSubscription = {
         studentIdsNeedingSupport?: Array< string | null > | null,
         ppqAssessmentId?: string | null,
         postPpqAssessmentId?: string | null,
+        selectedMisconceptionId?: string | null,
         assessments?:  {
           __typename: "ModelMicroCoachAssessmentConnection",
           items:  Array< {
@@ -6312,6 +6340,7 @@ export type OnCreateMicroCoachSessionSubscription = {
     studentIdsNeedingSupport?: Array< string | null > | null,
     ppqAssessmentId?: string | null,
     postPpqAssessmentId?: string | null,
+    selectedMisconceptionId?: string | null,
     assessments?:  {
       __typename: "ModelMicroCoachAssessmentConnection",
       items:  Array< {
@@ -6477,6 +6506,7 @@ export type OnUpdateMicroCoachSessionSubscription = {
     studentIdsNeedingSupport?: Array< string | null > | null,
     ppqAssessmentId?: string | null,
     postPpqAssessmentId?: string | null,
+    selectedMisconceptionId?: string | null,
     assessments?:  {
       __typename: "ModelMicroCoachAssessmentConnection",
       items:  Array< {
@@ -6642,6 +6672,7 @@ export type OnDeleteMicroCoachSessionSubscription = {
     studentIdsNeedingSupport?: Array< string | null > | null,
     ppqAssessmentId?: string | null,
     postPpqAssessmentId?: string | null,
+    selectedMisconceptionId?: string | null,
     assessments?:  {
       __typename: "ModelMicroCoachAssessmentConnection",
       items:  Array< {

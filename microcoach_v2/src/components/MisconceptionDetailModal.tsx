@@ -16,7 +16,7 @@ import { CardBadge } from '../lib/styledcomponents/UnderstandStyledComponents';
 import {
   MODAL_MAX_HEIGHT,
   MODAL_MAX_WIDTH,
-  MODAL_TOP_OFFSET,
+  MODAL_INSET_Y,
   ModalBody,
   ModalCtaButton,
   ModalFooter,
@@ -218,7 +218,8 @@ export default function MisconceptionDetailModal({
           alignItems: 'flex-start',
           justifyContent: 'center',
           padding: theme.sizing.space4,
-          paddingTop: isLarge ? MODAL_TOP_OFFSET : theme.sizing.space4,
+          paddingTop: isLarge ? MODAL_INSET_Y : theme.sizing.space4,
+          paddingBottom: isLarge ? MODAL_INSET_Y : theme.sizing.space4,
         },
         content: {
           position: 'relative',

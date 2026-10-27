@@ -1,3 +1,6 @@
+import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
+import { IMicroCoachSavedPlan } from '../api/Models/IMicroCoachSavedPlan';
+import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { FlowStep } from './flowProgress';
 import { weekOf } from './weeks';
 
@@ -12,6 +15,8 @@ export interface IWeeklyClassProgress {
   className: string;
   studentCount: number;
   step: FlowStep;
+  // The misconception picked on Review, where a CHOOSE row resumes.
+  selectedMisconceptionId: string | null;
   // Files are in but the pipeline has not reported back yet.
   isAwaitingResults: boolean;
 }
@@ -34,6 +39,26 @@ export interface IPastActivity {
   isAwaitingResults: boolean;
   // The week the session is for, which an upload pre-fills.
   weekStart: string;
+  // The misconception picked on Review, where a CHOOSE row resumes.
+  selectedMisconceptionId: string | null;
+}
+
+/** One class as fetched for the cross-class lists (useClassActivity). */
+export interface IClassRecord {
+  classroom: IMicroCoachClassroom;
+  sessions: IMicroCoachSession[];
+  studentCount: number;
+  plans: IMicroCoachSavedPlan[];
+}
+
+/**
+ * Every class's sessions, students and saved plans, fetched once and kept in
+ * the app store: Home's weekly progress and Past Activities are built from
+ * it, and switching class reads its sessions from it rather than refetching.
+ */
+export interface IClassActivityData {
+  perClass: IClassRecord[];
+  past: IPastActivity[];
 }
 
 export enum ActivitySortOrder {

@@ -190,7 +190,6 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
     case ScreenType.PAST_ACTIVITIES:
       screenComponent = (
         <PastActivities
-          apiClients={apiClients}
           screenSize={screenSize}
           classrooms={classrooms}
           sessions={sessions}
@@ -236,7 +235,9 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       break;
     }
     case ScreenType.REFLECT:
-      screenComponent = <Reflect screenSize={screenSize} />;
+      screenComponent = (
+        <Reflect screenSize={screenSize} sessions={sessions} plan={plan} />
+      );
       break;
     case ScreenType.PROFILE:
       screenComponent = (

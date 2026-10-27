@@ -30,12 +30,12 @@ export const WeekGroup = styled(Box)(({ theme }) => ({
   gap: theme.sizing.space4,
 }));
 
-// Past Activities: one WeekGroup per week, ~64 between weeks (Figma
-// Dashboard3_a: ~70 from a week's last card to the next heading).
+// Past Activities: one WeekGroup per week, 80 between weeks (dev QA
+// 2026-10-27; Dashboard3_a drew ~70).
 export const ActivityGroupList = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.sizing.space11,
+  gap: theme.sizing.space12,
   width: '100%',
   maxWidth: theme.sizing.activityListMaxWidth,
 }));

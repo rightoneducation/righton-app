@@ -48,22 +48,24 @@ export const TemplateHeading = styled(Box)(({ theme }) => ({
   gap: theme.sizing.space0,
 }));
 
+// Change Activity is centred on the name (Before Class, My Activity frames).
 export const TemplateNameRow = styled(Box)(({ theme }) => ({
   display: 'flex',
-  alignItems: 'baseline',
+  alignItems: 'center',
   flexWrap: 'wrap',
   columnGap: theme.sizing.space5,
   rowGap: theme.sizing.space0,
 }));
 
-// Figma: Rubik 15/600 atlanticNavy, text only.
+// Figma: Rubik 15/600 atlanticNavy, text only; always underlined so it reads
+// as a link (dev QA 2026-10-27).
 export const ChangeActivityLink = styled(ButtonBase)(({ theme }) => ({
   color: theme.palette.designSystem.surface.atlanticNavy,
   ...theme.typography.buttonLabelSm,
   fontSize: 15,
   fontWeight: 600,
   borderRadius: codeChipRadius,
-  '&:hover, &.Mui-focusVisible': { textDecoration: 'underline' },
+  textDecoration: 'underline',
 }));
 
 export const PhaseNav = styled('nav')(({ theme }) => ({
@@ -133,6 +135,15 @@ export const FlowCardTitle = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.sizing.space0,
+}));
+
+// Before class: the duration chip sits 24 after the title, centred on it,
+// rather than at the card's far edge (Before Class_SpottheSlipActivity).
+export const FlowCardTitleRow = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  flexWrap: 'wrap',
+  gap: theme.sizing.space5,
 }));
 
 /* ── Before class ─────────────────────────────────────────────────────── */
@@ -429,6 +440,20 @@ export const WatchForRow = styled(Box, {
   '& > *': { flex: '1 1 0', minWidth: 0 },
 }));
 
+// The Watch for text, as tall as the longest card's (dev QA 2026-10-27): every
+// card's text sits in the one grid cell, only its own visible, so shorter text
+// leaves a gap and Try asking starts level on every card. Only the text is
+// shared — opening Try asking still grows just that card.
+export const WatchForTextStack = styled(Box)({
+  display: 'grid',
+  '& > *': { gridArea: '1 / 1' },
+});
+
+// A stacked copy of another card's text: holds the height, unseen and unread.
+export const WatchForTextSpacer = styled(Box)({
+  visibility: 'hidden',
+});
+
 // Figma: #F3F4F6 (wildSand) on a 2px #C1D1E1 (periwinkle, Δ2) line, rx8.
 export const TryAskingBox = styled(Box)(({ theme }) => ({
   borderRadius: theme.sizing.space1,
@@ -512,6 +537,14 @@ export const NavPill = styled(Button, {
 /* ── My Activity ──────────────────────────────────────────────────────── */
 
 /** Title over the intro (Figma: nearly touching). */
+// The heading over the saved activity (InflowScreens/MyActivity: ~59 from
+// the intro to the card).
+export const MyActivityBody = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space10,
+}));
+
 export const MyActivityHeading = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',

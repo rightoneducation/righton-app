@@ -39,11 +39,17 @@ export const UnderstandPage = styled(Box, {
   ...patternPageBackground(theme, screenSize),
 }));
 
-/** The page column (Figma: 280..1406, the in-app 1128 column). */
+/*
+ * The page column (Figma: 280..1406, the in-app 1128 column) of Review and
+ * Select Activity. 32 between sections, as ActivityFlowColumn: DevQA
+ * SelectingMisconceptions puts the title 155 under the header, which with
+ * the 73-tall circle track leaves ~32 under it, and the Misconception
+ * selected bar then sits the same distance from the stepper on every page.
+ */
 export const UnderstandColumn = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.sizing.space8,
+  gap: theme.sizing.space6,
   width: '100%',
   maxWidth: theme.sizing.appContentMaxWidth,
 }));
@@ -51,17 +57,20 @@ export const UnderstandColumn = styled(Box)(({ theme }) => ({
 /*
  * /review below the stepper (rev3 PaddingReference): the title and cards
  * (ReviewIntro, ~56 apart) over the correct-responses section and the AI
- * disclaimer (ReviewFooter, 16 apart), the two groups ~74 apart in the
- * frame (space11, 64, per design call 2026-10-16).
- * Grouped so each gap has one owner; UnderstandColumn's 48 still spaces the
+ * disclaimer (ReviewFooter, 16 apart), the two groups 74 apart (DevQA
+ * SelectingMisconceptions: card edge to the heading's line box; between
+ * space11 and space12 with neither close).
+ * Grouped so each gap has one owner; UnderstandColumn's gap still spaces the
  * stepper from all of it.
  */
+const reviewGroupGap = 74;
+
 export const ReviewBody = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: screenSize === ScreenSize.LARGE ? theme.sizing.space11 : theme.sizing.space8,
+  gap: screenSize === ScreenSize.LARGE ? reviewGroupGap : theme.sizing.space8,
 }));
 
 export const ReviewIntro = styled(Box, {
@@ -118,10 +127,11 @@ export const ViewMiuLink = styled(Link)(({ theme }) => ({
   '&:hover, &:focus-visible': { textDecoration: 'underline' },
 }));
 
-// Figma (frame 3): a one-time overlay across the title, so it takes no space.
-export const BannerOverlay = styled(Box)({
+// Figma (SelectingMisconceptions3): a one-time overlay across the title, so it
+// takes no space. Its top sits ~19 above the title's.
+export const BannerOverlay = styled(Box)(({ theme }) => ({
   position: 'absolute',
-  top: 0,
+  top: -theme.sizing.space4,
   left: 0,
   right: 0,
   display: 'flex',
@@ -129,15 +139,18 @@ export const BannerOverlay = styled(Box)({
   zIndex: 2,
   pointerEvents: 'none',
   '& > *': { pointerEvents: 'auto' },
-});
+}));
 
+// Figma (SelectingMisconceptions3): 829x59 rx20, text 20 in from either end.
 export const ResultsBannerBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: theme.sizing.space3,
   maxWidth: '100%',
-  padding: `${theme.sizing.space1}px ${theme.sizing.space3}px`,
-  borderRadius: theme.sizing.space2,
+  minHeight: 59,
+  padding: `0 ${theme.sizing.space4}px`,
+  borderRadius: theme.sizing.space4,
+  boxSizing: 'border-box',
   backgroundColor: theme.palette.designSystem.status.lightGreen,
   border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.status.success}`,
   color: theme.palette.designSystem.surface.atlanticNavy,
@@ -195,7 +208,9 @@ export const MisconceptionCardSurface = styled(Box, {
       }
     : { display: 'flex', flexDirection: 'column', gap: theme.sizing.space3 }),
   // rev3 PaddingReference: ~36 inside; space7 per design call (2026-10-16).
+  // DevQA SelectingMisconceptions: 58 under the buttons.
   padding: theme.sizing.space7,
+  paddingBottom: theme.sizing.space10,
   borderRadius: theme.sizing.space6,
   backgroundColor: theme.palette.designSystem.surface.white,
   boxShadow: dashboardCardShadow,

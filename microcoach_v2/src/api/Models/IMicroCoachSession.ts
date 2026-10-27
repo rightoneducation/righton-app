@@ -74,6 +74,8 @@ export interface IMicroCoachSession {
   studentIdsNeedingSupport: string[];
   ppqAssessmentId: string | null;
   postPpqAssessmentId: string | null;
+  // The misconception picked on Review before an activity is saved.
+  selectedMisconceptionId: string | null;
   pregeneratedNextSteps: string | null;
   evaluationResults: string | null;
   // Empty until the pipeline writes it (see the v2 pipeline task).

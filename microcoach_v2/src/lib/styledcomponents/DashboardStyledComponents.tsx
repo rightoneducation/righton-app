@@ -211,9 +211,12 @@ export const dashboardCardShadow = [
   '20px 32px 15px rgba(0, 0, 0, 0.01)',
 ].join(', ');
 
-// Figma (rev2 LandingPage): 1206x542, radius 20, holding the heading, then
-// the pickers and CTA. The two groups sit ~92 apart, between space12 and
-// space13 with neither close; each spaces its own items more tightly.
+// Figma (DevQA TeacherDashboard): 1206x542, radius 20, holding the heading,
+// then the pickers and CTA. The two groups sit ~94 apart, between space12 and
+// space13 with neither close; each spaces its own items more tightly. The
+// title sits 28 under the card's top edge and the CTA ~28 over its bottom.
+const dashboardCardInsetY = 28;
+
 export const DashboardCard = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => {
@@ -223,10 +226,12 @@ export const DashboardCard = styled(Box, {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: isLarge ? 92 : theme.sizing.space6,
+    gap: isLarge ? 94 : theme.sizing.space6,
     width: '100%',
     maxWidth: theme.sizing.dashboardCardMaxWidth,
-    padding: isLarge ? theme.sizing.space6 : theme.sizing.space4,
+    padding: isLarge
+      ? `${dashboardCardInsetY}px ${theme.sizing.space6}px`
+      : theme.sizing.space4,
     borderRadius: theme.sizing.space4,
     backgroundColor: theme.palette.designSystem.surface.white,
     boxShadow: dashboardCardShadow,
@@ -255,6 +260,8 @@ export const DashboardForm = styled(Box)(({ theme }) => ({
 // The step track on the left, "My activity" on the right. Below LARGE the two
 // stack. At LARGE they wrap the same way once the column is narrower than
 // both (~1044; under ~1356 with the sidebar) rather than overflowing it.
+// At LARGE the button is centred on the whole track, circles and labels
+// (DevQA TeacherDashboard, rev3 PaddingReference).
 export const StepperBand = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => {
@@ -264,7 +271,7 @@ export const StepperBand = styled(Box, {
     display: 'flex',
     flexDirection: isLarge ? 'row' : 'column',
     flexWrap: isLarge ? 'wrap' : 'nowrap',
-    alignItems: 'flex-start',
+    alignItems: isLarge ? 'center' : 'flex-start',
     justifyContent: 'space-between',
     gap: theme.sizing.space4,
     width: '100%',

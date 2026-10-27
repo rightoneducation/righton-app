@@ -96,6 +96,9 @@ type MicroCoachSession @model @auth(rules: [{ allow: private }]) {
 
   ppqAssessmentId: ID
   postPpqAssessmentId: ID
+  # The misconception the teacher picked on Review (Select), before any
+  # activity is saved: what places the class at Choose Activity.
+  selectedMisconceptionId: ID
   assessments: [MicroCoachAssessment]
     @hasMany(indexName: "bySession", fields: ["id"])
   misconceptions: [MicroCoachMisconception]

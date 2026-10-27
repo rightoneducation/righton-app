@@ -3,6 +3,7 @@ import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { IUser } from '../api/Models/IUser';
 import { IPlanItem } from './PipelineModels';
+import { IClassActivityData } from './ActivityListModels';
 
 // Auth lifecycle states, mirroring central_v2's UserStatusType.
 export enum UserStatusType {
@@ -89,6 +90,12 @@ export interface IMicroCoachDataState {
   planItems: IPlanItem[];
   planItemsStatus: MicroCoachDataStatus;
   planItemsError: Error | null;
+  // The cross-class lists' data (useClassActivityLoader), for the class ids
+  // in classActivityKey. Stale: shown as is while a refetch runs.
+  classActivity: IClassActivityData | null;
+  classActivityKey: string | null;
+  classActivityStatus: MicroCoachDataStatus;
+  classActivityStale: boolean;
 }
 
 export const initMicroCoachDataState: IMicroCoachDataState = {
@@ -109,4 +116,8 @@ export const initMicroCoachDataState: IMicroCoachDataState = {
   planItems: [],
   planItemsStatus: MicroCoachDataStatus.IDLE,
   planItemsError: null,
+  classActivity: null,
+  classActivityKey: null,
+  classActivityStatus: MicroCoachDataStatus.IDLE,
+  classActivityStale: false,
 };

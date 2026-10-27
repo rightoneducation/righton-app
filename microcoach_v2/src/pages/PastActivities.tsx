@@ -8,13 +8,12 @@ import SidebarPage from '../components/SidebarPage';
 import ActivitySortMenu from '../components/ActivitySortMenu';
 import LoadingSlot from '../components/LoadingSlot';
 import { PastActivitiesSkeleton } from '../components/skeletons/ActivityListSkeleton';
-import { IAPIClients } from '../api';
 import { UseClassroomsResult } from '../hooks/useClassrooms';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { useClassActivity } from '../hooks/useClassActivity';
 import { useOpenClassSession } from '../hooks/useOpenClassSession';
 import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
-import { FlowStep, RESUME_PATH } from '../lib/flowProgress';
+import { FlowStep, resumePath } from '../lib/flowProgress';
 import {
   ActivitySortOrder,
   groupPastActivities,
@@ -50,13 +49,11 @@ const CARD_HEIGHT = 128;
 const EMPTY_STATE_IMAGE_WIDTH = 224;
 
 interface PastActivitiesProps extends ScreenSizeProps {
-  apiClients: IAPIClients;
   classrooms: UseClassroomsResult;
   sessions: UseSessionsResult;
 }
 
 export default function PastActivities({
-  apiClients,
   screenSize,
   classrooms,
   sessions,
@@ -68,12 +65,7 @@ export default function PastActivities({
     ActivitySortOrder.RECENT_FIRST,
   );
   const classesFailed = classrooms.status === MicroCoachDataStatus.ERROR;
-  const classesKnown =
-    classrooms.status === MicroCoachDataStatus.READY || classesFailed;
-  const activity = useClassActivity(
-    apiClients,
-    classesKnown ? classrooms.classrooms : null,
-  );
+  const activity = useClassActivity();
   const openClassSession = useOpenClassSession(classrooms, sessions);
   const isLoading = activity.status === MicroCoachDataStatus.LOADING;
   const hasFailed =
@@ -189,19 +181,18 @@ export default function PastActivities({
                           <CardActionButton
                             disableElevation
                             endIcon={<ChevronRightIcon />}
-                            onClick={() =>
+                            onClick={() => {
+                              const path = resumePath(row.step, row.selectedMisconceptionId);
                               openClassSession({
                                 classId: row.classId,
                                 sessionId: row.id,
-                                path: RESUME_PATH[row.step],
+                                path,
                                 // The upload pre-fills the week it is for.
-                                state: RESUME_PATH[row.step].startsWith(
-                                  '/upload-',
-                                )
+                                state: path.startsWith('/upload-')
                                   ? { weekStart: row.weekStart }
                                   : undefined,
-                              })
-                            }
+                              });
+                            }}
                           >
                             {t('pastActivities.viewData')}
                           </CardActionButton>

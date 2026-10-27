@@ -93,6 +93,24 @@ export class SessionAPIClient
       : null;
   }
 
+  async setSelectedMisconception(
+    id: string,
+    misconceptionId: string | null,
+  ): Promise<IMicroCoachSession | null> {
+    const variables: UpdateMicroCoachSessionMutationVariables = {
+      input: { id, selectedMisconceptionId: misconceptionId },
+    };
+    const res = await this.mutateGraphQL<UpdateMicroCoachSessionMutation>(
+      updateMicroCoachSession,
+      variables as unknown as GraphQLOptions,
+    );
+
+    const updatedSession = res?.data?.updateMicroCoachSession;
+    return updatedSession
+      ? SessionParser.parseIMicroCoachSessionfromAWSSession(updatedSession)
+      : null;
+  }
+
   async deleteSession(id: string): Promise<IMicroCoachSession | null> {
     if (!id) return null;
 

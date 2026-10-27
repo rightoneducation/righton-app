@@ -29,6 +29,8 @@ import {
   TryAskingDetail,
   TryAskingToggle,
   WatchForRow,
+  WatchForTextSpacer,
+  WatchForTextStack,
 } from '../../lib/styledcomponents/ActivityFlowStyledComponents';
 
 function Question({ item, number }: { item: IDiscussionQuestion; number: number }) {
@@ -53,7 +55,15 @@ function Answer({ item }: { item: IDiscussionQuestion }) {
   );
 }
 
-function WatchForCard({ item, index }: { item: IWatchFor; index: number }) {
+interface WatchForCardProps {
+  item: IWatchFor;
+  index: number;
+  // Every card's Watch for text, side by side at LARGE: the text slot holds
+  // the tallest. Empty when the cards stack.
+  rowTexts: string[];
+}
+
+function WatchForCard({ item, index, rowTexts }: WatchForCardProps) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = React.useState(false);
   const detailId = `watch-for-${index}-detail`;
@@ -63,7 +73,17 @@ function WatchForCard({ item, index }: { item: IWatchFor; index: number }) {
       <Typography variant="headingLg" component="h3">
         {t('activityFlow.discussion.watchFor')}
       </Typography>
-      <MathTypography variant="smallBodyText" text={item.watchFor} />
+      <WatchForTextStack>
+        <MathTypography variant="smallBodyText" text={item.watchFor} />
+        {rowTexts.map((text, textIndex) =>
+          textIndex === index ? null : (
+            // eslint-disable-next-line react/no-array-index-key -- texts can repeat; position is the identity
+            <WatchForTextSpacer key={textIndex} aria-hidden>
+              <MathTypography variant="smallBodyText" text={text} />
+            </WatchForTextSpacer>
+          ),
+        )}
+      </WatchForTextStack>
       <TryAskingBox>
         <TryAskingToggle
           aria-expanded={isOpen}
@@ -149,7 +169,12 @@ export default function DiscussionView({ content, screenSize }: DiscussionViewPr
       {watchFors.length > 0 && (
         <WatchForRow screenSize={screenSize}>
           {watchFors.map((item, index) => (
-            <WatchForCard key={item.watchFor} item={item} index={index} />
+            <WatchForCard
+              key={item.watchFor}
+              item={item}
+              index={index}
+              rowTexts={isLarge ? watchFors.map((entry) => entry.watchFor) : []}
+            />
           ))}
         </WatchForRow>
       )}

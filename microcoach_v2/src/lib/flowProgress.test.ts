@@ -4,10 +4,12 @@ import { Translate } from './activityMarks';
 import {
   FlowStep,
   buildFlowSteps,
+  buildFlowStepsForPage,
   buildPendingFlowSteps,
   deriveCurrentStep,
   hasChosenActivity,
   isAwaitingResults,
+  resumePath,
   sessionForWeek,
   sortSessionsLatestFirst,
   stepCta,
@@ -31,6 +33,7 @@ const session = (overrides: Partial<IMicroCoachSession> = {}): IMicroCoachSessio
   studentIdsNeedingSupport: [],
   ppqAssessmentId: null,
   postPpqAssessmentId: null,
+  selectedMisconceptionId: null,
   pregeneratedNextSteps: null,
   evaluationResults: null,
   questionStats: [],
@@ -61,8 +64,16 @@ describe('deriveCurrentStep', () => {
     expect(deriveCurrentStep(session(), false)).toBe(FlowStep.UNDERSTAND);
   });
 
-  it('never reports CHOOSE (nothing persisted separates it from UNDERSTAND)', () => {
-    expect(deriveCurrentStep(session(), false)).not.toBe(FlowStep.CHOOSE);
+  it('is CHOOSE once a misconception is picked and no plan is saved', () => {
+    expect(
+      deriveCurrentStep(session({ selectedMisconceptionId: 'm1' }), false),
+    ).toBe(FlowStep.CHOOSE);
+  });
+
+  it('is REASSESS once a plan is saved, misconception picked or not', () => {
+    expect(
+      deriveCurrentStep(session({ selectedMisconceptionId: 'm1' }), true),
+    ).toBe(FlowStep.REASSESS);
   });
 
   it('is REASSESS once a plan is saved', () => {
@@ -134,6 +145,58 @@ describe('buildFlowSteps', () => {
   });
 });
 
+describe('buildFlowStepsForPage', () => {
+  const states = (page: FlowStep, progress: FlowStep) =>
+    buildFlowStepsForPage(page, progress, t).map((step) => step.state);
+
+  it('makes the page current even when the class is further along', () => {
+    expect(states(FlowStep.UNDERSTAND, FlowStep.REFLECT)).toEqual([
+      'COMPLETE',
+      'CURRENT',
+      'COMPLETE',
+      'COMPLETE',
+      'UPCOMING',
+    ]);
+  });
+
+  it('keeps steps past the page linked when the class has done them', () => {
+    const steps = buildFlowStepsForPage(FlowStep.UNDERSTAND, FlowStep.REASSESS, t);
+    expect(steps[2].isClickable).toBe(true);
+    expect(steps[2].path).toBe('/myactivity');
+    expect(steps[3].isClickable).toBe(false);
+  });
+
+  it('matches buildFlowSteps when the page is the class\'s own step', () => {
+    expect(buildFlowStepsForPage(FlowStep.CHOOSE, FlowStep.CHOOSE, t)).toEqual(
+      buildFlowSteps(FlowStep.CHOOSE, t),
+    );
+  });
+
+  it('runs ahead of the class when the teacher is ahead of it', () => {
+    expect(states(FlowStep.CHOOSE, FlowStep.UNDERSTAND)).toEqual([
+      'COMPLETE',
+      'COMPLETE',
+      'CURRENT',
+      'UPCOMING',
+      'UPCOMING',
+    ]);
+  });
+});
+
+describe('resumePath', () => {
+  it('resumes CHOOSE at the picked misconception\'s activities', () => {
+    expect(resumePath(FlowStep.CHOOSE, 'm1')).toBe('/review/m1/activities');
+  });
+
+  it('falls back to the misconceptions without one', () => {
+    expect(resumePath(FlowStep.CHOOSE, null)).toBe('/review');
+  });
+
+  it('ignores the misconception for other steps', () => {
+    expect(resumePath(FlowStep.REASSESS, 'm1')).toBe('/upload-reassess');
+  });
+});
+
 describe('buildPendingFlowSteps', () => {
   it('has no current step and nothing clickable', () => {
     const steps = buildPendingFlowSteps(t);
@@ -165,6 +228,13 @@ describe('stepCta', () => {
     [FlowStep.DONE, '/upload-miu'],
   ])('%s → %s', (step, path) => {
     expect(stepCta(step).path).toBe(path);
+  });
+
+  it('sends CHOOSE to the picked misconception\'s activities', () => {
+    expect(stepCta(FlowStep.CHOOSE, 'm1')).toEqual({
+      labelKey: 'dashboard.cta.CHOOSE',
+      path: '/review/m1/activities',
+    });
   });
 });
 

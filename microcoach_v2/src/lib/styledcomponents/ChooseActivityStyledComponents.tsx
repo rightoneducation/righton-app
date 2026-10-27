@@ -82,7 +82,8 @@ export const ActivityCardRow = styled(Box, {
       },
 );
 
-// Figma: 551x475 rx32 white with the dashboard card's soft shadow, 25 in.
+// Figma: 551x475 rx32 white with the dashboard card's soft shadow, 25 in;
+// its sections 16 apart.
 export const ActivityCardSurface = styled(Box, {
   shouldForwardProp: noAligned,
 })<AlignedProps>(({ theme, isAligned }) => ({
@@ -91,10 +92,10 @@ export const ActivityCardSurface = styled(Box, {
         display: 'grid',
         gridRow: `span ${ACTIVITY_CARD_ROWS}`,
         gridTemplateRows: 'subgrid',
-        rowGap: theme.sizing.space5,
+        rowGap: theme.sizing.space3,
         alignContent: 'start',
       }
-    : { display: 'flex', flexDirection: 'column', gap: theme.sizing.space5 }),
+    : { display: 'flex', flexDirection: 'column', gap: theme.sizing.space3 }),
   padding: theme.sizing.space5,
   borderRadius: theme.sizing.space6,
   backgroundColor: theme.palette.designSystem.surface.white,

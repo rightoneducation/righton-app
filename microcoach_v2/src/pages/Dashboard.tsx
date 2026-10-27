@@ -135,8 +135,8 @@ export default function Dashboard({
   }, [weekSession, selectedSessionId, selectSession]);
 
   /*
-   * The saved plan is what separates UNDERSTAND from REASSESS, so a class that
-   * would read UNDERSTAND waits for it rather than showing Understand and then
+   * The saved plan is what moves UNDERSTAND or CHOOSE on to REASSESS, so a
+   * class that would read either waits for it rather than showing it and then
    * jumping. usePlanItems holds the plan at LOADING until the misconceptions
    * are READY, so a failed misconception fetch counts as an answer (no plan).
    */
@@ -149,7 +149,9 @@ export default function Dashboard({
       misconceptionsStatus === MicroCoachDataStatus.ERROR);
   const isStepPending =
     !sessionsKnown ||
-    (!sessionsFailed && stepWithoutPlan === FlowStep.UNDERSTAND && !isPlanKnown);
+    (!sessionsFailed &&
+      (stepWithoutPlan === FlowStep.UNDERSTAND || stepWithoutPlan === FlowStep.CHOOSE) &&
+      !isPlanKnown);
   const currentStep = deriveCurrentStep(
     weekSession,
     isPlanKnown && plan.planItems.length > 0,
@@ -160,8 +162,14 @@ export default function Dashboard({
     : buildPendingFlowSteps(t);
   // A failed session fetch falls back to the upload, which is always a valid
   // next action, rather than guessing a later step.
-  const cta = stepCta(isStepKnown ? currentStep : FlowStep.ASSESS);
+  const cta = stepCta(
+    isStepKnown ? currentStep : FlowStep.ASSESS,
+    weekSession?.selectedMisconceptionId,
+  );
   const isCtaLoading = isStepPending;
+  // Dev QA: while the class list or the step is still loading, the card says
+  // so ("Welcome to MicroCoach. Please wait…") instead of the upload prompt.
+  const isDataLoading = !classesKnown || isStepPending;
   const canOpenMyActivity = isStepKnown && hasChosenActivity(currentStep);
   // Shown while classes load (a teacher normally has them); hidden only once
   // the list is known to be empty or failed.
@@ -227,7 +235,11 @@ export default function Dashboard({
                     variant="h1"
                     sx={{ color: 'designSystem.surface.atlanticNavy' }}
                   >
-                    {t(hasUploads === true ? 'dashboard.titleReturning' : 'dashboard.title')}
+                    {t(
+                      hasUploads === true && !isDataLoading
+                        ? 'dashboard.titleReturning'
+                        : 'dashboard.title',
+                    )}
                   </Typography>
 
                   <Typography
@@ -236,8 +248,9 @@ export default function Dashboard({
                       color: 'designSystem.surface.atlanticNavy',
                       whiteSpace: 'pre-line',
                     }}
+                    {...(isDataLoading && { role: 'status', 'aria-live': 'polite' as const })}
                   >
-                    {t('dashboard.subtitle')}
+                    {t(isDataLoading ? 'dashboard.subtitleLoading' : 'dashboard.subtitle')}
                   </Typography>
                 </DashboardHeading>
 
@@ -366,7 +379,6 @@ export default function Dashboard({
 
             {/* rev2 LandingPage: This Week now lives below the upload card. */}
             <WeeklyProgressList
-              apiClients={apiClients}
               screenSize={screenSize}
               classrooms={classrooms}
               sessions={sessions}

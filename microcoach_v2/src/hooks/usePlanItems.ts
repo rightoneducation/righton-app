@@ -88,6 +88,9 @@ export function usePlanItems(
   // one when Select is clicked before the load answers, or twice quickly.
   const loadRef = useRef<Promise<void>>(Promise.resolve());
   const saveQueueRef = useRef<Promise<void>>(Promise.resolve());
+  // Each scope's saved plan as last fetched or saved here, so returning to a
+  // class or session (or the misconceptions reloading) does not refetch it.
+  const savedPlanCacheRef = useRef(new Map<string, IMicroCoachSavedPlan | null>());
 
   const scopeType = scope?.type ?? null;
   let scopeId: string | null = null;
@@ -128,6 +131,30 @@ export function usePlanItems(
 
     const activeScopeType = scopeType;
     const activeScopeId = scopeId;
+    const cacheKey = `${activeScopeType}:${activeScopeId}`;
+    const cache = savedPlanCacheRef.current;
+
+    // Known already: answer in this render, with no loading state between.
+    if (cache.has(cacheKey)) {
+      const savedPlan = cache.get(cacheKey) ?? null;
+      answeredScopeRef.current = activeScopeId;
+      savedPlanRef.current = savedPlan;
+      loadRef.current = Promise.resolve();
+      dispatch({
+        type: 'SET_PLAN_ITEMS',
+        payload: combineSavedPlanItemsWithBackendData(
+          savedPlan ? [savedPlan] : [],
+          misconceptions,
+        ),
+      });
+      dispatch({
+        type: 'SET_PLAN_ITEMS_STATUS',
+        payload: MicroCoachDataStatus.READY,
+      });
+      dispatch({ type: 'SET_PLAN_ITEMS_ERROR', payload: null });
+      return undefined;
+    }
+
     dispatch({ type: 'SET_PLAN_ITEMS', payload: [] });
     dispatch({
       type: 'SET_PLAN_ITEMS_STATUS',
@@ -143,13 +170,15 @@ export function usePlanItems(
             : await apiClients.savedPlan.getSavedPlansBySessionId(
                 activeScopeId,
               );
+        const savedPlan =
+          [...fetchedSavedPlans].sort(
+            (a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt),
+          )[0] ?? null;
+        cache.set(cacheKey, savedPlan);
         if (cancelled) return;
 
         answeredScopeRef.current = activeScopeId;
-        const savedPlan = [...fetchedSavedPlans].sort(
-          (a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt),
-        )[0];
-        savedPlanRef.current = savedPlan ?? null;
+        savedPlanRef.current = savedPlan;
         dispatch({
           type: 'SET_PLAN_ITEMS',
           payload: combineSavedPlanItemsWithBackendData(
@@ -231,6 +260,11 @@ export function usePlanItems(
 
         if (!savedPlan) throw new Error('The saved plan request returned no data');
         savedPlanRef.current = savedPlan;
+        // The other scope (class vs session) and the cross-class lists now
+        // describe an older plan: drop them so they are read afresh.
+        savedPlanCacheRef.current.clear();
+        savedPlanCacheRef.current.set(`${scopeType}:${scopeId}`, savedPlan);
+        dispatch({ type: 'INVALIDATE_CLASS_ACTIVITY' });
       };
 
       // One save at a time, in click order; a failed save doesn't block the next.
@@ -238,7 +272,7 @@ export function usePlanItems(
       saveQueueRef.current = run.catch(() => undefined);
       return run;
     },
-    [apiClients, classId, scopeId, scopeType],
+    [apiClients, classId, dispatch, scopeId, scopeType],
   );
 
   const persistUpdate = useCallback(

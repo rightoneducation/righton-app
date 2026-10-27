@@ -1,12 +1,19 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { IAPIClients } from '../api';
 import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
-import { IMicroCoachSavedPlan } from '../api/Models/IMicroCoachSavedPlan';
-import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
 import { deriveCurrentStep, isAwaitingResults, sessionForWeek } from '../lib/flowProgress';
 import { weekOf } from '../lib/weeks';
-import { IPastActivity, IWeeklyClassProgress } from '../lib/ActivityListModels';
+import {
+  IClassActivityData,
+  IClassRecord,
+  IPastActivity,
+  IWeeklyClassProgress,
+} from '../lib/ActivityListModels';
+import {
+  useMicroCoachDataDispatch,
+  useMicroCoachDataState,
+} from './context/useMicroCoachDataContext';
 
 export interface UseClassActivityResult {
   // Every class's place in the given week's flow.
@@ -15,23 +22,9 @@ export interface UseClassActivityResult {
   status: MicroCoachDataStatus;
 }
 
-// One class as fetched; the week's rows are built from these, so picking
-// another week does not refetch.
-interface ClassRecord {
-  classroom: IMicroCoachClassroom;
-  sessions: IMicroCoachSession[];
-  studentCount: number;
-  plans: IMicroCoachSavedPlan[];
-}
+const EMPTY: IClassActivityData = { perClass: [], past: [] };
 
-interface ClassActivity {
-  perClass: ClassRecord[];
-  past: IPastActivity[];
-}
-
-const EMPTY: ClassActivity = { perClass: [], past: [] };
-
-function weekRows(perClass: ClassRecord[], weekStart: string): IWeeklyClassProgress[] {
+function weekRows(perClass: IClassRecord[], weekStart: string): IWeeklyClassProgress[] {
   return perClass.map(({ classroom, sessions, studentCount, plans }) => {
     const session = sessionForWeek(sessions, weekStart);
     const hasSavedPlan =
@@ -42,6 +35,7 @@ function weekRows(perClass: ClassRecord[], weekStart: string): IWeeklyClassProgr
       className: classroom.name,
       studentCount,
       step: deriveCurrentStep(session, hasSavedPlan),
+      selectedMisconceptionId: session?.selectedMisconceptionId ?? null,
       isAwaitingResults: isAwaitingResults(session),
     };
   });
@@ -50,7 +44,7 @@ function weekRows(perClass: ClassRecord[], weekStart: string): IWeeklyClassProgr
 async function loadClassActivity(
   apiClients: IAPIClients,
   classrooms: IMicroCoachClassroom[],
-): Promise<ClassActivity> {
+): Promise<IClassActivityData> {
   const perClass = await Promise.all(
     classrooms.map(async (classroom) => {
       const [sessions, students, plans] = await Promise.all([
@@ -102,69 +96,101 @@ async function loadClassActivity(
     step,
     isAwaitingResults: isAwaitingResults(session),
     weekStart: weekOf(session.createdAt),
+    selectedMisconceptionId: session.selectedMisconceptionId,
   }));
 
   return { perClass, past };
 }
 
 /**
- * Home's weekly progress and Past Activities span every class, while the app-level
- * useSessions follows only the selected one, so this fetches on its own: per
- * class its sessions, students and saved plans (a teacher has a handful), then
- * one lookup per completed session's activity.
+ * Fetches the cross-class lists' data into the app store: per class its
+ * sessions, students and saved plans (a teacher has a handful), then one
+ * lookup per completed session's activity. Called once, in the root layout, so
+ * the answer outlives the pages: Home and Past Activities read it
+ * (useClassActivity) and switching class reads its sessions from it.
  *
- * `classrooms` is null until the class list has loaded. `weekStart` picks the
- * week the progress rows describe (Home's week dropdown).
+ * `classrooms` is null until the class list has loaded. It refetches when the
+ * class ids change or the data is marked stale, keeping the last answer on
+ * screen meanwhile, so a refresh never flashes back to a skeleton.
  */
-export function useClassActivity(
+export function useClassActivityLoader(
   apiClients: IAPIClients,
   classrooms: IMicroCoachClassroom[] | null,
-  weekStart: string | null = null,
-): UseClassActivityResult {
+): void {
+  const { classActivity, classActivityKey, classActivityStatus, classActivityStale } =
+    useMicroCoachDataState();
+  const dispatch = useMicroCoachDataDispatch();
   const requestKey =
     classrooms?.map((classroom) => classroom.id).join(',') ?? null;
-  const [result, setResult] = useState<{
-    key: string;
-    data: ClassActivity;
-    status: MicroCoachDataStatus;
-  } | null>(null);
+  const isAnswered =
+    classActivityKey === requestKey &&
+    !classActivityStale &&
+    classActivityStatus !== MicroCoachDataStatus.LOADING;
+  // Read inside the effect, not a reason to rerun it.
+  const hasDataRef = useRef(classActivity !== null);
+  hasDataRef.current = classActivity !== null;
 
   useEffect(() => {
-    if (requestKey === null || !classrooms) return undefined;
+    if (requestKey === null || !classrooms || isAnswered) return undefined;
     if (classrooms.length === 0) {
-      setResult({ key: requestKey, data: EMPTY, status: MicroCoachDataStatus.READY });
+      dispatch({
+        type: 'SET_CLASS_ACTIVITY',
+        payload: { key: requestKey, data: EMPTY, status: MicroCoachDataStatus.READY },
+      });
       return undefined;
     }
 
     let cancelled = false;
+    // With nothing on screen yet the lists show their skeletons; otherwise the
+    // last answer stays up until this one lands.
+    if (!hasDataRef.current) {
+      dispatch({
+        type: 'SET_CLASS_ACTIVITY',
+        payload: { key: requestKey, data: null, status: MicroCoachDataStatus.LOADING },
+      });
+    }
     loadClassActivity(apiClients, classrooms)
       .then((data) => {
-        if (!cancelled) {
-          setResult({ key: requestKey, data, status: MicroCoachDataStatus.READY });
-        }
+        if (cancelled) return;
+        dispatch({
+          type: 'SET_CLASS_ACTIVITY',
+          payload: { key: requestKey, data, status: MicroCoachDataStatus.READY },
+        });
       })
       .catch((error) => {
         console.error('Could not load class activity', error);
-        if (!cancelled) {
-          setResult({ key: requestKey, data: EMPTY, status: MicroCoachDataStatus.ERROR });
-        }
+        if (cancelled || hasDataRef.current) return;
+        dispatch({
+          type: 'SET_CLASS_ACTIVITY',
+          payload: { key: requestKey, data: EMPTY, status: MicroCoachDataStatus.ERROR },
+        });
       });
     return () => {
       cancelled = true;
     };
     // classrooms is read through requestKey, which changes whenever its ids do.
-  }, [apiClients, requestKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [apiClients, dispatch, isAnswered, requestKey]); // eslint-disable-line react-hooks/exhaustive-deps
+}
 
-  // Keep the last answer on screen while a refetch runs (the class list
-  // changed), so the list does not flash back to a spinner.
-  const isCurrent = result !== null && result.key === requestKey;
-  let status = MicroCoachDataStatus.LOADING;
-  if (isCurrent) status = result.status;
-  else if (result !== null && result.status === MicroCoachDataStatus.READY) {
-    status = MicroCoachDataStatus.READY;
-  }
+/**
+ * Home's weekly progress and Past Activities: the store's cross-class data,
+ * with `weekStart` picking the week the progress rows describe (Home's week
+ * dropdown). Opening either page shows what is held at once and refreshes it
+ * in the background, so a session the pipeline finished since still shows up.
+ */
+export function useClassActivity(weekStart: string | null = null): UseClassActivityResult {
+  const { classActivity, classActivityStatus } = useMicroCoachDataState();
+  const dispatch = useMicroCoachDataDispatch();
 
-  const perClass = result?.data.perClass;
+  // Only an answer already on screen is refreshed: on the first visit the
+  // loader is still fetching it.
+  const hasData = classActivity !== null;
+  useEffect(() => {
+    if (hasData) dispatch({ type: 'INVALIDATE_CLASS_ACTIVITY' });
+    // On arrival only, not every time the data lands.
+  }, [dispatch]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const perClass = classActivity?.perClass;
   const week = useMemo(
     () => (perClass && weekStart ? weekRows(perClass, weekStart) : []),
     [perClass, weekStart],
@@ -172,7 +198,10 @@ export function useClassActivity(
 
   return {
     week,
-    past: result?.data.past ?? [],
-    status,
+    past: classActivity?.past ?? [],
+    status:
+      classActivityStatus === MicroCoachDataStatus.IDLE
+        ? MicroCoachDataStatus.LOADING
+        : classActivityStatus,
   };
 }

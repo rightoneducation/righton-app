@@ -1,15 +1,16 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import AppContentRow from '../components/AppContentRow';
-import FlowNav, { FlowTabId, flowTabPath } from '../components/FlowNav';
+import { FlowStepperBand } from '../components/FlowHeader';
 import ReflectionDetailModal from '../components/ReflectionDetailModal';
 import ReflectSkeleton from '../components/ReflectSkeleton';
 import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
+import { FlowStep } from '../lib/flowProgress';
 import { IImplementedActivity } from '../lib/PipelineModels';
-import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import { UseSessionsResult } from '../hooks/useSessions';
+import { IPlanItemsState } from '../hooks/usePlanItems';
 import useReflectionResults from '../hooks/useReflectionResults';
 import { ScreenSizeProps } from '../lib/styledcomponents/ReviewStyledComponents';
 import {
@@ -36,12 +37,14 @@ import {
 import { useAllReady, useI18nReady } from '../hooks/readiness';
 import { getReflectionTrend } from '../lib/reflectionResults';
 
-type ReflectProps = ScreenSizeProps;
-export default function Reflect({ screenSize }: ReflectProps) {
+interface ReflectProps extends ScreenSizeProps {
+  sessions: UseSessionsResult;
+  plan: IPlanItemsState;
+}
+
+export default function Reflect({ screenSize, sessions, plan }: ReflectProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const navigate = useNavigate();
-  const { planItems } = useMicroCoachDataState();
   const { reflect, status } = useReflectionResults();
   const [selectedActivity, setSelectedActivity] =
     React.useState<IImplementedActivity | null>(null);
@@ -50,10 +53,6 @@ export default function Reflect({ screenSize }: ReflectProps) {
 
   if (!isReady) return <ReflectSkeleton screenSize={screenSize} />;
 
-  const handleTabSelect = (tabId: FlowTabId) => {
-    if (tabId === 'reflect') return;
-    navigate(flowTabPath(tabId, planItems.length > 0));
-  };
 
   const isLarge = screenSize === ScreenSize.LARGE;
 
@@ -72,13 +71,12 @@ export default function Reflect({ screenSize }: ReflectProps) {
         }}
       >
         <ReflectPageContent>
-          <FlowNav
+          {/* The flow pages' stepper row (rev2 Stepper), as on Review. */}
+          <FlowStepperBand
             screenSize={screenSize}
-            activeTabId="reflect"
-            actionLabelKey="flowNav.home"
-            compactAction
-            onTabSelect={handleTabSelect}
-            onAction={() => navigate('/')}
+            sessions={sessions}
+            plan={plan}
+            page={FlowStep.REFLECT}
           />
           <ReflectResultsSection>
             <ReflectHeading>

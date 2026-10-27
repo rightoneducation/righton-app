@@ -7,12 +7,11 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ClassStepTrack from './ClassStepTrack';
 import LoadingSlot from './LoadingSlot';
 import { WeeklyProgressSkeleton } from './skeletons/ActivityListSkeleton';
-import { IAPIClients } from '../api';
 import { UseClassroomsResult } from '../hooks/useClassrooms';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { useClassActivity } from '../hooks/useClassActivity';
 import { useOpenClassSession } from '../hooks/useOpenClassSession';
-import { RESUME_PATH } from '../lib/flowProgress';
+import { resumePath } from '../lib/flowProgress';
 import { IWeeklyClassProgress } from '../lib/ActivityListModels';
 import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import { formatSchoolWeek } from '../lib/weeks';
@@ -43,7 +42,6 @@ const statusKey = (row: IWeeklyClassProgress) =>
   row.isAwaitingResults ? 'AWAITING' : row.step;
 
 interface WeeklyProgressListProps extends ScreenSizeProps {
-  apiClients: IAPIClients;
   classrooms: UseClassroomsResult;
   sessions: UseSessionsResult;
   // The week picked on Home: the heading and every class's step follow it.
@@ -53,7 +51,6 @@ interface WeeklyProgressListProps extends ScreenSizeProps {
 // Home's "Weekly Activity Progress" (rev2 LandingPage, was the This Week
 // page): every class's place in the picked week's flow.
 export default function WeeklyProgressList({
-  apiClients,
   screenSize,
   classrooms,
   sessions,
@@ -64,11 +61,7 @@ export default function WeeklyProgressList({
   const classesFailed = classrooms.status === MicroCoachDataStatus.ERROR;
   const classesKnown =
     classrooms.status === MicroCoachDataStatus.READY || classesFailed;
-  const activity = useClassActivity(
-    apiClients,
-    classesKnown ? classrooms.classrooms : null,
-    weekStart,
-  );
+  const activity = useClassActivity(weekStart);
   const openClassSession = useOpenClassSession(classrooms, sessions);
 
   const isLoading = activity.status === MicroCoachDataStatus.LOADING;
@@ -168,18 +161,16 @@ export default function WeeklyProgressList({
                       <CardActionButton
                         disableElevation
                         endIcon={<ArrowForwardIcon />}
-                        onClick={() =>
+                        onClick={() => {
+                          const path = resumePath(row.step, row.selectedMisconceptionId);
                           openClassSession({
                             classId: row.classId,
                             sessionId: row.sessionId,
-                            path: RESUME_PATH[row.step],
+                            path,
                             // The upload pre-fills the week it is for.
-                            state:
-                              RESUME_PATH[row.step].startsWith('/upload-')
-                                ? { weekStart }
-                                : undefined,
-                          })
-                        }
+                            state: path.startsWith('/upload-') ? { weekStart } : undefined,
+                          });
+                        }}
                       >
                         {t(`weeklyProgress.action.${row.step}`)}
                       </CardActionButton>

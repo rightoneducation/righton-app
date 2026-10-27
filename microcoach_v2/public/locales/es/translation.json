@@ -152,12 +152,14 @@
     "title": "Bienvenido a MicroCoach",
     "titleReturning": "Bienvenido de nuevo a MicroCoach",
     "subtitle": "Sube tus archivos MIU del lunes para comprender mejor\nel pensamiento de tus estudiantes y recibir los próximos pasos recomendados.",
+    "subtitleLoading": "Espera mientras cargamos tus datos.",
     "classPrompt": "¿Con qué clase trabajas hoy?",
     "moreClasses": "Más",
     "weekLabel": "Semana",
     "cta": {
       "ASSESS": "Sube los archivos MIU del lunes para analizar",
       "UNDERSTAND": "Revisar patrones de conceptos erróneos",
+      "CHOOSE": "Elige tu próxima actividad",
       "REASSESS": "Subir resultados de la reevaluación",
       "REFLECT": "Reflexionar sobre el impacto"
     },

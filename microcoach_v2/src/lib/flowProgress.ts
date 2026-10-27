@@ -26,10 +26,9 @@ export const FLOW_ORDER: FlowStep[] = [
 ];
 
 /*
- * Nothing persisted separates "reviewing misconceptions" from "choosing an
- * activity" — both are a GENERATED session with no saved plan — so CHOOSE is
- * never the current step. Saving a plan moves the class straight from
- * UNDERSTAND to REASSESS.
+ * Picking a misconception on Review records it on the session
+ * (selectedMisconceptionId), which moves the class from UNDERSTAND to CHOOSE;
+ * saving a plan moves it on to REASSESS.
  *
  * Checked latest-signal-first, so a session that has moved on is placed by how
  * far it got, not by the first gap.
@@ -49,8 +48,14 @@ export function deriveCurrentStep(
   if (session.status === SessionStatus.REASSESS_INGESTED) return FlowStep.REASSESS;
   if (session.postPpqAssessmentId) return FlowStep.REFLECT;
   if (hasSavedPlan) return FlowStep.REASSESS;
+  if (session.selectedMisconceptionId) return FlowStep.CHOOSE;
   return FlowStep.UNDERSTAND;
 }
+
+// The activities for the picked misconception: where CHOOSE resumes. Without
+// one (an older session) it falls back to the misconceptions.
+const choosePath = (misconceptionId: string | null | undefined) =>
+  misconceptionId ? `/review/${misconceptionId}/activities` : '/review';
 
 // Whether the class has an activity to show on My Activity: saving a plan is
 // what moves it on to REASSESS. Until then the button is greyed out (rev2
@@ -58,7 +63,7 @@ export function deriveCurrentStep(
 // Where a class's action button goes for its current step (Home, and Past
 // Activities' cards). The upload covers both the first upload and the
 // reassessment; a finished week opens its results.
-export const RESUME_PATH: Record<FlowStep, string> = {
+const RESUME_PATH: Record<FlowStep, string> = {
   [FlowStep.ASSESS]: '/upload-miu',
   [FlowStep.UNDERSTAND]: '/review',
   [FlowStep.CHOOSE]: '/review',
@@ -66,6 +71,15 @@ export const RESUME_PATH: Record<FlowStep, string> = {
   [FlowStep.REFLECT]: '/reflect',
   [FlowStep.DONE]: '/reflect',
 };
+
+export function resumePath(
+  step: FlowStep,
+  selectedMisconceptionId?: string | null,
+): string {
+  return step === FlowStep.CHOOSE
+    ? choosePath(selectedMisconceptionId)
+    : RESUME_PATH[step];
+}
 
 export function hasChosenActivity(step: FlowStep): boolean {
   return [FlowStep.REASSESS, FlowStep.REFLECT, FlowStep.DONE].includes(step);
@@ -105,6 +119,31 @@ export function buildFlowSteps(current: FlowStep, t: Translate): IFlowStep[] {
   });
 }
 
+/*
+ * The flow pages' track follows the teacher (dev QA 2026-10-27): the page they
+ * are on is current and everything before it complete, while steps after it
+ * stay complete if the class has already been through them, so they still
+ * link forward.
+ */
+export function buildFlowStepsForPage(
+  page: FlowStep,
+  progress: FlowStep,
+  t: Translate,
+): IFlowStep[] {
+  const stepIndex = (step: FlowStep) =>
+    step === FlowStep.DONE ? FLOW_ORDER.length : FLOW_ORDER.indexOf(step);
+  const pageIndex = stepIndex(page);
+  const progressIndex = stepIndex(progress);
+  return buildFlowSteps(page, t).map((step, index) => {
+    if (index <= pageIndex || index >= progressIndex) return step;
+    return {
+      ...step,
+      state: 'COMPLETE',
+      isClickable: true,
+    };
+  });
+}
+
 // The breadcrumb before the class's sessions are known: every label, none
 // marked current and none linked, so it renders at once and is corrected when
 // the query answers rather than guessing a step that may jump.
@@ -118,11 +157,18 @@ export function buildPendingFlowSteps(t: Translate): IFlowStep[] {
 
 // The dashboard's one call to action follows the current step. REASSESS is
 // the post-activity upload (/upload-reassess); DONE starts the next cycle the same way.
-export function stepCta(current: FlowStep): { labelKey: string; path: string } {
+export function stepCta(
+  current: FlowStep,
+  selectedMisconceptionId?: string | null,
+): { labelKey: string; path: string } {
   switch (current) {
     case FlowStep.UNDERSTAND:
-    case FlowStep.CHOOSE:
       return { labelKey: 'dashboard.cta.UNDERSTAND', path: '/review' };
+    case FlowStep.CHOOSE:
+      return {
+        labelKey: 'dashboard.cta.CHOOSE',
+        path: choosePath(selectedMisconceptionId),
+      };
     case FlowStep.REASSESS:
       return { labelKey: 'dashboard.cta.REASSESS', path: '/upload-reassess' };
     case FlowStep.REFLECT:

@@ -3,10 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import FlowStepper from './FlowStepper';
 import {
-  buildFlowSteps,
+  buildFlowStepsForPage,
   deriveCurrentStep,
   FlowStep,
-  FLOW_ORDER,
   hasChosenActivity,
 } from '../lib/flowProgress';
 import {
@@ -25,7 +24,7 @@ import MathTypography from './MathTypography';
 interface FlowStepperBandProps extends ScreenSizeProps {
   sessions: UseSessionsResult;
   plan: IPlanItemsState;
-  // The step this page belongs to; the track never shows the class behind it.
+  // The step this page belongs to: the track shows it as current.
   page: FlowStep;
 }
 
@@ -46,15 +45,9 @@ export function FlowStepperBand({
     sessions.selectedSession,
     plan.planItems.length > 0,
   );
-  // The track follows the teacher: whichever is further along, the class's
-  // saved progress or the page they are on. Saved progress alone never
-  // reaches CHOOSE (deriveCurrentStep), and revisiting an earlier page should
-  // not move the class backwards.
-  const stepIndex = (step: FlowStep) =>
-    step === FlowStep.DONE ? FLOW_ORDER.length : FLOW_ORDER.indexOf(step);
-  const shownStep =
-    stepIndex(page) > stepIndex(currentStep) ? page : currentStep;
-  const flowSteps = buildFlowSteps(shownStep, t);
+  // The track follows the teacher: the page they are on is current, and steps
+  // past it the class has already done stay complete (buildFlowStepsForPage).
+  const flowSteps = buildFlowStepsForPage(page, currentStep, t);
 
   return (
     <StepperBand screenSize={screenSize}>

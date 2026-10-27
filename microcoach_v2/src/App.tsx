@@ -13,9 +13,14 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { APIClients, AppType, Environment } from './api';
 import Theme from './lib/Theme';
-import { GOOGLE_OAUTH_CLIENT_ID, ScreenType } from './lib/MicroCoachModels';
+import {
+  GOOGLE_OAUTH_CLIENT_ID,
+  MicroCoachDataStatus,
+  ScreenType,
+} from './lib/MicroCoachModels';
 import { useAPIClients } from './hooks/useAPIClients';
 import { useAuthResolver } from './hooks/useAuthActions';
+import { useClassActivityLoader } from './hooks/useClassActivity';
 import { useClassrooms } from './hooks/useClassrooms';
 import { useMisconceptions } from './hooks/useMisconceptions';
 import { PlanItemsScope, usePlanItems } from './hooks/usePlanItems';
@@ -44,9 +49,19 @@ function RootLayout({ apiClients }: { apiClients: APIClients }) {
   // Google signup leg (/auth → AuthCallback) never resolves.
   useAuthResolver(apiClients, user);
   const classrooms = useClassrooms(apiClients, user.userProfile?.id ?? null);
+  // Every class's sessions, students and plans, fetched once for the session
+  // rather than per page: Home, Past Activities and class switching read it.
+  const classesKnown =
+    classrooms.status === MicroCoachDataStatus.READY ||
+    classrooms.status === MicroCoachDataStatus.ERROR;
+  useClassActivityLoader(apiClients, classesKnown ? classrooms.classrooms : null);
   const sessions = useSessions(apiClients, classrooms.selectedClassroomId);
 
-  useMisconceptions(apiClients, sessions.selectedSessionId);
+  useMisconceptions(
+    apiClients,
+    sessions.selectedSessionId,
+    sessions.selectedSession?.status ?? null,
+  );
 
   let planScope: PlanItemsScope = null;
   if (sessions.selectedSessionId) {

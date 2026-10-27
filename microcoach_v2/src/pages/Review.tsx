@@ -140,6 +140,9 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
   };
 
   const handleSelect = (misconceptionId: string) => {
+    // Saved on the session, so Home and the stepper place the class at Select
+    // Activity, and its CTA comes back to this misconception's activities.
+    sessions.selectMisconception(misconceptionId);
     // Close before navigating so react-modal runs its own close path and
     // restores #root's aria-hidden, rather than being torn down mid-flight.
     setSelected(null);
