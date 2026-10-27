@@ -45,7 +45,7 @@ interface ReflectProps extends ScreenSizeProps {
 export default function Reflect({ screenSize, sessions, plan }: ReflectProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const { reflect, status } = useReflectionResults();
+  const { reflect, status } = useReflectionResults(sessions.selectedSession);
   const [selectedActivity, setSelectedActivity] =
     React.useState<IImplementedActivity | null>(null);
   const dataReady = status === MicroCoachDataStatus.READY;

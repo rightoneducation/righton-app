@@ -65,6 +65,7 @@ import {
 } from '../lib/styledcomponents/ProfileStyledComponents';
 import type { ToastTone } from '../lib/styledcomponents/ProfileStyledComponents';
 import { FieldErrorIcon } from '../lib/styledcomponents/SignUpStyledComponents';
+import { classroomList } from '../lib/selectors';
 
 const NAME_ERROR_ID = 'profile-name-error';
 const ADD_CLASS_ERROR_ID = 'profile-add-class-error';
@@ -384,7 +385,9 @@ function PasswordPanel({ apiClients }: PasswordPanelProps) {
  */
 function AddClassPanel({ apiClients }: { apiClients: IAPIClients }) {
   const { t } = useTranslation();
-  const { userProfile, classrooms, selectedClassroomId } = useMicroCoachDataState();
+  const state = useMicroCoachDataState();
+  const { userProfile } = state;
+  const classrooms = classroomList(state);
   const dispatch = useMicroCoachDataDispatch();
   const [draftName, setDraftName] = React.useState<string | null>(null);
   const [isAdding, setIsAdding] = React.useState(false);
@@ -441,10 +444,8 @@ function AddClassPanel({ apiClients }: { apiClients: IAPIClients }) {
       setIsToastOpen(true);
       return;
     }
-    dispatch({ type: 'SET_CLASSROOMS', payload: [...classrooms, created] });
-    if (!selectedClassroomId) {
-      dispatch({ type: 'SET_SELECTED_CLASSROOM_ID', payload: created.id });
-    }
+    // With no class selected yet, the first class is the selected one.
+    dispatch({ type: 'UPSERT_ROWS', table: 'classrooms', rows: [created] });
     close();
   };
 
@@ -575,7 +576,9 @@ export default function Profile({
 }: ProfileProps) {
   const { t, i18n } = useTranslation();
   const isI18nReady = useI18nReady();
-  const { userProfile, classrooms, selectedClassroomId } = useMicroCoachDataState();
+  const state = useMicroCoachDataState();
+  const { userProfile } = state;
+  const classrooms = classroomList(state);
   const dispatch = useMicroCoachDataDispatch();
   const isLarge = screenSize === ScreenSize.LARGE;
 
@@ -618,14 +621,8 @@ export default function Profile({
       console.error('Could not delete the class', error);
       return false;
     }
-    const remaining = classrooms.filter((classroom) => classroom.id !== classId);
-    dispatch({ type: 'SET_CLASSROOMS', payload: remaining });
-    if (selectedClassroomId === classId) {
-      dispatch({
-        type: 'SET_SELECTED_CLASSROOM_ID',
-        payload: remaining[0]?.id ?? null,
-      });
-    }
+    // A removed selected class falls back to the first one left (selectors).
+    dispatch({ type: 'REMOVE_ROWS', table: 'classrooms', ids: [classId] });
     return true;
   };
   const remove = useConfirmRemove(removeClass);

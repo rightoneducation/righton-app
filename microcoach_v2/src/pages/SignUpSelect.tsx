@@ -102,7 +102,7 @@ export default function SignUpSelect({
         console.error('Signup reached class save with no User row id');
       }
       setClassIdsByName(ids);
-      dispatch({ type: 'SET_CLASSROOMS', payload: createdRows });
+      dispatch({ type: 'REPLACE_ROWS', table: 'classrooms', rows: createdRows });
       setSignedInUser({
         ...(userProfile ?? {}),
         email: state.email,
@@ -122,7 +122,7 @@ export default function SignUpSelect({
   const handleUpload = () => {
     const selectedId = selectedClass ? classIdsByName[selectedClass] : undefined;
     if (selectedId) {
-      dispatch({ type: 'SET_SELECTED_CLASSROOM_ID', payload: selectedId });
+      dispatch({ type: 'SELECT', classId: selectedId, sessionId: null });
     }
     // The upload screen is a later flow; the prototype hands off to the app.
     // No reset needed: leaving /signup unmounts the wizard and its state.

@@ -21,7 +21,7 @@ import {
   TitleBlock,
 } from '../lib/styledcomponents/ChooseActivityStyledComponents';
 import { useI18nReady } from '../hooks/readiness';
-import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import { useSessionMisconceptions } from '../hooks/useSessionMisconceptions';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { IPlanItemsState } from '../hooks/usePlanItems';
 import { IMicroCoachActivity } from '../api/Models/IMicroCoachActivity';
@@ -53,7 +53,9 @@ export default function ChooseActivity({
   const navigate = useNavigate();
   const isI18nReady = useI18nReady();
   const { misconceptionId } = useParams();
-  const { misconceptions, misconceptionsStatus } = useMicroCoachDataState();
+  const { misconceptions, status: misconceptionsStatus } = useSessionMisconceptions(
+    sessions.selectedSession,
+  );
   const [pendingActivity, setPendingActivity] =
     React.useState<IMicroCoachActivity | null>(null);
 

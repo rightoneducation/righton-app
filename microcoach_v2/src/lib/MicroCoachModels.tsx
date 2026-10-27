@@ -1,9 +1,10 @@
+import { IMicroCoachActivity } from '../api/Models/IMicroCoachActivity';
 import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
+import { IMicroCoachSavedPlan } from '../api/Models/IMicroCoachSavedPlan';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
+import { IMicroCoachStudent } from '../api/Models/IMicroCoachStudent';
 import { IUser } from '../api/Models/IUser';
-import { IPlanItem } from './PipelineModels';
-import { IClassActivityData } from './ActivityListModels';
 
 // Auth lifecycle states, mirroring central_v2's UserStatusType.
 export enum UserStatusType {
@@ -72,52 +73,70 @@ export enum MicroCoachDataStatus {
   ERROR = 'error',
 }
 
-export interface IMicroCoachDataState {
+/** One fetch's state, keyed by what it fetched (see `loadKeys`). */
+export interface ILoadState {
+  status: MicroCoachDataStatus;
+  error: Error | null;
+  // Shown as is while a background refetch replaces it.
+  stale: boolean;
+}
+
+// The keys `loads` is indexed by: every status names exactly what it describes.
+export const loadKeys = {
+  classrooms: (userId: string) => `classrooms:${userId}`,
+  // A class's sessions, students and saved plans.
+  classChildren: (classId: string) => `class:${classId}`,
+  // A session's misconceptions and their activities. The session's status is
+  // part of the key, so the pipeline moving it on asks for them again.
+  sessionChildren: (sessionId: string, status: string | null) =>
+    `session:${sessionId}@${status ?? ''}`,
+};
+
+// A misconception as stored: its activities are their own table, joined back
+// on by lib/selectors.ts.
+export type MisconceptionRow = Omit<IMicroCoachMisconception, 'nextStepActivities'>;
+
+/**
+ * The schema's tables, one row per id. Each row is held once; every screen's
+ * shape (a class's sessions, Home's weekly rows, a plan's items) is joined
+ * from these during render by lib/selectors.ts, never stored.
+ */
+export interface IMicroCoachTables {
+  classrooms: Record<string, IMicroCoachClassroom>;
+  students: Record<string, IMicroCoachStudent>;
+  sessions: Record<string, IMicroCoachSession>;
+  savedPlans: Record<string, IMicroCoachSavedPlan>;
+  misconceptions: Record<string, MisconceptionRow>;
+  activities: Record<string, IMicroCoachActivity>;
+}
+
+export type TableName = keyof IMicroCoachTables;
+export type TableRow<T extends TableName> = IMicroCoachTables[T][string];
+
+export interface IMicroCoachDataState extends IMicroCoachTables {
   userProfile: IUser | null;
   userStatus: UserStatusType;
   userErrorString: string;
-  classrooms: IMicroCoachClassroom[];
-  selectedClassroomId: string | null;
-  classroomsStatus: MicroCoachDataStatus;
-  classroomsError: Error | null;
-  sessions: IMicroCoachSession[];
-  selectedSessionId: string | null;
-  sessionsStatus: MicroCoachDataStatus;
-  sessionsError: Error | null;
-  misconceptions: IMicroCoachMisconception[];
-  misconceptionsStatus: MicroCoachDataStatus;
-  misconceptionsError: Error | null;
-  planItems: IPlanItem[];
-  planItemsStatus: MicroCoachDataStatus;
-  planItemsError: Error | null;
-  // The cross-class lists' data (useClassActivityLoader), for the class ids
-  // in classActivityKey. Stale: shown as is while a refetch runs.
-  classActivity: IClassActivityData | null;
-  classActivityKey: string | null;
-  classActivityStatus: MicroCoachDataStatus;
-  classActivityStale: boolean;
+  loads: Record<string, ILoadState>;
+  // What the teacher is looking at, set together in one action. Either may
+  // point at a row that is gone; the selectors fall back (first class, the
+  // class's latest session) rather than an effect correcting it.
+  selection: { classId: string | null; sessionId: string | null };
+  // Bumped on sign-out: a fetch that started before it drops its answer.
+  epoch: number;
 }
 
 export const initMicroCoachDataState: IMicroCoachDataState = {
   userProfile: null,
   userStatus: UserStatusType.LOADING,
   userErrorString: '',
-  classrooms: [],
-  selectedClassroomId: null,
-  classroomsStatus: MicroCoachDataStatus.IDLE,
-  classroomsError: null,
-  sessions: [],
-  selectedSessionId: null,
-  sessionsStatus: MicroCoachDataStatus.IDLE,
-  sessionsError: null,
-  misconceptions: [],
-  misconceptionsStatus: MicroCoachDataStatus.IDLE,
-  misconceptionsError: null,
-  planItems: [],
-  planItemsStatus: MicroCoachDataStatus.IDLE,
-  planItemsError: null,
-  classActivity: null,
-  classActivityKey: null,
-  classActivityStatus: MicroCoachDataStatus.IDLE,
-  classActivityStale: false,
+  classrooms: {},
+  students: {},
+  sessions: {},
+  savedPlans: {},
+  misconceptions: {},
+  activities: {},
+  loads: {},
+  selection: { classId: null, sessionId: null },
+  epoch: 0,
 };

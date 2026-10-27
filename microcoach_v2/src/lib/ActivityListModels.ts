@@ -1,11 +1,8 @@
-import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
-import { IMicroCoachSavedPlan } from '../api/Models/IMicroCoachSavedPlan';
-import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { FlowStep } from './flowProgress';
 import { weekOf } from './weeks';
 
 // The rows behind This Week and Past Activities, assembled across every class
-// by hooks/useClassActivity.ts.
+// from the store's tables by lib/selectors.ts.
 
 /** One class's place in this week's loop (dashboard/v2 Dashboard2). */
 export interface IWeeklyClassProgress {
@@ -41,24 +38,6 @@ export interface IPastActivity {
   weekStart: string;
   // The misconception picked on Review, where a CHOOSE row resumes.
   selectedMisconceptionId: string | null;
-}
-
-/** One class as fetched for the cross-class lists (useClassActivity). */
-export interface IClassRecord {
-  classroom: IMicroCoachClassroom;
-  sessions: IMicroCoachSession[];
-  studentCount: number;
-  plans: IMicroCoachSavedPlan[];
-}
-
-/**
- * Every class's sessions, students and saved plans, fetched once and kept in
- * the app store: Home's weekly progress and Past Activities are built from
- * it, and switching class reads its sessions from it rather than refetching.
- */
-export interface IClassActivityData {
-  perClass: IClassRecord[];
-  past: IPastActivity[];
 }
 
 export enum ActivitySortOrder {

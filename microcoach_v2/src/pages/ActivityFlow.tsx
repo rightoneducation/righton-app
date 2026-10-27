@@ -36,7 +36,7 @@ import {
 } from '../lib/styledcomponents/ActivityFlowStyledComponents';
 import { UnderstandPage } from '../lib/styledcomponents/UnderstandStyledComponents';
 import { useI18nReady } from '../hooks/readiness';
-import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import { useSessionMisconceptions } from '../hooks/useSessionMisconceptions';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { IPlanItemsState } from '../hooks/usePlanItems';
 
@@ -216,7 +216,9 @@ export default function ActivityFlow({ screenSize, sessions, plan }: ActivityFlo
   const { t } = useTranslation();
   const isI18nReady = useI18nReady();
   const { activityId, phase } = useParams();
-  const { misconceptions, misconceptionsStatus } = useMicroCoachDataState();
+  const { misconceptions, status: misconceptionsStatus } = useSessionMisconceptions(
+    sessions.selectedSession,
+  );
 
   if (!isI18nReady) return null;
 

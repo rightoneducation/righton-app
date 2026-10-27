@@ -37,18 +37,15 @@ import { UseSessionsResult } from '../hooks/useSessions';
 import { useI18nReady } from '../hooks/readiness';
 import { useSidebarNav } from '../hooks/useSidebarNav';
 import { useHasUploads } from '../hooks/useHasUploads';
-import { IPlanItemsState } from '../hooks/usePlanItems';
+import { useClassActivity } from '../hooks/useClassActivity';
+import { useRefreshClassesOnMount } from '../hooks/loaders';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
-import { IAPIClients } from '../api';
 import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import {
   FlowStep,
   buildFlowSteps,
   buildPendingFlowSteps,
-  deriveCurrentStep,
   hasChosenActivity,
-  sessionForWeek,
-  sortSessionsLatestFirst,
   stepCta,
 } from '../lib/flowProgress';
 import { currentSchoolWeek, formatSchoolWeek, schoolWeeks } from '../lib/weeks';
@@ -61,26 +58,21 @@ const CHIP_ROW_HEIGHT = 50;
 const CHIP_SKELETON_WIDTH = 140;
 
 interface DashboardProps extends ScreenSizeProps {
-  apiClients: IAPIClients;
   classrooms: UseClassroomsResult;
   sessions: UseSessionsResult;
-  plan: IPlanItemsState;
 }
 
 export default function Dashboard({
-  apiClients,
   screenSize,
   classrooms,
   sessions,
-  plan,
 }: DashboardProps) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { userProfile, misconceptionsStatus } = useMicroCoachDataState();
+  const { userProfile } = useMicroCoachDataState();
   const classList = classrooms.classrooms;
   const selectedClassId = classrooms.selectedClassroomId ?? '';
   const selectClass = classrooms.selectClassroom;
-  const sessionList = sortSessionsLatestFirst(sessions.sessions);
 
   /*
    * Only translations hold the page back. Everything else renders at once and
@@ -99,19 +91,7 @@ export default function Dashboard({
     classrooms.status === MicroCoachDataStatus.ERROR;
   const classesFailed = classrooms.status === MicroCoachDataStatus.ERROR;
   const hasClasses = classList.length > 0;
-  // Sessions sit at IDLE when there is no class to load them for, which is an
-  // answer once the class list is in.
-  const sessionsKnown =
-    sessions.status === MicroCoachDataStatus.READY ||
-    sessions.status === MicroCoachDataStatus.ERROR ||
-    (classesKnown && !classrooms.selectedClassroomId);
-  const sessionsFailed = sessions.status === MicroCoachDataStatus.ERROR;
-  const hasUploads = useHasUploads(
-    apiClients,
-    userProfile?.id ?? null,
-    classesKnown ? classList.map((classroom) => classroom.id) : null,
-    sessionList.length > 0,
-  );
+  const hasUploads = useHasUploads(userProfile?.id ?? null, classesKnown);
 
   const [moreAnchor, setMoreAnchor] = React.useState<HTMLElement | null>(null);
   /*
@@ -123,49 +103,29 @@ export default function Dashboard({
    */
   const [pickedWeek, setPickedWeek] = React.useState<string | null>(null);
   const weekStart = pickedWeek ?? currentSchoolWeek();
-  const weekSession = sessionForWeek(sessionList, weekStart);
-
-  // Review, Select Activity and the rest read the app-wide selected session,
-  // so it follows the week's session; the plan below is that session's.
-  const { selectSession, selectedSessionId } = sessions;
-  React.useEffect(() => {
-    if (weekSession && weekSession.id !== selectedSessionId) {
-      selectSession(weekSession.id);
-    }
-  }, [weekSession, selectedSessionId, selectSession]);
 
   /*
-   * The saved plan is what moves UNDERSTAND or CHOOSE on to REASSESS, so a
-   * class that would read either waits for it rather than showing it and then
-   * jumping. usePlanItems holds the plan at LOADING until the misconceptions
-   * are READY, so a failed misconception fetch counts as an answer (no plan).
+   * The card shows the selected class's row of the same joins as Weekly
+   * Activity Progress, read from the store: picking a class or a week only
+   * picks another row, and runs no query. Home refreshes every class's rows
+   * in the background on arrival, so a session the pipeline finished since
+   * shows up.
    */
-  const stepWithoutPlan = deriveCurrentStep(weekSession, false);
-  const isPlanKnown =
-    !!weekSession &&
-    weekSession.id === selectedSessionId &&
-    (plan.status === MicroCoachDataStatus.READY ||
-      plan.status === MicroCoachDataStatus.ERROR ||
-      misconceptionsStatus === MicroCoachDataStatus.ERROR);
+  useRefreshClassesOnMount();
+  const activity = useClassActivity(weekStart);
+  const classRow = activity.week.find((row) => row.classId === selectedClassId);
+  const activityFailed = activity.status === MicroCoachDataStatus.ERROR;
   const isStepPending =
-    !sessionsKnown ||
-    (!sessionsFailed &&
-      (stepWithoutPlan === FlowStep.UNDERSTAND || stepWithoutPlan === FlowStep.CHOOSE) &&
-      !isPlanKnown);
-  const currentStep = deriveCurrentStep(
-    weekSession,
-    isPlanKnown && plan.planItems.length > 0,
-  );
-  const isStepKnown = !isStepPending && !sessionsFailed;
+    !classesKnown || activity.status === MicroCoachDataStatus.LOADING;
+  const isStepKnown = !isStepPending && !activityFailed;
+  // A failed fetch falls back to the upload, which is always a valid next
+  // action, rather than guessing a later step.
+  const currentStep =
+    isStepKnown && classRow ? classRow.step : FlowStep.ASSESS;
   const flowSteps = isStepKnown
     ? buildFlowSteps(currentStep, t)
     : buildPendingFlowSteps(t);
-  // A failed session fetch falls back to the upload, which is always a valid
-  // next action, rather than guessing a later step.
-  const cta = stepCta(
-    isStepKnown ? currentStep : FlowStep.ASSESS,
-    weekSession?.selectedMisconceptionId,
-  );
+  const cta = stepCta(currentStep, classRow?.selectedMisconceptionId);
   const isCtaLoading = isStepPending;
   // Dev QA: while the class list or the step is still loading, the card says
   // so ("Welcome to MicroCoach. Please wait…") instead of the upload prompt.
@@ -189,7 +149,17 @@ export default function Dashboard({
 
   const sidebar = useSidebarNav();
 
+  // Review, Select Activity and the rest read the app-wide selection: leaving
+  // Home points it at this class's session for the picked week (none yet:
+  // the class's latest).
+  const selectWeekSession = () => {
+    if (selectedClassId) {
+      sessions.select(selectedClassId, classRow?.sessionId ?? null);
+    }
+  };
+
   const handleCta = () => {
+    selectWeekSession();
     if (cta.path === '/upload-miu' || cta.path === '/upload-reassess') {
       navigate(cta.path, { state: { weekStart } });
     } else {
@@ -223,7 +193,10 @@ export default function Dashboard({
                 <MyActivityButton
                   disableElevation
                   disabled={!canOpenMyActivity}
-                  onClick={() => navigate('/myactivity')}
+                  onClick={() => {
+                    selectWeekSession();
+                    navigate('/myactivity');
+                  }}
                 >
                   {t('dashboard.myActivity')}
                 </MyActivityButton>

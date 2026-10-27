@@ -1,17 +1,20 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useMemo } from 'react';
 import { IAPIClients } from '../api';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
-import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
-import { sortSessionsLatestFirst } from '../lib/flowProgress';
+import { loadKeys, MicroCoachDataStatus } from '../lib/MicroCoachModels';
+import { classSessions, selectedClassId, selectedSession } from '../lib/selectors';
 import {
   useMicroCoachDataDispatch,
   useMicroCoachDataState,
 } from './context/useMicroCoachDataContext';
 
 export interface UseSessionsResult {
+  // The selected class's sessions, latest first.
   sessions: IMicroCoachSession[];
   selectedSessionId: string | null;
   selectedSession: IMicroCoachSession | null;
+  // Selects a class and one of its sessions together (null: its latest).
+  select: (classId: string, sessionId: string | null) => void;
   selectSession: (sessionId: string) => void;
   // Records the misconception picked on Review on the selected session, which
   // moves the class to Select Activity. Optimistic; rolled back on failure.
@@ -20,158 +23,68 @@ export interface UseSessionsResult {
   error: Error | null;
 }
 
-export function useSessions(
-  apiClients: IAPIClients,
-  classId: string | null,
-): UseSessionsResult {
-  const {
-    sessions,
-    selectedSessionId,
-    sessionsStatus,
-    sessionsError,
-    classActivity,
-    classActivityStatus,
-  } = useMicroCoachDataState();
+/** The selected class's sessions, read from the store (useClassChildrenLoader fills it). */
+export function useSessions(apiClients: IAPIClients): UseSessionsResult {
+  const { classrooms, sessions, selection, loads } = useMicroCoachDataState();
   const dispatch = useMicroCoachDataDispatch();
-  // The cross-class data already holds every class's sessions; read inside
-  // the effect so it answers a class switch without refetching, but its
-  // arrival is not itself a reason to rerun.
-  const cachedRef = useRef<IMicroCoachSession[] | null>(null);
-  cachedRef.current =
-    (classActivityStatus === MicroCoachDataStatus.READY &&
-      classActivity?.perClass.find((record) => record.classroom.id === classId)
-        ?.sessions) ||
-    null;
+  const classId = selectedClassId({ classrooms, selection });
+  const session = selectedSession({ classrooms, sessions, selection });
 
-  useEffect(() => {
-    let cancelled = false;
-
-    if (!classId) {
-      dispatch({ type: 'SET_SESSIONS', payload: [] });
-      dispatch({ type: 'SET_SELECTED_SESSION_ID', payload: null });
-      dispatch({
-        type: 'SET_SESSIONS_STATUS',
-        payload: MicroCoachDataStatus.IDLE,
-      });
-      dispatch({ type: 'SET_SESSIONS_ERROR', payload: null });
-      return undefined;
-    }
-
-    const cached = cachedRef.current;
-    if (cached) {
-      const sortedSessions = sortSessionsLatestFirst(cached);
-      dispatch({ type: 'SET_SESSIONS', payload: sortedSessions });
-      dispatch({
-        type: 'SET_SELECTED_SESSION_ID',
-        payload: sortedSessions[0]?.id ?? null,
-      });
-      dispatch({
-        type: 'SET_SESSIONS_STATUS',
-        payload: MicroCoachDataStatus.READY,
-      });
-      dispatch({ type: 'SET_SESSIONS_ERROR', payload: null });
-      return undefined;
-    }
-
-    const activeClassId = classId;
-    dispatch({ type: 'SET_SESSIONS', payload: [] });
-    dispatch({ type: 'SET_SELECTED_SESSION_ID', payload: null });
-    dispatch({
-      type: 'SET_SESSIONS_STATUS',
-      payload: MicroCoachDataStatus.LOADING,
-    });
-    dispatch({ type: 'SET_SESSIONS_ERROR', payload: null });
-
-    async function loadSessions() {
-      try {
-        const fetchedSessions =
-          await apiClients.session.getSessionsByClassId(activeClassId);
-        if (cancelled) return;
-
-        const sortedSessions = sortSessionsLatestFirst(fetchedSessions);
-        dispatch({ type: 'SET_SESSIONS', payload: sortedSessions });
-        dispatch({
-          type: 'SET_SELECTED_SESSION_ID',
-          payload: sortedSessions[0]?.id ?? null,
-        });
-        dispatch({
-          type: 'SET_SESSIONS_STATUS',
-          payload: MicroCoachDataStatus.READY,
-        });
-      } catch (error) {
-        if (cancelled) return;
-
-        dispatch({
-          type: 'SET_SESSIONS_ERROR',
-          payload:
-            error instanceof Error
-              ? error
-              : new Error('Failed to load sessions'),
-        });
-        dispatch({
-          type: 'SET_SESSIONS_STATUS',
-          payload: MicroCoachDataStatus.ERROR,
-        });
-      }
-    }
-
-    loadSessions();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [apiClients, classId, dispatch]);
-
-  const selectSession = useCallback(
-    (sessionId: string) => {
-      dispatch({ type: 'SET_SELECTED_SESSION_ID', payload: sessionId });
+  const select = useCallback(
+    (nextClassId: string, sessionId: string | null) => {
+      dispatch({ type: 'SELECT', classId: nextClassId, sessionId });
     },
     [dispatch],
   );
 
-  const selectedSession =
-    sessions.find((session) => session.id === selectedSessionId) ?? null;
+  const selectSession = useCallback(
+    (sessionId: string) => {
+      dispatch({
+        type: 'SELECT',
+        classId: sessions[sessionId]?.classId ?? classId,
+        sessionId,
+      });
+    },
+    [classId, dispatch, sessions],
+  );
+
   const selectMisconception = useCallback(
     (misconceptionId: string) => {
-      if (!selectedSession) return;
-      const { id, selectedMisconceptionId: previous } = selectedSession;
-      if (previous === misconceptionId) return;
+      if (!session || session.selectedMisconceptionId === misconceptionId) return;
       dispatch({
-        type: 'UPDATE_SESSION',
-        payload: { id, changes: { selectedMisconceptionId: misconceptionId } },
+        type: 'UPSERT_ROWS',
+        table: 'sessions',
+        rows: [{ ...session, selectedMisconceptionId: misconceptionId }],
       });
       apiClients.session
-        .setSelectedMisconception(id, misconceptionId)
+        .setSelectedMisconception(session.id, misconceptionId)
         .catch((error) => {
-          dispatch({
-            type: 'UPDATE_SESSION',
-            payload: { id, changes: { selectedMisconceptionId: previous } },
-          });
+          dispatch({ type: 'UPSERT_ROWS', table: 'sessions', rows: [session] });
           // eslint-disable-next-line no-console
           console.error('[useSessions] Failed to save the picked misconception', error);
         });
     },
-    [apiClients, dispatch, selectedSession],
+    [apiClients, dispatch, session],
   );
+
+  const load = classId ? loads[loadKeys.classChildren(classId)] : undefined;
+  let status = MicroCoachDataStatus.IDLE;
+  if (classId) status = load?.status ?? MicroCoachDataStatus.LOADING;
+  const error = load?.error ?? null;
+
+  const list = useMemo(() => classSessions({ sessions }, classId), [classId, sessions]);
 
   return useMemo(
     () => ({
-      sessions,
-      selectedSessionId,
-      selectedSession,
+      sessions: list,
+      selectedSessionId: session?.id ?? null,
+      selectedSession: session,
+      select,
       selectSession,
       selectMisconception,
-      status: sessionsStatus,
-      error: sessionsError,
+      status,
+      error,
     }),
-    [
-      selectMisconception,
-      selectedSession,
-      selectSession,
-      selectedSessionId,
-      sessions,
-      sessionsError,
-      sessionsStatus,
-    ],
+    [error, list, select, selectMisconception, selectSession, session, status],
   );
 }

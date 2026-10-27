@@ -42,7 +42,7 @@ import {
   EmptyStateText,
 } from '../lib/styledcomponents/ActivityListStyledComponents';
 import { useI18nReady } from '../hooks/readiness';
-import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import { useSessionMisconceptions } from '../hooks/useSessionMisconceptions';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { IPlanItemsState } from '../hooks/usePlanItems';
 import MathText from '../components/MathText';
@@ -93,7 +93,9 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const isI18nReady = useI18nReady();
-  const { misconceptions, misconceptionsStatus } = useMicroCoachDataState();
+  const { misconceptions, status: misconceptionsStatus } = useSessionMisconceptions(
+    sessions.selectedSession,
+  );
   const session = sessions.selectedSession;
   const sessionId = session?.id ?? null;
 

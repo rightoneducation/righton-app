@@ -62,7 +62,7 @@ export default function WeeklyProgressList({
   const classesKnown =
     classrooms.status === MicroCoachDataStatus.READY || classesFailed;
   const activity = useClassActivity(weekStart);
-  const openClassSession = useOpenClassSession(classrooms, sessions);
+  const openClassSession = useOpenClassSession(sessions);
 
   const isLoading = activity.status === MicroCoachDataStatus.LOADING;
   const hasFailed =

@@ -33,7 +33,7 @@ import {
 } from '../lib/styledcomponents/ActivityFlowStyledComponents';
 import { UnderstandPage } from '../lib/styledcomponents/UnderstandStyledComponents';
 import { useI18nReady } from '../hooks/readiness';
-import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import { useSessionMisconceptions } from '../hooks/useSessionMisconceptions';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { IPlanItemsState } from '../hooks/usePlanItems';
 import MathTypography from '../components/MathTypography';
@@ -114,7 +114,9 @@ export default function MyActivity({ screenSize, sessions, plan }: MyActivityPro
   const { t } = useTranslation();
   const navigate = useNavigate();
   const isI18nReady = useI18nReady();
-  const { misconceptions, misconceptionsStatus } = useMicroCoachDataState();
+  const { misconceptions, status: misconceptionsStatus } = useSessionMisconceptions(
+    sessions.selectedSession,
+  );
   // The misconception whose saved activity is being changed; null when closed.
   const [changingId, setChangingId] = React.useState<string | null>(null);
 

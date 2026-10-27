@@ -179,11 +179,9 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
     case ScreenType.DASHBOARD:
       screenComponent = (
         <Dashboard
-          apiClients={apiClients}
           screenSize={screenSize}
           classrooms={classrooms}
           sessions={sessions}
-          plan={plan}
         />
       );
       break;

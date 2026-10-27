@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
+import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
 import { IReflect } from '../lib/PipelineModels';
 import buildReflectionResults from '../lib/reflectionResults';
-import { useMicroCoachDataState } from './context/useMicroCoachDataContext';
+import { useSessionMisconceptions } from './useSessionMisconceptions';
 
 export interface UseReflectionResultsResult {
   reflect: IReflect;
@@ -10,50 +11,15 @@ export interface UseReflectionResultsResult {
   error: Error | null;
 }
 
-// Reflect is derived from session results plus activity and misconception
-// metadata that are already loaded into the shared MicroCoach data context.
-export default function useReflectionResults(): UseReflectionResultsResult {
-  const {
-    sessions,
-    selectedSessionId,
-    sessionsStatus,
-    sessionsError,
-    misconceptions,
-    misconceptionsStatus,
-    misconceptionsError,
-  } = useMicroCoachDataState();
-
-  const selectedSession = useMemo(
-    () =>
-      sessions.find((session) => session.id === selectedSessionId) ?? null,
-    [selectedSessionId, sessions],
-  );
+// Reflect is derived from the session's results plus its misconceptions and
+// their activities.
+export default function useReflectionResults(
+  session: IMicroCoachSession | null,
+): UseReflectionResultsResult {
+  const { misconceptions, status, error } = useSessionMisconceptions(session);
   const reflect = useMemo(
-    () => buildReflectionResults(selectedSession, misconceptions),
-    [misconceptions, selectedSession],
+    () => buildReflectionResults(session, misconceptions),
+    [misconceptions, session],
   );
-
-  let status = MicroCoachDataStatus.LOADING;
-  if (
-    sessionsStatus === MicroCoachDataStatus.ERROR ||
-    misconceptionsStatus === MicroCoachDataStatus.ERROR
-  ) {
-    status = MicroCoachDataStatus.ERROR;
-  } else if (
-    sessionsStatus === MicroCoachDataStatus.READY &&
-    misconceptionsStatus === MicroCoachDataStatus.READY
-  ) {
-    status = MicroCoachDataStatus.READY;
-  } else if (
-    sessionsStatus === MicroCoachDataStatus.IDLE &&
-    misconceptionsStatus === MicroCoachDataStatus.IDLE
-  ) {
-    status = MicroCoachDataStatus.IDLE;
-  }
-
-  return {
-    reflect,
-    status,
-    error: sessionsError ?? misconceptionsError,
-  };
+  return { reflect, status, error };
 }

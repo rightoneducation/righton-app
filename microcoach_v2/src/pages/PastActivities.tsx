@@ -11,6 +11,7 @@ import { PastActivitiesSkeleton } from '../components/skeletons/ActivityListSkel
 import { UseClassroomsResult } from '../hooks/useClassrooms';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { useClassActivity } from '../hooks/useClassActivity';
+import { useRefreshClassesOnMount } from '../hooks/loaders';
 import { useOpenClassSession } from '../hooks/useOpenClassSession';
 import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
 import { FlowStep, resumePath } from '../lib/flowProgress';
@@ -65,8 +66,9 @@ export default function PastActivities({
     ActivitySortOrder.RECENT_FIRST,
   );
   const classesFailed = classrooms.status === MicroCoachDataStatus.ERROR;
+  useRefreshClassesOnMount();
   const activity = useClassActivity();
-  const openClassSession = useOpenClassSession(classrooms, sessions);
+  const openClassSession = useOpenClassSession(sessions);
   const isLoading = activity.status === MicroCoachDataStatus.LOADING;
   const hasFailed =
     classesFailed || activity.status === MicroCoachDataStatus.ERROR;

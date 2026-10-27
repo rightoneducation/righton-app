@@ -41,10 +41,7 @@ export function FlowStepperBand({
 }: FlowStepperBandProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const currentStep = deriveCurrentStep(
-    sessions.selectedSession,
-    plan.planItems.length > 0,
-  );
+  const currentStep = deriveCurrentStep(sessions.selectedSession, plan.hasSavedPlan);
   // The track follows the teacher: the page they are on is current, and steps
   // past it the class has already done stay complete (buildFlowStepsForPage).
   const flowSteps = buildFlowStepsForPage(page, currentStep, t);

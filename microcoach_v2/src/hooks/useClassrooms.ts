@@ -1,7 +1,9 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { IAPIClients } from '../api';
 import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
-import { MicroCoachDataStatus } from '../lib/MicroCoachModels';
+import { loadKeys, MicroCoachDataStatus } from '../lib/MicroCoachModels';
+import { classroomList, selectedClassId } from '../lib/selectors';
+import { useClassroomsLoader } from './loaders';
 import {
   useMicroCoachDataDispatch,
   useMicroCoachDataState,
@@ -11,6 +13,7 @@ export interface UseClassroomsResult {
   classrooms: IMicroCoachClassroom[];
   selectedClassroomId: string | null;
   selectedClassroom: IMicroCoachClassroom | null;
+  // Selects the class and, with it, its latest session.
   selectClassroom: (classroomId: string) => void;
   status: MicroCoachDataStatus;
   error: Error | null;
@@ -20,100 +23,32 @@ export function useClassrooms(
   apiClients: IAPIClients,
   userId: string | null,
 ): UseClassroomsResult {
-  const { classrooms, selectedClassroomId, classroomsStatus, classroomsError } =
-    useMicroCoachDataState();
+  useClassroomsLoader(apiClients, userId);
+  const { classrooms, selection, loads } = useMicroCoachDataState();
   const dispatch = useMicroCoachDataDispatch();
-
-  useEffect(() => {
-    let cancelled = false;
-
-    if (!userId) {
-      dispatch({ type: 'SET_CLASSROOMS', payload: [] });
-      dispatch({ type: 'SET_SELECTED_CLASSROOM_ID', payload: null });
-      dispatch({
-        type: 'SET_CLASSROOMS_STATUS',
-        payload: MicroCoachDataStatus.IDLE,
-      });
-      dispatch({ type: 'SET_CLASSROOMS_ERROR', payload: null });
-      return undefined;
-    }
-
-    const activeUserId = userId;
-    dispatch({ type: 'SET_CLASSROOMS', payload: [] });
-    dispatch({ type: 'SET_SELECTED_CLASSROOM_ID', payload: null });
-    dispatch({
-      type: 'SET_CLASSROOMS_STATUS',
-      payload: MicroCoachDataStatus.LOADING,
-    });
-    dispatch({ type: 'SET_CLASSROOMS_ERROR', payload: null });
-
-    async function loadClassrooms() {
-      try {
-        const fetchedClassrooms =
-          await apiClients.classroom.getClassroomsByUserId(activeUserId);
-        if (cancelled) return;
-
-        const sortedClassrooms = [...fetchedClassrooms].sort((a, b) =>
-          a.createdAt.localeCompare(b.createdAt),
-        );
-        dispatch({ type: 'SET_CLASSROOMS', payload: sortedClassrooms });
-        dispatch({
-          type: 'SET_SELECTED_CLASSROOM_ID',
-          payload: sortedClassrooms[0]?.id ?? null,
-        });
-        dispatch({
-          type: 'SET_CLASSROOMS_STATUS',
-          payload: MicroCoachDataStatus.READY,
-        });
-      } catch (error) {
-        if (cancelled) return;
-
-        dispatch({
-          type: 'SET_CLASSROOMS_ERROR',
-          payload:
-            error instanceof Error
-              ? error
-              : new Error('Failed to load classrooms'),
-        });
-        dispatch({
-          type: 'SET_CLASSROOMS_STATUS',
-          payload: MicroCoachDataStatus.ERROR,
-        });
-      }
-    }
-
-    loadClassrooms();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [apiClients, dispatch, userId]);
 
   const selectClassroom = useCallback(
     (classroomId: string) => {
-      dispatch({ type: 'SET_SELECTED_CLASSROOM_ID', payload: classroomId });
+      dispatch({ type: 'SELECT', classId: classroomId, sessionId: null });
     },
     [dispatch],
   );
 
-  return useMemo(() => {
-    const selectedClassroom =
-      classrooms.find((classroom) => classroom.id === selectedClassroomId) ??
-      null;
+  const load = userId ? loads[loadKeys.classrooms(userId)] : undefined;
+  let status = MicroCoachDataStatus.IDLE;
+  if (userId) status = load?.status ?? MicroCoachDataStatus.LOADING;
+  const error = load?.error ?? null;
 
+  return useMemo(() => {
+    const list = classroomList({ classrooms });
+    const selectedId = selectedClassId({ classrooms, selection });
     return {
-      classrooms,
-      selectedClassroomId,
-      selectedClassroom,
+      classrooms: list,
+      selectedClassroomId: selectedId,
+      selectedClassroom: selectedId ? classrooms[selectedId] : null,
       selectClassroom,
-      status: classroomsStatus,
-      error: classroomsError,
+      status,
+      error,
     };
-  }, [
-    classrooms,
-    classroomsError,
-    classroomsStatus,
-    selectClassroom,
-    selectedClassroomId,
-  ]);
+  }, [classrooms, error, selectClassroom, selection, status]);
 }
