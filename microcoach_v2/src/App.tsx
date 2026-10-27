@@ -13,12 +13,15 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { APIClients, AppType, Environment } from './api';
 import Theme from './lib/Theme';
-import { GOOGLE_OAUTH_CLIENT_ID, ScreenType } from './lib/MicroCoachModels';
+import {
+  GOOGLE_OAUTH_CLIENT_ID,
+  ScreenType,
+} from './lib/MicroCoachModels';
 import { useAPIClients } from './hooks/useAPIClients';
 import { useAuthResolver } from './hooks/useAuthActions';
+import { useClassChildrenLoader } from './hooks/loaders';
 import { useClassrooms } from './hooks/useClassrooms';
-import { useMisconceptions } from './hooks/useMisconceptions';
-import { PlanItemsScope, usePlanItems } from './hooks/usePlanItems';
+import { usePlanItems } from './hooks/usePlanItems';
 import { useSessions } from './hooks/useSessions';
 import { useUserState } from './hooks/useUserState';
 import AppSwitch from './switches/AppSwitch';
@@ -43,24 +46,16 @@ function RootLayout({ apiClients }: { apiClients: APIClients }) {
   // On-load session restore: without it a refresh comes up signed out and the
   // Google signup leg (/auth → AuthCallback) never resolves.
   useAuthResolver(apiClients, user);
+  /*
+   * The store holds the schema's tables, one row per id. The root layout
+   * loads the teacher's classes and every class's sessions, students and
+   * saved plans once; a session's misconceptions are loaded by the pages that
+   * show them (useSessionMisconceptions). The hooks below only read the store.
+   */
   const classrooms = useClassrooms(apiClients, user.userProfile?.id ?? null);
-  const sessions = useSessions(apiClients, classrooms.selectedClassroomId);
-
-  useMisconceptions(apiClients, sessions.selectedSessionId);
-
-  let planScope: PlanItemsScope = null;
-  if (sessions.selectedSessionId) {
-    planScope = {
-      type: 'session',
-      sessionId: sessions.selectedSessionId,
-    };
-  } else if (classrooms.selectedClassroomId) {
-    planScope = {
-      type: 'class',
-      classId: classrooms.selectedClassroomId,
-    };
-  }
-  const plan = usePlanItems(apiClients, planScope);
+  useClassChildrenLoader(apiClients);
+  const sessions = useSessions(apiClients);
+  const plan = usePlanItems(apiClients);
 
   const outletContext = useMemo(
     () => ({ apiClients, user, classrooms, sessions, plan }),

@@ -30,6 +30,8 @@ export class MisconceptionParser {
 
     const parsedMisconception: IMicroCoachMisconception = {
       id: misconception.id,
+      sessionId: misconception.sessionId,
+      classId: misconception.classId,
       rank: misconception.rank,
       badge: misconception.badge ?? null,
       isRecommendedFocus: misconception.badge === Badge.RECOMMENDED_FOCUS,

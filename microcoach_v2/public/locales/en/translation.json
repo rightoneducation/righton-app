@@ -152,12 +152,14 @@
     "title": "Welcome to MicroCoach",
     "titleReturning": "Welcome back to MicroCoach",
     "subtitle": "Upload your Monday MIU files to better understand\nstudent thinking and receive recommended next steps.",
+    "subtitleLoading": "Please wait while we load your data.",
     "classPrompt": "Which class are you working with today?",
     "moreClasses": "More",
     "weekLabel": "Week",
     "cta": {
       "ASSESS": "Upload Monday MIU files for analysis",
       "UNDERSTAND": "Review misconception patterns",
+      "CHOOSE": "Choose your next-step activity",
       "REASSESS": "Upload reassessment results",
       "REFLECT": "Reflect on impact"
     },
@@ -447,7 +449,7 @@
   "activityFlow": {
     "loading": "Loading the activity",
     "loadError": "We couldn't load this activity. Refresh the page to try again.",
-    "changeActivity": "Change activity",
+    "changeActivity": "Change Activity",
     "phasesLabel": "Activity steps",
     "phases": {
       "beforeClass": "Before class",

@@ -18,8 +18,9 @@ export const MODAL_MAX_WIDTH = 800;
 // Figma: the frame is 1118 tall; on shorter screens it fills what is left.
 export const MODAL_MAX_HEIGHT = 1118;
 
-// Distance from the top of the viewport to the top of the modal.
-export const MODAL_TOP_OFFSET = 94;
+// Distance from the viewport's top and bottom edges to the modal (Figma: 41
+// each way in the 1200-tall frame, over the header).
+export const MODAL_INSET_Y = 41;
 
 const namePillRadius = 12;
 const rowRadius = 10;
@@ -136,12 +137,14 @@ export const ModalTab = styled(Tab, {
 }));
 
 /** LARGE: the scroll region, with heading, tabs and footer fixed around it. */
+// Figma: its blocks (evidence, explanation, question cards; the skill
+// cards) sit 12 apart.
 export const TabPanel = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.sizing.space5,
+  gap: theme.sizing.space2,
   ...(screenSize === ScreenSize.LARGE
     ? { flex: '1 1 auto', minHeight: 0, overflowY: 'auto' }
     : { flex: 'none' }),
@@ -369,12 +372,14 @@ export const ResponderGroup = styled(Box)(({ theme }) => ({
 
 /* ── Related Skills ──────────────────────────────────────────────────────── */
 
-// Figma: white rx12 cards, 16 in, the group name over its rows.
+// Figma: white rx12 cards, 16 in (12 over the group name), the name over
+// its rows.
 export const SkillCard = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.sizing.space2,
   padding: theme.sizing.space3,
+  paddingTop: theme.sizing.space2,
   borderRadius: theme.sizing.space2,
   backgroundColor: theme.palette.designSystem.surface.white,
   minWidth: 0,
@@ -391,10 +396,11 @@ export const SkillColumns = styled(Box, {
   '& > *': { flex: '1 1 0' },
 }));
 
+// Figma: Prerequisite Gaps' and Upcoming Skills' rows 12 apart.
 export const SkillRowList = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.sizing.space1,
+  gap: theme.sizing.space2,
 }));
 
 export type SkillTone = 'focus' | 'prerequisite' | 'upcoming';

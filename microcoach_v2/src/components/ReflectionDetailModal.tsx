@@ -8,7 +8,7 @@ import { SelectChangeEvent } from '@mui/material/Select';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import Modal from 'react-modal';
+import AppModal from './AppModal';
 import type {
   IMicroCoachReflectionAnswerResult,
   IMicroCoachReflectionStudentResult,
@@ -426,7 +426,7 @@ export default function ReflectionDetailModal({
   };
 
   return (
-    <Modal
+    <AppModal
       isOpen
       onRequestClose={handleClose}
       contentLabel={t('reflect.detailsFor', { title: activity.title })}
@@ -681,6 +681,6 @@ export default function ReflectionDetailModal({
           </ReflectionProgressBody>
         </ReflectionProgressPanel>
       </ReflectionDetailBody>
-    </Modal>
+    </AppModal>
   );
 }

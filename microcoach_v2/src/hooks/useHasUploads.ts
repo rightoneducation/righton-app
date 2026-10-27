@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
-import { IAPIClients } from '../api';
+import { useEffect } from 'react';
+import { loadKeys, MicroCoachDataStatus } from '../lib/MicroCoachModels';
+import { combinedLoad } from '../lib/selectors';
+import { useMicroCoachDataState } from './context/useMicroCoachDataContext';
 
 // Null while it is still unknown.
 export type HasUploads = boolean | null;
@@ -30,60 +32,29 @@ function remember(userId: string | null) {
  * Whether the teacher has uploaded for any class yet: the dashboard greets a first-time
  * teacher with "Welcome to MicroCoach" and a returning one with "Welcome back".
  * Nothing on the User row records a first login, so a session in any class is
- * the signal.
+ * the signal: read from the store, which holds every class's sessions.
  *
- * Answered, cheapest first, by: what this device remembers; `knownUploaded`
- * (the selected class's own sessions, already fetched); one session query per
- * class (a teacher has a handful). `classIds` is null until the class list has
+ * What this device remembers answers first, so the greeting is right before
+ * the sessions arrive. `classesKnown` is false until the class list has
  * loaded. A failed fetch leaves the answer unknown rather than claiming "no".
  */
 export function useHasUploads(
-  apiClients: IAPIClients,
   userId: string | null,
-  classIds: string[] | null,
-  knownUploaded: boolean,
+  classesKnown: boolean,
 ): HasUploads {
+  const { classrooms, sessions, loads } = useMicroCoachDataState();
+  const hasSession = Object.keys(sessions).length > 0;
   const remembered = readRemembered(userId);
-  const isKnownTrue = remembered || knownUploaded;
-  const classKey = classIds?.join(',') ?? null;
-  const [result, setResult] = useState<{
-    classKey: string;
-    hasUploads: boolean;
-  } | null>(null);
 
   useEffect(() => {
-    if (knownUploaded) remember(userId);
-  }, [knownUploaded, userId]);
+    if (hasSession) remember(userId);
+  }, [hasSession, userId]);
 
-  useEffect(() => {
-    if (isKnownTrue || classKey === null) return undefined;
-    if (!classKey) {
-      setResult({ classKey, hasUploads: false });
-      return undefined;
-    }
-
-    let cancelled = false;
-    Promise.all(
-      classKey
-        .split(',')
-        .map((id) => apiClients.session.getSessionsByClassId(id)),
-    )
-      .then((lists) => {
-        if (cancelled) return;
-        const hasUploads = lists.some((list) => list.length > 0);
-        if (hasUploads) remember(userId);
-        setResult({ classKey, hasUploads });
-      })
-      .catch((error) => {
-        console.error('Could not check for earlier uploads', error);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [apiClients, classKey, isKnownTrue, userId]);
-
-  if (isKnownTrue) return true;
-  return result !== null && result.classKey === classKey
-    ? result.hasUploads
-    : null;
+  if (remembered || hasSession) return true;
+  if (!classesKnown) return null;
+  const load = combinedLoad(
+    loads,
+    Object.keys(classrooms).map((classId) => loadKeys.classChildren(classId)),
+  );
+  return load.status === MicroCoachDataStatus.READY ? false : null;
 }

@@ -21,6 +21,7 @@ const row = (
   step: FlowStep.DONE,
   isAwaitingResults: false,
   weekStart: weekOf(completedAt),
+  selectedMisconceptionId: null,
 });
 
 // Week 8 = Oct 12-16, Week 9 = Oct 19-23 (2026). Midday UTC keeps every

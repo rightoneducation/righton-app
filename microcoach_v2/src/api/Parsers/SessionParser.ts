@@ -47,6 +47,7 @@ export class SessionParser {
       ),
       ppqAssessmentId: session.ppqAssessmentId ?? null,
       postPpqAssessmentId: session.postPpqAssessmentId ?? null,
+      selectedMisconceptionId: session.selectedMisconceptionId ?? null,
       pregeneratedNextSteps: session.pregeneratedNextSteps ?? null,
       evaluationResults: session.evaluationResults ?? null,
       questionStats: (session.questionStats ?? [])
@@ -157,6 +158,7 @@ export class SessionParser {
       studentIdsNeedingSupport: session.studentIdsNeedingSupport,
       ppqAssessmentId: session.ppqAssessmentId,
       postPpqAssessmentId: session.postPpqAssessmentId,
+      selectedMisconceptionId: session.selectedMisconceptionId,
       pregeneratedNextSteps: session.pregeneratedNextSteps,
       evaluationResults: session.evaluationResults,
     };

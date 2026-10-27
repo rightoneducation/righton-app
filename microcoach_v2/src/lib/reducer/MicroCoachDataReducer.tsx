@@ -1,14 +1,20 @@
-import { IMicroCoachClassroom } from '../../api/Models/IMicroCoachClassroom';
-import { IMicroCoachMisconception } from '../../api/Models/IMicroCoachMisconception';
-import { IMicroCoachSession } from '../../api/Models/IMicroCoachSession';
 import { IUser } from '../../api/Models/IUser';
 import {
   IMicroCoachDataState,
+  ILoadState,
   initMicroCoachDataState,
   MicroCoachDataStatus,
+  TableName,
+  TableRow,
   UserStatusType,
 } from '../MicroCoachModels';
-import { IPlanItem } from '../PipelineModels';
+
+// One table's rows, typed by the table they go into.
+type RowsFor = {
+  [T in TableName]: { table: T; rows: TableRow<T>[] };
+}[TableName];
+
+type ParentKey = 'classId' | 'sessionId' | 'misconceptionId';
 
 export type MicroCoachDataAction =
   | { type: 'SET_USER_PROFILE'; payload: IUser | null }
@@ -16,26 +22,29 @@ export type MicroCoachDataAction =
   | { type: 'SET_USER_STATUS'; payload: UserStatusType }
   | { type: 'SET_USER_ERROR_STRING'; payload: string }
   | { type: 'CLEAR_USER_PROFILE' }
-  | { type: 'SET_CLASSROOMS'; payload: IMicroCoachClassroom[] }
-  | { type: 'SET_SELECTED_CLASSROOM_ID'; payload: string | null }
-  | { type: 'SET_CLASSROOMS_STATUS'; payload: MicroCoachDataStatus }
-  | { type: 'SET_CLASSROOMS_ERROR'; payload: Error | null }
-  | { type: 'SET_SESSIONS'; payload: IMicroCoachSession[] }
-  | { type: 'SET_SELECTED_SESSION_ID'; payload: string | null }
-  | { type: 'SET_SESSIONS_STATUS'; payload: MicroCoachDataStatus }
-  | { type: 'SET_SESSIONS_ERROR'; payload: Error | null }
+  // Adds rows or replaces them by id.
+  | ({ type: 'UPSERT_ROWS' } & RowsFor)
+  // A fetched list is the whole truth for its parent: rows of that parent the
+  // answer no longer has (deleted elsewhere) go, the rest are upserted.
+  // Without a parent it replaces the whole table.
+  | ({
+      type: 'REPLACE_ROWS';
+      parent?: { key: ParentKey; id: string };
+    } & RowsFor)
+  | { type: 'REMOVE_ROWS'; table: TableName; ids: string[] }
   | {
-      type: 'SET_MISCONCEPTIONS';
-      payload: IMicroCoachMisconception[];
+      type: 'SET_LOAD';
+      key: string;
+      status: MicroCoachDataStatus;
+      error?: Error | null;
     }
-  | { type: 'SET_MISCONCEPTIONS_STATUS'; payload: MicroCoachDataStatus }
-  | { type: 'SET_MISCONCEPTIONS_ERROR'; payload: Error | null }
-  | { type: 'SET_PLAN_ITEMS'; payload: IPlanItem[] }
-  | { type: 'SAVE_PLAN_ITEM'; payload: IPlanItem }
-  | { type: 'MARK_PLAN_ITEM_DONE'; payload: string }
-  | { type: 'REMOVE_PLAN_ITEM'; payload: string }
-  | { type: 'SET_PLAN_ITEMS_STATUS'; payload: MicroCoachDataStatus }
-  | { type: 'SET_PLAN_ITEMS_ERROR'; payload: Error | null };
+  // Marks every load whose key starts with the prefix for a background refetch.
+  | { type: 'MARK_LOADS_STALE'; prefix: string }
+  | { type: 'SELECT'; classId: string | null; sessionId: string | null };
+
+// Rows keyed by id. The action's union already ties rows to their table.
+const byId = (rows: readonly { id: string }[]) =>
+  Object.fromEntries(rows.map((row) => [row.id, row]));
 
 export function microCoachDataReducer(
   state: IMicroCoachDataState,
@@ -56,61 +65,47 @@ export function microCoachDataReducer(
     case 'SET_USER_ERROR_STRING':
       return { ...state, userErrorString: action.payload };
     case 'CLEAR_USER_PROFILE':
-      return { ...initMicroCoachDataState };
-    case 'SET_CLASSROOMS':
-      return { ...state, classrooms: action.payload };
-    case 'SET_SELECTED_CLASSROOM_ID':
-      return { ...state, selectedClassroomId: action.payload };
-    case 'SET_CLASSROOMS_STATUS':
-      return { ...state, classroomsStatus: action.payload };
-    case 'SET_CLASSROOMS_ERROR':
-      return { ...state, classroomsError: action.payload };
-    case 'SET_SESSIONS':
-      return { ...state, sessions: action.payload };
-    case 'SET_SELECTED_SESSION_ID':
-      return { ...state, selectedSessionId: action.payload };
-    case 'SET_SESSIONS_STATUS':
-      return { ...state, sessionsStatus: action.payload };
-    case 'SET_SESSIONS_ERROR':
-      return { ...state, sessionsError: action.payload };
-    case 'SET_MISCONCEPTIONS':
-      return { ...state, misconceptions: action.payload };
-    case 'SET_MISCONCEPTIONS_STATUS':
-      return { ...state, misconceptionsStatus: action.payload };
-    case 'SET_MISCONCEPTIONS_ERROR':
-      return { ...state, misconceptionsError: action.payload };
-    case 'SET_PLAN_ITEMS':
-      return { ...state, planItems: action.payload };
-    case 'SAVE_PLAN_ITEM':
+      return { ...initMicroCoachDataState, epoch: state.epoch + 1 };
+    case 'UPSERT_ROWS':
       return {
         ...state,
-        planItems: [
-          ...state.planItems.filter(
-            (item) =>
-              item.status !== 'SAVED' ||
-              item.misconceptionId !== action.payload.misconceptionId,
-          ),
-          action.payload,
-        ],
+        [action.table]: { ...state[action.table], ...byId(action.rows) },
       };
-    case 'MARK_PLAN_ITEM_DONE':
+    case 'REPLACE_ROWS': {
+      const { table, rows, parent } = action;
+      if (!parent) return { ...state, [table]: byId(rows) };
+      const kept = Object.values(state[table]).filter(
+        (row) => (row as Record<string, unknown>)[parent.key] !== parent.id,
+      );
+      return { ...state, [table]: byId([...kept, ...rows]) };
+    }
+    case 'REMOVE_ROWS': {
+      const next = { ...state[action.table] };
+      action.ids.forEach((id) => delete next[id]);
+      return { ...state, [action.table]: next };
+    }
+    case 'SET_LOAD': {
+      const load: ILoadState = {
+        status: action.status,
+        error: action.error ?? null,
+        stale: false,
+      };
+      return { ...state, loads: { ...state.loads, [action.key]: load } };
+    }
+    case 'MARK_LOADS_STALE': {
+      const loads = Object.fromEntries(
+        Object.entries(state.loads).map(([key, load]) => [
+          key,
+          key.startsWith(action.prefix) ? { ...load, stale: true } : load,
+        ]),
+      );
+      return { ...state, loads };
+    }
+    case 'SELECT':
       return {
         ...state,
-        planItems: state.planItems.map((item) =>
-          item.id === action.payload
-            ? { ...item, status: 'COMPLETED' as const }
-            : item,
-        ),
+        selection: { classId: action.classId, sessionId: action.sessionId },
       };
-    case 'REMOVE_PLAN_ITEM':
-      return {
-        ...state,
-        planItems: state.planItems.filter((item) => item.id !== action.payload),
-      };
-    case 'SET_PLAN_ITEMS_STATUS':
-      return { ...state, planItemsStatus: action.payload };
-    case 'SET_PLAN_ITEMS_ERROR':
-      return { ...state, planItemsError: action.payload };
     default:
       return state;
   }

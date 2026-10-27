@@ -36,6 +36,7 @@ export const onCreateMicroCoachUser = /* GraphQL */ `
               studentIdsNeedingSupport
               ppqAssessmentId
               postPpqAssessmentId
+              selectedMisconceptionId
               pregeneratedNextSteps
               evaluationResults
               createdAt
@@ -110,6 +111,7 @@ export const onUpdateMicroCoachUser = /* GraphQL */ `
               studentIdsNeedingSupport
               ppqAssessmentId
               postPpqAssessmentId
+              selectedMisconceptionId
               pregeneratedNextSteps
               evaluationResults
               createdAt
@@ -184,6 +186,7 @@ export const onDeleteMicroCoachUser = /* GraphQL */ `
               studentIdsNeedingSupport
               ppqAssessmentId
               postPpqAssessmentId
+              selectedMisconceptionId
               pregeneratedNextSteps
               evaluationResults
               createdAt
@@ -248,6 +251,7 @@ export const onCreateMicroCoachClassroom = /* GraphQL */ `
           studentIdsNeedingSupport
           ppqAssessmentId
           postPpqAssessmentId
+          selectedMisconceptionId
           assessments {
             items {
               id
@@ -384,6 +388,7 @@ export const onUpdateMicroCoachClassroom = /* GraphQL */ `
           studentIdsNeedingSupport
           ppqAssessmentId
           postPpqAssessmentId
+          selectedMisconceptionId
           assessments {
             items {
               id
@@ -520,6 +525,7 @@ export const onDeleteMicroCoachClassroom = /* GraphQL */ `
           studentIdsNeedingSupport
           ppqAssessmentId
           postPpqAssessmentId
+          selectedMisconceptionId
           assessments {
             items {
               id
@@ -697,6 +703,7 @@ export const onCreateMicroCoachSession = /* GraphQL */ `
       studentIdsNeedingSupport
       ppqAssessmentId
       postPpqAssessmentId
+      selectedMisconceptionId
       assessments {
         items {
           id
@@ -861,6 +868,7 @@ export const onUpdateMicroCoachSession = /* GraphQL */ `
       studentIdsNeedingSupport
       ppqAssessmentId
       postPpqAssessmentId
+      selectedMisconceptionId
       assessments {
         items {
           id
@@ -1025,6 +1033,7 @@ export const onDeleteMicroCoachSession = /* GraphQL */ `
       studentIdsNeedingSupport
       ppqAssessmentId
       postPpqAssessmentId
+      selectedMisconceptionId
       assessments {
         items {
           id

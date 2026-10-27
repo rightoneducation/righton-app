@@ -70,7 +70,8 @@ function SkillRow({ skill, tone, learningComponents = [] }: SkillRowProps) {
               <IconButton
                 size="small"
                 aria-label={t('misconceptionModal.domainTooltipLabel', { code: skill.code })}
-                sx={{ color: 'inherit' }}
+                // Hover/focus shows the tooltip; there is nothing to click.
+                sx={{ color: 'inherit', cursor: 'default' }}
               >
                 <InfoOutlinedIcon sx={{ fontSize: 16 }} />
               </IconButton>

@@ -17,6 +17,7 @@ export type AWSSession = {
   studentIdsNeedingSupport?: Array<string | null> | null
   ppqAssessmentId?: string | null
   postPpqAssessmentId?: string | null
+  selectedMisconceptionId?: string | null
   pregeneratedNextSteps?: string | null
   evaluationResults?: string | null
   questionStats?: Array<{

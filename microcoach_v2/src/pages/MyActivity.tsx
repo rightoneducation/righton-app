@@ -23,6 +23,7 @@ import {
   MisconceptionBand,
   MisconceptionBandHead,
   MyActivityActions,
+  MyActivityBody,
   MyActivityCardSurface,
   MyActivityHeading,
   MyActivityList,
@@ -32,7 +33,7 @@ import {
 } from '../lib/styledcomponents/ActivityFlowStyledComponents';
 import { UnderstandPage } from '../lib/styledcomponents/UnderstandStyledComponents';
 import { useI18nReady } from '../hooks/readiness';
-import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import { useSessionMisconceptions } from '../hooks/useSessionMisconceptions';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { IPlanItemsState } from '../hooks/usePlanItems';
 import MathTypography from '../components/MathTypography';
@@ -113,7 +114,9 @@ export default function MyActivity({ screenSize, sessions, plan }: MyActivityPro
   const { t } = useTranslation();
   const navigate = useNavigate();
   const isI18nReady = useI18nReady();
-  const { misconceptions, misconceptionsStatus } = useMicroCoachDataState();
+  const { misconceptions, status: misconceptionsStatus } = useSessionMisconceptions(
+    sessions.selectedSession,
+  );
   // The misconception whose saved activity is being changed; null when closed.
   const [changingId, setChangingId] = React.useState<string | null>(null);
 
@@ -182,13 +185,7 @@ export default function MyActivity({ screenSize, sessions, plan }: MyActivityPro
           page={FlowStep.CHOOSE}
         />
 
-        <MyActivityHeading>
-          <Typography variant="appTitle" component="h1">
-            {t('myActivity.title')}
-          </Typography>
-          <Typography variant="uploadLabel">{t('myActivity.intro')}</Typography>
-        </MyActivityHeading>
-
+        {/* Above the heading, so the heading-to-card gap stays the frame's. */}
         {saveFailed && (
           <Typography
             variant="rubikBody"
@@ -199,14 +196,23 @@ export default function MyActivity({ screenSize, sessions, plan }: MyActivityPro
           </Typography>
         )}
 
-        <LoadingSlot
-          isLoading={isLoading}
-          minHeight={CARD_HEIGHT}
-          label={t('myActivity.loading')}
-          skeleton={<SavedActivitySkeleton />}
-        >
-          {content}
-        </LoadingSlot>
+        <MyActivityBody>
+          <MyActivityHeading>
+            <Typography variant="appTitle" component="h1">
+              {t('myActivity.title')}
+            </Typography>
+            <Typography variant="uploadLabel">{t('myActivity.intro')}</Typography>
+          </MyActivityHeading>
+
+          <LoadingSlot
+            isLoading={isLoading}
+            minHeight={CARD_HEIGHT}
+            label={t('myActivity.loading')}
+            skeleton={<SavedActivitySkeleton />}
+          >
+            {content}
+          </LoadingSlot>
+        </MyActivityBody>
       </ActivityFlowColumn>
 
       <ChangeActivityDialog

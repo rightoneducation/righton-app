@@ -33,6 +33,7 @@ export const getMicroCoachUser = /* GraphQL */ `
               studentIdsNeedingSupport
               ppqAssessmentId
               postPpqAssessmentId
+              selectedMisconceptionId
               pregeneratedNextSteps
               evaluationResults
               createdAt
@@ -143,6 +144,7 @@ export const getMicroCoachClassroom = /* GraphQL */ `
           studentIdsNeedingSupport
           ppqAssessmentId
           postPpqAssessmentId
+          selectedMisconceptionId
           assessments {
             items {
               id
@@ -286,6 +288,7 @@ export const listMicroCoachClassrooms = /* GraphQL */ `
             studentIdsNeedingSupport
             ppqAssessmentId
             postPpqAssessmentId
+            selectedMisconceptionId
             assessments {
               nextToken
               __typename
@@ -402,6 +405,7 @@ export const getMicroCoachSession = /* GraphQL */ `
       studentIdsNeedingSupport
       ppqAssessmentId
       postPpqAssessmentId
+      selectedMisconceptionId
       assessments {
         items {
           id
@@ -573,6 +577,7 @@ export const listMicroCoachSessions = /* GraphQL */ `
         studentIdsNeedingSupport
         ppqAssessmentId
         postPpqAssessmentId
+        selectedMisconceptionId
         assessments {
           items {
             id
@@ -990,6 +995,7 @@ export const microCoachClassroomsByUserId = /* GraphQL */ `
             studentIdsNeedingSupport
             ppqAssessmentId
             postPpqAssessmentId
+            selectedMisconceptionId
             assessments {
               nextToken
               __typename
@@ -1110,6 +1116,7 @@ export const microCoachSessionsByClassId = /* GraphQL */ `
         studentIdsNeedingSupport
         ppqAssessmentId
         postPpqAssessmentId
+        selectedMisconceptionId
         assessments {
           items {
             id

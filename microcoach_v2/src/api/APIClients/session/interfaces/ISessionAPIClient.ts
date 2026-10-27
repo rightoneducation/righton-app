@@ -9,5 +9,10 @@ export interface ISessionAPIClient {
   updateSession(
     session: IMicroCoachSession,
   ): Promise<IMicroCoachSession | null>;
+  // Writes only selectedMisconceptionId, so nothing else on the row is touched.
+  setSelectedMisconception(
+    id: string,
+    misconceptionId: string | null,
+  ): Promise<IMicroCoachSession | null>;
   deleteSession(id: string): Promise<IMicroCoachSession | null>;
 }

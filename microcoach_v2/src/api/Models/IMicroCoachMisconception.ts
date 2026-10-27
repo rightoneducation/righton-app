@@ -14,6 +14,8 @@ export interface IResponseEvidence {
 
 export interface IMicroCoachMisconception {
   id: string;
+  sessionId: string;
+  classId: string;
   rank: number;
   badge: string | null;
   isRecommendedFocus: boolean;

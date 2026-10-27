@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -9,8 +10,6 @@ import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AppSidebar from '../components/AppSidebar';
 import ClassStepTrack from '../components/ClassStepTrack';
-import LoadingSlot from '../components/LoadingSlot';
-import { SkeletonPill } from '../components/skeletons/SkeletonParts';
 import WeeklyProgressList from '../components/WeeklyProgressList';
 import {
   SidebarLayout,
@@ -37,50 +36,41 @@ import { UseSessionsResult } from '../hooks/useSessions';
 import { useI18nReady } from '../hooks/readiness';
 import { useSidebarNav } from '../hooks/useSidebarNav';
 import { useHasUploads } from '../hooks/useHasUploads';
-import { IPlanItemsState } from '../hooks/usePlanItems';
+import { useClassActivity } from '../hooks/useClassActivity';
+import { useRefreshClassesOnMount } from '../hooks/loaders';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
-import { IAPIClients } from '../api';
 import { MicroCoachDataStatus, ScreenSize } from '../lib/MicroCoachModels';
 import {
   FlowStep,
   buildFlowSteps,
   buildPendingFlowSteps,
-  deriveCurrentStep,
   hasChosenActivity,
-  sessionForWeek,
-  sortSessionsLatestFirst,
   stepCta,
 } from '../lib/flowProgress';
 import { currentSchoolWeek, formatSchoolWeek, schoolWeeks } from '../lib/weeks';
 
 // Chips shown inline before the rest fold into "More".
 const VISIBLE_CLASS_COUNT = 4;
-// One row of class chips: what the loading spinner holds open.
-const CHIP_ROW_HEIGHT = 50;
-// A class chip with a typical name in it.
-const CHIP_SKELETON_WIDTH = 140;
+// Roughly the pickers and button the spinner stands in for, so the card
+// does not shrink and grow back when the data lands.
+const LOADING_MIN_HEIGHT = 240;
 
 interface DashboardProps extends ScreenSizeProps {
-  apiClients: IAPIClients;
   classrooms: UseClassroomsResult;
   sessions: UseSessionsResult;
-  plan: IPlanItemsState;
 }
 
 export default function Dashboard({
-  apiClients,
   screenSize,
   classrooms,
   sessions,
-  plan,
 }: DashboardProps) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { userProfile, misconceptionsStatus } = useMicroCoachDataState();
+  const { userProfile } = useMicroCoachDataState();
   const classList = classrooms.classrooms;
   const selectedClassId = classrooms.selectedClassroomId ?? '';
   const selectClass = classrooms.selectClassroom;
-  const sessionList = sortSessionsLatestFirst(sessions.sessions);
 
   /*
    * Only translations hold the page back. Everything else renders at once and
@@ -99,19 +89,7 @@ export default function Dashboard({
     classrooms.status === MicroCoachDataStatus.ERROR;
   const classesFailed = classrooms.status === MicroCoachDataStatus.ERROR;
   const hasClasses = classList.length > 0;
-  // Sessions sit at IDLE when there is no class to load them for, which is an
-  // answer once the class list is in.
-  const sessionsKnown =
-    sessions.status === MicroCoachDataStatus.READY ||
-    sessions.status === MicroCoachDataStatus.ERROR ||
-    (classesKnown && !classrooms.selectedClassroomId);
-  const sessionsFailed = sessions.status === MicroCoachDataStatus.ERROR;
-  const hasUploads = useHasUploads(
-    apiClients,
-    userProfile?.id ?? null,
-    classesKnown ? classList.map((classroom) => classroom.id) : null,
-    sessionList.length > 0,
-  );
+  const hasUploads = useHasUploads(userProfile?.id ?? null, classesKnown);
 
   const [moreAnchor, setMoreAnchor] = React.useState<HTMLElement | null>(null);
   /*
@@ -123,49 +101,33 @@ export default function Dashboard({
    */
   const [pickedWeek, setPickedWeek] = React.useState<string | null>(null);
   const weekStart = pickedWeek ?? currentSchoolWeek();
-  const weekSession = sessionForWeek(sessionList, weekStart);
-
-  // Review, Select Activity and the rest read the app-wide selected session,
-  // so it follows the week's session; the plan below is that session's.
-  const { selectSession, selectedSessionId } = sessions;
-  React.useEffect(() => {
-    if (weekSession && weekSession.id !== selectedSessionId) {
-      selectSession(weekSession.id);
-    }
-  }, [weekSession, selectedSessionId, selectSession]);
 
   /*
-   * The saved plan is what separates UNDERSTAND from REASSESS, so a class that
-   * would read UNDERSTAND waits for it rather than showing Understand and then
-   * jumping. usePlanItems holds the plan at LOADING until the misconceptions
-   * are READY, so a failed misconception fetch counts as an answer (no plan).
+   * The card shows the selected class's row of the same joins as Weekly
+   * Activity Progress, read from the store: picking a class or a week only
+   * picks another row, and runs no query. Home refreshes every class's rows
+   * in the background on arrival, so a session the pipeline finished since
+   * shows up.
    */
-  const stepWithoutPlan = deriveCurrentStep(weekSession, false);
-  const isPlanKnown =
-    !!weekSession &&
-    weekSession.id === selectedSessionId &&
-    (plan.status === MicroCoachDataStatus.READY ||
-      plan.status === MicroCoachDataStatus.ERROR ||
-      misconceptionsStatus === MicroCoachDataStatus.ERROR);
+  useRefreshClassesOnMount();
+  const activity = useClassActivity(weekStart);
+  const classRow = activity.week.find((row) => row.classId === selectedClassId);
+  const activityFailed = activity.status === MicroCoachDataStatus.ERROR;
   const isStepPending =
-    !sessionsKnown ||
-    (!sessionsFailed && stepWithoutPlan === FlowStep.UNDERSTAND && !isPlanKnown);
-  const currentStep = deriveCurrentStep(
-    weekSession,
-    isPlanKnown && plan.planItems.length > 0,
-  );
-  const isStepKnown = !isStepPending && !sessionsFailed;
+    !classesKnown || activity.status === MicroCoachDataStatus.LOADING;
+  const isStepKnown = !isStepPending && !activityFailed;
+  // A failed fetch falls back to the upload, which is always a valid next
+  // action, rather than guessing a later step.
+  const currentStep =
+    isStepKnown && classRow ? classRow.step : FlowStep.ASSESS;
   const flowSteps = isStepKnown
     ? buildFlowSteps(currentStep, t)
     : buildPendingFlowSteps(t);
-  // A failed session fetch falls back to the upload, which is always a valid
-  // next action, rather than guessing a later step.
-  const cta = stepCta(isStepKnown ? currentStep : FlowStep.ASSESS);
-  const isCtaLoading = isStepPending;
+  const cta = stepCta(currentStep, classRow?.selectedMisconceptionId);
+  // Dev QA: while the class list or the step is still loading, the card says
+  // so ("Welcome to MicroCoach. Please wait…") instead of the upload prompt.
+  const isDataLoading = !classesKnown || isStepPending;
   const canOpenMyActivity = isStepKnown && hasChosenActivity(currentStep);
-  // Shown while classes load (a teacher normally has them); hidden only once
-  // the list is known to be empty or failed.
-  const showCta = !classesKnown || hasClasses;
 
   // The selected class always gets a chip, even when it sits past the fold
   // (picked from "More" or the header): it takes the last inline slot.
@@ -181,7 +143,17 @@ export default function Dashboard({
 
   const sidebar = useSidebarNav();
 
+  // Review, Select Activity and the rest read the app-wide selection: leaving
+  // Home points it at this class's session for the picked week (none yet:
+  // the class's latest).
+  const selectWeekSession = () => {
+    if (selectedClassId) {
+      sessions.select(selectedClassId, classRow?.sessionId ?? null);
+    }
+  };
+
   const handleCta = () => {
+    selectWeekSession();
     if (cta.path === '/upload-miu' || cta.path === '/upload-reassess') {
       navigate(cta.path, { state: { weekStart } });
     } else {
@@ -215,7 +187,10 @@ export default function Dashboard({
                 <MyActivityButton
                   disableElevation
                   disabled={!canOpenMyActivity}
-                  onClick={() => navigate('/myactivity')}
+                  onClick={() => {
+                    selectWeekSession();
+                    navigate('/myactivity');
+                  }}
                 >
                   {t('dashboard.myActivity')}
                 </MyActivityButton>
@@ -227,7 +202,11 @@ export default function Dashboard({
                     variant="h1"
                     sx={{ color: 'designSystem.surface.atlanticNavy' }}
                   >
-                    {t(hasUploads === true ? 'dashboard.titleReturning' : 'dashboard.title')}
+                    {t(
+                      hasUploads === true && !isDataLoading
+                        ? 'dashboard.titleReturning'
+                        : 'dashboard.title',
+                    )}
                   </Typography>
 
                   <Typography
@@ -236,33 +215,37 @@ export default function Dashboard({
                       color: 'designSystem.surface.atlanticNavy',
                       whiteSpace: 'pre-line',
                     }}
+                    {...(isDataLoading && { role: 'status', 'aria-live': 'polite' as const })}
                   >
-                    {t('dashboard.subtitle')}
+                    {t(isDataLoading ? 'dashboard.subtitleLoading' : 'dashboard.subtitle')}
                   </Typography>
                 </DashboardHeading>
 
+                {/* While loading, the card is just the message and a spinner:
+                    no picker or button placeholders. */}
+                {isDataLoading ? (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexGrow: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      minHeight: LOADING_MIN_HEIGHT,
+                    }}
+                  >
+                    <CircularProgress aria-label={t('dashboard.loadingNextStep')} />
+                  </Box>
+                ) : (
                 <DashboardForm>
                   <PickerRow screenSize={screenSize}>
                     <PickerColumn screenSize={screenSize}>
                       <PickerLabel screenSize={screenSize}>
                         {t(
-                          classesKnown && !classesFailed && !hasClasses
+                          !classesFailed && !hasClasses
                             ? 'dashboard.noClassesTitle'
                             : 'dashboard.classPrompt',
                         )}
                       </PickerLabel>
-                      <LoadingSlot
-                        isLoading={!classesKnown}
-                        minHeight={CHIP_ROW_HEIGHT}
-                        label={t('dashboard.loadingClasses')}
-                        skeleton={
-                          <ChipWrap>
-                            {[0, 1, 2].map((chip) => (
-                              <SkeletonPill key={chip} width={CHIP_SKELETON_WIDTH} height={CHIP_ROW_HEIGHT} />
-                            ))}
-                          </ChipWrap>
-                        }
-                      >
                         {classesFailed && (
                           <PickerNote
                             role="alert"
@@ -325,7 +308,6 @@ export default function Dashboard({
                             </Link>
                           </PickerNote>
                         )}
-                      </LoadingSlot>
                     </PickerColumn>
 
                     <PickerColumn screenSize={screenSize} grow>
@@ -346,27 +328,16 @@ export default function Dashboard({
                     </PickerColumn>
                   </PickerRow>
 
-                  {/* Until the step is known, a skeleton of the button holds its place. */}
-                  {showCta && isCtaLoading && (
-                    <Box
-                      role="status"
-                      aria-busy
-                      aria-label={t('dashboard.loadingNextStep')}
-                      sx={{ width: '100%', maxWidth: 440 }}
-                    >
-                      <SkeletonPill width="100%" height={58} />
-                    </Box>
-                  )}
-                  {showCta && !isCtaLoading && (
+                  {hasClasses && (
                     <DashboardCta onClick={handleCta}>{t(cta.labelKey)}</DashboardCta>
                   )}
                 </DashboardForm>
+                )}
               </DashboardCard>
             </DashboardIntro>
 
             {/* rev2 LandingPage: This Week now lives below the upload card. */}
             <WeeklyProgressList
-              apiClients={apiClients}
               screenSize={screenSize}
               classrooms={classrooms}
               sessions={sessions}

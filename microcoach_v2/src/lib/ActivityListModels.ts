@@ -2,7 +2,7 @@ import { FlowStep } from './flowProgress';
 import { weekOf } from './weeks';
 
 // The rows behind This Week and Past Activities, assembled across every class
-// by hooks/useClassActivity.ts.
+// from the store's tables by lib/selectors.ts.
 
 /** One class's place in this week's loop (dashboard/v2 Dashboard2). */
 export interface IWeeklyClassProgress {
@@ -12,6 +12,8 @@ export interface IWeeklyClassProgress {
   className: string;
   studentCount: number;
   step: FlowStep;
+  // The misconception picked on Review, where a CHOOSE row resumes.
+  selectedMisconceptionId: string | null;
   // Files are in but the pipeline has not reported back yet.
   isAwaitingResults: boolean;
 }
@@ -34,6 +36,8 @@ export interface IPastActivity {
   isAwaitingResults: boolean;
   // The week the session is for, which an upload pre-fills.
   weekStart: string;
+  // The misconception picked on Review, where a CHOOSE row resumes.
+  selectedMisconceptionId: string | null;
 }
 
 export enum ActivitySortOrder {
