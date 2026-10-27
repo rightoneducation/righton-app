@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
-import Modal from 'react-modal';
+import AppModal from './AppModal';
 import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
 import { IQuestionStat } from '../api/Models/IMicroCoachSession';
 import { ScreenSize } from '../lib/MicroCoachModels';
@@ -203,7 +203,7 @@ export default function MisconceptionDetailModal({
   // close path, and unmounting it mid-flight leaves #root hidden from
   // screen readers. Only its contents remount per open.
   return (
-    <Modal
+    <AppModal
       isOpen={Boolean(misconception)}
       onRequestClose={onClose}
       // An accessible name is a plain string: math reads as text.
@@ -250,6 +250,6 @@ export default function MisconceptionDetailModal({
           onChooseActivity={onChooseActivity}
         />
       )}
-    </Modal>
+    </AppModal>
   );
 }

@@ -23,12 +23,3 @@ code {
 .math-text .katex {
   font-size: 1em;
 }
-
-/*
- * react-modal (Misconception Details, Reflection details) leaves the page
- * scrollable under its overlay; it marks <body> with this class while a modal
- * is open, so the page behind holds still.
- */
-.ReactModal__Body--open {
-  overflow: hidden;
-}
