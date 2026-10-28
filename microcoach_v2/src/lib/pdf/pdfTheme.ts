@@ -61,6 +61,8 @@ export const pdfColors = {
   periwinkle: designSystemColors.foreground.periwinkle,
   successFill: designSystemColors.status.lightGreen,
   muted: designSystemColors.surface.ashyGray,
+  // The on-screen boxes' and dividers' hairline (theme.borders.subtle).
+  hairline: designSystemColors.foreground.greyAccent,
 };
 
 export const pdfStyles = StyleSheet.create({

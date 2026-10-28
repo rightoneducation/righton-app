@@ -124,6 +124,49 @@ const styles = {
   body: { fontFamily: 'Rubik', fontSize: 10, lineHeight: 1.35 },
   workRow: { paddingVertical: 2, paddingHorizontal: 6, fontSize: 10, lineHeight: 1.35 },
   tonedBox: { borderRadius: 6, padding: 8, marginTop: 6 },
+  // Make Your Case, as the page draws it (DevQA MakeYourCase_Teacher /
+  // _Student) at PDF scale: the claim centred, its options, a hairline, then
+  // the examples or the students' two columns.
+  claimHead: { alignItems: 'center' as const, gap: 4, marginBottom: 8 },
+  claimText: { fontFamily: 'Poppins', fontWeight: 600, fontSize: 12, textAlign: 'center' as const },
+  claimOptions: { gap: 6 },
+  answerBand: {
+    gap: 2,
+    padding: 4,
+    marginHorizontal: -4,
+    borderRadius: 8,
+    backgroundColor: pdfColors.successFill,
+  },
+  boxDivider: {
+    borderTopWidth: 0.75,
+    borderTopColor: pdfColors.hairline,
+    marginVertical: 10,
+  },
+  sectionPill: {
+    alignSelf: 'flex-start' as const,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    backgroundColor: pdfColors.deepNavy,
+    color: pdfColors.offWhite,
+    fontFamily: 'Poppins',
+    fontWeight: 600,
+    fontSize: 10,
+  },
+  bringInList: { gap: 8, marginTop: 8 },
+  studentColumns: { flexDirection: 'row' as const, gap: 16 },
+  studentColumn: { flex: 1, gap: 8 },
+  studentColumnDivided: { borderLeftWidth: 0.75, borderLeftColor: pdfColors.hairline, paddingLeft: 16 },
+  numberedItem: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8 },
+  numberDisc: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    backgroundColor: pdfColors.deepNavy,
+  },
+  numberDiscText: { color: pdfColors.white, fontFamily: 'Rubik', fontWeight: 700, fontSize: 7 },
   final: {
     fontFamily: 'Poppins',
     fontWeight: 600,
@@ -363,69 +406,79 @@ function CompareSection({ facilitate, isTeacher, t }: { facilitate: ICompareFaci
 const CLAIM_OPTIONS = ['TRUE', 'FALSE', 'CONDITIONAL'] as const;
 const VOTE_OPTIONS = ['YES', 'NO', 'UNDECIDED'] as const;
 
+/** Student copy: a heading pill over its numbered list. */
+function NumberedColumn({ title, items, isDivided = false }: { title: string; items: string[]; isDivided?: boolean }) {
+  return (
+    <View style={[styles.studentColumn, isDivided ? styles.studentColumnDivided : {}]}>
+      <Text style={styles.sectionPill}>{title}</Text>
+      {items.map((item, index) => (
+        <View key={item} style={styles.numberedItem}>
+          <View style={styles.numberDisc}>
+            <Text style={styles.numberDiscText}>{index + 1}</Text>
+          </View>
+          <Text style={[styles.body, { flex: 1 }]}>{m(item)}</Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+
+/*
+ * One card, as the page's one box: the claim and its options, a hairline,
+ * then the teacher's examples to bring in or the students' steps and examples
+ * side by side. The student copy keeps its work area below.
+ */
 function ClaimSection({ facilitate, isTeacher, t }: { facilitate: IMakeYourCaseFacilitate; isTeacher: boolean; t: Translate }) {
   const { resolution } = facilitate;
-  if (!isTeacher) {
-    return (
-      <Card isTeacher={false} withWorkArea>
-        <Text style={styles.label}>{t('activityFlow.facilitate.claim')}</Text>
-        <Text style={styles.prompt}>{`"${m(facilitate.claim)}"`}</Text>
-        <Text style={styles.body}>{VOTE_OPTIONS.map((option) => t(`activityFlow.facilitate.voteOption.${option}`)).join('     ')}</Text>
-        <Text style={styles.label}>{t('activityFlow.facilitate.stepsToFollow')}</Text>
-        {facilitate.studentSteps.map((step, index) => (
-          <Text key={step} style={styles.body}>{`${index + 1}. ${m(step)}`}</Text>
-        ))}
-        <Text style={styles.label}>{t('activityFlow.facilitate.examplesToTry')}</Text>
-        {facilitate.examples.map((example, index) => (
-          <Text key={example.prompt} style={styles.body}>{`${index + 1}. ${m(example.prompt)}`}</Text>
-        ))}
-      </Card>
-    );
-  }
   return (
-    <>
-      <Card isTeacher>
-        <Text style={styles.label}>{t('activityFlow.facilitate.claim')}</Text>
-        <Text style={styles.prompt}>{`"${m(facilitate.claim)}"`}</Text>
-        {CLAIM_OPTIONS.map((option) => {
-          const isResolution = option === resolution.verdict;
-          return (
-            <View
-              key={option}
-              style={[styles.tonedBox, { backgroundColor: isResolution ? pdfColors.periwinkle : pdfColors.grey }]}
-            >
-              <Text style={pdfStyles.bodyBold}>
-                {`${t(`activityFlow.facilitate.claimOption.${option}`)}${isResolution ? ` ${t('activityFlow.pdf.markCorrect')}` : ''}`}
-              </Text>
-              {isResolution && (
-                <>
-                  <Text style={styles.label}>{t('activityFlow.facilitate.why')}</Text>
+    <Card isTeacher={isTeacher} withWorkArea>
+      <View style={styles.claimHead}>
+        <Text style={styles.body}>{t('activityFlow.facilitate.claim')}</Text>
+        <Text style={styles.claimText}>{`"${m(facilitate.claim)}"`}</Text>
+      </View>
+      <View style={styles.claimOptions}>
+        {isTeacher
+          ? CLAIM_OPTIONS.map((option) => {
+              const label = t(`activityFlow.facilitate.claimOption.${option}`);
+              if (option !== resolution.verdict) {
+                return <Text key={option} style={styles.body}>{label}</Text>;
+              }
+              return (
+                <View key={option} style={styles.answerBand}>
+                  <Text style={styles.body}>{`${label} ${t('activityFlow.pdf.markCorrect')}`}</Text>
+                  <Text style={pdfStyles.bodyBold}>{t('activityFlow.facilitate.why')}</Text>
                   <Text style={styles.body}>{m(resolution.why)}</Text>
-                </>
-              )}
-            </View>
-          );
-        })}
-      </Card>
-      <Card isTeacher>
-        <Text style={styles.exampleTitle}>{t('activityFlow.facilitate.examplesToBringIn')}</Text>
-        {facilitate.examples.map((example) => (
-          <View key={example.prompt} style={{ marginTop: 6 }}>
-            <Text style={pdfStyles.bodyBold}>{m(example.prompt)}</Text>
-            <Text style={styles.body}>{m(t('activityFlow.facilitate.exampleAnswer', { answer: example.answer }))}</Text>
+                </View>
+              );
+            })
+          : VOTE_OPTIONS.map((option) => (
+              <Text key={option} style={styles.body}>{t(`activityFlow.facilitate.voteOption.${option}`)}</Text>
+            ))}
+      </View>
+      <View style={styles.boxDivider} />
+      {isTeacher ? (
+        <View>
+          <Text style={styles.sectionPill}>{t('activityFlow.facilitate.examplesToBringIn')}</Text>
+          <View style={styles.bringInList}>
+            {facilitate.examples.map((example) => (
+              <View key={example.prompt}>
+                <Text style={[styles.body, { paddingLeft: 12 }]}>{m(example.prompt)}</Text>
+                <Text style={styles.body}>{m(t('activityFlow.facilitate.exampleAnswer', { answer: example.answer }))}</Text>
+              </View>
+            ))}
           </View>
-        ))}
-      </Card>
-      <Card isTeacher>
-        <Text style={styles.exampleTitle}>{t('activityFlow.facilitate.argumentsTitle')}</Text>
-        {facilitate.arguments.map((argument) => (
-          <View key={argument.text.slice(0, 40)} style={{ marginTop: 6 }}>
-            <Text style={styles.label}>{t(`activityFlow.facilitate.argumentStance.${argument.stance}`)}</Text>
-            <Text style={styles.body}>{m(argument.text)}</Text>
-          </View>
-        ))}
-      </Card>
-    </>
+        </View>
+      ) : (
+        <View style={styles.studentColumns}>
+          <NumberedColumn title={t('activityFlow.facilitate.stepsToFollow')} items={facilitate.studentSteps} />
+          <NumberedColumn
+            title={t('activityFlow.facilitate.examplesToTry')}
+            items={facilitate.examples.map((example) => example.prompt)}
+            isDivided
+          />
+        </View>
+      )}
+    </Card>
   );
 }
 

@@ -254,6 +254,36 @@ export function incompleteSystems(facilitate) {
   ));
 }
 
+/**
+ * Templates whose grouping pattern runs one way, smallest to largest
+ * (Individual → pairs → whole class). The others are left out on purpose: Make
+ * Your Case's re-vote is individual again by design ("Revisit the claim"), and
+ * Math Detective and Compare the Thinking start at pairs or the whole class.
+ */
+export const ORDERED_GROUPING_TYPES = ['FAVORITE_NO', 'INCORRECT_WORKED_EXAMPLES'];
+
+const GROUPING_RANK = Object.fromEntries(GROUPING_KINDS.map((kind, i) => [kind, i]));
+
+/**
+ * Run steps that go back to a smaller grouping after the class has reached a
+ * larger one (dev QA 2026-10-28: My Favorite No as Individual → Pairs → Whole
+ * class → Pairs). A step offering two groupings counts as the smaller; a step
+ * that doesn't regroup is skipped. The handler regenerates once when any are
+ * found.
+ */
+export function groupingRegressions(plan, contentType) {
+  if (!ORDERED_GROUPING_TYPES.includes(contentType)) return [];
+  let peak = -1;
+  return (plan?.howToRun ?? []).flatMap((step, i) => {
+    const ranks = (step.groupings ?? []).map((kind) => GROUPING_RANK[kind]);
+    if (!ranks.length) return [];
+    const rank = Math.min(...ranks);
+    const isBack = rank < peak;
+    peak = Math.max(peak, rank);
+    return isBack ? [{ step: i + 1, title: step.title, groupings: step.groupings }] : [];
+  });
+}
+
 const DEFAULT_BOUNDS = {
   examplesMin: 1, examplesMax: 3,
   beforeClassMin: 2, beforeClassMax: 3,

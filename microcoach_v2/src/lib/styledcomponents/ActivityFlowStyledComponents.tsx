@@ -123,22 +123,15 @@ export const FlowCard = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 
-/** Title over subtitle on the left, the duration chip on the right. */
-export const FlowCardHeader = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'flex-start',
-  justifyContent: 'space-between',
-  gap: theme.sizing.space3,
-}));
-
 export const FlowCardTitle = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.sizing.space0,
 }));
 
-// Before class: the duration chip sits 24 after the title, centred on it,
-// rather than at the card's far edge (Before Class_SpottheSlipActivity).
+// Every phase card: the duration chip sits 24 after the title, centred on it,
+// rather than at the card's far edge (Before Class_SpottheSlipActivity; all
+// phases from dev QA 2026-10-28).
 export const FlowCardTitleRow = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -158,12 +151,12 @@ export const Checklist = styled('ol')(({ theme }) => ({
   listStyle: 'none',
 }));
 
+// The step text centres on its disc (dev QA 2026-10-28), as StepRow's does.
 export const ChecklistItem = styled('li')(({ theme }) => ({
   display: 'flex',
-  alignItems: 'flex-start',
+  alignItems: 'center',
   gap: theme.sizing.space2,
   ...theme.typography.rubikBody,
-  '& > :first-of-type': { marginTop: 1 },
 }));
 
 /** The grouping card's title over its sequence (Figma: ~12 apart). */
@@ -379,6 +372,167 @@ export const PagerButton = styled(Button)(({ theme }) => ({
   '&.Mui-disabled': {
     color: theme.palette.designSystem.foreground.mutedGrey,
   },
+}));
+
+/* ── Math Detective: the open example's header ───────────────────────── */
+
+const exampleIconSize = 52;
+
+// DevQA MathDetective: 1049x75 rx11.5 on a #E0E4EF (greyAccent, Δ6) hairline;
+// the icon tile ~12 down and 16 in, the text 12 after it.
+export const ExampleHeaderBox = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.sizing.space2,
+  padding: `${theme.sizing.space2}px ${theme.sizing.space3}px`,
+  borderRadius: theme.sizing.space2,
+  border: theme.borders.subtle,
+  color: theme.palette.designSystem.surface.atlanticNavy,
+}));
+
+// Figma: a 52px atlanticNavy tile, rx13, holding a white pencil.
+export const ExampleIconTile = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexShrink: 0,
+  width: exampleIconSize,
+  height: exampleIconSize,
+  borderRadius: theme.sizing.space2,
+  backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
+  color: theme.palette.designSystem.surface.white,
+}));
+
+export const ExampleHeaderText = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  minWidth: 0,
+});
+
+/* ── Make Your Case ───────────────────────────────────────────────────── */
+
+const sectionPillHeight = 40;
+
+// DevQA MakeYourCase_Teacher / _Student: one box rx11.5 on a #E0E4EF
+// (greyAccent, Δ6) hairline, the claim section over the examples section.
+export const ClaimBox = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  borderRadius: theme.sizing.space2,
+  border: theme.borders.subtle,
+  color: theme.palette.designSystem.surface.atlanticNavy,
+  overflow: 'hidden',
+}));
+
+interface ClaimBoxSectionProps {
+  // The sections after the first start on the hairline that splits the box.
+  isDivided?: boolean;
+}
+
+export const ClaimBoxSection = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isDivided',
+})<ClaimBoxSectionProps>(({ theme, isDivided }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space3,
+  padding: theme.sizing.space3,
+  ...(isDivided && { borderTop: theme.borders.subtle }),
+}));
+
+/** "Claim" over the claim itself, centred (Figma: Rubik 16, Poppins 20/600). */
+export const ClaimHeading = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: theme.sizing.space1,
+  textAlign: 'center',
+}));
+
+/** The A / B / C lines (Figma: ~12 apart). */
+export const ClaimOptions = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space2,
+}));
+
+// Teacher view: the option the mathematics supports, with its Why?, on
+// #ECFFE3 (lightGreen) rx16. The band reaches 4 past the text so the option
+// stays level with the others.
+export const ClaimAnswerBand = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  padding: theme.sizing.space0,
+  margin: `0 -${theme.sizing.space0}px`,
+  borderRadius: theme.sizing.space3,
+  backgroundColor: theme.palette.designSystem.status.lightGreen,
+}));
+
+// Figma: navyBlue h40 rx16, Poppins 16/600 offWhite, 12 in. (The student
+// frame's second pill is #1B2A6B; treated as a slip, both are navyBlue.)
+export const SectionPill = styled(Box)(({ theme }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  alignSelf: 'flex-start',
+  minHeight: sectionPillHeight,
+  padding: `0 ${theme.sizing.space2}px`,
+  borderRadius: theme.sizing.space3,
+  backgroundColor: theme.palette.designSystem.background.navyBlue,
+  color: theme.palette.designSystem.background.offWhite,
+  ...theme.typography.headingSm,
+}));
+
+/** Teacher view: each example to bring in (Figma: ~20 apart). */
+export const BringInList = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space4,
+}));
+
+// The prompt sits 24 in from its answer.
+export const BringInItem = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  '& > :first-of-type': { paddingLeft: theme.sizing.space5 },
+}));
+
+// Student view: Steps to follow | Examples to try, split by a hairline;
+// stacked below LARGE.
+export const StudentColumns = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => {
+  const isLarge = screenSize === ScreenSize.LARGE;
+  return {
+    display: 'flex',
+    flexDirection: isLarge ? 'row' : 'column',
+    gap: theme.sizing.space6,
+    '& > *': { flex: '1 1 0', minWidth: 0 },
+    '& > * + *': isLarge
+      ? { borderLeft: theme.borders.subtle, paddingLeft: theme.sizing.space6 }
+      : { borderTop: theme.borders.subtle, paddingTop: theme.sizing.space3 },
+  };
+});
+
+/** A pill over its numbered list (Figma: 16 apart). */
+export const StudentColumn = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space3,
+}));
+
+export const StudentList = styled('ol')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space2,
+  margin: 0,
+  padding: 0,
+  listStyle: 'none',
+}));
+
+// Figma: a 20px navy disc, the text 12 after it.
+export const StudentListItem = styled('li')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.sizing.space2,
 }));
 
 /* ── Closing discussion ───────────────────────────────────────────────── */

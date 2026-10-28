@@ -10,6 +10,7 @@ import {
   WeekGroup,
   WeekHeadingRow,
 } from '../../lib/styledcomponents/ActivityListStyledComponents';
+import { ScreenSize } from '../../lib/MicroCoachModels';
 import { SkeletonFade, SkeletonLine, SkeletonPill } from './SkeletonParts';
 
 /*
@@ -44,7 +45,11 @@ function ProgressRow({ screenSize }: ScreenSizeProps) {
           ))}
         </Box>
       </CardColumn>
-      <CardColumn align="end">
+      {/* Left-aligned when stacked, as the real card's is. */}
+      <CardColumn
+        align="end"
+        sx={screenSize === ScreenSize.LARGE ? undefined : { alignItems: 'flex-start' }}
+      >
         <SkeletonLine width={220} />
         <SkeletonPill width={180} height={actionHeight} />
       </CardColumn>

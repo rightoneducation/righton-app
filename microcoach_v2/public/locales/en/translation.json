@@ -498,11 +498,6 @@
       "why": "Why?",
       "examplesToBringIn": "Examples to bring in",
       "exampleAnswer": "Answer: {{answer}}",
-      "argumentsTitle": "Arguments to anticipate",
-      "argumentStance": {
-        "SUPPORT": "Supports the claim",
-        "CHALLENGE": "Challenges the claim"
-      },
       "stepsToFollow": "Steps to follow",
       "examplesToTry": "Examples to try",
       "stage": {

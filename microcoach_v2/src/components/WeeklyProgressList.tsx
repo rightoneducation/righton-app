@@ -151,7 +151,17 @@ export default function WeeklyProgressList({
                       fluid={screenSize === ScreenSize.SMALL}
                     />
                   </CardColumn>
-                  <CardColumn align="end">
+                  {/* Stacked, the column is only as wide as its widest child,
+                      so right-aligning put the button left or right by state.
+                      Left-aligned there instead (dev QA 2026-10-28, iOS). */}
+                  <CardColumn
+                    align="end"
+                    sx={
+                      screenSize === ScreenSize.LARGE
+                        ? undefined
+                        : { alignItems: 'flex-start', textAlign: 'left' }
+                    }
+                  >
                     <CardMessage>
                       {t(`weeklyProgress.status.${statusKey(row)}`)}
                     </CardMessage>

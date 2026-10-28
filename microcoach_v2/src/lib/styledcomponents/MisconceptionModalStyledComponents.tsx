@@ -66,6 +66,11 @@ export const ModalHeading = styled(Box)(({ theme }) => ({
  * which only the tab panel scrolls. Below LARGE the fixed parts would leave
  * the panel half the modal, so this whole area scrolls instead, with the tabs
  * pinned to its top.
+ *
+ * Both scrollers reserve their scrollbar's gutter (dev QA 2026-10-28): Edge's
+ * classic scrollbar otherwise appears mid-way through a skill expanding and
+ * narrows the content under it. Chromium has no overlay scrollbars to use
+ * instead (`overflow: overlay` is `auto` since 114).
  */
 export const ModalScrollArea = styled(Box, {
   shouldForwardProp: noScreenSize,
@@ -75,7 +80,7 @@ export const ModalScrollArea = styled(Box, {
   gap: theme.sizing.space4,
   flex: '1 1 auto',
   minHeight: 0,
-  ...(screenSize !== ScreenSize.LARGE && { overflowY: 'auto' }),
+  ...(screenSize !== ScreenSize.LARGE && { overflowY: 'auto', scrollbarGutter: 'stable' }),
 }));
 
 // Tabs and their panel share one outline, so they sit in a column with no gap.
@@ -146,7 +151,7 @@ export const TabPanel = styled(Box, {
   flexDirection: 'column',
   gap: theme.sizing.space2,
   ...(screenSize === ScreenSize.LARGE
-    ? { flex: '1 1 auto', minHeight: 0, overflowY: 'auto' }
+    ? { flex: '1 1 auto', minHeight: 0, overflowY: 'auto', scrollbarGutter: 'stable' }
     : { flex: 'none' }),
   padding: theme.sizing.space3,
   border: theme.borders.subtle,
@@ -385,13 +390,18 @@ export const SkillCard = styled(Box)(({ theme }) => ({
   minWidth: 0,
 }));
 
-/** Prerequisite Gaps beside Upcoming Skills (Figma: 8 apart); stacked below LARGE. */
+/**
+ * Prerequisite Gaps beside Upcoming Skills (Figma: 8 apart); stacked below
+ * LARGE. Stacked, the cards stretch to the panel's width: sized to their
+ * content, a long name made a card wider than the panel, which then scrolled
+ * sideways (dev QA 2026-10-28, iOS).
+ */
 export const SkillColumns = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => ({
   display: 'flex',
   flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
-  alignItems: 'flex-start',
+  alignItems: screenSize === ScreenSize.LARGE ? 'flex-start' : 'stretch',
   gap: theme.sizing.space1,
   '& > *': { flex: '1 1 0' },
 }));

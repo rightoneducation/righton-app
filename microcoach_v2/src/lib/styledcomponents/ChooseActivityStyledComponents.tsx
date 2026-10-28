@@ -41,6 +41,25 @@ export const ChangeLink = styled(ButtonBase)(({ theme }) => ({
   '&:hover, &.Mui-focusVisible': { textDecoration: 'underline' },
 }));
 
+/*
+ * Below the stepper: the Misconception selected bar, then the title and
+ * cards. Figma puts the title ~60 under the bar (space10; 56 and 64 are
+ * equally near, and My Activity's ~59 already took space10). Grouped here so
+ * UnderstandColumn's 32, which Review shares, still spaces the stepper.
+ */
+export const ChooseActivityBody = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space10,
+}));
+
+/** The title over the cards, 32 apart as before. */
+export const ChooseActivityMain = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space6,
+}));
+
 /** Title over subtitle (Figma: 8 apart). */
 export const TitleBlock = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -118,11 +137,14 @@ export const CardHeader = styled(Box, {
     : { display: 'flex', flexDirection: 'column', gap: theme.sizing.space1 },
 );
 
+// The duration chip follows the name, centred on it, as on the flow cards'
+// titles (FlowCardTitleRow) rather than at the card's far edge (dev QA
+// 2026-10-28).
 export const NameRow = styled(Box)(({ theme }) => ({
   display: 'flex',
-  alignItems: 'flex-start',
-  justifyContent: 'space-between',
-  gap: theme.sizing.space2,
+  alignItems: 'center',
+  flexWrap: 'wrap',
+  gap: theme.sizing.space5,
 }));
 
 // Figma: 78x27 rx4 brightBlue, Poppins 12 offWhite.

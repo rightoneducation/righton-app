@@ -15,8 +15,8 @@ import { DurationChip } from '../../lib/styledcomponents/ChooseActivityStyledCom
 import {
   AnswerCell,
   FlowCard,
-  FlowCardHeader,
   FlowCardTitle,
+  FlowCardTitleRow,
   PhaseCards,
   QuestionBadge,
   QuestionCell,
@@ -129,17 +129,17 @@ export default function DiscussionView({ content, screenSize }: DiscussionViewPr
   return (
     <PhaseCards>
       <FlowCard component="section" aria-labelledby={discussionTitleId}>
-        <FlowCardHeader>
-          <FlowCardTitle>
+        <FlowCardTitle>
+          <FlowCardTitleRow>
             <Typography id={discussionTitleId} variant="headingLg" component="h2">
               {t('activityFlow.discussion.title')}
             </Typography>
-            <Typography variant="rubikBody">
-              {t('activityFlow.discussion.subtitle')}
-            </Typography>
-          </FlowCardTitle>
-          <DurationChip>{content.durations.discussion}</DurationChip>
-        </FlowCardHeader>
+            <DurationChip>{content.durations.discussion}</DurationChip>
+          </FlowCardTitleRow>
+          <Typography variant="rubikBody">
+            {t('activityFlow.discussion.subtitle')}
+          </Typography>
+        </FlowCardTitle>
 
         {/* Across: all questions, one rule, then all answers. Stacked: each
             question keeps its answer. */}

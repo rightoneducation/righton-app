@@ -18,6 +18,8 @@ import {
 } from '../lib/styledcomponents/UnderstandStyledComponents';
 import {
   ActivityCardRow,
+  ChooseActivityBody,
+  ChooseActivityMain,
   TitleBlock,
 } from '../lib/styledcomponents/ChooseActivityStyledComponents';
 import { useI18nReady } from '../hooks/readiness';
@@ -100,52 +102,56 @@ export default function ChooseActivity({
           page={FlowStep.CHOOSE}
         />
 
-        {misconception && <MisconceptionSelectedBar title={misconception.title} />}
+        <ChooseActivityBody>
+          {misconception && <MisconceptionSelectedBar title={misconception.title} />}
 
-        <TitleBlock>
-          <Typography
-            variant="appTitle"
-            component="h1"
-            sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {t('chooseActivity.title')}
-          </Typography>
-          <Typography
-            variant="uploadLabel"
-            sx={{ color: 'designSystem.surface.atlanticNavy' }}
-          >
-            {t('chooseActivity.subheading')}
-          </Typography>
-        </TitleBlock>
+          <ChooseActivityMain>
+            <TitleBlock>
+              <Typography
+                variant="appTitle"
+                component="h1"
+                sx={{ color: 'designSystem.surface.atlanticNavy' }}
+              >
+                {t('chooseActivity.title')}
+              </Typography>
+              <Typography
+                variant="uploadLabel"
+                sx={{ color: 'designSystem.surface.atlanticNavy' }}
+              >
+                {t('chooseActivity.subheading')}
+              </Typography>
+            </TitleBlock>
 
-        <LoadingSlot
-          isLoading={isLoading}
-          minHeight={screenSize === ScreenSize.LARGE ? CARD_HEIGHT : 0}
-          label={t('chooseActivity.loading')}
-          skeleton={<ActivityCardsSkeleton screenSize={screenSize} />}
-        >
-          {hasFailed || !misconception ? (
-            <Typography
-              variant="rubikBody"
-              role="alert"
-              sx={{ color: 'designSystem.status.errorStroke' }}
+            <LoadingSlot
+              isLoading={isLoading}
+              minHeight={screenSize === ScreenSize.LARGE ? CARD_HEIGHT : 0}
+              label={t('chooseActivity.loading')}
+              skeleton={<ActivityCardsSkeleton screenSize={screenSize} />}
             >
-              {t('chooseActivity.loadError')}
-            </Typography>
-          ) : (
-            <ActivityCardRow screenSize={screenSize}>
-              {misconception.nextStepActivities.map((activity) => (
-                <ActivityCard
-                  key={activity.id}
-                  activity={activity}
-                  screenSize={screenSize}
-                  onViewDetails={(activityId) => navigate(`/activity/${activityId}/before-class`)}
-                  onSelect={handleSelect}
-                />
-              ))}
-            </ActivityCardRow>
-          )}
-        </LoadingSlot>
+              {hasFailed || !misconception ? (
+                <Typography
+                  variant="rubikBody"
+                  role="alert"
+                  sx={{ color: 'designSystem.status.errorStroke' }}
+                >
+                  {t('chooseActivity.loadError')}
+                </Typography>
+              ) : (
+                <ActivityCardRow screenSize={screenSize}>
+                  {misconception.nextStepActivities.map((activity) => (
+                    <ActivityCard
+                      key={activity.id}
+                      activity={activity}
+                      screenSize={screenSize}
+                      onViewDetails={(activityId) => navigate(`/activity/${activityId}/before-class`)}
+                      onSelect={handleSelect}
+                    />
+                  ))}
+                </ActivityCardRow>
+              )}
+            </LoadingSlot>
+          </ChooseActivityMain>
+        </ChooseActivityBody>
       </UnderstandColumn>
       <ChangeActivityDialog
         open={pendingActivity !== null}

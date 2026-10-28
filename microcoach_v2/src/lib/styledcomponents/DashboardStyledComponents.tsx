@@ -467,14 +467,16 @@ export const DashboardCta = styled(Button)(({ theme }) => ({
   // page, and minWidth beats the parent's width.
   width: '100%',
   maxWidth: 440,
-  height: 58,
-  padding: `0 ${theme.sizing.space6}px`,
+  // A floor, not a fixed height: on a phone the longer labels ("Upload Monday
+  // MIU files for analysis") wrap, and the button grows to hold them.
+  minHeight: 58,
+  padding: `${theme.sizing.space2}px ${theme.sizing.space6}px`,
   borderRadius: ctaRadius,
   backgroundColor: theme.palette.designSystem.background.navyBlue,
   color: theme.palette.designSystem.surface.white,
   ...theme.typography.ctaLabel,
   textTransform: 'none',
-  whiteSpace: 'nowrap',
+  textAlign: 'center',
   '&:hover': {
     backgroundColor: theme.palette.designSystem.background.navyBlue,
   },
