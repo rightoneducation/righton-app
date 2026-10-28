@@ -59,6 +59,8 @@ import {
   toStoredDiscussion,
   toStoredFacilitate,
   incompleteSystems,
+  groupingRegressions,
+  ORDERED_GROUPING_TYPES,
   teacherLabels,
   applyLabelFixes,
 } from './util/activityContent.mjs';
@@ -560,7 +562,7 @@ Subject: ${classroomContext.subject ?? 'math'} | Class size: ${classroomContext.
 - **whyThisActivity**: 2-3 teacher-facing sentences, per "Why This Activity" above. Draw on the instructional need and why the template was selected; do not mention scores, ranks, rubrics, or the word "template", and do not overstate what the evidence shows.
 - **minutes** (each howToRun step), **discussionMinutes** and **beforeClassMinutes**: realistic minutes, per Pacing above. The steps' minutes plus discussionMinutes should come to about ${DEFAULT_DURATION} and must be at most ${MAX_DURATION}, which is slack for a class that runs long, not a budget to fill; if they would be over, cut content (fewer steps, a shorter task) rather than shrinking the estimates.
 - **beforeClass.steps**: ${BOUNDS.beforeClassMin}-${BOUNDS.beforeClassMax} concrete things the teacher prepares. **beforeClass.groupingRationale**: 1-2 sentences on why students are grouped this way, from the template's priority grouping pattern.
-- **howToRun**: ${BOUNDS.howToRunMin}-${BOUNDS.howToRunMax} steps following the template's classroom flow. Give each step its grouping; leave \`groupings\` empty for a step that doesn't regroup; use two values only when the teacher chooses between them.${hasExamples ? ' Refer to examples as "Example 1", "Example 2", … and never to more examples than you write.' : ''}
+- **howToRun**: ${BOUNDS.howToRunMin}-${BOUNDS.howToRunMax} steps following the template's classroom flow. Give each step its grouping; leave \`groupings\` empty for a step that doesn't regroup; use two values only when the teacher chooses between them.${ORDERED_GROUPING_TYPES.includes(contentType) ? ' The groupings follow the priority grouping pattern in order: once the class has moved to a larger grouping, no later step returns to a smaller one.' : ''}${hasExamples ? ' Refer to examples as "Example 1", "Example 2", … and never to more examples than you write.' : ''}
 - ${FACILITATE_INSTRUCTIONS[contentType]()}
 - \`facilitate.type\` must be exactly "${contentType}".
 - Teacher-view labels (a line's status, a step's annotation or highlight, a strategy's verdict) must agree with the math. Label each line by whether the move it records is right: a line that records only a correct move, such as a solid boundary for $\\leq$, is CORRECT even inside work that goes wrong elsewhere. When teacher-only text names a region or direction (above, below, left, right, upper-left), solve for $y$ first and check the direction against the inequality and the line's slope.${hasExamples ? `
@@ -762,6 +764,22 @@ ${MATH_FORMATTING}
       if (replanned.total < planned.total && incompleteSystems(retried.facilitate).length <= incompleteSystems(generated.facilitate).length) {
         generated = retried;
       }
+    }
+    // A one-way grouping pattern (Individual → pairs → whole class) that steps
+    // back to a smaller grouping no longer follows the template. Regenerate once,
+    // keep the attempt with fewer step-backs as long as it is no worse on the
+    // checks above, and record both so evaluation can see how often this fired.
+    const regressions = groupingRegressions(generated, contentType);
+    if (regressions.length) {
+      const retried = await generateActivity();
+      const stillRegressing = groupingRegressions(retried, contentType);
+      recordSubCall('retry-grouping-order', null, null, {
+        before: regressions, after: stillRegressing, fixed: stillRegressing.length === 0,
+      });
+      const noWorse = incompleteSystems(retried.facilitate).length <= incompleteSystems(generated.facilitate).length
+        && (plannedClassMinutes(retried).total <= MAX_DURATION
+          || plannedClassMinutes(retried).total <= plannedClassMinutes(generated).total);
+      if (stillRegressing.length < regressions.length && noWorse) generated = retried;
     }
     const {
       targets, instructionalMove, strategyTag, aiReasoning, ...activity

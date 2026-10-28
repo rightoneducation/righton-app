@@ -124,7 +124,6 @@ export default function MisconceptionCarousel({ children }: MisconceptionCarouse
             slidesOffsetBefore={geometry.before}
             slidesOffsetAfter={geometry.after}
             longSwipesRatio={LONG_SWIPE_RATIO}
-            grabCursor
             style={{
               width: `calc(100% + ${geometry.before + geometry.after}px)`,
               marginLeft: -geometry.before,

@@ -6,6 +6,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import EditIcon from '@mui/icons-material/Edit';
 import ErrorIcon from '@mui/icons-material/Error';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import MathTypography from '../MathTypography';
@@ -22,14 +23,32 @@ import { ScreenSize } from '../../lib/MicroCoachModels';
 import {
   ColumnBadge,
   ContentPanel,
-  NumberBadge,
   PromptBand,
   StepChip,
   StepRow,
   TonedPanel,
   VerdictChip,
 } from '../../lib/styledcomponents/ActivityDetailStyledComponents';
-import { ExampleDetail, FlowCard } from '../../lib/styledcomponents/ActivityFlowStyledComponents';
+import { StepBadge } from '../../lib/styledcomponents/ChooseActivityStyledComponents';
+import {
+  BringInItem,
+  BringInList,
+  ClaimAnswerBand,
+  ClaimBox,
+  ClaimBoxSection,
+  ClaimHeading,
+  ClaimOptions,
+  ExampleDetail,
+  ExampleHeaderBox,
+  ExampleHeaderText,
+  ExampleIconTile,
+  FlowCard,
+  SectionPill,
+  StudentColumn,
+  StudentColumns,
+  StudentList,
+  StudentListItem,
+} from '../../lib/styledcomponents/ActivityFlowStyledComponents';
 import {
   ArtifactHeader,
   ArtifactPanelProps,
@@ -65,13 +84,10 @@ function WorkLine({
   text,
   status,
   isTeacher,
-  variant = 'smallBodyText',
 }: {
   text: string;
   status: WorkStatus;
   isTeacher: boolean;
-  // Figma: 14 in My Favorite No's student work, 16 under Math Detective's open example.
-  variant?: 'smallBodyText' | 'rubikBody';
 }) {
   return (
     <StepRow
@@ -81,8 +97,9 @@ function WorkLine({
       // 29px floor apply.
       sx={{ px: 1, borderRadius: 0, minHeight: 0 }}
     >
+      {/* Figma (My Favorite No): the student work is 14. */}
       <MathTypography
-        variant={variant}
+        variant="smallBodyText"
         sx={{ color: navy }}
         text={isTeacher ? withWorkMark(text, status) : text}
       />
@@ -192,29 +209,34 @@ export function CompareThinkingPanel({
 const CLAIM_OPTIONS = ['TRUE', 'FALSE', 'CONDITIONAL'] as const;
 const VOTE_OPTIONS = ['YES', 'NO', 'UNDECIDED'] as const;
 
+/** Student view: a heading pill over its numbered list. */
 function NumberedList({ title, items }: { title: string; items: string[] }) {
-  const theme = useTheme();
   return (
-    <ContentPanel>
-      <Typography variant="headingSm" sx={{ color: navy }}>
-        {title}
-      </Typography>
-      {items.map((item, index) => (
-        <Stack key={item} direction="row" alignItems="center" spacing={`${theme.sizing.space2}px`}>
-          <NumberBadge>{index + 1}</NumberBadge>
-          <MathTypography variant="rubikBody" sx={{ color: navy }} text={item} />
-        </Stack>
-      ))}
-    </ContentPanel>
+    <StudentColumn>
+      <SectionPill>{title}</SectionPill>
+      <StudentList>
+        {items.map((item, index) => (
+          <StudentListItem key={item}>
+            <StepBadge aria-hidden>{index + 1}</StepBadge>
+            <MathTypography variant="rubikBody" component="span" sx={{ color: navy }} text={item} />
+          </StudentListItem>
+        ))}
+      </StudentList>
+    </StudentColumn>
   );
 }
 
+/*
+ * DevQA MakeYourCase_Teacher / _Student: one box, the claim and its options
+ * over a hairline, then the teacher's examples to bring in, or the students'
+ * steps and examples side by side. The generated arguments aren't in the
+ * frame and aren't shown here (they stay in the teacher PDF).
+ */
 export function MakeYourCasePanel({
   facilitate,
   ...props
 }: ArtifactPanelProps & { facilitate: IMakeYourCaseFacilitate }) {
   const { t } = useTranslation();
-  const theme = useTheme();
   const titleId = React.useId();
   const view = useArtifactView(props);
   const { isTeacher } = view;
@@ -223,92 +245,66 @@ export function MakeYourCasePanel({
   return (
     <FlowCard component="section" aria-labelledby={titleId}>
       <ArtifactHeader titleId={titleId} title={props.template.artifactTitle} view={view} />
-      <PromptBand tone="sky">
-        <Box sx={{ minWidth: 0 }}>
-          <Typography variant="rubikBody" sx={{ color: navy }}>
-            {t('activityFlow.facilitate.claim')}
-          </Typography>
-          <MathTypography variant="headingMd" sx={{ color: navy }} text={`"${facilitate.claim}"`} />
-        </Box>
-      </PromptBand>
-
-      {isTeacher ? (
-        <>
-          <Stack spacing={`${theme.sizing.space1}px`}>
-            {CLAIM_OPTIONS.map((option) => {
-              const isResolution = option === resolution.verdict;
-              return (
-                // Figma (Make Your Case Teacher): options 16, "Why?" 16/500, explanation 16.
-                <TonedPanel key={option} tone={isResolution ? 'periwinkle' : 'grey'}>
-                  <Typography variant="rubikBody" sx={{ color: navy }}>
-                    {t(`activityFlow.facilitate.claimOption.${option}`)}
-                    {isResolution ? ' ✓' : ''}
-                  </Typography>
-                  {isResolution && (
-                    <>
-                      <Typography variant="rubikLabel" sx={{ color: navy }}>
-                        {t('activityFlow.facilitate.why')}
+      <ClaimBox>
+        <ClaimBoxSection>
+          <ClaimHeading>
+            <Typography variant="rubikBody">{t('activityFlow.facilitate.claim')}</Typography>
+            <MathTypography variant="headingMd" text={`"${facilitate.claim}"`} />
+          </ClaimHeading>
+          <ClaimOptions>
+            {isTeacher
+              ? CLAIM_OPTIONS.map((option) => {
+                  const label = t(`activityFlow.facilitate.claimOption.${option}`);
+                  if (option !== resolution.verdict) {
+                    return (
+                      <Typography key={option} variant="rubikBody">
+                        {label}
                       </Typography>
-                      <MathTypography variant="rubikBody" sx={{ color: navy }} text={resolution.why} />
-                    </>
-                  )}
-                </TonedPanel>
-              );
-            })}
-          </Stack>
+                    );
+                  }
+                  return (
+                    <ClaimAnswerBand key={option}>
+                      <Typography variant="rubikBody">{`${label} ✓`}</Typography>
+                      <Typography variant="rubikLabel">{t('activityFlow.facilitate.why')}</Typography>
+                      <MathTypography variant="rubikBody" text={resolution.why} />
+                    </ClaimAnswerBand>
+                  );
+                })
+              : VOTE_OPTIONS.map((option) => (
+                  <Typography key={option} variant="rubikBody">
+                    {t(`activityFlow.facilitate.voteOption.${option}`)}
+                  </Typography>
+                ))}
+          </ClaimOptions>
+        </ClaimBoxSection>
 
-          <ContentPanel>
-            <Typography variant="headingSm" sx={{ color: navy }}>
-              {t('activityFlow.facilitate.examplesToBringIn')}
-            </Typography>
-            {facilitate.examples.map((example) => (
-              <Box key={example.prompt}>
-                {/* Figma: prompt and answer both Rubik 16. */}
-                <MathTypography variant="rubikBody" sx={{ color: navy }} text={example.prompt} />
-                <MathTypography
-                  variant="rubikBody"
-                  sx={{ color: navy }}
-                  text={t('activityFlow.facilitate.exampleAnswer', { answer: example.answer })}
-                />
-              </Box>
-            ))}
-          </ContentPanel>
-
-          {/* Not in the frame: the generated arguments on both sides, kept for
-              the teacher rather than dropped. */}
-          <ContentPanel>
-            <Typography variant="headingSm" sx={{ color: navy }}>
-              {t('activityFlow.facilitate.argumentsTitle')}
-            </Typography>
-            {facilitate.arguments.map((argument) => (
-              <TonedPanel key={argument.text.slice(0, 40)} tone="grey">
-                <Box>
-                  <VerdictChip tone={argument.stance === 'SUPPORT' ? 'correct' : 'wrong'} sx={{ display: 'inline-flex' }}>
-                    {t(`activityFlow.facilitate.argumentStance.${argument.stance}`)}
-                  </VerdictChip>
-                </Box>
-                <MathTypography variant="smallBodyText" sx={{ color: navy }} text={argument.text} />
-              </TonedPanel>
-            ))}
-          </ContentPanel>
-        </>
-      ) : (
-        <>
-          <Stack direction="row" flexWrap="wrap" gap={`${theme.sizing.space2}px`}>
-            {VOTE_OPTIONS.map((option) => (
-              // Figma (Make Your Case Student): the vote options are Rubik 16.
-              <StepChip key={option} sx={{ typography: 'rubikBody' }}>
-                {t(`activityFlow.facilitate.voteOption.${option}`)}
-              </StepChip>
-            ))}
-          </Stack>
-          <NumberedList title={t('activityFlow.facilitate.stepsToFollow')} items={facilitate.studentSteps} />
-          <NumberedList
-            title={t('activityFlow.facilitate.examplesToTry')}
-            items={facilitate.examples.map((example) => example.prompt)}
-          />
-        </>
-      )}
+        <ClaimBoxSection isDivided>
+          {isTeacher ? (
+            <>
+              <SectionPill>{t('activityFlow.facilitate.examplesToBringIn')}</SectionPill>
+              <BringInList>
+                {facilitate.examples.map((example) => (
+                  <BringInItem key={example.prompt}>
+                    <MathTypography variant="rubikBody" text={example.prompt} />
+                    <MathTypography
+                      variant="rubikBody"
+                      text={t('activityFlow.facilitate.exampleAnswer', { answer: example.answer })}
+                    />
+                  </BringInItem>
+                ))}
+              </BringInList>
+            </>
+          ) : (
+            <StudentColumns screenSize={props.screenSize}>
+              <NumberedList title={t('activityFlow.facilitate.stepsToFollow')} items={facilitate.studentSteps} />
+              <NumberedList
+                title={t('activityFlow.facilitate.examplesToTry')}
+                items={facilitate.examples.map((example) => example.prompt)}
+              />
+            </StudentColumns>
+          )}
+        </ClaimBoxSection>
+      </ClaimBox>
     </FlowCard>
   );
 }
@@ -320,7 +316,6 @@ export function MathDetectivePanel({
   ...props
 }: ArtifactPanelProps & { facilitate: IMathDetectiveFacilitate }) {
   const { t } = useTranslation();
-  const theme = useTheme();
   const titleId = React.useId();
   const view = useArtifactView(props);
   const { isTeacher } = view;
@@ -351,19 +346,17 @@ export function MathDetectivePanel({
       {example && (
         <ExampleDetail aria-live="polite">
           <ExampleOfHeading index={index} count={examples.length} />
-          {/* Figma (Math Detective Teacher): the problem Poppins 20/600, the work 16. */}
-          <MathTypography variant="headingMd" text={example.prompt} />
-          <Stack spacing={`${theme.sizing.space0}px`}>
-            {example.workSummary.map((line) => (
-              <WorkLine
-                key={line.text}
-                text={line.text}
-                status={line.status}
-                isTeacher={isTeacher}
-                variant="rubikBody"
-              />
-            ))}
-          </Stack>
+          {/* DevQA MathDetective: the pencil tile, then the problem (Poppins
+              20/600) over the work in one line (Rubik 16), marked in teacher view. */}
+          <ExampleHeaderBox>
+            <ExampleIconTile aria-hidden>
+              <EditIcon />
+            </ExampleIconTile>
+            <ExampleHeaderText>
+              <MathTypography variant="headingMd" text={example.prompt} />
+              <MathTypography variant="rubikBody" text={workLine(example.workSummary)} />
+            </ExampleHeaderText>
+          </ExampleHeaderBox>
           {example.stages.map((stage) => (
             <ContentPanel key={stage.kind}>
               <Typography variant="headingSm" sx={{ color: navy }}>

@@ -142,13 +142,15 @@ export const BannerOverlay = styled(Box)(({ theme }) => ({
 }));
 
 // Figma (SelectingMisconceptions3): 829x59 rx20, text 20 in from either end.
+// The 12 above and below keeps wrapped text (three lines on a phone) off the
+// edges; one line still sits inside the 59.
 export const ResultsBannerBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: theme.sizing.space3,
   maxWidth: '100%',
   minHeight: 59,
-  padding: `0 ${theme.sizing.space4}px`,
+  padding: `${theme.sizing.space2}px ${theme.sizing.space4}px`,
   borderRadius: theme.sizing.space4,
   boxSizing: 'border-box',
   backgroundColor: theme.palette.designSystem.status.lightGreen,

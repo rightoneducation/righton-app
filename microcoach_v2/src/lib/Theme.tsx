@@ -829,6 +829,14 @@ const Theme = createTheme({
     designSystem: designSystemColors,
   },
   components: {
+    // The overscroll gap (Edge/Chrome elastic scroll past either end) shows the
+    // root background. Navy carries the header colour into the top gap; every
+    // page sits on AppContainer's opaque 100dvh layer, so it shows nowhere else.
+    MuiCssBaseline: {
+      styleOverrides: {
+        html: { backgroundColor: designSystemColors.background.navyBlue },
+      },
+    },
     // Hover lightens a button's own fill with a faint white layer. Filled
     // buttons keep their resting colour on hover so this layer shows through
     // instead of MUI's default hover tint replacing the fill.

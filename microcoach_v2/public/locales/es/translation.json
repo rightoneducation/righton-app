@@ -498,11 +498,6 @@
       "why": "¿Por qué?",
       "examplesToBringIn": "Ejemplos para presentar",
       "exampleAnswer": "Respuesta: {{answer}}",
-      "argumentsTitle": "Argumentos que pueden surgir",
-      "argumentStance": {
-        "SUPPORT": "Apoya la afirmación",
-        "CHALLENGE": "Cuestiona la afirmación"
-      },
       "stepsToFollow": "Pasos a seguir",
       "examplesToTry": "Ejemplos para probar",
       "stage": {

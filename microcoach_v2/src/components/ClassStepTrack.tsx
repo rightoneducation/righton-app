@@ -50,11 +50,15 @@ const Line = styled(Box)({
   position: 'absolute',
 });
 
+// Top-aligned in both kinds of column. ButtonBase centres its content, so a
+// linked step would otherwise sit lower than its neighbours whenever a label
+// wraps and the columns stretch to the tallest (dev QA 2026-10-28, iOS).
 const columnStyles = {
   position: 'relative' as const,
   display: 'flex',
   flexDirection: 'column' as const,
   alignItems: 'center',
+  justifyContent: 'flex-start',
 };
 
 const Column = styled(Box)(columnStyles);
