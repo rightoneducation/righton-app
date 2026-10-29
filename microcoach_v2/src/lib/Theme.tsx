@@ -586,7 +586,7 @@ const sizing = {
   reflectDetailsButtonHeight: 37,
   reflectDetailModalMaxWidth: 800,
   reflectDetailHeaderHeight: 61,
-  reflectDetailSortWidth: 128,
+  reflectDetailSortWidth: 140,
   reflectDetailSortHeight: 30,
   reflectCountChipHeight: 31,
   reflectMiuLabelWidth: 70,

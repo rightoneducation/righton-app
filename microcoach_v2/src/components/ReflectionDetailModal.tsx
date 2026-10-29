@@ -2,7 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { SelectChangeEvent } from '@mui/material/Select';
 import CloseIcon from '@mui/icons-material/Close';
@@ -42,6 +41,7 @@ import {
   ReflectionPanelDivider,
   ReflectionProgressBody,
   ReflectionProgressPanel,
+  ReflectionSortMenuItem,
   ReflectionSortRow,
   ReflectionSortSelect,
   ReflectionSummaryChange,
@@ -242,38 +242,35 @@ function StudentGroup({
             }
             inputProps={{ 'aria-label': t('reflect.sortStudents') }}
             MenuProps={{
+              MenuListProps: {
+                sx: {
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: `${theme.sizing.space0}px`,
+                  padding: `${theme.sizing.space1}px`,
+                },
+              },
               PaperProps: {
                 sx: {
-                  mt: `-${theme.sizing.space1}px`,
-                  width: theme.sizing.reflectDetailSortWidth,
+                  width: `${theme.sizing.reflectDetailSortWidth}px`,
                   minWidth: `${theme.sizing.reflectDetailSortWidth}px !important`,
                   borderRadius: `0 0 ${theme.sizing.space2}px ${theme.sizing.space2}px`,
                   color: 'designSystem.surface.white',
                   backgroundColor: 'designSystem.surface.steelBlue',
                   boxShadow: 'none',
-                  '& .MuiMenuItem-root': {
-                    minHeight: theme.sizing.space6,
-                    mx: `${theme.sizing.space1}px`,
-                    my: `${theme.sizing.space0}px`,
-                    borderRadius: `${theme.sizing.space0}px`,
-                    backgroundColor: 'designSystem.foreground.fadedNavyBlue',
-                  },
-                  '& .MuiMenuItem-root:hover': {
-                    backgroundColor: 'designSystem.foreground.fadedNavyBlue',
-                  },
                 },
               },
             }}
           >
             {sort === 'mostImproved' && (
-              <MenuItem value="highestScoring">
+              <ReflectionSortMenuItem value="highestScoring">
                 {t('reflect.highestScoring')}
-              </MenuItem>
+              </ReflectionSortMenuItem>
             )}
             {sort === 'highestScoring' && (
-              <MenuItem value="mostImproved">
+              <ReflectionSortMenuItem value="mostImproved">
                 {t('reflect.mostImproved')}
-              </MenuItem>
+              </ReflectionSortMenuItem>
             )}
           </ReflectionSortSelect>
         </ReflectionSortRow>
