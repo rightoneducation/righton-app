@@ -68,7 +68,8 @@ export default function Dashboard({
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { userProfile } = useMicroCoachDataState();
-  const classList = classrooms.classrooms;
+  // A-Z here only; the shared list stays in creation order (dev QA 2026-10-29).
+  const classList = [...classrooms.classrooms].sort((a, b) => a.name.localeCompare(b.name));
   const selectedClassId = classrooms.selectedClassroomId ?? '';
   const selectClass = classrooms.selectClassroom;
 
