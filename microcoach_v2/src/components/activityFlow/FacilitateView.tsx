@@ -24,6 +24,7 @@ import {
   RunStepText,
   RunStepTitleRow,
   SlipChip,
+  flowCardHeadingSx,
 } from '../../lib/styledcomponents/ActivityFlowStyledComponents';
 import {
   ArtifactHeader,
@@ -168,7 +169,7 @@ export default function FacilitateView({
       <FlowCard component="section" aria-labelledby={runTitleId}>
         <FlowCardHeader>
           <FlowCardTitle>
-            <Typography id={runTitleId} variant="headingLg" component="h2">
+            <Typography id={runTitleId} variant="headingLg" component="h2" sx={flowCardHeadingSx}>
               {t('activityFlow.facilitate.title')}
             </Typography>
             <Typography variant="rubikBody">

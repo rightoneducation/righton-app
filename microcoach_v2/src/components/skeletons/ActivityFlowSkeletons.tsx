@@ -34,7 +34,9 @@ export function ActivityFlowSkeleton() {
       </Box>
       <SkeletonFade index={0}>
         <FlowCard>
-          <SkeletonLine width={220} height={32} />
+          {/* The title's 24 box; its bar pinned to the top so it starts at the
+              card's 32 padding, as the title's text does. */}
+          <SkeletonLine width={220} height={24} sx={{ transformOrigin: '0 0' }} />
           <SkeletonParagraph lines={6} />
         </FlowCard>
       </SkeletonFade>

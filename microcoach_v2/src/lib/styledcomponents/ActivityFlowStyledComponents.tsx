@@ -111,11 +111,12 @@ export const PhaseCards = styled(Box)(({ theme }) => ({
 }));
 
 // Figma: 1130 wide rx12 white, 25 in, with the dashboard card's soft shadow.
+// 32 over the title (dev QA 2026-10-29), 24 on the other sides.
 export const FlowCard = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.sizing.space4,
-  padding: theme.sizing.space5,
+  padding: `${theme.sizing.space6}px ${theme.sizing.space5}px ${theme.sizing.space5}px`,
   borderRadius: theme.sizing.space2,
   backgroundColor: theme.palette.designSystem.surface.white,
   boxShadow: dashboardCardShadow,
@@ -131,11 +132,17 @@ export const FlowCardHeader = styled(Box)(({ theme }) => ({
   gap: theme.sizing.space3,
 }));
 
+// Figma: ~14 from the title's baseline to the subtitle's cap height.
 export const FlowCardTitle = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.sizing.space0,
+  gap: theme.sizing.space1,
 }));
+
+// A flow card's title, its box as tall as its font size (24, not Poppins'
+// normal 36), so the card's padding and the gaps around it measure from the
+// text (dev QA 2026-10-29).
+export const flowCardHeadingSx = { lineHeight: 1 } as const;
 
 /* ── Before class ─────────────────────────────────────────────────────── */
 
@@ -639,12 +646,13 @@ export const TryAskingBlock = styled(Box)(({ theme }) => ({
   gap: theme.sizing.space1,
 }));
 
-// Figma: #E5F0F5 → fadedLightBlue (Δ2), rx12, 22 in.
+// Figma: #E5F0F5 → fadedLightBlue (Δ2), rx12, 22 in; 32 over the title as on
+// FlowCard.
 export const TakeawayBand = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.sizing.space1,
-  padding: theme.sizing.space5,
+  padding: `${theme.sizing.space6}px ${theme.sizing.space5}px ${theme.sizing.space5}px`,
   borderRadius: theme.sizing.space2,
   backgroundColor: theme.palette.designSystem.foreground.fadedLightBlue,
   color: theme.palette.designSystem.surface.atlanticNavy,

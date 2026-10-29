@@ -18,6 +18,7 @@ import {
   ToggleGroup,
   ViewPillOption,
   ViewPillToggle,
+  flowCardHeadingSx,
 } from '../../lib/styledcomponents/ActivityFlowStyledComponents';
 
 /*
@@ -80,7 +81,7 @@ export function ArtifactHeader({
 
   return (
     <>
-      <Typography id={titleId} variant="headingMd" component="h2">
+      <Typography id={titleId} variant="headingMd" component="h2" sx={flowCardHeadingSx}>
         {title}
       </Typography>
       <ExamplesToolbar>

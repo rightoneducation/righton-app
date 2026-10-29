@@ -16,6 +16,7 @@ import {
   FlowCardTitle,
   GroupingHeader,
   PhaseCards,
+  flowCardHeadingSx,
 } from '../../lib/styledcomponents/ActivityFlowStyledComponents';
 
 interface BeforeClassViewProps {
@@ -36,7 +37,7 @@ export default function BeforeClassView({ content }: BeforeClassViewProps) {
             frame's chip beside the title was a design mistake (dev QA 2026-10-29). */}
         <FlowCardHeader>
           <FlowCardTitle>
-            <Typography id={beforeClassTitleId} variant="headingLg" component="h2">
+            <Typography id={beforeClassTitleId} variant="headingLg" component="h2" sx={flowCardHeadingSx}>
               {t('activityFlow.beforeClass.title')}
             </Typography>
             <Typography variant="rubikBody">
@@ -57,7 +58,7 @@ export default function BeforeClassView({ content }: BeforeClassViewProps) {
 
       <FlowCard component="section" aria-labelledby={groupingTitleId}>
         <GroupingHeader>
-          <Typography id={groupingTitleId} variant="headingLg" component="h2">
+          <Typography id={groupingTitleId} variant="headingLg" component="h2" sx={flowCardHeadingSx}>
             {t('activityFlow.beforeClass.groupingTitle')}
           </Typography>
           <GroupingSequenceChips steps={content.howToRun} />

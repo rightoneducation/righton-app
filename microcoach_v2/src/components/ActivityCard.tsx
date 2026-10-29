@@ -56,7 +56,8 @@ export default function ActivityCard({
           <Typography
             variant="headingLg"
             component="h2"
-            sx={{ color: 'designSystem.surface.atlanticNavy' }}
+            // Its box as tall as its font size (24, not 36), as on the flow cards.
+            sx={{ color: 'designSystem.surface.atlanticNavy', lineHeight: 1 }}
           >
             {template.name}
           </Typography>

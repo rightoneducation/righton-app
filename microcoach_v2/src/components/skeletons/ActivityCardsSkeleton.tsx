@@ -34,7 +34,9 @@ export default function ActivityCardsSkeleton({
           <ActivityCardSurface isAligned={isAligned}>
             <CardHeader isAligned={isAligned}>
               <NameRow>
-                <SkeletonLine width="55%" height={34} />
+                {/* The text bar is 60% of its box; pinned to the top so it starts
+                    at the card's 32 padding, as the title's text does. */}
+                <SkeletonLine width="55%" height={24} sx={{ transformOrigin: '0 0' }} />
                 <SkeletonPill width={64} height={27} radius={4} />
               </NameRow>
               <SkeletonLine width="45%" />

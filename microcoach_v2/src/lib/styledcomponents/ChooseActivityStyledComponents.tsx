@@ -102,7 +102,8 @@ export const ActivityCardRow = styled(Box, {
 );
 
 // Figma: 551x475 rx32 white with the dashboard card's soft shadow, 25 in;
-// its sections 16 apart.
+// its sections 16 apart. 32 over the title (dev QA 2026-10-29), as on the
+// activity flow's cards.
 export const ActivityCardSurface = styled(Box, {
   shouldForwardProp: noAligned,
 })<AlignedProps>(({ theme, isAligned }) => ({
@@ -115,7 +116,7 @@ export const ActivityCardSurface = styled(Box, {
         alignContent: 'start',
       }
     : { display: 'flex', flexDirection: 'column', gap: theme.sizing.space3 }),
-  padding: theme.sizing.space5,
+  padding: `${theme.sizing.space6}px ${theme.sizing.space5}px ${theme.sizing.space5}px`,
   borderRadius: theme.sizing.space6,
   backgroundColor: theme.palette.designSystem.surface.white,
   boxShadow: dashboardCardShadow,

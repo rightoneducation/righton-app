@@ -31,6 +31,7 @@ import {
   WatchForRow,
   WatchForTextSpacer,
   WatchForTextStack,
+  flowCardHeadingSx,
 } from '../../lib/styledcomponents/ActivityFlowStyledComponents';
 
 function Question({ item, number }: { item: IDiscussionQuestion; number: number }) {
@@ -70,7 +71,7 @@ function WatchForCard({ item, index, rowTexts }: WatchForCardProps) {
 
   return (
     <FlowCard component="section" aria-label={t('activityFlow.discussion.watchForLabel', { number: index + 1 })}>
-      <Typography variant="headingLg" component="h3">
+      <Typography variant="headingLg" component="h3" sx={flowCardHeadingSx}>
         {t('activityFlow.discussion.watchFor')}
       </Typography>
       <WatchForTextStack>
@@ -131,7 +132,7 @@ export default function DiscussionView({ content, screenSize }: DiscussionViewPr
       <FlowCard component="section" aria-labelledby={discussionTitleId}>
         <FlowCardHeader>
           <FlowCardTitle>
-            <Typography id={discussionTitleId} variant="headingLg" component="h2">
+            <Typography id={discussionTitleId} variant="headingLg" component="h2" sx={flowCardHeadingSx}>
               {t('activityFlow.discussion.title')}
             </Typography>
             <Typography variant="rubikBody">
@@ -180,7 +181,7 @@ export default function DiscussionView({ content, screenSize }: DiscussionViewPr
       )}
 
       <TakeawayBand component="section" aria-labelledby={takeawayTitleId}>
-        <Typography id={takeawayTitleId} variant="headingLg" component="h2">
+        <Typography id={takeawayTitleId} variant="headingLg" component="h2" sx={flowCardHeadingSx}>
           {t('activityFlow.discussion.takeaway')}
         </Typography>
         <MathTypography variant="rubikBody" text={takeaway} />
