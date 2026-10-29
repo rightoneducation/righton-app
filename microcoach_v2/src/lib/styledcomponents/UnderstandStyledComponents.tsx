@@ -287,30 +287,6 @@ export const PrevalenceTag = styled(Box)(({ theme }) => ({
   cursor: 'default',
 }));
 
-/** The student-count chip and, on one card, the Highest frequency tag beside it. */
-export const TagRow = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexWrap: 'wrap',
-  alignItems: 'center',
-  gap: theme.sizing.space1,
-}));
-
-// Not in Figma yet: the PrevalenceTag shape in the light-green fill and success
-// border Profile already pairs, so it reads as a label beside the count.
-export const HighestFrequencyTag = styled(Box)(({ theme }) => ({
-  display: 'inline-flex',
-  alignItems: 'center',
-  minHeight: 30,
-  padding: `0 ${theme.sizing.space2}px`,
-  borderRadius: tagRadius,
-  backgroundColor: theme.palette.designSystem.status.lightGreen,
-  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.status.success}`,
-  color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.placeholderLabel,
-  cursor: 'default',
-  boxSizing: 'border-box',
-}));
-
 /** A small caps label over its text (RESPONSE EVIDENCE:, POSSIBLE EXPLANATION:). */
 export const LabelledBlock = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -333,13 +309,10 @@ export const EvidenceLink = styled('button')(({ theme }) => ({
   '&:hover, &:focus-visible': { textDecoration: 'underline' },
 }));
 
-// marginTop auto keeps the buttons along the bottom when a card is stretched to
-// its row's tallest (Review's carousel); in the grid they already have their row.
 export const CardActions = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
   gap: theme.sizing.space1,
-  marginTop: 'auto',
 }));
 
 interface CardButtonProps {

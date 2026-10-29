@@ -14,6 +14,7 @@ import { activityTemplateCopy } from '../lib/activityTemplates';
 import {
   CardAction,
   DurationChip,
+  NameRow,
 } from '../lib/styledcomponents/ChooseActivityStyledComponents';
 import {
   ActivityFlowColumn,
@@ -59,16 +60,17 @@ function SavedActivityCard({
   return (
     <MyActivityCardSurface component="section" aria-labelledby={`saved-${activity.id}`}>
       <TemplateHeading>
-        {/* The duration chip follows the name, as on every other card title. */}
-        <TemplateNameRow>
-          <Typography id={`saved-${activity.id}`} variant="appTitle" component="h2">
-            {template.name}
-          </Typography>
+        <NameRow>
+          <TemplateNameRow>
+            <Typography id={`saved-${activity.id}`} variant="appTitle" component="h2">
+              {template.name}
+            </Typography>
+            <ChangeActivityLink onClick={onChangeActivity}>
+              {t('activityFlow.changeActivity')}
+            </ChangeActivityLink>
+          </TemplateNameRow>
           {activity.durationLabel && <DurationChip>{activity.durationLabel}</DurationChip>}
-          <ChangeActivityLink onClick={onChangeActivity}>
-            {t('activityFlow.changeActivity')}
-          </ChangeActivityLink>
-        </TemplateNameRow>
+        </NameRow>
         <Typography variant="uploadLabel">{template.subtitle}</Typography>
       </TemplateHeading>
 

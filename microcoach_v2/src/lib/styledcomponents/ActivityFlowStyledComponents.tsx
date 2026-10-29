@@ -123,20 +123,18 @@ export const FlowCard = styled(Box)(({ theme }) => ({
   boxSizing: 'border-box',
 }));
 
+/** Title over subtitle on the left, the duration chip on the right. */
+export const FlowCardHeader = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'flex-start',
+  justifyContent: 'space-between',
+  gap: theme.sizing.space3,
+}));
+
 export const FlowCardTitle = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.sizing.space0,
-}));
-
-// Every phase card: the duration chip sits 24 after the title, centred on it,
-// rather than at the card's far edge (Before Class_SpottheSlipActivity; all
-// phases from dev QA 2026-10-28).
-export const FlowCardTitleRow = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  flexWrap: 'wrap',
-  gap: theme.sizing.space5,
 }));
 
 /* ── Before class ─────────────────────────────────────────────────────── */

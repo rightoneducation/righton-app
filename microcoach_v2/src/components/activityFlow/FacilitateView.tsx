@@ -15,8 +15,8 @@ import {
   ExampleDetail,
   ExampleSteps,
   FlowCard,
+  FlowCardHeader,
   FlowCardTitle,
-  FlowCardTitleRow,
   PhaseCards,
   RunBadge,
   RunGrid,
@@ -166,17 +166,17 @@ export default function FacilitateView({
   return (
     <PhaseCards>
       <FlowCard component="section" aria-labelledby={runTitleId}>
-        <FlowCardTitle>
-          <FlowCardTitleRow>
+        <FlowCardHeader>
+          <FlowCardTitle>
             <Typography id={runTitleId} variant="headingLg" component="h2">
               {t('activityFlow.facilitate.title')}
             </Typography>
-            <DurationChip>{content.durations.facilitate}</DurationChip>
-          </FlowCardTitleRow>
-          <Typography variant="rubikBody">
-            {t('activityFlow.facilitate.subtitle')}
-          </Typography>
-        </FlowCardTitle>
+            <Typography variant="rubikBody">
+              {t('activityFlow.facilitate.subtitle')}
+            </Typography>
+          </FlowCardTitle>
+          <DurationChip>{content.durations.facilitate}</DurationChip>
+        </FlowCardHeader>
         <RunGrid screenSize={screenSize} rows={Math.ceil(howToRun.length / 2)}>
           {howToRun.map((step, index) => (
             <RunStepItem key={step.title}>

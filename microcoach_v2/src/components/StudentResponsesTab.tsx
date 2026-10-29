@@ -198,7 +198,7 @@ export default function StudentResponsesTab({
                           {option.studentNames.length > 0 ? (
                             option.studentNames.map((name) => (
                               <ResponderPill key={name} title={name}>
-                                {nameFor.get(name.trim()) ?? name}
+                                {(nameFor.get(name.trim()) ?? name).replace(/,$/, '')}
                               </ResponderPill>
                             ))
                           ) : (

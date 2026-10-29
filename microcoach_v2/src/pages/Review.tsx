@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
@@ -11,7 +12,6 @@ import { FlowStep } from '../lib/flowProgress';
 import LoadingSlot from '../components/LoadingSlot';
 import MisconceptionCardsSkeleton from '../components/skeletons/MisconceptionCardsSkeleton';
 import MisconceptionCard from '../components/MisconceptionCard';
-import MisconceptionCarousel from '../components/MisconceptionCarousel';
 import MisconceptionDetailModal, {
   MisconceptionDetailSelection,
 } from '../components/MisconceptionDetailModal';
@@ -49,9 +49,9 @@ import MathText from '../components/MathText';
 
 // One card's height: what the loading spinner holds open (Figma: 544).
 const CARD_HEIGHT = 544;
-// Cards that fit side by side at LARGE (Figma: three 366-wide). More than this —
-// the Highest Frequency misconception carried forward as a fourth — swipe.
-const CARDS_PER_ROW = 3;
+// Figma: three 366-wide cards. The pipeline can carry a fourth forward (its
+// Highest Frequency pick, outside the top 3); Review shows the top 3 only.
+const CARDS_SHOWN = 3;
 
 // The results banner is a one-time notice per upload: once dismissed for a
 // session it stays dismissed on this device. Storage may be blocked, in which
@@ -122,19 +122,6 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
   const miuPdfUrl: string | null = null;
   const selectedMisconception =
     misconceptions.find((item) => item.id === selected?.id) ?? null;
-  // The pipeline tags the widest-reaching misconception overall and always carries it
-  // forward (as a fourth card when it is outside the top 3); the stored row
-  // keeps its student count, so the tag is worked out here rather than stored.
-  // Strictly greater, so a tie stays with the earlier (better-ranked) card.
-  const highestFrequencyId = misconceptions.reduce<{ id: string; n: number } | null>(
-    (best, item) => {
-      const n = item.prevalence?.studentsNeedingSupport;
-      if (n == null) return best;
-      return !best || n > best.n ? { id: item.id, n } : best;
-    },
-    null,
-  )?.id;
-
   const dismissBanner = () => {
     if (!sessionId) return;
     writeBannerSeen(sessionId);
@@ -150,25 +137,6 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
     setSelected(null);
     navigate(`/review/${misconceptionId}/activities`);
   };
-
-  const isLarge = screenSize === ScreenSize.LARGE;
-  const isCarousel = isLarge && misconceptions.length > CARDS_PER_ROW;
-  const cards = misconceptions.map((misconception) => (
-    <MisconceptionCard
-      key={misconception.id}
-      // The shared-row alignment needs one grid; a swipe strip has a box per card.
-      isAligned={isLarge && !isCarousel}
-      isHighestFrequency={misconception.id === highestFrequencyId}
-      misconception={misconception}
-      onViewDetails={(id, fromEvidence) => setSelected({ id, fromEvidence })}
-      onSelect={handleSelect}
-    />
-  ));
-  const cardLayout = isCarousel ? (
-    <MisconceptionCarousel>{cards}</MisconceptionCarousel>
-  ) : (
-    <CardRow screenSize={screenSize}>{cards}</CardRow>
-  );
 
   return (
     <UnderstandPage screenSize={screenSize}>
@@ -256,7 +224,19 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
                   </EmptyStateButton>
                 </EmptyState>
               )}
-              {!hasFailed && misconceptions.length > 0 && cardLayout}
+              {!hasFailed && misconceptions.length > 0 && (
+                <CardRow screenSize={screenSize}>
+                  {misconceptions.slice(0, CARDS_SHOWN).map((misconception) => (
+                    <MisconceptionCard
+                      key={misconception.id}
+                      isAligned={screenSize === ScreenSize.LARGE}
+                      misconception={misconception}
+                      onViewDetails={(id, fromEvidence) => setSelected({ id, fromEvidence })}
+                      onSelect={handleSelect}
+                    />
+                  ))}
+                </CardRow>
+              )}
             </LoadingSlot>
           </ReviewIntro>
 
@@ -274,33 +254,39 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
                   {questionStats.map((stat) => {
                     const label = t('review.questionLabel', { number: stat.questionNumber });
                     return (
-                      <Tooltip
-                        key={stat.questionNumber}
-                        title={
-                          stat.questionText ? (
-                            <>
-                              {`${label}. `}
-                              <MathText text={stat.questionText} inline />
-                            </>
-                          ) : (
-                            ''
-                          )
-                        }
-                        placement="bottom"
-                        arrow
-                        slotProps={continueTooltipSx}
-                      >
-                        <QuestionTile tabIndex={stat.questionText ? 0 : undefined}>
-                          <Typography variant="rubikBody">{label}</Typography>
-                          <TilePercent>{`${Math.round(stat.percentCorrect * 100)}%`}</TilePercent>
-                          <Typography
-                            variant="rubikBody"
-                            sx={{ color: 'designSystem.status.correctGreen' }}
+                      // The tooltip anchors on the tile's content, not the tile,
+                      // so its arrow sits under "Correct" rather than the border.
+                      <QuestionTile key={stat.questionNumber}>
+                        <Tooltip
+                          title={
+                            stat.questionText ? (
+                              <>
+                                {`${label}. `}
+                                <MathText text={stat.questionText} inline />
+                              </>
+                            ) : (
+                              ''
+                            )
+                          }
+                          placement="bottom"
+                          arrow
+                          slotProps={continueTooltipSx}
+                        >
+                          <Box
+                            tabIndex={stat.questionText ? 0 : undefined}
+                            sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
                           >
-                            {t('review.correct')}
-                          </Typography>
-                        </QuestionTile>
-                      </Tooltip>
+                            <Typography variant="rubikBody">{label}</Typography>
+                            <TilePercent>{`${Math.round(stat.percentCorrect * 100)}%`}</TilePercent>
+                            <Typography
+                              variant="rubikBody"
+                              sx={{ color: 'designSystem.status.correctGreen' }}
+                            >
+                              {t('review.correct')}
+                            </Typography>
+                          </Box>
+                        </Tooltip>
+                      </QuestionTile>
                     );
                   })}
                 </TileRow>
