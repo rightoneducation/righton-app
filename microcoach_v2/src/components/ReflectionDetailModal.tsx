@@ -437,10 +437,10 @@ export default function ReflectionDetailModal({
           backgroundColor: theme.palette.designSystem.background.scrim,
           zIndex: theme.zIndex.modal,
           display: 'flex',
-          alignItems: isLarge ? 'center' : 'flex-start',
+          alignItems: 'flex-start',
           justifyContent: 'center',
           padding: isLarge
-            ? `${theme.sizing.space11}px ${theme.sizing.space1}px`
+            ? `${theme.sizing.headerHeight + theme.sizing.space8}px ${theme.sizing.space1}px ${theme.sizing.space8}px`
             : theme.sizing.space1,
         },
         content: {
