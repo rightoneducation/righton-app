@@ -3,6 +3,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Box from '@mui/material/Box';
+import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import { ScreenSize } from '../MicroCoachModels';
@@ -192,19 +193,22 @@ export const ReflectionSortRow = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
-  gap: theme.sizing.space1,
+  gap: `${theme.sizing.space1}px`,
 }));
 
-export const ReflectionSortSelect = styled(Select)(({ theme }) => ({
-  minWidth: theme.sizing.reflectDetailSortWidth,
-  height: theme.sizing.reflectDetailSortHeight,
-  borderRadius: theme.sizing.space5,
+export const ReflectionSortSelect = styled(Select)(({ theme, open }) => ({
+  width: `${theme.sizing.reflectDetailSortWidth}px`,
+  height: `${theme.sizing.reflectDetailSortHeight}px`,
+  borderRadius: open
+    ? `${theme.sizing.space4}px ${theme.sizing.space4}px 0 0`
+    : `${theme.sizing.space5}px`,
   color: theme.palette.designSystem.surface.white,
   backgroundColor: theme.palette.designSystem.surface.steelBlue,
   ...theme.typography.microLabel,
   '& .MuiSelect-select': {
-    paddingTop: theme.sizing.space1,
-    paddingBottom: theme.sizing.space1,
+    paddingTop: `${theme.sizing.space1}px`,
+    paddingBottom: `${theme.sizing.space1}px`,
+    paddingLeft: `${theme.sizing.space3}px`,
   },
   '& .MuiSelect-icon': {
     color: theme.palette.designSystem.surface.white,
@@ -220,6 +224,19 @@ export const ReflectionSortSelect = styled(Select)(({ theme }) => ({
   },
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
     border: 'none',
+  },
+}));
+
+export const ReflectionSortMenuItem = styled(MenuItem)(({ theme }) => ({
+  minHeight: `${theme.sizing.space3}px`,
+  padding: `0 ${theme.sizing.space0}px`,
+  borderRadius: `${theme.sizing.space0}px`,
+  justifyContent: 'flex-start',
+  color: theme.palette.designSystem.surface.white,
+  backgroundColor: theme.palette.designSystem.foreground.mutedSteelBlue,
+  ...theme.typography.microLabel,
+  '&:hover, &.Mui-focusVisible': {
+    backgroundColor: theme.palette.designSystem.foreground.mutedSteelBlue,
   },
 }));
 

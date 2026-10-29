@@ -50,7 +50,7 @@ export const ReflectionCard = styled(Paper, {
 })<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: `${theme.sizing.space4}px`,
+  gap: `${theme.sizing.space5}px`,
   width: '100%',
   minHeight:
     screenSize === ScreenSize.LARGE
@@ -113,7 +113,7 @@ export const ReflectionResults = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
-  gap: `${theme.sizing.space6}px`,
+  gap: `${theme.sizing.space8}px`,
 }));
 
 export const ScoreGroup = styled(Box)(({ theme }) => ({
