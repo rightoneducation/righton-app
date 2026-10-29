@@ -12,8 +12,8 @@ import {
   Checklist,
   ChecklistItem,
   FlowCard,
+  FlowCardHeader,
   FlowCardTitle,
-  FlowCardTitleRow,
   GroupingHeader,
   PhaseCards,
 } from '../../lib/styledcomponents/ActivityFlowStyledComponents';
@@ -32,17 +32,19 @@ export default function BeforeClassView({ content }: BeforeClassViewProps) {
   return (
     <PhaseCards>
       <FlowCard component="section" aria-labelledby={beforeClassTitleId}>
-        <FlowCardTitle>
-          <FlowCardTitleRow>
+        {/* The chip at the card's right edge, as on the other phase cards; the
+            frame's chip beside the title was a design mistake (dev QA 2026-10-29). */}
+        <FlowCardHeader>
+          <FlowCardTitle>
             <Typography id={beforeClassTitleId} variant="headingLg" component="h2">
               {t('activityFlow.beforeClass.title')}
             </Typography>
-            <DurationChip>{content.durations.beforeClass}</DurationChip>
-          </FlowCardTitleRow>
-          <Typography variant="rubikBody">
-            {t('activityFlow.beforeClass.subtitle')}
-          </Typography>
-        </FlowCardTitle>
+            <Typography variant="rubikBody">
+              {t('activityFlow.beforeClass.subtitle')}
+            </Typography>
+          </FlowCardTitle>
+          <DurationChip>{content.durations.beforeClass}</DurationChip>
+        </FlowCardHeader>
         <Checklist>
           {content.beforeClass.steps.map((step, index) => (
             <ChecklistItem key={step}>

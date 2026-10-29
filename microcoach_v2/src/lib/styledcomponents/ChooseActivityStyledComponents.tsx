@@ -137,14 +137,11 @@ export const CardHeader = styled(Box, {
     : { display: 'flex', flexDirection: 'column', gap: theme.sizing.space1 },
 );
 
-// The duration chip follows the name, centred on it, as on the flow cards'
-// titles (FlowCardTitleRow) rather than at the card's far edge (dev QA
-// 2026-10-28).
 export const NameRow = styled(Box)(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center',
-  flexWrap: 'wrap',
-  gap: theme.sizing.space5,
+  alignItems: 'flex-start',
+  justifyContent: 'space-between',
+  gap: theme.sizing.space2,
 }));
 
 // Figma: 78x27 rx4 brightBlue, Poppins 12 offWhite.

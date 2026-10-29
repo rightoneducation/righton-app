@@ -372,9 +372,16 @@ export default function Header({
                     sx={{ mx: 2, borderColor: 'designSystem.surface.white' }}
                   />
                   <Box sx={{ px: 3, py: 1.5 }}>
+                    {/* Navy, as Select activity's button: the transparent pill
+                        vanished into the menu's accentBlue (dev QA 2026-10-29). */}
                     <LogOutButton
                       fullWidth
                       disableElevation
+                      sx={{
+                        bgcolor: 'designSystem.background.navyBlue',
+                        borderColor: 'designSystem.background.navyBlue',
+                        '&:hover': { bgcolor: 'designSystem.background.navyBlue' },
+                      }}
                       onClick={() => {
                         setAccountAnchor(null);
                         onLogOut?.();
