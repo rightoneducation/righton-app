@@ -113,7 +113,7 @@ export const ReflectionResults = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
-  gap: `${theme.sizing.space6}px`,
+  gap: `${theme.sizing.space8}px`,
 }));
 
 export const ScoreGroup = styled(Box)(({ theme }) => ({
