@@ -208,6 +208,8 @@ function StudentGroup({
     [sort, students],
   );
 
+  const [isSortOpen, setIsSortOpen] = React.useState(false);
+
   const handleSortChange = (event: SelectChangeEvent<unknown>) => {
     onSortChange(event.target.value as ReflectionDetailSort);
   };
@@ -234,6 +236,9 @@ function StudentGroup({
           </Typography>
           <ReflectionSortSelect
             value={sort}
+            open={isSortOpen}
+            onOpen={() => setIsSortOpen(true)}
+            onClose={() => setIsSortOpen(false)}
             onChange={handleSortChange}
             renderValue={() =>
               sort === 'highestScoring'
@@ -247,16 +252,16 @@ function StudentGroup({
                   display: 'flex',
                   flexDirection: 'column',
                   gap: `${theme.sizing.space0}px`,
-                  padding: `${theme.sizing.space1}px`,
+                  padding: `${theme.sizing.space2}px ${theme.sizing.space2}px ${theme.sizing.space1}px`,
                 },
               },
               PaperProps: {
                 sx: {
                   width: `${theme.sizing.reflectDetailSortWidth}px`,
-                  minWidth: `${theme.sizing.reflectDetailSortWidth}px !important`,
-                  borderRadius: `0 0 ${theme.sizing.space2}px ${theme.sizing.space2}px`,
+                  borderRadius: `0 0 ${theme.sizing.space3}px ${theme.sizing.space3}px`,
                   color: 'designSystem.surface.white',
                   backgroundColor: 'designSystem.surface.steelBlue',
+                  backgroundImage: 'none',
                   boxShadow: 'none',
                 },
               },

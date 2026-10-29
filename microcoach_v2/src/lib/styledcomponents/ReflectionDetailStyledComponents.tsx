@@ -196,16 +196,19 @@ export const ReflectionSortRow = styled(Box)(({ theme }) => ({
   gap: `${theme.sizing.space1}px`,
 }));
 
-export const ReflectionSortSelect = styled(Select)(({ theme }) => ({
-  minWidth: `${theme.sizing.reflectDetailSortWidth}px`,
+export const ReflectionSortSelect = styled(Select)(({ theme, open }) => ({
+  width: `${theme.sizing.reflectDetailSortWidth}px`,
   height: `${theme.sizing.reflectDetailSortHeight}px`,
-  borderRadius: `${theme.sizing.space5}px`,
+  borderRadius: open
+    ? `${theme.sizing.space4}px ${theme.sizing.space4}px 0 0`
+    : `${theme.sizing.space5}px`,
   color: theme.palette.designSystem.surface.white,
   backgroundColor: theme.palette.designSystem.surface.steelBlue,
   ...theme.typography.microLabel,
   '& .MuiSelect-select': {
     paddingTop: `${theme.sizing.space1}px`,
     paddingBottom: `${theme.sizing.space1}px`,
+    paddingLeft: `${theme.sizing.space3}px`,
   },
   '& .MuiSelect-icon': {
     color: theme.palette.designSystem.surface.white,
@@ -225,17 +228,15 @@ export const ReflectionSortSelect = styled(Select)(({ theme }) => ({
 }));
 
 export const ReflectionSortMenuItem = styled(MenuItem)(({ theme }) => ({
-  minHeight: `${theme.sizing.space5}px`,
-  padding: `0 ${theme.sizing.space1}px`,
+  minHeight: `${theme.sizing.space3}px`,
+  padding: `0 ${theme.sizing.space0}px`,
   borderRadius: `${theme.sizing.space0}px`,
-  justifyContent: 'center',
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
+  justifyContent: 'flex-start',
   color: theme.palette.designSystem.surface.white,
-  backgroundColor: theme.palette.designSystem.foreground.fadedNavyBlue,
+  backgroundColor: theme.palette.designSystem.foreground.mutedSteelBlue,
   ...theme.typography.microLabel,
-  '&:hover': {
-    backgroundColor: theme.palette.designSystem.foreground.fadedNavyBlue,
+  '&:hover, &.Mui-focusVisible': {
+    backgroundColor: theme.palette.designSystem.foreground.mutedSteelBlue,
   },
 }));
 
