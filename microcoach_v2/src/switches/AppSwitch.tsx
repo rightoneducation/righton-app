@@ -6,6 +6,10 @@ import { useAppOutletContext } from '../hooks/useAppOutletContext';
 import { useLogOut } from '../hooks/useAuthActions';
 import { useScreenSize } from '../hooks/useScreenSize';
 import { useProfilePictureUrl } from '../hooks/useProfilePictureUrl';
+import { useClassActivity } from '../hooks/useClassActivity';
+import { useOpenClassSession } from '../hooks/useOpenClassSession';
+import { FlowStep, stepCta } from '../lib/flowProgress';
+import { currentSchoolWeek } from '../lib/weeks';
 import AppContainer from '../containers/AppContainer';
 import { HeaderVariant } from '../components/Header';
 import AuthGuard from '../containers/AuthGuard';
@@ -121,6 +125,29 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
     apiClients,
     user.userProfile?.profilePicPath,
   );
+
+  /*
+   * The flow screens' class switcher does what Home's button does (dev QA
+   * 2026-10-30): the class's row for this school week gives its step and
+   * session, and the switch opens that step's page with that session. Picking
+   * the class alone left the page in place on the class's latest session from
+   * any week, which Home doesn't count as current (a finished Week 9 lit every
+   * step for a class Home shows at Upload MIU 1).
+   */
+  const flowWeek = currentSchoolWeek();
+  const { week } = useClassActivity(flowWeek);
+  const openClassSession = useOpenClassSession(sessions);
+  const switchFlowClass = (classId: string) => {
+    const row = week.find((item) => item.classId === classId);
+    const { path } = stepCta(row?.step ?? FlowStep.ASSESS, row?.selectedMisconceptionId);
+    openClassSession({
+      classId,
+      sessionId: row?.sessionId ?? null,
+      path,
+      // The upload pre-fills the week it is for, as from Home.
+      state: path.startsWith('/upload-') ? { weekStart: flowWeek } : undefined,
+    });
+  };
 
   /*
    * This used to clear the reducer by hand and never call handleLogOut, so the
@@ -275,7 +302,9 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       onLogOut={handleHeaderLogOut}
       classrooms={classrooms.classrooms}
       selectedClassroomId={classrooms.selectedClassroomId}
-      onSelectClassroom={classrooms.selectClassroom}
+      onSelectClassroom={
+        FLOW_SCREENS.has(currentScreen) ? switchFlowClass : classrooms.selectClassroom
+      }
       profilePictureUrl={profilePictureUrl}
       areClassesLoading={
         classrooms.status === MicroCoachDataStatus.LOADING ||
