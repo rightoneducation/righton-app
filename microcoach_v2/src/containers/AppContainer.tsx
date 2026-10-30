@@ -21,7 +21,8 @@ const ScreenContainer = styled(Box)(({ theme }) => ({
   minHeight: '100dvh',
   display: 'flex',
   flexDirection: 'column',
-  backgroundColor: theme.palette.designSystem.background.cream,
+  // Cool white app-wide; only the landing page draws cream (dev QA 2026-10-30).
+  backgroundColor: theme.palette.designSystem.background.coolWhite,
 }));
 
 const BodyContainer = styled(Box)({

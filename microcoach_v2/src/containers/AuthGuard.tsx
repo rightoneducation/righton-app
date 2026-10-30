@@ -33,8 +33,6 @@ export default function AuthGuard({
 
   const isAuthPage = Boolean(useMatch('/auth'));
   const isLoginPage = Boolean(useMatch('/login'));
-  // `end` so only / itself matches, not every route under it.
-  const isLandingPage = Boolean(useMatch({ path: '/', end: true }));
   /*
    * Exact match on purpose: `/signup` is the wizard's entry, not the whole
    * flow. Every redirect below must target a location that satisfies its own
@@ -105,10 +103,11 @@ export default function AuthGuard({
       return children;
     case UserStatusType.LOGGEDIN:
     default:
-      // Signed in → keep users off the auth pages and the marketing page,
-      // into the app. /dashboard matches none of these, so the redirect
-      // cannot loop.
-      return isAuthPage || isLoginPage || isSignupPage || isLandingPage ? (
+      // Signed in → keep users off the auth pages, into the app. The landing
+      // page stays reachable; its Get Started leads to /dashboard (dev QA
+      // 2026-10-30). /dashboard matches none of these, so the redirect cannot
+      // loop.
+      return isAuthPage || isLoginPage || isSignupPage ? (
         <Navigate to="/dashboard" replace />
       ) : (
         children

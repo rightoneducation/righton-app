@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import {
   ActivityCard,
+  weeklyCardSx,
   ActivityList,
   CardColumn,
   CardLine,
@@ -25,7 +26,7 @@ const actionHeight = 42;
 
 function ProgressRow({ screenSize }: ScreenSizeProps) {
   return (
-    <ActivityCard screenSize={screenSize}>
+    <ActivityCard screenSize={screenSize} sx={weeklyCardSx(screenSize)}>
       <CardColumn align="start" sx={{ alignSelf: 'stretch' }}>
         <CardLine>
           <SkeletonLine width={150} height={30} />
@@ -95,7 +96,8 @@ export function WeeklyProgressSkeleton({
 
 export function PastActivitiesSkeleton({ screenSize }: ScreenSizeProps) {
   return (
-    <WeekGroup>
+    // 24 to the first card, as the page's own weeks.
+    <WeekGroup sx={{ gap: (theme) => `${theme.sizing.space5}px` }}>
       <WeekHeadingRow>
         <SkeletonLine width={320} height={44} />
       </WeekHeadingRow>

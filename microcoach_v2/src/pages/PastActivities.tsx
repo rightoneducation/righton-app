@@ -43,6 +43,7 @@ import {
   WeekHeadingRow,
   ScreenSizeProps,
 } from '../lib/styledcomponents/ActivityListStyledComponents';
+import { titledPageSpace } from '../lib/styledcomponents/DashboardStyledComponents';
 
 // One card's height: what the loading spinner holds open.
 const CARD_HEIGHT = 128;
@@ -78,7 +79,7 @@ export default function PastActivities({
     <SidebarPage
       screenSize={screenSize}
       title={t('pastActivities.title')}
-      contentGap={theme.sizing.space12}
+      contentGap={titledPageSpace}
     >
       <ActivityGroupList>
         <LoadingSlot
@@ -123,7 +124,9 @@ export default function PastActivities({
           )}
           {!hasFailed &&
             groups.map((group, groupIndex) => (
-              <WeekGroup key={group.key}>
+              // 24 from the week heading to its first card here (dev QA
+              // 2026-10-30); Home's week keeps WeekGroup's 20.
+              <WeekGroup key={group.key} sx={{ gap: `${theme.sizing.space5}px` }}>
                 <WeekHeadingRow>
                   {/* By class, the class name heads its group in the week's place. */}
                   <WeekHeading>

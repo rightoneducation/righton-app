@@ -9,15 +9,15 @@ import { ReflectionTrend } from '../reflectionResults';
 
 const noScreenSize = (prop: PropertyKey) => prop !== 'screenSize';
 
-export const ReflectPage = styled(Box)(({ theme }) => ({
+// On the app's cool white (dev QA 2026-10-30), its two patterns either side.
+export const ReflectPage = styled(Box)({
   position: 'relative',
   minHeight: '100%',
   backgroundImage: `url(${landingPagePattern}), url(${landingPagePattern})`,
   backgroundPosition: 'left 54%, right 54%',
   backgroundRepeat: 'no-repeat, no-repeat',
   backgroundSize: '313px 236px, 313px 236px',
-  backgroundColor: theme.palette.designSystem.background.offWhite,
-}));
+});
 
 export const ReflectPageContent = styled(Box)(({ theme }) => ({
   display: 'flex',

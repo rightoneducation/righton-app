@@ -209,10 +209,9 @@ export const MisconceptionCardSurface = styled(Box, {
         alignContent: 'start',
       }
     : { display: 'flex', flexDirection: 'column', gap: theme.sizing.space3 }),
-  // rev3 PaddingReference: ~36 inside; space7 per design call (2026-10-16).
-  // DevQA SelectingMisconceptions: 58 under the buttons.
-  padding: theme.sizing.space7,
-  paddingBottom: theme.sizing.space10,
+  // DevQA SelectingMisconceptions: 30 top and 36 in, set to 32 (dev QA
+  // 2026-10-30); 58 under the buttons.
+  padding: `${theme.sizing.space6}px ${theme.sizing.space6}px ${theme.sizing.space10}px`,
   borderRadius: theme.sizing.space6,
   backgroundColor: theme.palette.designSystem.surface.white,
   boxShadow: dashboardCardShadow,
@@ -309,10 +308,13 @@ export const EvidenceLink = styled('button')(({ theme }) => ({
   '&:hover, &:focus-visible': { textDecoration: 'underline' },
 }));
 
+// Figma: 58 from the explanation (space10). The card's rows share one 16 gap
+// (a subgrid can't vary it), so the buttons add the rest.
 export const CardActions = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
   gap: theme.sizing.space1,
+  marginTop: theme.sizing.space10 - theme.sizing.space3,
 }));
 
 interface CardButtonProps {

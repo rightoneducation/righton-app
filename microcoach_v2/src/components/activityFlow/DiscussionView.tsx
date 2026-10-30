@@ -38,8 +38,8 @@ function Question({ item, number }: { item: IDiscussionQuestion; number: number 
   return (
     <QuestionCell>
       <QuestionBadge aria-hidden>{number}</QuestionBadge>
-      {/* Figma (Make Your Case, Compare the Thinking Discussion): Rubik 16; answers 14. */}
-      <MathTypography variant="rubikBody" component="h3" text={item.question} />
+      {/* Rubik 20 (dev QA 2026-10-30; the frames drew 16); answers 14. */}
+      <MathTypography variant="h4" component="h3" text={item.question} />
     </QuestionCell>
   );
 }

@@ -138,7 +138,15 @@ export default function Landing({ screenSize }: ScreenSizeProps) {
     // The PatternDetail overhangs run past the gutter until ~1520px, which
     // would widen the page. `clip`, not `hidden`, so this isn't a scroll
     // container (no trackpad scroll, sticky children still work).
-    <Box sx={{ position: 'relative', overflowX: 'clip' }}>
+    // The one cream page (dev QA 2026-10-30); the app container is cool white.
+    <Box
+      sx={{
+        position: 'relative',
+        overflowX: 'clip',
+        flexGrow: 1,
+        bgcolor: 'designSystem.background.cream',
+      }}
+    >
       <HeaderPattern
         screenSize={screenSize}
         src={landingPagePattern}

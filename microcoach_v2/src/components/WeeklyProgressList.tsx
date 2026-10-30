@@ -19,6 +19,7 @@ import {
   ActivityList,
   WeekGroup,
   ActivityCard,
+  weeklyCardSx,
   CardActionButton,
   CardColumn,
   CardLine,
@@ -129,7 +130,7 @@ export default function WeeklyProgressList({
           {!hasFailed && rows.length > 0 && (
             <ActivityList>
               {rows.map((row) => (
-                <ActivityCard key={row.classId} screenSize={screenSize}>
+                <ActivityCard key={row.classId} screenSize={screenSize} sx={weeklyCardSx(screenSize)}>
                   {/* Below LARGE the card stacks; this column then spans it so
                       the fluid track has a width to fill. */}
                   <CardColumn

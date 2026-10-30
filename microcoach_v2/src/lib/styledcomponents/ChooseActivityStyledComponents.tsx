@@ -38,7 +38,8 @@ export const ChangeLink = styled(ButtonBase)(({ theme }) => ({
   color: theme.palette.designSystem.surface.atlanticNavy,
   ...theme.typography.uploadLabel,
   borderRadius: chipRadius,
-  '&:hover, &.Mui-focusVisible': { textDecoration: 'underline' },
+  // Underlined at rest, so it reads as a link (dev QA 2026-10-30).
+  textDecoration: 'underline',
 }));
 
 /*
