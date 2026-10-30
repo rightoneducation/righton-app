@@ -142,6 +142,10 @@ interface SidebarContentProps extends ScreenSizeProps {
   contentGap?: number;
 }
 
+// Past Activities (the only titled sidebar page): 90 over the title and 90
+// under it, a design value between space12 and space13 (dev QA 2026-10-30).
+export const titledPageSpace = 90;
+
 // The sidebar screens' content column: its gap spaces the page's sections and
 // its padding is the page inset. Not clamped itself — each section sets its own
 // max width, so the stepper and card can run wider than the picker column.
@@ -159,7 +163,7 @@ export const SidebarContent = styled(Box, {
   let paddingTop = theme.sizing.space6;
   let gap = theme.sizing.space6;
   if (isLarge) {
-    paddingTop = isTitled ? theme.sizing.space13 : theme.sizing.space11;
+    paddingTop = isTitled ? titledPageSpace : theme.sizing.space11;
     gap = contentGap ?? theme.sizing.space8;
   }
 

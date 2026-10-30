@@ -26,6 +26,8 @@ interface FlowStepperBandProps extends ScreenSizeProps {
   plan: IPlanItemsState;
   // The step this page belongs to: the track shows it as current.
   page: FlowStep;
+  // Reflect draws no My Activity button (dev QA 2026-10-30).
+  showMyActivity?: boolean;
 }
 
 /**
@@ -38,6 +40,7 @@ export function FlowStepperBand({
   sessions,
   plan,
   page,
+  showMyActivity = true,
 }: FlowStepperBandProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -49,16 +52,18 @@ export function FlowStepperBand({
   return (
     <StepperBand screenSize={screenSize}>
       <FlowStepper steps={flowSteps} page={page} screenSize={screenSize} />
-      <MyActivityButton
-        // The flow pages draw it 160 wide (rev3 PaddingReference); Home's
-        // frame keeps the shared 229.
-        sx={{ minWidth: 160 }}
-        disableElevation
-        disabled={!hasChosenActivity(currentStep)}
-        onClick={() => navigate('/myactivity')}
-      >
-        {t('dashboard.myActivity')}
-      </MyActivityButton>
+      {showMyActivity && (
+        <MyActivityButton
+          // The flow pages draw it 160 wide (rev3 PaddingReference); Home's
+          // frame keeps the shared 229.
+          sx={{ minWidth: 160 }}
+          disableElevation
+          disabled={!hasChosenActivity(currentStep)}
+          onClick={() => navigate('/myactivity')}
+        >
+          {t('dashboard.myActivity')}
+        </MyActivityButton>
+      )}
     </StepperBand>
   );
 }

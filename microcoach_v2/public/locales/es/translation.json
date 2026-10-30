@@ -301,6 +301,7 @@
     "deleteClassTitle": "¿Eliminar esta clase?",
     "deleteClassBody": "Esto elimina {{className}} de tu cuenta. No se puede deshacer.",
     "deleteClassError": "No se pudo eliminar la clase. Inténtalo de nuevo.",
+    "deleteClassConfirm": "Sí, eliminar clase",
     "addClass": "Añadir otra clase",
     "addClassPlaceholder": "Escribe el nombre de la clase (p. ej., Justice)",
     "addClassError": "No se añadió tu clase. Algo salió mal.",
@@ -528,8 +529,7 @@
       "backBeforeClass": "Atrás: Antes de la clase",
       "nextDiscussion": "Siguiente: Discusión de cierre",
       "backFacilitate": "Atrás: Facilitar la actividad",
-      "selectActivity": "Seleccionar esta actividad",
-      "goToMyActivity": "Ir a Mi actividad"
+      "selectActivity": "Seleccionar esta actividad"
     },
     "changeDialog": {
       "title": "Cambiar actividad",

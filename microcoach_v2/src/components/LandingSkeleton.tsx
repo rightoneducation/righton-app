@@ -57,7 +57,8 @@ export default function LandingSkeleton({ screenSize }: ScreenSizeProps) {
   const isLarge = screenSize === ScreenSize.LARGE;
 
   return (
-    <Box>
+    // Cream, as the landing page it stands in for.
+    <Box sx={{ flexGrow: 1, bgcolor: 'designSystem.background.cream' }}>
       {/* Hero */}
       <ContentRow
         screenSize={screenSize}

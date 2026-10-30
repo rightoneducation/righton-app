@@ -51,6 +51,9 @@ export default function ActivitySortMenu({
         anchorEl={sortAnchor}
         open={!!sortAnchor}
         onClose={() => setSortAnchor(null)}
+        // A menu needn't lock the page: locking hid the scrollbar and shifted
+        // the page while it was open (dev QA 2026-10-30).
+        disableScrollLock
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         slotProps={{ paper: { sx: sortMenuPaperSx } }}

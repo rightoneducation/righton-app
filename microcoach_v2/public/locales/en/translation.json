@@ -301,6 +301,7 @@
     "deleteClassTitle": "Delete this class?",
     "deleteClassBody": "This removes {{className}} from your account. This can't be undone.",
     "deleteClassError": "That class couldn't be deleted. Please try again.",
+    "deleteClassConfirm": "Yes, delete class",
     "addClass": "Add another class",
     "addClassPlaceholder": "Enter class name (e.g., Justice)",
     "addClassError": "Your class wasn’t added. Something went wrong.",
@@ -528,8 +529,7 @@
       "backBeforeClass": "Back: Before class",
       "nextDiscussion": "Next: Closing discussion",
       "backFacilitate": "Back: Facilitate activity",
-      "selectActivity": "Select this activity",
-      "goToMyActivity": "Go to My Activity"
+      "selectActivity": "Select this activity"
     },
     "changeDialog": {
       "title": "Change activity",

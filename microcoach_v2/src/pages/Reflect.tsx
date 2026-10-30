@@ -77,6 +77,7 @@ export default function Reflect({ screenSize, sessions, plan }: ReflectProps) {
             sessions={sessions}
             plan={plan}
             page={FlowStep.REFLECT}
+            showMyActivity={false}
           />
           <ReflectResultsSection>
             <ReflectHeading>

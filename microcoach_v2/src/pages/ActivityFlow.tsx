@@ -108,7 +108,7 @@ function ActivityFlowView({
 
   // Back / Next walk the phases; the ends leave the flow. Before class goes
   // back to the activity choices, and Closing discussion selects the activity
-  // (or, once it is the saved one, just goes to My Activity).
+  // (the same label once it is the saved one, which just goes to My Activity).
   const nav = (() => {
     switch (phase) {
       case 'facilitate':
@@ -119,15 +119,13 @@ function ActivityFlowView({
       case 'discussion':
         return {
           back: { label: t('activityFlow.nav.backFacilitate'), onClick: () => navigate(phasePath('facilitate')) },
-          next: isSaved
-            ? { label: t('activityFlow.nav.goToMyActivity'), onClick: () => navigate('/myactivity') }
-            : {
-                label: t('activityFlow.nav.selectActivity'),
-                onClick: () => {
-                  saveActivity(planItemFor(misconception, activity));
-                  navigate('/myactivity');
-                },
-              },
+          next: {
+            label: t('activityFlow.nav.selectActivity'),
+            onClick: () => {
+              if (!isSaved) saveActivity(planItemFor(misconception, activity));
+              navigate('/myactivity');
+            },
+          },
         };
       case 'before-class':
       default:

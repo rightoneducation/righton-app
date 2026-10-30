@@ -936,9 +936,11 @@ export default function Profile({
         hasError={remove.hasError}
         onCancel={remove.cancel}
         onConfirm={remove.confirm}
+        barTitle={t('profile.deleteClass', { name: remove.target?.className })}
         title={t('profile.deleteClassTitle')}
         body={t('profile.deleteClassBody', { className: remove.target?.className })}
         errorText={t('profile.deleteClassError')}
+        confirmLabel={t('profile.deleteClassConfirm')}
       />
     </ProfilePage>
   );

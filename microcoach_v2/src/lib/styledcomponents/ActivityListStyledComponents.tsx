@@ -1,4 +1,4 @@
-import { styled } from '@mui/material/styles';
+import { styled, Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -133,6 +133,16 @@ export const ActivityCard = styled(Box, {
     boxSizing: 'border-box',
   };
 });
+
+// Home's cards at LARGE: 32 top, 24 sides, 20 bottom (dev QA 2026-10-30).
+// Past Activities shares ActivityCard and keeps its 32 all round.
+export const weeklyCardSx = (screenSize: ScreenSize) =>
+  screenSize === ScreenSize.LARGE
+    ? {
+        padding: (theme: Theme) =>
+          `${theme.sizing.space6}px ${theme.sizing.space5}px ${theme.sizing.space4}px`,
+      }
+    : undefined;
 
 export const CardColumn = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'align',
