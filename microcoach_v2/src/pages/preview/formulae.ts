@@ -183,16 +183,19 @@ export const FORMULAE: Formula[] = [
     source: 'microcoachv2NextStepOption/src/index.mjs · util/activityContent.mjs',
     steps: [
       {
-        text: 'Each example problem is written as an instruction and its math, separately. The math declares whether it is one expression or a system; a system must list at least two, so it cannot arrive with an inequality missing. Code joins them into the problem students see.',
+        text: 'Each example problem, and Compare the Thinking\'s one problem, is written as an instruction and its math, separately. The math declares whether it is one expression or a system; a system must list at least two, so it cannot arrive with an inequality missing. Code joins them into the problem students see.',
         tex: '\\text{problem} = \\text{instruction} + \\text{: } + \\text{every expression, comma-separated}',
       },
       { text: 'If an instruction says "system" but its math is not one, the activity is generated again, once. Whichever attempt has fewer such examples is kept.' },
+      { text: 'A system written as one \\begin{cases} expression is split into one expression per row, and an item that is only a \\text{} note is dropped, so a note cannot sit inside the math students see.' },
       { text: 'If an instruction asks about "the point" but no point is given, it becomes "Find a solution", which a student can answer from the math shown.' },
-      { text: 'LaTeX is repaired: commands broken by JSON parsing (a single-backslash \\rightarrow arriving as "ightarrow") are restored, and doubled backslashes are collapsed.' },
+      { text: 'A correctness label written into text students see ("CORRECT:", "ERROR:") is removed from it; on a Spot the Slip step without a teacher annotation it becomes the annotation, so students are not shown where the slip is.' },
+      { text: 'An instruction that already states the math is shown on its own, not followed by the math a second time.' },
+      { text: 'LaTeX is repaired: commands broken by JSON parsing (a single-backslash \\rightarrow arriving as "ightarrow") are restored, doubled backslashes are collapsed, and an inequality written as a Unicode character or a \\u2265 escape becomes \\leq, \\geq or \\neq.' },
     ],
     notes: [
       'These run inside generation and are part of it, not evaluation. Each one is recorded when it fires; the run bar above shows how many fired on this run.',
-      'None of them rewrites the model\'s wording beyond the two named replacements; the retry regenerates rather than patches.',
+      'None of them rewrites the model\'s wording beyond the named replacements; the retry regenerates rather than patches.',
     ],
   },
 ];

@@ -36,14 +36,33 @@ const StepAnnotation = z.object({
   text: z.string().nullable().describe('The note itself, or null for a bare CORRECT marker'),
 });
 
-const ExampleStep = z.object({
-  step: z.number().int().describe('1-based position in the solution'),
-  text: z.string().describe('The step as a student sees it. No correctness marker of its own.'),
-  annotation: StepAnnotation.nullable().describe('Teacher view only. null for an unremarked step.'),
-});
+const STEP_TEXT_RULE = 'Student-facing: never a correctness label such as "CORRECT:", "ERROR:" or "INCORRECT:", which would show students where the slip is. Labels go in the teacher-only field.';
+
+// Generated with an annotation on every step (NONE for an unremarked one): a
+// nullable annotation let the model leave all of them null and write "CORRECT:"
+// and "ERROR:" into the step text students see (v43), giving the slip away. The
+// stored shape keeps null for an unremarked step, as the app expects.
+function exampleStepFor(mode) {
+  const text = z.string().describe(`The step as a student sees it. ${STEP_TEXT_RULE}`);
+  if (mode === 'stored') {
+    return z.object({
+      step: z.number().int().describe('1-based position in the solution'),
+      text,
+      annotation: StepAnnotation.nullable().describe('Teacher view only. null for an unremarked step.'),
+    });
+  }
+  return z.object({
+    step: z.number().int().describe('1-based position in the solution'),
+    text,
+    annotation: z.object({
+      kind: z.enum(['CORRECT', 'ERROR', 'NONE']).describe('Teacher view only: CORRECT for a valid step before the slip, ERROR for the first invalid step, NONE for the steps after it'),
+      text: z.string().nullable().describe('The note itself, or null for a bare marker'),
+    }),
+  });
+}
 
 const WorkLine = z.object({
-  text: z.string().describe('One line of the student work, as written'),
+  text: z.string().describe(`One line of the student work, as written. ${STEP_TEXT_RULE}`),
   status: z.enum(['CORRECT', 'INCORRECT', 'NEUTRAL']).describe('Teacher view only: whether this line is right. NEUTRAL for a line that just restates the problem.'),
 });
 
@@ -98,9 +117,15 @@ const MathStatement = z.discriminatedUnion('kind', [
   }),
   z.object({
     kind: z.literal('SYSTEM'),
-    expressions: z.array(Expression).min(2).max(3).describe('Every equation or inequality of the system, one per item, e.g. ["$y + x > 2$", "$y \\leq 3x - 2$"]. All of them: the work and the answers may only use what is listed here.'),
+    expressions: z.array(Expression).min(2).max(3).describe('Every equation or inequality of the system, one per item, e.g. ["$y + x > 2$", "$y \\leq 3x - 2$"]. All of them: the work and the answers may only use what is listed here. Never the whole system in one item (no \\begin{cases}), and never a note or words (no \\text{}) as an item.'),
   }),
 ]);
+
+// Student-facing instruction and math, generated apart (see above).
+const generatedProblem = () => ({
+  math: MathStatement.describe('The problem\'s math, with no words. SYSTEM for a system (list every equation or inequality in it), SINGLE otherwise. Never a point or answer choices to pick from.'),
+  task: z.string().max(TASK_MAX).describe('The instruction alone: one short imperative or question about the problem, under 60 characters, with no trailing punctuation, e.g. "Graph the inequality", "Solve for $x$", "Find a solution of the system". Student-facing: never student work, a description of a response, a hint, or how to solve it, and never a second clause about the student work, how it is shown or comparing to it ("Then compare to…"): the activity shows the work itself. Never a multiple-choice stem ("Which graph…", "Which of the following…"): the student sees no answer choices, so restate the question as an open problem that needs no given value, e.g. "Find a solution of the system" or "Graph the system".'),
+});
 
 function problemFields(mode) {
   if (mode === 'stored') {
@@ -109,10 +134,7 @@ function problemFields(mode) {
       problem: z.string().describe('The math alone, shown on the example tile'),
     };
   }
-  return {
-    math: MathStatement.describe('The problem\'s math, with no words. SYSTEM for a system (list every equation or inequality in it), SINGLE otherwise. Never a point or answer choices to pick from.'),
-    task: z.string().max(TASK_MAX).describe('The instruction alone, as a short imperative or question with no trailing punctuation, e.g. "Graph the inequality", "Solve for $x$", "Find a solution of the system". Student-facing: never student work, a description of a response, a hint, or how to solve it. Never a multiple-choice stem ("Which graph…", "Which of the following…"): the student sees no answer choices, so restate the question as an open problem that needs no given value, e.g. "Find a solution of the system" or "Graph the system".'),
-  };
+  return generatedProblem();
 }
 
 function spotTheSlip({ examplesMin, examplesMax }, mode) {
@@ -121,7 +143,7 @@ function spotTheSlip({ examplesMin, examplesMax }, mode) {
     examples: z.array(z.object({
       ...problemFields(mode),
       slip: z.string().describe('Teacher view only: the slip in 3-6 words, e.g. "Flipped inequality when testing"'),
-      steps: z.array(ExampleStep).min(3).max(6).describe('The full worked solution. Annotate correct steps before the slip CORRECT, the FIRST invalid step ERROR, and leave the later steps (consequences of the slip) unannotated.'),
+      steps: z.array(exampleStepFor(mode)).min(3).max(6).describe('The full worked solution. Annotate correct steps before the slip CORRECT, the FIRST invalid step ERROR, and the later steps (consequences of the slip) NONE.'),
       finalOutcome: z.string().describe('Teacher view only: what the incorrect reasoning arrives at, one sentence'),
     })).min(examplesMin).max(examplesMax).describe('Each example is a DIFFERENT problem (different numbers or a different expression) showing the same need, so the teacher can choose among them — never the same problem repeated.'),
   });
@@ -159,9 +181,14 @@ function mathDetective({ examplesMin, examplesMax }, mode) {
 
 const Tone = z.enum(['ERROR', 'SUCCESS', 'NEUTRAL']);
 
-const compareTheThinking = () => z.object({
+// The one problem is generated as task + math like the examples' problems, so
+// instruction and math can't run together (v37 stored "Which graph represents
+// the inequality…"); toStoredFacilitate joins them into the stored `problem`.
+const compareTheThinking = (_bounds, mode) => z.object({
   type: z.literal('COMPARE_THE_THINKING'),
-  problem: z.string().describe('The one problem both strategies attempt'),
+  ...(mode === 'stored'
+    ? { problem: z.string().describe('The one problem both strategies attempt: its instruction and its math') }
+    : generatedProblem()),
   comparison: z.enum(['CORRECT_VS_INCORRECT', 'BOTH_CORRECT']),
   strategies: z.array(z.object({
     label: z.string().describe('"A" for the first strategy, "B" for the second. One letter.'),
@@ -222,19 +249,118 @@ const ANSWERABLE_FALLBACK = 'Find a solution';
 
 const expressionsOf = (math) => (math?.expressions ?? []).map((e) => String(e).trim());
 
+function storedProblem({ task, math }, onFallback) {
+  const expressions = expressionsOf(math);
+  const joined = expressions.join(', ');
+  const missingPoint = NAMES_A_POINT.test(task ?? '') && !expressions.some((e) => IS_A_POINT.test(e));
+  if (missingPoint) onFallback({ task, math: joined });
+  const instruction = (missingPoint ? ANSWERABLE_FALLBACK : String(task ?? '')).trim().replace(/[.:?]\s*$/, '');
+  // An instruction that already states every expression ("Graph the inequality
+  // $-6x+3y>12$ and justify…", v43) is the whole problem: appending the math again
+  // would show it twice.
+  const bare = (t) => t.replace(/[\s$]/g, '');
+  const statesAll = expressions.length > 0 && expressions.every((e) => bare(instruction).includes(bare(e)));
+  if (statesAll) return { problem: joined, prompt: instruction };
+  return { problem: joined, prompt: instruction ? `${instruction}: ${joined}` : joined };
+}
+
+/** The problems a generated artifact states as task + math. */
+const generatedProblemsOf = (facilitate) => {
+  if (EXAMPLE_TYPES.includes(facilitate?.type)) return facilitate.examples ?? [];
+  if (facilitate?.type === 'COMPARE_THE_THINKING' && facilitate.math) return [facilitate];
+  return [];
+};
+
 export function toStoredFacilitate(facilitate, onFallback = () => {}) {
+  if (facilitate?.type === 'COMPARE_THE_THINKING' && facilitate.math) {
+    const { task, math, ...rest } = facilitate;
+    return { ...rest, problem: storedProblem({ task, math }, onFallback).prompt };
+  }
   if (!EXAMPLE_TYPES.includes(facilitate?.type)) return facilitate;
   return {
     ...facilitate,
-    examples: facilitate.examples.map(({ task, math, ...rest }) => {
-      const expressions = expressionsOf(math);
-      const joined = expressions.join(', ');
-      const missingPoint = NAMES_A_POINT.test(task ?? '') && !expressions.some((e) => IS_A_POINT.test(e));
-      if (missingPoint) onFallback({ task, math: joined });
-      const instruction = (missingPoint ? ANSWERABLE_FALLBACK : String(task ?? '')).trim().replace(/[.:?]\s*$/, '');
-      return { problem: joined, prompt: instruction ? `${instruction}: ${joined}` : joined, ...rest };
-    }),
+    examples: facilitate.examples.map(({ task, math, ...rest }) => ({
+      ...storedProblem({ task, math }, onFallback),
+      ...rest,
+      // Steps are generated with NONE on an unremarked step; stored, it is null.
+      ...(Array.isArray(rest.steps) && {
+        steps: rest.steps.map((st) => (st?.annotation?.kind === 'NONE' || st?.annotation == null ? { ...st, annotation: null } : st)),
+      }),
+    })),
   };
+}
+
+/**
+ * Two shapes the math schema can't rule out, put right after generation:
+ *   - a whole system written as one \begin{cases}/aligned/array expression is
+ *     split into one expression per row;
+ *   - an item that is only a note in \text{…} is dropped.
+ * v37's My Favorite No did both: SYSTEM needs two items, so the system went in
+ * one as \begin{cases} and "\text{(Student work projected separately)}" filled
+ * the second. The kind follows the count that is left. `onFix` is told each time,
+ * so the run can count how often this covered for the generator.
+ */
+const ENVIRONMENT = /^\$\s*\\begin\{(cases|aligned|array|gathered)\}(?:\{[^}]*\})?([\s\S]*?)\\end\{\1\}\s*\$$/;
+const NOTE_ONLY = /^\$\s*\\text\{[^}]*\}\s*[.,;:]?\s*\$$/;
+
+function normalizedMath(math) {
+  const before = expressionsOf(math);
+  const after = before.flatMap((e) => {
+    if (NOTE_ONLY.test(e)) return [];
+    const env = e.match(ENVIRONMENT);
+    if (!env) return [e];
+    return env[2].split(/\\{2,}(?:\[[^\]]*\])?/)
+      .map((row) => row.replace(/&/g, ' ').replace(/\s+/g, ' ').trim())
+      .filter(Boolean)
+      .map((row) => `$${row}$`);
+  });
+  if (!after.length || (after.length === before.length && after.every((e, i) => e === before[i]))) return null;
+  return { kind: after.length >= 2 ? 'SYSTEM' : 'SINGLE', expressions: after.slice(0, 3) };
+}
+
+/**
+ * A correctness label written into text students see ("CORRECT: Rewrite…",
+ * "ERROR: Substitute…", v43 Spot the Slip) gives the slip away. The label is
+ * stripped from the text. On a Spot the Slip step whose annotation is NONE it
+ * becomes the annotation; a work line keeps its own status. `onFix` is told once
+ * per artifact with every line it changed, so the run counts how often this
+ * covered for the generator.
+ */
+const LEADING_LABEL = /^\s*[([]?\s*(CORRECT|ERROR|INCORRECT|WRONG|RIGHT)\s*[)\]]?\s*[:.\-–—]\s*/i;
+const STEP_KIND = { CORRECT: 'CORRECT', RIGHT: 'CORRECT', ERROR: 'ERROR', INCORRECT: 'ERROR', WRONG: 'ERROR' };
+
+export function stripTextLabels(facilitate, onFix = () => {}) {
+  const fixed = [];
+  const strip = (owner, where) => {
+    const m = typeof owner?.text === 'string' ? owner.text.match(LEADING_LABEL) : null;
+    if (!m) return null;
+    const rest = owner.text.slice(m[0].length);
+    owner.text = rest.charAt(0).toUpperCase() + rest.slice(1);
+    fixed.push({ where, label: m[1].toUpperCase() });
+    return m[1].toUpperCase();
+  };
+  (facilitate?.examples ?? []).forEach((ex, i) => {
+    (ex.steps ?? []).forEach((st, j) => {
+      const label = strip(st, `examples[${i}].steps[${j}]`);
+      if (label && (st.annotation == null || st.annotation.kind === 'NONE')) {
+        st.annotation = { kind: STEP_KIND[label], text: st.annotation?.text ?? null };
+      }
+    });
+    (ex.work ?? []).forEach((line, j) => strip(line, `examples[${i}].work[${j}]`));
+    (ex.workSummary ?? []).forEach((line, j) => strip(line, `examples[${i}].workSummary[${j}]`));
+  });
+  if (fixed.length) onFix({ lines: fixed });
+  return facilitate;
+}
+
+export function normalizeGeneratedMath(facilitate, onFix = () => {}) {
+  generatedProblemsOf(facilitate).forEach((p, i) => {
+    const fixed = normalizedMath(p.math);
+    if (!fixed) return;
+    onFix({ problem: i + 1, before: expressionsOf(p.math), after: fixed.expressions });
+    p.math = fixed;
+  });
+  return facilitate;
 }
 
 /**
@@ -246,8 +372,7 @@ export function toStoredFacilitate(facilitate, onFallback = () => {}) {
 const NAMES_A_SYSTEM = /\bsystems?\b/i;
 
 export function incompleteSystems(facilitate) {
-  if (!EXAMPLE_TYPES.includes(facilitate?.type)) return [];
-  return (facilitate.examples ?? []).flatMap(({ task, math }, i) => (
+  return generatedProblemsOf(facilitate).flatMap(({ task, math }, i) => (
     NAMES_A_SYSTEM.test(task ?? '') && (math?.kind !== 'SYSTEM' || expressionsOf(math).length < 2)
       ? [{ example: i + 1, task, math: expressionsOf(math).join(', ') }]
       : []

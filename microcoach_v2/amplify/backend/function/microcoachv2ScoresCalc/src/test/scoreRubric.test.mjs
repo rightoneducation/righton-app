@@ -197,7 +197,7 @@ test('highest frequency inside the top 3: tagged there, still 3 carried forward'
   assert.deepEqual(out.map((x) => x.priorityRank), [1, 2, 3, 4]);
 });
 
-test('highest frequency outside the top 3: tagged and carried forward as a fourth, after the top 3', () => {
+test('highest frequency outside the top 3: tagged only, not carried forward', () => {
   const items = [
     item(full({ studentPercent: 0.18, conceptualDepth: 3, meanConfidence: 4.5 }), 0),
     item(full({ studentPercent: 0.32, conceptualDepth: 3 }), 1),
@@ -209,13 +209,26 @@ test('highest frequency outside the top 3: tagged and carried forward as a fourt
   const tagged = out.filter((x) => x.isHighestFrequency);
   assert.equal(tagged.length, 1);
   assert.equal(tagged[0].raw.studentPercent, 0.45);
-  assert.equal(tagged[0].retained, true);
-  assert.equal(tagged[0].isRecommendedFocus, false);
+  assert.equal(tagged[0].retained, false);
   assert.ok(tagged[0].priorityRank > rubric.selection.cap);
-  // The top 3 plus it; the one between them is still dropped, and ranks are unchanged.
-  assert.equal(out.filter((x) => x.retained).length, rubric.selection.cap + 1);
+  assert.equal(out.filter((x) => x.retained).length, rubric.selection.cap);
   assert.deepEqual(out.map((x) => x.priorityRank), [1, 2, 3, 4, 5]);
-  assert.equal(out.filter((x) => !x.retained).length, 1);
+});
+
+test('alwaysRetain (when enabled) carries an outside-the-cap highest frequency forward as a fourth', () => {
+  const items = [
+    item(full({ studentPercent: 0.18, conceptualDepth: 3, meanConfidence: 4.5 }), 0),
+    item(full({ studentPercent: 0.32, conceptualDepth: 3 }), 1),
+    item(full({ studentPercent: 0.39, conceptualDepth: 1 }), 2),
+    item(full({ studentPercent: 0.1, conceptualDepth: 0, meanConfidence: 1 }), 3),
+    item(full({ studentPercent: 0.45, conceptualDepth: 0, meanConfidence: 1 }), 4),
+  ];
+  const selection = { ...rubric.selection, highestFrequency: { ...rubric.selection.highestFrequency, alwaysRetain: true } };
+  const out = rank(items, selection);
+  const tagged = out.find((x) => x.isHighestFrequency);
+  assert.equal(tagged.retained, true);
+  assert.equal(tagged.isRecommendedFocus, false);
+  assert.equal(out.filter((x) => x.retained).length, rubric.selection.cap + 1);
 });
 
 test('a reach tie for highest frequency goes to the better-ranked misconception', () => {

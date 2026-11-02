@@ -27,6 +27,8 @@ export interface CallTrace {
     usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number } | null;
     fellBack?: boolean;
     reason?: string;
+    /** The model itself could not be used (retired, renamed, not on this key). */
+    modelUnavailable?: boolean;
   }>;
   [key: string]: any;
 }
@@ -44,7 +46,7 @@ function gitSha(): string {
  * fires (see its index.mjs). Collected into the manifest's `guardFires` so
  * /preview and the run report show how often generation leaned on them.
  */
-const GUARD_LABELS = new Set(['answerable-fallback', 'retry-incomplete-system']);
+const GUARD_LABELS = new Set(['answerable-fallback', 'retry-incomplete-system', 'math-normalized', 'label-in-text']);
 
 export interface GuardFire {
   call: string;
@@ -54,10 +56,10 @@ export interface GuardFire {
 }
 
 export function guardFire(call: string, sc: Record<string, any>): GuardFire {
-  const detail =
-    sc.label === 'retry-incomplete-system'
-      ? (sc.fixed ? 'fixed by the retry' : 'still incomplete after the retry')
-      : `"${sc.before ?? ''}"`;
+  let detail = `"${sc.before ?? ''}"`;
+  if (sc.label === 'retry-incomplete-system') detail = sc.fixed ? 'fixed by the retry' : 'still incomplete after the retry';
+  if (sc.label === 'math-normalized') detail = `${(sc.before ?? []).length} → ${(sc.after ?? []).length} expressions`;
+  if (sc.label === 'label-in-text') detail = `${(sc.lines ?? []).length} label(s) moved out of student text`;
   return { call, label: sc.label, detail };
 }
 
@@ -75,6 +77,7 @@ export class RunCapture {
   private tokens = { prompt: 0, completion: 0, total: 0 };
   private models = new Set<string>();
   private fallbacks: Array<{ call: string; label: string; reason?: string }> = [];
+  private unavailableModels: Array<{ call: string; label: string; model: string; reason?: string }> = [];
   private guardFires: GuardFire[] = [];
   private extras: Record<string, any> = {};
 
@@ -128,6 +131,7 @@ export class RunCapture {
       if (sc.model) this.models.add(sc.model);
       addUsage(sc.usage);
       if (sc.fellBack) this.fallbacks.push({ call: name, label: sc.label, reason: sc.reason });
+      if (sc.modelUnavailable) this.unavailableModels.push({ call: name, label: sc.label, model: sc.model, reason: sc.reason });
       if (GUARD_LABELS.has(sc.label)) this.guardFires.push(guardFire(name, sc));
     }
     // A Lambda that makes a single model call reports usage at the top level with no
@@ -171,11 +175,19 @@ export class RunCapture {
       tokens: this.tokens,
       modelCalls: this.seq,
       silentFallbacks: this.fallbacks,
+      // A configuration fault, not a quality signal: the step it belongs to did not
+      // run. Kept apart from silentFallbacks so it can't be missed among them.
+      modelUnavailable: this.unavailableModels,
       guardFires: this.guardFires,
       ...this.extras,
       ...summary,
     };
     this.write('manifest.json', manifest);
+    if (this.unavailableModels.length) {
+      const models = [...new Set(this.unavailableModels.map((u) => u.model))].join(', ');
+      const steps = [...new Set(this.unavailableModels.map((u) => u.label))].join(', ');
+      console.error(`\n✗ MODEL UNAVAILABLE in this run: ${models} (${this.unavailableModels.length} call(s); skipped: ${steps}). ${this.unavailableModels[0].reason ?? ''}\n  Those steps did not run, so the output is not what the pipeline is meant to produce. Change the model in the Lambda's util/config.json before using this run.\n`);
+    }
     return manifest;
   }
 }

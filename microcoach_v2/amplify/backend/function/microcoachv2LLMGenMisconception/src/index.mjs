@@ -170,8 +170,16 @@ const CONTROL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F​-�
  */
 const LOST_ESCAPE_LETTER = { '\r': 'r', '\t': 't', '\f': 'f', '\b': 'b' };
 
+// A relation symbol the model wrote as a literal "\u2265" escape or as the Unicode
+// character itself, where the command was asked for. v37 stored "$\u2265$" this way
+// (and lost the "$\leq$" beside it). Both become the command.
+const RELATION_COMMAND = { '2264': '\\leq', '2265': '\\geq', '2260': '\\neq', '≤': '\\leq', '≥': '\\geq', '≠': '\\neq' };
+
 function restoreLostEscapes(text) {
   return text
+    .replace(/\\u(226[045])(?![0-9a-fA-F])/g, (_, code) => `${RELATION_COMMAND[code]} `)
+    .replace(/\$[^$]*\$/g, (span) => span.replace(/[≤≥≠]/g, (c) => `${RELATION_COMMAND[c]} `))
+    .replace(/(\\(?:leq|geq|neq)) +(?=[$}\s,.;:)]|$)/g, '$1')
     .replace(/[\r\t\f\b](?=[a-zA-Z])/g, (c) => `\\${LOST_ESCAPE_LETTER[c]}`)
     .replace(/\$\$[^$]*\$\$|\$[^$]*\$/g, (span) => span.replace(/\n(?=[a-zA-Z])/g, '\\n'));
 }
@@ -196,7 +204,7 @@ function sanitizeStrings(value) {
 // the fields the app renders as math. Titles stay plain words: they are short
 // noun phrases, and the admission checks read them for "(" and "or".
 const MATH_FORMATTING = `## Math formatting
-- In descriptions, wrong-answer explanations and question texts, use LaTeX for every mathematical expression: $...$ inline, $$...$$ for a standalone equation. Never use Unicode math symbols (≤ ≥ ≠ × ÷ √ π ½ ²) or caret/underscore notation outside the delimiters. Fractions are $\\frac{a}{b}$, inequalities $\\leq$ / $\\geq$, multiplication $\\times$. Write each command with ONE backslash: never \\\\ (a line break) or \\  (a forced space). Plain prose stays plain English — only the math goes inside delimiters.
+- In descriptions, wrong-answer explanations and question texts, use LaTeX for every mathematical expression: $...$ inline, $$...$$ for a standalone equation. Never use Unicode math symbols (≤ ≥ ≠ × ÷ √ π ½ ²) anywhere, inside the delimiters included, never a \\u escape such as \\u2265, and never caret/underscore notation outside the delimiters. Fractions are $\\frac{a}{b}$, inequalities $\\leq$ / $\\geq$ / $\\neq$, multiplication $\\times$. Every $...$ holds the math it stands for: never leave one empty, e.g. "$>$ versus $\\geq$", not "$>$ versus $$". Write each command with ONE backslash: never \\\\ (a line break) or \\  (a forced space). Plain prose stays plain English — only the math goes inside delimiters.
 - Titles contain no math and no LaTeX: plain words only.`;
 
 export function buildPrompt(questions, context, learningScienceData) {

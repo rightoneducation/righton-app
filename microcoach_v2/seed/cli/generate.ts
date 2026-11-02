@@ -573,9 +573,8 @@ function buildNextSteps(
       rubric: m.rubric ?? null,
       priorityRank: m.priorityRank ?? null,
       isRecommendedFocus: m.isRecommendedFocus === true,
-      // Of all the misconceptions, the one reaching the most students (carried forward
-      // as a fourth when it is outside the top 3). A tag;
-      // the rank above is unaffected.
+      // Of all the misconceptions, the one reaching the most students. A tag only:
+      // the rank above and which misconceptions are carried forward are unaffected.
       isHighestFrequency: m.isHighestFrequency === true,
       retained: m.retained !== false,
       occurrence: m.occurrence ?? m.rationale?.recurrence ?? null,
@@ -655,6 +654,26 @@ function parseJson(raw: any): any {
 }
 
 // ── Per-classroom pipeline ────────────────────────────────────────────────────
+
+/**
+ * The student-facing problems a generated activity works with: each example's full
+ * problem, Compare the Thinking's one problem, or Make Your Case's claim and cases.
+ * Handed to the next activity for the same need so it can use different ones.
+ */
+function studentFacingProblems(content: any): string[] {
+  const f = content?.facilitate;
+  if (!f) return [];
+  const out: string[] = [];
+  if (typeof f.claim === 'string') out.push(f.claim);
+  if (typeof f.problem === 'string') out.push(f.problem);
+  if (Array.isArray(f.examples)) {
+    for (const e of f.examples) {
+      const text = e?.prompt ?? e?.problem;
+      if (typeof text === 'string' && text.trim()) out.push(text);
+    }
+  }
+  return out;
+}
 
 async function processClassroom(
   gql: GqlFn,
@@ -973,8 +992,11 @@ async function processClassroom(
           missing: sc.missing ?? [],
           inputs: sc.inputs ?? null,
           conceptualDepthWhy: sc.conceptualDepthWhy ?? null,
-          // Each depth call's judgment; the score uses the middle one.
+          // Each depth call's judgment and reason; the score uses the middle one.
           conceptualDepthSamples: sc.conceptualDepthSamples ?? null,
+          conceptualDepthSampleWhys: sc.conceptualDepthSampleWhys ?? null,
+          conceptualDepthSpread: sc.conceptualDepthSpread ?? null,
+          depthDisagreement: sc.depthDisagreement === true,
         },
         priorityRank: sc.priorityRank,
         isRecommendedFocus: sc.isRecommendedFocus === true,
@@ -1209,16 +1231,19 @@ async function processClassroom(
       };
       const resultList: any[] = [];
 
-      // Sequential rather than parallel within a misconception: cheap to keep, and
-      // the calls share a prompt prefix so the second benefits from the cache.
+      // Sequential rather than parallel within a misconception: the calls share a
+      // prompt prefix so the second benefits from the cache, and the second is told
+      // the problems the first already uses so it can work with different ones.
       for (const pick of picks) {
         try {
           // The other pick for this need, so each activity is built to differ from it.
           const sibling = picks.find((p: any) => p !== pick);
+          const siblingProblems = resultList.flatMap((r: any) => studentFacingProblems(r?.content));
           const activityInput = {
             ...baseInput,
             selectedTemplate: JSON.stringify(pick),
             ...(sibling && { siblingPick: JSON.stringify(sibling) }),
+            ...(siblingProblems.length && { siblingProblems: JSON.stringify(siblingProblems) }),
             evidence: JSON.stringify(evidence),
             trace: WANT_TRACE,
           };
@@ -1346,6 +1371,11 @@ async function processClassroom(
     rubricVersion,
     recommendedFocus: nextSteps.find((n: any) => n.isRecommendedFocus)?.title ?? null,
     highestFrequency: nextSteps.find((n: any) => n.isHighestFrequency)?.title ?? null,
+    // Misconceptions whose depth calls were far apart (rubric llm.disagreementSpread),
+    // carried forward or not. Recorded, not scored.
+    depthDisagreements: nextSteps
+      .filter((n: any) => n.rubric?.depthDisagreement === true)
+      .map((n: any) => ({ title: n.title, samples: n.rubric.conceptualDepthSamples, retained: n.retained !== false })),
     misconceptionsRetained: genMisconceptions.length,
     misconceptionsDropped: droppedMisconceptions.length,
     // Template selection health: how many needs got two picks, and whether the

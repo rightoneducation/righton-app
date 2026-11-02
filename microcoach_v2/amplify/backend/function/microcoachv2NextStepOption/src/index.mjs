@@ -30,6 +30,8 @@
  *                          instructionalNeed?: { text, evidenceUsed }, evidence? }
  *   selectedTemplate     one pick from LLMSelectTemplate: { templateId,
  *                          instructionalApproach, studentsDo?, rationale } (required)
+ *   siblingProblems      optional, JSON array of the student-facing problems the
+ *                          other activity for this need already uses (it ran first)
  *   siblingPick          optional, the other pick for the same need (same shape):
  *                          the activity is told what students do there, to differ
  *   learningScienceData  { standards: KgQueryType[] }
@@ -59,6 +61,8 @@ import {
   toStoredDiscussion,
   toStoredFacilitate,
   incompleteSystems,
+  normalizeGeneratedMath,
+  stripTextLabels,
   groupingRegressions,
   ORDERED_GROUPING_TYPES,
   teacherLabels,
@@ -74,7 +78,7 @@ const vco = nso.validator ?? {};
 const cdo = nso.closingDiscussion ?? {};
 const ws  = config?.writingStyle ?? {};
 const MODEL                          = nso.model ?? 'gpt-4o';
-const VALIDATOR_MODEL                = vco.model ?? 'o3-mini';
+const VALIDATOR_MODEL                = vco.model ?? 'gpt-5-mini';
 const VALIDATOR_SYSTEM_PROMPT        = vco.systemPrompt ?? 'You are a math accuracy reviewer. Output only valid JSON.';
 const DISCUSSION_MODEL        = cdo.model ?? MODEL;
 const REVIEW_MODEL            = cdo.reviewModel ?? VALIDATOR_MODEL;
@@ -169,8 +173,16 @@ const CONTROL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F​-�
  */
 const LOST_ESCAPE_LETTER = { '\r': 'r', '\t': 't', '\f': 'f', '\b': 'b' };
 
+// A relation symbol the model wrote as a literal "\u2265" escape or as the Unicode
+// character itself, where the command was asked for. v37 stored "$\u2265$" this way
+// (and lost the "$\leq$" beside it). Both become the command.
+const RELATION_COMMAND = { '2264': '\\leq', '2265': '\\geq', '2260': '\\neq', '≤': '\\leq', '≥': '\\geq', '≠': '\\neq' };
+
 function restoreLostEscapes(text) {
   return text
+    .replace(/\\u(226[045])(?![0-9a-fA-F])/g, (_, code) => `${RELATION_COMMAND[code]} `)
+    .replace(/\$[^$]*\$/g, (span) => span.replace(/[≤≥≠]/g, (c) => `${RELATION_COMMAND[c]} `))
+    .replace(/(\\(?:leq|geq|neq)) +(?=[$}\s,.;:)]|$)/g, '$1')
     .replace(/[\r\t\f\b](?=[a-zA-Z])/g, (c) => `\\${LOST_ESCAPE_LETTER[c]}`)
     .replace(/\$\$[^$]*\$\$|\$[^$]*\$/g, (span) => span.replace(/\n(?=[a-zA-Z])/g, '\\n'));
 }
@@ -191,6 +203,27 @@ function sanitizeStrings(value) {
   return value;
 }
 
+/**
+ * A model call that failed because the model itself can't be used (retired,
+ * renamed, or not available to this key), as opposed to a bad answer or a timeout.
+ * v43: OpenAI retired o3-mini and the worked-example check quietly fell back on
+ * every call. The fallback still keeps the teacher's activity whole, but a
+ * configuration fault must be loud for us: it is logged as an error naming the
+ * model and the config key, and recorded on the sub-call so the run surfaces it.
+ */
+function modelUnavailable(err) {
+  const status = err?.status ?? err?.response?.status;
+  const code = err?.code ?? err?.error?.code;
+  const message = String(err?.message ?? '');
+  return status === 404
+    || code === 'model_not_found'
+    || /model[^.]*(deprecated|does not exist|not found|decommission)/i.test(message);
+}
+
+function reportModelUnavailable(label, model, configKey, err) {
+  console.error(`[microcoachv2NextStepOption] MODEL UNAVAILABLE: "${model}" (${configKey}) failed for ${label}: ${err?.message ?? err}. The step was skipped and its input kept; change ${configKey} in util/config.json.`);
+}
+
 const parseMaybe = (raw, fallback) => {
   if (raw == null) return fallback;
   return typeof raw === 'string' ? JSON.parse(raw) : raw;
@@ -199,7 +232,7 @@ const parseMaybe = (raw, fallback) => {
 // ── Prompt pieces ─────────────────────────────────────────────────────────────
 
 const MATH_FORMATTING = `## Math formatting
-Use LaTeX for every mathematical expression: $...$ inline, $$...$$ for a standalone equation. Never use Unicode math symbols (≤ ≥ ≠ × ÷ √ π ½ ²) or caret/underscore notation outside the delimiters. Fractions are $\\frac{a}{b}$, inequalities $\\leq$ / $\\geq$, multiplication $\\times$. Write each command with ONE backslash: never \\\\ (a line break) or \\  (a forced space), and never a placeholder symbol such as \\square — write the real symbol or words instead. Plain prose stays plain English — only the math goes inside delimiters.`;
+Use LaTeX for every mathematical expression: $...$ inline, $$...$$ for a standalone equation. Never use Unicode math symbols (≤ ≥ ≠ × ÷ √ π ½ ²) anywhere, inside the delimiters included, never a \\u escape such as \\u2265, and never caret/underscore notation outside the delimiters. Fractions are $\\frac{a}{b}$, inequalities $\\leq$ / $\\geq$ / $\\neq$, multiplication $\\times$. Every $...$ holds the math it stands for: never leave one empty, e.g. "$>$ versus $\\geq$", not "$>$ versus $$". Write each command with ONE backslash: never \\\\ (a line break) or \\  (a forced space), and never a placeholder symbol such as \\square — write the real symbol or words instead. Plain prose stays plain English — only the math goes inside delimiters.`;
 
 function renderNeed(misconception) {
   const need = misconception.instructionalNeed;
@@ -237,7 +270,7 @@ ${questions.map((q) => {
 }
 
 const FACILITATE_INSTRUCTIONS = {
-  INCORRECT_WORKED_EXAMPLES: () => `\`facilitate.examples\`: ${BOUNDS.examplesMin}-${BOUNDS.examplesMax} incorrect worked solutions, each a different instance of the error. Each has its \`task\` and \`math\`, a 3-6 word \`slip\` (teacher only), the full step-by-step work, and a one-sentence \`finalOutcome\` (teacher only). Annotate the steps before the slip CORRECT, the FIRST invalid step ERROR, and leave its consequences unannotated.
+  INCORRECT_WORKED_EXAMPLES: () => `\`facilitate.examples\`: ${BOUNDS.examplesMin}-${BOUNDS.examplesMax} incorrect worked solutions, each a different instance of the error. Each has its \`task\` and \`math\`, a 3-6 word \`slip\` (teacher only), the full step-by-step work, and a one-sentence \`finalOutcome\` (teacher only). Annotate the steps before the slip CORRECT, the FIRST invalid step ERROR, and its consequences NONE. Step text is what students see: never write a correctness label ("CORRECT:", "ERROR:") into it.
 
 Critical rules for the worked examples:
 ${INCORRECT_EXAMPLE_RULES.map((r, i) => `  ${i + 1}. ${r}`).join('\n')}
@@ -252,7 +285,7 @@ ${INCORRECT_EXAMPLE_FEW_SHOT.map((ex) => `Misconception: ${ex.misconception}
   Incorrect work: ${ex.bad.incorrectWork}`).join('\n\n')}` : ''}`,
   FAVORITE_NO: () => `\`facilitate.examples\`: ${BOUNDS.examplesMin}-${BOUNDS.examplesMax} incorrect responses, each revealing a mathematical idea, intuition, strategy, or assumption worth preserving — not a procedural slip, arithmetic mistake, or random answer. \`work\` is the response line by line, with the sound lines marked CORRECT so the error sits inside partly sound reasoning. \`notice\` (teacher only) lists what the reasoning gets right (PRESERVE, first) and then what needs to change (REVISE). \`sourceNote\` (teacher only) says this is one plausible way a student might reason toward the answer, not any one student's work, and that a real anonymous response can replace it. \`task\` and \`math\` state only the problem students solve — never the response, a description of it, or what is wrong with it; the response belongs in \`work\`.`,
   MATH_DETECTIVE: () => `\`facilitate.examples\`: ${BOUNDS.examplesMin}-${BOUNDS.examplesMax} incorrect responses, each pointing to a deeper mathematical issue to investigate — not a single localized slip. \`workSummary\` is one student's attempt in 2-5 short moves (the evidence). \`stages\`, in order: INVESTIGATE (ask what is going wrong and what idea, assumption, model, or representation might be behind it; answer with the issue and the evidence for it, naming another plausible interpretation when there is one), SOLVE (ask students to revise the reasoning; answer with the revised step and a check that it works on the original or a related example), GENERALIZE (ask for a rule that prevents the issue; answer with the rule to post). Student-facing \`ask\` text never gives the answer away. \`task\` and \`math\` state only the problem the student was solving, rewritten as an open problem when the original was multiple choice (the student's chosen answer belongs in \`workSummary\`) — never the student's work, a description of what the student did, or the error; those belong in \`workSummary\` and the teacher-only answers.`,
-  COMPARE_THE_THINKING: () => `\`facilitate\`: one \`problem\` and exactly two strategies, A and B, with equal visual weight. Use CORRECT_VS_INCORRECT when the opportunity is to examine the misconception through the contrast; BOTH_CORRECT when it is to compare valid strategies (efficiency, generalizability, representation, assumptions). Verdicts, step highlights and notes are teacher only: highlight ERROR on the first invalid step and SUCCESS on the step that makes an approach work. Each strategy gets 1-2 notes on what it reveals about the thinking behind it. The comparison must have a clear mathematical purpose, not be a "which one is right?" exercise.`,
+  COMPARE_THE_THINKING: () => `\`facilitate\`: one problem, as its \`task\` and \`math\`, and exactly two strategies, A and B, with equal visual weight. Use CORRECT_VS_INCORRECT when the opportunity is to examine the misconception through the contrast; BOTH_CORRECT when it is to compare valid strategies (efficiency, generalizability, representation, assumptions). Verdicts, step highlights and notes are teacher only: highlight ERROR on the first invalid step and SUCCESS on the step that makes an approach work. Each strategy gets 1-2 notes on what it reveals about the thinking behind it. The comparison must have a clear mathematical purpose, not be a "which one is right?" exercise.`,
   MAKE_YOUR_CASE: () => `\`facilitate\`: a \`claim\` students can genuinely defend, challenge, or refine with evidence — not obviously true or false, and never a mathematically indefensible position. \`resolution\` (teacher only) is what the mathematics supports; use CONDITIONAL with the refined claim when it holds only under conditions. \`studentSteps\` are 1-3 short instructions for building a case. \`examples\` are 2-4 cases to bring in, each with what it shows (teacher only). \`arguments\` (teacher reference) hold at least one substantive SUPPORT and one substantive CHALLENGE — a counterexample, boundary condition, assumption, or limitation — never a deliberately weak one.`,
 };
 
@@ -288,6 +321,7 @@ export const handler = async (event) => {
   const contextDataItems    = parseMaybe(input.contextData, []);
   const selectedTemplate    = parseMaybe(input.selectedTemplate);
   const siblingPick         = input.siblingPick == null ? null : parseMaybe(input.siblingPick);
+  const siblingProblems     = input.siblingProblems == null ? [] : parseMaybe(input.siblingProblems, []);
   const evidence            = parseMaybe(input.evidence, null);
 
   // The template fixes the content shape. RightOn! has no content type (it renders
@@ -534,7 +568,12 @@ ${selectedTemplate.rationale ? `Why it was selected: ${selectedTemplate.rational
 ${siblingPick ? `
 ## The other recommendation
 The teacher sees this activity next to a second one for the same need: ${templateById(siblingPick.templateId)?.title ?? siblingPick.templateId}${siblingPick.instructionalApproach ? ` (move: ${siblingPick.instructionalApproach})` : ''}.${siblingPick.studentsDo ? ` What students do there: ${siblingPick.studentsDo}` : ''} Two recommendations are worth offering only when they are different experiences for students. Make this one visibly different from it, not just differently labelled: give students a different problem or representation to work with, a different question to answer, and a different thing to produce, and let the closing discussion follow from this activity's own work.
-` : ''}
+${Array.isArray(siblingProblems) && siblingProblems.length ? `
+The problems the other activity already uses:
+${siblingProblems.map((p) => `- ${p}`).join('\n')}
+
+Work with different ones here: different numbers, a different equation or system, or a different representation of the idea (a graph where the other works with the algebra, or the reverse), so students examine different evidence and come away with a different piece of the understanding. Keep the same item only when this template's move depends on it, and then have students do something different with it. This is a preference for a real difference, not variety for its own sake: never choose a weaker problem just to differ.
+` : ''}` : ''}
 
 ## Classroom feasibility
 ${CLASSROOM_FEASIBILITY.map((r) => `- ${r}`).join('\n')}
@@ -606,7 +645,7 @@ ${JSON.stringify(examples.map(e => ({ problem: e.problem, prompt: e.prompt, slip
           { role: 'user', content: prompt },
         ],
       });
-      const raw = completion.choices[0]?.message?.content ?? '[]';
+      const raw = (completion.choices[0]?.message?.content ?? '[]').trim().replace(/^```(?:json)?\s*|\s*```$/g, '');
       const parsed = sanitizeStrings(JSON.parse(raw));
       if (!Array.isArray(parsed) || parsed.length !== examples.length) {
         recordSubCall('validate-worked-examples', VALIDATOR_MODEL, completion, {
@@ -643,9 +682,11 @@ ${JSON.stringify(examples.map(e => ({ problem: e.problem, prompt: e.prompt, slip
         };
       });
     } catch (err) {
-      console.warn('[microcoachNextStepOption] validateWorkedExamples failed:', err?.message);
+      const unavailable = modelUnavailable(err);
+      if (unavailable) reportModelUnavailable('validate-worked-examples', VALIDATOR_MODEL, 'nextStepOption.validator.model', err);
+      else console.warn('[microcoachNextStepOption] validateWorkedExamples failed:', err?.message);
       recordSubCall('validate-worked-examples', VALIDATOR_MODEL, null, {
-        fellBack: true, reason: err?.message ?? 'error',
+        fellBack: true, reason: err?.message ?? 'error', ...(unavailable && { modelUnavailable: true }),
       });
       return examples;
     }
@@ -732,11 +773,19 @@ ${MATH_FORMATTING}
   };
 
   try {
-    const generateActivity = () => structuredCall(
-      'generate-activity', MODEL,
-      'You are an expert K-12 math instructional coach. Output exclusively valid JSON.',
-      activityPrompt, ActivitySchema, 'activity',
-    );
+    // Every attempt's math is put in shape before the checks below read it: a
+    // system written as one \begin{cases} expression is split into its rows, and
+    // an item that is only a \text{} note is dropped (see normalizeGeneratedMath).
+    const generateActivity = async () => {
+      const attempt = await structuredCall(
+        'generate-activity', MODEL,
+        'You are an expert K-12 math instructional coach. Output exclusively valid JSON.',
+        activityPrompt, ActivitySchema, 'activity',
+      );
+      normalizeGeneratedMath(attempt.facilitate, (fix) => recordSubCall('math-normalized', null, null, fix));
+      stripTextLabels(attempt.facilitate, (fix) => recordSubCall('label-in-text', null, null, fix));
+      return attempt;
+    };
     let generated = await generateActivity();
     // An instruction that names a system over math that is not one ("Graph the
     // system: $y + x > 2$") cannot be answered. Regenerate once; keep whichever
@@ -855,8 +904,12 @@ ${MATH_FORMATTING}
         });
       }
     } catch (err) {
-      console.warn('[microcoachNextStepOption] discussion review failed — keeping the draft:', err?.message);
-      recordSubCall('review-discussion', REVIEW_MODEL, null, { fellBack: true, reason: err?.message ?? 'error' });
+      const unavailable = modelUnavailable(err);
+      if (unavailable) reportModelUnavailable('review-discussion', REVIEW_MODEL, 'nextStepOption.closingDiscussion.reviewModel', err);
+      else console.warn('[microcoachNextStepOption] discussion review failed — keeping the draft:', err?.message);
+      recordSubCall('review-discussion', REVIEW_MODEL, null, {
+        fellBack: true, reason: err?.message ?? 'error', ...(unavailable && { modelUnavailable: true }),
+      });
     }
 
     // The teacher runs one of the three questions, so the class time is the steps
