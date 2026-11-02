@@ -524,6 +524,29 @@ function RubricBlock({ item, tie }: { item: Rec; tie?: TieNote }) {
         {asStr(rubric.conceptualDepthWhy) !== '' && (
           <Row k="depth — why" v={<MathText text={asStr(rubric.conceptualDepthWhy)} />} />
         )}
+        {Array.isArray(rubric.conceptualDepthSamples) && (
+          <Row
+            k="depth — calls"
+            v={
+              <span>
+                <span className="p2-mono">
+                  {rubric.conceptualDepthSamples.map((d) => (typeof d === 'number' ? String(d) : '–')).join(', ')}
+                </span>
+                {' · middle one used'}
+                {rubric.depthDisagreement === true && <span className="p2-dropped"> 2+ levels apart</span>}
+              </span>
+            }
+          />
+        )}
+        {rubric.depthDisagreement === true && Array.isArray(rubric.conceptualDepthSampleWhys)
+          && rubric.conceptualDepthSampleWhys.map((why, i) => (
+            <Row
+              // eslint-disable-next-line react/no-array-index-key
+              key={`depth-call-${i}`}
+              k={`call ${i + 1} — ${String((Array.isArray(rubric.conceptualDepthSamples) ? rubric.conceptualDepthSamples[i] : null) ?? '–')}`}
+              v={<MathText text={asStr(why)} />}
+            />
+          ))}
       </div>
     </Block>
   );
@@ -895,6 +918,9 @@ function RunBar({
   if (guardFires && guardFires.length > 0) {
     guardText = `${guardFires.length} (${guardFires.map((g) => asStr(g.label)).join(', ')})`;
   }
+  // Models that could not be called at all (retired, renamed): the steps that use
+  // them did not run, so this run is not what the pipeline produces.
+  const unavailable = asArray(manifest.modelUnavailable);
   const stat = (label: string, value: React.ReactNode) => (
     <span className="p2-stat" key={label}>
       <span className="p2-stat-k">{label}</span>
@@ -939,6 +965,13 @@ function RunBar({
         {stat('version', asStr(manifest.version) || 'untagged')}
         {stat('condition', String(manifest.condition ?? '—'))}
         {stat('guards fired', guardText)}
+        {unavailable.length > 0 &&
+          stat(
+            'model unavailable',
+            <span className="p2-dropped">
+              {Array.from(new Set(unavailable.map((u) => `${asStr(u.model)} (${asStr(u.label)})`))).join(', ')} — step skipped
+            </span>,
+          )}
         {typeof manifest.needSeparationChecked === 'number' &&
           stat(
             'needs prescribing an activity',

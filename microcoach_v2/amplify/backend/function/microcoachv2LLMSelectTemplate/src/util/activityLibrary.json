@@ -183,10 +183,11 @@
           "There is a discernible first breakdown in the sequence of reasoning.",
           "Students can explain why the step is invalid rather than simply identify it as wrong.",
           "Revising the reasoning is mathematically meaningful and can help students understand how the error affected subsequent work.",
-          "Analyzing the reasoning is more valuable than simply revealing or practicing the correct procedure."
+          "Analyzing the reasoning is more valuable than simply revealing or practicing the correct procedure.",
+          "Students' answers point to a specific breakdown that can be shown in a constructed worked example: a solution, built from the evidence, that leads by the misconception's reasoning to the wrong answer students actually chose. This applies even when students submitted only a final answer, as long as the constructed solution contains a step where the meaning changes that students can locate and repair."
         ],
         "lessAppropriateWhen": [
-          "The response contains only a final-answer error with no meaningful reasoning to examine.",
+          "The error has no meaningful reasoning to examine, even in a worked solution constructed from the evidence.",
           "There is no clear point of breakdown.",
           "The primary instructional opportunity is to investigate an underlying mathematical issue that could have multiple plausible explanations.",
           "The activity would amount primarily to having students redo the problem from scratch."
@@ -198,7 +199,10 @@
           }
         ],
         "doNot": [
-          "Do not manufacture intermediate steps that are not supported by the student response or original work."
+          "Do not construct a worked example the evidence does not support: it must arrive at a wrong answer students actually chose, through the reasoning the misconception describes, and every step before the breakdown must be valid."
+        ],
+        "departureNote": [
+          "2026-11-02: departs from the Activity Library doc. The doc's 'only a final-answer error' (less appropriate when) and 'do not manufacture intermediate steps not supported by the student response' read as excluding Spot the Slip whenever students submitted only an answer, which is all a multiple-choice MIU gives. Generation already builds evidence-grounded worked examples for this template, so selection now accepts a constructed worked example that leads to the chosen wrong answer; the evidence-grounding requirement is kept in the doNot. Not rendered into prompts."
         ]
       },
       "infill": {

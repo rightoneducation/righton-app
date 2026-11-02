@@ -35,6 +35,8 @@ const rubric = JSON.parse(readFileSync(new URL('./misconceptionRubric.json', imp
 
 const MODEL = rubric.llm?.model ?? 'gpt-5-mini';
 const DEPTH_SAMPLES = Math.max(1, rubric.llm?.depthSamples ?? 1);
+// Depth calls this many levels apart or more are flagged (rubric llm.disagreementSpread).
+const DISAGREEMENT_SPREAD = rubric.llm?.disagreementSpread ?? 2;
 const DEPTH = rubric.metrics.find((m) => m.id === 'conceptualDepth');
 
 // ── Schema ────────────────────────────────────────────────────────────────────
@@ -204,7 +206,10 @@ export const handler = async (event) => {
       const samples = calls.map((c) => c.depths[i]?.conceptualDepth ?? null);
       const value = middleValue(samples);
       const why = calls.find((c) => c.depths[i]?.conceptualDepth === value)?.depths[i]?.why ?? null;
-      return value == null ? null : { conceptualDepth: value, why, samples };
+      const whys = calls.map((c) => c.depths[i]?.why ?? null);
+      const judged = samples.filter((x) => x != null);
+      const spread = judged.length ? Math.max(...judged) - Math.min(...judged) : null;
+      return value == null ? null : { conceptualDepth: value, why, samples, whys, spread };
     });
     const rejected = calls.flatMap((c, n) => c.rejected.map((r) => ({ ...r, call: n + 1 })));
     const positionMatches = calls.reduce((sum, c) => sum + c.positionMatches, 0);
@@ -223,8 +228,13 @@ export const handler = async (event) => {
         inputOrder: i,
         title: m.title,
         conceptualDepthWhy: depths[i]?.why ?? null,
-        // Every call's judgment, so a reader can see when the middle value was a split.
+        // Every call's judgment and its one-sentence reason, so a reader can see
+        // when the middle value was a split and what each call read into it.
         conceptualDepthSamples: depths[i]?.samples ?? null,
+        conceptualDepthSampleWhys: depths[i]?.whys ?? null,
+        conceptualDepthSpread: depths[i]?.spread ?? null,
+        // Recorded, not scored: the ranking still uses the middle value.
+        depthDisagreement: (depths[i]?.spread ?? 0) >= DISAGREEMENT_SPREAD,
       };
     });
     const scored = rank(items, rubric.selection).map(({ raw: r, inputOrder, ...rest }) => ({ ...rest, inputs: r }));

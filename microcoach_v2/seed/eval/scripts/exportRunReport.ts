@@ -84,7 +84,14 @@ function header(manifest: any, retained: any[], swapNote: string | null, guardFi
     `**Retained / dropped:** ${manifest.misconceptionsRetained} / ${manifest.misconceptionsDropped} (rubric cap)  `,
     `**Standard matched:** ${manifest.targetStandardMatched}/${manifest.misconceptionCount}  `,
     `**Needs prescribing an activity:** ${needsFlagged}/${manifest.needSeparationChecked ?? retained.length}  `,
-    `**In-pipeline guards fired:** ${guardFires.length ? guardFires.join('; ') : 'none'}`,
+    ...(Array.isArray(manifest.modelUnavailable) && manifest.modelUnavailable.length
+      ? [`**⚠ Model unavailable:** ${[...new Set(manifest.modelUnavailable.map((u: any) => `${u.model} (${u.label})`))].join('; ')}: those steps did not run. ${manifest.modelUnavailable[0].reason ?? ''}  `]
+      : []),
+    ...(Array.isArray(manifest.silentFallbacks) && manifest.silentFallbacks.length
+      ? [`**Calls that fell back to their input:** ${manifest.silentFallbacks.map((f: any) => `${f.call} · ${f.label}`).join('; ')}  `]
+      : []),
+    `**In-pipeline guards fired:** ${guardFires.length ? guardFires.join('; ') : 'none'}  `,
+    `**Depth calls 2+ levels apart:** ${manifest.depthDisagreements == null ? 'not recorded' : manifest.depthDisagreements.length ? manifest.depthDisagreements.map((d: any) => `${d.title} (${(d.samples ?? []).map((x: number | null) => x ?? '–').join(', ')})`).join('; ') : 'none'}`,
   ];
   if (swapNote) out.push('', '> **Re-generated after the run.** ' + swapNote.replace(/^Copy of [^\n]*\n+/, '').trim().replace(/\n+/g, ' '));
   return out;
@@ -162,7 +169,7 @@ function rubricIntro(scored: any[]): string[] {
     seen.set(k, (seen.get(k) ?? 0) + 1);
   }
   const shared = [...seen].filter(([, n]) => n > 1).map(([k]) => k);
-  out.push('', `★ = Recommended Focus.${scored.some((m) => m.isHighestFrequency) ? ' ◆ = Highest Frequency: of the misconceptions carried forward, the one reaching the most students. A tag; it does not change the ranking.' : ''}`, '');
+  out.push('', `★ = Recommended Focus.${scored.some((m) => m.isHighestFrequency) ? ' ◆ = Highest Frequency: of all the misconceptions scored, the one reaching the most students. A tag; it does not change the ranking or which misconceptions are carried forward.' : ''}`, '');
   out.push(`A response can be linked to more than one misconception, so these groups are not mutually exclusive and the percentages do not sum to 100%.${shared.length ? ` In this run ${shared.join(', ')} ${shared.length === 1 ? 'is' : 'are'} linked to more than one.` : ''}`, '');
   return out;
 }
@@ -204,6 +211,14 @@ function rubricTable(m: any): string[] {
     '',
     `**Depth rationale.** ${m.rubric?.conceptualDepthWhy ?? '—'}${m.rubric?.conceptualDepthSamples ? ` (depth calls: ${m.rubric.conceptualDepthSamples.map((d: number | null) => d ?? '–').join(', ')}; the middle one is used)` : ''}`,
     '',
+    ...(m.rubric?.depthDisagreement && m.rubric?.conceptualDepthSampleWhys
+      ? [
+        '**Depth calls disagreed** (2+ levels apart). Each call\'s reason:',
+        '',
+        ...m.rubric.conceptualDepthSampleWhys.map((why: string | null, i: number) => `- Call ${i + 1}, depth ${m.rubric.conceptualDepthSamples?.[i] ?? '–'}: ${why ?? '—'}`),
+        '',
+      ]
+      : []),
   ];
 }
 

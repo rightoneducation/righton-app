@@ -125,7 +125,8 @@
       }
     ],
     "validator": {
-      "model": "o3-mini",
+      "model": "gpt-5-mini",
+      "modelNote": "gpt-5-mini since 2026-11-02 (user-approved): OpenAI retired o3-mini, and every call to it returned 404 'model deprecated', so the Spot the Slip worked-example check fell back and passed its examples through unchecked (v43). Same model as the discussion review.",
       "systemPrompt": "You are a math accuracy reviewer. Output only valid JSON."
     },
     "durationNote": "Teachers have a 10-15 minute window for the activity and its closing discussion (Wave 2 doc, Activity Timing); 15 is the hard ceiling and the target sits below it. Prep before class is outside that window."
