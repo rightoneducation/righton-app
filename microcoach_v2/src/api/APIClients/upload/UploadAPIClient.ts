@@ -1,25 +1,12 @@
 import { getUrl, uploadData } from "aws-amplify/storage";
 import { BaseAPIClient, GraphQLOptions } from "../base/BaseAPIClient";
-import { ITeacherUploadInput, IUploadAPIClient } from "./interfaces/IUploadAPIClient";
-
-/*
- * Not in the generated graphql/ files: the v2 schema has no teacherUpload
- * mutation yet. v1 defined it as
- *   teacherUpload(input: TeacherUploadInput!): String
- *     @function(name: "microcoachTeacherUpload-${env}")
- *   input TeacherUploadInput { classroomId: ID!  docxKey: String!  xlsxKey: String! }
- * and microcoachv2TeacherUpload reads exactly that input. Until the schema
- * carries it, AppSync rejects this call and startAnalysis throws.
- *
- * The client also sends `assessmentType` (PPQ or POST_PPQ) so the analysis can
- * tell a first upload from the one after the activity: the v2 input needs
- * `assessmentType: AssessmentType!`, and the Lambda needs to read it.
- */
-const teacherUploadMutation = /* GraphQL */ `
-  mutation TeacherUpload($input: TeacherUploadInput!) {
-    teacherUpload(input: $input)
-  }
-`;
+import {
+  CreateMicroCoachUploadMutation,
+  CreateMicroCoachUploadMutationVariables,
+  UploadStatus,
+} from "../../../AWSAPI";
+import { createMicroCoachUpload } from "../../../graphql/mutations";
+import { IRecordUploadInput, IUploadAPIClient } from "./interfaces/IUploadAPIClient";
 
 // Spaces and symbols in a teacher's file name would otherwise end up in the key.
 const safeName = (name: string) => name.replace(/[^A-Za-z0-9._-]+/g, "_");
@@ -31,7 +18,7 @@ export class UploadAPIClient extends BaseAPIClient implements IUploadAPIClient {
    * role, so any key the teacher can write, it can read.
    *
    * Uploads are never deleted: they are the backup if the pipeline fails, and
-   * the session's `miuUploads` records where each one is.
+   * the MicroCoachUpload row records where each pair is.
    */
   async uploadFile(classroomId: string, file: File): Promise<string> {
     const result = await uploadData({
@@ -65,15 +52,17 @@ export class UploadAPIClient extends BaseAPIClient implements IUploadAPIClient {
     return url.toString();
   }
 
-  async startAnalysis(input: ITeacherUploadInput): Promise<string> {
-    const res = await this.callGraphQL<{ teacherUpload?: string | null }>(
-      teacherUploadMutation,
-      { input } as unknown as GraphQLOptions,
+  // cognitoId is left out: the owner rule fills it in from the signed-in user.
+  async recordUpload(input: IRecordUploadInput): Promise<string> {
+    const variables: CreateMicroCoachUploadMutationVariables = {
+      input: { ...input, status: UploadStatus.RECEIVED },
+    };
+    const res = await this.mutateGraphQL<CreateMicroCoachUploadMutation>(
+      createMicroCoachUpload,
+      variables as unknown as GraphQLOptions,
     );
-    const message = res?.data?.teacherUpload;
-    if (!message) throw new Error("teacherUpload returned no response");
-    // The Lambda reports bad input in its string result rather than throwing.
-    if (message.includes('"error"')) throw new Error(message);
-    return message;
+    const id = res?.data?.createMicroCoachUpload?.id;
+    if (!id) throw new Error("createMicroCoachUpload returned no row");
+    return id;
   }
 }

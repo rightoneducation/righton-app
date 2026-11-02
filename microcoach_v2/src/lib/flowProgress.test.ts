@@ -38,7 +38,6 @@ const session = (overrides: Partial<IMicroCoachSession> = {}): IMicroCoachSessio
   evaluationResults: null,
   questionStats: [],
   reflectionResults: [],
-  miuUploads: [],
   createdAt: '2026-10-12T15:00:00.000Z',
   updatedAt: '2026-10-12T15:00:00.000Z',
   ...overrides,

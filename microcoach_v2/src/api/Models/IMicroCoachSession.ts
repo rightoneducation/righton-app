@@ -1,4 +1,4 @@
-import { AssessmentType, PublishStatus, SessionStatus } from '../../AWSAPI';
+import { PublishStatus, SessionStatus } from '../../AWSAPI';
 
 export interface IMicroCoachReflectionStudentResult {
   studentId: string;
@@ -58,16 +58,6 @@ export interface IQuestionStat {
   options: IQuestionOption[];
 }
 
-/** One submitted MIU file pair. The files stay in S3; this row is how to find them. */
-export interface IMiuUpload {
-  assessmentType: AssessmentType;
-  docxKey: string;
-  xlsxKey: string;
-  /** Monday of the school week the teacher picked, `YYYY-MM-DD`. */
-  weekStart: string | null;
-  uploadedAt: string;
-}
-
 export interface IMicroCoachSession {
   id: string;
   classId: string;
@@ -91,8 +81,6 @@ export interface IMicroCoachSession {
   // Empty until the pipeline writes it (see the v2 pipeline task).
   questionStats: IQuestionStat[];
   reflectionResults: IMicroCoachReflectionResult[];
-  // Oldest first; append only.
-  miuUploads: IMiuUpload[];
   createdAt: string;
   updatedAt: string;
 }

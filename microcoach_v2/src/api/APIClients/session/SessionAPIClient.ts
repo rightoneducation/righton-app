@@ -20,7 +20,7 @@ import {
   getMicroCoachSession,
   microCoachSessionsByClassId,
 } from "../../../graphql/queries";
-import { IMicroCoachSession, IMiuUpload } from "../../Models/IMicroCoachSession";
+import { IMicroCoachSession } from "../../Models/IMicroCoachSession";
 import { SessionParser } from "../../Parsers/SessionParser";
 import { BaseAPIClient, GraphQLOptions } from "../base/BaseAPIClient";
 import { ISessionAPIClient } from "./interfaces/ISessionAPIClient";
@@ -114,14 +114,9 @@ export class SessionAPIClient
 
   async createUploadedSession(
     classId: string,
-    upload: IMiuUpload,
   ): Promise<IMicroCoachSession | null> {
     const variables: CreateMicroCoachSessionMutationVariables = {
-      input: {
-        classId,
-        status: SessionStatus.DATA_INGESTED,
-        miuUploads: [upload],
-      },
+      input: { classId, status: SessionStatus.DATA_INGESTED },
     };
     const res = await this.mutateGraphQL<CreateMicroCoachSessionMutation>(
       createMicroCoachSession,
@@ -134,13 +129,12 @@ export class SessionAPIClient
       : null;
   }
 
-  async recordMiuUpload(
+  async setSessionStatus(
     id: string,
-    miuUploads: IMiuUpload[],
     status: SessionStatus,
   ): Promise<IMicroCoachSession | null> {
     const variables: UpdateMicroCoachSessionMutationVariables = {
-      input: { id, miuUploads, status },
+      input: { id, status },
     };
     const res = await this.mutateGraphQL<UpdateMicroCoachSessionMutation>(
       updateMicroCoachSession,

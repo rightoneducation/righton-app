@@ -123,7 +123,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
-    "microcoachdocs": {
+    "microcoachuploads": {
       "BucketName": "string",
       "Region": "string"
     }

@@ -52,7 +52,10 @@ export interface IUploadState {
   responses: IUploadFile | null;
   submitStatus: SubmitStatus;
   submitError: SubmitError | null;
-  // Set once the files are in S3 and the analysis has started.
+  // The session this upload went on, once saved: a retry after a failed
+  // upload record reuses it rather than starting a second session.
+  sessionId: string | null;
+  // Set once the files are in S3 and recorded (MicroCoachUpload).
   submission: IUploadSubmission | null;
 }
 
@@ -66,6 +69,7 @@ export const emptyUploadState = (
   responses: null,
   submitStatus: 'IDLE',
   submitError: null,
+  sessionId: null,
   submission: null,
 });
 

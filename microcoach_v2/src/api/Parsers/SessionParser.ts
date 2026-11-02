@@ -131,15 +131,6 @@ export class SessionParser {
                 })),
             })),
         })),
-      miuUploads: (session.miuUploads ?? [])
-        .filter((upload): upload is NonNullable<typeof upload> => upload != null)
-        .map((upload) => ({
-          assessmentType: upload.assessmentType,
-          docxKey: upload.docxKey,
-          xlsxKey: upload.xlsxKey,
-          weekStart: upload.weekStart ?? null,
-          uploadedAt: upload.uploadedAt,
-        })),
       createdAt: session.createdAt,
       updatedAt: session.updatedAt,
     };

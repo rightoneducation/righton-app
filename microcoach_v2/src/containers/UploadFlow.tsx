@@ -9,7 +9,6 @@ import {
 } from 'react-router-dom';
 import { IAPIClients } from '../api';
 import { AssessmentType, SessionStatus } from '../AWSAPI';
-import { IMiuUpload } from '../api/Models/IMicroCoachSession';
 import {
   MicroCoachDataStatus,
   ScreenSize,
@@ -44,9 +43,10 @@ import UploadMiuSubmitted from '../pages/UploadMiuSubmitted';
  * survive "Back to upload" from the review step without a provider above both.
  *
  * Files stay in the browser until "Submit files for analysis": that uploads
- * both to S3 and records them on the session (`miuUploads`). S3 is one way:
- * nothing here deletes an uploaded file, so a failed pipeline run can always
- * be redone by hand from the recorded keys.
+ * both to S3, puts the session in its waiting state, and records the pair as a
+ * MicroCoachUpload row, which is what starts ingest. S3 is one way: nothing
+ * here deletes an uploaded file, so a failed pipeline run can always be
+ * redone by hand from the recorded keys.
  */
 
 interface UploadFlowProps {
@@ -120,42 +120,47 @@ export default function UploadFlow({
         return false;
       }
 
-      // Record the upload on the session: MIU 1 starts a new one; MIU 2 goes
-      // on the session Home sent the teacher here for (that week's, else the
-      // class's latest). If this fails the files stay in S3, and a retry
-      // uploads a fresh pair.
-      const entry: IMiuUpload = {
-        assessmentType: kind,
-        ...keys,
-        weekStart,
-        uploadedAt: new Date().toISOString(),
-      };
+      // MIU 1 starts a new session; MIU 2 goes on the session Home sent the
+      // teacher here for (that week's, else the class's latest). Then the
+      // upload row, whose creation starts ingest. If either write fails the
+      // files stay in S3, and a retry uploads a fresh pair.
       try {
-        let saved;
-        if (kind === AssessmentType.PPQ) {
-          saved = await apiClients.session.createUploadedSession(classId, entry);
-        } else {
-          const ofClass = classSessions({ sessions }, classId);
-          const target = sessionForWeek(ofClass, weekStart) ?? ofClass[0];
-          if (!target) throw new Error(`Class ${classId} has no session to reassess`);
-          saved = await apiClients.session.recordMiuUpload(
-            target.id,
-            [...target.miuUploads, entry],
-            SessionStatus.REASSESS_INGESTED,
-          );
+        let { sessionId } = upload;
+        if (!sessionId) {
+          let saved;
+          if (kind === AssessmentType.PPQ) {
+            saved = await apiClients.session.createUploadedSession(classId);
+          } else {
+            const ofClass = classSessions({ sessions }, classId);
+            const target = sessionForWeek(ofClass, weekStart) ?? ofClass[0];
+            if (!target) throw new Error(`Class ${classId} has no session to reassess`);
+            saved = await apiClients.session.setSessionStatus(
+              target.id,
+              SessionStatus.REASSESS_INGESTED,
+            );
+          }
+          if (!saved) throw new Error('The session came back empty');
+          dispatch({ type: 'UPSERT_ROWS', table: 'sessions', rows: [saved] });
+          dispatch({ type: 'SELECT', classId, sessionId: saved.id });
+          const savedId = saved.id;
+          sessionId = savedId;
+          setUpload((s) => ({ ...s, sessionId: savedId }));
         }
-        if (!saved) throw new Error('The session came back empty');
-        dispatch({ type: 'UPSERT_ROWS', table: 'sessions', rows: [saved] });
-        dispatch({ type: 'SELECT', classId, sessionId: saved.id });
+        if (!userProfile?.id) throw new Error('No signed-in user to record the upload under');
+        await apiClients.upload.recordUpload({
+          userId: userProfile.id,
+          classId,
+          sessionId,
+          assessmentType: kind,
+          ...keys,
+          weekStart,
+        });
       } catch (error) {
         console.error('Could not record the MIU upload', { ...keys, error });
         setUpload((s) => ({ ...s, submitStatus: 'ERROR', submitError: 'UPLOAD' }));
         return false;
       }
 
-      // TODO(ingest): start the analysis here (apiClients.upload.startAnalysis
-      // with the session id) once the v2 schema has the mutation. Its failure
-      // must not remove the files or the row.
       setUpload((s) => ({ ...s, submitStatus: 'IDLE', submission: keys }));
       return true;
     },

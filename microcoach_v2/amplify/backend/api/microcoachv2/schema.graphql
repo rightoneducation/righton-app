@@ -32,6 +32,7 @@ type MicroCoachUser
   # null shows their initials. Same field and pattern as central_v2's User.
   profilePicPath: String
   classes: [MicroCoachClassroom] @hasMany(indexName: "byUser", fields: ["id"])
+  uploads: [MicroCoachUpload] @hasMany(indexName: "byUser", fields: ["id"])
   role: UserRole! @index(name: "byRole", queryField: "usersByRole")
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
@@ -109,23 +110,53 @@ type MicroCoachSession @model @auth(rules: [{ allow: private }]) {
   # tiles), with the question text for the tile's tooltip.
   questionStats: [QuestionStat]
   reflectionResults: [ReflectionResult]
-  # Every MIU file pair the teacher submitted for this session, oldest first.
-  # Append only: the files stay in S3 for good, and this is how to find them
-  # if the pipeline fails and an upload has to be processed by hand.
-  miuUploads: [MiuUpload]
+  # Every MIU file pair submitted for this session (MicroCoachUpload).
+  uploads: [MicroCoachUpload] @hasMany(indexName: "bySession", fields: ["id"])
 
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
 
-# One submitted MIU: the S3 keys of its two files, as uploaded.
-type MiuUpload {
+enum UploadStatus {
+  RECEIVED
+  INGESTING
+  INGESTED
+  FAILED
+}
+
+# One submitted MIU file pair. The files stay in S3 for good, and this row is
+# how to find them if the pipeline fails and an upload is redone by hand.
+# Creating a row is what starts ingest: a DynamoDB stream on this table runs
+# the ingest Lambda on each INSERT. Teachers can create and read their own
+# rows but never change or delete them; only the Lambda moves `status` on.
+type MicroCoachUpload
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "cognitoId"
+        identityClaim: "sub"
+        operations: [create, read]
+      }
+      { allow: groups, groups: ["Admins"], operations: [read] }
+    ]
+  ) {
+  id: ID!
+  userId: ID! @index(name: "byUser")
+  cognitoId: String
+  classId: ID! @index(name: "byClass")
+  sessionId: ID! @index(name: "bySession")
   assessmentType: AssessmentType! # PPQ = MIU 1, POST_PPQ = MIU 2
   docxKey: String!
   xlsxKey: String!
   # Monday of the school week the teacher picked (YYYY-MM-DD).
   weekStart: String
-  uploadedAt: AWSDateTime!
+  status: UploadStatus
+  # Set with FAILED: why ingest stopped.
+  error: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
 }
 
 enum AssessmentType {

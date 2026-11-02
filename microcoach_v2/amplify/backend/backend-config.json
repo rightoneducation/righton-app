@@ -158,7 +158,7 @@
             "BucketName"
           ],
           "category": "storage",
-          "resourceName": "microcoachdocs"
+          "resourceName": "microcoachuploads"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -407,7 +407,7 @@
     }
   },
   "storage": {
-    "microcoachdocs": {
+    "microcoachuploads": {
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "S3"
