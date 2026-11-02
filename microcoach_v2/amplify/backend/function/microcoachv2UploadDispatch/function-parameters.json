@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "function": {
+      "microcoachv2UploadIngest": [
+        "create",
+        "read",
+        "update"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

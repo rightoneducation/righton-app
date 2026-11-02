@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "storage": {
+      "microcoachuploads": [
+        "read"
+      ],
+      "MicroCoachUpload:@model(appsync)": [
+        "read",
+        "update"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

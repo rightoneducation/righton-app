@@ -169,6 +169,49 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "microcoachv2UploadDispatch": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "microcoachv2"
+        },
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "microcoachv2UploadIngest"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachv2UploadIngest": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "BucketName"
+          ],
+          "category": "storage",
+          "resourceName": "microcoachuploads"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "microcoachv2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "microcoachv2bb9ce5a2PostAuthentication": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -370,6 +413,38 @@
         {
           "category": "function",
           "resourceName": "microcoachv2TeacherUpload"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2UploadDispatch_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2UploadDispatch"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2UploadDispatch_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2UploadDispatch"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2UploadIngest_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2UploadIngest"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2UploadIngest_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2UploadIngest"
         }
       ]
     },

@@ -169,6 +169,14 @@
         "microcoachv2bb9ce5a2PreSignup": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
           "s3Key": "amplify-builds/microcoachv2bb9ce5a2PreSignup-6661537779502b436c38-build.zip"
+        },
+        "microcoachv2UploadIngest": {
+          "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
+          "s3Key": "amplify-builds/microcoachv2UploadIngest-39527648732b71377a6c-build.zip"
+        },
+        "microcoachv2UploadDispatch": {
+          "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
+          "s3Key": "amplify-builds/microcoachv2UploadDispatch-7331644f4a4a62616c38-build.zip"
         }
       },
       "storage": {
