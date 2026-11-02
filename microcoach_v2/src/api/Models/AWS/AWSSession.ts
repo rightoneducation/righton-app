@@ -1,4 +1,4 @@
-import { PublishStatus, ReflectionResult, SessionStatus } from '../../../AWSAPI'
+import { MiuUpload, PublishStatus, ReflectionResult, SessionStatus } from '../../../AWSAPI'
 
 export type AWSSession = {
   __typename?: 'MicroCoachSession'
@@ -33,6 +33,7 @@ export type AWSSession = {
     } | null> | null
   } | null> | null
   reflectionResults?: Array<ReflectionResult | null> | null
+  miuUploads?: Array<Omit<MiuUpload, '__typename'> | null> | null
   createdAt: string
   updatedAt: string
 }

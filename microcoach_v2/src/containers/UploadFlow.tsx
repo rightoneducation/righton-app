@@ -8,7 +8,8 @@ import {
   useParams,
 } from 'react-router-dom';
 import { IAPIClients } from '../api';
-import { AssessmentType } from '../AWSAPI';
+import { AssessmentType, SessionStatus } from '../AWSAPI';
+import { IMiuUpload } from '../api/Models/IMicroCoachSession';
 import {
   MicroCoachDataStatus,
   ScreenSize,
@@ -24,8 +25,13 @@ import {
   validateUploadFile,
 } from '../lib/UploadModels';
 import { currentSchoolWeek, schoolWeeks } from '../lib/weeks';
+import { sessionForWeek } from '../lib/flowProgress';
+import { classSessions } from '../lib/selectors';
 import { UseClassroomsResult } from '../hooks/useClassrooms';
-import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import {
+  useMicroCoachDataDispatch,
+  useMicroCoachDataState,
+} from '../hooks/context/useMicroCoachDataContext';
 import UploadConfirmDialog from '../components/UploadConfirmDialog';
 import UploadMiu from '../pages/UploadMiu';
 import UploadMiuReview from '../pages/UploadMiuReview';
@@ -38,7 +44,9 @@ import UploadMiuSubmitted from '../pages/UploadMiuSubmitted';
  * survive "Back to upload" from the review step without a provider above both.
  *
  * Files stay in the browser until "Submit files for analysis": that uploads
- * both to S3 and starts the analysis (UploadAPIClient).
+ * both to S3 and records them on the session (`miuUploads`). S3 is one way:
+ * nothing here deletes an uploaded file, so a failed pipeline run can always
+ * be redone by hand from the recorded keys.
  */
 
 interface UploadFlowProps {
@@ -58,7 +66,8 @@ export default function UploadFlow({
   const location = useLocation();
   const navigate = useNavigate();
   const step = useParams()['*'] ?? '';
-  const { userProfile, userStatus } = useMicroCoachDataState();
+  const { userProfile, userStatus, sessions } = useMicroCoachDataState();
+  const dispatch = useMicroCoachDataDispatch();
   const basePath = UPLOAD_BASE_PATH[kind];
 
   // Class and week arrive pre-filled from the dashboard: the class through the
@@ -94,7 +103,7 @@ export default function UploadFlow({
     },
     clearFile: (slot) => setUpload((s) => ({ ...s, [slot]: null })),
     submit: async () => {
-      const { exemplar, responses } = upload;
+      const { exemplar, responses, weekStart } = upload;
       if (!classId || !exemplar?.file || !responses?.file) return false;
       setUpload((s) => ({ ...s, submitStatus: 'SUBMITTING', submitError: null }));
 
@@ -111,38 +120,47 @@ export default function UploadFlow({
         return false;
       }
 
+      // Record the upload on the session: MIU 1 starts a new one; MIU 2 goes
+      // on the session Home sent the teacher here for (that week's, else the
+      // class's latest). If this fails the files stay in S3, and a retry
+      // uploads a fresh pair.
+      const entry: IMiuUpload = {
+        assessmentType: kind,
+        ...keys,
+        weekStart,
+        uploadedAt: new Date().toISOString(),
+      };
       try {
-        await apiClients.upload.startAnalysis({
-          classroomId: classId,
-          ...keys,
-          assessmentType: kind,
-        });
+        let saved;
+        if (kind === AssessmentType.PPQ) {
+          saved = await apiClients.session.createUploadedSession(classId, entry);
+        } else {
+          const ofClass = classSessions({ sessions }, classId);
+          const target = sessionForWeek(ofClass, weekStart) ?? ofClass[0];
+          if (!target) throw new Error(`Class ${classId} has no session to reassess`);
+          saved = await apiClients.session.recordMiuUpload(
+            target.id,
+            [...target.miuUploads, entry],
+            SessionStatus.REASSESS_INGESTED,
+          );
+        }
+        if (!saved) throw new Error('The session came back empty');
+        dispatch({ type: 'UPSERT_ROWS', table: 'sessions', rows: [saved] });
+        dispatch({ type: 'SELECT', classId, sessionId: saved.id });
       } catch (error) {
-        console.error('Could not start the analysis', error);
-        // The files are in S3 but nothing will read them: take them back out.
-        await Promise.all(
-          [keys.docxKey, keys.xlsxKey].map((key) =>
-            apiClients.upload.removeFile(key).catch(() => undefined),
-          ),
-        );
-        setUpload((s) => ({ ...s, submitStatus: 'ERROR', submitError: 'ANALYSIS' }));
+        console.error('Could not record the MIU upload', { ...keys, error });
+        setUpload((s) => ({ ...s, submitStatus: 'ERROR', submitError: 'UPLOAD' }));
         return false;
       }
 
+      // TODO(ingest): start the analysis here (apiClients.upload.startAnalysis
+      // with the session id) once the v2 schema has the mutation. Its failure
+      // must not remove the files or the row.
       setUpload((s) => ({ ...s, submitStatus: 'IDLE', submission: keys }));
       return true;
     },
+    // Only resets the form: the submitted files and their record stay.
     startOver: async () => {
-      const { submission } = upload;
-      if (submission) {
-        await Promise.all(
-          [submission.docxKey, submission.xlsxKey].map((key) =>
-            apiClients.upload.removeFile(key).catch((error) => {
-              console.error('Could not remove an uploaded file', error);
-            }),
-          ),
-        );
-      }
       setUpload((s) => emptyUploadState(s.classId, s.weekStart));
       navigate(basePath, { replace: true });
     },

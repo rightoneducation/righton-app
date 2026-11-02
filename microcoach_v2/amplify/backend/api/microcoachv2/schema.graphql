@@ -109,9 +109,23 @@ type MicroCoachSession @model @auth(rules: [{ allow: private }]) {
   # tiles), with the question text for the tile's tooltip.
   questionStats: [QuestionStat]
   reflectionResults: [ReflectionResult]
+  # Every MIU file pair the teacher submitted for this session, oldest first.
+  # Append only: the files stay in S3 for good, and this is how to find them
+  # if the pipeline fails and an upload has to be processed by hand.
+  miuUploads: [MiuUpload]
 
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
+}
+
+# One submitted MIU: the S3 keys of its two files, as uploaded.
+type MiuUpload {
+  assessmentType: AssessmentType! # PPQ = MIU 1, POST_PPQ = MIU 2
+  docxKey: String!
+  xlsxKey: String!
+  # Monday of the school week the teacher picked (YYYY-MM-DD).
+  weekStart: String
+  uploadedAt: AWSDateTime!
 }
 
 enum AssessmentType {

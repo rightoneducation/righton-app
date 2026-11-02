@@ -11,7 +11,6 @@ export interface ITeacherUploadInput {
 export interface IUploadAPIClient {
   /** Uploads one MIU file to the docs bucket; resolves to its S3 key. */
   uploadFile(classroomId: string, file: File): Promise<string>;
-  removeFile(key: string): Promise<void>;
   /** Uploads a profile picture to the teacher's private prefix; resolves to its S3 path. */
   uploadProfilePicture(file: File): Promise<string>;
   /** A short-lived URL to show a private file (the owner's own). */

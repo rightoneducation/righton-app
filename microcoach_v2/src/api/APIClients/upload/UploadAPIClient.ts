@@ -1,4 +1,4 @@
-import { getUrl, remove, uploadData } from "aws-amplify/storage";
+import { getUrl, uploadData } from "aws-amplify/storage";
 import { BaseAPIClient, GraphQLOptions } from "../base/BaseAPIClient";
 import { ITeacherUploadInput, IUploadAPIClient } from "./interfaces/IUploadAPIClient";
 
@@ -29,6 +29,9 @@ export class UploadAPIClient extends BaseAPIClient implements IUploadAPIClient {
    * The private prefix, not public/: the bucket grants guests read on public/,
    * and the responses sheet holds student work. The Lambda reads with its own
    * role, so any key the teacher can write, it can read.
+   *
+   * Uploads are never deleted: they are the backup if the pipeline fails, and
+   * the session's `miuUploads` records where each one is.
    */
   async uploadFile(classroomId: string, file: File): Promise<string> {
     const result = await uploadData({
@@ -38,10 +41,6 @@ export class UploadAPIClient extends BaseAPIClient implements IUploadAPIClient {
       options: { contentType: file.type || undefined },
     }).result;
     return result.path;
-  }
-
-  async removeFile(key: string): Promise<void> {
-    await remove({ path: key });
   }
 
   /*

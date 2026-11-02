@@ -146,8 +146,18 @@ export type MicroCoachSession = {
   evaluationResults?: string | null,
   questionStats?:  Array<QuestionStat | null > | null,
   reflectionResults?:  Array<ReflectionResult | null > | null,
+  miuUploads?:  Array<MiuUpload | null > | null,
   createdAt: string,
   updatedAt: string,
+};
+
+export type MiuUpload = {
+  __typename: "MiuUpload",
+  assessmentType: AssessmentType,
+  docxKey: string,
+  xlsxKey: string,
+  weekStart?: string | null,
+  uploadedAt: string,
 };
 
 export enum SessionStatus {
@@ -516,8 +526,17 @@ export type CreateMicroCoachSessionInput = {
   evaluationResults?: string | null,
   questionStats?: Array< QuestionStatInput | null > | null,
   reflectionResults?: Array< ReflectionResultInput | null > | null,
+  miuUploads?: Array< MiuUploadInput | null > | null,
   createdAt?: string | null,
   updatedAt?: string | null,
+};
+
+export type MiuUploadInput = {
+  assessmentType: AssessmentType,
+  docxKey: string,
+  xlsxKey: string,
+  weekStart?: string | null,
+  uploadedAt: string,
 };
 
 export type QuestionStatInput = {
@@ -631,6 +650,7 @@ export type UpdateMicroCoachSessionInput = {
   evaluationResults?: string | null,
   questionStats?: Array< QuestionStatInput | null > | null,
   reflectionResults?: Array< ReflectionResultInput | null > | null,
+  miuUploads?: Array< MiuUploadInput | null > | null,
   createdAt?: string | null,
   updatedAt?: string | null,
 };
