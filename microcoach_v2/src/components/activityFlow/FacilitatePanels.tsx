@@ -434,9 +434,17 @@ export function FavoriteNoPanel({
       />
       {example && (
         <ExampleDetail aria-live="polite">
-          <ExampleOfHeading index={index} count={examples.length} />
-          {/* Figma (My Favorite No Teacher): Poppins 16/600. */}
-          <Typography variant="headingSm">{t('activityFlow.facilitate.anonymousResponse')}</Typography>
+          <Stack
+            direction="row"
+            alignItems="baseline"
+            justifyContent="space-between"
+            flexWrap="wrap"
+            columnGap={`${theme.sizing.space2}px`}
+          >
+            <ExampleOfHeading index={index} count={examples.length} />
+            {/* Figma (My Favorite No Teacher): Poppins 16/600. */}
+            <Typography variant="headingSm">{t('activityFlow.facilitate.anonymousResponse')}</Typography>
+          </Stack>
           <MathTypography variant="rubikSubBold" text={example.prompt} />
           <Stack
             direction={props.screenSize === ScreenSize.SMALL ? 'column' : 'row'}

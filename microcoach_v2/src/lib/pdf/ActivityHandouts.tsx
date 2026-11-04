@@ -110,6 +110,12 @@ const styles = {
   groupingIcon: { width: 8, height: 8, objectFit: 'contain' as const },
   sectionHeading: { fontFamily: 'Poppins', fontWeight: 600, fontSize: 16, marginTop: 6, marginBottom: 10 },
   exampleTitle: { fontFamily: 'Poppins', fontWeight: 600, fontSize: 14 },
+  exampleHeadRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    gap: 10,
+  },
   strategyTitleRow: {
     flexDirection: 'row' as const,
     justifyContent: 'space-between' as const,
@@ -550,8 +556,12 @@ function FavoriteNoExampleCard({
   const notice = [...example.notice].sort((a, b) => Number(a.kind === 'REVISE') - Number(b.kind === 'REVISE'));
   return (
     <Card isTeacher={isTeacher} withWorkArea>
-      <Text style={styles.exampleTitle}>{t('activityFlow.facilitate.exampleLabel', { number })}</Text>
-      <Text style={styles.label}>{t('activityFlow.facilitate.anonymousResponse')}</Text>
+      <View style={styles.exampleHeadRow}>
+        <Text style={styles.exampleTitle}>{t('activityFlow.facilitate.exampleLabel', { number })}</Text>
+        <Text style={[styles.label, { marginTop: 0, marginBottom: 0 }]}>
+          {t('activityFlow.facilitate.anonymousResponse')}
+        </Text>
+      </View>
       <Text style={styles.prompt}>{m(example.prompt)}</Text>
       <Text style={styles.label}>{t('activityFlow.facilitate.studentWork')}</Text>
       {example.work.map((line) => (
