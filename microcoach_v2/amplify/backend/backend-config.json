@@ -191,9 +191,72 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "microcoachv2UploadGenerate": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "microcoachv2GetLearningScience"
+        },
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "microcoachv2LLMGenInstrNeed"
+        },
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "microcoachv2LLMGenMisconception"
+        },
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "microcoachv2LLMSelectTemplate"
+        },
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "microcoachv2NextStepOption"
+        },
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "microcoachv2ScoresCalc"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "microcoachv2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "microcoachv2UploadIngest": {
       "build": true,
       "dependsOn": [
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "microcoachv2UploadGenerate"
+        },
         {
           "attributes": [
             "BucketName"
@@ -429,6 +492,22 @@
         {
           "category": "function",
           "resourceName": "microcoachv2UploadDispatch"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2UploadGenerate_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2UploadGenerate"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2UploadGenerate_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2UploadGenerate"
         }
       ]
     },

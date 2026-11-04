@@ -12,7 +12,6 @@ import { SavedPlanAPIClient } from "./savedPlan/SavedPlanAPIClient";
 import { ClassroomAPIClient } from "./classroom/ClassroomAPIClient";
 import { AssessmentAPIClient } from "./assessment/AssessmentAPIClient";
 import { ContextDataAPIClient } from "./contextData/ContextDataAPIClient";
-import { StudentAPIClient } from "./student/StudentAPIClient";
 import { UploadAPIClient } from "./upload/UploadAPIClient";
 
 // Single app type today; kept for signature parity with central's factory.
@@ -30,7 +29,6 @@ export class APIClients {
   classroom: ClassroomAPIClient;
   assessment: AssessmentAPIClient;
   contextData: ContextDataAPIClient;
-  student: StudentAPIClient;
   upload: UploadAPIClient;
   // TEMPORARY — /preview reads eval runs through this. Delete with the
   // MicroCoachPipelineRun model.
@@ -47,7 +45,6 @@ export class APIClients {
     this.classroom = new ClassroomAPIClient(env, this.auth);
     this.assessment = new AssessmentAPIClient(env, this.auth);
     this.contextData = new ContextDataAPIClient(env, this.auth);
-    this.student = new StudentAPIClient(env, this.auth);
     this.upload = new UploadAPIClient(env, this.auth);
     this.pipelineRun = new PipelineRunAPIClient(env, this.auth);
   }

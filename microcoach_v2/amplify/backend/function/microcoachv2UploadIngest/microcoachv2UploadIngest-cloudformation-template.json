@@ -23,6 +23,10 @@
     "apimicrocoachv2GraphQLAPIIdOutput": {
       "Type": "String",
       "Default": "apimicrocoachv2GraphQLAPIIdOutput"
+    },
+    "functionmicrocoachv2UploadGenerateName": {
+      "Type": "String",
+      "Default": "functionmicrocoachv2UploadGenerateName"
     }
   },
   "Conditions": {
@@ -111,7 +115,88 @@
               "Ref": "apimicrocoachv2GraphQLAPIIdOutput"
             },
             "NOTIFY_FROM_EMAIL": "noreply@rightoneducation.com",
-            "NOTIFY_TO_EMAILS": "drewjhart@gmail.com"
+            "NOTIFY_TO_EMAILS": "drewjhart@gmail.com",
+            "API_MICROCOACHV2_MICROCOACHSESSIONTABLE_NAME": {
+              "Fn::ImportValue": {
+                "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachSessionTable:Name"
+              }
+            },
+            "API_MICROCOACHV2_MICROCOACHSESSIONTABLE_ARN": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:aws:dynamodb:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":table/",
+                  {
+                    "Fn::ImportValue": {
+                      "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachSessionTable:Name"
+                    }
+                  }
+                ]
+              ]
+            },
+            "API_MICROCOACHV2_MICROCOACHASSESSMENTTABLE_NAME": {
+              "Fn::ImportValue": {
+                "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachAssessmentTable:Name"
+              }
+            },
+            "API_MICROCOACHV2_MICROCOACHASSESSMENTTABLE_ARN": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:aws:dynamodb:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":table/",
+                  {
+                    "Fn::ImportValue": {
+                      "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachAssessmentTable:Name"
+                    }
+                  }
+                ]
+              ]
+            },
+            "API_MICROCOACHV2_MICROCOACHSTUDENTRESPONSETABLE_NAME": {
+              "Fn::ImportValue": {
+                "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachStudentResponseTable:Name"
+              }
+            },
+            "API_MICROCOACHV2_MICROCOACHSTUDENTRESPONSETABLE_ARN": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:aws:dynamodb:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":table/",
+                  {
+                    "Fn::ImportValue": {
+                      "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachStudentResponseTable:Name"
+                    }
+                  }
+                ]
+              ]
+            },
+            "FUNCTION_MICROCOACHV2UPLOADGENERATE_NAME": {
+              "Ref": "functionmicrocoachv2UploadGenerateName"
+            }
           }
         },
         "Role": {
@@ -225,6 +310,35 @@
           "Statement": [
             {
               "Effect": "Allow",
+              "Action": [
+                "lambda:Get*",
+                "lambda:List*",
+                "lambda:Invoke*"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:lambda:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":function:",
+                      {
+                        "Ref": "functionmicrocoachv2UploadGenerateName"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
               "Action": "s3:ListBucket",
               "Resource": [
                 {
@@ -255,6 +369,67 @@
                         "Ref": "storagemicrocoachuploadsBucketName"
                       },
                       "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:Put*",
+                "dynamodb:Create*",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:Get*",
+                "dynamodb:BatchGetItem",
+                "dynamodb:List*",
+                "dynamodb:Describe*",
+                "dynamodb:Scan",
+                "dynamodb:Query",
+                "dynamodb:Update*",
+                "dynamodb:RestoreTable*"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachSessionTable:Name"
+                        }
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachSessionTable:Name"
+                        }
+                      },
+                      "/index/*"
                     ]
                   ]
                 }
@@ -310,6 +485,128 @@
                       {
                         "Fn::ImportValue": {
                           "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachUploadTable:Name"
+                        }
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:Put*",
+                "dynamodb:Create*",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:Get*",
+                "dynamodb:BatchGetItem",
+                "dynamodb:List*",
+                "dynamodb:Describe*",
+                "dynamodb:Scan",
+                "dynamodb:Query",
+                "dynamodb:Update*",
+                "dynamodb:RestoreTable*"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachAssessmentTable:Name"
+                        }
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachAssessmentTable:Name"
+                        }
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:Put*",
+                "dynamodb:Create*",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:Get*",
+                "dynamodb:BatchGetItem",
+                "dynamodb:List*",
+                "dynamodb:Describe*",
+                "dynamodb:Scan",
+                "dynamodb:Query",
+                "dynamodb:Update*",
+                "dynamodb:RestoreTable*"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachStudentResponseTable:Name"
+                        }
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachStudentResponseTable:Name"
                         }
                       },
                       "/index/*"

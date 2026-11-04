@@ -7,7 +7,6 @@ import { ISavedPlanAPIClient } from "../savedPlan/interfaces/ISavedPlanAPIClient
 import { IClassroomAPIClient } from "../classroom/interfaces/IClassroomAPIClient";
 import { IAssessmentAPIClient } from "../assessment/interfaces/IAssessmentAPIClient";
 import { IContextDataAPIClient } from "../contextData/interfaces/IContextDataAPIClient";
-import { IStudentAPIClient } from "../student/interfaces/IStudentAPIClient";
 import { IUploadAPIClient } from "../upload/interfaces/IUploadAPIClient";
 
 import { IPipelineRunAPIClient } from "../pipelineRun/interfaces/IPipelineRunAPIClient";
@@ -28,7 +27,6 @@ export interface IAPIClients {
   classroom: IClassroomAPIClient,
   assessment: IAssessmentAPIClient,
   contextData: IContextDataAPIClient,
-  student: IStudentAPIClient,
   upload: IUploadAPIClient,
   pipelineRun: IPipelineRunAPIClient // TEMPORARY — see MicroCoachPipelineRun
 }
