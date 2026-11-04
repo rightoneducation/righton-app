@@ -61,15 +61,29 @@ export const WeekSubheading = styled(Typography)(({ theme }) => ({
 }));
 
 // rev2 PastActivities: a Rubik 32/600 heading over each week's cards, with
-// Sort on the right of the first.
-export const WeekHeadingRow = styled(Box)(({ theme }) => ({
+// Sort on the right of the first. On phones the two would split the heading's
+// text across a narrow column, so Sort stacks above it, each at full width.
+export const WeekHeadingRow = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<Partial<ScreenSizeProps>>(({ theme, screenSize }) => {
+  const isSmall = screenSize === ScreenSize.SMALL;
+
+  return {
+    display: 'flex',
+    flexDirection: isSmall ? 'column-reverse' : 'row',
+    alignItems: isSmall ? 'stretch' : 'center',
+    justifyContent: 'space-between',
+    gap: theme.sizing.space3,
+    // Inset to the cards' text edge, like WeekSubheading.
+    paddingLeft: theme.sizing.space5,
+  };
+});
+
+// Holds Sort at the row's right edge, whatever width the row gives it.
+export const SortContainer = styled(Box)({
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: theme.sizing.space3,
-  // Inset to the cards' text edge, like WeekSubheading.
-  paddingLeft: theme.sizing.space5,
-}));
+  justifyContent: 'flex-end',
+});
 
 export const WeekHeading = styled(Typography)(({ theme }) => ({
   ...theme.typography.appTitle,
