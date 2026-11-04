@@ -8,7 +8,6 @@ import { ScreenSize } from '../MicroCoachModels';
 import { noScreenSize, ScreenSizeProps } from './LandingStyledComponents';
 import {
   dashboardCardShadow,
-  patternPageBackground,
 } from './DashboardStyledComponents';
 
 /*
@@ -37,17 +36,14 @@ const dashedEdge = (color: string) => {
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 };
 
-/** The page: the dashboard's cool white and tiled band, without its sidebar. */
-export const UploadLayout = styled(Box, {
-  shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => ({
+/** The page column; AppContainer draws the tiled band behind it. */
+export const UploadLayout = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'stretch',
   width: '100%',
   flexGrow: 1,
-  ...patternPageBackground(theme, screenSize),
-}));
+});
 
 /**
  * Figma: 1360x148 (setup) and 660x451 (files), rx 32, white on a navy hairline

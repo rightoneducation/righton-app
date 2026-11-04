@@ -39,7 +39,7 @@ export default function UploadMiuReview(props: UploadStepProps) {
   };
 
   return (
-    <UploadLayout screenSize={screenSize}>
+    <UploadLayout>
       <ContentRow
         screenSize={screenSize}
         columnWidth={theme.sizing.reviewContentMaxWidth}
