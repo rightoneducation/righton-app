@@ -99,6 +99,16 @@ export interface ICompareStrategy {
   notes: { heading: string | null; text: string; tone: Tone }[];
 }
 
+/**
+ * The teacher view's order: the wrong approach leads. The student view keeps
+ * the authored order, since a fixed position would give the answer away. Each
+ * strategy keeps its own label, which the activity's text refers to.
+ */
+export const teacherStrategyOrder = (strategies: ICompareStrategy[]): ICompareStrategy[] =>
+  [...strategies].sort(
+    (a, b) => Number(b.verdict === 'INCORRECT') - Number(a.verdict === 'INCORRECT'),
+  );
+
 /** Compare the Thinking: two approaches with equal visual weight. */
 export interface ICompareFacilitate {
   type: 'COMPARE_THE_THINKING';

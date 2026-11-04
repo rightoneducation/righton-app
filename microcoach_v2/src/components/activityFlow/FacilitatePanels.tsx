@@ -16,6 +16,7 @@ import {
   IMakeYourCaseFacilitate,
   IMathDetectiveFacilitate,
   Tone,
+  teacherStrategyOrder,
 } from '../../lib/ActivityContentModels';
 import { WorkStatus } from '../../lib/PipelineModels';
 import { withWorkMark } from '../../lib/activityMarks';
@@ -118,6 +119,9 @@ export function CompareThinkingPanel({
   const titleId = React.useId();
   const view = useArtifactView(props);
   const { isTeacher } = view;
+  const strategies = isTeacher
+    ? teacherStrategyOrder(facilitate.strategies)
+    : facilitate.strategies;
 
   return (
     <FlowCard component="section" aria-labelledby={titleId}>
@@ -143,9 +147,14 @@ export function CompareThinkingPanel({
             <Divider orientation="vertical" flexItem sx={{ borderColor: 'designSystem.background.navyBlue' }} />
           }
         >
-          {facilitate.strategies.map((strategy) => (
+          {strategies.map((strategy) => (
             <Stack key={strategy.label} spacing={`${theme.sizing.space1}px`} sx={{ flex: 1, minWidth: 0 }}>
-              <Stack direction="row" alignItems="center" spacing={`${theme.sizing.space2}px`}>
+              <Stack
+                direction="row"
+                alignItems="flex-start"
+                justifyContent="space-between"
+                spacing={`${theme.sizing.space2}px`}
+              >
                 <ColumnBadge
                   isCorrect={strategy.verdict !== 'INCORRECT'}
                   isRevealed={isTeacher && strategy.verdict !== null}
