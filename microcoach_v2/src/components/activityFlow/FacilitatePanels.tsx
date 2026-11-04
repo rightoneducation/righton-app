@@ -9,6 +9,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import ErrorIcon from '@mui/icons-material/Error';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import MathText from '../MathText';
 import MathTypography from '../MathTypography';
 import {
   ICompareFacilitate,
@@ -198,7 +199,7 @@ export function CompareThinkingPanel({
                       {/* Figma (Compare the Thinking Teacher2): "WHY IT WORKS:" Rubik 16/500, text 16. */}
                       {note.heading && (
                         <Typography variant="rubikLabel" sx={{ color: navy, textTransform: 'uppercase' }}>
-                          {`${note.heading.replace(/:$/, '')}:`}
+                          <MathText text={note.heading.replace(/:$/, '')} inline />:
                         </Typography>
                       )}
                       <MathTypography variant="rubikBody" sx={{ color: navy }} text={note.text} />
