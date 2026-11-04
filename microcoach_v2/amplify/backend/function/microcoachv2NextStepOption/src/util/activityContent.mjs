@@ -196,7 +196,7 @@ const compareTheThinking = (_bounds, mode) => z.object({
     steps: z.array(z.object({
       step: z.number().int(),
       text: z.string(),
-      highlight: z.enum(['ERROR', 'SUCCESS']).nullable().describe('Teacher view only: ERROR on the first invalid step, SUCCESS on the step that makes the approach work; null otherwise'),
+      highlight: z.enum(['ERROR', 'SUCCESS']).nullable().describe('Teacher view only: ERROR on the first invalid step; SUCCESS on the step that makes a correct approach work, never on a step of an INCORRECT approach; null otherwise'),
     })).min(2).max(6),
     notes: z.array(z.object({
       heading: z.string().nullable().describe('e.g. "Why it works"; null for a single unheaded note'),
@@ -375,6 +375,23 @@ export function incompleteSystems(facilitate) {
   return generatedProblemsOf(facilitate).flatMap(({ task, math }, i) => (
     NAMES_A_SYSTEM.test(task ?? '') && (math?.kind !== 'SYSTEM' || expressionsOf(math).length < 2)
       ? [{ example: i + 1, task, math: expressionsOf(math).join(', ') }]
+      : []
+  ));
+}
+
+/**
+ * Compare the Thinking steps marked SUCCESS inside an INCORRECT approach. A wrong
+ * approach has no step that makes it work, so this mark means the model wrote the
+ * student correcting the mistake (v45: "...so the line should be dashed instead"),
+ * which leaves a "wrong" column that ends right and hands students the answer.
+ */
+export function selfCorrectingStrategies(facilitate) {
+  if (facilitate?.type !== 'COMPARE_THE_THINKING') return [];
+  return (facilitate.strategies ?? []).flatMap((strategy) => (
+    strategy.verdict === 'INCORRECT'
+      ? (strategy.steps ?? [])
+        .filter((step) => step.highlight === 'SUCCESS')
+        .map((step) => ({ strategy: strategy.label, step: step.step, text: step.text }))
       : []
   ));
 }
@@ -690,6 +707,22 @@ export function applyLabelFixes(facilitate, fixes = []) {
       return { ...ex, steps: original.steps };
     });
   }
-  const reverted = new Set(rejected.filter((r) => r.reason === 'wouldNotLeaveOneError').map((r) => r.id));
+  // The review can't rewrite a step's text, so a SUCCESS it adds to a wrong
+  // approach can only mislabel the step.
+  if (next.type === 'COMPARE_THE_THINKING') {
+    next.strategies.forEach((strategy, i) => {
+      if (strategy.verdict !== 'INCORRECT') return;
+      strategy.steps.forEach((step, j) => {
+        const id = `strategies[${i}].steps[${j}].highlight`;
+        const fix = applied.find((a) => a.id === id);
+        if (step.highlight !== 'SUCCESS' || !fix) return;
+        step.highlight = facilitate.strategies[i].steps[j].highlight;
+        rejected.push({ id, label: fix.to, reason: 'successOnWrongApproach' });
+      });
+    });
+  }
+  const reverted = new Set(rejected
+    .filter((r) => ['wouldNotLeaveOneError', 'successOnWrongApproach'].includes(r.reason))
+    .map((r) => r.id));
   return { facilitate: next, applied: applied.filter((a) => !reverted.has(a.id)), rejected };
 }

@@ -61,6 +61,7 @@ import {
   toStoredDiscussion,
   toStoredFacilitate,
   incompleteSystems,
+  selfCorrectingStrategies,
   normalizeGeneratedMath,
   stripTextLabels,
   groupingRegressions,
@@ -285,7 +286,7 @@ ${INCORRECT_EXAMPLE_FEW_SHOT.map((ex) => `Misconception: ${ex.misconception}
   Incorrect work: ${ex.bad.incorrectWork}`).join('\n\n')}` : ''}`,
   FAVORITE_NO: () => `\`facilitate.examples\`: ${BOUNDS.examplesMin}-${BOUNDS.examplesMax} incorrect responses, each revealing a mathematical idea, intuition, strategy, or assumption worth preserving — not a procedural slip, arithmetic mistake, or random answer. \`work\` is the response line by line, with the sound lines marked CORRECT so the error sits inside partly sound reasoning. \`notice\` (teacher only) lists what the reasoning gets right (PRESERVE, first) and then what needs to change (REVISE). \`sourceNote\` (teacher only) says this is one plausible way a student might reason toward the answer, not any one student's work, and that a real anonymous response can replace it. \`task\` and \`math\` state only the problem students solve — never the response, a description of it, or what is wrong with it; the response belongs in \`work\`.`,
   MATH_DETECTIVE: () => `\`facilitate.examples\`: ${BOUNDS.examplesMin}-${BOUNDS.examplesMax} incorrect responses, each pointing to a deeper mathematical issue to investigate — not a single localized slip. \`workSummary\` is one student's attempt in 2-5 short moves (the evidence). \`stages\`, in order: INVESTIGATE (ask what is going wrong and what idea, assumption, model, or representation might be behind it; answer with the issue and the evidence for it, naming another plausible interpretation when there is one), SOLVE (ask students to revise the reasoning; answer with the revised step and a check that it works on the original or a related example), GENERALIZE (ask for a rule that prevents the issue; answer with the rule to post). Student-facing \`ask\` text never gives the answer away. \`task\` and \`math\` state only the problem the student was solving, rewritten as an open problem when the original was multiple choice (the student's chosen answer belongs in \`workSummary\`) — never the student's work, a description of what the student did, or the error; those belong in \`workSummary\` and the teacher-only answers.`,
-  COMPARE_THE_THINKING: () => `\`facilitate\`: one problem, as its \`task\` and \`math\`, and exactly two strategies, A and B, with equal visual weight. Use CORRECT_VS_INCORRECT when the opportunity is to examine the misconception through the contrast; BOTH_CORRECT when it is to compare valid strategies (efficiency, generalizability, representation, assumptions). Verdicts, step highlights and notes are teacher only: highlight ERROR on the first invalid step and SUCCESS on the step that makes an approach work. Each strategy gets 1-2 notes on what it reveals about the thinking behind it. The comparison must have a clear mathematical purpose, not be a "which one is right?" exercise.`,
+  COMPARE_THE_THINKING: () => `\`facilitate\`: one problem, as its \`task\` and \`math\`, and exactly two strategies, A and B, with equal visual weight. Use CORRECT_VS_INCORRECT when the opportunity is to examine the misconception through the contrast; BOTH_CORRECT when it is to compare valid strategies (efficiency, generalizability, representation, assumptions). Verdicts, step highlights and notes are teacher only: highlight ERROR on the first invalid step and SUCCESS on the step that makes a correct approach work. An INCORRECT approach stays wrong through its last step: its student never notices, tests for or corrects the mistake, and none of its steps is marked SUCCESS. Each strategy gets 1-2 notes on what it reveals about the thinking behind it. The comparison must have a clear mathematical purpose, not be a "which one is right?" exercise.`,
   MAKE_YOUR_CASE: () => `\`facilitate\`: a \`claim\` students can genuinely defend, challenge, or refine with evidence — not obviously true or false, and never a mathematically indefensible position. \`resolution\` (teacher only) is what the mathematics supports; use CONDITIONAL with the refined claim when it holds only under conditions. \`studentSteps\` are 1-3 short instructions for building a case. \`examples\` are 2-4 cases to bring in, each with what it shows (teacher only). \`arguments\` (teacher reference) hold at least one substantive SUPPORT and one substantive CHALLENGE — a counterexample, boundary condition, assumption, or limitation — never a deliberately weak one.`,
 };
 
@@ -829,6 +830,22 @@ ${MATH_FORMATTING}
         && (plannedClassMinutes(retried).total <= MAX_DURATION
           || plannedClassMinutes(retried).total <= plannedClassMinutes(generated).total);
       if (stillRegressing.length < regressions.length && noWorse) generated = retried;
+    }
+    // A wrong approach that corrects itself ends right under a "Wrong approach"
+    // label and gives students the answer. Regenerate once, keep the attempt with
+    // fewer such steps as long as it is no worse on the checks above, and record
+    // both so evaluation can see how often this fired.
+    const selfCorrecting = selfCorrectingStrategies(generated.facilitate);
+    if (selfCorrecting.length) {
+      const retried = await generateActivity();
+      const stillSelfCorrecting = selfCorrectingStrategies(retried.facilitate);
+      recordSubCall('retry-self-correcting-strategy', null, null, {
+        before: selfCorrecting, after: stillSelfCorrecting, fixed: stillSelfCorrecting.length === 0,
+      });
+      const noWorse = incompleteSystems(retried.facilitate).length <= incompleteSystems(generated.facilitate).length
+        && (plannedClassMinutes(retried).total <= MAX_DURATION
+          || plannedClassMinutes(retried).total <= plannedClassMinutes(generated).total);
+      if (stillSelfCorrecting.length < selfCorrecting.length && noWorse) generated = retried;
     }
     const {
       targets, instructionalMove, strategyTag, aiReasoning, ...activity
