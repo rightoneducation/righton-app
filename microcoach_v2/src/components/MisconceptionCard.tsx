@@ -80,7 +80,7 @@ export default function MisconceptionCard({
           {isRecommendedFocus && (
             <Tooltip
               title={t('review.focusTooltip')}
-              placement="bottom-start"
+              placement="bottom"
               arrow
               slotProps={continueTooltipSx}
             >

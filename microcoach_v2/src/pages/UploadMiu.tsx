@@ -251,7 +251,7 @@ export default function UploadMiu({
   if (!isI18nReady) return null;
 
   return (
-    <UploadLayout screenSize={screenSize}>
+    <UploadLayout>
       <ContentRow
         narrow
         screenSize={screenSize}

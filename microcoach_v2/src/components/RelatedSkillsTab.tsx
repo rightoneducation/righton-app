@@ -61,7 +61,7 @@ function SkillRow({ skill, tone, learningComponents = [] }: SkillRowProps) {
           {domain && (
             <Tooltip
               title={domain}
-              placement="bottom-start"
+              placement="bottom"
               arrow
               enterTouchDelay={0}
               leaveTouchDelay={TOOLTIP_TOUCH_HOLD_MS}

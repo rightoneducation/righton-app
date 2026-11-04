@@ -553,7 +553,7 @@
   "myActivity": {
     "title": "Mi actividad",
     "intro": "Revisa la actividad que guardaste para tu clase. Después de realizarla, sube los archivos MIU del jueves para que MicroCoach pueda seguir el progreso de tus estudiantes a lo largo del tiempo",
-    "uploadMiu": "Subir archivos MIU",
+    "uploadMiu": "Subir archivos MIU 2",
     "loading": "Cargando tu actividad guardada",
     "loadError": "No pudimos cargar tu actividad guardada. Actualiza la página para intentarlo de nuevo.",
     "saveError": "No pudimos guardar tu actividad. Vuelve atrás y selecciónala de nuevo.",

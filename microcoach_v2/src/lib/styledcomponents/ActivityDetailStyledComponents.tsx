@@ -177,10 +177,14 @@ export const StepRow = styled(Box, {
 
   return {
     display: 'flex',
-    // Figma centres the chip against the body, so a two-line step keeps its
-    // chip on the block's mid-line rather than at the first line.
-    alignItems: 'center',
+    // The chip starts at the top of its text, so a wrapped step keeps the chip
+    // on its first line (QA, replacing Figma's centring).
+    alignItems: 'flex-start',
     gap: theme.sizing.space0,
+    // Insets the chip from a red or green highlight. On every row, highlighted
+    // or not, so the chips and text keep one edge down the column.
+    paddingTop: theme.sizing.space0,
+    paddingLeft: theme.sizing.space0,
     minHeight: stepChipHeight,
     borderRadius: stepChipHeight / 2,
     backgroundColor: background,

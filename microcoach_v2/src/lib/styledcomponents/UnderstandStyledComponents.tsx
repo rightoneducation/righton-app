@@ -7,7 +7,6 @@ import { ScreenSize } from '../MicroCoachModels';
 import { noScreenSize, ScreenSizeProps } from './LandingStyledComponents';
 import {
   dashboardCardShadow,
-  patternPageBackground,
 } from './DashboardStyledComponents';
 import { pageGutter } from '../../components/ContentRow';
 
@@ -36,7 +35,6 @@ export const UnderstandPage = styled(Box, {
   paddingLeft: pageGutter(theme, screenSize),
   paddingRight: pageGutter(theme, screenSize),
   boxSizing: 'border-box',
-  ...patternPageBackground(theme, screenSize),
 }));
 
 /*

@@ -553,7 +553,7 @@
   "myActivity": {
     "title": "My Activity",
     "intro": "Review the activity you’ve saved for your class. After running the activity, upload your Thursday MIU files so MicroCoach can help track student progress over time",
-    "uploadMiu": "Upload MIU files",
+    "uploadMiu": "Upload MIU 2 files",
     "loading": "Loading your saved activity",
     "loadError": "We couldn't load your saved activity. Refresh the page to try again.",
     "saveError": "We couldn't save your activity. Go back and select it again.",

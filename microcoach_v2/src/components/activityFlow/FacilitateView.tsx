@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import MathText from '../MathText';
 import MathTypography from '../MathTypography';
 import { GroupingOptions } from '../GroupingChips';
 import { ISpotTheSlipFacilitate } from '../../lib/ActivityContentModels';
@@ -79,7 +80,8 @@ function SpotTheSlipPanel({
               <SlipChip>
                 <span>
                   <strong>{t('activityFlow.facilitate.slip')}</strong>
-                  {`: ${examples[index].slip}`}
+                  {': '}
+                  <MathText text={examples[index].slip} inline />
                 </span>
               </SlipChip>
             )}
