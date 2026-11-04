@@ -94,9 +94,9 @@ function WorkLine({
     <StepRow
       isError={isTeacher && status === 'INCORRECT'}
       isCorrect={isTeacher && status === 'CORRECT'}
-      // These rows carry no step chip, so neither the pill radius nor its
-      // 29px floor apply.
-      sx={{ px: 1, borderRadius: 0, minHeight: 0 }}
+      // These rows carry no step chip, so neither the pill radius, its 29px
+      // floor nor its inset apply.
+      sx={{ px: 1, pt: 0, borderRadius: 0, minHeight: 0 }}
     >
       {/* Figma (My Favorite No): the student work is 14. */}
       <MathTypography

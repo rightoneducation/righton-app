@@ -119,7 +119,7 @@ const styles = {
   prompt: { fontFamily: 'Rubik', fontWeight: 700, fontSize: 10, marginTop: 4, marginBottom: 6 },
   stepRow: {
     flexDirection: 'row' as const,
-    alignItems: 'center' as const,
+    alignItems: 'flex-start' as const,
     gap: 10,
     paddingVertical: 4,
     paddingHorizontal: 6,
