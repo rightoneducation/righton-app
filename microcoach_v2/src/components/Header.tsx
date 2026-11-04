@@ -14,13 +14,13 @@ import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import ContentRow from './ContentRow';
 import { ScreenSize, UserStatusType } from '../lib/MicroCoachModels';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import AvatarContent from './AvatarContent';
+import logoutIconWhite from '../images/logoutIconWhite.svg';
 
 /**
  * `app` is the in-app chrome (newexports/Wireframe2,3,5): the 362-wide
@@ -386,7 +386,7 @@ export default function Header({
                         setAccountAnchor(null);
                         onLogOut?.();
                       }}
-                      startIcon={<LogoutIcon fontSize="small" />}
+                      startIcon={<img src={logoutIconWhite} alt="" />}
                     >
                       {t('profile.logOut')}
                     </LogOutButton>
@@ -401,7 +401,7 @@ export default function Header({
                     <LogOutButton
                       disableElevation
                       onClick={onLogOut}
-                      startIcon={<LogoutIcon fontSize="small" />}
+                      startIcon={<img src={logoutIconWhite} alt="" />}
                     >
                       {t('profile.logOut')}
                     </LogOutButton>
