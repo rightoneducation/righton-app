@@ -94,6 +94,18 @@ const FLOW_SCREENS = new Set<ScreenType>([
   ScreenType.REFLECT,
 ]);
 
+// The screens drawn over the fixed tiled band (AppContainer's PatternBackdrop).
+const PATTERN_BACKDROP_SCREENS = new Set<ScreenType>([
+  ScreenType.DASHBOARD,
+  ScreenType.PAST_ACTIVITIES,
+  ScreenType.REVIEW,
+  ScreenType.CHOOSE_ACTIVITY,
+  ScreenType.ACTIVITY_DETAIL,
+  ScreenType.MY_ACTIVITY,
+  ScreenType.UPLOAD_MIU,
+  ScreenType.UPLOAD_REASSESS,
+]);
+
 const APP_CHROME_SCREENS = new Set<ScreenType>([
   ScreenType.PROFILE,
   ScreenType.CHANGE_PASSWORD,
@@ -313,6 +325,7 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       // The sign-up frames carry no footer either.
       showFooter={!usesAppChrome && !isSignUp}
       showClassSwitcher={FLOW_SCREENS.has(currentScreen)}
+      showPatternBackdrop={PATTERN_BACKDROP_SCREENS.has(currentScreen)}
       showHelp={
         currentScreen !== ScreenType.PROFILE &&
         currentScreen !== ScreenType.CHANGE_PASSWORD

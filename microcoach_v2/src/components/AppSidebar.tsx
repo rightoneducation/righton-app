@@ -7,6 +7,7 @@ import { ScreenSize } from '../lib/MicroCoachModels';
 import {
   Sidebar,
   SidebarItem,
+  SidebarItemList,
   SidebarSelect,
 } from '../lib/styledcomponents/DashboardStyledComponents';
 
@@ -47,18 +48,20 @@ export default function AppSidebar({
 
   return (
     <Sidebar screenSize={screenSize} component="nav">
-      {items.map((item) => (
-        <SidebarItem
-          key={item.id}
-          isActive={item.isActive}
-          screenSize={screenSize}
-          startIcon={icons[item.id]}
-          onClick={() => onSelect(item.id)}
-          aria-current={item.isActive ? 'page' : undefined}
-        >
-          {item.label}
-        </SidebarItem>
-      ))}
+      <SidebarItemList screenSize={screenSize}>
+        {items.map((item) => (
+          <SidebarItem
+            key={item.id}
+            isActive={item.isActive}
+            screenSize={screenSize}
+            startIcon={icons[item.id]}
+            onClick={() => onSelect(item.id)}
+            aria-current={item.isActive ? 'page' : undefined}
+          >
+            {item.label}
+          </SidebarItem>
+        ))}
+      </SidebarItemList>
     </Sidebar>
   );
 }

@@ -31,31 +31,35 @@ interface ActiveProps {
 // BackgroundPattern.svg) padded to 601: the frames repeat it every 601px
 // (x -1, 600, 1201), and repeat-x lays copies edge to edge at the image width.
 const patternBandTop = 383;
+const patternBandHeight = 358;
 
 /**
- * The cool-white page with the tiled pattern band, shared by the sidebar
- * screens and the MIU upload flow (their frames draw the same band).
+ * The tiled pattern band, pinned to the viewport so page scrolling never moves
+ * it. AppContainer renders it as a sibling of the page. zIndex -1 puts it above
+ * ScreenContainer's background (its stacking context) and below all page
+ * content, so anything drawn over it has to stay transparent or cover it.
  */
-export const patternPageBackground = (theme: Theme, screenSize: ScreenSize) => ({
-  backgroundColor: theme.palette.designSystem.background.coolWhite,
-  // The band is decoration sized for the desktop frame; below LARGE the
-  // content stacks and would sit across it at arbitrary points.
-  ...(screenSize === ScreenSize.LARGE && {
-    backgroundImage: `url(${sidebarPatternTile})`,
-    backgroundRepeat: 'repeat-x',
-    backgroundPosition: `left 0 top ${patternBandTop}px`,
-  }),
-});
+export const PatternBackdrop = styled(Box)(({ theme }) => ({
+  position: 'fixed',
+  top: theme.sizing.headerHeight + patternBandTop,
+  left: 0,
+  right: 0,
+  height: patternBandHeight,
+  zIndex: -1,
+  pointerEvents: 'none',
+  backgroundImage: `url(${sidebarPatternTile})`,
+  backgroundRepeat: 'repeat-x',
+  backgroundPosition: 'left top',
+}));
 
 export const SidebarLayout = styled(Box, {
   shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => ({
+})<ScreenSizeProps>(({ screenSize }) => ({
   display: 'flex',
   flexDirection: screenSize === ScreenSize.LARGE ? 'row' : 'column',
   alignItems: 'stretch',
   width: '100%',
   flexGrow: 1,
-  ...patternPageBackground(theme, screenSize),
 }));
 
 // Sits below the header rather than beside it, on the three sidebar screens
@@ -73,7 +77,6 @@ export const Sidebar = styled(Box, {
     display: 'flex',
     flexDirection: isLarge ? 'column' : 'row',
     flexShrink: 0,
-    gap: isLarge ? theme.sizing.space6 : theme.sizing.space3,
     width: isLarge ? SIDEBAR_WIDTH : '100%',
     paddingTop: isLarge ? theme.sizing.space3 : theme.sizing.space4,
     paddingBottom: theme.sizing.space4,
@@ -82,6 +85,27 @@ export const Sidebar = styled(Box, {
     backgroundColor: theme.palette.designSystem.background.sidebarBlue,
     boxSizing: 'border-box',
     overflowX: isLarge ? 'visible' : 'auto',
+  };
+});
+
+// The tabs, which stick under the header at LARGE while Sidebar keeps painting
+// the full-height column. Sidebar must stay flexDirection column at LARGE: in a
+// row this list would stretch to the column's height and have no room to stick.
+// top adds Sidebar's paddingTop, so the tabs stick where they already start.
+export const SidebarItemList = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => {
+  const isLarge = screenSize === ScreenSize.LARGE;
+
+  return {
+    display: 'flex',
+    flexDirection: isLarge ? 'column' : 'row',
+    flexShrink: 0,
+    gap: isLarge ? theme.sizing.space6 : theme.sizing.space3,
+    ...(isLarge && {
+      position: 'sticky',
+      top: theme.sizing.headerHeight + theme.sizing.space3,
+    }),
   };
 });
 

@@ -9,6 +9,7 @@ import {
   IMakeYourCaseFacilitate,
   IMathDetectiveExample,
   ISpotTheSlipExample,
+  teacherStrategyOrder,
 } from '../ActivityContentModels';
 import { WorkStatus } from '../PipelineModels';
 import { IActivityTemplateCopy } from '../activityTemplates';
@@ -109,10 +110,22 @@ const styles = {
   groupingIcon: { width: 8, height: 8, objectFit: 'contain' as const },
   sectionHeading: { fontFamily: 'Poppins', fontWeight: 600, fontSize: 16, marginTop: 6, marginBottom: 10 },
   exampleTitle: { fontFamily: 'Poppins', fontWeight: 600, fontSize: 14 },
+  exampleHeadRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    gap: 10,
+  },
+  strategyTitleRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'flex-start' as const,
+    gap: 10,
+  },
   prompt: { fontFamily: 'Rubik', fontWeight: 700, fontSize: 10, marginTop: 4, marginBottom: 6 },
   stepRow: {
     flexDirection: 'row' as const,
-    alignItems: 'center' as const,
+    alignItems: 'flex-start' as const,
     gap: 10,
     paddingVertical: 4,
     paddingHorizontal: 6,
@@ -359,18 +372,26 @@ function SlipExampleCard({
 /* ── Compare the Thinking ────────────────────────────────────────────── */
 
 function CompareSection({ facilitate, isTeacher, t }: { facilitate: ICompareFacilitate; isTeacher: boolean; t: Translate }) {
+  const strategies = isTeacher
+    ? teacherStrategyOrder(facilitate.strategies)
+    : facilitate.strategies;
+
   return (
     <>
       <Card isTeacher={isTeacher}>
         <Text style={styles.label}>{t('activityFlow.facilitate.problem')}</Text>
         <Text style={styles.prompt}>{m(facilitate.problem)}</Text>
       </Card>
-      {facilitate.strategies.map((strategy) => (
+      {strategies.map((strategy) => (
         <Card key={strategy.label} isTeacher={isTeacher}>
-          <Text style={styles.exampleTitle}>
-            {strategy.label}
-            {isTeacher && strategy.verdict ? `  ·  ${t(`activityFlow.facilitate.strategyVerdict.${strategy.verdict}`)}` : ''}
-          </Text>
+          <View style={styles.strategyTitleRow}>
+            <Text style={styles.exampleTitle}>{strategy.label}</Text>
+            {isTeacher && strategy.verdict && (
+              <Text style={styles.exampleTitle}>
+                {t(`activityFlow.facilitate.strategyVerdict.${strategy.verdict}`)}
+              </Text>
+            )}
+          </View>
           {strategy.steps.map((step) => {
             let fill = {};
             let mark = '';
@@ -535,8 +556,12 @@ function FavoriteNoExampleCard({
   const notice = [...example.notice].sort((a, b) => Number(a.kind === 'REVISE') - Number(b.kind === 'REVISE'));
   return (
     <Card isTeacher={isTeacher} withWorkArea>
-      <Text style={styles.exampleTitle}>{t('activityFlow.facilitate.exampleLabel', { number })}</Text>
-      <Text style={styles.label}>{t('activityFlow.facilitate.anonymousResponse')}</Text>
+      <View style={styles.exampleHeadRow}>
+        <Text style={styles.exampleTitle}>{t('activityFlow.facilitate.exampleLabel', { number })}</Text>
+        <Text style={[styles.label, { marginTop: 0, marginBottom: 0 }]}>
+          {t('activityFlow.facilitate.anonymousResponse')}
+        </Text>
+      </View>
       <Text style={styles.prompt}>{m(example.prompt)}</Text>
       <Text style={styles.label}>{t('activityFlow.facilitate.studentWork')}</Text>
       {example.work.map((line) => (

@@ -9,6 +9,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import ErrorIcon from '@mui/icons-material/Error';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import MathText from '../MathText';
 import MathTypography from '../MathTypography';
 import {
   ICompareFacilitate,
@@ -16,6 +17,7 @@ import {
   IMakeYourCaseFacilitate,
   IMathDetectiveFacilitate,
   Tone,
+  teacherStrategyOrder,
 } from '../../lib/ActivityContentModels';
 import { WorkStatus } from '../../lib/PipelineModels';
 import { withWorkMark } from '../../lib/activityMarks';
@@ -93,9 +95,9 @@ function WorkLine({
     <StepRow
       isError={isTeacher && status === 'INCORRECT'}
       isCorrect={isTeacher && status === 'CORRECT'}
-      // These rows carry no step chip, so neither the pill radius nor its
-      // 29px floor apply.
-      sx={{ px: 1, borderRadius: 0, minHeight: 0 }}
+      // These rows carry no step chip, so neither the pill radius, its 29px
+      // floor nor its inset apply.
+      sx={{ px: 1, pt: 0, borderRadius: 0, minHeight: 0 }}
     >
       {/* Figma (My Favorite No): the student work is 14. */}
       <MathTypography
@@ -118,6 +120,9 @@ export function CompareThinkingPanel({
   const titleId = React.useId();
   const view = useArtifactView(props);
   const { isTeacher } = view;
+  const strategies = isTeacher
+    ? teacherStrategyOrder(facilitate.strategies)
+    : facilitate.strategies;
 
   return (
     <FlowCard component="section" aria-labelledby={titleId}>
@@ -143,9 +148,14 @@ export function CompareThinkingPanel({
             <Divider orientation="vertical" flexItem sx={{ borderColor: 'designSystem.background.navyBlue' }} />
           }
         >
-          {facilitate.strategies.map((strategy) => (
+          {strategies.map((strategy) => (
             <Stack key={strategy.label} spacing={`${theme.sizing.space1}px`} sx={{ flex: 1, minWidth: 0 }}>
-              <Stack direction="row" alignItems="center" spacing={`${theme.sizing.space2}px`}>
+              <Stack
+                direction="row"
+                alignItems="flex-start"
+                justifyContent="space-between"
+                spacing={`${theme.sizing.space2}px`}
+              >
                 <ColumnBadge
                   isCorrect={strategy.verdict !== 'INCORRECT'}
                   isRevealed={isTeacher && strategy.verdict !== null}
@@ -189,7 +199,7 @@ export function CompareThinkingPanel({
                       {/* Figma (Compare the Thinking Teacher2): "WHY IT WORKS:" Rubik 16/500, text 16. */}
                       {note.heading && (
                         <Typography variant="rubikLabel" sx={{ color: navy, textTransform: 'uppercase' }}>
-                          {`${note.heading.replace(/:$/, '')}:`}
+                          <MathText text={note.heading.replace(/:$/, '')} inline />:
                         </Typography>
                       )}
                       <MathTypography variant="rubikBody" sx={{ color: navy }} text={note.text} />
@@ -425,9 +435,17 @@ export function FavoriteNoPanel({
       />
       {example && (
         <ExampleDetail aria-live="polite">
-          <ExampleOfHeading index={index} count={examples.length} />
-          {/* Figma (My Favorite No Teacher): Poppins 16/600. */}
-          <Typography variant="headingSm">{t('activityFlow.facilitate.anonymousResponse')}</Typography>
+          <Stack
+            direction="row"
+            alignItems="baseline"
+            justifyContent="space-between"
+            flexWrap="wrap"
+            columnGap={`${theme.sizing.space2}px`}
+          >
+            <ExampleOfHeading index={index} count={examples.length} />
+            {/* Figma (My Favorite No Teacher): Poppins 16/600. */}
+            <Typography variant="headingSm">{t('activityFlow.facilitate.anonymousResponse')}</Typography>
+          </Stack>
           <MathTypography variant="rubikSubBold" text={example.prompt} />
           <Stack
             direction={props.screenSize === ScreenSize.SMALL ? 'column' : 'row'}

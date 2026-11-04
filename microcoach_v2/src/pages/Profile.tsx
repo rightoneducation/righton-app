@@ -7,7 +7,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Typography from '@mui/material/Typography';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AddIcon from '@mui/icons-material/Add';
-import LogoutIcon from '@mui/icons-material/Logout';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AvatarContent from '../components/AvatarContent';
@@ -17,6 +16,7 @@ import { IAPIClients } from '../api';
 import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import accountPatternTopLeft from '../images/accountPatternTopLeft.svg';
 import accountPatternBottomRight from '../images/accountPatternBottomRight.svg';
+import logoutIconBlue from '../images/logoutIconBlue.svg';
 import removeIcon from '../images/removeIcon.svg';
 import errorIcon from '../images/errorIcon.svg';
 import { IUserState } from '../hooks/useUserState';
@@ -842,7 +842,7 @@ export default function Profile({
           </SidebarIdentity>
           <SidebarLogOut
             disableElevation
-            startIcon={<LogoutIcon fontSize="small" />}
+            startIcon={<img src={logoutIconBlue} alt="" />}
             onClick={onLogOut}
           >
             {t('profile.logOut')}

@@ -38,6 +38,7 @@ import {
   CompletedTag,
   StudentsTag,
   WaitingPill,
+  SortContainer,
   WeekHeading,
   WeekGroup,
   WeekHeadingRow,
@@ -127,7 +128,7 @@ export default function PastActivities({
               // 24 from the week heading to its first card here (dev QA
               // 2026-10-30); Home's week keeps WeekGroup's 20.
               <WeekGroup key={group.key} sx={{ gap: `${theme.sizing.space5}px` }}>
-                <WeekHeadingRow>
+                <WeekHeadingRow screenSize={screenSize}>
                   {/* By class, the class name heads its group in the week's place. */}
                   <WeekHeading>
                     {group.weekStart
@@ -140,10 +141,12 @@ export default function PastActivities({
                       : group.className}
                   </WeekHeading>
                   {groupIndex === 0 && (
-                    <ActivitySortMenu
-                      sortOrder={sortOrder}
-                      onSortChange={setSortOrder}
-                    />
+                    <SortContainer>
+                      <ActivitySortMenu
+                        sortOrder={sortOrder}
+                        onSortChange={setSortOrder}
+                      />
+                    </SortContainer>
                   )}
                 </WeekHeadingRow>
                 <ActivityList>

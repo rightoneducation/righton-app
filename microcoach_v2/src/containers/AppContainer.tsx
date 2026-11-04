@@ -5,6 +5,8 @@ import Header, { HeaderVariant } from '../components/Header';
 import Footer from '../components/Footer';
 import NeedHelpButton from '../components/NeedHelpButton';
 import { useScreenSize } from '../hooks/useScreenSize';
+import { ScreenSize } from '../lib/MicroCoachModels';
+import { PatternBackdrop } from '../lib/styledcomponents/DashboardStyledComponents';
 import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 
 /**
@@ -23,6 +25,8 @@ const ScreenContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   // Cool white app-wide; only the landing page draws cream (dev QA 2026-10-30).
   backgroundColor: theme.palette.designSystem.background.coolWhite,
+  // Keeps PatternBackdrop's negative zIndex above this background.
+  isolation: 'isolate',
 }));
 
 const BodyContainer = styled(Box)({
@@ -40,6 +44,9 @@ interface AppContainerProps {
   showFooter?: boolean;
   // The floating Need help button; the Account frames draw none.
   showHelp?: boolean;
+  // The fixed tiled band behind the page, drawn at LARGE only: it's sized for
+  // the desktop frame, and stacked content would sit across it arbitrarily.
+  showPatternBackdrop?: boolean;
   onLogOut?: () => void;
   classrooms?: IMicroCoachClassroom[];
   selectedClassroomId?: string | null;
@@ -55,6 +62,7 @@ export default function AppContainer({
   showClassSwitcher = false,
   showFooter = true,
   showHelp = true,
+  showPatternBackdrop = false,
   onLogOut,
   profilePictureUrl = null,
   areClassesLoading = false,
@@ -66,6 +74,7 @@ export default function AppContainer({
 
   return (
     <ScreenContainer>
+      {showPatternBackdrop && screenSize === ScreenSize.LARGE && <PatternBackdrop aria-hidden />}
       <Header
         screenSize={screenSize}
         variant={headerVariant}
