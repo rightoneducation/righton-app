@@ -16,6 +16,7 @@ import { IActivityTemplateCopy } from '../activityTemplates';
 import formatStepAnnotation, { studentWorkText, Translate } from '../activityMarks';
 import mathText from '../mathText';
 import { pdfColors, pdfStyles } from './pdfTheme';
+import handoutBookIcon from '../../images/handoutBookIcon.png';
 import groupingIndividual from '../../images/groupingIndividual.png';
 import groupingPairs from '../../images/groupingPairs.png';
 import groupingWholeClass from '../../images/groupingWholeClass.png';
@@ -54,14 +55,17 @@ const RUN_TITLE_MAX_WIDTH = RUN_COLUMN_WIDTH - 18 - 8 - RUN_TAG_WIDTH - RUN_TITL
 const styles = {
   headerRow: { flexDirection: 'row' as const, justifyContent: 'flex-end' as const },
   labelPill: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: 6,
     backgroundColor: pdfColors.navy,
     color: pdfColors.white,
     borderRadius: 6,
     paddingVertical: 8,
     paddingHorizontal: 18,
-    fontFamily: 'Rubik',
-    fontSize: 12,
   },
+  labelText: { fontFamily: 'Rubik', fontSize: 12, color: pdfColors.white },
+  labelIcon: { width: 14, height: 14, objectFit: 'contain' as const },
   title: { fontFamily: 'Rubik', fontWeight: 600, fontSize: 24, marginTop: 16 },
   subtitle: { fontFamily: 'Rubik', fontSize: 13, marginTop: 4 },
   banner: {
@@ -230,7 +234,11 @@ function HandoutHeader({
   return (
     <View>
       <View style={styles.headerRow}>
-        <Text style={styles.labelPill}>{label}</Text>
+        <View style={styles.labelPill}>
+          {/* eslint-disable-next-line jsx-a11y/alt-text */}
+          <Image src={handoutBookIcon} style={styles.labelIcon} />
+          <Text style={styles.labelText}>{label}</Text>
+        </View>
       </View>
       <Text style={styles.title}>{template.name}</Text>
       <Text style={styles.subtitle}>{template.subtitle}</Text>
