@@ -303,9 +303,9 @@ export function MakeYourCasePanel({
             <>
               <SectionPill>{t('activityFlow.facilitate.examplesToBringIn')}</SectionPill>
               <BringInList>
-                {facilitate.examples.map((example) => (
+                {facilitate.examples.map((example, index) => (
                   <BringInItem key={example.prompt}>
-                    <MathTypography variant="rubikBody" text={example.prompt} />
+                    <MathTypography variant="rubikBody" text={`${index + 1}. ${example.prompt}`} />
                     <MathTypography
                       variant="rubikBody"
                       text={t('activityFlow.facilitate.exampleAnswer', { answer: example.answer })}

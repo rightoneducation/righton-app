@@ -481,9 +481,9 @@ function ClaimSection({ facilitate, isTeacher, t }: { facilitate: IMakeYourCaseF
         <View>
           <Text style={styles.sectionPill}>{t('activityFlow.facilitate.examplesToBringIn')}</Text>
           <View style={styles.bringInList}>
-            {facilitate.examples.map((example) => (
+            {facilitate.examples.map((example, index) => (
               <View key={example.prompt}>
-                <Text style={[styles.body, { paddingLeft: 12 }]}>{m(example.prompt)}</Text>
+                <Text style={styles.body}>{`${index + 1}. ${m(example.prompt)}`}</Text>
                 <Text style={styles.body}>{m(t('activityFlow.facilitate.exampleAnswer', { answer: example.answer }))}</Text>
               </View>
             ))}
