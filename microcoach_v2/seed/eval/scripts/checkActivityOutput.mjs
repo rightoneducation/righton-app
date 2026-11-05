@@ -16,7 +16,7 @@
 import { readFileSync, readdirSync, writeFileSync, existsSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { activityContentSchemaFor } from '../../../amplify/backend/function/microcoachv2NextStepOption/src/util/activityContent.mjs';
+import { activityContentSchemaFor, selfCorrectingStrategies } from '../../../amplify/backend/function/microcoachv2NextStepOption/src/util/activityContent.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const EVAL_ROOT = path.resolve(HERE, '..');
@@ -300,6 +300,15 @@ const RULES = [
         }
       }
       return null;
+    },
+  },
+  {
+    // v45: a "Wrong approach" column whose last step caught and fixed the mistake.
+    id: 'wrong approach has no SUCCESS step',
+    applies: (t) => t === 'COMPARE_THE_THINKING',
+    check: (c) => {
+      const flagged = selfCorrectingStrategies(c.facilitate);
+      return flagged.length ? flagged.map((f) => `${f.strategy} step ${f.step}`).join('; ') : null;
     },
   },
   // v32's Math Detective described the region for $y>2x+4$ as "above/right": for a
