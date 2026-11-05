@@ -238,7 +238,8 @@ const RULES = [
     check: (c) => {
       const steps = c.howToRun ?? [];
       if (!steps.some((st) => st.minutes != null)) return 'skip';
-      const missingStep = steps.findIndex((st) => !Number.isInteger(st.minutes));
+      // A step with no grouping is the optional Repeat step: no time is pinned on it.
+      const missingStep = steps.findIndex((st) => st.groupings?.length && !Number.isInteger(st.minutes));
       if (missingStep > -1) return `step ${missingStep + 1} has no minutes`;
       const qs = c.discussion?.questions ?? [];
       const missingQ = qs.findIndex((q) => !Number.isInteger(q.minutes));

@@ -215,7 +215,7 @@ A misconception does not, by itself, determine the instructional response. The s
 - **Descriptions**: ${ws.descriptions ?? 'Short sentences. Plain language. No run-ons.'}
 
 ## Math Formatting Requirements
-Always use LaTeX for mathematical expressions. Never use Unicode math symbols anywhere (inside LaTeX delimiters included; inequalities are \\leq, \\geq, \\neq), never a \\u escape such as \\u2265, never an empty $...$, and never caret/underscore ASCII notation outside of LaTeX delimiters. Wrap ALL math in LaTeX delimiters:
+Always use LaTeX for mathematical expressions. Never use Unicode math symbols anywhere (inside LaTeX delimiters included; inequalities are \\leq, \\geq, \\neq), never a \\u escape such as \\u2265, never an empty $...$, never a placeholder symbol such as \\square or \\Box, never \\textgreater or \\textless (write $>$ and $<$), never an expression split across delimiters around punctuation ($(x, y)$, not $($x$, $y$)$), and never caret/underscore ASCII notation outside of LaTeX delimiters. Wrap ALL math in LaTeX delimiters:
 - Inline math: $...$ (e.g. $\frac{2}{3} \div \frac{3}{4}$, $-6x + 12$, $x^2$)
 - Display/block math (standalone equations): $$...$$ on its own line
 Specific rules:

@@ -46,7 +46,7 @@ function gitSha(): string {
  * fires (see its index.mjs). Collected into the manifest's `guardFires` so
  * /preview and the run report show how often generation leaned on them.
  */
-const GUARD_LABELS = new Set(['answerable-fallback', 'retry-incomplete-system', 'math-normalized', 'label-in-text']);
+const GUARD_LABELS = new Set(['answerable-fallback', 'retry-incomplete-system', 'math-normalized', 'label-in-text', 'retry-takeaway-length']);
 
 export interface GuardFire {
   call: string;
@@ -59,6 +59,7 @@ export function guardFire(call: string, sc: Record<string, any>): GuardFire {
   let detail = `"${sc.before ?? ''}"`;
   if (sc.label === 'retry-incomplete-system') detail = sc.fixed ? 'fixed by the retry' : 'still incomplete after the retry';
   if (sc.label === 'math-normalized') detail = `${(sc.before ?? []).length} → ${(sc.after ?? []).length} expressions`;
+  if (sc.label === 'retry-takeaway-length') detail = `${sc.before} → ${sc.after} characters${sc.fixed ? '' : ', still over the limit'}`;
   if (sc.label === 'label-in-text') detail = `${(sc.lines ?? []).length} label(s) moved out of student text`;
   return { call, label: sc.label, detail };
 }
@@ -133,6 +134,13 @@ export class RunCapture {
       if (sc.fellBack) this.fallbacks.push({ call: name, label: sc.label, reason: sc.reason });
       if (sc.modelUnavailable) this.unavailableModels.push({ call: name, label: sc.label, model: sc.model, reason: sc.reason });
       if (GUARD_LABELS.has(sc.label)) this.guardFires.push(guardFire(name, sc));
+    }
+    // GenMisconception makes one model call, so it reports what it dropped in its
+    // output rather than as a sub-call.
+    for (const r of output?.rejected ?? []) {
+      if (r.reason === 'explanationCutOff') {
+        this.guardFires.push({ call: name, label: 'explanation-cut-off', detail: `Q${r.questionNumber}${r.letter} under "${r.misconception}"` });
+      }
     }
     // A Lambda that makes a single model call reports usage at the top level with no
     // subCalls. Counting only subCalls silently zeroed those out of every manifest.

@@ -65,6 +65,9 @@ const STYLE_EXAMPLES = gc.styleExamples ?? [];
 const WrongAnswerRef = z.object({
   questionNumber: z.number().describe('The question number exactly as given'),
   letter: z.string().describe('The option letter exactly as given — wrong options only'),
+  check: z.string().describe(
+    'Test THIS option\'s value in the question before explaining it: which condition, equation or graph feature it gets wrong, and the exact comparison that shows it, e.g. "$(3,1)$: $1 \\geq 3+2$ is $1 \\geq 5$, false". Then ask whether the misconception\'s reasoning produces that failure. If it does not, leave the option out.',
+  ),
   explanation: z.string().describe(
     'What THIS option\'s own value shows about the reasoning. Account for the actual value, not just the letter: name the numbers or features that distinguish it from the correct answer and from the other options. If the misconception does not determine this option\'s value, it is not the explanation for it — leave the option out.',
   ),
@@ -76,7 +79,7 @@ const MisconceptionOut = z.object({
   title: z.string().describe('(b) A precise title focused on the conceptual error itself'),
   learningScienceConnection: z.string().describe('(c) The mathematical relationship this error breaks — which idea from the standard, its learning components, or its prerequisites the student is not coordinating. A mathematical claim about this error, never a learning-science category.'),
   evidenceBasis: z.enum(['grounded', 'inferred']).describe(
-    '(d) "grounded" when the option content or question text supports this misconception as the explanation for the linked wrong answers; "inferred" when it is the most plausible reading of the response pattern but other explanations fit the same data. Deliberately not called "confidence" — that word already names the students\' 1-5 self-rating and the per-option grounding label.',
+    '(d) "grounded" only when the option text itself states the reasoning, or the reasoning fully determines every linked option\'s value (the same two numbers in the wrong order); "inferred" otherwise, including any bare point or number that merely fails a condition, since many routes reach it. Deliberately not called "confidence" — that word already names the students\' 1-5 self-rating and the per-option grounding label.',
   ),
   wrongAnswers: z.array(WrongAnswerRef).describe(
     'Every wrong option, across all questions, that a student holding this misconception would choose. An option may appear under more than one misconception.',
@@ -177,6 +180,7 @@ const RELATION_COMMAND = { '2264': '\\leq', '2265': '\\geq', '2260': '\\neq', '�
 
 function restoreLostEscapes(text) {
   return text
+    .replace(/\\text(greater|less)(?![a-zA-Z])/g, (_, word) => (word === 'greater' ? '>' : '<'))
     .replace(/\\u(226[045])(?![0-9a-fA-F])/g, (_, code) => `${RELATION_COMMAND[code]} `)
     .replace(/\$[^$]*\$/g, (span) => span.replace(/[≤≥≠]/g, (c) => `${RELATION_COMMAND[c]} `))
     .replace(/(\\(?:leq|geq|neq)) +(?=[$}\s,.;:)]|$)/g, '$1')
@@ -204,7 +208,7 @@ function sanitizeStrings(value) {
 // the fields the app renders as math. Titles stay plain words: they are short
 // noun phrases, and the admission checks read them for "(" and "or".
 const MATH_FORMATTING = `## Math formatting
-- In descriptions, wrong-answer explanations and question texts, use LaTeX for every mathematical expression: $...$ inline, $$...$$ for a standalone equation. Never use Unicode math symbols (≤ ≥ ≠ × ÷ √ π ½ ²) anywhere, inside the delimiters included, never a \\u escape such as \\u2265, and never caret/underscore notation outside the delimiters. Fractions are $\\frac{a}{b}$, inequalities $\\leq$ / $\\geq$ / $\\neq$, multiplication $\\times$. Every $...$ holds the math it stands for: never leave one empty, e.g. "$>$ versus $\\geq$", not "$>$ versus $$". Write each command with ONE backslash: never \\\\ (a line break) or \\  (a forced space). Plain prose stays plain English — only the math goes inside delimiters.
+- In descriptions, wrong-answer explanations and question texts, use LaTeX for every mathematical expression: $...$ inline, $$...$$ for a standalone equation. Never use Unicode math symbols (≤ ≥ ≠ × ÷ √ π ½ ²) anywhere, inside the delimiters included, never a \\u escape such as \\u2265, and never caret/underscore notation outside the delimiters. Fractions are $\\frac{a}{b}$, inequalities $\\leq$ / $\\geq$ / $\\neq$, multiplication $\\times$. Every $...$ holds the math it stands for: never leave one empty, e.g. "$>$ versus $\\geq$", not "$>$ versus $$". Write each command with ONE backslash: never \\\\ (a line break) or \\  (a forced space). Never a placeholder symbol such as \\square or \\Box, and never \\textgreater or \\textless: write $>$ and $<$. Keep a whole expression inside one pair of delimiters, never split around punctuation: $(x, y)$, not $($x$, $y$)$. Plain prose stays plain English — only the math goes inside delimiters.
 - Titles contain no math and no LaTeX: plain words only.`;
 
 export function buildPrompt(questions, context, learningScienceData) {
@@ -248,7 +252,7 @@ export function buildPrompt(questions, context, learningScienceData) {
     ## Grounding rules
     - Infer the most plausible mathematical misconception supported by the response pattern and the question content. Do not assume an incorrect answer corresponds to a single known misconception: a distractor can be reached by more than one route, and the Wave 2 answer key says which option is correct without saying what any distractor represents.
     - When several readings fit the same option, pick the one its value actually supports and say what in the value supports it. If two readings genuinely fit, give two misconceptions — never one that hedges between them. A description offering alternatives ("sets a variable to zero, or another arbitrary value", "substitutes wrongly or omits y") is two misconceptions written as one.
-    - Mark \`evidenceBasis\` "grounded" only when the option content or question text supports this misconception as the explanation for the linked wrong answers; "inferred" when it is the most plausible of several explanations that fit the same responses.
+    - Mark \`evidenceBasis\` "grounded" only when the option text itself states the reasoning, or the reasoning fully determines every linked option's value (the same two numbers in the wrong order). Mark it "inferred" otherwise, including any bare point or number that merely fails a condition: what students chose is observed, and many routes reach it.
     - Account for every wrong option students chose in numbers. Leaving one unclaimed is allowed and is sometimes the only honest answer — it says the option's value is not produced by any misconception identifiable from this evidence — but it is an exception you make deliberately, not a default. Claiming an option on a reading that does not produce its value is worse than leaving it out; silently dropping an option many students chose is also a failure.
     - Never describe the correct answer, and never build a misconception out of a feature the correct answer also has. If the correct answer is (5,0), "set a variable to zero" describes the key, not an error.
     - Never invent numbers that do not appear in the question or option content.
@@ -275,9 +279,9 @@ export function buildPrompt(questions, context, learningScienceData) {
       c. the mathematical relationship this error breaks: which specific idea from the standard, its learning components, or its prerequisites the student is not coordinating. Name the mathematics, not a learning-science category — never "working memory", "representational fluency", "strategy use", "cognitive load", or a named instructional strategy. Do not propose a remedy or solution.
          Good: "Treats the coefficients as graph features without coordinating them with the algebraic form the inequality must be rewritten into first."
          Not: "Reflects weak strategy use and incomplete conceptual understanding."
-      d. \`evidenceBasis\`: "grounded" when the option content or question text supports this reading, "inferred" when it is the most plausible of several explanations that fit the same responses.
+      d. \`evidenceBasis\`: "grounded" or "inferred", by the rule above.
       e. \`ccssStandard\`: which of the standards under "Standards assessed" this misconception sits under. Choose the standard the linked questions assess — the mathematics the student was actually doing — not the standard a remediation would target. Use one of the listed codes exactly.
-      f. \`wrongAnswers\`: the options it produces, each with its own \`explanation\` of what that option's value shows. Group across questions; an option may sit under more than one misconception only when its value is genuinely consistent with both. If you cannot write the explanation for an option, do not list it.
+      f. \`wrongAnswers\`: the options it produces. For each, first write \`check\`: test the value in the question and state the exact comparison it fails. Link the option only if this misconception's reasoning produces that failure: a reading about ordering negative numbers cannot explain an option whose failing comparison involves no negative numbers. Then write its \`explanation\` of what the value shows, as a complete sentence. Group across questions; an option may sit under more than one misconception only when its value is genuinely consistent with both. If you cannot write the explanation for an option, do not list it.
     2. \`questions\` — for each question, one \`text\` line per WRONG option naming the error a student who chose it most likely made, derived from the misconceptions above.
 
     Return JSON only.
@@ -412,19 +416,30 @@ export function validateOutput(structured, questions) {
       if (option.isCorrect) { rejected.push({ misconception: m.title, questionNumber: w.questionNumber, letter, reason: 'markedCorrect' }); continue; }
 
       const explanation = String(w.explanation ?? '').trim();
+      // A link whose reasoning was never finished explains nothing, and it still adds
+      // students to the misconception's reach (v44: 3 of 23, stopping where an
+      // inequality symbol belonged; none in the 684 others on record). A complete
+      // explanation ends in sentence punctuation.
+      if (explanation && !/[.!?][)"']?$/.test(explanation)) {
+        rejected.push({ misconception: m.title, questionNumber: w.questionNumber, letter, reason: 'explanationCutOff', explanation });
+        continue;
+      }
       // Option-level fault, option-level remedy: drop this reference and leave the
       // rest of the misconception standing, exactly as unknownRef and markedCorrect
       // do above. A misconception left with no references at all then falls to
       // noValidRefs below, so nothing is kept that explains nothing.
-      const fault = checkOptionAdmission(explanation, option.content);
+      // `check` is where the option's value is now tested, so it counts: on v47 the
+      // value sat there rather than in `explanation`, and reading only the explanation
+      // dropped Q3C, Q3B, Q6B and Q6D, with them every link to Q3.
+      const fault = checkOptionAdmission(`${w.check ?? ''} ${explanation}`, option.content);
       if (fault) {
         hits.push(`${fault} Q${w.questionNumber}${letter}`);
         if (ADMISSION_ENFORCED) {
-          rejected.push({ misconception: m.title, questionNumber: w.questionNumber, letter, reason: 'notAdmissible', hits: [fault] });
+          rejected.push({ misconception: m.title, questionNumber: w.questionNumber, letter, reason: 'notAdmissible', hits: [fault], check: w.check ?? null, explanation });
           continue;
         }
       }
-      kept.push({ questionNumber: w.questionNumber, letter, explanation });
+      kept.push({ questionNumber: w.questionNumber, letter, check: w.check ?? null, explanation });
     }
 
     const titleHits = checkMisconceptionAdmission(m);

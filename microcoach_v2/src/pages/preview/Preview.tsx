@@ -965,6 +965,13 @@ function RunBar({
         {stat('version', asStr(manifest.version) || 'untagged')}
         {stat('condition', String(manifest.condition ?? '—'))}
         {stat('guards fired', guardText)}
+        {asArray(manifest.activitiesFailed).length > 0 &&
+          stat(
+            'activities not generated',
+            <span className="p2-dropped">
+              {asArray(manifest.activitiesFailed).map((f) => `${asStr(f.templateId)} for "${asStr(f.misconception)}"`).join('; ')}
+            </span>,
+          )}
         {unavailable.length > 0 &&
           stat(
             'model unavailable',

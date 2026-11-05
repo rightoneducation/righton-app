@@ -77,9 +77,18 @@ export function formatForInfill(t) {
   const out = [];
   out.push(`## Template: ${t.title} — ${t.primaryMove} (${t.primaryMoveLong})`);
   out.push(t.description);
-  out.push('', 'Classroom flow:');
-  out.push(bullets((f.classroomFlow ?? []).map((s, i) => `${i + 1}. ${s.step}: ${s.description}`)));
-  if (f.groupingPattern) out.push('', `Priority grouping pattern: ${f.groupingPattern}`);
+  if (f.runSteps?.length) {
+    out.push('', 'How to run it: these steps, in this order. Each title and grouping is fixed by the template.');
+    out.push(bullets(f.runSteps.map((s, i) => {
+      const grouping = s.groupings.length ? s.groupings.join(' or ') : 'no regrouping';
+      return `${i + 1}. ${s.title} [${grouping}]${s.optional ? ' (optional, filled in for you)' : ''}: ${s.guidance}`;
+    })));
+    if (f.groupingPattern) out.push('', `Required grouping pattern: ${f.groupingPattern}`);
+  } else {
+    out.push('', 'Classroom flow:');
+    out.push(bullets((f.classroomFlow ?? []).map((s, i) => `${i + 1}. ${s.step}: ${s.description}`)));
+    if (f.groupingPattern) out.push('', `Priority grouping pattern: ${f.groupingPattern}`);
+  }
   if (f.examples?.length) {
     out.push('', 'Illustrative examples:');
     for (const ex of f.examples) {

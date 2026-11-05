@@ -1176,6 +1176,8 @@ async function processClassroom(
   // That is the intended outcome of the no-strong-fit rule, not a failure, so it is
   // counted rather than hidden.
   let misconceptionsWithoutActivities = 0;
+  // Picks whose activity never came back. Unlike the count above, this is a failure.
+  const activitiesFailed: Array<{ misconception: string; templateId: string; error: string }> = [];
   const activitiesPerGroup: any[][] = ANALYSIS_ONLY ? misconceptions.map(() => []) : await Promise.all(
     misconceptions.map(async (m: any, i: number) => {
       const selected: any[] = m.selectedTemplates?.picks ?? [];
@@ -1253,6 +1255,7 @@ async function processClassroom(
           resultList.push({ ...parsed, templateId: pick.templateId });
         } catch (err) {
           console.error(`\n    ✗ ${pick.templateId}: ${err}`);
+          activitiesFailed.push({ misconception: m.title, templateId: pick.templateId, error: String(err).slice(0, 300) });
         }
       }
 
@@ -1386,6 +1389,7 @@ async function processClassroom(
     templatePicks: misconceptions.reduce((n: number, m: any) => n + (m.selectedTemplates?.picks?.length ?? 0), 0),
     // Misconceptions that reached activity generation with no template to enact.
     misconceptionsWithoutActivities,
+    activitiesFailed,
     // How often the pipeline declined to force a template. Non-zero is a valid
     // outcome, not a failure — the doc says not to pick a weak template to fill a slot.
     selectionsWithOnePick: misconceptions.filter((m: any) => m.selectedTemplates?.picks?.length === 1).length,
@@ -1413,6 +1417,9 @@ async function processClassroom(
     for (const s of manifest.studentCountTotals) {
       const n = s.studentCount == null ? 'not linked' : `${s.studentCount} students (${Math.round((s.studentPercent ?? 0) * 100)}%)`;
       console.log(`      ${s.title}: ${n}`);
+    }
+    if (activitiesFailed.length) {
+      console.error(`\n✗ ${activitiesFailed.length} ACTIVITY(IES) NOT GENERATED: ${activitiesFailed.map((f) => `${f.templateId} for "${f.misconception}"`).join('; ')}. See manifest.json.`);
     }
     if (manifest.silentFallbacks.length) {
       console.log(`    ⚠ ${manifest.silentFallbacks.length} silent validator fallback(s) — see manifest.json`);

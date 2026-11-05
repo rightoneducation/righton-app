@@ -42,6 +42,7 @@
     "grouping": {
       "INDIVIDUAL": "Individual",
       "PAIRS": "Pairs",
+      "TWO_GROUPS": "Two Groups",
       "WHOLE_CLASS": "Whole Class"
     },
     "whyTitle": "Why this activity?",

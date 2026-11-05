@@ -24,7 +24,7 @@ import { z } from 'zod';
 
 export const CONTENT_VERSION = 2;
 
-export const GROUPING_KINDS = ['INDIVIDUAL', 'PAIRS', 'WHOLE_CLASS'];
+export const GROUPING_KINDS = ['INDIVIDUAL', 'PAIRS', 'TWO_GROUPS', 'WHOLE_CLASS'];
 const GroupingKind = z.enum(GROUPING_KINDS);
 
 // ── Shared pieces ─────────────────────────────────────────────────────────────
@@ -81,6 +81,37 @@ function runStepFor(mode) {
   const minutes = z.number().int().min(1).max(STEP_MINUTES_MAX)
     .describe('Realistic class minutes for this step with a class of about 28: the time students actually need to read, work the math, talk in pairs and share out, plus any regrouping. Not an ideal pace.');
   return z.object({ ...runStepFields, minutes: mode === 'stored' ? minutes.optional() : minutes });
+}
+
+/**
+ * A template's steps are fixed by Design (issues #2826, #2832): the count, order,
+ * titles and groupings come from the library, and the model writes only each
+ * required step's body and minutes. `title` is generated so the model anchors each
+ * body to its step; withFixedRunSteps then overwrites it by position.
+ *
+ * An optional step ("Repeat steps 1-3 … as time allows") is not generated at all:
+ * its text is the library's and it carries no minutes, so it stays out of the
+ * activity's class time.
+ */
+const requiredRunSteps = (runSteps) => runSteps.filter((s) => !s.optional);
+
+function fixedRunStep(runSteps) {
+  return z.object({
+    title: z.enum(requiredRunSteps(runSteps).map((s) => s.title)).describe('This step\'s title, exactly as listed, in the listed order'),
+    body: runStepFields.body,
+    minutes: runStepFor('generate').shape.minutes,
+  });
+}
+
+/** The generated steps as stored: fixed title and groupings, generated body and minutes. */
+export function withFixedRunSteps(generatedSteps, runSteps) {
+  let next = 0;
+  return runSteps.map(({ title, groupings, guidance, optional }) => {
+    if (optional) return { title, body: guidance, groupings };
+    const { body, minutes } = generatedSteps[next];
+    next += 1;
+    return { title, body, groupings, minutes };
+  });
 }
 
 // ── Facilitate: one artifact per template ─────────────────────────────────────
@@ -396,36 +427,6 @@ export function selfCorrectingStrategies(facilitate) {
   ));
 }
 
-/**
- * Templates whose grouping pattern runs one way, smallest to largest
- * (Individual → pairs → whole class). The others are left out on purpose: Make
- * Your Case's re-vote is individual again by design ("Revisit the claim"), and
- * Math Detective and Compare the Thinking start at pairs or the whole class.
- */
-export const ORDERED_GROUPING_TYPES = ['FAVORITE_NO', 'INCORRECT_WORKED_EXAMPLES'];
-
-const GROUPING_RANK = Object.fromEntries(GROUPING_KINDS.map((kind, i) => [kind, i]));
-
-/**
- * Run steps that go back to a smaller grouping after the class has reached a
- * larger one (dev QA 2026-10-28: My Favorite No as Individual → Pairs → Whole
- * class → Pairs). A step offering two groupings counts as the smaller; a step
- * that doesn't regroup is skipped. The handler regenerates once when any are
- * found.
- */
-export function groupingRegressions(plan, contentType) {
-  if (!ORDERED_GROUPING_TYPES.includes(contentType)) return [];
-  let peak = -1;
-  return (plan?.howToRun ?? []).flatMap((step, i) => {
-    const ranks = (step.groupings ?? []).map((kind) => GROUPING_RANK[kind]);
-    if (!ranks.length) return [];
-    const rank = Math.min(...ranks);
-    const isBack = rank < peak;
-    peak = Math.max(peak, rank);
-    return isBack ? [{ step: i + 1, title: step.title, groupings: step.groupings }] : [];
-  });
-}
-
 const DEFAULT_BOUNDS = {
   examplesMin: 1, examplesMax: 3,
   beforeClassMin: 2, beforeClassMax: 3,
@@ -451,7 +452,10 @@ export function activityPlanSchemaFor(contentType, bounds = {}, mode = 'generate
     steps: z.array(z.string()).min(b.beforeClassMin).max(b.beforeClassMax).describe('What the teacher prepares before class, one sentence each'),
     groupingRationale: z.string().describe('1-2 sentences: why students are grouped this way for this activity'),
   });
-  const howToRun = z.array(runStepFor(mode)).min(b.howToRunMin).max(b.howToRunMax).describe('The run-of-show, following the template\'s classroom flow and grouping pattern');
+  const required = b.runSteps?.length ? requiredRunSteps(b.runSteps).length : 0;
+  const howToRun = mode === 'generate' && required
+    ? z.array(fixedRunStep(b.runSteps)).min(required).max(required).describe('The template\'s required steps, every one, in the listed order')
+    : z.array(runStepFor(mode)).min(b.howToRunMin).max(b.howToRunMax).describe('The run-of-show, following the template\'s classroom flow and grouping pattern');
   const why = z.string().describe('2-3 teacher-facing sentences: the student need, why this template\'s move fits it, and how the activity addresses it. Not a description of the steps.');
   if (mode === 'stored') {
     return z.object({
@@ -513,7 +517,7 @@ export const QUESTION_PURPOSES = ['TEST', 'GENERALIZE', 'APPLY', 'CHALLENGE', 'C
 export function discussionDraftSchema(bounds = {}, minutesMax = DEFAULT_BOUNDS.discussionMinutesMax) {
   const b = { ...DEFAULT_BOUNDS, ...bounds };
   return z.object({
-    takeaway: z.string().describe('The one central mathematical idea students should leave with, in 1-2 sentences of mathematics: not a description of the activity, not a restatement of the need, and no list of edge cases or conditions (those go in a question\'s teacher answer)'),
+    takeaway: z.string().describe('The one central mathematical idea students should leave with, in 1-2 sentences of mathematics and at most 300 characters: not a description of the activity, not a restatement of the need, and no list of edge cases or conditions (those go in a question\'s teacher answer)'),
     questions: z.array(z.object({
       purpose: z.enum(QUESTION_PURPOSES),
       question: z.string().describe('Student-facing'),

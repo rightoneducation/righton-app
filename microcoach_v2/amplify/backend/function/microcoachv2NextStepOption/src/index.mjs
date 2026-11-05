@@ -64,8 +64,7 @@ import {
   selfCorrectingStrategies,
   normalizeGeneratedMath,
   stripTextLabels,
-  groupingRegressions,
-  ORDERED_GROUPING_TYPES,
+  withFixedRunSteps,
   teacherLabels,
   applyLabelFixes,
 } from './util/activityContent.mjs';
@@ -83,6 +82,10 @@ const VALIDATOR_MODEL                = vco.model ?? 'gpt-5-mini';
 const VALIDATOR_SYSTEM_PROMPT        = vco.systemPrompt ?? 'You are a math accuracy reviewer. Output only valid JSON.';
 const DISCUSSION_MODEL        = cdo.model ?? MODEL;
 const REVIEW_MODEL            = cdo.reviewModel ?? VALIDATOR_MODEL;
+// Asked for at the target; a takeaway over the maximum is rewritten once. Not a
+// schema cap: a hard cap on a string truncates it mid-clause (v37's "Then compare to the:").
+const TAKEAWAY_TARGET_CHARS   = 300;
+const TAKEAWAY_MAX_CHARS      = cdo.takeawayMaxChars ?? 350;
 const MAX_DURATION            = nso.maxDurationMinutes ?? 15;
 const DEFAULT_DURATION        = nso.targetDurationMinutes ?? 12;
 const STRATEGY_TAGS           = nso.strategyTags ?? [];
@@ -121,7 +124,7 @@ const strategyTagSchema = STRATEGY_TAGS.length >= 2
 
 /** The row-level fields stored beside the content on MicroCoachActivity. */
 const RowFields = z.object({
-  targets: z.string().describe('The specific skill this activity builds, in plain skill language (e.g. "Applying integer sign rules in algebraic expressions"). Not ontology IDs.'),
+  targets: z.string().describe('The specific skill this activity builds, in plain words with no math, symbols or LaTeX (e.g. "Applying integer sign rules in algebraic expressions"). Not ontology IDs.'),
   instructionalMove: z.string().describe('What the teacher concretely does, beginning with a verb, 2-4 sentences, naming the error pattern this activity addresses.'),
   strategyTag: strategyTagSchema.describe(`Exactly one of: ${STRATEGY_TAGS.map((t) => t.name).join(', ')}`),
   aiReasoning: z.string().describe('Internal: why this design enacts the template for this need. Not shown to teachers.'),
@@ -181,6 +184,7 @@ const RELATION_COMMAND = { '2264': '\\leq', '2265': '\\geq', '2260': '\\neq', '�
 
 function restoreLostEscapes(text) {
   return text
+    .replace(/\\text(greater|less)(?![a-zA-Z])/g, (_, word) => (word === 'greater' ? '>' : '<'))
     .replace(/\\u(226[045])(?![0-9a-fA-F])/g, (_, code) => `${RELATION_COMMAND[code]} `)
     .replace(/\$[^$]*\$/g, (span) => span.replace(/[≤≥≠]/g, (c) => `${RELATION_COMMAND[c]} `))
     .replace(/(\\(?:leq|geq|neq)) +(?=[$}\s,.;:)]|$)/g, '$1')
@@ -233,7 +237,7 @@ const parseMaybe = (raw, fallback) => {
 // ── Prompt pieces ─────────────────────────────────────────────────────────────
 
 const MATH_FORMATTING = `## Math formatting
-Use LaTeX for every mathematical expression: $...$ inline, $$...$$ for a standalone equation. Never use Unicode math symbols (≤ ≥ ≠ × ÷ √ π ½ ²) anywhere, inside the delimiters included, never a \\u escape such as \\u2265, and never caret/underscore notation outside the delimiters. Fractions are $\\frac{a}{b}$, inequalities $\\leq$ / $\\geq$ / $\\neq$, multiplication $\\times$. Every $...$ holds the math it stands for: never leave one empty, e.g. "$>$ versus $\\geq$", not "$>$ versus $$". Write each command with ONE backslash: never \\\\ (a line break) or \\  (a forced space), and never a placeholder symbol such as \\square — write the real symbol or words instead. Plain prose stays plain English — only the math goes inside delimiters.`;
+Use LaTeX for every mathematical expression: $...$ inline, $$...$$ for a standalone equation. Never use Unicode math symbols (≤ ≥ ≠ × ÷ √ π ½ ²) anywhere, inside the delimiters included, never a \\u escape such as \\u2265, and never caret/underscore notation outside the delimiters. Fractions are $\\frac{a}{b}$, inequalities $\\leq$ / $\\geq$ / $\\neq$, multiplication $\\times$. Every $...$ holds the math it stands for: never leave one empty, e.g. "$>$ versus $\\geq$", not "$>$ versus $$". Write each command with ONE backslash: never \\\\ (a line break) or \\  (a forced space), and never a placeholder symbol such as \\square or \\Box — write the real symbol or words instead. Never \\textgreater or \\textless: write $>$ and $<$. Keep a whole expression inside one pair of delimiters, never split around punctuation: $(x, y)$, not $($x$, $y$)$. Plain prose stays plain English — only the math goes inside delimiters. When words name a side of a line, "above" and "below" are well defined for any non-vertical line; the sides of a descending line are upper-right and lower-left, and of an ascending line upper-left and lower-right.`;
 
 function renderNeed(misconception) {
   const need = misconception.instructionalNeed;
@@ -331,7 +335,8 @@ export const handler = async (event) => {
   const contentType = template?.contentType ?? null;
   if (!template) throw new Error(`unknown templateId "${selectedTemplate?.templateId}"`);
   if (!contentType) throw new Error(`template "${template.id}" has no content type and cannot be generated`);
-  const planSchema = activityPlanSchemaFor(contentType, BOUNDS);
+  const runSteps = template.infill.runSteps;
+  const planSchema = activityPlanSchemaFor(contentType, { ...BOUNDS, runSteps });
   const ActivitySchema = RowFields.merge(planSchema);
   const hasExamples = EXAMPLE_TYPES.includes(contentType);
 
@@ -562,7 +567,7 @@ ${formatDesignGuidance(['purpose', 'timing', 'grouping', 'views', ...(hasExample
 ## The activity template you must enact
 ${formatForInfill(template)}
 
-This template is not a label applied after the fact. The activity must follow its classroom flow, its priority grouping pattern and its defining instructional move; an activity that could equally have come from another template has failed.
+This template is not a label applied after the fact. The activity must follow its steps, its required grouping pattern and its defining instructional move; an activity that could equally have come from another template has failed.
 ${selectedTemplate.instructionalApproach ? `\nThe move this template was selected to enact for THIS need: ${selectedTemplate.instructionalApproach}` : ''}
 ${selectedTemplate.studentsDo ? `What students do in it: ${selectedTemplate.studentsDo}` : ''}
 ${selectedTemplate.rationale ? `Why it was selected: ${selectedTemplate.rationale}` : ''}
@@ -600,12 +605,13 @@ Subject: ${classroomContext.subject ?? 'math'} | Class size: ${classroomContext.
 
 ## What to write
 - **whyThisActivity**: 2-3 teacher-facing sentences, per "Why This Activity" above. Draw on the instructional need and why the template was selected; do not mention scores, ranks, rubrics, or the word "template", and do not overstate what the evidence shows.
-- **minutes** (each howToRun step), **discussionMinutes** and **beforeClassMinutes**: realistic minutes, per Pacing above. The steps' minutes plus discussionMinutes should come to about ${DEFAULT_DURATION} and must be at most ${MAX_DURATION}, which is slack for a class that runs long, not a budget to fill; if they would be over, cut content (fewer steps, a shorter task) rather than shrinking the estimates.
+- **minutes** (each howToRun step), **discussionMinutes** and **beforeClassMinutes**: realistic minutes, per Pacing above. The steps' minutes plus discussionMinutes should come to about ${DEFAULT_DURATION} and must be at most ${MAX_DURATION}, which is slack for a class that runs long, not a budget to fill; if they would be over, cut content (a shorter task, a shorter share-out) rather than shrinking the estimates.
 - **beforeClass.steps**: ${BOUNDS.beforeClassMin}-${BOUNDS.beforeClassMax} concrete things the teacher prepares. **beforeClass.groupingRationale**: 1-2 sentences on why students are grouped this way, from the template's priority grouping pattern.
-- **howToRun**: ${BOUNDS.howToRunMin}-${BOUNDS.howToRunMax} steps following the template's classroom flow. Give each step its grouping; leave \`groupings\` empty for a step that doesn't regroup; use two values only when the teacher chooses between them.${ORDERED_GROUPING_TYPES.includes(contentType) ? ' The groupings follow the priority grouping pattern in order: once the class has moved to a larger grouping, no later step returns to a smaller one.' : ''}${hasExamples ? ' Refer to examples as "Example 1", "Example 2", … and never to more examples than you write.' : ''}
+- **howToRun**: the required steps listed under "How to run it" in the template, in that order, each with its title exactly as listed. Write only the \`body\` and \`minutes\`. The title and grouping are fixed and appear next to your body, so the body must describe students working in that grouping, following the step's guidance and specific to this activity. Leave out any step marked optional: it is filled in for you, and its time is not part of the plan.${hasExamples ? ' Refer to examples as "Example 1", "Example 2", … and never to more examples than you write.' : ''}
 - ${FACILITATE_INSTRUCTIONS[contentType]()}
 - \`facilitate.type\` must be exactly "${contentType}".
 - Teacher-view labels (a line's status, a step's annotation or highlight, a strategy's verdict) must agree with the math. Label each line by whether the move it records is right: a line that records only a correct move, such as a solid boundary for $\\leq$, is CORRECT even inside work that goes wrong elsewhere. When teacher-only text names a region or direction (above, below, left, right, upper-left), solve for $y$ first and check the direction against the inequality and the line's slope.${hasExamples ? `
+- Every example must show, in its own work, the reasoning the instructional need names. A wrong answer being linked to this misconception is not enough: do not build an example around a different error, however legitimate. Two examples on the need beat three with one off it.
 - Each example uses a different problem: a meaningfully different instance of the same need, so the teacher can choose among them. \`task\` is the instruction alone (e.g. "Graph the inequality"), \`math\` the LaTeX alone, one expression per item: SINGLE for one expression, SYSTEM for a system, listing every equation or inequality in it; they are joined into the problem students see. A system's student work and teacher answers may only use equations and inequalities that \`math\` lists, and an instruction that says "system" needs a SYSTEM. Students see no answer choices, so when a source question is multiple choice, restate it as an open problem they can answer without them and without any given value: a "which point" question becomes "Find a solution of the system", a "which graph" question becomes "Graph the inequality" or "Graph the system".` : ''}
 - **targets**, **instructionalMove**, **strategyTag**${lvnFactors.length ? ' (use the LVN factors above)' : ''}, **aiReasoning**: as described in the schema.
 
@@ -711,14 +717,14 @@ ${renderEvidence(evidence)}
 ${template.title} — ${template.primaryMove}
 Why this activity: ${activity.whyThisActivity}
 How it runs:
-${activity.howToRun.map((s, i) => `  ${i + 1}. ${s.title} (${s.minutes} min): ${s.body}`).join('\n')}
+${activity.howToRun.map((s, i) => `  ${i + 1}. ${s.title}${s.minutes ? ` (${s.minutes} min)` : ''}: ${s.body}`).join('\n')}
 The artifact students analyze, with teacher-only fields:
 ${JSON.stringify(activity.facilitate, null, 2)}
 
 ---
 
 ## What to write, in this order
-1. **takeaway** — start from the instructional need: what mathematical understanding addresses it? Write that understanding as mathematics, faithful to this activity, and check it is correct and appropriately precise before going on. It anchors everything after it. Keep it to the one central idea, in 1-2 sentences a teacher can land in a few minutes: state it for the kind of problem this activity uses, and leave general formulas, special cases and side conditions (dividing by a negative, a zero coefficient, a vertical line) to the teacher answer of the question they bear on.
+1. **takeaway** — start from the instructional need: what mathematical understanding addresses it? Write that understanding as mathematics, faithful to this activity, and check it is correct and appropriately precise before going on. It anchors everything after it. Keep it to the one central idea, in 1-2 sentences and at most ${TAKEAWAY_TARGET_CHARS} characters, that a teacher can land in a few minutes: state it for the kind of problem this activity uses, and leave general formulas, special cases and side conditions (dividing by a negative, a zero coefficient, a vertical line) to the teacher answer of the question they bear on.
 2. **questions** — exactly ${BOUNDS.questionCount}, each building on the takeaway. They are alternatives: the teacher picks the one that best fits the class and runs it alone in the ${activity.discussionMinutes} minutes, so each must stand on its own and be answerable in that time. Give each its realistic \`minutes\` (think time, a few student responses, and the teacher drawing out the point). Tag each with its \`purpose\`; choose the purposes that best support the takeaway rather than one of each. \`answer\` is teacher-facing: the mathematically correct answer, or what to listen for when the question is open.
 3. **watchFors** — ${BOUNDS.watchForMin}-${BOUNDS.watchForMax} sets: fewer strong ones over more weak ones. Ground each in the thinking this activity surfaces, describe the observable move before any interpretation, and do not repeat what a discussion question already does.${misconception.evidenceBasis === 'inferred' ? ' The misconception is inferred, so one Watch for should help the teacher test it: what a student reasoning this way would say or do, what a different route to the same answer would sound like, and a question that tells them apart.' : ''}
 
@@ -726,6 +732,18 @@ Return JSON matching the schema.
 `.trim();
 
   // ── Call 3: the accuracy and coherence review ─────────────────────────────
+  const shortenTakeawayPromptFor = (activity, discussion) => `You are an expert K-12 math instructional coach. Rewrite this activity's mathematical takeaway so it is one central idea a teacher can land in a few minutes: at most ${TAKEAWAY_TARGET_CHARS} characters, in 1-2 sentences of mathematics.
+
+Keep the idea and keep it mathematically correct. Cut procedure, examples, conditions and special cases: those stay in the discussion questions. It must remain the anchor for the questions below.
+
+## The takeaway
+${discussion.takeaway}
+
+## The discussion questions it anchors
+${discussion.questions.map((q, i) => `${i + 1}. ${q.question}`).join('\n')}
+
+${MATH_FORMATTING}`;
+
   const reviewPromptFor = (activity, draft) => `
 You are a K-12 mathematics reviewer checking the Closing Discussion of a classroom activity before teachers see it.
 
@@ -751,7 +769,7 @@ Work through the mathematical accuracy and coherence check above, item by item. 
 
 - \`issues\`: one entry per failed check, naming the component and what is wrong. Empty when everything passes.
 - \`corrected\`: the discussion with every issue fixed, in the same shape and with the same number of questions. When there are no issues, return the draft unchanged. Do not restyle wording that passes the check.
-- Takeaway focus: the takeaway must be the one central idea in 1-2 sentences. When accuracy needs a condition or special case, do not append it to the takeaway — state the takeaway for the kind of problem the activity uses, and put the qualification in the teacher answer of the question it bears on. A takeaway that bundles conditions or edge cases is an issue to fix.
+- Takeaway focus: the takeaway must be the one central idea in 1-2 sentences and at most ${TAKEAWAY_TARGET_CHARS} characters. When accuracy needs a condition or special case, do not append it to the takeaway — state the takeaway for the kind of problem the activity uses, and put the qualification in the teacher answer of the question it bears on. A takeaway that bundles conditions or edge cases is an issue to fix.
 - \`artifactFixes\`: check every label and teacher note listed above against the math, as teachers will rely on them to facilitate. Student work is meant to contain the error, so correct the label, never the work: a label is right when it says whether the move its line or step records is right. A line that records only a correct move (a solid boundary for $\\leq$) is CORRECT even inside wrong work. For every direction word in a teacher note (above, below, left, right, upper-left, …), solve for $y$ and check it against the inequality and the line's slope; a note that hedges between directions ("above/right", "lower/upper depends") is wrong when one is correct. Give a label fix as \`label\` with one of its allowed values, a note fix as the whole corrected note in \`text\`. Use only the ids listed. If a fix changes what the discussion should say, fix the discussion too. Empty when everything is right.
 
 ${MATH_FORMATTING}
@@ -785,6 +803,7 @@ ${MATH_FORMATTING}
       );
       normalizeGeneratedMath(attempt.facilitate, (fix) => recordSubCall('math-normalized', null, null, fix));
       stripTextLabels(attempt.facilitate, (fix) => recordSubCall('label-in-text', null, null, fix));
+      attempt.howToRun = withFixedRunSteps(attempt.howToRun, runSteps);
       return attempt;
     };
     let generated = await generateActivity();
@@ -814,22 +833,6 @@ ${MATH_FORMATTING}
       if (replanned.total < planned.total && incompleteSystems(retried.facilitate).length <= incompleteSystems(generated.facilitate).length) {
         generated = retried;
       }
-    }
-    // A one-way grouping pattern (Individual → pairs → whole class) that steps
-    // back to a smaller grouping no longer follows the template. Regenerate once,
-    // keep the attempt with fewer step-backs as long as it is no worse on the
-    // checks above, and record both so evaluation can see how often this fired.
-    const regressions = groupingRegressions(generated, contentType);
-    if (regressions.length) {
-      const retried = await generateActivity();
-      const stillRegressing = groupingRegressions(retried, contentType);
-      recordSubCall('retry-grouping-order', null, null, {
-        before: regressions, after: stillRegressing, fixed: stillRegressing.length === 0,
-      });
-      const noWorse = incompleteSystems(retried.facilitate).length <= incompleteSystems(generated.facilitate).length
-        && (plannedClassMinutes(retried).total <= MAX_DURATION
-          || plannedClassMinutes(retried).total <= plannedClassMinutes(generated).total);
-      if (stillRegressing.length < regressions.length && noWorse) generated = retried;
     }
     // A wrong approach that corrects itself ends right under a "Wrong approach"
     // label and gives students the answer. Regenerate once, keep the attempt with
@@ -927,6 +930,30 @@ ${MATH_FORMATTING}
       recordSubCall('review-discussion', REVIEW_MODEL, null, {
         fellBack: true, reason: err?.message ?? 'error', ...(unavailable && { modelUnavailable: true }),
       });
+    }
+
+    // A takeaway over the limit is rewritten once on its own, leaving the questions
+    // and Watch for sets it anchors as they are. Kept only if shorter; a failure keeps
+    // what was written.
+    if (discussion.takeaway.length > TAKEAWAY_MAX_CHARS) {
+      const before = discussion.takeaway;
+      try {
+        const { takeaway } = await structuredCall(
+          'shorten-takeaway', REVIEW_MODEL, VALIDATOR_SYSTEM_PROMPT,
+          shortenTakeawayPromptFor(activity, discussion), z.object({ takeaway: z.string() }), 'takeaway',
+        );
+        if (takeaway.trim() && takeaway.length < before.length) discussion = { ...discussion, takeaway };
+        recordSubCall('retry-takeaway-length', null, null, {
+          before: before.length, after: discussion.takeaway.length, fixed: discussion.takeaway.length <= TAKEAWAY_MAX_CHARS,
+        });
+      } catch (err) {
+        const unavailable = modelUnavailable(err);
+        if (unavailable) reportModelUnavailable('shorten-takeaway', REVIEW_MODEL, 'nextStepOption.closingDiscussion.reviewModel', err);
+        else console.warn('[microcoachNextStepOption] takeaway rewrite failed — keeping it:', err?.message);
+        recordSubCall('shorten-takeaway', REVIEW_MODEL, null, {
+          fellBack: true, reason: err?.message ?? 'error', ...(unavailable && { modelUnavailable: true }),
+        });
+      }
     }
 
     // The teacher runs one of the three questions, so the class time is the steps

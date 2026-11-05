@@ -11,7 +11,7 @@ import { IExampleStep, WorkStatus } from './PipelineModels';
  * them questions first and the takeaway last.
  */
 
-export type GroupingKind = 'INDIVIDUAL' | 'PAIRS' | 'WHOLE_CLASS';
+export type GroupingKind = 'INDIVIDUAL' | 'PAIRS' | 'TWO_GROUPS' | 'WHOLE_CLASS';
 
 export interface IRunStep {
   title: string;
