@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -69,6 +69,16 @@ import {
  */
 
 const navy = 'designSystem.surface.atlanticNavy';
+
+// Generated questions can put prose inside LaTeX \text{…}. KaTeX otherwise
+// renders that prose in its own serif font, overriding the question's Rubik.
+const FavoriteNoQuestion = styled(MathTypography)(({ theme }) => ({
+  ...theme.typography.rubikSubBold,
+  '& .katex .text': {
+    fontFamily: theme.typography.rubikSubBold.fontFamily,
+    fontWeight: theme.typography.rubikSubBold.fontWeight,
+  },
+}));
 
 /** A note's tone as the icon the frames draw beside it. */
 function ToneIcon({ tone }: { tone: Tone }) {
@@ -429,7 +439,7 @@ export function FavoriteNoPanel({
             <Typography variant="headingMdBold" component="span">
               {t('activityFlow.facilitate.exampleLabel', { number: tileIndex + 1 })}
             </Typography>
-            <MathTypography variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
+            <FavoriteNoQuestion variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
           </>
         )}
       />
@@ -446,7 +456,7 @@ export function FavoriteNoPanel({
             {/* Figma (My Favorite No Teacher): Poppins 16/600. */}
             <Typography variant="headingSm">{t('activityFlow.facilitate.anonymousResponse')}</Typography>
           </Stack>
-          <MathTypography variant="rubikSubBold" text={example.prompt} />
+          <FavoriteNoQuestion variant="rubikSubBold" text={example.prompt} />
           <Stack
             direction={props.screenSize === ScreenSize.SMALL ? 'column' : 'row'}
             spacing={`${theme.sizing.space5}px`}
