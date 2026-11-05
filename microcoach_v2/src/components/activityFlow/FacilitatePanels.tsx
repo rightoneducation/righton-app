@@ -72,7 +72,7 @@ const navy = 'designSystem.surface.atlanticNavy';
 
 // Generated questions can put prose inside LaTeX \text{…}. KaTeX otherwise
 // renders that prose in its own serif font, overriding the question's Rubik.
-const FavoriteNoQuestion = styled(MathTypography)(({ theme }) => ({
+const ExampleQuestion = styled(MathTypography)(({ theme }) => ({
   ...theme.typography.rubikSubBold,
   '& .katex .text': {
     fontFamily: theme.typography.rubikSubBold.fontFamily,
@@ -358,22 +358,22 @@ export function MathDetectivePanel({
             <Typography variant="headingMdBold" component="span">
               {t('activityFlow.facilitate.exampleLabel', { number: tileIndex + 1 })}
             </Typography>
-            <MathTypography variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
-            <MathTypography variant="smallBodyText" component="span" text={workLine(examples[tileIndex].workSummary)} />
+            <ExampleQuestion variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
+            <ExampleQuestion variant="rubikSubBold" component="span" text={workLine(examples[tileIndex].workSummary)} />
           </>
         )}
       />
       {example && (
         <ExampleDetail aria-live="polite">
           <ExampleOfHeading index={index} count={examples.length} />
-          {/* DevQA MathDetective: the pencil tile, then the problem (Poppins
-              20/600) over the work in one line (Rubik 16), marked in teacher view. */}
+          {/* The question uses Rubik 14 bold; the work below stays Rubik 16,
+              marked in teacher view. */}
           <ExampleHeaderBox>
             <ExampleIconTile aria-hidden>
               <EditIcon />
             </ExampleIconTile>
             <ExampleHeaderText>
-              <MathTypography variant="headingMd" text={example.prompt} />
+              <ExampleQuestion variant="rubikSubBold" text={example.prompt} />
               <MathTypography variant="rubikBody" text={workLine(example.workSummary)} />
             </ExampleHeaderText>
           </ExampleHeaderBox>
@@ -439,7 +439,7 @@ export function FavoriteNoPanel({
             <Typography variant="headingMdBold" component="span">
               {t('activityFlow.facilitate.exampleLabel', { number: tileIndex + 1 })}
             </Typography>
-            <FavoriteNoQuestion variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
+            <ExampleQuestion variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
           </>
         )}
       />
@@ -456,7 +456,7 @@ export function FavoriteNoPanel({
             {/* Figma (My Favorite No Teacher): Poppins 16/600. */}
             <Typography variant="headingSm">{t('activityFlow.facilitate.anonymousResponse')}</Typography>
           </Stack>
-          <FavoriteNoQuestion variant="rubikSubBold" text={example.prompt} />
+          <ExampleQuestion variant="rubikSubBold" text={example.prompt} />
           <Stack
             direction={props.screenSize === ScreenSize.SMALL ? 'column' : 'row'}
             spacing={`${theme.sizing.space5}px`}
