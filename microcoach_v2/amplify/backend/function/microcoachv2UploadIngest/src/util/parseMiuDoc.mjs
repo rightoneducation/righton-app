@@ -179,21 +179,21 @@ function readQuestionRow(row, warnings) {
 /**
  * @param {Buffer} buffer the .docx file
  * @param {string} token  the assessment within it, e.g. "W11-MON" (see parseResults)
+ * @param {string} [keyToken] take the answer key from this assessment instead
  * @returns {Promise<{ questions: Array<{ docxQuestion: number, standard: string,
  *   questionText: string, correctAnswer: string,
  *   answerChoices: Array<{ letter: string, content: string, isCorrect: boolean }> }>,
  *   warnings: string[] }>}
  */
-export async function parseMiuDoc(buffer, token) {
+export async function parseMiuDoc(buffer, token, keyToken = token) {
   const zip = await JSZip.loadAsync(buffer);
   const file = zip.file('word/document.xml');
   if (!file) throw new Error('parseMiuDoc: not a Word document (no word/document.xml)');
   const xml = new DOMParser().parseFromString(await file.async('string'), 'text/xml');
   const allBlocks = blocks(child(xml.documentElement, W, 'body'));
 
-  const day = token.split('-')[1];
-  const dayName = DAY_NAMES[day];
-  if (!dayName) throw new Error(`parseMiuDoc: unknown day in assessment "${token}"`);
+  const dayName = DAY_NAMES[keyToken.split('-')[1]];
+  if (!dayName) throw new Error(`parseMiuDoc: unknown day in assessment "${keyToken}"`);
 
   // The code line, then the first table after it. The separator is matched loosely:
   // the same code has been written USI.COACH and USI_COACH across the client's files.

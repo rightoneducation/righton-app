@@ -181,8 +181,8 @@ type MicroCoachAssessment @model @auth(rules: [{ allow: private }]) {
     @hasMany(indexName: "byAssessment", fields: ["id"])
 }
 
-# One multiple-choice question. `questionNumber` runs 1..N; `docxQuestion` is the
-# number printed on the sheet (1, 3, 5...: the even numbers are confidence items).
+# One multiple-choice question. `questionNumber` is the number printed on the sheet
+# (1, 3, 5...: the even numbers are confidence items), and `docxQuestion` the same.
 type AssessmentQuestion {
   questionNumber: Int!
   docxQuestion: Int

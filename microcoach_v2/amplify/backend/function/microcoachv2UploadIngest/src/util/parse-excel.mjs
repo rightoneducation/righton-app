@@ -12,6 +12,9 @@
  * on a correct answer, so an empty cell means correct when green and skipped when
  * red. A fill that is neither throws: the export has changed, and guessing would
  * score students wrongly.
+ *
+ * A question's number is the one printed on the sheet (1, 3, 5...; the even numbers
+ * are its confidence items), so what teachers read matches the paper in their hands.
  */
 
 import * as XLSX from 'xlsx';
@@ -81,11 +84,12 @@ export function parseResults(buffer) {
   });
   if (!columns.length) throw new Error('parseResults: no question has an answer key');
 
-  const questions = columns.map(({ col, key }, i) => {
+  const printedNumber = (col) => parseInt(String(header[col]).trim(), 10);
+  const questions = columns.map(({ col, key }) => {
     const pct = parseFloat(String(percents[col] ?? ''));
     return {
-      questionNumber: i + 1,
-      docxQuestion: parseInt(String(header[col]).trim(), 10),
+      questionNumber: printedNumber(col),
+      docxQuestion: printedNumber(col),
       correctAnswer: key,
       classPercentCorrect: Number.isNaN(pct) ? 0 : pct,
     };
@@ -97,7 +101,7 @@ export function parseResults(buffer) {
     if (!ref) return;
     const studentRef = parseInt(ref[1], 10);
 
-    const questionResponses = columns.map(({ col, confidenceCol, key }, i) => {
+    const questionResponses = columns.map(({ col, confidenceCol, key }) => {
       const cell = sheet[XLSX.utils.encode_cell({ r, c: col })];
       const letter = String(cell?.v ?? '').trim().toUpperCase();
       const fill = fillOf(cell);
@@ -106,7 +110,7 @@ export function parseResults(buffer) {
       }
       const isCorrect = fill === GREEN;
       return {
-        questionNumber: i + 1,
+        questionNumber: printedNumber(col),
         // A correct answer's letter is hidden; a red empty cell is a skipped question.
         response: isCorrect ? key : letter || null,
         isCorrect,

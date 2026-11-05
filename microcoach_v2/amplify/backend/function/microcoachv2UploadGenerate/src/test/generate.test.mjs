@@ -35,7 +35,7 @@ const replies = (overrides = {}) => {
       { title: 'dropped', scores: {}, total: 1, maxPossible: 30, normalized: 0, priorityRank: 3, retained: false },
     ] }),
     genInstrNeed: () => ({ needs: [
-      { title: 'first one', instructionalNeed: { text: 'need one' }, rationale: {}, skillNames: [{ code: '7.NS.A.3', name: 'Rational ops' }] },
+      { title: 'first one', instructionalNeed: { text: 'need one' }, rationale: {}, skillNames: [{ code: '7.NS.3', name: 'Rational ops' }, { code: '6.NS.1', name: 'Prior skill' }] },
       { title: 'Second one', instructionalNeed: { text: 'need two' }, rationale: {} },
     ] }),
     selectTemplate: () => ({ selections: [
@@ -141,6 +141,7 @@ test('rows: prevalence, labels, skips, badges and activity content', async () =>
   assert.equal(focus.domainName, 'The Number System');
   assert.deepEqual(focus.learningComponents, ['lc']);
   assert.equal(first.skillContext.prerequisiteGaps.skills[0].code, '6.NS.1');
+  assert.equal(first.skillContext.prerequisiteGaps.skills[0].name, 'Prior skill');
 
   assert.equal(activities.length, 3);
   assert.equal(activities[0].misconceptionId, first.id);
@@ -151,4 +152,27 @@ test('rows: prevalence, labels, skips, badges and activity content', async () =>
 
 test('wrong-answer counts ignore correct answers and skips', () => {
   assert.deepEqual(computeWrongAnswerDist(studentResponses), { 1: { B: 1 }, 2: { C: 1 } });
+});
+
+test('understood means right on the linked questions, not just another wrong answer', () => {
+  const output = {
+    graph: [],
+    misconceptions: [{
+      title: 't', description: 'd', priorityRank: 1, ccssStandard: '7.NS.3', activities: [],
+      wrongAnswers: [{ questionNumber: 3, letter: 'B', explanation: 'x' }],
+    }],
+  };
+  const answer = (response, isCorrect) => ({ questionResponses: [{ questionNumber: 3, response, isCorrect }] });
+  const rows = [
+    { studentId: 'Student 1', ...answer('A', true) },
+    { studentId: 'Student 2', ...answer('B', false) },
+    { studentId: 'Student 3', ...answer('C', false) }, // a different wrong answer
+    { studentId: 'Student 4', ...answer(null, false) }, // skipped
+  ];
+  const [row] = buildRows(session, output, rows, 'now').misconceptions;
+  assert.deepEqual(row.studentWork.understoodConcept.students, ['Student 1']);
+  assert.equal(row.prevalence.studentsNeedingSupport, 1);
+  assert.equal(row.prevalence.studentsUnderstood, 1);
+  assert.equal(row.prevalence.studentsNoResponse, 1);
+  assert.equal(row.prevalence.totalAnalyzed, 4);
 });

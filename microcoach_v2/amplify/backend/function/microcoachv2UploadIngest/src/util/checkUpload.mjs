@@ -23,16 +23,11 @@ export function checkResults(results, assessmentType) {
   }
 }
 
-/** The document and the spreadsheet describe the same questions and answers. */
+/** The document and the spreadsheet describe the same questions. Keys: see rescore. */
 export function checkAgreement(results, doc) {
   const docNumbers = doc.questions.map((q) => q.docxQuestion).join(',');
   const sheetNumbers = results.questions.map((q) => q.docxQuestion).join(',');
   if (docNumbers !== sheetNumbers) {
     throw new Error(`The document has questions ${docNumbers}, but the spreadsheet has ${sheetNumbers}`);
   }
-  const differ = results.questions.flatMap((q, i) => {
-    const docKey = doc.questions[i].correctAnswer;
-    return docKey === q.correctAnswer ? [] : [`Q${q.docxQuestion} (document ${docKey}, spreadsheet ${q.correctAnswer})`];
-  });
-  if (differ.length) throw new Error(`The answer keys disagree on ${differ.join(', ')}`);
 }

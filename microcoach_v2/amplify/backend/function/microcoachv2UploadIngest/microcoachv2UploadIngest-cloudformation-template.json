@@ -196,6 +196,58 @@
             },
             "FUNCTION_MICROCOACHV2UPLOADGENERATE_NAME": {
               "Ref": "functionmicrocoachv2UploadGenerateName"
+            },
+            "API_MICROCOACHV2_MICROCOACHACTIVITYTABLE_NAME": {
+              "Fn::ImportValue": {
+                "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachActivityTable:Name"
+              }
+            },
+            "API_MICROCOACHV2_MICROCOACHACTIVITYTABLE_ARN": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:aws:dynamodb:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":table/",
+                  {
+                    "Fn::ImportValue": {
+                      "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachActivityTable:Name"
+                    }
+                  }
+                ]
+              ]
+            },
+            "API_MICROCOACHV2_MICROCOACHSAVEDPLANTABLE_NAME": {
+              "Fn::ImportValue": {
+                "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachSavedPlanTable:Name"
+              }
+            },
+            "API_MICROCOACHV2_MICROCOACHSAVEDPLANTABLE_ARN": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:aws:dynamodb:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":table/",
+                  {
+                    "Fn::ImportValue": {
+                      "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachSavedPlanTable:Name"
+                    }
+                  }
+                ]
+              ]
             }
           }
         },
@@ -607,6 +659,118 @@
                       {
                         "Fn::ImportValue": {
                           "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachStudentResponseTable:Name"
+                        }
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:Get*",
+                "dynamodb:BatchGetItem",
+                "dynamodb:List*",
+                "dynamodb:Describe*",
+                "dynamodb:Scan",
+                "dynamodb:Query"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachActivityTable:Name"
+                        }
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachActivityTable:Name"
+                        }
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:Get*",
+                "dynamodb:BatchGetItem",
+                "dynamodb:List*",
+                "dynamodb:Describe*",
+                "dynamodb:Scan",
+                "dynamodb:Query"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachSavedPlanTable:Name"
+                        }
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apimicrocoachv2GraphQLAPIIdOutput}:GetAtt:MicroCoachSavedPlanTable:Name"
                         }
                       },
                       "/index/*"

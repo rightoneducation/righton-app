@@ -255,7 +255,10 @@ function main() {
     }).sort((a, b) => b.studentCount - a.studentCount);
     const needing = [...new Set(buckets.flatMap((b) => b.students))].sort();
     const answeredLinked = responders.filter((name) => linkedQs.some((q) => answers.get(name)?.has(q)));
-    const understood = answeredLinked.filter((name) => !needing.includes(name));
+    // Right on every linked question, not just "didn't pick this wrong answer".
+    const understood = responders.filter(
+      (name) => linkedQs.length > 0 && linkedQs.every((q) => answers.get(name)?.get(q)?.isCorrect),
+    );
     const noResponse = allLabels.filter((name) => !answeredLinked.includes(name));
 
     const skillNames = new Map<string, string>((n.skillNames ?? []).map((s: any) => [normalizeCode(s.code), s.name]));

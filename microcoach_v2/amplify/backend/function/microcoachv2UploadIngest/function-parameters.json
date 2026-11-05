@@ -27,6 +27,12 @@
         "create",
         "read",
         "update"
+      ],
+      "MicroCoachActivity:@model(appsync)": [
+        "read"
+      ],
+      "MicroCoachSavedPlan:@model(appsync)": [
+        "read"
       ]
     }
   },

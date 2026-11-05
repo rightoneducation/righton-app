@@ -5,6 +5,7 @@
 
 import { randomUUID } from 'node:crypto';
 import { ccssDomainName } from './ccssDomains.mjs';
+import { canonicalCcss } from './ccssCode.mjs';
 
 // From LLMSelectTemplate's activityLibrary.json, matching the app's template copy.
 const ROUTINES = {
@@ -135,9 +136,10 @@ function activityRow(move, ids, now) {
 export function buildRows(session, output, studentResponses, now) {
   const descriptions = standardDescriptions(output.graph);
   const students = studentResponses.map((sr) => sr.studentId);
-  const responseOf = (student, question) => studentResponses
+  const answerOf = (student, question) => studentResponses
     .find((sr) => sr.studentId === student)
-    ?.questionResponses?.find((qr) => qr.questionNumber === question)?.response ?? null;
+    ?.questionResponses?.find((qr) => qr.questionNumber === question) ?? null;
+  const responseOf = (student, question) => answerOf(student, question)?.response ?? null;
   // A double-marked "BC" counts as choosing both, as the reach count does.
   const chose = (question, letter) => students.filter(
     (student) => String(responseOf(student, question) ?? '').toUpperCase().includes(String(letter).toUpperCase()),
@@ -165,13 +167,21 @@ export function buildRows(session, output, studentResponses, now) {
 
     const needing = [...new Set(buckets.flatMap((b) => b.students))];
     const answeredLinked = students.filter((s) => linkedQs.some((q) => responseOf(s, q) != null));
-    const understood = answeredLinked.filter((s) => !needing.includes(s));
+    // Right on every question this misconception is linked to. Not just "didn't pick
+    // this wrong answer": that would count students who chose a different wrong one.
+    const understood = students.filter(
+      (s) => linkedQs.length > 0 && linkedQs.every((q) => answerOf(s, q)?.isCorrect === true),
+    );
     const noResponse = students.filter((s) => !answeredLinked.includes(s));
 
+    // The need stage writes a code as the document spells it (7.NS.3), and the focus
+    // skill shows the graph's spelling (7.NS.A.3), so fall back to the shared key. Exact
+    // first: sub-standards like 7.NS.A.1.c and .d share one and have their own names.
     const skillNames = new Map((n.skillNames ?? []).map((s) => [normalizeCode(s.code), s.name]));
+    const canonicalNames = new Map((n.skillNames ?? []).map((s) => [canonicalCcss(s.code), s.name]));
     const skill = (code, description) => ({
       code,
-      name: skillNames.get(normalizeCode(code)) ?? null,
+      name: skillNames.get(normalizeCode(code)) ?? canonicalNames.get(canonicalCcss(code)) ?? null,
       description: description ?? '',
       domainName: ccssDomainName(String(code ?? '')),
     });

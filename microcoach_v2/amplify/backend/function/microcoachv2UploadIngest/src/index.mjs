@@ -1,7 +1,11 @@
 /* Amplify Params - DO NOT EDIT
 	API_MICROCOACHV2_GRAPHQLAPIIDOUTPUT
 	API_MICROCOACHV2_MICROCOACHASSESSMENTTABLE_ARN
+	API_MICROCOACHV2_MICROCOACHACTIVITYTABLE_ARN
+	API_MICROCOACHV2_MICROCOACHACTIVITYTABLE_NAME
 	API_MICROCOACHV2_MICROCOACHASSESSMENTTABLE_NAME
+	API_MICROCOACHV2_MICROCOACHSAVEDPLANTABLE_ARN
+	API_MICROCOACHV2_MICROCOACHSAVEDPLANTABLE_NAME
 	API_MICROCOACHV2_MICROCOACHSESSIONTABLE_ARN
 	API_MICROCOACHV2_MICROCOACHSESSIONTABLE_NAME
 	API_MICROCOACHV2_MICROCOACHSTUDENTRESPONSETABLE_ARN
@@ -29,7 +33,10 @@ Amplify Params - DO NOT EDIT */
  *
  * Reads both files from S3, parses them, checks they belong together, then writes
  * the assessment, each student's responses and the session's fields, then starts
- * generation for an MIU 1 (microcoachv2UploadGenerate). Rows are written before the
+ * generation for an MIU 1 (microcoachv2UploadGenerate), or for an MIU 2 compares it
+ * with MIU 1 and moves the session on to Reflect. Where the document's answer key
+ * differs from the spreadsheet's, the document wins (see rescore), and an email says
+ * so. Rows are written before the
  * session points at them, and their ids come from the upload, so a rerun after a
  * partial failure overwrites.
  *
@@ -43,13 +50,17 @@ import { DynamoDBClient, ConditionalCheckFailedException } from '@aws-sdk/client
 import {
   BatchWriteCommand,
   DynamoDBDocumentClient,
+  GetCommand,
   PutCommand,
+  QueryCommand,
   UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
 import { parseResults } from './util/parse-excel.mjs';
 import { parseMiuDoc } from './util/parseMiuDoc.mjs';
 import { checkAgreement, checkResults } from './util/checkUpload.mjs';
 import { buildRows } from './util/buildRows.mjs';
+import { rescore } from './util/rescore.mjs';
+import { buildReflectionResults } from './util/buildReflection.mjs';
 import { sendEmail } from './util/send-email.mjs';
 
 const REGION = process.env.REGION;
@@ -57,9 +68,18 @@ const UPLOAD_TABLE = process.env.API_MICROCOACHV2_MICROCOACHUPLOADTABLE_NAME;
 const ASSESSMENT_TABLE = process.env.API_MICROCOACHV2_MICROCOACHASSESSMENTTABLE_NAME;
 const RESPONSE_TABLE = process.env.API_MICROCOACHV2_MICROCOACHSTUDENTRESPONSETABLE_NAME;
 const SESSION_TABLE = process.env.API_MICROCOACHV2_MICROCOACHSESSIONTABLE_NAME;
+const SAVED_PLAN_TABLE = process.env.API_MICROCOACHV2_MICROCOACHSAVEDPLANTABLE_NAME;
+const ACTIVITY_TABLE = process.env.API_MICROCOACHV2_MICROCOACHACTIVITYTABLE_NAME;
 const BUCKET = process.env.STORAGE_MICROCOACHUPLOADS_BUCKETNAME;
 const BATCH_SIZE = 25; // DynamoDB's limit per BatchWrite
 const BATCH_RETRIES = 5;
+
+// TEMPORARY, until the client sends a real Thursday export: the test's Thursday
+// spreadsheet is the Monday responses with its code changed, so MIU 2 is scored
+// against Monday's corrected key. Before and after therefore come out the same, and
+// Thursday's options can be marked correct wrongly. Remove once real data arrives,
+// along with parseMiuDoc's keyToken.
+const MIU2_USES_MIU1_KEY = true;
 
 const s3 = new S3Client({ region: REGION });
 const lambda = new LambdaClient({ region: REGION });
@@ -154,6 +174,61 @@ async function updateSession(sessionId, fields, now) {
   );
 }
 
+const getRow = async (table, id) => {
+  const { Item } = await db.send(new GetCommand({ TableName: table, Key: { id } }));
+  return Item ?? null;
+};
+
+async function queryIndex(table, indexName, field, value) {
+  const items = [];
+  let ExclusiveStartKey;
+  do {
+    const page = await db.send(new QueryCommand({
+      TableName: table,
+      IndexName: indexName,
+      KeyConditionExpression: '#k = :v',
+      ExpressionAttributeNames: { '#k': field },
+      ExpressionAttributeValues: { ':v': value },
+      ExclusiveStartKey,
+    }));
+    items.push(...(page.Items ?? []));
+    ExclusiveStartKey = page.LastEvaluatedKey;
+  } while (ExclusiveStartKey);
+  return items;
+}
+
+/** What the class worked on: its saved activity, else the misconception it picked. */
+async function reflectionTarget(session) {
+  const plans = await queryIndex(SAVED_PLAN_TABLE, 'bySession', 'sessionId', session.id);
+  const latest = plans.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))[0];
+  const activityId = latest?.items?.[0]?.id ?? null;
+  const activity = activityId ? await getRow(ACTIVITY_TABLE, activityId) : null;
+  const misconceptionId = activity?.misconceptionId ?? session.selectedMisconceptionId ?? null;
+  if (!misconceptionId) {
+    throw new Error(`Session ${session.id} has no chosen misconception or activity to reflect on`);
+  }
+  return { activityId: activity?.id ?? null, misconceptionId };
+}
+
+/** MIU 2's session fields: the comparison with MIU 1, and the move on to Reflect. */
+async function reflectionFields(upload, assessment, responses) {
+  const session = await getRow(SESSION_TABLE, upload.sessionId);
+  if (!session?.ppqAssessmentId) {
+    throw new Error(`Session ${upload.sessionId} has no MIU 1 to compare this upload with`);
+  }
+  const before = await getRow(ASSESSMENT_TABLE, session.ppqAssessmentId);
+  if (!before) throw new Error(`MIU 1 assessment ${session.ppqAssessmentId} not found`);
+  const beforeResponses = await queryIndex(RESPONSE_TABLE, 'byAssessment', 'assessmentId', before.id);
+
+  const reflectionResults = buildReflectionResults({
+    target: await reflectionTarget(session),
+    before: { assessment: before, responses: beforeResponses },
+    after: { assessment, responses },
+  });
+  // Per the SessionStatus contract: MIU 2 analysed.
+  return { reflectionResults, status: 'GENERATED' };
+}
+
 async function ingest(upload) {
   const [docxBuffer, xlsxBuffer] = await Promise.all([
     fetchObject(upload.docxKey),
@@ -174,8 +249,28 @@ async function ingest(upload) {
     }),
   );
 
-  const doc = await parseMiuDoc(docxBuffer, results.assessmentToken);
+  const keyToken = MIU2_USES_MIU1_KEY && upload.assessmentType === 'POST_PPQ'
+    ? results.assessmentToken.replace('-THU', '-MON')
+    : results.assessmentToken;
+  const doc = await parseMiuDoc(docxBuffer, results.assessmentToken, keyToken);
   checkAgreement(results, doc);
+  const overrides = rescore(results, doc);
+  if (overrides.length) {
+    const changes = overrides.map((o) => `Q${o.docxQuestion} (${o.from} to ${o.to})`).join(', ');
+    console.warn(`Re-scored against the document's key: ${changes}`);
+    await sendEmail(
+      `MicroCoach re-scored an upload (${process.env.ENV})`,
+      null,
+      [
+        `Upload: ${upload.id}`,
+        `Assessment: ${results.assessmentCode}`,
+        `Section: ${results.section}`,
+        '',
+        `The spreadsheet was scored against a different answer key from the document, so its answers were re-scored against the document's key: ${changes}.`,
+        'If the document is the one that is wrong, this class\'s results are wrong too.',
+      ].join('\n'),
+    ).catch((e) => console.error('Could not send the re-score email:', e));
+  }
   doc.warnings.forEach((warning) => console.warn(`Document: ${warning}`));
   console.log(
     'Document parsed:',
@@ -193,7 +288,10 @@ async function ingest(upload) {
   const { assessment, responses, sessionFields } = buildRows(upload, results, doc, now);
   await db.send(new PutCommand({ TableName: ASSESSMENT_TABLE, Item: assessment }));
   await batchPut(RESPONSE_TABLE, responses);
-  await updateSession(upload.sessionId, sessionFields, now);
+  const reflection = upload.assessmentType === 'POST_PPQ'
+    ? await reflectionFields(upload, assessment, responses)
+    : {};
+  await updateSession(upload.sessionId, { ...sessionFields, ...reflection }, now);
   console.log(
     `Wrote assessment ${assessment.id}, ${responses.length} responses, session ${upload.sessionId}`,
   );
