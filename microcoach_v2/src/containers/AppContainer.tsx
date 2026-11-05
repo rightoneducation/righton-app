@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Header, { HeaderVariant } from '../components/Header';
 import Footer from '../components/Footer';
-import NeedHelpButton from '../components/NeedHelpButton';
 import { useScreenSize } from '../hooks/useScreenSize';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import { PatternBackdrop } from '../lib/styledcomponents/DashboardStyledComponents';
@@ -42,8 +41,6 @@ interface AppContainerProps {
   // Avatar header only: add the class switcher (the flow screens).
   showClassSwitcher?: boolean;
   showFooter?: boolean;
-  // The floating Need help button; the Account frames draw none.
-  showHelp?: boolean;
   // The fixed tiled band behind the page, drawn at LARGE only: it's sized for
   // the desktop frame, and stacked content would sit across it arbitrarily.
   showPatternBackdrop?: boolean;
@@ -61,7 +58,6 @@ export default function AppContainer({
   headerVariant = 'public',
   showClassSwitcher = false,
   showFooter = true,
-  showHelp = true,
   showPatternBackdrop = false,
   onLogOut,
   profilePictureUrl = null,
@@ -87,9 +83,6 @@ export default function AppContainer({
         areClassesLoading={areClassesLoading}
       />
       <BodyContainer component="main">{children}</BodyContainer>
-      {showHelp && (headerVariant === 'app' || headerVariant === 'avatar') && (
-        <NeedHelpButton />
-      )}
       {showFooter && <Footer screenSize={screenSize} />}
     </ScreenContainer>
   );
