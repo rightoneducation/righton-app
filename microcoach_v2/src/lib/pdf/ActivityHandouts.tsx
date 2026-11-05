@@ -190,10 +190,11 @@ const styles = {
   studentColumns: { flexDirection: 'row' as const, gap: 16 },
   studentColumn: { flex: 1, gap: 8 },
   studentColumnDivided: { borderLeftWidth: 0.75, borderLeftColor: pdfColors.hairline, paddingLeft: 16 },
-  numberedItem: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8 },
+  numberedItem: { flexDirection: 'row' as const, alignItems: 'flex-start' as const, gap: 8 },
   numberDisc: {
     width: 12,
     height: 12,
+    flexShrink: 0,
     borderRadius: 6,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
