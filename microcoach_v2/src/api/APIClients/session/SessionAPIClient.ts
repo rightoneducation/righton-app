@@ -7,6 +7,7 @@ import {
   GetMicroCoachSessionQueryVariables,
   MicroCoachSessionsByClassIdQuery,
   MicroCoachSessionsByClassIdQueryVariables,
+  SessionStatus,
   UpdateMicroCoachSessionMutation,
   UpdateMicroCoachSessionMutationVariables,
 } from "../../../AWSAPI";
@@ -99,6 +100,41 @@ export class SessionAPIClient
   ): Promise<IMicroCoachSession | null> {
     const variables: UpdateMicroCoachSessionMutationVariables = {
       input: { id, selectedMisconceptionId: misconceptionId },
+    };
+    const res = await this.mutateGraphQL<UpdateMicroCoachSessionMutation>(
+      updateMicroCoachSession,
+      variables as unknown as GraphQLOptions,
+    );
+
+    const updatedSession = res?.data?.updateMicroCoachSession;
+    return updatedSession
+      ? SessionParser.parseIMicroCoachSessionfromAWSSession(updatedSession)
+      : null;
+  }
+
+  async createUploadedSession(
+    classId: string,
+  ): Promise<IMicroCoachSession | null> {
+    const variables: CreateMicroCoachSessionMutationVariables = {
+      input: { classId, status: SessionStatus.DATA_INGESTED },
+    };
+    const res = await this.mutateGraphQL<CreateMicroCoachSessionMutation>(
+      createMicroCoachSession,
+      variables as unknown as GraphQLOptions,
+    );
+
+    const createdSession = res?.data?.createMicroCoachSession;
+    return createdSession
+      ? SessionParser.parseIMicroCoachSessionfromAWSSession(createdSession)
+      : null;
+  }
+
+  async setSessionStatus(
+    id: string,
+    status: SessionStatus,
+  ): Promise<IMicroCoachSession | null> {
+    const variables: UpdateMicroCoachSessionMutationVariables = {
+      input: { id, status },
     };
     const res = await this.mutateGraphQL<UpdateMicroCoachSessionMutation>(
       updateMicroCoachSession,

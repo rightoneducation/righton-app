@@ -71,12 +71,15 @@ export function selectedSession(
 }
 
 export function studentCount(
-  tables: Pick<Tables, 'students'>,
+  tables: Pick<Tables, 'sessions'>,
   classId: string,
 ): number {
-  return Object.values(tables.students).filter(
-    (student) => student.classId === classId,
-  ).length;
+  // There is no roster (FERPA): a class's size is how many students its latest
+  // analysed upload had. 0 until there is one.
+  const analysed = classSessions(tables, classId).find(
+    (session) => session.studentWorksAnalyzed != null,
+  );
+  return analysed?.studentWorksAnalyzed ?? 0;
 }
 
 /**
@@ -166,7 +169,7 @@ export function combinedLoad(
 
 /** Every class's place in a school week's flow (Home's weekly progress and card). */
 export function weekRows(
-  tables: Pick<Tables, 'classrooms' | 'sessions' | 'students' | 'savedPlans'>,
+  tables: Pick<Tables, 'classrooms' | 'sessions' | 'savedPlans'>,
   weekStart: string,
 ): IWeeklyClassProgress[] {
   return classroomList(tables).map((classroom) => {
@@ -192,7 +195,7 @@ export function weekRows(
 export function pastActivities(
   tables: Pick<
     Tables,
-    'classrooms' | 'sessions' | 'students' | 'savedPlans' | 'activities'
+    'classrooms' | 'sessions' | 'savedPlans' | 'activities'
   >,
 ): IPastActivity[] {
   return classroomList(tables).flatMap((classroom) =>

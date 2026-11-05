@@ -155,11 +155,13 @@ export default function PastActivities({
                       <CardColumn align="start">
                         <CardLine>
                           <ClassName>{row.className}</ClassName>
-                          <StudentsTag>
-                            {t('pastActivities.students', {
-                              count: row.studentCount,
-                            })}
-                          </StudentsTag>
+                          {row.studentCount > 0 && (
+                            <StudentsTag>
+                              {t('pastActivities.students', {
+                                count: row.studentCount,
+                              })}
+                            </StudentsTag>
+                          )}
                           {row.step === FlowStep.DONE ? (
                             <CompletedTag>
                               {t('pastActivities.completed', {

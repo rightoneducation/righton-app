@@ -16,9 +16,9 @@
     "s3Key": {
       "Type": "String"
     },
-    "storagemicrocoachdocsBucketName": {
+    "storagemicrocoachuploadsBucketName": {
       "Type": "String",
-      "Default": "storagemicrocoachdocsBucketName"
+      "Default": "storagemicrocoachuploadsBucketName"
     }
   },
   "Conditions": {
@@ -78,8 +78,8 @@
             "API_SECRET_NAME": "microcoach",
             "NOTIFY_FROM_EMAIL": "noreply@rightoneducation.com",
             "NOTIFY_TO_EMAILS": "drewjhart@gmail.com",
-            "STORAGE_MICROCOACHDOCS_BUCKETNAME": {
-              "Ref": "storagemicrocoachdocsBucketName"
+            "STORAGE_MICROCOACHUPLOADS_BUCKETNAME": {
+              "Ref": "storagemicrocoachuploadsBucketName"
             }
           }
         },
@@ -254,7 +254,7 @@
                     [
                       "arn:aws:s3:::",
                       {
-                        "Ref": "storagemicrocoachdocsBucketName"
+                        "Ref": "storagemicrocoachuploadsBucketName"
                       }
                     ]
                   ]
@@ -273,7 +273,7 @@
                     [
                       "arn:aws:s3:::",
                       {
-                        "Ref": "storagemicrocoachdocsBucketName"
+                        "Ref": "storagemicrocoachuploadsBucketName"
                       },
                       "/*"
                     ]

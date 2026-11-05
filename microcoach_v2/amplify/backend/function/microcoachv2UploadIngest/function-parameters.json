@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "function": {
+      "microcoachv2UploadGenerate": [
+        "read"
+      ]
+    },
+    "storage": {
+      "microcoachuploads": [
+        "read"
+      ],
+      "MicroCoachSession:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ],
+      "MicroCoachUpload:@model(appsync)": [
+        "read",
+        "update"
+      ],
+      "MicroCoachAssessment:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ],
+      "MicroCoachStudentResponse:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ],
+      "MicroCoachActivity:@model(appsync)": [
+        "read"
+      ],
+      "MicroCoachSavedPlan:@model(appsync)": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

@@ -3,7 +3,6 @@ import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
 import { IMicroCoachSavedPlan } from '../api/Models/IMicroCoachSavedPlan';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
-import { IMicroCoachStudent } from '../api/Models/IMicroCoachStudent';
 import { IUser } from '../api/Models/IUser';
 
 // Auth lifecycle states, mirroring central_v2's UserStatusType.
@@ -84,7 +83,7 @@ export interface ILoadState {
 // The keys `loads` is indexed by: every status names exactly what it describes.
 export const loadKeys = {
   classrooms: (userId: string) => `classrooms:${userId}`,
-  // A class's sessions, students and saved plans.
+  // A class's sessions and saved plans.
   classChildren: (classId: string) => `class:${classId}`,
   // A session's misconceptions and their activities. The session's status is
   // part of the key, so the pipeline moving it on asks for them again.
@@ -103,7 +102,6 @@ export type MisconceptionRow = Omit<IMicroCoachMisconception, 'nextStepActivitie
  */
 export interface IMicroCoachTables {
   classrooms: Record<string, IMicroCoachClassroom>;
-  students: Record<string, IMicroCoachStudent>;
   sessions: Record<string, IMicroCoachSession>;
   savedPlans: Record<string, IMicroCoachSavedPlan>;
   misconceptions: Record<string, MisconceptionRow>;
@@ -131,7 +129,6 @@ export const initMicroCoachDataState: IMicroCoachDataState = {
   userStatus: UserStatusType.LOADING,
   userErrorString: '',
   classrooms: {},
-  students: {},
   sessions: {},
   savedPlans: {},
   misconceptions: {},

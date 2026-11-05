@@ -143,9 +143,11 @@ export default function WeeklyProgressList({
                   >
                     <CardLine>
                       <ClassName>{row.className}</ClassName>
-                      <StudentsTag>
-                        {t('weeklyProgress.students', { count: row.studentCount })}
-                      </StudentsTag>
+                      {row.studentCount > 0 && (
+                        <StudentsTag>
+                          {t('weeklyProgress.students', { count: row.studentCount })}
+                        </StudentsTag>
+                      )}
                     </CardLine>
                     <ClassStepTrack
                       step={row.step}

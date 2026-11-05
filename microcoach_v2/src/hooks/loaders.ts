@@ -102,7 +102,7 @@ export function useClassroomsLoader(apiClients: IAPIClients, userId: string | nu
 }
 
 /**
- * Every class's sessions, students and saved plans, plus the activity each
+ * Every class's sessions and saved plans, plus the activity each
  * plan saved (Past Activities shows its title). Runs in the root layout, so a
  * class switch anywhere is answered from the store.
  */
@@ -124,14 +124,12 @@ export function useClassChildrenLoader(apiClients: IAPIClients) {
       const key = loadKeys.classChildren(classId);
       if (inFlight.has(key)) return;
       runLoad(dispatch, key, stateRef.current.loads[key], startGuard(), async (guarded) => {
-        const [sessions, students, savedPlans] = await Promise.all([
+        const [sessions, savedPlans] = await Promise.all([
           apiClients.session.getSessionsByClassId(classId),
-          apiClients.student.getStudentsByClassId(classId),
           apiClients.savedPlan.getSavedPlansByClassId(classId),
         ]);
         const parent = { key: 'classId' as const, id: classId };
         guarded({ type: 'REPLACE_ROWS', table: 'sessions', rows: sessions, parent });
-        guarded({ type: 'REPLACE_ROWS', table: 'students', rows: students, parent });
         guarded({ type: 'REPLACE_ROWS', table: 'savedPlans', rows: savedPlans, parent });
 
         // One lookup per saved activity not already held. A failed lookup

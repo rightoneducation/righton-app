@@ -67,6 +67,26 @@ export const getMicroCoachUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      uploads {
+        items {
+          id
+          userId
+          cognitoId
+          classId
+          sessionId
+          assessmentType
+          docxKey
+          xlsxKey
+          weekStart
+          status
+          error
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       role
       createdAt
       updatedAt
@@ -105,6 +125,26 @@ export const listMicroCoachUsers = /* GraphQL */ `
             grade
             state
             schoolYear
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        uploads {
+          items {
+            id
+            userId
+            cognitoId
+            classId
+            sessionId
+            assessmentType
+            docxKey
+            xlsxKey
+            weekStart
+            status
+            error
             createdAt
             updatedAt
             __typename
@@ -153,6 +193,8 @@ export const getMicroCoachClassroom = /* GraphQL */ `
               assessmentCode
               type
               weekNumber
+              uploadId
+              classPercentCorrect
               createdAt
               updatedAt
               __typename
@@ -225,6 +267,26 @@ export const getMicroCoachClassroom = /* GraphQL */ `
               percentCorrectAfter
               __typename
             }
+            __typename
+          }
+          uploads {
+            items {
+              id
+              userId
+              cognitoId
+              classId
+              sessionId
+              assessmentType
+              docxKey
+              xlsxKey
+              weekStart
+              status
+              error
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
             __typename
           }
           createdAt
@@ -314,6 +376,10 @@ export const listMicroCoachClassrooms = /* GraphQL */ `
               averageQuestionsCorrectBefore
               averageQuestionsCorrectAfter
               improvedStudentCount
+              __typename
+            }
+            uploads {
+              nextToken
               __typename
             }
             createdAt
@@ -414,6 +480,38 @@ export const getMicroCoachSession = /* GraphQL */ `
           assessmentCode
           type
           weekNumber
+          uploadId
+          classPercentCorrect
+          questions {
+            questionNumber
+            docxQuestion
+            questionText
+            ccssStandard
+            correctAnswer
+            classPercentCorrect
+            answerChoices {
+              letter
+              content
+              isCorrect
+              __typename
+            }
+            __typename
+          }
+          responses {
+            items {
+              id
+              assessmentId
+              classId
+              sessionId
+              studentRef
+              totalScore
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
           __typename
@@ -544,6 +642,26 @@ export const getMicroCoachSession = /* GraphQL */ `
         }
         __typename
       }
+      uploads {
+        items {
+          id
+          userId
+          cognitoId
+          classId
+          sessionId
+          assessmentType
+          docxKey
+          xlsxKey
+          weekStart
+          status
+          error
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -586,6 +704,21 @@ export const listMicroCoachSessions = /* GraphQL */ `
             assessmentCode
             type
             weekNumber
+            uploadId
+            classPercentCorrect
+            questions {
+              questionNumber
+              docxQuestion
+              questionText
+              ccssStandard
+              correctAnswer
+              classPercentCorrect
+              __typename
+            }
+            responses {
+              nextToken
+              __typename
+            }
             createdAt
             updatedAt
             __typename
@@ -695,6 +828,78 @@ export const listMicroCoachSessions = /* GraphQL */ `
           }
           __typename
         }
+        uploads {
+          items {
+            id
+            userId
+            cognitoId
+            classId
+            sessionId
+            assessmentType
+            docxKey
+            xlsxKey
+            weekStart
+            status
+            error
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getMicroCoachUpload = /* GraphQL */ `
+  query GetMicroCoachUpload($id: ID!) {
+    getMicroCoachUpload(id: $id) {
+      id
+      userId
+      cognitoId
+      classId
+      sessionId
+      assessmentType
+      docxKey
+      xlsxKey
+      weekStart
+      status
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listMicroCoachUploads = /* GraphQL */ `
+  query ListMicroCoachUploads(
+    $filter: ModelMicroCoachUploadFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMicroCoachUploads(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        cognitoId
+        classId
+        sessionId
+        assessmentType
+        docxKey
+        xlsxKey
+        weekStart
+        status
+        error
         createdAt
         updatedAt
         __typename
@@ -713,6 +918,46 @@ export const getMicroCoachAssessment = /* GraphQL */ `
       assessmentCode
       type
       weekNumber
+      uploadId
+      classPercentCorrect
+      questions {
+        questionNumber
+        docxQuestion
+        questionText
+        ccssStandard
+        correctAnswer
+        classPercentCorrect
+        answerChoices {
+          letter
+          content
+          isCorrect
+          __typename
+        }
+        __typename
+      }
+      responses {
+        items {
+          id
+          assessmentId
+          classId
+          sessionId
+          studentRef
+          totalScore
+          questionResponses {
+            questionNumber
+            response
+            isCorrect
+            pointsEarned
+            confidence
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -737,6 +982,104 @@ export const listMicroCoachAssessments = /* GraphQL */ `
         assessmentCode
         type
         weekNumber
+        uploadId
+        classPercentCorrect
+        questions {
+          questionNumber
+          docxQuestion
+          questionText
+          ccssStandard
+          correctAnswer
+          classPercentCorrect
+          answerChoices {
+            letter
+            content
+            isCorrect
+            __typename
+          }
+          __typename
+        }
+        responses {
+          items {
+            id
+            assessmentId
+            classId
+            sessionId
+            studentRef
+            totalScore
+            questionResponses {
+              questionNumber
+              response
+              isCorrect
+              pointsEarned
+              confidence
+              __typename
+            }
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getMicroCoachStudentResponse = /* GraphQL */ `
+  query GetMicroCoachStudentResponse($id: ID!) {
+    getMicroCoachStudentResponse(id: $id) {
+      id
+      assessmentId
+      classId
+      sessionId
+      studentRef
+      totalScore
+      questionResponses {
+        questionNumber
+        response
+        isCorrect
+        pointsEarned
+        confidence
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listMicroCoachStudentResponses = /* GraphQL */ `
+  query ListMicroCoachStudentResponses(
+    $filter: ModelMicroCoachStudentResponseFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMicroCoachStudentResponses(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        assessmentId
+        classId
+        sessionId
+        studentRef
+        totalScore
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          pointsEarned
+          confidence
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -838,6 +1181,26 @@ export const usersByCognitoId = /* GraphQL */ `
           nextToken
           __typename
         }
+        uploads {
+          items {
+            id
+            userId
+            cognitoId
+            classId
+            sessionId
+            assessmentType
+            docxKey
+            xlsxKey
+            weekStart
+            status
+            error
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
         role
         createdAt
         updatedAt
@@ -894,6 +1257,26 @@ export const usersByEmail = /* GraphQL */ `
           nextToken
           __typename
         }
+        uploads {
+          items {
+            id
+            userId
+            cognitoId
+            classId
+            sessionId
+            assessmentType
+            docxKey
+            xlsxKey
+            weekStart
+            status
+            error
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
         role
         createdAt
         updatedAt
@@ -943,6 +1326,26 @@ export const usersByRole = /* GraphQL */ `
             grade
             state
             schoolYear
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        uploads {
+          items {
+            id
+            userId
+            cognitoId
+            classId
+            sessionId
+            assessmentType
+            docxKey
+            xlsxKey
+            weekStart
+            status
+            error
             createdAt
             updatedAt
             __typename
@@ -1021,6 +1424,10 @@ export const microCoachClassroomsByUserId = /* GraphQL */ `
               averageQuestionsCorrectBefore
               averageQuestionsCorrectAfter
               improvedStudentCount
+              __typename
+            }
+            uploads {
+              nextToken
               __typename
             }
             createdAt
@@ -1125,6 +1532,21 @@ export const microCoachSessionsByClassId = /* GraphQL */ `
             assessmentCode
             type
             weekNumber
+            uploadId
+            classPercentCorrect
+            questions {
+              questionNumber
+              docxQuestion
+              questionText
+              ccssStandard
+              correctAnswer
+              classPercentCorrect
+              __typename
+            }
+            responses {
+              nextToken
+              __typename
+            }
             createdAt
             updatedAt
             __typename
@@ -1234,6 +1656,134 @@ export const microCoachSessionsByClassId = /* GraphQL */ `
           }
           __typename
         }
+        uploads {
+          items {
+            id
+            userId
+            cognitoId
+            classId
+            sessionId
+            assessmentType
+            docxKey
+            xlsxKey
+            weekStart
+            status
+            error
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const microCoachUploadsByUserId = /* GraphQL */ `
+  query MicroCoachUploadsByUserId(
+    $userId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMicroCoachUploadFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    microCoachUploadsByUserId(
+      userId: $userId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        cognitoId
+        classId
+        sessionId
+        assessmentType
+        docxKey
+        xlsxKey
+        weekStart
+        status
+        error
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const microCoachUploadsByClassId = /* GraphQL */ `
+  query MicroCoachUploadsByClassId(
+    $classId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMicroCoachUploadFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    microCoachUploadsByClassId(
+      classId: $classId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        cognitoId
+        classId
+        sessionId
+        assessmentType
+        docxKey
+        xlsxKey
+        weekStart
+        status
+        error
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const microCoachUploadsBySessionId = /* GraphQL */ `
+  query MicroCoachUploadsBySessionId(
+    $sessionId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMicroCoachUploadFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    microCoachUploadsBySessionId(
+      sessionId: $sessionId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        cognitoId
+        classId
+        sessionId
+        assessmentType
+        docxKey
+        xlsxKey
+        weekStart
+        status
+        error
         createdAt
         updatedAt
         __typename
@@ -1265,6 +1815,46 @@ export const microCoachAssessmentsByClassId = /* GraphQL */ `
         assessmentCode
         type
         weekNumber
+        uploadId
+        classPercentCorrect
+        questions {
+          questionNumber
+          docxQuestion
+          questionText
+          ccssStandard
+          correctAnswer
+          classPercentCorrect
+          answerChoices {
+            letter
+            content
+            isCorrect
+            __typename
+          }
+          __typename
+        }
+        responses {
+          items {
+            id
+            assessmentId
+            classId
+            sessionId
+            studentRef
+            totalScore
+            questionResponses {
+              questionNumber
+              response
+              isCorrect
+              pointsEarned
+              confidence
+              __typename
+            }
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -1296,6 +1886,163 @@ export const microCoachAssessmentsBySessionId = /* GraphQL */ `
         assessmentCode
         type
         weekNumber
+        uploadId
+        classPercentCorrect
+        questions {
+          questionNumber
+          docxQuestion
+          questionText
+          ccssStandard
+          correctAnswer
+          classPercentCorrect
+          answerChoices {
+            letter
+            content
+            isCorrect
+            __typename
+          }
+          __typename
+        }
+        responses {
+          items {
+            id
+            assessmentId
+            classId
+            sessionId
+            studentRef
+            totalScore
+            questionResponses {
+              questionNumber
+              response
+              isCorrect
+              pointsEarned
+              confidence
+              __typename
+            }
+            createdAt
+            updatedAt
+            __typename
+          }
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const microCoachStudentResponsesByAssessmentId = /* GraphQL */ `
+  query MicroCoachStudentResponsesByAssessmentId(
+    $assessmentId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMicroCoachStudentResponseFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    microCoachStudentResponsesByAssessmentId(
+      assessmentId: $assessmentId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        assessmentId
+        classId
+        sessionId
+        studentRef
+        totalScore
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          pointsEarned
+          confidence
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const microCoachStudentResponsesByClassId = /* GraphQL */ `
+  query MicroCoachStudentResponsesByClassId(
+    $classId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMicroCoachStudentResponseFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    microCoachStudentResponsesByClassId(
+      classId: $classId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        assessmentId
+        classId
+        sessionId
+        studentRef
+        totalScore
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          pointsEarned
+          confidence
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const microCoachStudentResponsesBySessionId = /* GraphQL */ `
+  query MicroCoachStudentResponsesBySessionId(
+    $sessionId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelMicroCoachStudentResponseFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    microCoachStudentResponsesBySessionId(
+      sessionId: $sessionId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        assessmentId
+        classId
+        sessionId
+        studentRef
+        totalScore
+        questionResponses {
+          questionNumber
+          response
+          isCorrect
+          pointsEarned
+          confidence
+          __typename
+        }
         createdAt
         updatedAt
         __typename

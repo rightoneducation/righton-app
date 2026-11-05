@@ -1,0 +1,53 @@
+{
+  "permissions": {
+    "function": {
+      "microcoachv2GetLearningScience": [
+        "read"
+      ],
+      "microcoachv2LLMGenInstrNeed": [
+        "read"
+      ],
+      "microcoachv2LLMGenMisconception": [
+        "read"
+      ],
+      "microcoachv2LLMSelectTemplate": [
+        "read"
+      ],
+      "microcoachv2NextStepOption": [
+        "read"
+      ],
+      "microcoachv2ScoresCalc": [
+        "read"
+      ]
+    },
+    "storage": {
+      "MicroCoachSession:@model(appsync)": [
+        "read",
+        "update"
+      ],
+      "MicroCoachUpload:@model(appsync)": [
+        "read",
+        "update"
+      ],
+      "MicroCoachAssessment:@model(appsync)": [
+        "read"
+      ],
+      "MicroCoachStudentResponse:@model(appsync)": [
+        "read"
+      ],
+      "MicroCoachMisconception:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "MicroCoachActivity:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}
