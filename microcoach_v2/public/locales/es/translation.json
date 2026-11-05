@@ -186,7 +186,7 @@
     "students": "{{count}} estudiantes",
     "waiting": "Esperando a MicroCoach...",
     "status": {
-      "ASSESS": "Evalúa los datos de respuestas MIU de tu clase",
+      "ASSESS": "Comprende el razonamiento de tus estudiantes",
       "AWAITING": "Analizando los archivos MIU, recibirás los resultados por correo en 48 horas",
       "UNDERSTAND": "Comprende los conceptos erróneos antes de elegir una actividad",
       "CHOOSE": "Selecciona tu próxima actividad",
