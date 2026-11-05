@@ -262,7 +262,9 @@ function HowToRun({ content, t }: { content: IActivityContent; t: Translate }) {
           <View key={column} style={pdfStyles.col}>
             {steps.map((step, index) => (
               <View key={step.title} style={styles.runStep}>
-                <Text style={pdfStyles.badge}>{column * half + index + 1}</Text>
+                <View style={pdfStyles.badge}>
+                  <Text style={pdfStyles.badgeText}>{column * half + index + 1}</Text>
+                </View>
                 <View style={pdfStyles.col}>
                   <View style={styles.runTitleRow}>
                     <Text style={[pdfStyles.bodyBold, styles.runTitle]}>{m(step.title)}</Text>
