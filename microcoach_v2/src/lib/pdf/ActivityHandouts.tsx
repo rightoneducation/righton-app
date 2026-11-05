@@ -13,7 +13,7 @@ import {
 } from '../ActivityContentModels';
 import { WorkStatus } from '../PipelineModels';
 import { IActivityTemplateCopy } from '../activityTemplates';
-import formatStepAnnotation, { Translate } from '../activityMarks';
+import formatStepAnnotation, { studentWorkText, Translate } from '../activityMarks';
 import mathText from '../mathText';
 import { pdfColors, pdfStyles } from './pdfTheme';
 import groupingIndividual from '../../images/groupingIndividual.png';
@@ -565,7 +565,7 @@ function FavoriteNoExampleCard({
       <Text style={styles.prompt}>{m(example.prompt)}</Text>
       <Text style={styles.label}>{t('activityFlow.facilitate.studentWork')}</Text>
       {example.work.map((line) => (
-        <WorkRow key={line.text} text={line.text} status={line.status} isTeacher={isTeacher} t={t} />
+        <WorkRow key={line.text} text={isTeacher ? line.text : studentWorkText(line.text)} status={line.status} isTeacher={isTeacher} t={t} />
       ))}
       {isTeacher && (
         <>
