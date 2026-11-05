@@ -156,10 +156,10 @@ export const Checklist = styled('ol')(({ theme }) => ({
   listStyle: 'none',
 }));
 
-// The step text centres on its disc (dev QA 2026-10-28), as StepRow's does.
+// Keep each number beside the first line when the preparation text wraps.
 export const ChecklistItem = styled('li')(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   gap: theme.sizing.space2,
   ...theme.typography.rubikBody,
 }));
