@@ -36,7 +36,11 @@ const StepAnnotation = z.object({
   text: z.string().nullable().describe('The note itself, or null for a bare CORRECT marker'),
 });
 
-const STEP_TEXT_RULE = 'Student-facing: never a correctness label such as "CORRECT:", "ERROR:" or "INCORRECT:", which would show students where the slip is. Labels go in the teacher-only field.';
+// One definition for every student-facing field: the answer reached students in
+// four templates, each time through a field with its own narrower rule (v53-v56).
+export const STUDENT_TEXT_RULE = 'Student-facing text is only what the student wrote or what students are asked to do. Student work reads as the student wrote it, with no narrator: never "the student", "instead of", what is correct, or the right answer. Work that goes wrong never shows that it is wrong: no check that fails, no note on the mistake. Instructions and questions never state a result.';
+
+const STEP_TEXT_RULE = `${STUDENT_TEXT_RULE} Never a correctness label such as "CORRECT:", "ERROR:" or "INCORRECT:": labels go in the teacher-only field.`;
 
 // Generated with an annotation on every step (NONE for an unremarked one): a
 // nullable annotation let the model leave all of them null and write "CORRECT:"
@@ -65,6 +69,11 @@ const WorkLine = z.object({
   text: z.string().describe(`One line of the student work, as written. ${STEP_TEXT_RULE}`),
   status: z.enum(['CORRECT', 'INCORRECT', 'NEUTRAL']).describe('Teacher view only: whether this line is right. NEUTRAL for a line that just restates the problem.'),
 });
+
+// No upper limit on an example's lines. A cap left no room for an error at the end of
+// a long solve: examples ended with no error (v53, v57, v61) or crammed several steps
+// into one line (v59). The template docs set no limit, and the output cap stops a runaway.
+const ONLY_THE_MOVES_THAT_MATTER = 'Only the moves that matter: do not spend a line restating the problem.';
 
 const runStepFields = {
   title: z.string().describe('Short step name, e.g. "Show Example 1" or "Compare and revise"'),
@@ -129,8 +138,12 @@ export function withFixedRunSteps(generatedSteps, runSteps) {
  */
 const TASK_MAX = 80;
 // One $…$ span and nothing else: the schema itself leaves no room for words
-// around the math (a bound, not a describe).
-const ONE_EXPRESSION = /^\s*\$[^$]+\$\s*$/;
+// around the math (a bound, not a describe). No whitespace around it and a length
+// limit, because strict mode lets the model write whatever the pattern allows: with
+// `\s*` here, a second item with no math left to put in it (the whole system already
+// written as one \begin{cases}) became an endless run of whitespace, and the call
+// ran until the Lambda died. The longest of 271 saved expressions is 54 characters.
+const ONE_EXPRESSION = /^\$[^$]{1,200}\$$/;
 const Expression = z.string().regex(ONE_EXPRESSION);
 
 /**
@@ -174,7 +187,7 @@ function spotTheSlip({ examplesMin, examplesMax }, mode) {
     examples: z.array(z.object({
       ...problemFields(mode),
       slip: z.string().describe('Teacher view only: the slip in 3-6 words, e.g. "Flipped inequality when testing"'),
-      steps: z.array(exampleStepFor(mode)).min(3).max(6).describe('The full worked solution. Annotate correct steps before the slip CORRECT, the FIRST invalid step ERROR, and the later steps (consequences of the slip) NONE.'),
+      steps: z.array(exampleStepFor(mode)).min(3).describe(`The full worked solution. Annotate correct steps before the slip CORRECT, the FIRST invalid step ERROR, and the later steps (consequences of the slip) NONE. ${ONLY_THE_MOVES_THAT_MATTER}`),
       finalOutcome: z.string().describe('Teacher view only: what the incorrect reasoning arrives at, one sentence'),
     })).min(examplesMin).max(examplesMax).describe('Each example is a DIFFERENT problem (different numbers or a different expression) showing the same need, so the teacher can choose among them — never the same problem repeated.'),
   });
@@ -185,7 +198,7 @@ function favoriteNo({ examplesMin, examplesMax }, mode) {
     type: z.literal('FAVORITE_NO'),
     examples: z.array(z.object({
       ...problemFields(mode),
-      work: z.array(WorkLine).min(2).max(6).describe('The response, line by line. The error must sit inside partly sound reasoning: keep the sound lines marked CORRECT.'),
+      work: z.array(WorkLine).min(2).describe(`The response, line by line. The error must sit inside partly sound reasoning: keep the sound lines marked CORRECT. ${ONLY_THE_MOVES_THAT_MATTER}`),
       notice: z.array(z.object({
         kind: z.enum(['PRESERVE', 'REVISE']),
         text: z.string(),
@@ -200,7 +213,7 @@ function mathDetective({ examplesMin, examplesMax }, mode) {
     type: z.literal('MATH_DETECTIVE'),
     examples: z.array(z.object({
       ...problemFields(mode),
-      workSummary: z.array(WorkLine).min(2).max(5).describe('The response in brief: 2-5 short moves of ONE student\'s attempt. This is the evidence students investigate.'),
+      workSummary: z.array(WorkLine).min(2).describe(`The response in brief, in short lines as ONE student wrote them. This is the evidence students investigate. ${ONLY_THE_MOVES_THAT_MATTER}`),
       stages: z.array(z.object({
         kind: z.enum(['INVESTIGATE', 'SOLVE', 'GENERALIZE']),
         ask: z.string().describe('Student-facing question for this stage'),
@@ -226,7 +239,7 @@ const compareTheThinking = (_bounds, mode) => z.object({
     verdict: z.enum(['CORRECT', 'INCORRECT', 'STRONGER']).nullable().describe('Teacher view only. STRONGER marks the more sophisticated of two correct approaches; null when the other is marked STRONGER.'),
     steps: z.array(z.object({
       step: z.number().int(),
-      text: z.string(),
+      text: z.string().describe(`One step of this approach. ${STEP_TEXT_RULE}`),
       highlight: z.enum(['ERROR', 'SUCCESS']).nullable().describe('Teacher view only: ERROR on the first invalid step; SUCCESS on the step that makes a correct approach work, never on a step of an INCORRECT approach; null otherwise'),
     })).min(2).max(6),
     notes: z.array(z.object({
@@ -244,10 +257,10 @@ const makeYourCase = () => z.object({
     verdict: z.enum(['TRUE', 'FALSE', 'CONDITIONAL']),
     why: z.string().describe('Teacher view only: what the mathematics supports, and the condition or refinement when CONDITIONAL'),
   }),
-  studentSteps: z.array(z.string()).min(1).max(3).describe('What students do while building a case, e.g. "Write down why you think so."'),
+  studentSteps: z.array(z.string()).min(1).max(3).describe(`What students do while building a case, e.g. "Write down why you think so." ${STUDENT_TEXT_RULE}`),
   examples: z.array(z.object({
-    prompt: z.string().describe('A case to bring in, e.g. "Slope 2 vs slope −5"'),
-    answer: z.string().describe('Teacher view only: what the case shows'),
+    prompt: z.string().describe(`Names a case to bring in, e.g. "Slope 2 vs slope −5". ${STUDENT_TEXT_RULE}`),
+    answer: z.string().describe('Teacher view only, required and never empty: the worked result and what the case shows'),
   })).min(2).max(4),
   arguments: z.array(z.object({
     stance: z.enum(['SUPPORT', 'CHALLENGE']),
@@ -302,6 +315,32 @@ const generatedProblemsOf = (facilitate) => {
   return [];
 };
 
+// A short token repeated ten or more times: v59 wrote " )" hundreds of times in student work.
+const REPEATED_TOKEN = /\s+(\S{1,3})(?:\s+\1){9,}/g;
+
+/** Drop blank lines from an example's work and cut runaway repetition (v59). `onCut` is told each time. */
+export function tidyGeneratedWork(facilitate, onCut = () => {}) {
+  if (!EXAMPLE_TYPES.includes(facilitate?.type)) return facilitate;
+  const tidy = (lines) => lines.map((line) => {
+    const text = line.text.replace(REPEATED_TOKEN, '').trim();
+    if (text !== line.text.trim()) onCut({ before: line.text.length, after: text.length, text });
+    return { ...line, text };
+  }).filter((line) => line.text);
+  facilitate.examples = facilitate.examples.map((example) => {
+    const key = ['steps', 'work', 'workSummary'].find((k) => Array.isArray(example[k]));
+    return key ? { ...example, [key]: tidy(example[key]) } : example;
+  });
+  return facilitate;
+}
+
+/** Number every step 1, 2, 3 in order: v57 stored Spot the Slip steps as -6 to -1. */
+export function renumberSteps(facilitate) {
+  const renumber = (steps) => (steps ?? []).map((step, i) => ({ ...step, step: i + 1 }));
+  (facilitate?.examples ?? []).forEach((example) => { if (example.steps) example.steps = renumber(example.steps); });
+  (facilitate?.strategies ?? []).forEach((strategy) => { if (strategy.steps) strategy.steps = renumber(strategy.steps); });
+  return facilitate;
+}
+
 export function toStoredFacilitate(facilitate, onFallback = () => {}) {
   if (facilitate?.type === 'COMPARE_THE_THINKING' && facilitate.math) {
     const { task, math, ...rest } = facilitate;
@@ -322,10 +361,10 @@ export function toStoredFacilitate(facilitate, onFallback = () => {}) {
 }
 
 /**
- * Two shapes the math schema can't rule out, put right after generation:
+ * Shapes the math schema can't rule out, put right after generation:
  *   - a whole system written as one \begin{cases}/aligned/array expression is
- *     split into one expression per row;
- *   - an item that is only a note in \text{…} is dropped.
+ *     split into one expression per row, and every other item is discarded;
+ *   - an item that is only a note in \text{…}, or blank, is dropped.
  * v37's My Favorite No did both: SYSTEM needs two items, so the system went in
  * one as \begin{cases} and "\text{(Student work projected separately)}" filled
  * the second. The kind follows the count that is left. `onFix` is told each time,
@@ -334,19 +373,24 @@ export function toStoredFacilitate(facilitate, onFallback = () => {}) {
 const ENVIRONMENT = /^\$\s*\\begin\{(cases|aligned|array|gathered)\}(?:\{[^}]*\})?([\s\S]*?)\\end\{\1\}\s*\$$/;
 const NOTE_ONLY = /^\$\s*\\text\{[^}]*\}\s*[.,;:]?\s*\$$/;
 
+const BLANK = /^\$\s*\$$/;
+
+const rowsOf = (environment) => environment[2].split(/\\{2,}(?:\[[^\]]*\])?/)
+  .map((row) => row.replace(/&/g, ' ').replace(/\s+/g, ' ').trim())
+  .filter(Boolean)
+  .map((row) => `$${row}$`);
+
 function normalizedMath(math) {
   const before = expressionsOf(math);
-  const after = before.flatMap((e) => {
-    if (NOTE_ONLY.test(e)) return [];
-    const env = e.match(ENVIRONMENT);
-    if (!env) return [e];
-    return env[2].split(/\\{2,}(?:\[[^\]]*\])?/)
-      .map((row) => row.replace(/&/g, ' ').replace(/\s+/g, ' ').trim())
-      .filter(Boolean)
-      .map((row) => `$${row}$`);
-  });
+  // A whole-system environment is the system. SYSTEM needs two items, so whatever
+  // else the model listed is filler written to satisfy that: a repeat, a note, or
+  // an inequality that was never in the problem. Only the environment's rows count.
+  const environment = before.map((e) => e.match(ENVIRONMENT)).find(Boolean);
+  const after = environment
+    ? rowsOf(environment)
+    : before.filter((e) => !NOTE_ONLY.test(e) && !BLANK.test(e));
   if (!after.length || (after.length === before.length && after.every((e, i) => e === before[i]))) return null;
-  return { kind: after.length >= 2 ? 'SYSTEM' : 'SINGLE', expressions: after.slice(0, 3) };
+  return { kind: after.length >= 2 ? 'SYSTEM' : 'SINGLE', expressions: after };
 }
 
 /**
@@ -357,7 +401,7 @@ function normalizedMath(math) {
  * per artifact with every line it changed, so the run counts how often this
  * covered for the generator.
  */
-const LEADING_LABEL = /^\s*[([]?\s*(CORRECT|ERROR|INCORRECT|WRONG|RIGHT)\s*[)\]]?\s*[:.\-–—]\s*/i;
+const LEADING_LABEL = /^\s*[([]?\s*(CORRECT|ERROR|INCORRECT|WRONG|RIGHT|NONE)\s*[)\]]?\s*[:.\-–—]\s*/i;
 const STEP_KIND = { CORRECT: 'CORRECT', RIGHT: 'CORRECT', ERROR: 'ERROR', INCORRECT: 'ERROR', WRONG: 'ERROR' };
 
 export function stripTextLabels(facilitate, onFix = () => {}) {
@@ -373,7 +417,7 @@ export function stripTextLabels(facilitate, onFix = () => {}) {
   (facilitate?.examples ?? []).forEach((ex, i) => {
     (ex.steps ?? []).forEach((st, j) => {
       const label = strip(st, `examples[${i}].steps[${j}]`);
-      if (label && (st.annotation == null || st.annotation.kind === 'NONE')) {
+      if (label && STEP_KIND[label] && (st.annotation == null || st.annotation.kind === 'NONE')) {
         st.annotation = { kind: STEP_KIND[label], text: st.annotation?.text ?? null };
       }
     });
@@ -729,4 +773,177 @@ export function applyLabelFixes(facilitate, fixes = []) {
     .filter((r) => ['wouldNotLeaveOneError', 'successOnWrongApproach'].includes(r.reason))
     .map((r) => r.id));
   return { facilitate: next, applied: applied.filter((a) => !reverted.has(a.id)), rejected };
+}
+
+// ── The final check ───────────────────────────────────────────────────────────
+
+/** The problems an activity states, labelled as the rows are, for the math check to read. */
+export function checkedProblems(facilitate) {
+  if (facilitate?.problem) return [`The problem: ${facilitate.problem}`];
+  if (facilitate?.claim) return [`The claim students argue, which may be false: ${facilitate.claim}`];
+  return (facilitate?.examples ?? []).filter((example) => example.prompt).map((example, i) => `Example ${i + 1}: ${example.prompt}`);
+}
+
+/** Teacher text that explains the planned error, whose math is meant to be wrong. */
+function describesPlannedError(facilitate, id) {
+  if (/^examples\[\d+\]\.finalOutcome$/.test(id)) return true;
+  const step = id.match(/^examples\[(\d+)\]\.steps\[(\d+)\]\.annotation\.text$/);
+  if (step) return facilitate.examples[step[1]].steps[step[2]].annotation?.kind === 'ERROR';
+  const note = id.match(/^strategies\[(\d+)\]\.notes\[\d+\]\.text$/);
+  if (note) return facilitate.strategies[note[1]].verdict === 'INCORRECT';
+  // A supporting argument can be one the mathematics refutes.
+  const argument = id.match(/^arguments\[(\d+)\]\.text$/);
+  if (argument) return facilitate.arguments[argument[1]].stance === 'SUPPORT';
+  return false;
+}
+
+/** A row that repeats a Make Your Case claim that isn't simply true: it is meant to be argued. */
+function quotesArguableClaim(facilitate, text) {
+  if (!facilitate?.claim || facilitate.resolution?.verdict === 'TRUE') return false;
+  const bare = (t) => String(t).replace(/[$\s]/g, '');
+  return bare(text).includes(bare(facilitate.claim));
+}
+
+/**
+ * Which part of the activity a row is, for the math check. Without it the rows of
+ * different examples look alike, and v60's check held Example 2's correct "$y > -x + 2$"
+ * to Example 1's algebra.
+ */
+export function rowLabel(id) {
+  const path = id.replace(/^facilitate\./, '');
+  const n = (m) => Number(m) + 1;
+  const part = path.match(/^examples\[(\d+)\]\.(\w+)\[(\d+)\]/);
+  if (part) {
+    const names = { work: 'student work line', workSummary: 'student work line', steps: 'worked step', notice: 'teacher note', stages: 'stage' };
+    return `Example ${n(part[1])}, ${names[part[2]] ?? part[2]} ${n(part[3])}`;
+  }
+  const example = path.match(/^examples\[(\d+)\]\.(\w+)/);
+  if (example) return `Example ${n(example[1])}, ${example[2]}`;
+  const strategy = path.match(/^strategies\[(\d+)\]\.(steps|notes)\[(\d+)\]/);
+  if (strategy) return `Strategy ${String.fromCharCode(65 + Number(strategy[1]))}, ${strategy[2] === 'steps' ? 'step' : 'teacher note'} ${n(strategy[3])}`;
+  const list = path.match(/^(\w+(?:\.\w+)?)\[(\d+)\]/);
+  if (list) return `${list[1]} ${n(list[2])}`;
+  return path;
+}
+
+/**
+ * Every string the final check reads, with an id. `audience` says who sees it,
+ * from what the app and handouts show students. `intended` marks a student line at
+ * or after the planned error, which is meant to be wrong, so the math check skips it.
+ */
+export function checkableRows(content) {
+  const rows = [];
+  const student = (id, text, extra = {}) => rows.push({ id: `facilitate.${id}`, audience: 'student', text, intended: false, ...extra });
+  const teacher = (id, text) => { if (typeof text === 'string') rows.push({ id, audience: 'teacher', text, intended: quotesArguableClaim(content.facilitate, text) }); };
+  const f = content.facilitate ?? {};
+
+  const workLines = (lines, owner, isError, statusOf) => {
+    let seenError = false;
+    (lines ?? []).forEach((line, j) => {
+      seenError = seenError || isError(line);
+      student(`${owner}[${j}].text`, line.text, { intended: seenError, status: statusOf(line) });
+    });
+  };
+  (f.examples ?? []).forEach((ex, i) => {
+    if (f.type === 'INCORRECT_WORKED_EXAMPLES') {
+      workLines(ex.steps, `examples[${i}].steps`, (s) => s.annotation?.kind === 'ERROR', (s) => s.annotation?.kind ?? 'NONE');
+    }
+    if (f.type === 'FAVORITE_NO') workLines(ex.work, `examples[${i}].work`, (l) => l.status === 'INCORRECT', (l) => l.status);
+    if (f.type === 'MATH_DETECTIVE') {
+      workLines(ex.workSummary, `examples[${i}].workSummary`, (l) => l.status === 'INCORRECT', (l) => l.status);
+      (ex.stages ?? []).forEach((stage, j) => student(`examples[${i}].stages[${j}].ask`, stage.ask));
+    }
+    if (f.type === 'MAKE_YOUR_CASE') student(`examples[${i}].prompt`, ex.prompt);
+  });
+  (f.strategies ?? []).forEach((strategy, i) => {
+    const hasError = (strategy.steps ?? []).some((s) => s.highlight === 'ERROR');
+    workLines(
+      strategy.steps,
+      `strategies[${i}].steps`,
+      (s) => strategy.verdict === 'INCORRECT' && (!hasError || s.highlight === 'ERROR'),
+      () => strategy.verdict ?? 'NONE',
+    );
+  });
+  (f.studentSteps ?? []).forEach((text, i) => student(`studentSteps[${i}]`, text));
+
+  teacherLabels(f).filter((l) => !l.allowed).forEach((l) => {
+    rows.push({ id: `facilitate.${l.id}`, audience: 'teacher', text: l.current, intended: describesPlannedError(f, l.id) || quotesArguableClaim(f, l.current) });
+  });
+  (content.beforeClass?.steps ?? []).forEach((text, i) => teacher(`beforeClass.steps[${i}]`, text));
+  // A step with no minutes is the optional repeat step, whose text is fixed.
+  (content.howToRun ?? []).forEach((step, i) => { if (step.minutes != null) teacher(`howToRun[${i}].body`, step.body); });
+  const d = content.discussion;
+  if (d) {
+    teacher('discussion.takeaway', d.takeaway);
+    (d.questions ?? []).forEach((q, i) => {
+      teacher(`discussion.questions[${i}].question`, q.question);
+      teacher(`discussion.questions[${i}].answer`, q.answer);
+    });
+    (d.watchFors ?? []).forEach((w, i) => {
+      teacher(`discussion.watchFors[${i}].watchFor`, w.watchFor);
+      teacher(`discussion.watchFors[${i}].tryAsking`, w.tryAsking);
+      teacher(`discussion.watchFors[${i}].howToRespond`, w.howToRespond);
+    });
+  }
+  return rows;
+}
+
+// Parentheticals outside the math, as [start, end] spans. A coordinate inside $...$ is left out.
+function parentheticals(text) {
+  const spans = [];
+  let inMath = false;
+  let depth = 0;
+  let start = -1;
+  for (let i = 0; i < text.length; i += 1) {
+    const ch = text[i];
+    if (ch === '$') inMath = !inMath;
+    else if (ch === '(' && (depth > 0 || !inMath)) {
+      if (depth === 0) start = i;
+      depth += 1;
+    } else if (ch === ')' && depth > 0) {
+      depth -= 1;
+      if (depth === 0) spans.push([start, i + 1]);
+    }
+  }
+  return spans;
+}
+
+const RELATION = /(?:>=|<=|>|<|=|\\geq|\\leq|\\ge|\\le|\\neq|≥|≤|≠)/;
+const hasNoLetters = (side) => !/[a-zA-Z]/.test(side.replace(/\\[a-zA-Z]+/g, ''));
+const isNumberComparison = (expr) => {
+  const sides = expr.split(RELATION);
+  return sides.length > 1 && sides.every((side) => /\d/.test(side) && hasNoLetters(side));
+};
+
+/** A comparison of plain numbers, such as "$0 > -2$": a result, not an instruction. */
+const statesResult = (text) => (String(text).match(/\$[^$]+\$/g) ?? []).some((m) => isNumberComparison(m.slice(1, -1)))
+  || isNumberComparison(String(text).match(/-?\d+(?:\.\d+)?\s*(?:>=|<=|>|<|=|≥|≤)\s*-?\d+(?:\.\d+)?/)?.[0] ?? '');
+
+const hasWords = (text) => /[A-Za-z]{3,}/.test(text.replace(/\$[^$]*\$/g, ''));
+
+function removeParentheticals(text, shouldRemove) {
+  const kept = parentheticals(text).filter(([a, b]) => shouldRemove(text.slice(a, b)));
+  const out = kept.reduceRight((s, [a, b]) => s.slice(0, a).trimEnd() + s.slice(b), text).replace(/\s+([.,;:?!])/g, '$1').trim();
+  return out || text;
+}
+
+/**
+ * What students see in Make Your Case can't carry an answer: v58 put a worked result in a
+ * step's "(for example: ...)" and labelled a case "(boundary point)". A step keeps its other
+ * parentheticals, such as "(Yes / No / Undecided)". A result left outside parentheses can't
+ * be cut without breaking the sentence, so `onLeft` reports it.
+ */
+export function cleanCaseStudentText(facilitate, onFix = () => {}, onLeft = () => {}) {
+  if (facilitate?.type !== 'MAKE_YOUR_CASE') return facilitate;
+  const clean = (text, where, shouldRemove) => {
+    const out = removeParentheticals(text, shouldRemove);
+    if (out !== text) onFix({ where, before: text, after: out });
+    if (statesResult(out)) onLeft({ where, text: out });
+    return out;
+  };
+  facilitate.studentSteps = (facilitate.studentSteps ?? []).map((text, i) => clean(text, `studentSteps[${i}]`, statesResult));
+  (facilitate.examples ?? []).forEach((example, i) => {
+    example.prompt = clean(example.prompt, `examples[${i}].prompt`, hasWords);
+  });
+  return facilitate;
 }

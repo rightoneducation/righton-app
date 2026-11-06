@@ -11,6 +11,8 @@
     "description": "microcoachv2NextStepOption — fills one selected Wave 2 activity template: the activity (why, before class, how to run it, the template artifact), then its closing discussion, then an accuracy review of that discussion",
     "model": "gpt-5-mini",
     "maxDurationMinutes": 15,
+    "maxCompletionTokens": 20000,
+    "maxCompletionTokensNote": "Backstop on every model call, reasoning included. The largest output on record is 8,569 tokens. A response that hits it is regenerated once.",
     "targetDurationMinutes": 12,
     "activitySteps": {
       "min": 4,

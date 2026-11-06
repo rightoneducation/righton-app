@@ -1075,6 +1075,9 @@ async function processClassroom(
   //     is only selectable when a game catalog is passed; none is today.
   let templatesSelected = 0;
   let selectCachedPromptTokens: number | null = null;
+  // Set when template selection fails: every activity depends on it (v49 hung here
+  // and finished with 0 activities and no failure recorded).
+  let selectTemplateFailed: string | null = null;
   const withNeeds = misconceptions.filter((m: any) => m.instructionalNeed?.text?.trim());
   if (withNeeds.length) {
     const selectInput = {
@@ -1082,13 +1085,16 @@ async function processClassroom(
       classroomData: JSON.stringify({ classroom, ppq: augmentedPpq, wrongAnswerDist }),
       assessmentType: 'multiple_choice',
       trace: WANT_TRACE,
+      ...(WANT_TRACE && fixture && { debugStream: true, debugStreamRetries: 2 }),
     };
     process.stdout.write(`  Template selection for ${withNeeds.length} need(s)...`);
+    capture.saveInput('select-template', selectInput);
     try {
       const raw = await invokeLambda(`microcoachv2LLMSelectTemplate-${AMPLIFY_ENV}`, { input: selectInput });
       const parsed = parseJson(raw);
       capture.recordCall('select-template', selectInput, parsed);
       if (parsed?.ok === false) {
+        selectTemplateFailed = String(parsed?.error?.message ?? 'unknown error').slice(0, 300);
         console.log(` ✗ ${parsed?.error?.message ?? 'unknown error'}`);
       } else {
         const byTitle = new Map<string, any>((parsed?.selections ?? []).map((x: any) => [String(x.title ?? '').trim(), x]));
@@ -1102,7 +1108,11 @@ async function processClassroom(
         console.log(` ✓  ${templatesSelected}/${withNeeds.length} selected${selectCachedPromptTokens != null ? ` · cached prompt tokens ${selectCachedPromptTokens}` : ''}${parsed?.rejected?.length ? ` (${parsed.rejected.length} rejected)` : ''}`);
       }
     } catch (err) {
+      selectTemplateFailed = String(err).slice(0, 300);
       console.log(` ✗ ${err}`);
+    }
+    if (selectTemplateFailed) {
+      console.error(`\n✗ TEMPLATE SELECTION FAILED, so no activities will be generated: ${selectTemplateFailed}`);
     }
   }
 
@@ -1248,6 +1258,9 @@ async function processClassroom(
             ...(siblingProblems.length && { siblingProblems: JSON.stringify(siblingProblems) }),
             evidence: JSON.stringify(evidence),
             trace: WANT_TRACE,
+            // Eval runs only: stream and log, so a call that doesn't return can be
+            // told apart as a stall or a runaway. Fixture data, so logging text is fine.
+            ...(WANT_TRACE && fixture && { debugStream: true, debugStreamRetries: 2 }),
           };
           const raw = await invokeLambda(`microcoachv2NextStepOption-${AMPLIFY_ENV}`, { input: activityInput });
           const parsed = parseJson(raw);
@@ -1390,6 +1403,7 @@ async function processClassroom(
     // Misconceptions that reached activity generation with no template to enact.
     misconceptionsWithoutActivities,
     activitiesFailed,
+    selectTemplateFailed,
     // How often the pipeline declined to force a template. Non-zero is a valid
     // outcome, not a failure — the doc says not to pick a weak template to fill a slot.
     selectionsWithOnePick: misconceptions.filter((m: any) => m.selectedTemplates?.picks?.length === 1).length,

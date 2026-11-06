@@ -84,6 +84,7 @@ function header(manifest: any, retained: any[], swapNote: string | null, guardFi
     `**Retained / dropped:** ${manifest.misconceptionsRetained} / ${manifest.misconceptionsDropped} (rubric cap)  `,
     `**Standard matched:** ${manifest.targetStandardMatched}/${manifest.misconceptionCount}  `,
     `**Needs prescribing an activity:** ${needsFlagged}/${manifest.needSeparationChecked ?? retained.length}  `,
+    ...(manifest.selectTemplateFailed ? [`**⚠ Template selection failed, so no activities were generated:** ${manifest.selectTemplateFailed}  `] : []),
     ...(Array.isArray(manifest.activitiesFailed) && manifest.activitiesFailed.length
       ? [`**⚠ Activities not generated:** ${manifest.activitiesFailed.map((f: any) => `${f.templateId} for "${f.misconception}"`).join('; ')}  `]
       : []),
