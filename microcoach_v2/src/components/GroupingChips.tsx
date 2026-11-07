@@ -57,13 +57,15 @@ interface IGroupingRun {
 
 /**
  * The groupings in run order, a new entry each time the grouping changes:
- * Individual › Pairs › Whole Class. Steps that don't regroup are skipped.
+ * Individual › Pairs › Whole Class. Steps that don't regroup are skipped, as is
+ * a step the previous entry already offers: Math Detective's frame reads "Pairs
+ * or Whole Class", with no Whole Class after it.
  */
 export function groupingSequence(steps: IRunStep[]): IGroupingRun[] {
   return steps.reduce<IGroupingRun[]>((sequence, step, index) => {
-    const key = step.groupings.join('|');
-    const previous = sequence[sequence.length - 1]?.groupings.join('|');
-    if (key && key !== previous) {
+    const previous = sequence[sequence.length - 1]?.groupings ?? [];
+    const isCovered = step.groupings.every((kind) => previous.includes(kind));
+    if (!isCovered) {
       sequence.push({ groupings: step.groupings, fromStep: index });
     }
     return sequence;
