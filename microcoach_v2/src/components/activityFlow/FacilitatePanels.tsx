@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -69,6 +69,16 @@ import {
  */
 
 const navy = 'designSystem.surface.atlanticNavy';
+
+// Generated questions can put prose inside LaTeX \text{…}. KaTeX otherwise
+// renders that prose in its own serif font, overriding the question's Rubik.
+const ExampleQuestion = styled(MathTypography)(({ theme }) => ({
+  ...theme.typography.rubikSubBold,
+  '& .katex .text': {
+    fontFamily: theme.typography.rubikSubBold.fontFamily,
+    fontWeight: theme.typography.rubikSubBold.fontWeight,
+  },
+}));
 
 /** A note's tone as the icon the frames draw beside it. */
 function ToneIcon({ tone }: { tone: Tone }) {
@@ -293,9 +303,9 @@ export function MakeYourCasePanel({
             <>
               <SectionPill>{t('activityFlow.facilitate.examplesToBringIn')}</SectionPill>
               <BringInList>
-                {facilitate.examples.map((example) => (
+                {facilitate.examples.map((example, index) => (
                   <BringInItem key={example.prompt}>
-                    <MathTypography variant="rubikBody" text={example.prompt} />
+                    <MathTypography variant="rubikBody" text={`${index + 1}. ${example.prompt}`} />
                     <MathTypography
                       variant="rubikBody"
                       text={t('activityFlow.facilitate.exampleAnswer', { answer: example.answer })}
@@ -348,22 +358,22 @@ export function MathDetectivePanel({
             <Typography variant="headingMdBold" component="span">
               {t('activityFlow.facilitate.exampleLabel', { number: tileIndex + 1 })}
             </Typography>
-            <MathTypography variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
-            <MathTypography variant="smallBodyText" component="span" text={workLine(examples[tileIndex].workSummary)} />
+            <ExampleQuestion variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
+            <ExampleQuestion variant="rubikSubBold" component="span" text={workLine(examples[tileIndex].workSummary)} />
           </>
         )}
       />
       {example && (
         <ExampleDetail aria-live="polite">
           <ExampleOfHeading index={index} count={examples.length} />
-          {/* DevQA MathDetective: the pencil tile, then the problem (Poppins
-              20/600) over the work in one line (Rubik 16), marked in teacher view. */}
+          {/* The question uses Rubik 14 bold; the work below stays Rubik 16,
+              marked in teacher view. */}
           <ExampleHeaderBox>
             <ExampleIconTile aria-hidden>
               <EditIcon />
             </ExampleIconTile>
             <ExampleHeaderText>
-              <MathTypography variant="headingMd" text={example.prompt} />
+              <ExampleQuestion variant="rubikSubBold" text={example.prompt} />
               <MathTypography variant="rubikBody" text={workLine(example.workSummary)} />
             </ExampleHeaderText>
           </ExampleHeaderBox>
@@ -429,7 +439,7 @@ export function FavoriteNoPanel({
             <Typography variant="headingMdBold" component="span">
               {t('activityFlow.facilitate.exampleLabel', { number: tileIndex + 1 })}
             </Typography>
-            <MathTypography variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
+            <ExampleQuestion variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
           </>
         )}
       />
@@ -446,7 +456,7 @@ export function FavoriteNoPanel({
             {/* Figma (My Favorite No Teacher): Poppins 16/600. */}
             <Typography variant="headingSm">{t('activityFlow.facilitate.anonymousResponse')}</Typography>
           </Stack>
-          <MathTypography variant="rubikSubBold" text={example.prompt} />
+          <ExampleQuestion variant="rubikSubBold" text={example.prompt} />
           <Stack
             direction={props.screenSize === ScreenSize.SMALL ? 'column' : 'row'}
             spacing={`${theme.sizing.space5}px`}

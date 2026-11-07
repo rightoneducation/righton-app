@@ -156,10 +156,10 @@ export const Checklist = styled('ol')(({ theme }) => ({
   listStyle: 'none',
 }));
 
-// The step text centres on its disc (dev QA 2026-10-28), as StepRow's does.
+// Keep each number beside the first line when the preparation text wraps.
 export const ChecklistItem = styled('li')(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   gap: theme.sizing.space2,
   ...theme.typography.rubikBody,
 }));
@@ -487,18 +487,20 @@ export const SectionPill = styled(Box)(({ theme }) => ({
 }));
 
 /** Teacher view: each example to bring in (Figma: ~20 apart). */
-export const BringInList = styled(Box)(({ theme }) => ({
+export const BringInList = styled('ol')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.sizing.space4,
+  margin: 0,
+  padding: 0,
+  listStyle: 'none',
 }));
 
-// The prompt sits 24 in from its answer.
-export const BringInItem = styled(Box)(({ theme }) => ({
+// Each numbered prompt sits above its answer, aligned to the list edge.
+export const BringInItem = styled('li')({
   display: 'flex',
   flexDirection: 'column',
-  '& > :first-of-type': { paddingLeft: theme.sizing.space5 },
-}));
+});
 
 // Student view: Steps to follow | Examples to try, split by a hairline;
 // stacked below LARGE.
