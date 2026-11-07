@@ -379,39 +379,106 @@ export const PagerButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-/* ── Math Detective: the open example's header ───────────────────────── */
+/* ── Math Detective ───────────────────────────────────────────────────── */
 
-const exampleIconSize = 52;
+const noteLinesHeight = 38;
+const noteLinesInset = 12;
 
-// DevQA MathDetective: 1049x75 rx11.5 on a #E0E4EF (greyAccent, Δ6) hairline;
-// the icon tile ~12 down and 16 in, the text 12 after it.
-export const ExampleHeaderBox = styled(Box)(({ theme }) => ({
+// rev7 MathDetective: the two sections on a tinted panel, rx15.5 on a #E0E4EF
+// (greyAccent, Δ6) hairline, each holding white cards.
+export const DetectiveSection = styled(Box)(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center',
-  gap: theme.sizing.space2,
+  flexDirection: 'column',
+  gap: theme.sizing.space3,
+  padding: theme.sizing.space4,
+  borderRadius: theme.sizing.space3,
+  border: theme.borders.subtle,
+  backgroundColor: theme.palette.designSystem.background.coolWhite,
+}));
+
+export const DetectiveSectionHeading = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+export const DetectiveCard = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space1,
   padding: `${theme.sizing.space2}px ${theme.sizing.space3}px`,
   borderRadius: theme.sizing.space2,
   border: theme.borders.subtle,
-  color: theme.palette.designSystem.surface.atlanticNavy,
+  backgroundColor: theme.palette.designSystem.surface.white,
 }));
 
-// Figma: a 52px atlanticNavy tile, rx13, holding a white pencil.
-export const ExampleIconTile = styled(Box)(({ theme }) => ({
+export const DetectiveExample = styled(ExampleDetail)(({ theme }) => ({
+  backgroundColor: theme.palette.designSystem.surface.white,
+}));
+
+// The solution beside the teacher's notes; stacked on phones.
+export const DetectiveColumns = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => ({
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexShrink: 0,
-  width: exampleIconSize,
-  height: exampleIconSize,
-  borderRadius: theme.sizing.space2,
-  backgroundColor: theme.palette.designSystem.surface.atlanticNavy,
-  color: theme.palette.designSystem.surface.white,
+  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
+  gap: theme.sizing.space5,
 }));
 
-export const ExampleHeaderText = styled(Box)({
+export const DetectiveColumn = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
+  flex: 1,
   minWidth: 0,
+  gap: theme.sizing.space2,
+}));
+
+export const EvidenceNotesPanel = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space0,
+  padding: theme.sizing.space3,
+  borderRadius: theme.sizing.space2,
+  backgroundColor: theme.palette.designSystem.surface.skyBlue,
+}));
+
+export const EvidenceNotesList = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space0,
+  paddingLeft: theme.sizing.space4,
+}));
+
+// Student view: each step beside its own blank box, so a wrapped step keeps its box
+// on the same row. On phones the box drops under its step.
+export const EvidenceNoteRow = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => ({
+  display: 'flex',
+  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
+  gap: screenSize === ScreenSize.SMALL ? theme.sizing.space0 : theme.sizing.space5,
+}));
+
+export const EvidenceNoteCell = styled(Box)({
+  flex: 1,
+  minWidth: 0,
+});
+
+// Figma: a 474x38 box, rx7.5, with two ruled lines. Decoration for writing on a
+// projected or printed copy; nothing is typed here.
+export const EvidenceNoteLines = styled(Box)(({ theme }) => {
+  const line = theme.palette.designSystem.foreground.greyAccent;
+  const width = `calc(100% - ${2 * noteLinesInset}px)`;
+
+  return {
+    height: noteLinesHeight,
+    borderRadius: theme.sizing.space1,
+    border: theme.borders.subtle,
+    boxSizing: 'border-box',
+    backgroundImage: `linear-gradient(${line}, ${line}), linear-gradient(${line}, ${line})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: `${width} 1px, ${width} 1px`,
+    backgroundPosition: `center 33%, center 67%`,
+  };
 });
 
 /* ── Make Your Case ───────────────────────────────────────────────────── */

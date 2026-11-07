@@ -500,15 +500,29 @@
       "stepsToFollow": "Steps to follow",
       "examplesToTry": "Examples to try",
       "stage": {
-        "INVESTIGATE": "Investigate — where did the reasoning break?",
-        "SOLVE": "Solve — rewrite the faulty step",
-        "GENERALIZE": "Generalize — write the rule that prevents this"
+        "INVESTIGATE": "Investigate",
+        "SOLVE": "Solve",
+        "REVISE_AND_CHECK": "Revise and check",
+        "GENERALIZE": "Generalize"
       },
-      "askStudents": "Ask students",
-      "stageAnswer": {
-        "INVESTIGATE": "Expected answer",
-        "SOLVE": "Corrected step",
-        "GENERALIZE": "Target rule (write on board)"
+      "detective": {
+        "evidenceTitle": "Example and evidence",
+        "evidenceSubtitle": "Choose an example, then review the issue and the evidence in the response.",
+        "focusTeacher": "Investigation focus",
+        "focusStudent": "Your investigation",
+        "issue": "Issue:",
+        "findEvidence": "Find the evidence",
+        "findEvidenceTeacher": "Have students circle one or two steps that give the strongest evidence of the issue and write what they notice next to those steps.",
+        "findEvidenceStudent": "Circle one or two steps that give you the strongest evidence of the issue. Write what you notice next to those steps.",
+        "solutionTeacher": "Incorrect worked solution",
+        "solutionStudent": "Incorrect solution",
+        "teacherNotes": "Teacher notes",
+        "yourEvidenceNotes": "Your evidence notes",
+        "evidenceInResponse": "Evidence in the response",
+        "evidenceTag": "Evidence {{number}}",
+        "stagesTitle": "Investigate, solve, revise and check",
+        "stagesSubtitle": "Work through these with students after the issue is stated.",
+        "potentialAnswer": "Potential answer"
       },
       "anonymousResponse": "Anonymous student response",
       "studentWork": "Student’s work",
@@ -580,7 +594,7 @@
       "subtitle": "Investigate underlying issues",
       "reflectSubtitle": "Investigate and solve",
       "description": "Students become “math detectives” by investigating an incorrect solution, identifying the underlying mathematical issue, revising the reasoning, and checking whether the revision works.",
-      "artifactTitle": "Student thinking analysis examples"
+      "artifactTitle": "Incorrect worked examples"
     },
     "COMPARE_THE_THINKING": {
       "name": "Compare the Thinking",

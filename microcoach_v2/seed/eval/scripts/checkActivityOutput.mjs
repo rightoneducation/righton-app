@@ -91,6 +91,7 @@ function teacherNotes(c) {
   const notes = [];
   for (const ex of f.examples ?? []) {
     notes.push(ex.finalOutcome, ex.answer, ...(ex.stages ?? []).map((s) => s.answer),
+      ...(ex.evidenceNotes ?? []).map((n) => n.text),
       ...(ex.notice ?? []).map((n) => n.text), ...(ex.steps ?? []).map((s) => s.annotation?.text));
   }
   for (const st of f.strategies ?? []) notes.push(...(st.notes ?? []).map((n) => n.text));
@@ -220,6 +221,15 @@ const RULES = [
     },
   },
   {
+    // The app now displays these (lib/mathDelimiters), so count them here (v65).
+    id: 'no LaTeX outside delimiters',
+    applies: () => true,
+    check: (c) => {
+      const hit = allStrings(c).find((s) => /\\[a-zA-Z]+/.test(outsideMath(s)));
+      return hit ? `"${hit.slice(0, 80)}"` : null;
+    },
+  },
+  {
     id: 'discussion counts (3 questions, 1-3 watch for)',
     applies: () => true,
     check: (c) => {
@@ -315,6 +325,18 @@ const RULES = [
         return marked ? [] : [`Example ${i + 1}`];
       });
       return missing.length ? missing.join(', ') : null;
+    },
+  },
+  {
+    // Issue #2848: students circle one or two steps, so the teacher view marks that many.
+    id: 'math detective marks 1-2 evidence steps',
+    applies: (t) => t === 'MATH_DETECTIVE',
+    check: (c) => {
+      const off = (c.facilitate.examples ?? []).flatMap((ex, i) => {
+        const count = (ex.workSummary ?? []).filter((l) => l.isEvidence).length;
+        return count >= 1 && count <= 2 ? [] : [`Example ${i + 1}: ${count}`];
+      });
+      return off.length ? off.join(', ') : null;
     },
   },
   {

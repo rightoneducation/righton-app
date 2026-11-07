@@ -161,6 +161,7 @@ export const VerdictChip = styled(Box, {
 interface StepRowProps {
   isError?: boolean;
   isCorrect?: boolean;
+  isEvidence?: boolean;
 }
 
 // The highlight runs the full row width, behind the chip as well as the body —
@@ -168,12 +169,14 @@ interface StepRowProps {
 // matches the chip so a single-line row reads as one pill; a wrapped row grows
 // and keeps the same corner.
 export const StepRow = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isError' && prop !== 'isCorrect',
-})<StepRowProps>(({ theme, isError, isCorrect }) => {
+  shouldForwardProp: (prop) =>
+    prop !== 'isError' && prop !== 'isCorrect' && prop !== 'isEvidence',
+})<StepRowProps>(({ theme, isError, isCorrect, isEvidence }) => {
   const palette = theme.palette.designSystem;
   let background = 'transparent';
   if (isError) background = palette.status.errorTint;
   else if (isCorrect) background = palette.status.lightGreen;
+  else if (isEvidence) background = palette.surface.skyBlue;
 
   return {
     display: 'flex',
@@ -185,11 +188,33 @@ export const StepRow = styled(Box, {
     // or not, so the chips and text keep one edge down the column.
     paddingTop: theme.sizing.space0,
     paddingLeft: theme.sizing.space0,
+    paddingRight: isEvidence ? theme.sizing.space0 : undefined,
+    paddingBottom: isEvidence ? theme.sizing.space0 : undefined,
     minHeight: stepChipHeight,
     borderRadius: stepChipHeight / 2,
     backgroundColor: background,
   };
 });
+
+// Figma (Math Detective): a navy pill on an evidence step's row, centred against
+// the step chip by a slot of the chip's height.
+export const EvidenceTagSlot = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  flexShrink: 0,
+  height: stepChipHeight,
+});
+
+export const EvidenceTag = styled(Box)(({ theme }) => ({
+  padding: `${theme.sizing.space0}px ${theme.sizing.space2}px`,
+  borderRadius: stepChipHeight / 2,
+  backgroundColor: theme.palette.designSystem.background.navyBlue,
+  color: theme.palette.designSystem.surface.white,
+  ...theme.typography.stepChipLabel,
+  fontSize: 10,
+  fontWeight: 500,
+  whiteSpace: 'nowrap',
+}));
 
 export const ViewToggle = styled(Box)(({ theme }) => ({
   display: 'flex',
