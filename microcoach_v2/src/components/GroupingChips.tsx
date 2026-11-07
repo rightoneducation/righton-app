@@ -8,15 +8,17 @@ import {
 } from '../lib/styledcomponents/ChooseActivityStyledComponents';
 import groupingIndividual from '../images/groupingIndividual.png';
 import groupingPairs from '../images/groupingPairs.png';
+import groupingTwoGroups from '../images/groupingTwoGroups.png';
 import groupingWholeClass from '../images/groupingWholeClass.png';
 
 const GROUPING_ICONS: Record<GroupingKind, string> = {
   INDIVIDUAL: groupingIndividual,
   PAIRS: groupingPairs,
+  TWO_GROUPS: groupingTwoGroups,
   WHOLE_CLASS: groupingWholeClass,
 };
 
-/** One grouping: its icon and name (Individual, Pairs, Whole Class). */
+/** One grouping: its icon and name (Individual, Pairs, Two Groups, Whole Class). */
 export function GroupingTag({ kind }: { kind: GroupingKind }) {
   const { t } = useTranslation();
 

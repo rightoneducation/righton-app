@@ -11,6 +11,8 @@
     "description": "microcoachv2NextStepOption — fills one selected Wave 2 activity template: the activity (why, before class, how to run it, the template artifact), then its closing discussion, then an accuracy review of that discussion",
     "model": "gpt-5-mini",
     "maxDurationMinutes": 15,
+    "maxCompletionTokens": 20000,
+    "maxCompletionTokensNote": "Backstop on every model call, reasoning included. The largest output on record is 8,569 tokens. A response that hits it is regenerated once.",
     "targetDurationMinutes": 12,
     "activitySteps": {
       "min": 4,
@@ -21,13 +23,14 @@
       "max": 3
     },
     "examples": {
-      "min": 1,
+      "min": 2,
       "max": 3
     },
     "examplesNote": "Spot the Slip, My Favorite No and Math Detective only. The doc asks for up to 3 examples that meaningfully support the need, with the teacher choosing which to use, so fewer is allowed. Enforced as .min/.max on the examples array in activityContent.mjs.",
     "closingDiscussion": {
       "model": "gpt-5-mini",
       "reviewModel": "gpt-5-mini",
+      "takeawayMaxChars": 350,
       "questionCount": 3,
       "minutes": {
         "min": 2,
@@ -50,8 +53,8 @@
       "Students take longer than an adult to do the math: reading the problem, working it, and checking it each take real time, so a single task worked in pairs is rarely under 3 minutes.",
       "Pair or small-group talk needs time to start and to wrap up; a share-out takes about a minute for each student or pair the teacher calls on.",
       "Every change of grouping or of materials costs time; count it in the step where it happens.",
-      "The examples are alternatives for the teacher to choose from. Plan the time to run one with the class; the others are spares, not extra rounds.",
-      "If the plan does not fit, cut content: fewer steps, one example, a shorter share-out. Never shrink an estimate to make the total fit."
+      "The examples are alternatives for the teacher to choose from. Plan the time to run one with the class; the others are spares. The optional Repeat step sits outside this time.",
+      "If the plan does not fit, cut content: a shorter task, a shorter share-out. Never shrink an estimate to make the total fit."
     ],
     "classroomFeasibility": [
       "Require minimal setup — activity should be implementable within 30–60 seconds of classroom transition.",

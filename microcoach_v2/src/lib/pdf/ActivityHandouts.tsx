@@ -18,6 +18,7 @@ import mathText from '../mathText';
 import { pdfColors, pdfStyles } from './pdfTheme';
 import groupingIndividual from '../../images/groupingIndividual.png';
 import groupingPairs from '../../images/groupingPairs.png';
+import groupingTwoGroups from '../../images/groupingTwoGroups.png';
 import groupingWholeClass from '../../images/groupingWholeClass.png';
 
 /*
@@ -38,6 +39,7 @@ import groupingWholeClass from '../../images/groupingWholeClass.png';
 const GROUPING_ICONS: Record<GroupingKind, string> = {
   INDIVIDUAL: groupingIndividual,
   PAIRS: groupingPairs,
+  TWO_GROUPS: groupingTwoGroups,
   WHOLE_CLASS: groupingWholeClass,
 };
 

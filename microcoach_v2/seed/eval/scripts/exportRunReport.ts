@@ -43,7 +43,7 @@ const table = (head: string[], rows: unknown[][]) => [
   ...rows.map((r) => `| ${r.map(cell).join(' | ')} |`),
 ];
 
-const GROUPING_LABEL: Record<string, string> = { INDIVIDUAL: 'Individual', PAIRS: 'Pairs', WHOLE_CLASS: 'Whole Class' };
+const GROUPING_LABEL: Record<string, string> = { INDIVIDUAL: 'Individual', PAIRS: 'Pairs', TWO_GROUPS: 'Two Groups', WHOLE_CLASS: 'Whole Class' };
 const STATUS_MARK: Record<string, string> = { CORRECT: '✓', INCORRECT: '✗', NEUTRAL: '·' };
 const TEMPLATE_LABEL: Record<string, string> = {
   INCORRECT_WORKED_EXAMPLES: 'Spot the Slip',
@@ -84,6 +84,10 @@ function header(manifest: any, retained: any[], swapNote: string | null, guardFi
     `**Retained / dropped:** ${manifest.misconceptionsRetained} / ${manifest.misconceptionsDropped} (rubric cap)  `,
     `**Standard matched:** ${manifest.targetStandardMatched}/${manifest.misconceptionCount}  `,
     `**Needs prescribing an activity:** ${needsFlagged}/${manifest.needSeparationChecked ?? retained.length}  `,
+    ...(manifest.selectTemplateFailed ? [`**⚠ Template selection failed, so no activities were generated:** ${manifest.selectTemplateFailed}  `] : []),
+    ...(Array.isArray(manifest.activitiesFailed) && manifest.activitiesFailed.length
+      ? [`**⚠ Activities not generated:** ${manifest.activitiesFailed.map((f: any) => `${f.templateId} for "${f.misconception}"`).join('; ')}  `]
+      : []),
     ...(Array.isArray(manifest.modelUnavailable) && manifest.modelUnavailable.length
       ? [`**⚠ Model unavailable:** ${[...new Set(manifest.modelUnavailable.map((u: any) => `${u.model} (${u.label})`))].join('; ')}: those steps did not run. ${manifest.modelUnavailable[0].reason ?? ''}  `]
       : []),

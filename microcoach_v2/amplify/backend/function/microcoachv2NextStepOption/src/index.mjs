@@ -48,6 +48,7 @@
  * strategyTag, durationMinutes, aiReasoning, content: IActivityContent }.
  * Throws when the template is unknown or has no content type (RightOn!).
  */
+import { createHash } from 'node:crypto';
 import { loadSecret } from './util/loadsecrets.mjs';
 import { templateById, formatForInfill, formatDesignGuidance } from './util/activityLibrary.mjs';
 import { matchStandard } from './util/ccssCode.mjs';
@@ -61,12 +62,19 @@ import {
   toStoredDiscussion,
   toStoredFacilitate,
   incompleteSystems,
+  selfCorrectingStrategies,
   normalizeGeneratedMath,
   stripTextLabels,
-  groupingRegressions,
-  ORDERED_GROUPING_TYPES,
+  withFixedRunSteps,
   teacherLabels,
   applyLabelFixes,
+  checkableRows,
+  checkedProblems,
+  rowLabel,
+  tidyGeneratedWork,
+  renumberSteps,
+  cleanCaseStudentText,
+  STUDENT_TEXT_RULE,
 } from './util/activityContent.mjs';
 import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
@@ -82,7 +90,13 @@ const VALIDATOR_MODEL                = vco.model ?? 'gpt-5-mini';
 const VALIDATOR_SYSTEM_PROMPT        = vco.systemPrompt ?? 'You are a math accuracy reviewer. Output only valid JSON.';
 const DISCUSSION_MODEL        = cdo.model ?? MODEL;
 const REVIEW_MODEL            = cdo.reviewModel ?? VALIDATOR_MODEL;
+// Asked for at the target; a takeaway over the maximum is rewritten once. Not a
+// schema cap: a hard cap on a string truncates it mid-clause (v37's "Then compare to the:").
+const TAKEAWAY_TARGET_CHARS   = 300;
+const TAKEAWAY_MAX_CHARS      = cdo.takeawayMaxChars ?? 350;
 const MAX_DURATION            = nso.maxDurationMinutes ?? 15;
+const MAX_COMPLETION_TOKENS   = nso.maxCompletionTokens ?? 20_000;
+const FINAL_CHECK_LATEST_START_MS = 420_000;
 const DEFAULT_DURATION        = nso.targetDurationMinutes ?? 12;
 const STRATEGY_TAGS           = nso.strategyTags ?? [];
 // How many LVN strategies per factor get a full description in the prompt.
@@ -120,7 +134,7 @@ const strategyTagSchema = STRATEGY_TAGS.length >= 2
 
 /** The row-level fields stored beside the content on MicroCoachActivity. */
 const RowFields = z.object({
-  targets: z.string().describe('The specific skill this activity builds, in plain skill language (e.g. "Applying integer sign rules in algebraic expressions"). Not ontology IDs.'),
+  targets: z.string().describe('The specific skill this activity builds, in plain words with no math, symbols or LaTeX (e.g. "Applying integer sign rules in algebraic expressions"). Not ontology IDs.'),
   instructionalMove: z.string().describe('What the teacher concretely does, beginning with a verb, 2-4 sentences, naming the error pattern this activity addresses.'),
   strategyTag: strategyTagSchema.describe(`Exactly one of: ${STRATEGY_TAGS.map((t) => t.name).join(', ')}`),
   aiReasoning: z.string().describe('Internal: why this design enacts the template for this need. Not shown to teachers.'),
@@ -180,6 +194,7 @@ const RELATION_COMMAND = { '2264': '\\leq', '2265': '\\geq', '2260': '\\neq', '�
 
 function restoreLostEscapes(text) {
   return text
+    .replace(/\\text(greater|less)(?![a-zA-Z])/g, (_, word) => (word === 'greater' ? '>' : '<'))
     .replace(/\\u(226[045])(?![0-9a-fA-F])/g, (_, code) => `${RELATION_COMMAND[code]} `)
     .replace(/\$[^$]*\$/g, (span) => span.replace(/[≤≥≠]/g, (c) => `${RELATION_COMMAND[c]} `))
     .replace(/(\\(?:leq|geq|neq)) +(?=[$}\s,.;:)]|$)/g, '$1')
@@ -192,7 +207,9 @@ function sanitizeStrings(value) {
     // Two or more backslashes before a letter or a space are an over-escaped command,
     // which LaTeX reads as a line break rather than the command meant. Strings
     // with a begin-environment (cases, aligned) keep theirs: there it is the row break.
-    const cleaned = restoreLostEscapes(value).replace(CONTROL_CHARS, '');
+    // Any other "\u2192" the model wrote as literal text shows as those characters, so make it the character.
+    const cleaned = restoreLostEscapes(value).replace(CONTROL_CHARS, '')
+      .replace(/\\+u([0-9a-fA-F]{4})(?![0-9a-fA-F])/g, (_, code) => String.fromCharCode(parseInt(code, 16)));
     const unescaped = /\\begin\{/.test(cleaned) ? cleaned : cleaned.replace(/\\{2,}(?=[a-zA-Z ])/g, '\\');
     return unescaped.replace(/ {2,}/g, ' ').trim();
   }
@@ -232,7 +249,7 @@ const parseMaybe = (raw, fallback) => {
 // ── Prompt pieces ─────────────────────────────────────────────────────────────
 
 const MATH_FORMATTING = `## Math formatting
-Use LaTeX for every mathematical expression: $...$ inline, $$...$$ for a standalone equation. Never use Unicode math symbols (≤ ≥ ≠ × ÷ √ π ½ ²) anywhere, inside the delimiters included, never a \\u escape such as \\u2265, and never caret/underscore notation outside the delimiters. Fractions are $\\frac{a}{b}$, inequalities $\\leq$ / $\\geq$ / $\\neq$, multiplication $\\times$. Every $...$ holds the math it stands for: never leave one empty, e.g. "$>$ versus $\\geq$", not "$>$ versus $$". Write each command with ONE backslash: never \\\\ (a line break) or \\  (a forced space), and never a placeholder symbol such as \\square — write the real symbol or words instead. Plain prose stays plain English — only the math goes inside delimiters.`;
+Use LaTeX for every mathematical expression: $...$ inline, $$...$$ for a standalone equation. Never use Unicode math symbols (≤ ≥ ≠ × ÷ √ π ½ ²) anywhere, inside the delimiters included, never a \\u escape such as \\u2265, and never caret/underscore notation outside the delimiters. Fractions are $\\frac{a}{b}$, inequalities $\\leq$ / $\\geq$ / $\\neq$, multiplication $\\times$. Every $...$ holds the math it stands for: never leave one empty, e.g. "$>$ versus $\\geq$", not "$>$ versus $$". Write each command with ONE backslash: never \\\\ (a line break) or \\  (a forced space), and never a placeholder symbol such as \\square or \\Box — write the real symbol or words instead. Never \\textgreater or \\textless: write $>$ and $<$. Keep a whole expression inside one pair of delimiters, never split around punctuation: $(x, y)$, not $($x$, $y$)$. Plain prose stays plain English — only the math goes inside delimiters. When words name a side of one line, say above or below (for a non-vertical line), or name the inequality or a test point. Never use right, left or diagonal words such as upper-left for the side of one line.`;
 
 function renderNeed(misconception) {
   const need = misconception.instructionalNeed;
@@ -270,7 +287,7 @@ ${questions.map((q) => {
 }
 
 const FACILITATE_INSTRUCTIONS = {
-  INCORRECT_WORKED_EXAMPLES: () => `\`facilitate.examples\`: ${BOUNDS.examplesMin}-${BOUNDS.examplesMax} incorrect worked solutions, each a different instance of the error. Each has its \`task\` and \`math\`, a 3-6 word \`slip\` (teacher only), the full step-by-step work, and a one-sentence \`finalOutcome\` (teacher only). Annotate the steps before the slip CORRECT, the FIRST invalid step ERROR, and its consequences NONE. Step text is what students see: never write a correctness label ("CORRECT:", "ERROR:") into it.
+  INCORRECT_WORKED_EXAMPLES: () => `\`facilitate.examples\`: ${BOUNDS.examplesMin}-${BOUNDS.examplesMax} incorrect worked solutions, each a different instance of the error. Each has its \`task\` and \`math\`, a 3-6 word \`slip\` (teacher only), the full step-by-step work, and a one-sentence \`finalOutcome\` (teacher only). Annotate the steps before the slip CORRECT, the FIRST invalid step ERROR, and its consequences NONE. One step must show the slip: when the error is in the final answer, the last step records that answer. Step text is what students see: never write a correctness label ("CORRECT:", "ERROR:") into it.
 
 Critical rules for the worked examples:
 ${INCORRECT_EXAMPLE_RULES.map((r, i) => `  ${i + 1}. ${r}`).join('\n')}
@@ -283,15 +300,25 @@ ${INCORRECT_EXAMPLE_FEW_SHOT.map((ex) => `Misconception: ${ex.misconception}
 ✗ ${ex.bad.label}
   Problem: ${ex.bad.problem}
   Incorrect work: ${ex.bad.incorrectWork}`).join('\n\n')}` : ''}`,
-  FAVORITE_NO: () => `\`facilitate.examples\`: ${BOUNDS.examplesMin}-${BOUNDS.examplesMax} incorrect responses, each revealing a mathematical idea, intuition, strategy, or assumption worth preserving — not a procedural slip, arithmetic mistake, or random answer. \`work\` is the response line by line, with the sound lines marked CORRECT so the error sits inside partly sound reasoning. \`notice\` (teacher only) lists what the reasoning gets right (PRESERVE, first) and then what needs to change (REVISE). \`sourceNote\` (teacher only) says this is one plausible way a student might reason toward the answer, not any one student's work, and that a real anonymous response can replace it. \`task\` and \`math\` state only the problem students solve — never the response, a description of it, or what is wrong with it; the response belongs in \`work\`.`,
-  MATH_DETECTIVE: () => `\`facilitate.examples\`: ${BOUNDS.examplesMin}-${BOUNDS.examplesMax} incorrect responses, each pointing to a deeper mathematical issue to investigate — not a single localized slip. \`workSummary\` is one student's attempt in 2-5 short moves (the evidence). \`stages\`, in order: INVESTIGATE (ask what is going wrong and what idea, assumption, model, or representation might be behind it; answer with the issue and the evidence for it, naming another plausible interpretation when there is one), SOLVE (ask students to revise the reasoning; answer with the revised step and a check that it works on the original or a related example), GENERALIZE (ask for a rule that prevents the issue; answer with the rule to post). Student-facing \`ask\` text never gives the answer away. \`task\` and \`math\` state only the problem the student was solving, rewritten as an open problem when the original was multiple choice (the student's chosen answer belongs in \`workSummary\`) — never the student's work, a description of what the student did, or the error; those belong in \`workSummary\` and the teacher-only answers.`,
-  COMPARE_THE_THINKING: () => `\`facilitate\`: one problem, as its \`task\` and \`math\`, and exactly two strategies, A and B, with equal visual weight. Use CORRECT_VS_INCORRECT when the opportunity is to examine the misconception through the contrast; BOTH_CORRECT when it is to compare valid strategies (efficiency, generalizability, representation, assumptions). Verdicts, step highlights and notes are teacher only: highlight ERROR on the first invalid step and SUCCESS on the step that makes an approach work. Each strategy gets 1-2 notes on what it reveals about the thinking behind it. The comparison must have a clear mathematical purpose, not be a "which one is right?" exercise.`,
-  MAKE_YOUR_CASE: () => `\`facilitate\`: a \`claim\` students can genuinely defend, challenge, or refine with evidence — not obviously true or false, and never a mathematically indefensible position. \`resolution\` (teacher only) is what the mathematics supports; use CONDITIONAL with the refined claim when it holds only under conditions. \`studentSteps\` are 1-3 short instructions for building a case. \`examples\` are 2-4 cases to bring in, each with what it shows (teacher only). \`arguments\` (teacher reference) hold at least one substantive SUPPORT and one substantive CHALLENGE — a counterexample, boundary condition, assumption, or limitation — never a deliberately weak one.`,
+  FAVORITE_NO: () => `\`facilitate.examples\`: ${BOUNDS.examplesMin}-${BOUNDS.examplesMax} incorrect responses, each revealing a mathematical idea, intuition, strategy, or assumption worth preserving — not a procedural slip, arithmetic mistake, or random answer. \`work\` is the response line by line, with the sound lines marked CORRECT so the error sits inside partly sound reasoning. One line must show the error, marked INCORRECT: when the error is in the final answer, the last line records that answer. \`notice\` (teacher only) lists what the reasoning gets right (PRESERVE, first) and then what needs to change (REVISE). \`sourceNote\` (teacher only) says this is one plausible way a student might reason toward the answer, not any one student's work, and that a real anonymous response can replace it. \`task\` and \`math\` state only the problem students solve — never the response, a description of it, or what is wrong with it; the response belongs in \`work\`.`,
+  MATH_DETECTIVE: () => `\`facilitate.examples\`: ${BOUNDS.examplesMin}-${BOUNDS.examplesMax} incorrect responses, each pointing to a deeper mathematical issue to investigate — not a single localized slip. \`workSummary\` is one student's attempt in short lines as they wrote them (the evidence). One line must show the error, marked INCORRECT: when the error is in the final answer, the last line records that answer. \`stages\`, in order: INVESTIGATE (ask what is going wrong and what idea, assumption, model, or representation might be behind it; answer with the issue and the evidence for it, naming another plausible interpretation when there is one), SOLVE (ask students to revise the reasoning; answer with the revised step and a check that it works on the original or a related example), GENERALIZE (ask for a rule that prevents the issue; answer with the rule to post). Student-facing \`ask\` text never gives the answer away. \`task\` and \`math\` state only the problem the student was solving, rewritten as an open problem when the original was multiple choice (the student's chosen answer belongs in \`workSummary\`) — never the student's work, a description of what the student did, or the error; those belong in \`workSummary\` and the teacher-only answers.`,
+  COMPARE_THE_THINKING: () => `\`facilitate\`: one problem, as its \`task\` and \`math\`, and exactly two strategies, A and B, with equal visual weight. Use CORRECT_VS_INCORRECT when the opportunity is to examine the misconception through the contrast; BOTH_CORRECT when it is to compare valid strategies (efficiency, generalizability, representation, assumptions). Verdicts, step highlights and notes are teacher only: highlight ERROR on the first invalid step and SUCCESS on the step that makes a correct approach work. An INCORRECT approach stays wrong through its last step: its student never notices, tests for or corrects the mistake, and none of its steps is marked SUCCESS. Each strategy gets 1-2 notes on what it reveals about the thinking behind it. The comparison must have a clear mathematical purpose, not be a "which one is right?" exercise.`,
+  MAKE_YOUR_CASE: () => `\`facilitate\`: a \`claim\` students can genuinely defend, challenge, or refine with evidence — not obviously true or false, and never a mathematically indefensible position. \`resolution\` (teacher only) is what the mathematics supports; use CONDITIONAL with the refined claim when it holds only under conditions. Students see only \`claim\`, \`studentSteps\` and each example's \`prompt\`; everything else is teacher only. \`studentSteps\` are 1-3 short instructions for building a case. \`examples\` are 2-4 cases to bring in: each \`prompt\` only names the case for students to work out, e.g. "Check $(1,3)$ in $y > 2x$", and each \`answer\` is required and never empty: the worked result and what it shows. \`arguments\` (teacher reference) hold at least one substantive SUPPORT and one substantive CHALLENGE — a counterexample, boundary condition, assumption, or limitation — never a deliberately weak one.`,
 };
 
 // ── Handler ───────────────────────────────────────────────────────────────────
 
+// A placeholder symbol anywhere in the generated text. Looks at the JSON, so a
+// backslash appears doubled; the lookahead leaves longer commands like \\squared alone.
+const hasMathPlaceholder = (value) => /\\+(?:Box|square)(?![a-zA-Z])/.test(JSON.stringify(value));
+
+// debugStream: which call this is in the container, and how long the container has lived.
+const debugContainerStart = Date.now();
+let debugInvocationCount = 0;
+const sha = (text) => createHash('sha256').update(text).digest('hex').slice(0, 16);
+
 export const handler = async (event) => {
+  debugInvocationCount += 1;
   const apiSecretName = process.env.API_SECRET_NAME;
   if (!apiSecretName) throw new Error('API_SECRET_NAME environment variable is required');
 
@@ -330,7 +357,8 @@ export const handler = async (event) => {
   const contentType = template?.contentType ?? null;
   if (!template) throw new Error(`unknown templateId "${selectedTemplate?.templateId}"`);
   if (!contentType) throw new Error(`template "${template.id}" has no content type and cannot be generated`);
-  const planSchema = activityPlanSchemaFor(contentType, BOUNDS);
+  const runSteps = template.infill.runSteps;
+  const planSchema = activityPlanSchemaFor(contentType, { ...BOUNDS, runSteps });
   const ActivitySchema = RowFields.merge(planSchema);
   const hasExamples = EXAMPLE_TYPES.includes(contentType);
 
@@ -345,14 +373,208 @@ export const handler = async (event) => {
   const startedAt = Date.now();
   const logTag = `[microcoachNextStepOption] ${template.id} · ${String(misconception.title ?? '').slice(0, 40)}`;
   const secs = (ms) => `${Math.round(ms / 1000)}s`;
-  const timedCompletion = async (label, params) => {
+  // Diagnostic for the calls that never return (input.debugStream === true only;
+  // normal runs and uploads do not stream). A non-streaming call shows nothing until
+  // it finishes, so a stalled request, a runaway answer and a lost response all look
+  // alike. Retries are off so one cannot hide inside the client. During reasoning a
+  // healthy call can send nothing, so "no content yet" alone is not a stall.
+  // These logs hold the generated text, so debugStream is for fixture tests only.
+  const debugLog = (label, what) => console.log(`${logTag} · ${label} ${what}`);
+  // CloudWatch caps an event at 256 KB, so long text goes out in numbered parts.
+  const debugDump = (label, name, text) => {
+    const PART = 100_000;
+    const parts = Math.max(1, Math.ceil(text.length / PART));
+    for (let i = 0; i < parts; i += 1) {
+      debugLog(label, `${name} part ${i + 1}/${parts} (${text.length} chars) ${JSON.stringify(text.slice(i * PART, (i + 1) * PART))}`);
+    }
+  };
+  // What the text looks like right now: repeating characters, a loop over a field, or
+  // one string that never closes.
+  const contentStats = (content) => {
+    const tail = content.slice(-500);
+    const keys = [...content.matchAll(/"([A-Za-z_]+)"\s*:/g)];
+    const counts = {};
+    for (const k of keys) counts[k[1]] = (counts[k[1]] ?? 0) + 1;
+    const top = Object.entries(counts).sort((x, y) => y[1] - x[1]).slice(0, 10).map(([k, n]) => `${k}:${n}`).join(' ');
+    const lastKey = keys[keys.length - 1];
+    const probe = content.slice(-60);
+    return `tail whitespace ${tail.length ? Math.round((tail.match(/\s/g)?.length ?? 0) * 100 / tail.length) : 0}% · tail distinct chars ${new Set(tail).size} · last 60 chars seen ${probe ? content.split(probe).length - 1 : 0}x · last key ${lastKey?.[1] ?? 'none'} · chars since it ${lastKey ? content.length - lastKey.index : content.length} · keys ${keys.length} [${top}]`;
+  };
+  const socketState = (s) => `destroyed ${s.destroyed} · state ${s.readyState} · bytes read ${s.bytesRead} · bytes written ${s.bytesWritten} · remote ${s.remoteAddress ?? '?'} · timeout ${s.timeout ?? '?'}`;
+  // When a call goes silent: is the socket alive, is data still arriving, and can
+  // this same container still reach OpenAI? Only one call is in flight per Lambda
+  // invocation, so the agent's in-use socket is this call's.
+  const runStallProbe = async (label, progress) => {
+    const { getDefaultAgent } = await import('openai/_shims/index.mjs');
+    const sockets = Object.values(getDefaultAgent(openai.baseURL).sockets ?? {}).flat();
+    debugLog(label, `stall probe · silent · sockets in use ${sockets.length} · ${sockets.map(socketState).join(' | ') || 'none'}`);
+    [progress.socket] = sockets;
+    const before = progress.socket?.bytesRead;
+    await new Promise((resolve) => { setTimeout(resolve, 20_000); });
+    debugLog(label, `stall probe · bytes read over the next 20 s: ${progress.socket ? progress.socket.bytesRead - before : 'no socket'} · chunks ${progress.chunks}`);
+    const timed = async (name, run) => {
+      const t = Date.now();
+      try {
+        debugLog(label, `stall probe · ${name} ok in ${await run().then(() => Date.now() - t)} ms`);
+      } catch (err) {
+        debugLog(label, `stall probe · ${name} failed after ${Date.now() - t} ms · ${err?.message ?? err}`);
+      }
+    };
+    await timed('GET /v1/models', () => openai.models.list({ timeout: 20_000, maxRetries: 0 }));
+    await timed('small chat, first chunk', async () => {
+      const probe = await openai.chat.completions.create({
+        model: progress.model, stream: true, max_completion_tokens: 200,
+        messages: [{ role: 'user', content: 'Reply with the word ok.' }],
+      }, { timeout: 45_000, maxRetries: 0 });
+      for await (const chunk of probe) {
+        if (chunk) break;
+      }
+    });
+    debugLog(label, `stall probe · finished · still silent ${Date.now() - (progress.lastChunkAt ?? Date.now())} ms · chunks ${progress.chunks}`);
+  };
+  // One line per call for the three open questions: what kind of ending was it,
+  // where did any whitespace run start, and did the model write a whole system in
+  // one item? Read by the investigation script, from CloudWatch or the trace.
+  const SYSTEM_RELATION = /\\+(?:leq?|geq?|neq?)|<=|>=|=|<|>/g;
+  const WHITESPACE_RUN = /(?:\s|\\[nrt]){200,}/;
+  const debugOutcome = (label, progress, finishReason, t0, how) => {
+    const { content } = progress;
+    const systems = [...content.matchAll(/"kind"\s*:\s*"SYSTEM"\s*,\s*"expressions"\s*:\s*\[/g)].map((m) => {
+      const rest = content.slice(m.index + m[0].length, m.index + m[0].length + 2_000);
+      const items = [...rest.split(']')[0].matchAll(/"((?:[^"\\]|\\.)*)"/g)].map((x) => x[1]);
+      const first = items[0] ?? '';
+      return { first: first.slice(0, 80), second: (items[1] ?? '').trim().slice(0, 60), whole: /begin\{/.test(first) || (first.match(SYSTEM_RELATION)?.length ?? 0) >= 2 };
+    });
+    const run = WHITESPACE_RUN.exec(content);
+    let whitespace = null;
+    if (run) {
+      const before = content.slice(0, run.index);
+      const lastKey = [...before.matchAll(/"([A-Za-z_]+)"\s*:/g)].pop()?.[1] ?? null;
+      const quotes = (before.replace(/\\./g, '').match(/"/g) ?? []).length;
+      const length = content.slice(run.index).match(/^(?:\s|\\[nrt])*/)[0].length;
+      whitespace = { at: run.index, length, lastKey, insideString: quotes % 2 === 1, afterWholeSystem: systems.some((x) => x.whole && before.includes(x.first.slice(0, 30))) };
+    }
+    const silentFor = progress.lastChunkAt ? Date.now() - progress.lastChunkAt : Date.now() - t0;
+    const finished = finishReason === 'stop';
+    let type = 'normal';
+    if (finishReason === 'length') type = 'capped';
+    else if (!finished && silentFor >= 60_000) type = 'stall';
+    else if (!finished) type = 'runaway';
+    else if ((whitespace?.length ?? 0) >= 2_000) type = 'whitespace-ended-itself';
+    const outcome = {
+      how, type, seconds: Math.round((Date.now() - t0) / 1000), finish: finishReason, chunks: progress.chunks,
+      chars: content.length, silentSeconds: Math.round(silentFor / 1000), wholeSystems: systems.filter((x) => x.whole).length, systems, whitespace,
+    };
+    debugLog(label, `outcome ${JSON.stringify(outcome)}`);
+    recordSubCall('debug-outcome', null, null, outcome);
+  };
+  const logStreamProgress = (label, progress, t0) => {
+    const now = Date.now();
+    const elapsed = now - t0;
+    const content = progress.content;
+    debugLog(label, `progress · ${Math.round((content.length - progress.beatChars) * 1000 / Math.max(1, now - progress.beatAt))} chars/s · largest chunk gap ${progress.maxGapMs} ms · empty chunks ${progress.emptyChunks} · other chunks ${progress.otherChunks} · ${contentStats(content)}`);
+    debugLog(label, `tail ${JSON.stringify(content.slice(-500))}`);
+    progress.beatChars = content.length;
+    progress.beatAt = now;
+    if (progress.socket) debugLog(label, `socket · ${socketState(progress.socket)}`);
+    // Silence: 60 s after output started, or 150 s with no output at all (headers
+    // have never taken more than 70 s). Once per call, and it never touches the call.
+    const silentFor = progress.lastChunkAt ? now - progress.lastChunkAt : elapsed;
+    if (!progress.probed && silentFor >= (progress.lastChunkAt ? 60_000 : 150_000)) {
+      progress.probed = true;
+      runStallProbe(label, progress).catch((err) => debugLog(label, `stall probe error · ${err?.message ?? err}`));
+    }
+    // Everything so far, each time it doubles past the longest normal response.
+    if (content.length >= progress.nextDumpAt) {
+      debugDump(label, 'content so far', content);
+      progress.nextDumpAt = content.length * 2;
+    }
+    // The Lambda dies at its limit with no chance to log, so keep the last text first.
+    if (Date.now() - startedAt >= 560_000 && !progress.finalDump) {
+      progress.finalDump = true;
+      debugDump(label, 'content near the Lambda limit', content);
+      debugOutcome(label, progress, null, t0, 'near-lambda-limit');
+    }
+  };
+  const streamedCompletion = async (label, params, t0, progress) => {
+    const { response_format: format, messages } = params;
+    progress.model = params.model;
+    debugLog(label, `request · invocation ${debugInvocationCount} in this container · container age ${secs(Date.now() - debugContainerStart)} · node ${process.version} · memory limit ${process.env.AWS_LAMBDA_FUNCTION_MEMORY_SIZE ?? '?'} MB · log stream ${process.env.AWS_LAMBDA_LOG_STREAM_NAME ?? '?'} · messages ${messages.length} · prompt sha256 ${sha(JSON.stringify(messages))} · schema sha256 ${sha(JSON.stringify(format ?? null))} · schema ${JSON.stringify(format ?? null).length} chars · params ${Object.keys(params).join(',')}`);
+    const { data: stream, response } = await openai.chat.completions
+      // Retries stay off in targeted tests so one can't hide; an eval run asks for the
+      // client's usual 2 so streaming doesn't make it more fragile than a normal run.
+      .create({ ...params, stream: true, stream_options: { include_usage: true } }, { maxRetries: input.debugStreamRetries ?? 0 })
+      .withResponse();
+    progress.headersAt = Date.now();
+    progress.beatAt = progress.headersAt;
+    const headers = {};
+    response.headers.forEach((value, key) => { if (key !== 'set-cookie') headers[key] = value; });
+    debugLog(label, `headers in ${secs(progress.headersAt - t0)} · status ${response.status} · request ${response.headers.get('x-request-id') ?? '?'} · ${JSON.stringify(headers)}`);
+    let content = '';
+    let finishReason = null;
+    let usage = null;
+    let lastRaw = null;
+    for await (const chunk of stream) {
+      const now = Date.now();
+      if (progress.chunks === 0) debugLog(label, `first chunk in ${secs(now - t0)} · ${JSON.stringify(chunk)}`);
+      if (progress.lastChunkAt) progress.maxGapMs = Math.max(progress.maxGapMs, now - progress.lastChunkAt);
+      progress.chunks += 1;
+      progress.lastChunkAt = now;
+      lastRaw = chunk;
+      const choice = chunk.choices?.[0];
+      const piece = choice?.delta?.content;
+      if (piece) {
+        if (!content) debugLog(label, `first content in ${secs(now - t0)}`);
+        content += piece;
+        progress.contentChars = content.length;
+        progress.content = content;
+      } else if (piece === '' || !choice) {
+        progress.emptyChunks += 1;
+      }
+      const { content: _content, role: _role, ...otherDelta } = choice?.delta ?? {};
+      if (Object.values(otherDelta).some((v) => v != null)) {
+        progress.otherChunks += 1;
+        if (progress.otherChunks <= 5) debugLog(label, `chunk with other fields · ${JSON.stringify(chunk)}`);
+      }
+      if (choice?.finish_reason) {
+        finishReason = choice.finish_reason;
+        debugLog(label, `finish chunk at ${secs(now - t0)} · ${JSON.stringify(chunk)}`);
+      }
+      if (chunk.usage) {
+        usage = chunk.usage;
+        debugLog(label, `usage · ${JSON.stringify(chunk.usage)}`);
+      }
+    }
+    debugLog(label, `stream closed after ${secs(Date.now() - t0)} · finish ${finishReason ?? 'none'} · chunks ${progress.chunks} · largest chunk gap ${progress.maxGapMs} ms · last raw chunk ${JSON.stringify(lastRaw)}`);
+    debugLog(label, `final · ${contentStats(content)}`);
+    let parse = 'valid JSON';
+    try { JSON.parse(content); } catch (err) { parse = `invalid JSON: ${err.message}`; }
+    debugLog(label, `final text is ${parse}`);
+    // Every debug call's whole text, so a runaway can be compared with normal ones.
+    debugDump(label, 'final content', content);
+    debugOutcome(label, progress, finishReason, t0, 'closed');
+    return { choices: [{ message: { content }, finish_reason: finishReason }], usage };
+  };
+  const timedCompletion = async (label, callParams) => {
+    const params = { ...callParams, max_completion_tokens: MAX_COMPLETION_TOKENS };
     const t0 = Date.now();
+    const debugStream = input.debugStream === true;
+    const progress = {
+      headersAt: null, chunks: 0, contentChars: 0, lastChunkAt: null, content: '', beatChars: 0, beatAt: t0,
+      maxGapMs: 0, emptyChunks: 0, otherChunks: 0, nextDumpAt: 12_000, finalDump: false,
+    };
     console.log(`${logTag} · ${label} start (${params.model}, prompt ${params.messages.reduce((n, m) => n + String(m.content ?? '').length, 0)} chars, at ${secs(t0 - startedAt)})`);
     const heartbeat = setInterval(() => {
-      console.log(`${logTag} · ${label} still waiting after ${secs(Date.now() - t0)} (at ${secs(Date.now() - startedAt)})`);
+      const stream = debugStream
+        ? ` · headers ${progress.headersAt ? 'yes' : 'no'} · chunks ${progress.chunks} · content ${progress.contentChars} chars · last chunk ${progress.lastChunkAt ? `${secs(Date.now() - progress.lastChunkAt)} ago` : 'never'}`
+        : '';
+      console.log(`${logTag} · ${label} still waiting after ${secs(Date.now() - t0)} (at ${secs(Date.now() - startedAt)})${stream}`);
+      if (debugStream) logStreamProgress(label, progress, t0);
     }, 30_000);
     try {
-      const completion = await openai.chat.completions.create(params);
+      const completion = debugStream
+        ? await streamedCompletion(label, params, t0, progress)
+        : await openai.chat.completions.create(params);
       const u = completion?.usage ?? {};
       console.log(`${logTag} · ${label} end in ${secs(Date.now() - t0)} · finish ${completion?.choices?.[0]?.finish_reason ?? '?'} · tokens in ${u.prompt_tokens ?? '?'} out ${u.completion_tokens ?? '?'} (reasoning ${u.completion_tokens_details?.reasoning_tokens ?? '?'}) · content ${String(completion?.choices?.[0]?.message?.content ?? '').length} chars`);
       return completion;
@@ -561,7 +783,7 @@ ${formatDesignGuidance(['purpose', 'timing', 'grouping', 'views', ...(hasExample
 ## The activity template you must enact
 ${formatForInfill(template)}
 
-This template is not a label applied after the fact. The activity must follow its classroom flow, its priority grouping pattern and its defining instructional move; an activity that could equally have come from another template has failed.
+This template is not a label applied after the fact. The activity must follow its steps, its required grouping pattern and its defining instructional move; an activity that could equally have come from another template has failed.
 ${selectedTemplate.instructionalApproach ? `\nThe move this template was selected to enact for THIS need: ${selectedTemplate.instructionalApproach}` : ''}
 ${selectedTemplate.studentsDo ? `What students do in it: ${selectedTemplate.studentsDo}` : ''}
 ${selectedTemplate.rationale ? `Why it was selected: ${selectedTemplate.rationale}` : ''}
@@ -599,12 +821,16 @@ Subject: ${classroomContext.subject ?? 'math'} | Class size: ${classroomContext.
 
 ## What to write
 - **whyThisActivity**: 2-3 teacher-facing sentences, per "Why This Activity" above. Draw on the instructional need and why the template was selected; do not mention scores, ranks, rubrics, or the word "template", and do not overstate what the evidence shows.
-- **minutes** (each howToRun step), **discussionMinutes** and **beforeClassMinutes**: realistic minutes, per Pacing above. The steps' minutes plus discussionMinutes should come to about ${DEFAULT_DURATION} and must be at most ${MAX_DURATION}, which is slack for a class that runs long, not a budget to fill; if they would be over, cut content (fewer steps, a shorter task) rather than shrinking the estimates.
+- **minutes** (each howToRun step), **discussionMinutes** and **beforeClassMinutes**: realistic minutes, per Pacing above. The steps' minutes plus discussionMinutes should come to about ${DEFAULT_DURATION} and must be at most ${MAX_DURATION}, which is slack for a class that runs long, not a budget to fill; if they would be over, cut content (a shorter task, a shorter share-out) rather than shrinking the estimates.
 - **beforeClass.steps**: ${BOUNDS.beforeClassMin}-${BOUNDS.beforeClassMax} concrete things the teacher prepares. **beforeClass.groupingRationale**: 1-2 sentences on why students are grouped this way, from the template's priority grouping pattern.
-- **howToRun**: ${BOUNDS.howToRunMin}-${BOUNDS.howToRunMax} steps following the template's classroom flow. Give each step its grouping; leave \`groupings\` empty for a step that doesn't regroup; use two values only when the teacher chooses between them.${ORDERED_GROUPING_TYPES.includes(contentType) ? ' The groupings follow the priority grouping pattern in order: once the class has moved to a larger grouping, no later step returns to a smaller one.' : ''}${hasExamples ? ' Refer to examples as "Example 1", "Example 2", … and never to more examples than you write.' : ''}
+- **howToRun**: the required steps listed under "How to run it" in the template, in that order, each with its title exactly as listed. Write only the \`body\` and \`minutes\`. The title and grouping are fixed and appear next to your body, so the body must describe students working in that grouping, following the step's guidance and specific to this activity. Leave out any step marked optional: it is filled in for you, and its time is not part of the plan.${hasExamples ? ' Refer to examples as "Example 1", "Example 2", … and never to more examples than you write.' : ''}
 - ${FACILITATE_INSTRUCTIONS[contentType]()}
 - \`facilitate.type\` must be exactly "${contentType}".
-- Teacher-view labels (a line's status, a step's annotation or highlight, a strategy's verdict) must agree with the math. Label each line by whether the move it records is right: a line that records only a correct move, such as a solid boundary for $\\leq$, is CORRECT even inside work that goes wrong elsewhere. When teacher-only text names a region or direction (above, below, left, right, upper-left), solve for $y$ first and check the direction against the inequality and the line's slope.${hasExamples ? `
+- Teacher-view labels (a line's status, a step's annotation or highlight, a strategy's verdict) must agree with the math. Label each line by whether the move it records is right: a line that records only a correct move, such as a solid boundary for $\\leq$, is CORRECT even inside work that goes wrong elsewhere. When teacher-only text names a region or direction (above, below, left, right, upper-left), solve for $y$ first and check the direction against the inequality and the line's slope.
+- ${STUDENT_TEXT_RULE}
+- Math accuracy: before you finish, recalculate every number, substitution and true or false conclusion you wrote. Each must be right and use every value it needs, apart from the intended error and what follows from it. This is only about accuracy: it adds no lines, steps or checks, and does not move or remove the intended error.${hasExamples ? `
+- Every example must show, in its own work, the reasoning the instructional need names. A wrong answer being linked to this misconception is not enough: do not build an example around a different error, however legitimate. Two examples on the need beat three with one off it.
+- A system's \`math\` looks exactly like {"kind":"SYSTEM","expressions":["$y + x > 2$","$y \\leq 3x - 2$"]}: each equation or inequality is its own string.
 - Each example uses a different problem: a meaningfully different instance of the same need, so the teacher can choose among them. \`task\` is the instruction alone (e.g. "Graph the inequality"), \`math\` the LaTeX alone, one expression per item: SINGLE for one expression, SYSTEM for a system, listing every equation or inequality in it; they are joined into the problem students see. A system's student work and teacher answers may only use equations and inequalities that \`math\` lists, and an instruction that says "system" needs a SYSTEM. Students see no answer choices, so when a source question is multiple choice, restate it as an open problem they can answer without them and without any given value: a "which point" question becomes "Find a solution of the system", a "which graph" question becomes "Graph the inequality" or "Graph the system".` : ''}
 - **targets**, **instructionalMove**, **strategyTag**${lvnFactors.length ? ' (use the LVN factors above)' : ''}, **aiReasoning**: as described in the schema.
 
@@ -710,14 +936,14 @@ ${renderEvidence(evidence)}
 ${template.title} — ${template.primaryMove}
 Why this activity: ${activity.whyThisActivity}
 How it runs:
-${activity.howToRun.map((s, i) => `  ${i + 1}. ${s.title} (${s.minutes} min): ${s.body}`).join('\n')}
+${activity.howToRun.map((s, i) => `  ${i + 1}. ${s.title}${s.minutes ? ` (${s.minutes} min)` : ''}: ${s.body}`).join('\n')}
 The artifact students analyze, with teacher-only fields:
 ${JSON.stringify(activity.facilitate, null, 2)}
 
 ---
 
 ## What to write, in this order
-1. **takeaway** — start from the instructional need: what mathematical understanding addresses it? Write that understanding as mathematics, faithful to this activity, and check it is correct and appropriately precise before going on. It anchors everything after it. Keep it to the one central idea, in 1-2 sentences a teacher can land in a few minutes: state it for the kind of problem this activity uses, and leave general formulas, special cases and side conditions (dividing by a negative, a zero coefficient, a vertical line) to the teacher answer of the question they bear on.
+1. **takeaway** — start from the instructional need: what mathematical understanding addresses it? Write that understanding as mathematics, faithful to this activity, and check it is correct and appropriately precise before going on. It anchors everything after it. Keep it to the one central idea, in 1-2 sentences and at most ${TAKEAWAY_TARGET_CHARS} characters, that a teacher can land in a few minutes: state it for the kind of problem this activity uses, and leave general formulas, special cases and side conditions (dividing by a negative, a zero coefficient, a vertical line) to the teacher answer of the question they bear on.
 2. **questions** — exactly ${BOUNDS.questionCount}, each building on the takeaway. They are alternatives: the teacher picks the one that best fits the class and runs it alone in the ${activity.discussionMinutes} minutes, so each must stand on its own and be answerable in that time. Give each its realistic \`minutes\` (think time, a few student responses, and the teacher drawing out the point). Tag each with its \`purpose\`; choose the purposes that best support the takeaway rather than one of each. \`answer\` is teacher-facing: the mathematically correct answer, or what to listen for when the question is open.
 3. **watchFors** — ${BOUNDS.watchForMin}-${BOUNDS.watchForMax} sets: fewer strong ones over more weak ones. Ground each in the thinking this activity surfaces, describe the observable move before any interpretation, and do not repeat what a discussion question already does.${misconception.evidenceBasis === 'inferred' ? ' The misconception is inferred, so one Watch for should help the teacher test it: what a student reasoning this way would say or do, what a different route to the same answer would sound like, and a question that tells them apart.' : ''}
 
@@ -725,6 +951,18 @@ Return JSON matching the schema.
 `.trim();
 
   // ── Call 3: the accuracy and coherence review ─────────────────────────────
+  const shortenTakeawayPromptFor = (activity, discussion) => `You are an expert K-12 math instructional coach. Rewrite this activity's mathematical takeaway so it is one central idea a teacher can land in a few minutes: at most ${TAKEAWAY_TARGET_CHARS} characters, in 1-2 sentences of mathematics.
+
+Keep the idea and keep it mathematically correct. Cut procedure, examples, conditions and special cases: those stay in the discussion questions. It must remain the anchor for the questions below.
+
+## The takeaway
+${discussion.takeaway}
+
+## The discussion questions it anchors
+${discussion.questions.map((q, i) => `${i + 1}. ${q.question}`).join('\n')}
+
+${MATH_FORMATTING}`;
+
   const reviewPromptFor = (activity, draft) => `
 You are a K-12 mathematics reviewer checking the Closing Discussion of a classroom activity before teachers see it.
 
@@ -750,15 +988,52 @@ Work through the mathematical accuracy and coherence check above, item by item. 
 
 - \`issues\`: one entry per failed check, naming the component and what is wrong. Empty when everything passes.
 - \`corrected\`: the discussion with every issue fixed, in the same shape and with the same number of questions. When there are no issues, return the draft unchanged. Do not restyle wording that passes the check.
-- Takeaway focus: the takeaway must be the one central idea in 1-2 sentences. When accuracy needs a condition or special case, do not append it to the takeaway — state the takeaway for the kind of problem the activity uses, and put the qualification in the teacher answer of the question it bears on. A takeaway that bundles conditions or edge cases is an issue to fix.
+- Takeaway focus: the takeaway must be the one central idea in 1-2 sentences and at most ${TAKEAWAY_TARGET_CHARS} characters. When accuracy needs a condition or special case, do not append it to the takeaway — state the takeaway for the kind of problem the activity uses, and put the qualification in the teacher answer of the question it bears on. A takeaway that bundles conditions or edge cases is an issue to fix.
 - \`artifactFixes\`: check every label and teacher note listed above against the math, as teachers will rely on them to facilitate. Student work is meant to contain the error, so correct the label, never the work: a label is right when it says whether the move its line or step records is right. A line that records only a correct move (a solid boundary for $\\leq$) is CORRECT even inside wrong work. For every direction word in a teacher note (above, below, left, right, upper-left, …), solve for $y$ and check it against the inequality and the line's slope; a note that hedges between directions ("above/right", "lower/upper depends") is wrong when one is correct. Give a label fix as \`label\` with one of its allowed values, a note fix as the whole corrected note in \`text\`. Use only the ids listed. If a fix changes what the discussion should say, fix the discussion too. Empty when everything is right.
 
 ${MATH_FORMATTING}
 `.trim();
 
+  // The last look at an activity, with one job: is the math in each row true? The code
+  // picks the rows and the schema requires a verdict on each one: left to choose, the
+  // model skipped most teacher notes and never reached v57's wrong point. It only flags,
+  // for the run report: all 4 fixes it made in live runs (v58-v60) wrote wrong content
+  // into correct text, such as v60's "$y > -x + 2$" becoming another problem's "$y > 2x + 4$".
+  const mathCheckPromptFor = (rows, intendedRows, content) => `
+Your only job: is the math in each row true?
+
+Work out every number, point, substitution, calculation and true or false result in the row yourself, then give one verdict per row. Wording, teaching choices, labels and alignment are not your concern.
+
+If a row has no math, it passes.
+
+Here are a few examples. They only illustrate the idea and are not a list of what to look for. Check all the math in every row, including kinds of error not shown here.
+
+Wrong:
+- "tests a boundary point of $y = 4x + 1$, such as $(1,3)$": $4(1) + 1 = 5$, not $3$, so it is not on the line.
+- "boundary point $(0,1)$ and nearby point $(2,9)$ for $y = 4x + 1$": $4(2) + 1 = 9$, so $(2,9)$ is on the line, not near it.
+- "Check $(1,2)$ in $y \\geq x - 6$: $2 \\geq 1$, true": $1 - 6 = -5$.
+- "$3x + y = 10$ with $x = 2$ gives $y = 5$": $6 + y = 10$, so $y = 4$.
+
+Right as written:
+- "the student writes $3 > 3$ is true, so the point works": it describes a planned error.
+- "a student says $0 < -1$ is true": it describes a student's mistaken belief.
+- "If $(0,0)$ lies on the boundary, pick another point": it is a condition and does not say the point is on the line.
+- "One possible argument is that $(0,4)$ should count": it is a position someone might argue.
+
+## The problems in this activity (not to be changed)
+${checkedProblems(content.facilitate).map((p) => `- ${p}`).join('\n')}
+
+## Planned errors, and notes explaining them (meant to be wrong: no verdict)
+${intendedRows.map((r) => `- ${JSON.stringify(r.text)}`).join('\n') || '(none)'}
+
+## The rows
+Each row belongs to the part of the activity named in its brackets. Check it against that part's own problem.
+${rows.map((r, i) => `- r${i} [${rowLabel(r.id)}]: ${JSON.stringify(r.text)}`).join('\n')}
+`.trim();
+
   /** One structured completion, parsed and sanitized against `schema`. */
   const structuredCall = async (label, model, systemPrompt, userPrompt, schema, name) => {
-    const completion = await timedCompletion(label, {
+    const callModel = () => timedCompletion(label, {
       model,
       messages: [
         { role: 'system', content: systemPrompt },
@@ -766,13 +1041,70 @@ ${MATH_FORMATTING}
       ],
       response_format: zodResponseFormat(schema, name),
     });
+    let completion = await callModel();
+    // A response that hit the output cap is cut off mid-JSON, so it can't be used.
+    // Normal responses stay well under the cap, and the same prompt usually finishes
+    // on a second try, so regenerate once and record it.
+    if (completion.choices[0]?.finish_reason === 'length') {
+      const capped = completion;
+      recordSubCall(label, model, capped, { fellBack: false, outputCapped: true });
+      completion = await callModel();
+      const fixed = completion.choices[0]?.finish_reason !== 'length';
+      recordSubCall('retry-output-cap', null, null, { call: label, cap: MAX_COMPLETION_TOKENS, fixed });
+      if (!fixed) throw new Error(`${label}: reached the ${MAX_COMPLETION_TOKENS}-token output cap twice`);
+    }
     const raw = completion.choices[0]?.message?.content;
     if (!raw) throw new Error(`${label}: empty completion content`);
     recordSubCall(label, model, completion, { fellBack: false });
     return sanitizeStrings(schema.parse(JSON.parse(raw)));
   };
 
+  const RowVerdict = z.object({
+    work: z.string().describe('The math in this row worked out, or "no math"'),
+    isRight: z.boolean(),
+  });
+
+  // Reports only, and a failure or a late start reports nothing: it never changes the
+  // activity. The Lambda stops at 600 s and this call can follow a retry elsewhere.
+  const runFinalCheck = async (content) => {
+    if (Date.now() - startedAt > FINAL_CHECK_LATEST_START_MS) {
+      recordSubCall('final-check-skipped', null, null, { atSeconds: Math.round((Date.now() - startedAt) / 1000) });
+      return [];
+    }
+    try {
+      const all = checkableRows(content).filter((r) => r.text.trim());
+      const rows = all.filter((r) => !r.intended);
+      const verdicts = await structuredCall(
+        'final-check-math', REVIEW_MODEL, VALIDATOR_SYSTEM_PROMPT,
+        mathCheckPromptFor(rows, all.filter((r) => r.intended), content),
+        z.object(Object.fromEntries(rows.map((_, i) => [`r${i}`, RowVerdict]))), 'mathCheck',
+      );
+      const flags = rows.flatMap((row, i) => {
+        const verdict = verdicts[`r${i}`];
+        return verdict.isRight ? [] : [{ id: row.id, text: row.text, why: verdict.work }];
+      });
+      recordSubCall('final-check-rows', null, null, { rows: rows.length, wrong: flags.length });
+      if (flags.length > 0) recordSubCall('final-check-flagged', null, null, { flags });
+      return flags;
+    } catch (err) {
+      const unavailable = modelUnavailable(err);
+      if (unavailable) reportModelUnavailable('final-check', REVIEW_MODEL, 'nextStepOption.closingDiscussion.reviewModel', err);
+      else console.warn('[microcoachNextStepOption] final check failed:', err?.message);
+      recordSubCall('final-check', REVIEW_MODEL, null, {
+        fellBack: true, reason: err?.message ?? 'error', ...(unavailable && { modelUnavailable: true }),
+      });
+      return [];
+    }
+  };
+
   try {
+    // Replay harness only (seed/eval/scripts/replayFinalCheck.mjs): the final check
+    // on an activity that is already written. Nothing in production sets this.
+    if (input.finalCheckOnly != null) {
+      const flags = await runFinalCheck(input.finalCheckOnly);
+      return JSON.stringify({ flags, _trace: { subCalls: traceSubCalls } });
+    }
+
     // Every attempt's math is put in shape before the checks below read it: a
     // system written as one \begin{cases} expression is split into its rows, and
     // an item that is only a \text{} note is dropped (see normalizeGeneratedMath).
@@ -782,8 +1114,15 @@ ${MATH_FORMATTING}
         'You are an expert K-12 math instructional coach. Output exclusively valid JSON.',
         activityPrompt, ActivitySchema, 'activity',
       );
+      tidyGeneratedWork(attempt.facilitate, (cut) => recordSubCall('runaway-text-cut', null, null, cut));
       normalizeGeneratedMath(attempt.facilitate, (fix) => recordSubCall('math-normalized', null, null, fix));
       stripTextLabels(attempt.facilitate, (fix) => recordSubCall('label-in-text', null, null, fix));
+      cleanCaseStudentText(
+        attempt.facilitate,
+        (fix) => recordSubCall('case-text-cleaned', null, null, fix),
+        (left) => recordSubCall('case-result-left', null, null, left),
+      );
+      attempt.howToRun = withFixedRunSteps(attempt.howToRun, runSteps);
       return attempt;
     };
     let generated = await generateActivity();
@@ -814,21 +1153,21 @@ ${MATH_FORMATTING}
         generated = retried;
       }
     }
-    // A one-way grouping pattern (Individual → pairs → whole class) that steps
-    // back to a smaller grouping no longer follows the template. Regenerate once,
-    // keep the attempt with fewer step-backs as long as it is no worse on the
-    // checks above, and record both so evaluation can see how often this fired.
-    const regressions = groupingRegressions(generated, contentType);
-    if (regressions.length) {
+    // A wrong approach that corrects itself ends right under a "Wrong approach"
+    // label and gives students the answer. Regenerate once, keep the attempt with
+    // fewer such steps as long as it is no worse on the checks above, and record
+    // both so evaluation can see how often this fired.
+    const selfCorrecting = selfCorrectingStrategies(generated.facilitate);
+    if (selfCorrecting.length) {
       const retried = await generateActivity();
-      const stillRegressing = groupingRegressions(retried, contentType);
-      recordSubCall('retry-grouping-order', null, null, {
-        before: regressions, after: stillRegressing, fixed: stillRegressing.length === 0,
+      const stillSelfCorrecting = selfCorrectingStrategies(retried.facilitate);
+      recordSubCall('retry-self-correcting-strategy', null, null, {
+        before: selfCorrecting, after: stillSelfCorrecting, fixed: stillSelfCorrecting.length === 0,
       });
       const noWorse = incompleteSystems(retried.facilitate).length <= incompleteSystems(generated.facilitate).length
         && (plannedClassMinutes(retried).total <= MAX_DURATION
           || plannedClassMinutes(retried).total <= plannedClassMinutes(generated).total);
-      if (stillRegressing.length < regressions.length && noWorse) generated = retried;
+      if (stillSelfCorrecting.length < selfCorrecting.length && noWorse) generated = retried;
     }
     const {
       targets, instructionalMove, strategyTag, aiReasoning, ...activity
@@ -851,6 +1190,7 @@ ${MATH_FORMATTING}
         misconception.ccssStandard,
       );
     }
+    renumberSteps(activity.facilitate);
 
     // Replay harness only (seed/eval/scripts/replayActivity.mjs): stop once the
     // activity is built, skipping the closing discussion and its review. Nothing
@@ -877,11 +1217,26 @@ ${MATH_FORMATTING}
     // ── Closing discussion, then its review ──────────────────────────────────
     const { DiscussionDraft, DiscussionReview } = discussionSchemasFor(activity.discussionMinutes);
     const discussionPrompt = discussionPromptFor(activity);
-    const draft = await structuredCall(
+    const generateDiscussion = () => structuredCall(
       'generate-discussion', DISCUSSION_MODEL,
       'You are an expert K-12 math instructional coach. Output exclusively valid JSON.',
       discussionPrompt, DiscussionDraft, 'closingDiscussion',
     );
+    let draft = await generateDiscussion();
+    // A placeholder such as $y \\;\\Box\\; mx+b$ reaches students as a literal box, and
+    // the prompt's ban alone doesn't stop it (v44, v51). Regenerate once, and keep the
+    // first draft if the retry fails, since a failed retry shouldn't lose the activity.
+    if (hasMathPlaceholder(draft)) {
+      let retried = null;
+      try {
+        retried = await generateDiscussion();
+      } catch (err) {
+        console.warn('[microcoachNextStepOption] placeholder retry failed — keeping the draft:', err?.message);
+      }
+      const fixed = retried != null && !hasMathPlaceholder(retried);
+      recordSubCall('retry-placeholder', null, null, { fixed });
+      if (fixed) draft = retried;
+    }
 
     let discussion = draft;
     let review = null;
@@ -912,6 +1267,33 @@ ${MATH_FORMATTING}
       });
     }
 
+    // A takeaway over the limit is rewritten once on its own, leaving the questions
+    // and Watch for sets it anchors as they are. Kept only if shorter; a failure keeps
+    // what was written.
+    if (discussion.takeaway.length > TAKEAWAY_MAX_CHARS) {
+      const before = discussion.takeaway;
+      try {
+        const { takeaway } = await structuredCall(
+          'shorten-takeaway', REVIEW_MODEL, VALIDATOR_SYSTEM_PROMPT,
+          shortenTakeawayPromptFor(activity, discussion), z.object({ takeaway: z.string() }), 'takeaway',
+        );
+        if (takeaway.trim() && takeaway.length < before.length) discussion = { ...discussion, takeaway };
+        recordSubCall('retry-takeaway-length', null, null, {
+          before: before.length, after: discussion.takeaway.length, fixed: discussion.takeaway.length <= TAKEAWAY_MAX_CHARS,
+        });
+      } catch (err) {
+        const unavailable = modelUnavailable(err);
+        if (unavailable) reportModelUnavailable('shorten-takeaway', REVIEW_MODEL, 'nextStepOption.closingDiscussion.reviewModel', err);
+        else console.warn('[microcoachNextStepOption] takeaway rewrite failed — keeping it:', err?.message);
+        recordSubCall('shorten-takeaway', REVIEW_MODEL, null, {
+          fellBack: true, reason: err?.message ?? 'error', ...(unavailable && { modelUnavailable: true }),
+        });
+      }
+    }
+
+    // The review or the rewrite can bring one back, so check what will be stored.
+    if (hasMathPlaceholder(discussion)) recordSubCall('placeholder-left', null, null, {});
+
     // The teacher runs one of the three questions, so the class time is the steps
     // plus the longest question. Over the window means a question outgrew the time
     // its activity reserved; record it rather than trim what was written.
@@ -931,6 +1313,7 @@ ${MATH_FORMATTING}
       facilitate: activity.facilitate,
       discussion: storedDiscussion,
     };
+    await runFinalCheck(content);
 
     const output = {
       templateId: template.id,
