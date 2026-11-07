@@ -500,15 +500,29 @@
       "stepsToFollow": "Pasos a seguir",
       "examplesToTry": "Ejemplos para probar",
       "stage": {
-        "INVESTIGATE": "Investigar: ¿dónde falló el razonamiento?",
-        "SOLVE": "Resolver: reescribe el paso equivocado",
-        "GENERALIZE": "Generalizar: escribe la regla que lo evita"
+        "INVESTIGATE": "Investigar",
+        "SOLVE": "Resolver",
+        "REVISE_AND_CHECK": "Revisar y comprobar",
+        "GENERALIZE": "Generalizar"
       },
-      "askStudents": "Pregunta a tus estudiantes",
-      "stageAnswer": {
-        "INVESTIGATE": "Respuesta esperada",
-        "SOLVE": "Paso corregido",
-        "GENERALIZE": "Regla objetivo (escríbela en la pizarra)"
+      "detective": {
+        "evidenceTitle": "Ejemplo y evidencia",
+        "evidenceSubtitle": "Elige un ejemplo y luego revisa el problema y la evidencia en la respuesta.",
+        "focusTeacher": "Enfoque de la investigación",
+        "focusStudent": "Tu investigación",
+        "issue": "Problema:",
+        "findEvidence": "Encuentra la evidencia",
+        "findEvidenceTeacher": "Pide a tus estudiantes que encierren en un círculo uno o dos pasos que den la evidencia más sólida del problema y escriban lo que observan junto a esos pasos.",
+        "findEvidenceStudent": "Encierra en un círculo uno o dos pasos que te den la evidencia más sólida del problema. Escribe lo que observas junto a esos pasos.",
+        "solutionTeacher": "Solución resuelta incorrecta",
+        "solutionStudent": "Solución incorrecta",
+        "teacherNotes": "Notas para el docente",
+        "yourEvidenceNotes": "Tus notas de evidencia",
+        "evidenceInResponse": "Evidencia en la respuesta",
+        "evidenceTag": "Evidencia {{number}}",
+        "stagesTitle": "Investiga, resuelve, revisa y comprueba",
+        "stagesSubtitle": "Trabaja esto con tus estudiantes después de plantear el problema.",
+        "potentialAnswer": "Respuesta posible"
       },
       "anonymousResponse": "Respuesta anónima de un estudiante",
       "studentWork": "Trabajo del estudiante",
@@ -580,7 +594,7 @@
       "subtitle": "Investiga los problemas de fondo",
       "reflectSubtitle": "Investigar y resolver",
       "description": "Los estudiantes se convierten en “detectives matemáticos”: investigan una solución incorrecta, identifican el problema matemático de fondo, revisan el razonamiento y comprueban si la revisión funciona.",
-      "artifactTitle": "Ejemplos de análisis del pensamiento estudiantil"
+      "artifactTitle": "Ejemplos resueltos incorrectos"
     },
     "COMPARE_THE_THINKING": {
       "name": "Compara el razonamiento",

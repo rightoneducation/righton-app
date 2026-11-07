@@ -69,20 +69,28 @@ export interface IFavoriteNoFacilitate {
   examples: IFavoriteNoExample[];
 }
 
-export type DetectiveStageKind = 'INVESTIGATE' | 'SOLVE' | 'GENERALIZE';
+// GENERALIZE stays for activities generated before issue #2848.
+export type DetectiveStageKind = 'INVESTIGATE' | 'SOLVE' | 'REVISE_AND_CHECK' | 'GENERALIZE';
 
 /** Math Detective: evidence of a deeper issue to investigate, revise and check. */
 export interface IMathDetectiveExample {
   problem: string;
   prompt: string;
-  /** The response in brief. `status` shows in teacher view only. */
-  workSummary: { text: string; status: WorkStatus }[];
+  /**
+   * The response in brief. `isEvidence` shows in teacher view only; `status` shows
+   * only on activities generated before issue #2848, which have no evidence marks.
+   */
+  workSummary: { text: string; status: WorkStatus; isEvidence?: boolean }[];
+  /** Teacher view only. Absent on activities generated before issue #2848. */
+  evidenceNotes?: { text: string }[];
   /** `ask` is student-facing; `answer` is teacher view only. */
   stages: { kind: DetectiveStageKind; ask: string; answer: string }[];
 }
 
 export interface IMathDetectiveFacilitate {
   type: 'MATH_DETECTIVE';
+  /** Shown in both views. Absent on activities generated before issue #2848. */
+  issue?: string;
   examples: IMathDetectiveExample[];
 }
 

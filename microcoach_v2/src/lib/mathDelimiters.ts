@@ -15,6 +15,11 @@
  * Pandoc's opening half (no space after the opening $) is left out: the
  * pipeline writes "$ (0,4)$", and prices are already ruled out by the close.
  * A backslash-escaped \$ is a literal dollar sign and never opens or closes.
+ *
+ * The prompt requires delimiters, but the model sometimes leaves them off (v57,
+ * v59, v65: "so 2y \leq x + 6"). A known math command in plain text is treated as
+ * inline math, so it can't show as raw markup. It's an allow-list because anything
+ * else after a backslash may not be math, and KaTeX would show it in red.
  */
 
 export type MathPart =
@@ -34,15 +39,28 @@ const DELIMITERS = new RegExp(
   'g',
 );
 
+// The command plus its {…} arguments, which may hold one level of braces.
+const STRAY_COMMAND =
+  /(?<!\\)\\(?:leq|geq|neq|le|ge|ne|lt|gt|times|div|cdot|pm|approx|infty|Rightarrow|implies|rightarrow|sqrt|frac|dfrac|tfrac)(?![a-zA-Z])(?:\s*\{(?:[^{}]|\{[^{}]*\})*\})*/g;
+
 /** The string as runs of text and math, in order; text keeps `\$` as `$`. */
 export function splitMath(text: string): MathPart[] {
   const parts: MathPart[] = [];
-  const pushText = (content: string) => {
+  const pushPlain = (content: string) => {
     if (!content) return;
     const plain = content.replace(/\\\$/g, '$');
     const last = parts[parts.length - 1];
     if (last?.type === 'text') last.content += plain;
     else parts.push({ type: 'text', content: plain });
+  };
+  const pushText = (content: string) => {
+    let end = 0;
+    Array.from(content.matchAll(STRAY_COMMAND)).forEach((match) => {
+      pushPlain(content.slice(end, match.index));
+      parts.push({ type: 'math', content: match[0], display: false });
+      end = (match.index ?? 0) + match[0].length;
+    });
+    pushPlain(content.slice(end));
   };
 
   let lastIndex = 0;

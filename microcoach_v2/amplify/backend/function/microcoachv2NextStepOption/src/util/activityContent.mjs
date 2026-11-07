@@ -75,6 +75,12 @@ const WorkLine = z.object({
 // into one line (v59). The template docs set no limit, and the output cap stops a runaway.
 const ONLY_THE_MOVES_THAT_MATTER = 'Only the moves that matter: do not spend a line restating the problem.';
 
+// Math Detective marks the lines students should treat as evidence (issue #2848).
+// The count (one or two) can't be bounded across items here, so the eval checks it.
+const DetectiveWorkLine = WorkLine.extend({
+  isEvidence: z.boolean().describe('Teacher view only: true on the one or two lines that give the strongest evidence of the issue, false on every other line.'),
+});
+
 const runStepFields = {
   title: z.string().describe('Short step name, e.g. "Show Example 1" or "Compare and revise"'),
   body: z.string().describe('What the teacher and students do in this step, 1-2 short sentences'),
@@ -211,14 +217,18 @@ function favoriteNo({ examplesMin, examplesMax }, mode) {
 function mathDetective({ examplesMin, examplesMax }, mode) {
   return z.object({
     type: z.literal('MATH_DETECTIVE'),
+    issue: z.string().describe('One short plain sentence naming the underlying mathematical issue the examples share. Students see it: never the fix, a corrected value, or which line shows it.'),
     examples: z.array(z.object({
       ...problemFields(mode),
-      workSummary: z.array(WorkLine).min(2).describe(`The response in brief, in short lines as ONE student wrote them. This is the evidence students investigate. ${ONLY_THE_MOVES_THAT_MATTER}`),
+      workSummary: z.array(DetectiveWorkLine).min(2).describe(`The response in brief, in short lines as ONE student wrote them. This is the evidence students investigate. ${ONLY_THE_MOVES_THAT_MATTER}`),
+      evidenceNotes: z.array(z.object({
+        text: z.string(),
+      })).min(1).max(4).describe('Teacher view only: what the evidence lines show about the issue and why the reasoning does not work.'),
       stages: z.array(z.object({
-        kind: z.enum(['INVESTIGATE', 'SOLVE', 'GENERALIZE']),
+        kind: z.enum(['INVESTIGATE', 'SOLVE', 'REVISE_AND_CHECK']),
         ask: z.string().describe('Student-facing question for this stage'),
-        answer: z.string().describe('Teacher view only: what the stage should land on. INVESTIGATE: the underlying issue and the evidence for it. SOLVE: the revised step and a check that it works. GENERALIZE: the rule to post.'),
-      })).length(3).describe('Exactly three, in order: INVESTIGATE, SOLVE, GENERALIZE.'),
+        answer: z.string().describe('Teacher view only: what the stage should land on. INVESTIGATE: what students should notice about the reasoning. SOLVE: what the evidence shows, with another plausible interpretation when there is one. REVISE_AND_CHECK: the revised reasoning and a worked check on this problem and another example.'),
+      })).length(3).describe('Exactly three, in order: INVESTIGATE, SOLVE, REVISE_AND_CHECK.'),
     })).min(examplesMin).max(examplesMax).describe('Each example is a DIFFERENT problem (different numbers or a different expression) showing the same need, so the teacher can choose among them — never the same problem repeated.'),
   });
 }
@@ -628,6 +638,7 @@ const LABEL_SPECS = {
   ],
   MATH_DETECTIVE: [
     { list: 'examples', items: 'workSummary', path: 'status', allowed: ['CORRECT', 'INCORRECT', 'NEUTRAL'] },
+    { list: 'examples', items: 'evidenceNotes', path: 'text' },
     { list: 'examples', items: 'stages', path: 'answer' },
   ],
   COMPARE_THE_THINKING: [
@@ -814,7 +825,7 @@ export function rowLabel(id) {
   const n = (m) => Number(m) + 1;
   const part = path.match(/^examples\[(\d+)\]\.(\w+)\[(\d+)\]/);
   if (part) {
-    const names = { work: 'student work line', workSummary: 'student work line', steps: 'worked step', notice: 'teacher note', stages: 'stage' };
+    const names = { work: 'student work line', workSummary: 'student work line', evidenceNotes: 'teacher note', steps: 'worked step', notice: 'teacher note', stages: 'stage' };
     return `Example ${n(part[1])}, ${names[part[2]] ?? part[2]} ${n(part[3])}`;
   }
   const example = path.match(/^examples\[(\d+)\]\.(\w+)/);
@@ -844,6 +855,7 @@ export function checkableRows(content) {
       student(`${owner}[${j}].text`, line.text, { intended: seenError, status: statusOf(line) });
     });
   };
+  if (f.type === 'MATH_DETECTIVE' && f.issue) student('issue', f.issue);
   (f.examples ?? []).forEach((ex, i) => {
     if (f.type === 'INCORRECT_WORKED_EXAMPLES') {
       workLines(ex.steps, `examples[${i}].steps`, (s) => s.annotation?.kind === 'ERROR', (s) => s.annotation?.kind ?? 'NONE');

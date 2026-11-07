@@ -296,11 +296,13 @@ function facilitate(f: any): string[] {
       });
       break;
     case 'MATH_DETECTIVE':
+      if (f.issue) out.push(`**Issue:** ${f.issue}`, '');
       f.examples.forEach((e: any, i: number) => {
         out.push(`*Example ${i + 1}.* ${e.prompt}`, '', 'Student work:');
-        out.push(...e.workSummary.map((w: any) => `- ${STATUS_MARK[w.status] ?? ''} ${w.text}`), '');
+        out.push(...e.workSummary.map((w: any) => `- ${STATUS_MARK[w.status] ?? ''} ${w.text}${w.isEvidence ? ' (evidence)' : ''}`), '');
+        if (e.evidenceNotes?.length) out.push('Evidence notes (teacher):', ...e.evidenceNotes.map((n: any) => `- ${n.text}`), '');
         for (const s of e.stages) {
-          out.push(`**${s.kind[0]}${s.kind.slice(1).toLowerCase()}.** ${s.ask}  `, `Answer (teacher): ${s.answer}`, '');
+          out.push(`**${s.kind[0]}${s.kind.slice(1).toLowerCase().replace(/_/g, ' ')}.** ${s.ask}  `, `Answer (teacher): ${s.answer}`, '');
         }
       });
       break;
