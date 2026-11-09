@@ -2,11 +2,20 @@
 name: MicroCoach Bug Report Template
 about: Create a report for an issue in MicroCoach
 title: "[MicroCoach] - [Add Descriptive Title] - [Assign Priority of P1-P4]"
-labels: microcoach
+labels: ''
 assignees: drewjhart
 type: Bug
 
 ---
+
+**Updates from Cross-Team QA #1: Please select an appropriate microcoach label for your item:**
+
+- `microcoach - crossteam qa #2 bug` - bugs that arise during the cross-team qa #2 (November 12 / 13)
+- `microcoach - other bug` - bugs that were discovered outside of the qa window 
+- `microcoach - design change` - a change from the design team rather than an implementation error by the dev team.
+
+Thanks! 🌴
+
 
 **Describe the bug**
 A clear and concise description of what the bug is.
