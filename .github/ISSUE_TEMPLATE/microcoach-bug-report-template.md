@@ -8,16 +8,15 @@ type: Bug
 
 ---
 
-**Updates from Cross-Team QA #1: Please select an appropriate microcoach label for your item:**
+**Step 1: Please select an appropriate label for your item (on the sidebar on the right)**
 
-- `microcoach - crossteam qa #2 bug` - bugs that arise during the cross-team qa #2 (November 12 / 13)
-- `microcoach - other bug` - bugs that were discovered outside of the qa window 
+- `microcoach - crossteam qa #2 bug` - bugs that arise during the cross-team qa # 2 (November 12 / 13)
+- `microcoach - other bug` - bugs that were discovered outside of a specific qa window 
 - `microcoach - design change` - a change from the design team rather than an implementation error by the dev team.
 
 Thanks! 🌴
 
-
-**Describe the bug**
+**Step 2: Describe the bug**
 A clear and concise description of what the bug is.
 
 **To Reproduce**
