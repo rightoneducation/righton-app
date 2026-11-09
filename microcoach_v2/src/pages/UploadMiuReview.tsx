@@ -6,6 +6,8 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { withSelection } from '../lib/selectionParams';
+import { useSelectionPath } from '../hooks/useEffectiveSelection';
 import ContentRow from '../components/ContentRow';
 import UploadSummaryCard from '../components/UploadSummaryCard';
 import { ScreenSize } from '../lib/MicroCoachModels';
@@ -27,6 +29,7 @@ export default function UploadMiuReview(props: UploadStepProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
+  const toFlow = useSelectionPath();
   const isI18nReady = useI18nReady();
   const isLarge = screenSize === ScreenSize.LARGE;
   const isSubmitting = upload.submitStatus === 'SUBMITTING';
@@ -34,8 +37,14 @@ export default function UploadMiuReview(props: UploadStepProps) {
   if (!isI18nReady) return null;
 
   const handleSubmit = async () => {
-    // Replace, so Back from the success screen cannot resubmit.
-    if (await actions.submit()) navigate(`${basePath}/submitted`, { replace: true });
+    // Replace, so Back from the success screen cannot resubmit. The URL now
+    // names the session the upload went on (MIU 1 starts a new one).
+    const sessionId = await actions.submit();
+    if (sessionId) {
+      navigate(withSelection(`${basePath}/submitted`, { classId: upload.classId, sessionId }), {
+        replace: true,
+      });
+    }
   };
 
   return (
@@ -101,7 +110,7 @@ export default function UploadMiuReview(props: UploadStepProps) {
               disableElevation
               disabled={isSubmitting}
               startIcon={<ArrowBackIcon fontSize="small" />}
-              onClick={() => navigate(basePath)}
+              onClick={() => navigate(toFlow(basePath))}
             >
               {t('upload.backToUpload')}
             </GhostAction>

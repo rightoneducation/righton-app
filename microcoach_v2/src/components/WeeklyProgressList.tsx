@@ -8,7 +8,6 @@ import ClassStepTrack from './ClassStepTrack';
 import LoadingSlot from './LoadingSlot';
 import { WeeklyProgressSkeleton } from './skeletons/ActivityListSkeleton';
 import { UseClassroomsResult } from '../hooks/useClassrooms';
-import { UseSessionsResult } from '../hooks/useSessions';
 import { useClassActivity } from '../hooks/useClassActivity';
 import { useOpenClassSession } from '../hooks/useOpenClassSession';
 import { resumePath } from '../lib/flowProgress';
@@ -44,7 +43,6 @@ const statusKey = (row: IWeeklyClassProgress) =>
 
 interface WeeklyProgressListProps extends ScreenSizeProps {
   classrooms: UseClassroomsResult;
-  sessions: UseSessionsResult;
   // The week picked on Home: the heading and every class's step follow it.
   weekStart: string;
 }
@@ -54,7 +52,6 @@ interface WeeklyProgressListProps extends ScreenSizeProps {
 export default function WeeklyProgressList({
   screenSize,
   classrooms,
-  sessions,
   weekStart,
 }: WeeklyProgressListProps) {
   const { t, i18n } = useTranslation();
@@ -63,7 +60,7 @@ export default function WeeklyProgressList({
   const classesKnown =
     classrooms.status === MicroCoachDataStatus.READY || classesFailed;
   const activity = useClassActivity(weekStart);
-  const openClassSession = useOpenClassSession(sessions);
+  const openClassSession = useOpenClassSession();
 
   const isLoading = activity.status === MicroCoachDataStatus.LOADING;
   const hasFailed =

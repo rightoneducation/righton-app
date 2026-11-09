@@ -9,7 +9,6 @@ import ActivitySortMenu from '../components/ActivitySortMenu';
 import LoadingSlot from '../components/LoadingSlot';
 import { PastActivitiesSkeleton } from '../components/skeletons/ActivityListSkeleton';
 import { UseClassroomsResult } from '../hooks/useClassrooms';
-import { UseSessionsResult } from '../hooks/useSessions';
 import { useClassActivity } from '../hooks/useClassActivity';
 import { useRefreshClassesOnMount } from '../hooks/loaders';
 import { useOpenClassSession } from '../hooks/useOpenClassSession';
@@ -53,13 +52,11 @@ const EMPTY_STATE_IMAGE_WIDTH = 224;
 
 interface PastActivitiesProps extends ScreenSizeProps {
   classrooms: UseClassroomsResult;
-  sessions: UseSessionsResult;
 }
 
 export default function PastActivities({
   screenSize,
   classrooms,
-  sessions,
 }: PastActivitiesProps) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
@@ -70,7 +67,7 @@ export default function PastActivities({
   const classesFailed = classrooms.status === MicroCoachDataStatus.ERROR;
   useRefreshClassesOnMount();
   const activity = useClassActivity();
-  const openClassSession = useOpenClassSession(sessions);
+  const openClassSession = useOpenClassSession();
   const isLoading = activity.status === MicroCoachDataStatus.LOADING;
   const hasFailed =
     classesFailed || activity.status === MicroCoachDataStatus.ERROR;

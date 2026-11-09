@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -7,6 +7,8 @@ import {
   RouterProvider,
   Outlet,
   ScrollRestoration,
+  useLocation,
+  useSearchParams,
 } from 'react-router-dom';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,8 +17,19 @@ import { APIClients, AppType, Environment } from './api';
 import Theme from './lib/Theme';
 import {
   GOOGLE_OAUTH_CLIENT_ID,
+  MicroCoachDataStatus,
   ScreenType,
+  UserStatusType,
 } from './lib/MicroCoachModels';
+import {
+  isFlowPath,
+  readSelectionParams,
+  setSelectionParams,
+} from './lib/selectionParams';
+import {
+  useMicroCoachDataDispatch,
+  useMicroCoachDataState,
+} from './hooks/context/useMicroCoachDataContext';
 import { useAPIClients } from './hooks/useAPIClients';
 import { useAuthResolver } from './hooks/useAuthActions';
 import { useClassChildrenLoader } from './hooks/loaders';
@@ -27,6 +40,73 @@ import { useUserState } from './hooks/useUserState';
 import AppSwitch from './switches/AppSwitch';
 import Preview from './pages/preview/Preview';
 import { MicroCoachDataProvider } from './lib/context/MicroCoachDataContext';
+
+/**
+ * Keeps the URL and the store's selection in step on the flow pages, which
+ * read the URL's (useEffectiveSelection). Nothing renders from this effect:
+ *   - URL names a class → the store takes it, so screens without one (Home, a
+ *     fresh visit) start from the last class shown.
+ *   - a flow page without one (a bookmark, an older link) → the URL takes the
+ *     store's, replacing the entry, so Back returns to this class.
+ * Raw ids are compared both ways: a SELECT always makes a new state, and an id
+ * the selectors resolve differently (a deleted class) would otherwise dispatch
+ * on every render. Signed-in only: sign-out clears the selection while the URL
+ * may still carry one, which must not be written back.
+ */
+function useSelectionUrlSync(
+  classrooms: ReturnType<typeof useClassrooms>,
+  sessions: ReturnType<typeof useSessions>,
+) {
+  const { pathname } = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { selection, userStatus } = useMicroCoachDataState();
+  const dispatch = useMicroCoachDataDispatch();
+
+  const fromUrl = readSelectionParams(searchParams);
+  const urlClassId = fromUrl?.classId ?? null;
+  const urlSessionId = fromUrl?.sessionId ?? null;
+  const isSignedIn = userStatus === UserStatusType.LOGGEDIN;
+  const needsParams =
+    !fromUrl &&
+    isFlowPath(pathname) &&
+    classrooms.status === MicroCoachDataStatus.READY &&
+    !!classrooms.selectedClassroomId;
+  // The stored session, kept as is while it is the resolved class's: before
+  // the class's sessions load, the resolved one would still be null.
+  const fillClassId = classrooms.selectedClassroomId;
+  const fillSessionId =
+    selection.classId === fillClassId
+      ? selection.sessionId ?? sessions.selectedSessionId
+      : sessions.selectedSessionId;
+
+  useEffect(() => {
+    if (!isSignedIn) return;
+    if (urlClassId) {
+      if (selection.classId !== urlClassId || selection.sessionId !== urlSessionId) {
+        dispatch({ type: 'SELECT', classId: urlClassId, sessionId: urlSessionId });
+      }
+      return;
+    }
+    if (needsParams) {
+      setSearchParams(
+        (params) =>
+          setSelectionParams(params, { classId: fillClassId, sessionId: fillSessionId }),
+        { replace: true, preventScrollReset: true },
+      );
+    }
+  }, [
+    dispatch,
+    fillClassId,
+    fillSessionId,
+    isSignedIn,
+    needsParams,
+    selection.classId,
+    selection.sessionId,
+    setSearchParams,
+    urlClassId,
+    urlSessionId,
+  ]);
+}
 
 /**
  * Parent layout route. React Router keeps this element mounted across child
@@ -56,6 +136,7 @@ function RootLayout({ apiClients }: { apiClients: APIClients }) {
   useClassChildrenLoader(apiClients);
   const sessions = useSessions(apiClients);
   const plan = usePlanItems(apiClients);
+  useSelectionUrlSync(classrooms, sessions);
 
   const outletContext = useMemo(
     () => ({ apiClients, user, classrooms, sessions, plan }),

@@ -34,6 +34,7 @@ import {
 import { UnderstandPage } from '../lib/styledcomponents/UnderstandStyledComponents';
 import { useI18nReady } from '../hooks/readiness';
 import { useSessionMisconceptions } from '../hooks/useSessionMisconceptions';
+import { useSelectionPath } from '../hooks/useEffectiveSelection';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { IPlanItemsState } from '../hooks/usePlanItems';
 import MathTypography from '../components/MathTypography';
@@ -54,6 +55,7 @@ function SavedActivityCard({
 }: SavedActivityCardProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const toFlow = useSelectionPath();
   const template = activityTemplateCopy(activity.activityType, t);
   const skillCode = misconception.skillContext?.focusSkill.code ?? null;
 
@@ -85,11 +87,11 @@ function SavedActivityCard({
       <MyActivityActions>
         <CardAction
           disableElevation
-          onClick={() => navigate(`/activity/${activity.id}/before-class`)}
+          onClick={() => navigate(toFlow(`/activity/${activity.id}/before-class`))}
         >
           {t('chooseActivity.viewDetails')}
         </CardAction>
-        <CardAction isPrimary disableElevation onClick={() => navigate('/upload-reassess')}>
+        <CardAction isPrimary disableElevation onClick={() => navigate(toFlow('/upload-reassess'))}>
           {t('myActivity.uploadMiu')}
         </CardAction>
       </MyActivityActions>
@@ -113,6 +115,7 @@ interface MyActivityProps extends ScreenSizeProps {
 export default function MyActivity({ screenSize, sessions, plan }: MyActivityProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const toFlow = useSelectionPath();
   const isI18nReady = useI18nReady();
   const { misconceptions, status: misconceptionsStatus } = useSessionMisconceptions(
     sessions.selectedSession,
@@ -218,7 +221,7 @@ export default function MyActivity({ screenSize, sessions, plan }: MyActivityPro
       <ChangeActivityDialog
         open={changingId !== null}
         onCancel={() => setChangingId(null)}
-        onConfirm={() => navigate(`/review/${changingId}/activities`)}
+        onConfirm={() => navigate(toFlow(`/review/${changingId}/activities`))}
       />
     </UnderstandPage>
   );

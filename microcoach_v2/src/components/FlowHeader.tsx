@@ -19,6 +19,7 @@ import {
 import { ScreenSizeProps } from '../lib/styledcomponents/LandingStyledComponents';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { IPlanItemsState } from '../hooks/usePlanItems';
+import { useSelectionPath } from '../hooks/useEffectiveSelection';
 import MathTypography from './MathTypography';
 
 interface FlowStepperBandProps extends ScreenSizeProps {
@@ -44,10 +45,14 @@ export function FlowStepperBand({
 }: FlowStepperBandProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const toFlow = useSelectionPath();
   const currentStep = deriveCurrentStep(sessions.selectedSession, plan.hasSavedPlan);
   // The track follows the teacher: the page they are on is current, and steps
   // past it the class has already done stay complete (buildFlowStepsForPage).
-  const flowSteps = buildFlowStepsForPage(page, currentStep, t);
+  // Its links keep this page's class and session.
+  const flowSteps = buildFlowStepsForPage(page, currentStep, t).map((step) =>
+    step.path ? { ...step, path: toFlow(step.path) } : step,
+  );
 
   return (
     <StepperBand screenSize={screenSize}>
@@ -59,7 +64,7 @@ export function FlowStepperBand({
           sx={{ minWidth: 160 }}
           disableElevation
           disabled={!hasChosenActivity(currentStep)}
-          onClick={() => navigate('/myactivity')}
+          onClick={() => navigate(toFlow('/myactivity'))}
         >
           {t('dashboard.myActivity')}
         </MyActivityButton>
@@ -72,6 +77,7 @@ export function FlowStepperBand({
 export function MisconceptionSelectedBar({ title }: { title: string }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const toFlow = useSelectionPath();
 
   return (
     <SelectedBar>
@@ -79,7 +85,7 @@ export function MisconceptionSelectedBar({ title }: { title: string }) {
         {`${t('chooseActivity.selected')} `}
         <MathTypography component="strong" variant="uploadLabel" sx={{ fontWeight: 600 }} text={title} />
       </span>
-      <ChangeLink onClick={() => navigate('/review')}>
+      <ChangeLink onClick={() => navigate(toFlow('/review'))}>
         {t('chooseActivity.change')}
       </ChangeLink>
     </SelectedBar>

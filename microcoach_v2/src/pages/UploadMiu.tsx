@@ -11,6 +11,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import { useSelectionPath } from '../hooks/useEffectiveSelection';
 import { SkeletonPill } from '../components/skeletons/SkeletonParts';
 import ContentRow from '../components/ContentRow';
 import {
@@ -237,10 +238,11 @@ export default function UploadMiu({
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
+  const toFlow = useSelectionPath();
   const isI18nReady = useI18nReady();
   const isLarge = screenSize === ScreenSize.LARGE;
 
-  const classId = upload.classId ?? '';
+  const { classId } = upload;
   const hasClass = classrooms.some((classroom) => classroom.id === classId);
   const bothReady = isFileReady(upload.exemplar) && isFileReady(upload.responses);
   const canContinue = hasClass && !!upload.weekStart && bothReady;
@@ -427,7 +429,7 @@ export default function UploadMiu({
               <SignUpCta
                 disableElevation
                 disabled={!canContinue}
-                onClick={() => navigate(`${basePath}/review`)}
+                onClick={() => navigate(toFlow(`${basePath}/review`))}
               >
                 {t('upload.continue')}
               </SignUpCta>

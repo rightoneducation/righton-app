@@ -37,6 +37,7 @@ import {
 import { UnderstandPage } from '../lib/styledcomponents/UnderstandStyledComponents';
 import { useI18nReady } from '../hooks/readiness';
 import { useSessionMisconceptions } from '../hooks/useSessionMisconceptions';
+import { useSelectionPath } from '../hooks/useEffectiveSelection';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { IPlanItemsState } from '../hooks/usePlanItems';
 
@@ -72,12 +73,14 @@ function ActivityFlowView({
 }: ActivityFlowViewProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const toFlow = useSelectionPath();
   const [isChangeOpen, setIsChangeOpen] = React.useState(false);
 
   const template = activityTemplateCopy(activity.activityType, t);
   const { content } = activity;
-  const choicesPath = `/review/${misconception.id}/activities`;
-  const phasePath = (id: ActivityPhaseId) => `/activity/${activity.id}/${id}`;
+  // Every link keeps this page's class and session.
+  const choicesPath = toFlow(`/review/${misconception.id}/activities`);
+  const phasePath = (id: ActivityPhaseId) => toFlow(`/activity/${activity.id}/${id}`);
 
   const body = (() => {
     // Rows written before the Wave 2 content shape have nothing to show.
@@ -123,7 +126,7 @@ function ActivityFlowView({
             label: t('activityFlow.nav.selectActivity'),
             onClick: () => {
               if (!isSaved) saveActivity(planItemFor(misconception, activity));
-              navigate('/myactivity');
+              navigate(toFlow('/myactivity'));
             },
           },
         };
@@ -214,6 +217,7 @@ export default function ActivityFlow({ screenSize, sessions, plan }: ActivityFlo
   const { t } = useTranslation();
   const isI18nReady = useI18nReady();
   const { activityId, phase } = useParams();
+  const toFlow = useSelectionPath();
   const { misconceptions, status: misconceptionsStatus } = useSessionMisconceptions(
     sessions.selectedSession,
   );
@@ -221,7 +225,7 @@ export default function ActivityFlow({ screenSize, sessions, plan }: ActivityFlo
   if (!isI18nReady) return null;
 
   if (!isPhase(phase)) {
-    return <Navigate to={`/activity/${activityId}/before-class`} replace />;
+    return <Navigate to={toFlow(`/activity/${activityId}/before-class`)} replace />;
   }
 
   const isLoading =
@@ -237,7 +241,7 @@ export default function ActivityFlow({ screenSize, sessions, plan }: ActivityFlo
 
   // Only once the list has answered: an unknown id goes back to the misconceptions.
   if (misconceptionsStatus === MicroCoachDataStatus.READY && !activity) {
-    return <Navigate to="/review" replace />;
+    return <Navigate to={toFlow('/review')} replace />;
   }
 
   const isSaved = plan.planItems.some(

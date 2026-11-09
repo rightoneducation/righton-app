@@ -43,6 +43,7 @@ import {
 } from '../lib/styledcomponents/ActivityListStyledComponents';
 import { useI18nReady } from '../hooks/readiness';
 import { useSessionMisconceptions } from '../hooks/useSessionMisconceptions';
+import { useSelectionPath } from '../hooks/useEffectiveSelection';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { IPlanItemsState } from '../hooks/usePlanItems';
 import MathText from '../components/MathText';
@@ -92,6 +93,7 @@ interface ReviewProps extends ScreenSizeProps {
 export default function Review({ screenSize, sessions, plan }: ReviewProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const toFlow = useSelectionPath();
   const isI18nReady = useI18nReady();
   const { misconceptions, status: misconceptionsStatus } = useSessionMisconceptions(
     sessions.selectedSession,
@@ -135,7 +137,7 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
     // Close before navigating so react-modal runs its own close path and
     // restores #root's aria-hidden, rather than being torn down mid-flight.
     setSelected(null);
-    navigate(`/review/${misconceptionId}/activities`);
+    navigate(toFlow(`/review/${misconceptionId}/activities`));
   };
 
   return (
