@@ -24,6 +24,7 @@ import {
 } from '../lib/styledcomponents/ChooseActivityStyledComponents';
 import { useI18nReady } from '../hooks/readiness';
 import { useSessionMisconceptions } from '../hooks/useSessionMisconceptions';
+import { useSelectionPath } from '../hooks/useEffectiveSelection';
 import { UseSessionsResult } from '../hooks/useSessions';
 import { IPlanItemsState } from '../hooks/usePlanItems';
 import { IMicroCoachActivity } from '../api/Models/IMicroCoachActivity';
@@ -53,6 +54,7 @@ export default function ChooseActivity({
 }: ChooseActivityProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const toFlow = useSelectionPath();
   const isI18nReady = useI18nReady();
   const { misconceptionId } = useParams();
   const { misconceptions, status: misconceptionsStatus } = useSessionMisconceptions(
@@ -72,13 +74,13 @@ export default function ChooseActivity({
 
   // Only once the list has answered: an unknown id goes back to the choice.
   if (misconceptionsStatus === MicroCoachDataStatus.READY && !misconception) {
-    return <Navigate to="/review" replace />;
+    return <Navigate to={toFlow('/review')} replace />;
   }
 
   const commitActivity = (activity: IMicroCoachActivity) => {
     if (!misconception) return;
     saveActivity(planItemFor(misconception, activity));
-    navigate('/myactivity');
+    navigate(toFlow('/myactivity'));
   };
 
   // The teacher came back and picked a different misconception: choosing here
@@ -143,7 +145,7 @@ export default function ChooseActivity({
                       key={activity.id}
                       activity={activity}
                       screenSize={screenSize}
-                      onViewDetails={(activityId) => navigate(`/activity/${activityId}/before-class`)}
+                      onViewDetails={(activityId) => navigate(toFlow(`/activity/${activityId}/before-class`))}
                       onSelect={handleSelect}
                     />
                   ))}

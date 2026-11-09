@@ -7,6 +7,7 @@ import {
   useMicroCoachDataDispatch,
   useMicroCoachDataState,
 } from './context/useMicroCoachDataContext';
+import { useEffectiveSelection } from './useEffectiveSelection';
 
 export interface UseSessionsResult {
   // The selected class's sessions, latest first.
@@ -25,7 +26,8 @@ export interface UseSessionsResult {
 
 /** The selected class's sessions, read from the store (useClassChildrenLoader fills it). */
 export function useSessions(apiClients: IAPIClients): UseSessionsResult {
-  const { classrooms, sessions, selection, loads } = useMicroCoachDataState();
+  const { classrooms, sessions, loads } = useMicroCoachDataState();
+  const selection = useEffectiveSelection();
   const dispatch = useMicroCoachDataDispatch();
   const classId = selectedClassId({ classrooms, selection });
   const session = selectedSession({ classrooms, sessions, selection });

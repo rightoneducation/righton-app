@@ -42,10 +42,9 @@ export type SubmitStatus = 'IDLE' | 'SUBMITTING' | 'ERROR';
 // Which half failed: the S3 upload, or starting the analysis afterwards.
 export type SubmitError = 'UPLOAD' | 'ANALYSIS';
 
+// The form's own state. The class is not in it: it is the URL's
+// (`?class=`), so Back returns to the class the upload was opened for.
 export interface IUploadState {
-  // null follows the dashboard's selected class; '' is "none chosen" (a new
-  // classroom's upload); otherwise the class this upload is for.
-  classId: string | null;
   /** Monday of the week this upload covers, local `YYYY-MM-DD` (lib/weeks). */
   weekStart: string;
   exemplar: IUploadFile | null;
@@ -53,17 +52,19 @@ export interface IUploadState {
   submitStatus: SubmitStatus;
   submitError: SubmitError | null;
   // The session this upload went on, once saved: a retry after a failed
-  // upload record reuses it rather than starting a second session.
+  // upload record reuses it rather than starting a second session. Only
+  // while it is the current class's (the class can change after a failure).
   sessionId: string | null;
   // Set once the files are in S3 and recorded (MicroCoachUpload).
   submission: IUploadSubmission | null;
 }
 
-export const emptyUploadState = (
-  classId: string | null,
-  weekStart: string,
-): IUploadState => ({
-  classId,
+// What the steps see: the form plus the class it is for ('' when none).
+export interface IUploadView extends IUploadState {
+  classId: string;
+}
+
+export const emptyUploadState = (weekStart: string): IUploadState => ({
   weekStart,
   exemplar: null,
   responses: null,
@@ -91,8 +92,9 @@ export interface IUploadActions {
   setWeek: (weekStart: string) => void;
   pickFile: (slot: UploadSlot, file: File) => void;
   clearFile: (slot: UploadSlot) => void;
-  // Uploads both files and starts the analysis; resolves true on success.
-  submit: () => Promise<boolean>;
+  // Uploads both files and starts the analysis; resolves the session it went
+  // on, or null when it failed.
+  submit: () => Promise<string | null>;
   // Cancels the submission: removes the uploaded files, back to an empty form.
   startOver: () => Promise<void>;
 }
@@ -102,7 +104,7 @@ export interface UploadStepProps {
   kind: AssessmentType;
   /** UPLOAD_BASE_PATH[kind]; the steps navigate under it. */
   basePath: string;
-  upload: IUploadState;
+  upload: IUploadView;
   actions: IUploadActions;
   classrooms: IMicroCoachClassroom[];
   // The class list has not answered yet: an empty list here is not "no classes".

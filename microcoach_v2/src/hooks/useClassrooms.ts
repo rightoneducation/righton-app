@@ -4,6 +4,7 @@ import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
 import { loadKeys, MicroCoachDataStatus } from '../lib/MicroCoachModels';
 import { classroomList, selectedClassId } from '../lib/selectors';
 import { useClassroomsLoader } from './loaders';
+import { useEffectiveSelection } from './useEffectiveSelection';
 import {
   useMicroCoachDataDispatch,
   useMicroCoachDataState,
@@ -24,7 +25,8 @@ export function useClassrooms(
   userId: string | null,
 ): UseClassroomsResult {
   useClassroomsLoader(apiClients, userId);
-  const { classrooms, selection, loads } = useMicroCoachDataState();
+  const { classrooms, loads } = useMicroCoachDataState();
+  const selection = useEffectiveSelection();
   const dispatch = useMicroCoachDataDispatch();
 
   const selectClassroom = useCallback(
