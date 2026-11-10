@@ -1,4 +1,4 @@
-import { styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ButtonBase from '@mui/material/ButtonBase';
@@ -25,7 +25,6 @@ export const MODAL_INSET_Y = 41;
 const namePillRadius = 12;
 const rowRadius = 10;
 const chipRadius = 6;
-const highlightRadius = 4;
 
 // Figma: 800x61 atlanticNavy-ish (#1B3467) bar, Poppins 24 "Misconception Details".
 export const ModalHeaderBar = styled(Box)(({ theme }) => ({
@@ -183,6 +182,41 @@ export const ModalCtaButton = styled(Button)(({ theme }) => ({
 
 /* ── Student Responses ───────────────────────────────────────────────────── */
 
+export const EvidenceSummary = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: `${theme.sizing.space1}px`,
+  padding: `${theme.sizing.space3}px`,
+  borderRadius: theme.sizing.space3,
+  backgroundColor: theme.palette.designSystem.background.offWhite,
+  color: theme.palette.designSystem.surface.atlanticNavy,
+}));
+
+export const EvidenceBlock = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: `${theme.sizing.space0}px`,
+  padding: `${theme.sizing.space2}px`,
+  borderRadius: theme.sizing.space1,
+  backgroundColor: alpha(theme.palette.designSystem.status.needsSupport, 0.3),
+}));
+
+export const EvidenceTitle = styled(Typography)(({ theme }) => ({
+  ...theme.typography.labelSmBold,
+  color: theme.palette.designSystem.status.prerequisite,
+  textTransform: 'uppercase',
+}));
+
+export const QuestionResponses = styled(Box, {
+  shouldForwardProp: noScreenSize,
+})<ScreenSizeProps>(({ theme, screenSize }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: `${theme.sizing.space1}px`,
+  paddingLeft: screenSize === ScreenSize.LARGE ? `${theme.sizing.space8}px` : 0,
+  color: theme.palette.designSystem.background.navyBlue,
+}));
+
 /** A small caps label over its text (RESPONSE EVIDENCE:, POSSIBLE EXPLANATION:). */
 export const LabelledText = styled(Box)({
   display: 'flex',
@@ -190,12 +224,12 @@ export const LabelledText = styled(Box)({
 });
 
 export const PanelLabel = styled(Typography)(({ theme }) => ({
-  ...theme.typography.rubikBody,
+  ...theme.typography.rubikSubBold,
   color: theme.palette.designSystem.surface.atlanticNavy,
   textTransform: 'uppercase',
 }));
 
-// Figma: 719 wide rx16 offWhite card on a greyAccent hairline, 12 in.
+// Aggregate question responses on the tab's sky-blue surface.
 export const QuestionCard = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -203,43 +237,45 @@ export const QuestionCard = styled(Box)(({ theme }) => ({
   padding: theme.sizing.space2,
   borderRadius: theme.sizing.space3,
   backgroundColor: theme.palette.designSystem.background.offWhite,
-  border: theme.borders.subtle,
+  color: theme.palette.designSystem.background.navyBlue,
 }));
 
 export const QuestionHeading = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'baseline',
-  gap: theme.sizing.space2,
+  gap: `${theme.sizing.space2}px`,
   color: theme.palette.designSystem.background.navyBlue,
   ...theme.typography.headingMd,
+  '& > :first-child': { flexShrink: 0 },
+  '& > :last-child': { minWidth: 0 },
 }));
 
 export const OptionList = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.sizing.space0,
+  gap: `${theme.sizing.space2}px`,
 }));
 
 interface OptionUnitProps {
   isFlagged: boolean;
 }
 
-// One answer option and, when shown, who chose it. A flagged option (cited as
-// evidence on the card) is outlined in needsSupport salmon.
+// Evidence options are highlighted without exposing individual respondents.
 export const OptionUnit = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isFlagged',
 })<OptionUnitProps>(({ theme, isFlagged }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.sizing.space1,
-  padding: `${theme.sizing.space0}px ${theme.sizing.space1}px`,
-  borderRadius: highlightRadius,
-  border: isFlagged
-    ? `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.status.needsSupport}`
-    : theme.borders.transparent,
+  justifyContent: 'center',
+  minHeight: theme.sizing.space5,
+  padding: `0 ${theme.sizing.space0}px`,
+  borderRadius: chipRadius,
+  backgroundColor: isFlagged
+    ? alpha(theme.palette.designSystem.status.needsSupport, 0.3)
+    : 'transparent',
 }));
 
-/** "B. Dashed line, shaded below  Correct answer      30%  Show students ›" */
+/** An answer choice, its correctness indicator, and the aggregate percentage. */
 export const OptionRow = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => ({
@@ -248,52 +284,34 @@ export const OptionRow = styled(Box, {
   flexWrap: screenSize === ScreenSize.LARGE ? 'nowrap' : 'wrap',
   gap: theme.sizing.space2,
   color: theme.palette.designSystem.background.navyBlue,
-  ...theme.typography.smallBodyText,
+  ...theme.typography.rubikBody,
 }));
 
 export const OptionText = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'baseline',
-  flexWrap: 'wrap',
-  columnGap: theme.sizing.space2,
+  gap: `${theme.sizing.space0}px`,
   flex: '1 1 auto',
   minWidth: 0,
+  '& > :first-child': { flexShrink: 0 },
+  '& > :last-child': { minWidth: 0, overflowWrap: 'anywhere' },
 }));
 
-interface OptionTagProps {
-  tone: 'correct' | 'flagged';
-}
-
-export const OptionTag = styled('span', {
-  shouldForwardProp: (prop) => prop !== 'tone',
-})<OptionTagProps>(({ theme, tone }) => ({
-  color:
-    tone === 'correct'
-      ? theme.palette.designSystem.status.correctGreen
-      : theme.palette.designSystem.status.prerequisite,
-}));
-
-export const OptionPercent = styled('span')({
-  flexShrink: 0,
-  minWidth: 40,
-  textAlign: 'right',
-});
-
-// "Show students ›" — text-only, the chevron turns down when open.
-export const ShowStudentsButton = styled(ButtonBase)(({ theme }) => ({
+export const OptionTag = styled('span')(({ theme }) => ({
   display: 'inline-flex',
   alignItems: 'center',
-  gap: theme.sizing.space0,
+  gap: `${theme.sizing.space0}px`,
   flexShrink: 0,
-  minWidth: 128,
-  justifyContent: 'space-between',
-  padding: `0 ${theme.sizing.space0}px`,
-  borderRadius: highlightRadius,
-  color: theme.palette.designSystem.background.navyBlue,
-  ...theme.typography.smallBodyText,
-  '&:hover, &.Mui-focusVisible': { textDecoration: 'underline' },
-  // Design note: an option nobody picked (0%) greys "Show students" out.
-  '&.Mui-disabled': { color: theme.palette.designSystem.foreground.disabledStroke },
+  ...theme.typography.rubikSubBold,
+  color: theme.palette.designSystem.status.correctGreen,
+}));
+
+export const OptionPercent = styled('span')(({ theme }) => ({
+  flexShrink: 0,
+  minWidth: 40,
+  width: '25%',
+  textAlign: 'left',
+  ...theme.typography.rubikLabel,
 }));
 
 /* ── Fallback errors list (sessions written before per-option data) ──────── */
@@ -348,31 +366,6 @@ export const NamePillGroup = styled(Box)(({ theme }) => ({
   flexWrap: 'wrap',
   alignItems: 'center',
   gap: theme.sizing.space1,
-}));
-
-// Figma: h24 rx12 navyBlue chips, cream Rubik 12, 16 apart across, 4 down.
-export const ResponderPill = styled(Box)(({ theme }) => ({
-  display: 'inline-flex',
-  alignItems: 'center',
-  minHeight: 24,
-  padding: `0 ${theme.sizing.space2}px`,
-  borderRadius: namePillRadius,
-  backgroundColor: theme.palette.designSystem.background.navyBlue,
-  color: theme.palette.designSystem.background.cream,
-  ...theme.typography.microLabel,
-  whiteSpace: 'nowrap',
-  // Backstop for a very long name: the pill ends in an ellipsis rather than
-  // overrunning the row.
-  maxWidth: '100%',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-}));
-
-export const ResponderGroup = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexWrap: 'wrap',
-  rowGap: theme.sizing.space0,
-  columnGap: theme.sizing.space3,
 }));
 
 /* ── Related Skills ──────────────────────────────────────────────────────── */

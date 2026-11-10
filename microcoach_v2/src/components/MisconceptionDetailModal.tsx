@@ -8,7 +8,7 @@ import AppModal from './AppModal';
 import { IMicroCoachMisconception } from '../api/Models/IMicroCoachMisconception';
 import { IQuestionStat } from '../api/Models/IMicroCoachSession';
 import { ScreenSize } from '../lib/MicroCoachModels';
-import StudentResponsesTab, { flaggedOptionKeys } from './StudentResponsesTab';
+import StudentResponsesTab from './StudentResponsesTab';
 import RelatedSkillsTab from './RelatedSkillsTab';
 import MathTypography from './MathTypography';
 import mathText from '../lib/mathText';
@@ -31,29 +31,26 @@ import {
 
 type ModalTabId = 'student-responses' | 'related-skills';
 
-/** Which misconception is open, and whether it was opened from its evidence. */
+/** Which misconception is open. */
 export interface MisconceptionDetailSelection {
   id: string;
-  fromEvidence: boolean;
 }
 
 interface DetailContentProps {
   misconception: IMicroCoachMisconception;
   questionStats: IQuestionStat[];
-  showNames: boolean;
   screenSize: ScreenSize;
   onClose: () => void;
   onChooseActivity: (misconceptionId: string) => void;
 }
 
 /**
- * The modal's contents. Keyed by the caller on misconception + open mode, so
- * each open starts on Student Responses with names shown or hidden afresh.
+ * The modal's contents. Keyed by the caller on misconception, so
+ * each open starts on Student Responses.
  */
 function DetailContent({
   misconception,
   questionStats,
-  showNames,
   screenSize,
   onClose,
   onChooseActivity,
@@ -149,9 +146,6 @@ function DetailContent({
                   misconception={misconception}
                   questionStats={questionStats}
                   screenSize={screenSize}
-                  initialOpenKeys={
-                    showNames ? flaggedOptionKeys(misconception) : []
-                  }
                 />
               ) : (
                 <RelatedSkillsTab
@@ -178,9 +172,6 @@ function DetailContent({
 
 interface MisconceptionDetailModalProps {
   misconception: IMicroCoachMisconception | null;
-  // Opened from the card's response evidence: the cited options start with
-  // their students shown (Figma: Details 2). View details starts collapsed.
-  showNames: boolean;
   questionStats: IQuestionStat[];
   screenSize: ScreenSize;
   onClose: () => void;
@@ -189,7 +180,6 @@ interface MisconceptionDetailModalProps {
 
 export default function MisconceptionDetailModal({
   misconception,
-  showNames,
   questionStats,
   screenSize,
   onClose,
@@ -241,10 +231,9 @@ export default function MisconceptionDetailModal({
     >
       {misconception && (
         <DetailContent
-          key={`${misconception.id}:${showNames}`}
+          key={misconception.id}
           misconception={misconception}
           questionStats={questionStats}
-          showNames={showNames}
           screenSize={screenSize}
           onClose={onClose}
           onChooseActivity={onChooseActivity}
