@@ -10,6 +10,7 @@ import { SignUpStepProps } from '../lib/SignUpModels';
 import { UserRole as Role } from '../api';
 import AppContentRow from '../components/AppContentRow';
 import {
+  FORM_COLUMN,
   CARD_COLUMN,
   RoleCard,
   RoleIconTile,
@@ -71,6 +72,9 @@ export default function SignUpRole({ screenSize, state, actions }: SignUpStepPro
               flexDirection: 'column',
               alignItems: 'center',
               width: '100%',
+              // The column is 640 only so the heading fits on one line; the form
+              // under it stays on the 500 Figma column.
+              maxWidth: FORM_COLUMN,
               gap: `${theme.sizing.space5}px`,
             }}
           >

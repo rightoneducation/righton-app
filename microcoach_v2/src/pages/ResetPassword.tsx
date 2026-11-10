@@ -11,6 +11,7 @@ import SignUpStepper from '../components/SignUpStepper';
 import VerificationCodeInput from '../components/VerificationCodeInput';
 import { CODE_LENGTH } from '../lib/SignUpModels';
 import {
+  FORM_COLUMN,
   FieldRow,
   PasswordRulesPanel,
   ResetButton,
@@ -71,115 +72,167 @@ export default function ResetPassword({
   const goToPassword = () => setStep('password');
 
   return (
+    // Same shell as the sign-up steps: fills the body under the header and
+    // sits 125 off the bottom; the 140 above the heading is the stepper's row.
+    // Three sibling blocks — heading, form, Continue — 48 apart, flex-start.
     <AppContentRow
       screenSize={screenSize}
-      sx={{ pt: `${theme.sizing.space8}px`, pb: `${theme.sizing.space12}px` }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1,
+        pb: '125px',
+      }}
     >
-      <SignUpColumn screenSize={screenSize}>
-        {/* Wizard furniture: the stepper and the "Step 2" subheading only make
-            sense to someone actually in sign-up. */}
-        {!isInSession && <SignUpStepper current={2} />}
-        <SignUpHeading>
-          {t(isInSession ? 'reset.title' : 'signup.welcome')}
-        </SignUpHeading>
-        {!isInSession && (
-          <SignUpSubheading>{t('signup.verifyTitle')}</SignUpSubheading>
-        )}
-
-        <Typography
-          variant="rubikBody"
-          sx={{ color: 'designSystem.surface.darkBlue', textAlign: 'center' }}
+      <SignUpColumn
+        screenSize={screenSize}
+        width={640}
+        sx={{
+          flexGrow: 1,
+          justifyContent: 'flex-start',
+          gap: `${theme.sizing.space8}px`,
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
         >
-          {t('signup.verifyBody')}
-        </Typography>
+          {/* 140 tall (space14 + space4 — no single token) and centred, so the
+              heading lands 140 below the header. The row stays when the
+              stepper is hidden, so both variants share that position. */}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: `${theme.sizing.space14 + theme.sizing.space4}px`,
+            }}
+          >
+            {/* Wizard furniture: the stepper and the "Step 2" subheading only
+                make sense to someone actually in sign-up. */}
+            {!isInSession && <SignUpStepper current={2} />}
+          </Box>
+          <SignUpHeading>
+            {t(isInSession ? 'reset.title' : 'signup.welcome')}
+          </SignUpHeading>
+        </Box>
 
-        {step === 'verify' ? (
-          <>
-            <VerificationCodeInput
-              autoFocus
-              code={code}
-              onCodeChange={setCode}
-            />
-
-            <Button
-              variant="text"
-              onClick={() => setCode(Array(CODE_LENGTH).fill(''))}
-              sx={{
-                ...theme.typography.rubikBody,
-                color: 'designSystem.surface.darkBlue',
-                textTransform: 'none',
-                textDecoration: 'underline',
-              }}
-            >
-              {t('signup.resend')}
-            </Button>
-
-            <SignUpPill disableElevation onClick={goToPassword}>
-              {t('signup.verify')}
-            </SignUpPill>
-          </>
-        ) : (
-          <>
-            {/* Figma pairs these at 242 each, like the first/last name row,
-                rather than the 500-wide single fields used elsewhere. */}
-            <FieldRow screenSize={screenSize}>
-              <SignUpField
-                type="password"
-                placeholder={t('reset.newPassword')}
-                inputProps={{ 'aria-label': t('reset.newPassword') }}
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-              />
-              <SignUpField
-                type="password"
-                placeholder={t('reset.confirmPassword')}
-                inputProps={{ 'aria-label': t('reset.confirmPassword') }}
-                value={confirm}
-                onChange={(event) => setConfirm(event.target.value)}
-              />
-            </FieldRow>
-
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                justifyContent: 'space-between',
-                gap: `${theme.sizing.space3}px`,
-                width: '100%',
-                flexWrap: 'wrap',
-              }}
-            >
-              <PasswordRulesPanel>
-                <Typography variant="rubikBody" sx={{ display: 'block' }}>
-                  {t('reset.rulesTitle')}
-                </Typography>
-                <Stack component="ul" sx={{ m: 0, pl: 2 }}>
-                  {RULE_KEYS.map((key) => (
-                    <Typography
-                      key={key}
-                      component="li"
-                      variant="rubikBody"
-                      sx={{ display: 'list-item' }}
-                    >
-                      {t(key)}
-                    </Typography>
-                  ))}
-                </Stack>
-              </PasswordRulesPanel>
-
-              <ResetButton disableElevation onClick={leaveFlow}>
-                {t('reset.reset')}
-              </ResetButton>
-            </Box>
-          </>
-        )}
-
-        <SignUpCta
-          disableElevation
-          onClick={step === 'verify' ? goToPassword : leaveFlow}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            width: '100%',
+            // The column is 640 only so the heading fits on one line; the form
+            // under it stays on the 500 Figma column.
+            maxWidth: FORM_COLUMN,
+            gap: `${theme.sizing.space5}px`,
+          }}
         >
-          {t('signup.continue')}
-        </SignUpCta>
+          {!isInSession && (
+            <SignUpSubheading>{t('signup.verifyTitle')}</SignUpSubheading>
+          )}
+
+          <Typography
+            variant="rubikBody"
+            sx={{ color: 'designSystem.surface.darkBlue', textAlign: 'center' }}
+          >
+            {t('signup.verifyBody')}
+          </Typography>
+
+          {step === 'verify' ? (
+            <>
+              <VerificationCodeInput
+                autoFocus
+                code={code}
+                onCodeChange={setCode}
+              />
+
+              <Button
+                variant="text"
+                onClick={() => setCode(Array(CODE_LENGTH).fill(''))}
+                sx={{
+                  ...theme.typography.rubikBody,
+                  color: 'designSystem.surface.darkBlue',
+                  textTransform: 'none',
+                  textDecoration: 'underline',
+                }}
+              >
+                {t('signup.resend')}
+              </Button>
+
+              <SignUpPill disableElevation onClick={goToPassword}>
+                {t('signup.verify')}
+              </SignUpPill>
+            </>
+          ) : (
+            <>
+              {/* Figma pairs these at 242 each, like the first/last name row,
+                  rather than the 500-wide single fields used elsewhere. */}
+              <FieldRow screenSize={screenSize}>
+                <SignUpField
+                  type="password"
+                  placeholder={t('reset.newPassword')}
+                  inputProps={{ 'aria-label': t('reset.newPassword') }}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+                <SignUpField
+                  type="password"
+                  placeholder={t('reset.confirmPassword')}
+                  inputProps={{ 'aria-label': t('reset.confirmPassword') }}
+                  value={confirm}
+                  onChange={(event) => setConfirm(event.target.value)}
+                />
+              </FieldRow>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  justifyContent: 'space-between',
+                  gap: `${theme.sizing.space3}px`,
+                  width: '100%',
+                  flexWrap: 'wrap',
+                }}
+              >
+                <PasswordRulesPanel>
+                  <Typography variant="rubikBody" sx={{ display: 'block' }}>
+                    {t('reset.rulesTitle')}
+                  </Typography>
+                  <Stack component="ul" sx={{ m: 0, pl: 2 }}>
+                    {RULE_KEYS.map((key) => (
+                      <Typography
+                        key={key}
+                        component="li"
+                        variant="rubikBody"
+                        sx={{ display: 'list-item' }}
+                      >
+                        {t(key)}
+                      </Typography>
+                    ))}
+                  </Stack>
+                </PasswordRulesPanel>
+
+                <ResetButton disableElevation onClick={leaveFlow}>
+                  {t('reset.reset')}
+                </ResetButton>
+              </Box>
+            </>
+          )}
+        </Box>
+
+        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+          <SignUpCta
+            disableElevation
+            onClick={step === 'verify' ? goToPassword : leaveFlow}
+          >
+            {t('signup.continue')}
+          </SignUpCta>
+        </Box>
       </SignUpColumn>
     </AppContentRow>
   );

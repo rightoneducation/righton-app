@@ -245,6 +245,7 @@
     "verifyDigit": "Dígito de verificación {{number}}",
     "resend": "Reenviar código",
     "resendSent": "Le enviamos un código nuevo.",
+    "resendError": "No pudimos enviar un código nuevo. Espere un momento e inténtelo de nuevo.",
     "verify": "Verificar",
     "classesTitle": "Paso 3: Termine de configurar su cuenta",
     "classPlaceholder": "Escriba el nombre de la clase (p. ej., Justice)",

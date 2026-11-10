@@ -25,6 +25,7 @@ import checkEmailApproval from '../lib/mocks/approvalCheck';
 import AppContentRow from '../components/AppContentRow';
 import SignUpStepper from '../components/SignUpStepper';
 import {
+  FORM_COLUMN,
   FieldRow,
   GoogleButton,
   GoogleMark,
@@ -171,188 +172,242 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
   };
 
   return (
+    // Same shell as SignUpRole: fills the body under the header and sits 125
+    // off the bottom. The 140 above the heading is the stepper's own row
+    // rather than padding, so the stepper centres in that space. Unlike
+    // SignUpRole, the CTA sits straight under the form (flex-start).
     <AppContentRow
       screenSize={screenSize}
-      sx={{ pt: `${theme.sizing.space8}px`, pb: `${theme.sizing.space12}px` }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1,
+        pb: '125px',
+      }}
     >
-      <SignUpColumn screenSize={screenSize} width={640}>
-        <SignUpStepper current={1} />
-        <SignUpHeading>{t('signup.welcome')}</SignUpHeading>
-        <SignUpSubheading>{t('signup.registerTitle')}</SignUpSubheading>
-        <GoogleButton disableElevation onClick={handleGoogle}>
-          <GoogleMark src={googleIcon} alt="" aria-hidden />
-          {t('signup.google')}
-        </GoogleButton>
-
-        <OrDivider>{t('signup.or')}</OrDivider>
-
-        <Stack spacing={`${theme.sizing.space2}px`} sx={{ width: '100%' }}>
-          <FieldRow screenSize={screenSize}>
-            <SignUpField
-              isError={showFieldErrors && !state.firstName.trim()}
-              endAdornment={errorAdornment(
-                showFieldErrors && !state.firstName.trim(),
-              )}
-              placeholder={t('signup.firstName')}
-              inputProps={{
-                'aria-label': t('signup.firstName'),
-                'aria-invalid': showFieldErrors && !state.firstName.trim(),
-              }}
-              value={state.firstName}
-              onChange={(event) => setField('firstName')(event.target.value)}
-            />
-            <SignUpField
-              isError={showFieldErrors && !state.lastName.trim()}
-              endAdornment={errorAdornment(
-                showFieldErrors && !state.lastName.trim(),
-              )}
-              placeholder={t('signup.lastName')}
-              inputProps={{
-                'aria-label': t('signup.lastName'),
-                'aria-invalid': showFieldErrors && !state.lastName.trim(),
-              }}
-              value={state.lastName}
-              onChange={(event) => setField('lastName')(event.target.value)}
-            />
-          </FieldRow>
-
-          <SignUpField
-            type="email"
-            isActive={approval === 'checking'}
-            // Red for an empty address and for one the vetted list refused —
-            // the message underneath already tells the two apart.
-            isError={
-              showFieldErrors &&
-              (!state.email.trim() || approval !== 'approved')
-            }
-            endAdornment={errorAdornment(
-              showFieldErrors &&
-                (!state.email.trim() || approval !== 'approved'),
-            )}
-            placeholder={t('signup.email')}
-            inputProps={{
-              'aria-label': t('signup.email'),
-              'aria-invalid':
-                showFieldErrors &&
-                (!state.email.trim() || approval !== 'approved'),
+      <SignUpColumn
+        screenSize={screenSize}
+        width={640}
+        sx={{
+          flexGrow: 1,
+          justifyContent: 'flex-start',
+          gap: `${theme.sizing.space8}px`,
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          {/* 140 tall (space14 + space4 — no single token) and centred, so
+              the heading lands 140 below the header whatever the stepper's
+              own height. */}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: `${theme.sizing.space14 + theme.sizing.space4}px`,
             }}
-            value={state.email}
-            onChange={(event) => {
-              setField('email')(event.target.value);
-              // A verdict for the old address is meaningless once it changes.
-              // if (approval !== 'idle') setApproval('idle'); 
-            }}
-            // onBlur={(event) => 
-            //   runApprovalCheck(event.target.value)
-            // }
-          />
-
-          {/* In flow rather than overlaid, so the password field reflows down
-              as the frames draw it. Copy and colour are the frames' own — the
-              outline carries any error, the message stays accentBlue. */}
-          {approval !== 'approved' && (
-            <Typography
-              variant="rubikLabel"
-              role="status"
-              sx={{
-                fontWeight: 600,
-                color: 'designSystem.foreground.accentBlue',
-                textAlign: 'center',
-              }}
-            >
-              {t(
-                approval === 'checking'
-                  ? 'signup.checkingEmail'
-                  : 'signup.emailNotApproved',
-              )}
-            </Typography>
-          )}
-          <SignUpField
-            type={isShowPassword ? 'text' : 'password'}
-            isError={showFieldErrors && !state.password}
-            placeholder={t('signup.password')}
-            inputProps={{
-              'aria-label': t('signup.password'),
-              'aria-invalid': showFieldErrors && !state.password,
-            }}
-            value={state.password}
-            onChange={(event) => setField('password')(event.target.value)}
-            endAdornment={
-              <InputAdornment position="end">
-                {showFieldErrors && !state.password && (
-                  <FieldErrorIcon src={errorIcon} alt="" />
-                )}
-                <IconButton
-                  size="small"
-                  edge="end"
-                  aria-label={t(
-                    isShowPassword
-                      ? 'signup.hidePassword'
-                      : 'signup.showPassword',
-                  )}
-                  onClick={handleClickShowPassword}
-                  onMouseDown={suppressDefault}
-                  onMouseUp={suppressDefault}
-                  sx={{ color: 'designSystem.surface.placeholderGrey' }}
-                >
-                  {isShowPassword ? (
-                    <VisibilityOff fontSize="small" />
-                  ) : (
-                    <Visibility fontSize="small" />
-                  )}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        </Stack>
+          >
+            <SignUpStepper current={1} />
+          </Box>
+          <SignUpHeading>{t('signup.welcome')}</SignUpHeading>
+        </Box>
 
         <Box
           sx={{
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'flex-end',
-            gap: `${theme.sizing.space3}px`,
             width: '100%',
+            // The column is 640 only so the heading fits on one line; the form
+            // under it stays on the 500 Figma column.
+            maxWidth: FORM_COLUMN,
+            gap: `${theme.sizing.space5}px`,
           }}
         >
-          <Typography
-            variant="rubikBody"
-            sx={{ color: 'designSystem.surface.darkBlue' }}
-          >
-            {t('signup.haveAccount')}
-          </Typography>
-          <SignUpPill disableElevation onClick={() => navigate('/login')}>
-            {t('signup.login')}
-          </SignUpPill>
-        </Box>
-        {/* Same treatment as Login's sign-in error. */}
-        {signUpError && (
-          <Typography
-            variant="rubikLabel"
-            role="alert"
+          <SignUpSubheading>{t('signup.registerTitle')}</SignUpSubheading>
+          <GoogleButton disableElevation onClick={handleGoogle}>
+            <GoogleMark src={googleIcon} alt="" aria-hidden />
+            {t('signup.google')}
+          </GoogleButton>
+
+          <OrDivider>{t('signup.or')}</OrDivider>
+
+          {/* useFlexGap: Stack's default spacing is margin-top on each child. */}
+          <Stack useFlexGap spacing={`${theme.sizing.space2}px`} sx={{ width: '100%' }}>
+            <FieldRow screenSize={screenSize}>
+              <SignUpField
+                isError={showFieldErrors && !state.firstName.trim()}
+                endAdornment={errorAdornment(
+                  showFieldErrors && !state.firstName.trim(),
+                )}
+                placeholder={t('signup.firstName')}
+                inputProps={{
+                  'aria-label': t('signup.firstName'),
+                  'aria-invalid': showFieldErrors && !state.firstName.trim(),
+                }}
+                value={state.firstName}
+                onChange={(event) => setField('firstName')(event.target.value)}
+              />
+              <SignUpField
+                isError={showFieldErrors && !state.lastName.trim()}
+                endAdornment={errorAdornment(
+                  showFieldErrors && !state.lastName.trim(),
+                )}
+                placeholder={t('signup.lastName')}
+                inputProps={{
+                  'aria-label': t('signup.lastName'),
+                  'aria-invalid': showFieldErrors && !state.lastName.trim(),
+                }}
+                value={state.lastName}
+                onChange={(event) => setField('lastName')(event.target.value)}
+              />
+            </FieldRow>
+
+            <SignUpField
+              type="email"
+              isActive={approval === 'checking'}
+              // Red for an empty address and for one the vetted list refused —
+              // the message underneath already tells the two apart.
+              isError={
+                showFieldErrors &&
+                (!state.email.trim() || approval !== 'approved')
+              }
+              endAdornment={errorAdornment(
+                showFieldErrors &&
+                  (!state.email.trim() || approval !== 'approved'),
+              )}
+              placeholder={t('signup.email')}
+              inputProps={{
+                'aria-label': t('signup.email'),
+                'aria-invalid':
+                  showFieldErrors &&
+                  (!state.email.trim() || approval !== 'approved'),
+              }}
+              value={state.email}
+              onChange={(event) => {
+                setField('email')(event.target.value);
+                // A verdict for the old address is meaningless once it changes.
+                // if (approval !== 'idle') setApproval('idle'); 
+              }}
+              // onBlur={(event) => 
+              //   runApprovalCheck(event.target.value)
+              // }
+            />
+
+            {/* In flow rather than overlaid, so the password field reflows down
+                as the frames draw it. Copy and colour are the frames' own — the
+                outline carries any error, the message stays accentBlue. */}
+            {approval !== 'approved' && (
+              <Typography
+                variant="rubikLabel"
+                role="status"
+                sx={{
+                  fontWeight: 600,
+                  color: 'designSystem.foreground.accentBlue',
+                  textAlign: 'center',
+                }}
+              >
+                {t(
+                  approval === 'checking'
+                    ? 'signup.checkingEmail'
+                    : 'signup.emailNotApproved',
+                )}
+              </Typography>
+            )}
+            <SignUpField
+              type={isShowPassword ? 'text' : 'password'}
+              isError={showFieldErrors && !state.password}
+              placeholder={t('signup.password')}
+              inputProps={{
+                'aria-label': t('signup.password'),
+                'aria-invalid': showFieldErrors && !state.password,
+              }}
+              value={state.password}
+              onChange={(event) => setField('password')(event.target.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  {showFieldErrors && !state.password && (
+                    <FieldErrorIcon src={errorIcon} alt="" />
+                  )}
+                  <IconButton
+                    size="small"
+                    edge="end"
+                    aria-label={t(
+                      isShowPassword
+                        ? 'signup.hidePassword'
+                        : 'signup.showPassword',
+                    )}
+                    onClick={handleClickShowPassword}
+                    onMouseDown={suppressDefault}
+                    onMouseUp={suppressDefault}
+                    sx={{ color: 'designSystem.surface.placeholderGrey' }}
+                  >
+                    {isShowPassword ? (
+                      <VisibilityOff fontSize="small" />
+                    ) : (
+                      <Visibility fontSize="small" />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </Stack>
+
+          <Box
             sx={{
-              color: 'designSystem.foreground.accentBlue',
-              textAlign: 'center',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              gap: `${theme.sizing.space3}px`,
+              width: '100%',
             }}
           >
-            {signUpError}
-          </Typography>
-        )}
+            <Typography
+              variant="rubikBody"
+              sx={{ color: 'designSystem.surface.darkBlue' }}
+            >
+              {t('signup.haveAccount')}
+            </Typography>
+            <SignUpPill disableElevation onClick={() => navigate('/login')}>
+              {t('signup.login')}
+            </SignUpPill>
+          </Box>
+          {/* Same treatment as Login's sign-in error. */}
+          {signUpError && (
+            <Typography
+              variant="rubikLabel"
+              role="alert"
+              sx={{
+                color: 'designSystem.foreground.accentBlue',
+                textAlign: 'center',
+              }}
+            >
+              {signUpError}
+            </Typography>
+          )}
+        </Box>
+
         {/* color="inherit": the spinner takes SignUpCta's disabled label
             colour, which reads on its grey disabled fill where white would
             vanish. */}
-        <SignUpCta
-          disableElevation
-          disabled={isSubmitting}
-          onClick={handleContinue}
-          sx={{ mt: `${theme.sizing.space3}px` }}
-        >
-          {isSubmitting ? (
-            <CircularProgress size={24} color="inherit" aria-label={t('signup.continue')} />
-          ) : (
-            t('signup.continue')
-          )}
-        </SignUpCta>
+        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+          <SignUpCta
+            disableElevation
+            disabled={isSubmitting}
+            onClick={handleContinue}
+          >
+            {isSubmitting ? (
+              <CircularProgress size={24} color="inherit" aria-label={t('signup.continue')} />
+            ) : (
+              t('signup.continue')
+            )}
+          </SignUpCta>
+        </Box>
       </SignUpColumn>
     </AppContentRow>
   );

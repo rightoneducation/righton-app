@@ -21,6 +21,7 @@ import AppContentRow from '../components/AppContentRow';
 import { IUserState } from '../hooks/useUserState';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import {
+  FORM_COLUMN,
   GoogleButton,
   GoogleMark,
   OrDivider,
@@ -109,149 +110,186 @@ export default function Login({ apiClients, screenSize, signIn }: LoginProps) {
   if (!isReady) return null;
 
   return (
+    // Same shell as the sign-up steps: fills the body under the header, 140
+    // from it (space14 + space4 — no single token; no stepper here, so it is
+    // padding as on SignUpRole) and 125 off the bottom. Three sibling blocks —
+    // heading, form, Continue — 48 apart, flex-start.
     <AppContentRow
       screenSize={screenSize}
-      sx={{ pt: `${theme.sizing.space12}px`, pb: `${theme.sizing.space12}px` }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1,
+        pt: `${theme.sizing.space14 + theme.sizing.space4}px`,
+        pb: '125px',
+      }}
     >
-      <SignUpColumn screenSize={screenSize}>
-        <SignUpHeading>{t('login.welcome')}</SignUpHeading>
-        <SignUpSubheading>{t('login.subtitle')}</SignUpSubheading>
-
-        {/* Real Google OAuth now: popup, then the Hosted-UI redirect. Sign-in
-            and sign-up share one entry point — Cognito issues the session
-            either way, and validateUser decides which it was by whether a
-            MicroCoachUser row exists for the cognitoId. */}
-        <GoogleButton disableElevation onClick={handleGoogle}>
-          <GoogleMark src={googleIcon} alt="" aria-hidden />
-          {t('signup.google')}
-        </GoogleButton>
-
-        <OrDivider>{t('signup.or')}</OrDivider>
-
-        <Stack spacing={`${theme.sizing.space2}px`} sx={{ width: '100%' }}>
-          <SignUpField
-            type="email"
-            placeholder={t('signup.email')}
-            inputProps={{ 'aria-label': t('signup.email') }}
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-          <SignUpField
-            type={isShowPassword ? 'text' : 'password'}
-            placeholder={t('signup.password')}
-            inputProps={{ 'aria-label': t('signup.password') }}
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  size="small"
-                  edge="end"
-                  aria-label={t(
-                    isShowPassword
-                      ? 'signup.hidePassword'
-                      : 'signup.showPassword',
-                  )}
-                  onClick={() => setIsShowPassword((show) => !show)}
-                  onMouseDown={suppressDefault}
-                  onMouseUp={suppressDefault}
-                  sx={{ color: 'designSystem.surface.placeholderGrey' }}
-                >
-                  {isShowPassword ? (
-                    <VisibilityOff fontSize="small" />
-                  ) : (
-                    <Visibility fontSize="small" />
-                  )}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        </Stack>
-
-        {/* Figma left-aligns this under the password field, where the rest of
-            the column is centred. */}
-        <Button
-          variant="text"
-          onClick={() => navigate('/password/reset')}
-          sx={{
-            alignSelf: 'flex-start',
-            p: 0,
-            mt: `-${theme.sizing.space0}px`,
-            ...theme.typography.rubikBody,
-            color: 'designSystem.surface.darkBlue',
-            textTransform: 'none',
-          }}
-        >
-          {t('login.forgot')}
-        </Button>
-
-        {/* Sign-in failures used to be console-only, so a rejected password
-            looked like a dead button. */}
-        {userErrorString && (
-          <Typography
-            variant="rubikLabel"
-            role="alert"
-            sx={{
-              color: 'designSystem.foreground.accentBlue',
-              textAlign: 'center',
-            }}
-          >
-            {userErrorString}
-          </Typography>
-        )}
-
-        {/* Spinner replaces the label, as on SignUpVerify. SignUpPill has no
-            Mui-disabled rule, so the colour is held here or MUI greys it out;
-            the spinner inherits it. */}
-        <SignUpPill
-          disableElevation
-          disabled={isSubmitting}
-          onClick={() => handleSignIn('pill')}
-          sx={{ '&.Mui-disabled': { color: 'designSystem.surface.white' } }}
-        >
-          {submittingFrom === 'pill' ? (
-            <CircularProgress size={20} color="inherit" aria-label={t('signup.login')} />
-          ) : (
-            t('signup.login')
-          )}
-        </SignUpPill>
+      <SignUpColumn
+        screenSize={screenSize}
+        // Wider than the other steps (640): "Welcome back to MicroCoach" is
+        // ~729px at 52px Rubik 500 and the Spanish ~872px. The form below
+        // stays capped at FORM_COLUMN.
+        width={900}
+        sx={{
+          flexGrow: 1,
+          justifyContent: 'flex-start',
+          gap: `${theme.sizing.space8}px`,
+        }}
+      >
+        <Box>
+          <SignUpHeading>{t('login.welcome')}</SignUpHeading>
+        </Box>
 
         <Box
           sx={{
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
-            gap: `${theme.sizing.space3}px`,
             width: '100%',
-            mt: `-${theme.sizing.space0}px`,
+            // The column is 640 only so the heading fits on one line; the form
+            // under it stays on the 500 Figma column.
+            maxWidth: FORM_COLUMN,
+            gap: `${theme.sizing.space5}px`,
           }}
         >
-          <Typography
-            variant="rubikBody"
-            sx={{ color: 'designSystem.surface.darkBlue' }}
+          <SignUpSubheading>{t('login.subtitle')}</SignUpSubheading>
+
+          {/* Real Google OAuth now: popup, then the Hosted-UI redirect. Sign-in
+              and sign-up share one entry point — Cognito issues the session
+              either way, and validateUser decides which it was by whether a
+              MicroCoachUser row exists for the cognitoId. */}
+          <GoogleButton disableElevation onClick={handleGoogle}>
+            <GoogleMark src={googleIcon} alt="" aria-hidden />
+            {t('signup.google')}
+          </GoogleButton>
+
+          <OrDivider>{t('signup.or')}</OrDivider>
+
+          {/* useFlexGap: Stack's default spacing is margin-top on each child. */}
+          <Stack useFlexGap spacing={`${theme.sizing.space2}px`} sx={{ width: '100%' }}>
+            <SignUpField
+              type="email"
+              placeholder={t('signup.email')}
+              inputProps={{ 'aria-label': t('signup.email') }}
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+            <SignUpField
+              type={isShowPassword ? 'text' : 'password'}
+              placeholder={t('signup.password')}
+              inputProps={{ 'aria-label': t('signup.password') }}
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    edge="end"
+                    aria-label={t(
+                      isShowPassword
+                        ? 'signup.hidePassword'
+                        : 'signup.showPassword',
+                    )}
+                    onClick={() => setIsShowPassword((show) => !show)}
+                    onMouseDown={suppressDefault}
+                    onMouseUp={suppressDefault}
+                    sx={{ color: 'designSystem.surface.placeholderGrey' }}
+                  >
+                    {isShowPassword ? (
+                      <VisibilityOff fontSize="small" />
+                    ) : (
+                      <Visibility fontSize="small" />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </Stack>
+
+          {/* Figma left-aligns this under the password field, where the rest of
+              the column is centred. */}
+          <Button
+            variant="text"
+            onClick={() => navigate('/password/reset')}
+            sx={{
+              alignSelf: 'flex-start',
+              p: 0,
+              ...theme.typography.rubikBody,
+              color: 'designSystem.surface.darkBlue',
+              textTransform: 'none',
+            }}
           >
-            {t('login.noAccount')}
-          </Typography>
-          <SignUpPillMuted disableElevation onClick={() => navigate('/signup')}>
-            {t('header.signup')}
-          </SignUpPillMuted>
+            {t('login.forgot')}
+          </Button>
+
+          {/* Sign-in failures used to be console-only, so a rejected password
+              looked like a dead button. */}
+          {userErrorString && (
+            <Typography
+              variant="rubikLabel"
+              role="alert"
+              sx={{
+                color: 'designSystem.foreground.accentBlue',
+                textAlign: 'center',
+              }}
+            >
+              {userErrorString}
+            </Typography>
+          )}
+
+          {/* Spinner replaces the label, as on SignUpVerify. SignUpPill has no
+              Mui-disabled rule, so the colour is held here or MUI greys it out;
+              the spinner inherits it. */}
+          <SignUpPill
+            disableElevation
+            disabled={isSubmitting}
+            onClick={() => handleSignIn('pill')}
+            sx={{ '&.Mui-disabled': { color: 'designSystem.surface.white' } }}
+          >
+            {submittingFrom === 'pill' ? (
+              <CircularProgress size={20} color="inherit" aria-label={t('signup.login')} />
+            ) : (
+              t('signup.login')
+            )}
+          </SignUpPill>
+
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: `${theme.sizing.space3}px`,
+              width: '100%',
+            }}
+          >
+            <Typography
+              variant="rubikBody"
+              sx={{ color: 'designSystem.surface.darkBlue' }}
+            >
+              {t('login.noAccount')}
+            </Typography>
+            <SignUpPillMuted disableElevation onClick={() => navigate('/signup')}>
+              {t('header.signup')}
+            </SignUpPillMuted>
+          </Box>
         </Box>
 
         {/* color="inherit": the spinner takes SignUpCta's disabled label
             colour, which reads on its grey disabled fill where white would
             vanish. */}
-        <SignUpCta
-          disableElevation
-          disabled={isSubmitting}
-          onClick={() => handleSignIn('cta')}
-          sx={{ mt: `${theme.sizing.space5}px` }}
-        >
-          {submittingFrom === 'cta' ? (
-            <CircularProgress size={24} color="inherit" aria-label={t('signup.continue')} />
-          ) : (
-            t('signup.continue')
-          )}
-        </SignUpCta>
+        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+          <SignUpCta
+            disableElevation
+            disabled={isSubmitting}
+            onClick={() => handleSignIn('cta')}
+          >
+            {submittingFrom === 'cta' ? (
+              <CircularProgress size={24} color="inherit" aria-label={t('signup.continue')} />
+            ) : (
+              t('signup.continue')
+            )}
+          </SignUpCta>
+        </Box>
       </SignUpColumn>
     </AppContentRow>
   );

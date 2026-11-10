@@ -2,13 +2,14 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
-import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import { SignUpStepProps, namedClasses } from '../lib/SignUpModels';
 import { UserRole } from '../api';
 import AppContentRow from '../components/AppContentRow';
 import {
+  FORM_COLUMN,
   ClassChip,
   ClassChipGrid,
   ClassSelect,
@@ -130,59 +131,93 @@ export default function SignUpSelect({
   };
 
   return (
+    // Same shell as the sign-up steps: fills the body under the header, 140
+    // from it (space14 + space4 — no single token; no stepper on this step,
+    // so it is padding as on SignUpRole) and 125 off the bottom. Three sibling
+    // blocks — heading, form, CTA — 48 apart, flex-start.
     <AppContentRow
       screenSize={screenSize}
-      sx={{ pt: `${theme.sizing.space12}px`, pb: `${theme.sizing.space12}px` }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1,
+        pt: `${theme.sizing.space14 + theme.sizing.space4}px`,
+        pb: '125px',
+      }}
     >
-      <SignUpColumn screenSize={screenSize} width={600}>
-        <SignUpHeading>{t('signup.welcome')}</SignUpHeading>
-        <SignUpSubheading>{t('signup.selectTitle')}</SignUpSubheading>
+      <SignUpColumn
+        screenSize={screenSize}
+        width={640}
+        sx={{
+          flexGrow: 1,
+          justifyContent: 'flex-start',
+          gap: `${theme.sizing.space8}px`,
+        }}
+      >
+        <Box>
+          <SignUpHeading>{t('signup.welcome')}</SignUpHeading>
+        </Box>
 
-        <TeacherSelectField>
-          {/* Figma sets this at the same 50% it uses for placeholders — the
-              name reads as a chosen value in a select, not as body copy. */}
-          <Typography
-            variant="headingSm"
-            sx={{ color: 'designSystem.surface.placeholderGrey', opacity: 0.5 }}
-          >
-            {displayName}
-          </Typography>
-        </TeacherSelectField>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            width: '100%',
+            // The column is 640 only so the heading fits on one line; the form
+            // under it stays on the 500 Figma column.
+            maxWidth: FORM_COLUMN,
+            gap: `${theme.sizing.space5}px`,
+          }}
+        >
+          <SignUpSubheading>{t('signup.selectTitle')}</SignUpSubheading>
 
-        {isAdmin ? (
-          <ClassSelect
-            value={selectedClass ?? ''}
-            onChange={(event) => setSelectedClass(event.target.value)}
-            inputProps={{ 'aria-label': t('signup.classPlaceholder') }}
-          >
-            {classes.map((name) => (
-              <MenuItem key={name} value={name}>
-                {name}
-              </MenuItem>
-            ))}
-          </ClassSelect>
-        ) : (
-          <ClassChipGrid screenSize={screenSize}>
-            {classes.map((name) => (
-              <ClassChip
-                key={name}
-                disableElevation
-                isSelected={name === selectedClass}
-                aria-pressed={name === selectedClass}
-                onClick={() => setSelectedClass(name)}
-              >
-                {name}
+          <TeacherSelectField>
+            {/* Figma sets this at the same 50% it uses for placeholders — the
+                name reads as a chosen value in a select, not as body copy. */}
+            <Typography
+              variant="headingSm"
+              sx={{ color: 'designSystem.surface.placeholderGrey', opacity: 0.5 }}
+            >
+              {displayName}
+            </Typography>
+          </TeacherSelectField>
+
+          {isAdmin ? (
+            <ClassSelect
+              value={selectedClass ?? ''}
+              onChange={(event) => setSelectedClass(event.target.value)}
+              inputProps={{ 'aria-label': t('signup.classPlaceholder') }}
+            >
+              {classes.map((name) => (
+                <MenuItem key={name} value={name}>
+                  {name}
+                </MenuItem>
+              ))}
+            </ClassSelect>
+          ) : (
+            <ClassChipGrid screenSize={screenSize}>
+              {classes.map((name) => (
+                <ClassChip
+                  key={name}
+                  disableElevation
+                  isSelected={name === selectedClass}
+                  aria-pressed={name === selectedClass}
+                  onClick={() => setSelectedClass(name)}
+                >
+                  {name}
+                </ClassChip>
+              ))}
+              {/* Figma draws a trailing "More" chip in the disabled treatment —
+                  there is nothing behind it, so it stays inert here too. */}
+              <ClassChip disableElevation isMore disabled>
+                {t('signup.more')}
               </ClassChip>
-            ))}
-            {/* Figma draws a trailing "More" chip in the disabled treatment —
-                there is nothing behind it, so it stays inert here too. */}
-            <ClassChip disableElevation isMore disabled>
-              {t('signup.more')}
-            </ClassChip>
-          </ClassChipGrid>
-        )}
+            </ClassChipGrid>
+          )}
+        </Box>
 
-        <Stack sx={{ mt: `${theme.sizing.space12}px`, alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           {/* Figma: 384 wide for the admin's longer label, 303 for the
               teacher's. */}
           <SignUpCtaWide
@@ -193,7 +228,7 @@ export default function SignUpSelect({
           >
             {t(isAdmin ? 'signup.viewData' : 'signup.upload')}
           </SignUpCtaWide>
-        </Stack>
+        </Box>
       </SignUpColumn>
     </AppContentRow>
   );

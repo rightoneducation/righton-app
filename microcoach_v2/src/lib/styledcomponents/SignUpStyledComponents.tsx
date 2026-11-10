@@ -16,7 +16,7 @@ import { noScreenSize, ScreenSizeProps } from './LandingStyledComponents';
  */
 
 // Figma centres the form on a 500-wide column (x 720..1220).
-const FORM_COLUMN = 500;
+export const FORM_COLUMN = 500;
 // The role cards sit on their own slightly narrower column (x 770..1170).
 export const CARD_COLUMN = 400;
 const roleCardHeight = 93;
@@ -213,7 +213,8 @@ export const GoogleButton = styled(Button)(({ theme }) => ({
   gap: theme.sizing.space1 + 2,
   padding: `${theme.sizing.space1 + 2}px ${theme.sizing.space3}px`,
   borderRadius: theme.sizing.space1,
-  backgroundColor: 'transparent',
+  // White rather than transparent: these pages now sit over the pattern band.
+  backgroundColor: theme.palette.designSystem.surface.white,
   border: `${FIELD_BORDER_WIDTH}px solid ${GOOGLE_BLUE}`,
   color: GOOGLE_BLUE,
   ...theme.typography.headingSm,

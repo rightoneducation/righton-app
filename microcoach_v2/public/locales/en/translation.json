@@ -245,6 +245,7 @@
     "verifyDigit": "Verification digit {{number}}",
     "resend": "Resend Code",
     "resendSent": "A new code is on its way.",
+    "resendError": "We couldn’t send a new code. Please wait a moment and try again.",
     "verify": "Verify",
     "classesTitle": "Step 3: Finish setting up your account",
     "classPlaceholder": "Enter class name (e.g., Justice)",
