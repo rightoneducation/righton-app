@@ -7,7 +7,6 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
-import useResultsBanner from '../hooks/useResultsBanner';
 import { FlowStepperBand } from '../components/FlowHeader';
 import { FlowStep } from '../lib/flowProgress';
 import LoadingSlot from '../components/LoadingSlot';
@@ -79,11 +78,18 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
   const sessionId = session?.id ?? null;
 
   const [selected, setSelected] = React.useState<MisconceptionDetailSelection | null>(null);
-  const { showBanner, dismissBanner } = useResultsBanner(
-    sessionId,
-    session?.selectedMisconceptionId ?? null,
-    isI18nReady && misconceptions.length > 0,
-  );
+  const [dismissedFor, setDismissedFor] = React.useState<string | null>(null);
+  const showBanner =
+    !!sessionId &&
+    isI18nReady &&
+    misconceptions.length > 0 &&
+    (session?.selectedMisconceptionId ?? null) === null &&
+    dismissedFor !== sessionId;
+
+  const dismissBanner = () => {
+    if (!sessionId) return;
+    setDismissedFor(sessionId);
+  };
 
   if (!isI18nReady) return null;
 
