@@ -175,7 +175,7 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
       screenSize={screenSize}
       sx={{ pt: `${theme.sizing.space8}px`, pb: `${theme.sizing.space12}px` }}
     >
-      <SignUpColumn screenSize={screenSize}>
+      <SignUpColumn screenSize={screenSize} width={640}>
         <SignUpStepper current={1} />
         <SignUpHeading>{t('signup.welcome')}</SignUpHeading>
         <SignUpSubheading>{t('signup.registerTitle')}</SignUpSubheading>
