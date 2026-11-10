@@ -74,6 +74,9 @@ const navy = 'designSystem.surface.atlanticNavy';
 // renders that prose in its own serif font, overriding the question's Rubik.
 const ExampleQuestion = styled(MathTypography)(({ theme }) => ({
   ...theme.typography.rubikSubBold,
+  '& .katex': {
+    fontWeight: theme.typography.rubikSubBold.fontWeight,
+  },
   '& .katex .text': {
     fontFamily: theme.typography.rubikSubBold.fontFamily,
     fontWeight: theme.typography.rubikSubBold.fontWeight,
@@ -358,8 +361,8 @@ export function MathDetectivePanel({
             <Typography variant="headingMdBold" component="span">
               {t('activityFlow.facilitate.exampleLabel', { number: tileIndex + 1 })}
             </Typography>
-            <ExampleQuestion variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
-            <ExampleQuestion variant="rubikSubBold" component="span" text={workLine(examples[tileIndex].workSummary)} />
+            <ExampleQuestion boldMath variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
+            <ExampleQuestion boldMath variant="rubikSubBold" component="span" text={workLine(examples[tileIndex].workSummary)} />
           </>
         )}
       />
@@ -373,7 +376,7 @@ export function MathDetectivePanel({
               <EditIcon />
             </ExampleIconTile>
             <ExampleHeaderText>
-              <ExampleQuestion variant="rubikSubBold" text={example.prompt} />
+              <ExampleQuestion boldMath variant="rubikSubBold" text={example.prompt} />
               <MathTypography variant="rubikBody" text={workLine(example.workSummary)} />
             </ExampleHeaderText>
           </ExampleHeaderBox>
@@ -439,7 +442,7 @@ export function FavoriteNoPanel({
             <Typography variant="headingMdBold" component="span">
               {t('activityFlow.facilitate.exampleLabel', { number: tileIndex + 1 })}
             </Typography>
-            <ExampleQuestion variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
+            <ExampleQuestion boldMath variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
           </>
         )}
       />
@@ -456,7 +459,7 @@ export function FavoriteNoPanel({
             {/* Figma (My Favorite No Teacher): Poppins 16/600. */}
             <Typography variant="headingSm">{t('activityFlow.facilitate.anonymousResponse')}</Typography>
           </Stack>
-          <ExampleQuestion variant="rubikSubBold" text={example.prompt} />
+          <ExampleQuestion boldMath variant="rubikSubBold" text={example.prompt} />
           <Stack
             direction={props.screenSize === ScreenSize.SMALL ? 'column' : 'row'}
             spacing={`${theme.sizing.space5}px`}

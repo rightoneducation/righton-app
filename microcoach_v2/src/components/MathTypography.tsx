@@ -7,6 +7,7 @@ interface MathTypographyProps extends Omit<TypographyProps, 'children'> {
   text: string | null | undefined;
   /** A second string appended after `text`, separated by a space. Also parsed. */
   suffix?: string | null;
+  boldMath?: boolean;
 }
 
 /**
@@ -37,14 +38,14 @@ interface MathTypographyProps extends Omit<TypographyProps, 'children'> {
  * be formatStepAnnotation's output, which interpolates the model's own
  * annotation.text into catalogue copy, and that text carries LaTeX.
  */
-export default function MathTypography({ text, suffix, ...props }: MathTypographyProps) {
+export default function MathTypography({ text, suffix, boldMath = false, ...props }: MathTypographyProps) {
   return (
     <Typography {...props}>
-      <MathText text={text} inline />
+      <MathText text={text} inline boldMath={boldMath} />
       {suffix ? (
         <>
           {' '}
-          <MathText text={suffix} inline />
+          <MathText text={suffix} inline boldMath={boldMath} />
         </>
       ) : null}
     </Typography>
