@@ -81,6 +81,7 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
   const [selected, setSelected] = React.useState<MisconceptionDetailSelection | null>(null);
   const { showBanner, dismissBanner } = useResultsBanner(
     sessionId,
+    session?.selectedMisconceptionId ?? null,
     isI18nReady && misconceptions.length > 0,
   );
 
