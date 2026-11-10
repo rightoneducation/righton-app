@@ -246,6 +246,7 @@
     "resend": "Resend Code",
     "resendSent": "A new code is on its way.",
     "resendError": "We couldn’t send a new code. Please wait a moment and try again.",
+    "accountExists": "This email already has an account. Log in instead.",
     "verify": "Verify",
     "classesTitle": "Step 3: Finish setting up your account",
     "classPlaceholder": "Enter class name (e.g., Justice)",
@@ -260,6 +261,13 @@
     "checkingEmail": "Checking email against your district's admin list…",
     "emailNotApproved": "This email isn't on our list of approved admin emails for your district. Contact your school to get added, or sign up as a Teacher instead.",
     "viewData": "View classroom data across teachers"
+  },
+  "verifyAccount": {
+    "barTitle": "Verify your account",
+    "title": "This account hasn’t been verified yet.",
+    "body": "We’ll send a new code to {{email}} so you can finish signing up.",
+    "confirm": "Send code",
+    "error": "We couldn’t send a new code. Please wait a moment and try again."
   },
   "login": {
     "welcome": "Welcome back to MicroCoach",

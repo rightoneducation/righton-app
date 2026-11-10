@@ -21,6 +21,7 @@ import {
 } from '../lib/SignUpModels';
 import googleIcon from '../images/googleicon.svg';
 import errorIcon from '../images/errorIcon.svg';
+import loginIconWhite from '../images/loginIconWhite.svg';
 import checkEmailApproval from '../lib/mocks/approvalCheck';
 import AppContentRow from '../components/AppContentRow';
 import SignUpStepper from '../components/SignUpStepper';
@@ -39,6 +40,7 @@ import {
   SignUpSubheading,
 } from '../lib/styledcomponents/SignUpStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
+import VerifyAccountDialog from '../components/VerifyAccountDialog';
 
 export default function SignUpRegister({ apiClients, screenSize, state, actions }: SignUpStepProps) {
   const { t } = useTranslation();
@@ -79,6 +81,13 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
   // already registered with Google. awsSignUp has already reduced it to the
   // human-readable half of `CODE|message`.
   const [signUpError, setSignUpError] = React.useState('');
+  // Set when the email belongs to an account that never confirmed its code;
+  // the dialog offers a fresh one rather than a dead-end "exists" message.
+  const [unverifiedEmail, setUnverifiedEmail] = React.useState<string | null>(
+    null,
+  );
+  const [isResending, setIsResending] = React.useState(false);
+  const [resendError, setResendError] = React.useState(false);
   const handleClickShowPassword = () => setIsShowPassword((show) => !show);
   const suppressDefault = (event: React.MouseEvent<HTMLButtonElement>) =>
     event.preventDefault();
@@ -147,6 +156,31 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
     googleLogin();
   };
 
+  /*
+   * Cognito refuses a second signUp for the same email whether or not the
+   * first one confirmed. Signing in with the typed password tells the two
+   * apart without saying whether an email is registered: only someone holding
+   * the password learns the account is unverified.
+   */
+  const handleExistingAccount = async () => {
+    try {
+      const result = await apiClients.auth.awsSignIn(state.email, state.password);
+      if (result.nextStep?.signInStep === 'CONFIRM_SIGN_UP') {
+        setResendError(false);
+        setUnverifiedEmail(state.email);
+        return;
+      }
+      // Confirmed account and the right password: this is a sign-up page, so
+      // undo the sign-in and point them at Log in instead.
+      if (result.isSignedIn) await apiClients.auth.awsSignOut();
+    } catch (error) {
+      // Wrong password (or an unconfirmed account under a different one —
+      // indistinguishable here). Log in is the way forward either way.
+      console.error('Existing-account check', error);
+    }
+    setSignUpError(t('signup.accountExists'));
+  };
+
   const handleContinue = async () => {
     // Guards a second click landing before the disabled re-render.
     if (isSubmitting) return;
@@ -165,9 +199,29 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
       navigate('/signup/verify');
     } catch (error) {
       console.error('Sign Up Error', error);
-      setSignUpError((error as Error).message);
+      if ((error as Error).name === 'UsernameExistsException') {
+        await handleExistingAccount();
+      } else {
+        setSignUpError((error as Error).message);
+      }
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleSendCode = async () => {
+    if (!unverifiedEmail || isResending) return;
+    setIsResending(true);
+    setResendError(false);
+    try {
+      await apiClients.auth.awsResendConfirmationCode(unverifiedEmail);
+      // The wizard already holds the names and password just typed.
+      navigate('/signup/verify');
+    } catch (error) {
+      console.error('Resend code error', error);
+      setResendError(true);
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -373,7 +427,11 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
             >
               {t('signup.haveAccount')}
             </Typography>
-            <SignUpPill disableElevation onClick={() => navigate('/login')}>
+            <SignUpPill
+              disableElevation
+              startIcon={<img src={loginIconWhite} alt="" />}
+              onClick={() => navigate('/login')}
+            >
               {t('signup.login')}
             </SignUpPill>
           </Box>
@@ -409,6 +467,13 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
           </SignUpCta>
         </Box>
       </SignUpColumn>
+      <VerifyAccountDialog
+        email={unverifiedEmail}
+        isSending={isResending}
+        hasError={resendError}
+        onCancel={() => setUnverifiedEmail(null)}
+        onConfirm={handleSendCode}
+      />
     </AppContentRow>
   );
 }

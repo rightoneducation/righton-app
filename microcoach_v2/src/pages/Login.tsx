@@ -18,15 +18,15 @@ import {
 } from '../lib/googleProfileStash';
 import { IAPIClients } from '../api';
 import AppContentRow from '../components/AppContentRow';
-import { IUserState } from '../hooks/useUserState';
+import { EMPTY_CREDENTIALS_ERROR, IUserState } from '../hooks/useUserState';
 import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
 import {
+  FieldErrorIcon,
   FORM_COLUMN,
   GoogleButton,
   GoogleMark,
   OrDivider,
   SignUpColumn,
-  SignUpCta,
   SignUpField,
   SignUpHeading,
   SignUpPill,
@@ -35,14 +35,25 @@ import {
   ScreenSizeProps,
 } from '../lib/styledcomponents/SignUpStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
+import VerifyAccountDialog from '../components/VerifyAccountDialog';
+import { SignUpVerifyHandoff } from '../lib/SignUpModels';
 import googleIcon from '../images/googleicon.svg';
+import errorIcon from '../images/errorIcon.svg';
+import loginIconWhite from '../images/loginIconWhite.svg';
+import signupIconWhite from '../images/signupIconWhite.svg';
 
 interface LoginProps extends ScreenSizeProps {
   apiClients: IAPIClients;
   signIn: IUserState['signIn'];
+  setUserErrorString: IUserState['setUserErrorString'];
 }
 
-export default function Login({ apiClients, screenSize, signIn }: LoginProps) {
+export default function Login({
+  apiClients,
+  screenSize,
+  signIn,
+  setUserErrorString,
+}: LoginProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -52,32 +63,78 @@ export default function Login({ apiClients, screenSize, signIn }: LoginProps) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [isShowPassword, setIsShowPassword] = React.useState(false);
+  // The empty-fields prompt goes on the first keystroke in either field. Other
+  // sign-in errors (wrong password, no account) stay put while they retype.
+  const clearEmptyFieldsError = () => {
+    if (userErrorString === EMPTY_CREDENTIALS_ERROR) setUserErrorString('');
+  };
   const suppressDefault = (event: React.MouseEvent<HTMLButtonElement>) =>
     event.preventDefault();
+
+  // As on SignUpRegister: set by a sign-in attempt with an empty field, after
+  // which each empty field reads red until it is filled. Kept separate from
+  // the message, which clears on the first keystroke in either field.
+  const [isFormErrored, setIsFormErrored] = React.useState(false);
+  const isEmailErrored = isFormErrored && !email.trim();
+  const isPasswordErrored = isFormErrored && !password;
+  const errorAdornment = (show: boolean) =>
+    show ? (
+      <InputAdornment position="end">
+        <FieldErrorIcon src={errorIcon} alt="" />
+      </InputAdornment>
+    ) : undefined;
 
   /*
    * signIn resolves the real User row and puts it in state; nothing here
    * fabricates profile fields. Navigation waits on it — it used to fire
    * unconditionally, so a rejected password still landed on the dashboard.
    */
-  // Which of the two sign-in buttons is waiting, so the spinner shows in the
-  // one that was pressed. null when idle.
-  const [submittingFrom, setSubmittingFrom] = React.useState<
-    'pill' | 'cta' | null
-  >(null);
-  const isSubmitting = submittingFrom !== null;
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  const handleSignIn = async (source: 'pill' | 'cta') => {
+  // The account behind these credentials never confirmed its code. Sending a
+  // fresh one and handing over to the wizard's verify step finishes it there.
+  const [unverifiedEmail, setUnverifiedEmail] = React.useState<string | null>(
+    null,
+  );
+  const [isResending, setIsResending] = React.useState(false);
+  const [resendError, setResendError] = React.useState(false);
+
+  const handleSignIn = async () => {
     // Guards a second click landing before the disabled re-render.
     if (isSubmitting) return;
-    setSubmittingFrom(source);
+    // Flag the fields, then carry on: signIn still sets the message, so it
+    // keeps one source.
+    if (!email.trim() || !password) setIsFormErrored(true);
+    setIsSubmitting(true);
     try {
-      const profile = await signIn({ email: email.trim(), password });
-      if (profile) navigate('/dashboard');
+      const result = await signIn({ email: email.trim(), password });
+      if (result.status === 'ok') navigate('/dashboard');
+      else if (result.status === 'unconfirmed') {
+        setResendError(false);
+        setUnverifiedEmail(email.trim());
+      }
     } finally {
-      // signIn reports a bad password by resolving null, not throwing, so the
-      // reset has to cover every path.
-      setSubmittingFrom(null);
+      // signIn reports a bad password by resolving 'error', not throwing, so
+      // the reset has to cover every path.
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSendCode = async () => {
+    if (!unverifiedEmail || isResending) return;
+    setIsResending(true);
+    setResendError(false);
+    try {
+      await apiClients.auth.awsResendConfirmationCode(unverifiedEmail);
+      // The wizard seeds its state from this and clears it from history at
+      // once, so the password isn't left in history.state.
+      const handoff: SignUpVerifyHandoff = { email: unverifiedEmail, password };
+      navigate('/signup/verify', { state: handoff });
+    } catch (error) {
+      console.error('Resend code error', error);
+      setResendError(true);
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -112,8 +169,9 @@ export default function Login({ apiClients, screenSize, signIn }: LoginProps) {
   return (
     // Same shell as the sign-up steps: fills the body under the header, 140
     // from it (space14 + space4 — no single token; no stepper here, so it is
-    // padding as on SignUpRole) and 125 off the bottom. Three sibling blocks —
-    // heading, form, Continue — 48 apart, flex-start.
+    // padding as on SignUpRole) and 125 off the bottom. Two sibling blocks —
+    // heading and form — 48 apart, flex-start. No Continue: the Log in pill
+    // is the only submit.
     <AppContentRow
       screenSize={screenSize}
       sx={{
@@ -169,19 +227,37 @@ export default function Login({ apiClients, screenSize, signIn }: LoginProps) {
           <Stack useFlexGap spacing={`${theme.sizing.space2}px`} sx={{ width: '100%' }}>
             <SignUpField
               type="email"
+              isError={isEmailErrored}
+              endAdornment={errorAdornment(isEmailErrored)}
               placeholder={t('signup.email')}
-              inputProps={{ 'aria-label': t('signup.email') }}
+              inputProps={{
+                'aria-label': t('signup.email'),
+                'aria-invalid': isEmailErrored,
+              }}
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(event) => {
+                setEmail(event.target.value);
+                clearEmptyFieldsError();
+              }}
             />
             <SignUpField
               type={isShowPassword ? 'text' : 'password'}
+              isError={isPasswordErrored}
               placeholder={t('signup.password')}
-              inputProps={{ 'aria-label': t('signup.password') }}
+              inputProps={{
+                'aria-label': t('signup.password'),
+                'aria-invalid': isPasswordErrored,
+              }}
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(event) => {
+                setPassword(event.target.value);
+                clearEmptyFieldsError();
+              }}
               endAdornment={
                 <InputAdornment position="end">
+                  {isPasswordErrored && (
+                    <FieldErrorIcon src={errorIcon} alt="" />
+                  )}
                   <IconButton
                     size="small"
                     edge="end"
@@ -243,10 +319,12 @@ export default function Login({ apiClients, screenSize, signIn }: LoginProps) {
           <SignUpPill
             disableElevation
             disabled={isSubmitting}
-            onClick={() => handleSignIn('pill')}
+            onClick={handleSignIn}
+            // Dropped while submitting: the spinner stands in for the whole label.
+            startIcon={isSubmitting ? undefined : <img src={loginIconWhite} alt="" />}
             sx={{ '&.Mui-disabled': { color: 'designSystem.surface.white' } }}
           >
-            {submittingFrom === 'pill' ? (
+            {isSubmitting ? (
               <CircularProgress size={20} color="inherit" aria-label={t('signup.login')} />
             ) : (
               t('signup.login')
@@ -268,29 +346,23 @@ export default function Login({ apiClients, screenSize, signIn }: LoginProps) {
             >
               {t('login.noAccount')}
             </Typography>
-            <SignUpPillMuted disableElevation onClick={() => navigate('/signup')}>
+            <SignUpPillMuted
+              disableElevation
+              startIcon={<img src={signupIconWhite} alt="" />}
+              onClick={() => navigate('/signup')}
+            >
               {t('header.signup')}
             </SignUpPillMuted>
           </Box>
         </Box>
-
-        {/* color="inherit": the spinner takes SignUpCta's disabled label
-            colour, which reads on its grey disabled fill where white would
-            vanish. */}
-        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-          <SignUpCta
-            disableElevation
-            disabled={isSubmitting}
-            onClick={() => handleSignIn('cta')}
-          >
-            {submittingFrom === 'cta' ? (
-              <CircularProgress size={24} color="inherit" aria-label={t('signup.continue')} />
-            ) : (
-              t('signup.continue')
-            )}
-          </SignUpCta>
-        </Box>
       </SignUpColumn>
+      <VerifyAccountDialog
+        email={unverifiedEmail}
+        isSending={isResending}
+        hasError={resendError}
+        onCancel={() => setUnverifiedEmail(null)}
+        onConfirm={handleSendCode}
+      />
     </AppContentRow>
   );
 }

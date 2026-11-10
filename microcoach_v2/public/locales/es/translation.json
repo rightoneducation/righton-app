@@ -246,6 +246,7 @@
     "resend": "Reenviar código",
     "resendSent": "Le enviamos un código nuevo.",
     "resendError": "No pudimos enviar un código nuevo. Espere un momento e inténtelo de nuevo.",
+    "accountExists": "Este correo ya tiene una cuenta. Inicie sesión.",
     "verify": "Verificar",
     "classesTitle": "Paso 3: Termine de configurar su cuenta",
     "classPlaceholder": "Escriba el nombre de la clase (p. ej., Justice)",
@@ -260,6 +261,13 @@
     "checkingEmail": "Verificando el correo con la lista de administradores de su distrito…",
     "emailNotApproved": "Este correo no está en nuestra lista de correos de administrador aprobados para su distrito. Comuníquese con su escuela para agregarlo, o regístrese como Docente.",
     "viewData": "Ver datos de las aulas por docente"
+  },
+  "verifyAccount": {
+    "barTitle": "Verifique su cuenta",
+    "title": "Esta cuenta aún no se ha verificado.",
+    "body": "Le enviaremos un código nuevo a {{email}} para que pueda terminar de registrarse.",
+    "confirm": "Enviar código",
+    "error": "No pudimos enviar un código nuevo. Espere un momento e inténtelo de nuevo."
   },
   "login": {
     "welcome": "Bienvenido de nuevo a MicroCoach",

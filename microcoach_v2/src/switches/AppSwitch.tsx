@@ -189,6 +189,7 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
           apiClients={apiClients}
           screenSize={screenSize}
           signIn={user.signIn}
+          setUserErrorString={user.setUserErrorString}
         />
       );
       break;

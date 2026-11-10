@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import {
   ISignUpState,
   ISignUpActions,
   SignUpStepProps,
+  SignUpVerifyHandoff,
   initialSignUpState,
 } from '../lib/SignUpModels';
-import { IAPIClients } from '../api';
+import { IAPIClients, UserRole } from '../api';
 import { IUserState } from '../hooks/useUserState';
 import SignUpRole from '../pages/SignUpRole';
 import SignUpRegister from '../pages/SignUpRegister';
@@ -41,8 +42,32 @@ export default function SignUpWizard({
   setSignedInUser,
   updateUserProfile,
 }: SignUpWizardProps) {
-  const [state, setState] = useState<ISignUpState>(initialSignUpState);
+  const location = useLocation();
+  const navigate = useNavigate();
+  // Log in sends an unverified account here with its credentials (and a code
+  // already on its way). Teacher is the only role sign-up creates today, and
+  // the names come back from Cognito when verify builds the User row.
+  const [state, setState] = useState<ISignUpState>(() => {
+    const handoff = location.state as SignUpVerifyHandoff | null;
+    if (!handoff?.email) return initialSignUpState;
+    return {
+      ...initialSignUpState,
+      role: UserRole.TEACHER,
+      email: handoff.email,
+      password: handoff.password,
+    };
+  });
   const step = useParams()['*'] ?? '';
+
+  // Read once into state above; drop it from history straight away so the
+  // password doesn't survive in history.state (refresh, Back, devtools).
+  useEffect(() => {
+    if ((location.state as SignUpVerifyHandoff | null)?.email) {
+      navigate(location.pathname, { replace: true, state: null });
+    }
+    // Mount only: the handoff is read once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const actions: ISignUpActions = {
     setRole: (role) => setState((s) => ({ ...s, role })),

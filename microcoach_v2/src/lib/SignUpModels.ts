@@ -10,6 +10,17 @@ import { UserRole } from '../api/Models/IUser';
 /** How many verification digits the frame draws. */
 export const CODE_LENGTH = 6;
 
+/**
+ * Router state for /signup/verify when it is reached from outside the wizard:
+ * Log in found an account that never confirmed its code. The wizard seeds
+ * itself from this, then clears it from history (it carries the password,
+ * which verify needs to sign in after confirming).
+ */
+export interface SignUpVerifyHandoff {
+  email: string;
+  password: string;
+}
+
 export interface ISignUpState {
   role: UserRole | null;
   firstName: string;
