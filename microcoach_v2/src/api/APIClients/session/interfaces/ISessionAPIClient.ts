@@ -26,7 +26,12 @@ export interface ISessionAPIClient {
     id: string,
     status: SessionStatus,
   ): Promise<IMicroCoachSession | null>;
-  // Writes only publishStatus (/prepublishreview's Publish: DRAFT → PUBLISHED).
+  // The reviewer's Publish (/prepublishreview): DRAFT → PUBLISHED and the
+  // uploading teacher is emailed, server-side (microcoachv2EmailTeacher).
+  // Resolves to the session's publishStatus after the call.
+  publishSession(sessionId: string): Promise<PublishStatus | null>;
+  // Writes only publishStatus. Not for publishing: that emails the teacher,
+  // so it goes through publishSession.
   setPublishStatus(
     id: string,
     publishStatus: PublishStatus,

@@ -24,7 +24,7 @@ import {
   isFileReady,
   validateUploadFile,
 } from '../lib/UploadModels';
-import { currentSchoolWeek, schoolWeeks } from '../lib/weeks';
+import { currentSchoolWeek, formatSchoolWeek, schoolWeeks } from '../lib/weeks';
 import { sessionForWeek, sessionWeek } from '../lib/flowProgress';
 import { classSessions } from '../lib/selectors';
 import { setSelectionParams } from '../lib/selectionParams';
@@ -65,7 +65,7 @@ export default function UploadFlow({
   classrooms,
   kind,
 }: UploadFlowProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const [, setSearchParams] = useSearchParams();
@@ -176,6 +176,11 @@ export default function UploadFlow({
           assessmentType: kind,
           ...keys,
           weekStart,
+          // In English, as the review screen words it: it goes into the
+          // results email (microcoachv2EmailTeacher), which is English.
+          weekLabel: weekStart
+            ? formatSchoolWeek(weekStart, i18n.getFixedT('en'), 'en', 'upload.weekOption')
+            : null,
         });
       } catch (error) {
         console.error('Could not record the MIU upload', { ...keys, error });

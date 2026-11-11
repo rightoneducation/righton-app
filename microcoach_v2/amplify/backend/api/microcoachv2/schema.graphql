@@ -164,6 +164,9 @@ type MicroCoachUpload
   xlsxKey: String!
   # Monday of the school week the teacher picked (YYYY-MM-DD).
   weekStart: String
+  # That week as the teacher saw it ("Week 10: Oct 26-30"), saved at upload so
+  # the published-results email can show it without the app's school calendar.
+  weekLabel: String
   status: UploadStatus
   # Set with FAILED: why ingest stopped.
   error: String
@@ -532,6 +535,16 @@ type SchoolObservation {
   schoolCode: String!
   rubricScores: AWSJSON
   notes: String
+}
+
+# ── Publishing reviewed results ─────────────────────────────────────────────
+# The reviewer's Publish on /prepublishreview: DRAFT → PUBLISHED, then the
+# teacher who uploaded is emailed that their results are ready (MIU 1 or MIU 2).
+# Admins only, enforced here — the page only hides the button.
+type Mutation {
+  publishSession(sessionId: ID!): MicroCoachSession
+    @function(name: "microcoachv2EmailTeacher-${env}")
+    @auth(rules: [{ allow: groups, groups: ["Admins"] }])
 }
 
 # ── TEMPORARY: pipeline preview ─────────────────────────────────────────────

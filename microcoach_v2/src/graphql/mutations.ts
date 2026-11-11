@@ -2,6 +2,224 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const publishSession = /* GraphQL */ `
+  mutation PublishSession($sessionId: ID!) {
+    publishSession(sessionId: $sessionId) {
+      id
+      classId
+      sessionLabel
+      weekLabel
+      weekNumber
+      weekStart
+      topic
+      ccssStandards
+      status
+      publishStatus
+      studentWorksAnalyzed
+      studentsWithStrongUnderstanding
+      studentsWithStrongUnderstandingIds
+      studentIdsNeedingSupport
+      ppqAssessmentId
+      postPpqAssessmentId
+      selectedMisconceptionId
+      assessments {
+        items {
+          id
+          classId
+          sessionId
+          assessmentCode
+          type
+          weekNumber
+          uploadId
+          classPercentCorrect
+          questions {
+            questionNumber
+            docxQuestion
+            questionText
+            ccssStandard
+            correctAnswer
+            classPercentCorrect
+            answerChoices {
+              letter
+              content
+              isCorrect
+              __typename
+            }
+            __typename
+          }
+          responses {
+            items {
+              id
+              assessmentId
+              classId
+              sessionId
+              studentRef
+              totalScore
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      misconceptions {
+        items {
+          id
+          sessionId
+          classId
+          activity {
+            items {
+              id
+              misconceptionId
+              sessionId
+              classId
+              activityType
+              title
+              isSelected
+              selectLabel
+              detailStatus
+              routine
+              durationMinutes
+              durationLabel
+              targets
+              instructionalMove
+              strategyTag
+              phases
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          rank
+          badge
+          title
+          titleCased
+          shortLabel
+          description
+          consequence
+          prevalence {
+            level
+            label
+            studentsNeedingSupport
+            studentsUnderstood
+            studentsNoResponse
+            totalAnalyzed
+            supportSummaryLabel
+            understoodSummaryLabel
+            shortCountLabel
+            __typename
+          }
+          detailStatus
+          studentWork
+          skillContext
+          responseEvidence {
+            questionNumber
+            answers
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      pregeneratedNextSteps
+      pipelineOutput
+      evaluationResults
+      questionStats {
+        questionNumber
+        percentCorrect
+        questionText
+        options {
+          letter
+          text
+          percentChosen
+          isCorrect
+          studentNames
+          __typename
+        }
+        __typename
+      }
+      reflectionResults {
+        activityId
+        misconceptionId
+        questionCount
+        averagePercentCorrectBefore
+        averagePercentCorrectAfter
+        averageQuestionsCorrectBefore
+        averageQuestionsCorrectAfter
+        improvedStudentCount
+        studentResults {
+          studentId
+          studentName
+          questionsCorrectBefore
+          questionsCorrectAfter
+          __typename
+        }
+        questionResults {
+          questionNumber
+          questionText
+          beforeQuestionText
+          afterQuestionText
+          beforeStandard
+          afterStandard
+          percentCorrectBefore
+          percentCorrectAfter
+          beforeAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          afterAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
+      uploads {
+        items {
+          id
+          userId
+          cognitoId
+          classId
+          sessionId
+          assessmentType
+          docxKey
+          xlsxKey
+          weekStart
+          weekLabel
+          status
+          error
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createMicroCoachUser = /* GraphQL */ `
   mutation CreateMicroCoachUser(
     $input: CreateMicroCoachUserInput!
@@ -83,6 +301,7 @@ export const createMicroCoachUser = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -180,6 +399,7 @@ export const updateMicroCoachUser = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -277,6 +497,7 @@ export const deleteMicroCoachUser = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -416,6 +637,7 @@ export const createMicroCoachClassroom = /* GraphQL */ `
               docxKey
               xlsxKey
               weekStart
+              weekLabel
               status
               error
               createdAt
@@ -578,6 +800,7 @@ export const updateMicroCoachClassroom = /* GraphQL */ `
               docxKey
               xlsxKey
               weekStart
+              weekLabel
               status
               error
               createdAt
@@ -740,6 +963,7 @@ export const deleteMicroCoachClassroom = /* GraphQL */ `
               docxKey
               xlsxKey
               weekStart
+              weekLabel
               status
               error
               createdAt
@@ -1032,6 +1256,7 @@ export const createMicroCoachSession = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -1252,6 +1477,7 @@ export const updateMicroCoachSession = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -1472,6 +1698,7 @@ export const deleteMicroCoachSession = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -1502,6 +1729,7 @@ export const createMicroCoachUpload = /* GraphQL */ `
       docxKey
       xlsxKey
       weekStart
+      weekLabel
       status
       error
       createdAt
@@ -1525,6 +1753,7 @@ export const updateMicroCoachUpload = /* GraphQL */ `
       docxKey
       xlsxKey
       weekStart
+      weekLabel
       status
       error
       createdAt
@@ -1548,6 +1777,7 @@ export const deleteMicroCoachUpload = /* GraphQL */ `
       docxKey
       xlsxKey
       weekStart
+      weekLabel
       status
       error
       createdAt

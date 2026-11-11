@@ -52,9 +52,9 @@ import { sendEmail } from './util/send-email.mjs';
 
 const { env } = process;
 const REGION = env.REGION;
-// Where the "generation finished" email's review link points. Local for now:
-// switch to https://prototype.microcoach.com before building to the prototype.
-const REVIEW_BASE_URL = 'http://localhost:3000';
+// Where the review link points: the hosted prototype. Use
+// http://localhost:3000 to review against a local app.
+const REVIEW_BASE_URL = 'https://prototype.rightoneducation.com';
 const TABLES = {
   upload: env.API_MICROCOACHV2_MICROCOACHUPLOADTABLE_NAME,
   assessment: env.API_MICROCOACHV2_MICROCOACHASSESSMENTTABLE_NAME,

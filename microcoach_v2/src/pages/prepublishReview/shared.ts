@@ -191,13 +191,12 @@ export function usePrepublishSession(sessionId: string): PrepublishSessionState 
     setIsPublishing(true);
     setPublishError(false);
     try {
-      const updated = await apiClients.session.setPublishStatus(
-        session.id,
-        PublishStatus.PUBLISHED,
-      );
-      if (!updated) throw new Error('setPublishStatus returned no session');
-      // Keep the loaded output: the mutation's selection set may not carry it.
-      setSession({ ...session, publishStatus: updated.publishStatus });
+      // Server-side: publishes, then emails the teacher who uploaded.
+      const publishStatus = await apiClients.session.publishSession(session.id);
+      if (publishStatus !== PublishStatus.PUBLISHED) {
+        throw new Error(`publishSession left the session ${publishStatus ?? 'unset'}`);
+      }
+      setSession({ ...session, publishStatus });
     } catch (error) {
       console.error('Publish failed', error);
       setPublishError(true);

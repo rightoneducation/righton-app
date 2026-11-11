@@ -80,6 +80,7 @@ export const getMicroCoachUser = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -145,6 +146,7 @@ export const listMicroCoachUsers = /* GraphQL */ `
             docxKey
             xlsxKey
             weekStart
+            weekLabel
             status
             error
             createdAt
@@ -284,6 +286,7 @@ export const getMicroCoachClassroom = /* GraphQL */ `
               docxKey
               xlsxKey
               weekStart
+              weekLabel
               status
               error
               createdAt
@@ -661,6 +664,7 @@ export const getMicroCoachSession = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -849,6 +853,7 @@ export const listMicroCoachSessions = /* GraphQL */ `
             docxKey
             xlsxKey
             weekStart
+            weekLabel
             status
             error
             createdAt
@@ -879,6 +884,7 @@ export const getMicroCoachUpload = /* GraphQL */ `
       docxKey
       xlsxKey
       weekStart
+      weekLabel
       status
       error
       createdAt
@@ -908,6 +914,7 @@ export const listMicroCoachUploads = /* GraphQL */ `
         docxKey
         xlsxKey
         weekStart
+        weekLabel
         status
         error
         createdAt
@@ -1202,6 +1209,7 @@ export const usersByCognitoId = /* GraphQL */ `
             docxKey
             xlsxKey
             weekStart
+            weekLabel
             status
             error
             createdAt
@@ -1278,6 +1286,7 @@ export const usersByEmail = /* GraphQL */ `
             docxKey
             xlsxKey
             weekStart
+            weekLabel
             status
             error
             createdAt
@@ -1354,6 +1363,7 @@ export const usersByRole = /* GraphQL */ `
             docxKey
             xlsxKey
             weekStart
+            weekLabel
             status
             error
             createdAt
@@ -1681,6 +1691,7 @@ export const microCoachSessionsByClassId = /* GraphQL */ `
             docxKey
             xlsxKey
             weekStart
+            weekLabel
             status
             error
             createdAt
@@ -1724,6 +1735,7 @@ export const microCoachUploadsByUserId = /* GraphQL */ `
         docxKey
         xlsxKey
         weekStart
+        weekLabel
         status
         error
         createdAt
@@ -1760,6 +1772,7 @@ export const microCoachUploadsByClassId = /* GraphQL */ `
         docxKey
         xlsxKey
         weekStart
+        weekLabel
         status
         error
         createdAt
@@ -1796,6 +1809,7 @@ export const microCoachUploadsBySessionId = /* GraphQL */ `
         docxKey
         xlsxKey
         weekStart
+        weekLabel
         status
         error
         createdAt

@@ -26,6 +26,20 @@ import { SessionParser } from "../../Parsers/SessionParser";
 import { BaseAPIClient, GraphQLOptions } from "../base/BaseAPIClient";
 import { ISessionAPIClient } from "./interfaces/ISessionAPIClient";
 
+// Written out rather than imported from graphql/mutations: codegen only adds
+// publishSession after the push, and this needs nothing but the status back.
+const publishSessionMutation = /* GraphQL */ `
+  mutation PublishSession($sessionId: ID!) {
+    publishSession(sessionId: $sessionId) {
+      id
+      publishStatus
+    }
+  }
+`;
+type PublishSessionMutation = {
+  publishSession?: { id: string; publishStatus?: PublishStatus | null } | null;
+};
+
 export class SessionAPIClient
   extends BaseAPIClient
   implements ISessionAPIClient
@@ -154,6 +168,14 @@ export class SessionAPIClient
     return updatedSession
       ? SessionParser.parseIMicroCoachSessionfromAWSSession(updatedSession)
       : null;
+  }
+
+  async publishSession(sessionId: string): Promise<PublishStatus | null> {
+    const res = await this.mutateGraphQL<PublishSessionMutation>(
+      publishSessionMutation,
+      { sessionId } as unknown as GraphQLOptions,
+    );
+    return res?.data?.publishSession?.publishStatus ?? null;
   }
 
   async setPublishStatus(

@@ -952,31 +952,6 @@ function ReflectionResultCard({
             </table>
           )}
         </Block>
-        <Block label="By student" hint="questions correct, MIU 1 → MIU 2">
-          {result.studentResults.length === 0 ? (
-            <span className="p2-nil">no student results</span>
-          ) : (
-            <table className="p2-table">
-              <thead>
-                <tr>
-                  <th>Student</th>
-                  <th>MIU 1</th>
-                  <th>MIU 2</th>
-                </tr>
-              </thead>
-              <tbody>
-                {result.studentResults.map((st) => (
-                  <tr key={st.studentId}>
-                    <td>{st.studentName ?? st.studentId}</td>
-                    {/* null: the student didn't take that MIU. */}
-                    <td>{st.questionsCorrectBefore ?? '—'}</td>
-                    <td>{st.questionsCorrectAfter ?? '—'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </Block>
       </div>
     </details>
   );

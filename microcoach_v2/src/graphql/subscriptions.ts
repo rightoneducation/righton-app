@@ -83,6 +83,7 @@ export const onCreateMicroCoachUser = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -180,6 +181,7 @@ export const onUpdateMicroCoachUser = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -277,6 +279,7 @@ export const onDeleteMicroCoachUser = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -415,6 +418,7 @@ export const onCreateMicroCoachClassroom = /* GraphQL */ `
               docxKey
               xlsxKey
               weekStart
+              weekLabel
               status
               error
               createdAt
@@ -576,6 +580,7 @@ export const onUpdateMicroCoachClassroom = /* GraphQL */ `
               docxKey
               xlsxKey
               weekStart
+              weekLabel
               status
               error
               createdAt
@@ -737,6 +742,7 @@ export const onDeleteMicroCoachClassroom = /* GraphQL */ `
               docxKey
               xlsxKey
               weekStart
+              weekLabel
               status
               error
               createdAt
@@ -1025,6 +1031,7 @@ export const onCreateMicroCoachSession = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -1244,6 +1251,7 @@ export const onUpdateMicroCoachSession = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -1463,6 +1471,7 @@ export const onDeleteMicroCoachSession = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -1493,6 +1502,7 @@ export const onCreateMicroCoachUpload = /* GraphQL */ `
       docxKey
       xlsxKey
       weekStart
+      weekLabel
       status
       error
       createdAt
@@ -1516,6 +1526,7 @@ export const onUpdateMicroCoachUpload = /* GraphQL */ `
       docxKey
       xlsxKey
       weekStart
+      weekLabel
       status
       error
       createdAt
@@ -1539,6 +1550,7 @@ export const onDeleteMicroCoachUpload = /* GraphQL */ `
       docxKey
       xlsxKey
       weekStart
+      weekLabel
       status
       error
       createdAt

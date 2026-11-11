@@ -68,9 +68,9 @@ const UPLOAD_TABLE = process.env.API_MICROCOACHV2_MICROCOACHUPLOADTABLE_NAME;
 const ASSESSMENT_TABLE = process.env.API_MICROCOACHV2_MICROCOACHASSESSMENTTABLE_NAME;
 const RESPONSE_TABLE = process.env.API_MICROCOACHV2_MICROCOACHSTUDENTRESPONSETABLE_NAME;
 const SESSION_TABLE = process.env.API_MICROCOACHV2_MICROCOACHSESSIONTABLE_NAME;
-// Where the "MIU 2 analysed" email's review link points. Local for now, as in
-// UploadGenerate: switch to https://prototype.microcoach.com before building to it.
-const REVIEW_BASE_URL = 'http://localhost:3000';
+// Where the review link points: the hosted prototype. Use
+// http://localhost:3000 to review against a local app.
+const REVIEW_BASE_URL = 'https://prototype.rightoneducation.com';
 const SAVED_PLAN_TABLE = process.env.API_MICROCOACHV2_MICROCOACHSAVEDPLANTABLE_NAME;
 const ACTIVITY_TABLE = process.env.API_MICROCOACHV2_MICROCOACHACTIVITYTABLE_NAME;
 const BUCKET = process.env.STORAGE_MICROCOACHUPLOADS_BUCKETNAME;
