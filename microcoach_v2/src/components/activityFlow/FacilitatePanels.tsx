@@ -408,38 +408,36 @@ export function MathDetectivePanel({
             <Typography variant="headingSm">
               {t(`${copy}.${isTeacher ? 'focusTeacher' : 'focusStudent'}`)}
             </Typography>
-            <ExampleQuestion boldMath variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
-            <ExampleQuestion boldMath variant="rubikSubBold" component="span" text={workLine(examples[tileIndex].workSummary)} />
-          </>
+            <Typography variant="smallBodyText" component="div">
+              <strong>{t(`${copy}.issue`)}</strong>{' '}
+              <MathText text={issue} inline />
+            </Typography>
+          </DetectiveCard>
         )}
-      />
-      {example && (
-        <ExampleDetail aria-live="polite">
-          <ExampleOfHeading index={index} count={examples.length} />
-          {/* The question uses Rubik 14 bold; the work below stays Rubik 16,
-              marked in teacher view. */}
-          <ExampleHeaderBox>
-            <ExampleIconTile aria-hidden>
-              <EditIcon />
-            </ExampleIconTile>
-            <ExampleHeaderText>
-              <ExampleQuestion boldMath variant="rubikSubBold" text={example.prompt} />
-              <MathTypography variant="rubikBody" text={workLine(example.workSummary)} />
-            </ExampleHeaderText>
-          </ExampleHeaderBox>
-          {example.stages.map((stage) => (
-            <ContentPanel key={stage.kind}>
-              <Typography variant="headingSm" sx={{ color: navy }}>
-                {t(`activityFlow.facilitate.stage.${stage.kind}`)}
+        <DetectiveCard>
+          <Typography variant="headingSm">{t(`${copy}.findEvidence`)}</Typography>
+          <Typography variant="smallBodyText">
+            {t(`${copy}.${isTeacher ? 'findEvidenceTeacher' : 'findEvidenceStudent'}`)}
+          </Typography>
+        </DetectiveCard>
+        <ExamplePicker
+          count={examples.length}
+          index={index}
+          onSelect={setIndex}
+          screenSize={props.screenSize}
+          renderTile={(tileIndex) => (
+            <>
+              <Typography variant="headingMdBold" component="span">
+                {t('activityFlow.facilitate.exampleLabel', { number: tileIndex + 1 })}
               </Typography>
-              <MathTypography variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
+              <ExampleQuestion boldMath variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
             </>
           )}
         />
         {example && (
           <DetectiveExample aria-live="polite">
             <ExampleOfHeading index={index} count={examples.length} />
-            <MathTypography variant="rubikSubBold" text={example.prompt} />
+            <ExampleQuestion boldMath variant="rubikSubBold" text={example.prompt} />
             {isTeacher ? (
               <DetectiveColumns screenSize={props.screenSize}>
                 <DetectiveColumn>

@@ -430,4 +430,62 @@ export const AddClassActions = styled(Box)(({ theme }) => ({
   gap: theme.sizing.space4,
 }));
 
+// qa1 Rename: the pencil on the same 44x45 tile. While another row is being
+// renamed (or a class added) the pencils fade to 40% and stop responding.
+export const ClassRenameButton = styled(ClassDeleteButton)({
+  '&.Mui-disabled': {
+    opacity: 0.4,
+  },
+});
+
+// qa1 Rename: the editing field with its duplicate message ~8 below it (and,
+// below LARGE, Cancel / Done under that).
+export const RenameField = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.sizing.space1,
+  width: '100%',
+}));
+
+// qa1 Rename: Cancel then Done, 12 apart. Inside the field's right end on
+// LARGE; under the field below LARGE.
+export const RenameActions = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.sizing.space2,
+  flexShrink: 0,
+}));
+
+// qa1 Rename: Cancel is an underlined Rubik 12 text link in #2563EB (no
+// palette token carries that blue).
+export const RenameCancel = styled(Button)(({ theme }) => ({
+  minWidth: 0,
+  padding: 0,
+  color: '#2563EB',
+  ...theme.typography.microLabel,
+  letterSpacing: '-0.02em',
+  textTransform: 'none',
+  textDecoration: 'underline',
+  '&:hover': {
+    backgroundColor: 'transparent',
+    textDecoration: 'underline',
+  },
+}));
+
+// qa1 Rename: Done is a 45x28 rx14 navy pill, Rubik 12 white; at 40% until the
+// name is non-empty and unique.
+export const RenameDone = styled(ProfileActionPrimary)(({ theme }) => ({
+  minWidth: 45,
+  minHeight: 28,
+  padding: `0 ${theme.sizing.space1}px`,
+  borderRadius: 14,
+  ...theme.typography.microLabel,
+  letterSpacing: '-0.02em',
+  '&.Mui-disabled': {
+    backgroundColor: theme.palette.designSystem.background.navyBlue,
+    color: theme.palette.designSystem.surface.white,
+    opacity: 0.4,
+  },
+}));
+
 export type { ScreenSizeProps };
