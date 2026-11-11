@@ -7,6 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import AppModal from './AppModal';
+import MathTypography from './MathTypography';
 import type { IMicroCoachReflectionAnswerResult } from '../api/Models/IMicroCoachSession';
 import { IImplementedActivity } from '../lib/PipelineModels';
 import { ScreenSize } from '../lib/MicroCoachModels';
@@ -74,9 +75,11 @@ function ResponseRow({
     <AssessmentBlock>
       {questionText && (
         <AssessmentQuestionRow>
-          <Typography variant="bodyText" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-            {questionText}
-          </Typography>
+          <MathTypography
+            variant="bodyText"
+            sx={{ color: 'designSystem.surface.atlanticNavy' }}
+            text={questionText}
+          />
         </AssessmentQuestionRow>
       )}
       <AssessmentResponseRow screenSize={screenSize}>
@@ -251,7 +254,7 @@ export default function ReflectionDetailModal({
                             <Typography variant="microLabel">{t('reflect.miu1')}</Typography>
                             <ProficiencyCount assessment="before">{band.before}</ProficiencyCount>
                           </ProficiencyCountGroup>
-                          <Typography variant="rubikBody">→</Typography>
+                          <Typography variant="headingLg">→</Typography>
                           <ProficiencyCountGroup>
                             <Typography variant="microLabel">{t('reflect.miu2')}</Typography>
                             <ProficiencyCount assessment="after">{band.after}</ProficiencyCount>

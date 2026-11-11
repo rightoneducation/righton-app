@@ -158,6 +158,7 @@ export const ProficiencyCounts = styled(Box)(({ theme }) => ({
 export const ProficiencyCountGroup = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
+  alignItems: 'center',
   gap: `${theme.sizing.space0}px`,
 }));
 
