@@ -6,9 +6,10 @@ import {
   useLocation,
   useNavigate,
   useParams,
+  useSearchParams,
 } from 'react-router-dom';
 import { IAPIClients } from '../api';
-import { AssessmentType } from '../AWSAPI';
+import { AssessmentType, SessionStatus } from '../AWSAPI';
 import {
   MicroCoachDataStatus,
   ScreenSize,
@@ -24,8 +25,15 @@ import {
   validateUploadFile,
 } from '../lib/UploadModels';
 import { currentSchoolWeek, schoolWeeks } from '../lib/weeks';
+import { sessionForWeek } from '../lib/flowProgress';
+import { classSessions } from '../lib/selectors';
+import { setSelectionParams } from '../lib/selectionParams';
 import { UseClassroomsResult } from '../hooks/useClassrooms';
-import { useMicroCoachDataState } from '../hooks/context/useMicroCoachDataContext';
+import { useSelectionPath } from '../hooks/useEffectiveSelection';
+import {
+  useMicroCoachDataDispatch,
+  useMicroCoachDataState,
+} from '../hooks/context/useMicroCoachDataContext';
 import UploadConfirmDialog from '../components/UploadConfirmDialog';
 import UploadMiu from '../pages/UploadMiu';
 import UploadMiuReview from '../pages/UploadMiuReview';
@@ -38,7 +46,10 @@ import UploadMiuSubmitted from '../pages/UploadMiuSubmitted';
  * survive "Back to upload" from the review step without a provider above both.
  *
  * Files stay in the browser until "Submit files for analysis": that uploads
- * both to S3 and starts the analysis (UploadAPIClient).
+ * both to S3, puts the session in its waiting state, and records the pair as a
+ * MicroCoachUpload row, which is what starts ingest. S3 is one way: nothing
+ * here deletes an uploaded file, so a failed pipeline run can always be
+ * redone by hand from the recorded keys.
  */
 
 interface UploadFlowProps {
@@ -57,32 +68,35 @@ export default function UploadFlow({
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+  const [, setSearchParams] = useSearchParams();
+  const toFlow = useSelectionPath();
   const step = useParams()['*'] ?? '';
-  const { userProfile, userStatus } = useMicroCoachDataState();
+  const { userProfile, userStatus, sessions } = useMicroCoachDataState();
+  const dispatch = useMicroCoachDataDispatch();
   const basePath = UPLOAD_BASE_PATH[kind];
 
-  // Class and week arrive pre-filled from the dashboard: the class through the
-  // shared selection, the week through router state.
+  // The week arrives pre-filled through router state; the class is the URL's
+  // (`?class=`, set by whatever opened the upload), which may still be
+  // loading when the flow mounts.
   const [upload, setUpload] = useState<IUploadState>(() => {
     const passedWeek = (location.state as { weekStart?: string } | null)
       ?.weekStart;
     return emptyUploadState(
-      null,
       passedWeek && schoolWeeks().includes(passedWeek)
         ? passedWeek
         : currentSchoolWeek(),
     );
   });
-
-  // Until the teacher picks one here, the class follows the dashboard's
-  // selection, which may still be loading when the flow mounts.
-  const classId = upload.classId ?? classrooms.selectedClassroomId ?? '';
+  const classId = classrooms.selectedClassroomId ?? '';
 
   const actions: IUploadActions = {
+    // Picking a class here edits the form, so it replaces the history entry
+    // rather than adding a Back step, and keeps the scroll where it is.
     setClass: (nextClassId) => {
-      setUpload((s) => ({ ...s, classId: nextClassId }));
-      // Keep the app-wide selection in step, as the dashboard picker does.
-      classrooms.selectClassroom(nextClassId);
+      setSearchParams(
+        (params) => setSelectionParams(params, { classId: nextClassId, sessionId: null }),
+        { replace: true, preventScrollReset: true },
+      );
     },
     setWeek: (weekStart) => setUpload((s) => ({ ...s, weekStart })),
     pickFile: (slot, file) => {
@@ -94,8 +108,8 @@ export default function UploadFlow({
     },
     clearFile: (slot) => setUpload((s) => ({ ...s, [slot]: null })),
     submit: async () => {
-      const { exemplar, responses } = upload;
-      if (!classId || !exemplar?.file || !responses?.file) return false;
+      const { exemplar, responses, weekStart } = upload;
+      if (!classId || !exemplar?.file || !responses?.file) return null;
       setUpload((s) => ({ ...s, submitStatus: 'SUBMITTING', submitError: null }));
 
       let keys: { docxKey: string; xlsxKey: string };
@@ -108,43 +122,62 @@ export default function UploadFlow({
       } catch (error) {
         console.error('Could not upload the MIU files', error);
         setUpload((s) => ({ ...s, submitStatus: 'ERROR', submitError: 'UPLOAD' }));
-        return false;
+        return null;
       }
 
+      // MIU 1 starts a new session; MIU 2 goes on the session Home sent the
+      // teacher here for (that week's, else the class's latest). Then the
+      // upload row, whose creation starts ingest. If either write fails the
+      // files stay in S3, and a retry uploads a fresh pair.
+      // A session saved by an earlier, failed attempt is reused only for the
+      // class it was saved for: the class may have changed since.
+      let sessionId =
+        upload.sessionId && sessions[upload.sessionId]?.classId === classId
+          ? upload.sessionId
+          : null;
       try {
-        await apiClients.upload.startAnalysis({
-          classroomId: classId,
-          ...keys,
+        if (!sessionId) {
+          let saved;
+          if (kind === AssessmentType.PPQ) {
+            saved = await apiClients.session.createUploadedSession(classId);
+          } else {
+            const ofClass = classSessions({ sessions }, classId);
+            const target = sessionForWeek(ofClass, weekStart) ?? ofClass[0];
+            if (!target) throw new Error(`Class ${classId} has no session to reassess`);
+            saved = await apiClients.session.setSessionStatus(
+              target.id,
+              SessionStatus.REASSESS_INGESTED,
+            );
+          }
+          if (!saved) throw new Error('The session came back empty');
+          dispatch({ type: 'UPSERT_ROWS', table: 'sessions', rows: [saved] });
+          const savedId = saved.id;
+          sessionId = savedId;
+          setUpload((s) => ({ ...s, sessionId: savedId }));
+        }
+        if (!userProfile?.id) throw new Error('No signed-in user to record the upload under');
+        await apiClients.upload.recordUpload({
+          userId: userProfile.id,
+          classId,
+          sessionId,
           assessmentType: kind,
+          ...keys,
+          weekStart,
         });
       } catch (error) {
-        console.error('Could not start the analysis', error);
-        // The files are in S3 but nothing will read them: take them back out.
-        await Promise.all(
-          [keys.docxKey, keys.xlsxKey].map((key) =>
-            apiClients.upload.removeFile(key).catch(() => undefined),
-          ),
-        );
-        setUpload((s) => ({ ...s, submitStatus: 'ERROR', submitError: 'ANALYSIS' }));
-        return false;
+        console.error('Could not record the MIU upload', { ...keys, error });
+        setUpload((s) => ({ ...s, submitStatus: 'ERROR', submitError: 'UPLOAD' }));
+        return null;
       }
 
       setUpload((s) => ({ ...s, submitStatus: 'IDLE', submission: keys }));
-      return true;
+      // The caller opens the submitted step on it, in the URL.
+      return sessionId;
     },
+    // Only resets the form: the submitted files and their record stay.
     startOver: async () => {
-      const { submission } = upload;
-      if (submission) {
-        await Promise.all(
-          [submission.docxKey, submission.xlsxKey].map((key) =>
-            apiClients.upload.removeFile(key).catch((error) => {
-              console.error('Could not remove an uploaded file', error);
-            }),
-          ),
-        );
-      }
-      setUpload((s) => emptyUploadState(s.classId, s.weekStart));
-      navigate(basePath, { replace: true });
+      setUpload((s) => emptyUploadState(s.weekStart));
+      navigate(toFlow(basePath), { replace: true });
     },
   };
 
@@ -212,14 +245,14 @@ export default function UploadFlow({
     return isFileReady(upload.exemplar) && isFileReady(upload.responses) ? (
       <UploadMiuReview {...stepProps} />
     ) : (
-      <Navigate to={basePath} replace />
+      <Navigate to={toFlow(basePath)} replace />
     );
   }
   if (step === 'submitted') {
     return upload.submission ? (
       <UploadMiuSubmitted {...stepProps} />
     ) : (
-      <Navigate to={basePath} replace />
+      <Navigate to={toFlow(basePath)} replace />
     );
   }
   return (

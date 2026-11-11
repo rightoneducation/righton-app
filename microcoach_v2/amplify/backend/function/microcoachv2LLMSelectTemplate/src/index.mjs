@@ -45,6 +45,7 @@ import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
 import config from './util/config.json' assert { type: 'json' };
+import { streamedCompletion } from './util/debugStream.mjs';
 
 const sc = config?.selectTemplate ?? {};
 const MODEL = sc.model ?? 'gpt-5-mini';
@@ -77,7 +78,7 @@ const Pick = z.object({
 
 const Considered = z.object({
   templateId: templateIdSchema,
-  whyNot: z.string().describe('One sentence on why this template is a weaker fit for this need than the two selected'),
+  whyNot: z.string().describe('One sentence on why this template is a weaker fit for this need than the two selected, naming what about the reasoning in this need makes it weaker. A conceptual or procedural label alone is not a reason. For Spot the Slip, consider a worked example constructed from the evidence: is there a first step students could locate and repair?'),
 });
 
 const Selection = z.object({
@@ -316,14 +317,17 @@ export const handler = async (event) => {
     const sessionSection = buildSessionSection({ assessmentType, classroom, ppq, wrongAnswerDist, rightOnGames, needs });
     const userContent = `${staticPrefix}\n\n${sessionSection}`;
 
-    const completion = await openai.chat.completions.create({
+    const params = {
       model: MODEL,
       messages: [
         { role: 'system', content: 'You are an expert K-12 math instructional coach. Output exclusively valid JSON.' },
         { role: 'user', content: userContent },
       ],
       response_format: zodResponseFormat(SelectResponse, 'selectTemplate'),
-    });
+    };
+    const completion = input.debugStream === true
+      ? await streamedCompletion(openai, params, { tag: '[microcoachv2LLMSelectTemplate] select-template', retries: input.debugStreamRetries ?? 0 })
+      : await openai.chat.completions.create(params);
 
     const raw = completion.choices[0]?.message?.content;
     if (!raw) throw new Error('Empty completion content');

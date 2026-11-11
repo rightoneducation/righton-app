@@ -1,0 +1,12 @@
+{
+  "resourceName": "microcoachuploads",
+  "policyUUID": "bee3f596",
+  "bucketName": "microcoachuploads",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ"
+  ],
+  "triggerFunction": "NONE"
+}

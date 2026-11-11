@@ -19,6 +19,7 @@ import { pdfColors, pdfStyles } from './pdfTheme';
 import handoutBookIcon from '../../images/handoutBookIcon.png';
 import groupingIndividual from '../../images/groupingIndividual.png';
 import groupingPairs from '../../images/groupingPairs.png';
+import groupingTwoGroups from '../../images/groupingTwoGroups.png';
 import groupingWholeClass from '../../images/groupingWholeClass.png';
 
 /*
@@ -39,6 +40,7 @@ import groupingWholeClass from '../../images/groupingWholeClass.png';
 const GROUPING_ICONS: Record<GroupingKind, string> = {
   INDIVIDUAL: groupingIndividual,
   PAIRS: groupingPairs,
+  TWO_GROUPS: groupingTwoGroups,
   WHOLE_CLASS: groupingWholeClass,
 };
 
@@ -549,20 +551,54 @@ function DetectiveExampleCard({
   isTeacher: boolean;
   t: Translate;
 }) {
+  // Activities generated before issue #2848 keep their right/wrong marks.
+  const hasEvidence = Boolean(example.evidenceNotes);
+  let evidenceCount = 0;
+
   return (
     <Card isTeacher={isTeacher} withWorkArea>
       <Text style={styles.exampleTitle}>{t('activityFlow.facilitate.exampleLabel', { number })}</Text>
       <Text style={styles.prompt}>{m(example.prompt)}</Text>
-      {example.workSummary.map((line) => (
+      {!hasEvidence && example.workSummary.map((line) => (
         <WorkRow key={line.text} text={line.text} status={line.status} isTeacher={isTeacher} t={t} />
       ))}
+      {hasEvidence && (
+        <>
+          <Text style={styles.label}>
+            {t(`activityFlow.facilitate.detective.${isTeacher ? 'solutionTeacher' : 'solutionStudent'}`).toUpperCase()}
+          </Text>
+          {example.workSummary.map((line, index) => {
+            const isMarked = isTeacher && Boolean(line.isEvidence);
+            if (isMarked) evidenceCount += 1;
+            return (
+              <View key={line.text} style={[styles.stepRow, isMarked ? { backgroundColor: pdfColors.sky } : {}]}>
+                <Text style={styles.stepLabel}>{t('activityDetail.stepNumber', { number: index + 1 })}</Text>
+                <Text style={styles.stepText}>{m(line.text)}</Text>
+                {isMarked && (
+                  <Text style={pdfStyles.bodyBold}>
+                    {t('activityFlow.facilitate.detective.evidenceTag', { number: evidenceCount })}
+                  </Text>
+                )}
+              </View>
+            );
+          })}
+        </>
+      )}
+      {isTeacher && hasEvidence && (
+        <View style={[styles.tonedBox, { backgroundColor: pdfColors.sky }]}>
+          <Text style={pdfStyles.bodyBold}>{t('activityFlow.facilitate.detective.evidenceInResponse')}</Text>
+          {example.evidenceNotes?.map((note) => (
+            <Text key={note.text} style={styles.body}>{m(note.text)}</Text>
+          ))}
+        </View>
+      )}
       {example.stages.map((stage) => (
         <View key={stage.kind} style={{ marginTop: 6 }}>
           <Text style={styles.label}>{t(`activityFlow.facilitate.stage.${stage.kind}`)}</Text>
-          <Text style={styles.body}>{`"${m(stage.ask)}"`}</Text>
+          <Text style={styles.body}>{m(stage.ask)}</Text>
           {isTeacher && (
             <View style={[styles.tonedBox, { backgroundColor: pdfColors.periwinkle }]}>
-              <Text style={pdfStyles.bodyBold}>{t(`activityFlow.facilitate.stageAnswer.${stage.kind}`)}</Text>
+              <Text style={pdfStyles.bodyBold}>{t('activityFlow.facilitate.detective.potentialAnswer')}</Text>
               <Text style={styles.body}>{m(stage.answer)}</Text>
             </View>
           )}
@@ -636,6 +672,18 @@ function Artifact({ facilitate, isTeacher, t }: { facilitate: IFacilitateContent
     case 'MATH_DETECTIVE':
       return (
         <>
+          {facilitate.issue && (
+            <Card isTeacher={isTeacher}>
+              <Text style={styles.label}>
+                {t(`activityFlow.facilitate.detective.${isTeacher ? 'focusTeacher' : 'focusStudent'}`)}
+              </Text>
+              <Text style={styles.body}>{`${t('activityFlow.facilitate.detective.issue')} ${m(facilitate.issue)}`}</Text>
+              <Text style={styles.label}>{t('activityFlow.facilitate.detective.findEvidence')}</Text>
+              <Text style={styles.body}>
+                {t(`activityFlow.facilitate.detective.${isTeacher ? 'findEvidenceTeacher' : 'findEvidenceStudent'}`)}
+              </Text>
+            </Card>
+          )}
           {facilitate.examples.map((example, index) => (
             <DetectiveExampleCard key={example.prompt} example={example} number={index + 1} isTeacher={isTeacher} t={t} />
           ))}

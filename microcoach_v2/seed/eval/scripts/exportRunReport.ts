@@ -43,7 +43,7 @@ const table = (head: string[], rows: unknown[][]) => [
   ...rows.map((r) => `| ${r.map(cell).join(' | ')} |`),
 ];
 
-const GROUPING_LABEL: Record<string, string> = { INDIVIDUAL: 'Individual', PAIRS: 'Pairs', WHOLE_CLASS: 'Whole Class' };
+const GROUPING_LABEL: Record<string, string> = { INDIVIDUAL: 'Individual', PAIRS: 'Pairs', TWO_GROUPS: 'Two Groups', WHOLE_CLASS: 'Whole Class' };
 const STATUS_MARK: Record<string, string> = { CORRECT: '✓', INCORRECT: '✗', NEUTRAL: '·' };
 const TEMPLATE_LABEL: Record<string, string> = {
   INCORRECT_WORKED_EXAMPLES: 'Spot the Slip',
@@ -84,6 +84,10 @@ function header(manifest: any, retained: any[], swapNote: string | null, guardFi
     `**Retained / dropped:** ${manifest.misconceptionsRetained} / ${manifest.misconceptionsDropped} (rubric cap)  `,
     `**Standard matched:** ${manifest.targetStandardMatched}/${manifest.misconceptionCount}  `,
     `**Needs prescribing an activity:** ${needsFlagged}/${manifest.needSeparationChecked ?? retained.length}  `,
+    ...(manifest.selectTemplateFailed ? [`**⚠ Template selection failed, so no activities were generated:** ${manifest.selectTemplateFailed}  `] : []),
+    ...(Array.isArray(manifest.activitiesFailed) && manifest.activitiesFailed.length
+      ? [`**⚠ Activities not generated:** ${manifest.activitiesFailed.map((f: any) => `${f.templateId} for "${f.misconception}"`).join('; ')}  `]
+      : []),
     ...(Array.isArray(manifest.modelUnavailable) && manifest.modelUnavailable.length
       ? [`**⚠ Model unavailable:** ${[...new Set(manifest.modelUnavailable.map((u: any) => `${u.model} (${u.label})`))].join('; ')}: those steps did not run. ${manifest.modelUnavailable[0].reason ?? ''}  `]
       : []),
@@ -292,11 +296,13 @@ function facilitate(f: any): string[] {
       });
       break;
     case 'MATH_DETECTIVE':
+      if (f.issue) out.push(`**Issue:** ${f.issue}`, '');
       f.examples.forEach((e: any, i: number) => {
         out.push(`*Example ${i + 1}.* ${e.prompt}`, '', 'Student work:');
-        out.push(...e.workSummary.map((w: any) => `- ${STATUS_MARK[w.status] ?? ''} ${w.text}`), '');
+        out.push(...e.workSummary.map((w: any) => `- ${STATUS_MARK[w.status] ?? ''} ${w.text}${w.isEvidence ? ' (evidence)' : ''}`), '');
+        if (e.evidenceNotes?.length) out.push('Evidence notes (teacher):', ...e.evidenceNotes.map((n: any) => `- ${n.text}`), '');
         for (const s of e.stages) {
-          out.push(`**${s.kind[0]}${s.kind.slice(1).toLowerCase()}.** ${s.ask}  `, `Answer (teacher): ${s.answer}`, '');
+          out.push(`**${s.kind[0]}${s.kind.slice(1).toLowerCase().replace(/_/g, ' ')}.** ${s.ask}  `, `Answer (teacher): ${s.answer}`, '');
         }
       });
       break;

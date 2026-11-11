@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { UseSessionsResult } from './useSessions';
+import { withSelection } from '../lib/selectionParams';
 
 export interface OpenClassSessionTarget {
   classId: string;
@@ -10,17 +10,15 @@ export interface OpenClassSessionTarget {
 }
 
 /**
- * Opens a class's session on another page from the cross-class lists. The
- * pages behind it (Review, Reflect, upload) read the app-wide selection, so
- * this selects the class and session together, then navigates. Every class's
- * sessions are already in the store, so there is nothing to wait for.
+ * Opens a class's session on another page from the cross-class lists and the
+ * flow pages' class switcher. The class and session go in the URL, which the
+ * pages behind it (Review, Reflect, upload) read, so Back returns to the
+ * class the teacher came from. The store follows the URL (RootLayout), so a
+ * navigation the upload's leave dialog cancels leaves it untouched.
  */
-export function useOpenClassSession(
-  sessions: UseSessionsResult,
-): (target: OpenClassSessionTarget) => void {
+export function useOpenClassSession(): (target: OpenClassSessionTarget) => void {
   const navigate = useNavigate();
-  return (target) => {
-    sessions.select(target.classId, target.sessionId);
-    navigate(target.path, { state: target.state });
+  return ({ classId, sessionId, path, state }) => {
+    navigate(withSelection(path, { classId, sessionId }), { state });
   };
 }

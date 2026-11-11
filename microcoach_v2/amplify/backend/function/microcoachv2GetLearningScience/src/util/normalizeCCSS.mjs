@@ -47,6 +47,17 @@ export function normalizeCCSSCode(ccss) {
     }
   }
 
+  // Grade-level codes such as `7.NS.3` or `7.EE.4.a`. The graph has `7.NS.A.3`: it
+  // needs the cluster letter, and has no nodes for sub-standards like `.a`. Teachers'
+  // documents usually carry neither, so try each cluster. Only the real one can
+  // match, because standard numbers don't repeat within a domain.
+  const grade = code.match(/^(\d+\.[A-Z]+)\.(?:([A-Z])\.)?(\d+)(?:\.[a-z])?$/);
+  if (grade) {
+    const [, domain, cluster, number] = grade;
+    const clusters = cluster ? [cluster] : ['A', 'B', 'C', 'D'];
+    candidates.push(...clusters.map((letter) => `${domain}.${letter}.${number}`));
+  }
+
   // Deduplicate, preserving order.
   return [...new Set(candidates.filter(Boolean))];
 }

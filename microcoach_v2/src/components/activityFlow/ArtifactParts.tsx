@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -66,10 +67,13 @@ export function useArtifactView({
 export function ArtifactHeader({
   titleId,
   title,
+  titleAside,
   view,
 }: {
   titleId: string;
   title: string;
+  // A label at the far end of the title's line (Math Detective's frame).
+  titleAside?: string;
   view: ArtifactView;
 }) {
   const { t } = useTranslation();
@@ -81,9 +85,12 @@ export function ArtifactHeader({
 
   return (
     <>
-      <Typography id={titleId} variant="headingMd" component="h2" sx={flowCardHeadingSx}>
-        {title}
-      </Typography>
+      <Stack direction="row" alignItems="baseline" justifyContent="space-between" flexWrap="wrap">
+        <Typography id={titleId} variant="headingMd" component="h2" sx={flowCardHeadingSx}>
+          {title}
+        </Typography>
+        {titleAside && <Typography variant="headingSm">{titleAside}</Typography>}
+      </Stack>
       <ExamplesToolbar>
         <ToggleGroup>
           <ViewPillToggle role="group" aria-label={t('activityFlow.facilitate.viewLabel')}>

@@ -22,8 +22,8 @@
  * The session defaults to the run's own session id: the eval fixtures were
  * extracted from sessions that also exist in v2 (ef3872a1 is Test Classroom).
  *
- * Fixture students are pseudonymised (S0239…), so they are mapped onto the v2
- * class's roster by position, both lists sorted by name. Test data only.
+ * Student names are not stored (FERPA): student lists hold "Student N" labels, by
+ * the fixture students' sorted order. Test data only.
  *
  * Every row is recorded in a manifest beside the run before anything is written;
  * `--revert` deletes what was created and puts back what was deleted or changed.
@@ -183,18 +183,11 @@ function main() {
   if (!session) throw new Error(`v2 session ${sessionId} not found in ${table('MicroCoachSession')}`);
   const classId: string = session.classId.S;
 
-  const roster = queryIndex('MicroCoachStudent', 'byClass', 'classId', classId)
-    .map((s) => ({ id: s.id.S as string, name: s.name.S as string }))
-    .sort((a, b) => a.name.localeCompare(b.name));
   const fixtureStudents = [...(fixture.classroom?.students?.items ?? [])]
     .sort((a: any, b: any) => String(a.name).localeCompare(String(b.name)));
   const nameOf = new Map<string, string>();
-  fixtureStudents.forEach((s: any, i: number) => {
-    if (roster[i]) nameOf.set(s.id, roster[i].name);
-  });
-  if (fixtureStudents.length !== roster.length) {
-    console.warn(`⚠ fixture has ${fixtureStudents.length} students, v2 class has ${roster.length}; unmatched students are left out`);
-  }
+  fixtureStudents.forEach((s: any, i: number) => nameOf.set(s.id, `Student ${i + 1}`));
+  const allLabels = [...nameOf.values()];
 
   // Each student's PPQ answer per question, under their v2 name.
   const answers = new Map<string, Map<number, { response: string; isCorrect: boolean }>>();
@@ -262,8 +255,11 @@ function main() {
     }).sort((a, b) => b.studentCount - a.studentCount);
     const needing = [...new Set(buckets.flatMap((b) => b.students))].sort();
     const answeredLinked = responders.filter((name) => linkedQs.some((q) => answers.get(name)?.has(q)));
-    const understood = answeredLinked.filter((name) => !needing.includes(name));
-    const noResponse = roster.map((s) => s.name).filter((name) => !answeredLinked.includes(name));
+    // Right on every linked question, not just "didn't pick this wrong answer".
+    const understood = responders.filter(
+      (name) => linkedQs.length > 0 && linkedQs.every((q) => answers.get(name)?.get(q)?.isCorrect),
+    );
+    const noResponse = allLabels.filter((name) => !answeredLinked.includes(name));
 
     const skillNames = new Map<string, string>((n.skillNames ?? []).map((s: any) => [normalizeCode(s.code), s.name]));
     const skill = (code: string, description: string) => ({
@@ -286,7 +282,7 @@ function main() {
       titleCased,
       shortLabel: titleCased.split(/\s+/).slice(0, 3).join(' '),
       description: n.misconceptionSummary ?? '',
-      prevalence: prevalenceFor(needing.length, understood.length, noResponse.length, roster.length),
+      prevalence: prevalenceFor(needing.length, understood.length, noResponse.length, allLabels.length),
       detailStatus: 'COMPLETE',
       studentWork: {
         tabLabel: 'Student work',

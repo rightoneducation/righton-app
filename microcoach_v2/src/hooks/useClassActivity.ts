@@ -18,19 +18,19 @@ export interface UseClassActivityResult {
  * answered; a background refresh (useRefreshClassesOnMount) keeps READY.
  */
 export function useClassActivity(weekStart: string | null = null): UseClassActivityResult {
-  const { classrooms, sessions, students, savedPlans, activities, loads, userProfile } =
+  const { classrooms, sessions, savedPlans, activities, loads, userProfile } =
     useMicroCoachDataState();
 
   const week = useMemo(
     () =>
       weekStart
-        ? weekRows({ classrooms, sessions, students, savedPlans }, weekStart)
+        ? weekRows({ classrooms, sessions, savedPlans }, weekStart)
         : [],
-    [classrooms, savedPlans, sessions, students, weekStart],
+    [classrooms, savedPlans, sessions, weekStart],
   );
   const past = useMemo(
-    () => pastActivities({ classrooms, sessions, students, savedPlans, activities }),
-    [activities, classrooms, savedPlans, sessions, students],
+    () => pastActivities({ classrooms, sessions, savedPlans, activities }),
+    [activities, classrooms, savedPlans, sessions],
   );
 
   const userId = userProfile?.id ?? null;

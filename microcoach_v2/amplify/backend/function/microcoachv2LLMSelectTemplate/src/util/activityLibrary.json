@@ -41,7 +41,7 @@
     ],
     "timing": "Teachers have ~30-minute blocks, split between a 10-15 minute debrief/activity and a 10-15 minute quick diagnostic. Frame every activity to fit within a 10-15 minute window (or less), including the closing discussion.",
     "grouping": {
-      "principle": "Treat grouping as a reusable interaction pattern, not a separate design for every arrangement. Adapt the interaction only when needed to support the kind of mathematical thinking students are expected to produce. The template's priority pattern is a design priority, not a rigid requirement.",
+      "principle": "Treat grouping as a reusable interaction pattern, not a separate design for every arrangement. Adapt the interaction only when needed to support the kind of mathematical thinking students are expected to produce. Each template's grouping pattern is its required sequence, with at most three grouping phases.",
       "patterns": [
         "Individual preparation or response: a lightweight opportunity for students to develop or record their own thinking before collaborating, when individual accountability or diagnostic evidence is important.",
         "Pairs: a shared prompt, representation, or mathematical artifact to support partner explanation, comparison, investigation, or revision.",
@@ -184,7 +184,8 @@
           "Students can explain why the step is invalid rather than simply identify it as wrong.",
           "Revising the reasoning is mathematically meaningful and can help students understand how the error affected subsequent work.",
           "Analyzing the reasoning is more valuable than simply revealing or practicing the correct procedure.",
-          "Students' answers point to a specific breakdown that can be shown in a constructed worked example: a solution, built from the evidence, that leads by the misconception's reasoning to the wrong answer students actually chose. This applies even when students submitted only a final answer, as long as the constructed solution contains a step where the meaning changes that students can locate and repair."
+          "Students' answers point to a specific breakdown that can be shown in a constructed worked example: a solution, built from the evidence, that leads by the misconception's reasoning to the wrong answer students actually chose. This applies even when students submitted only a final answer, as long as the constructed solution contains a step where the meaning changes that students can locate and repair.",
+          "A conceptual label alone is not a reason to pass over this template. Ask whether a worked example, constructed from the evidence, would have a first step where the meaning changes that students can locate and repair. If so, it is a candidate even for a misconception about an idea rather than a procedure."
         ],
         "lessAppropriateWhen": [
           "The error has no meaningful reasoning to examine, even in a worked solution constructed from the evidence.",
@@ -202,7 +203,8 @@
           "Do not construct a worked example the evidence does not support: it must arrive at a wrong answer students actually chose, through the reasoning the misconception describes, and every step before the breakdown must be valid."
         ],
         "departureNote": [
-          "2026-11-02: departs from the Activity Library doc. The doc's 'only a final-answer error' (less appropriate when) and 'do not manufacture intermediate steps not supported by the student response' read as excluding Spot the Slip whenever students submitted only an answer, which is all a multiple-choice MIU gives. Generation already builds evidence-grounded worked examples for this template, so selection now accepts a constructed worked example that leads to the chosen wrong answer; the evidence-grounding requirement is kept in the doNot. Not rendered into prompts."
+          "2026-11-02: departs from the Activity Library doc. The doc's 'only a final-answer error' (less appropriate when) and 'do not manufacture intermediate steps not supported by the student response' read as excluding Spot the Slip whenever students submitted only an answer, which is all a multiple-choice MIU gives. Generation already builds evidence-grounded worked examples for this template, so selection now accepts a constructed worked example that leads to the chosen wrong answer; the evidence-grounding requirement is kept in the doNot. Not rendered into prompts.",
+          "2026-11-05: adds to the doc. The doc's 'generally a stronger fit for a localized procedural or reasoning breakdown' is kept; the added prioritizeWhen line keeps a conceptual label from settling selection by itself (review of v44, area 4)."
         ]
       },
       "infill": {
@@ -228,6 +230,43 @@
             "description": "Students articulate what they should look for or do differently in similar problems."
           }
         ],
+        "runSteps": [
+          {
+            "title": "Present the worked solution",
+            "groupings": [
+              "INDIVIDUAL"
+            ],
+            "guidance": "Put the first incorrect example on the board. Each student silently identifies the first step where the reasoning goes off track and jots it down."
+          },
+          {
+            "title": "Explain the error",
+            "groupings": [
+              "PAIRS"
+            ],
+            "guidance": "In pairs, students explain why the step is invalid and compare where they agreed or disagreed."
+          },
+          {
+            "title": "Revise the reasoning",
+            "groupings": [
+              "PAIRS"
+            ],
+            "guidance": "Students revise the reasoning and determine how the corrected step affects the remainder of the solution."
+          },
+          {
+            "title": "Repeat steps 1-3 with other examples as time allows",
+            "groupings": [],
+            "guidance": "Same routine: individual think time, then pair comparison and revision. Each example targets a different error.",
+            "optional": true
+          },
+          {
+            "title": "Synthesis and discussion",
+            "groupings": [
+              "WHOLE_CLASS"
+            ],
+            "guidance": "Discuss the first breakdown together, compare a few pairs' revisions, and make the takeaway explicit. Students articulate what they should look for or do differently in similar problems."
+          }
+        ],
+        "runStepsNote": "Fixed by Design (issues #2826 and #2832, Figma export 2026-11-05); replaces classroomFlow in the generation prompt. The model writes each step's body and minutes; title and groupings come from here.",
         "groupingPattern": "Individual think → pairs → whole-class discussion. Give students time to locate the first breakdown independently. Partners then explain, compare, and revise the reasoning before the class discusses the first breakdown, compares revisions, and makes the takeaway explicit.",
         "examples": [
           {
@@ -339,6 +378,43 @@
             "description": "Students articulate what they can keep in mind when solving similar problems."
           }
         ],
+        "runSteps": [
+          {
+            "title": "Present the response",
+            "groupings": [
+              "INDIVIDUAL"
+            ],
+            "guidance": "Put the first incorrect example on the board. Students write down why the response might seem reasonable and what makes sense or is mathematically useful about it."
+          },
+          {
+            "title": "Understand the thinking",
+            "groupings": [
+              "PAIRS"
+            ],
+            "guidance": "In pairs, students discuss how the student may have been thinking and why the response might seem reasonable, and compare where they agreed or disagreed."
+          },
+          {
+            "title": "Revise the reasoning",
+            "groupings": [
+              "PAIRS"
+            ],
+            "guidance": "In pairs, students revise the reasoning or answer while preserving what is mathematically useful."
+          },
+          {
+            "title": "Repeat steps 1-3 with other examples as time allows",
+            "groupings": [],
+            "guidance": "Same routine: individual think time, then pair comparison and revision. Each example targets a different idea worth preserving.",
+            "optional": true
+          },
+          {
+            "title": "Synthesis and discussion",
+            "groupings": [
+              "WHOLE_CLASS"
+            ],
+            "guidance": "Discuss the reasoning together, compare a few pairs' revisions, and make the takeaway explicit. Students articulate what they can keep in mind when solving similar problems."
+          }
+        ],
+        "runStepsNote": "Fixed by Design (issues #2826 and #2832, Figma export 2026-11-05); replaces classroomFlow in the generation prompt. The model writes each step's body and minutes; title and groupings come from here.",
         "groupingPattern": "Individual reflection → pairs → whole-class discussion. Have students first identify what is mathematically useful or reasonable in the response. Partners then discuss what to preserve and what needs to change before the class examines productive ideas, clarifies the misconception, and develops a shared takeaway.",
         "examples": [
           {
@@ -437,7 +513,45 @@
             "description": "The teacher reinforces the mathematical idea that the comparison makes visible and connects it to the misconception or learning goal."
           }
         ],
-        "groupingPattern": "Two-group → whole-class discussion. Have each of two groups develop and explain one approach, then bring the groups together to identify important similarities, differences, strengths, limitations, and mathematical choices. Pairs → whole-class discussion can be used when students would benefit from examining both approaches more closely before discussing the comparison as a class.",
+        "runSteps": [
+          {
+            "title": "Present the strategies A and B",
+            "groupings": [
+              "TWO_GROUPS"
+            ],
+            "guidance": "Split the class into two groups. Put Strategy A and Strategy B on the board side by side. Do not reveal which is correct or more useful."
+          },
+          {
+            "title": "Examine the thinking",
+            "groupings": [
+              "TWO_GROUPS"
+            ],
+            "guidance": "Each group takes one strategy and works out what it is doing and why, ready to explain it to the class."
+          },
+          {
+            "title": "Compare the approaches",
+            "groupings": [
+              "WHOLE_CLASS"
+            ],
+            "guidance": "The groups come together and identify important similarities, differences, assumptions, or mathematical choices between the strategies."
+          },
+          {
+            "title": "Evaluate the reasoning",
+            "groupings": [
+              "WHOLE_CLASS"
+            ],
+            "guidance": "Discuss whether and why each approach works. If one is wrong, find the first invalid step. If both work, decide which is more useful here."
+          },
+          {
+            "title": "Synthesis and discussion",
+            "groupings": [
+              "WHOLE_CLASS"
+            ],
+            "guidance": "Reinforce the mathematical idea the comparison makes visible and connect it back to the misconception."
+          }
+        ],
+        "runStepsNote": "Fixed by Design (issues #2826 and #2832, Figma export 2026-11-05); replaces classroomFlow in the generation prompt. The model writes each step's body and minutes; title and groupings come from here.",
+        "groupingPattern": "Two-group → whole-class discussion. Have each of two groups develop and explain one approach, then bring the groups together to identify important similarities, differences, strengths, limitations, and mathematical choices.",
         "examples": [
           {
             "topic": "Solving an equation",
@@ -483,7 +597,8 @@
           "student": "Present the strategies or responses with equal visual weight and without prematurely revealing which approach is correct, more efficient, or more useful, so students can independently analyze and compare the mathematical thinking.",
           "teacher": "May include annotations identifying important similarities, differences, assumptions, mathematical strengths or weaknesses, and the intended takeaway, along with facilitation guidance."
         },
-        "optionalExtension": null
+        "optionalExtension": null,
+        "groupingPatternNote": "The doc also allows pairs → whole-class; Design's template uses two groups only."
       }
     },
     {
@@ -544,6 +659,54 @@
             "description": "The teacher reinforces the mathematical idea that resolves the issue and helps students recognize or avoid it in future problems."
           }
         ],
+        "runSteps": [
+          {
+            "title": "Present the example",
+            "groupings": [
+              "PAIRS",
+              "WHOLE_CLASS"
+            ],
+            "guidance": "Show an incorrect solution or response representing the selected misconception. Decide to use pairs for a focused look at the evidence or whole class if the error invites multiple plausible explanations."
+          },
+          {
+            "title": "State the issue",
+            "groupings": [
+              "PAIRS",
+              "WHOLE_CLASS"
+            ],
+            "guidance": "In pairs or as a class, have students state the issue, and consider what underlying mathematical idea, assumption, model, or representation may be contributing to the error."
+          },
+          {
+            "title": "Find the evidence",
+            "groupings": [
+              "PAIRS",
+              "WHOLE_CLASS"
+            ],
+            "guidance": "Students find the evidence from the response to explain why the reasoning does not work and identify the mathematical issue that needs to change."
+          },
+          {
+            "title": "Revise and check",
+            "groupings": [
+              "PAIRS",
+              "WHOLE_CLASS"
+            ],
+            "guidance": "Students revise the reasoning to address the underlying issue and apply the revised reasoning to the original problem or a related example to determine whether it works."
+          },
+          {
+            "title": "Repeat steps 1-4 with other examples as time allows",
+            "groupings": [],
+            "guidance": "Choose the grouping again each time, with the same routine: investigate, explain and revise.",
+            "optional": true
+          },
+          {
+            "title": "Synthesis and discussion",
+            "groupings": [
+              "WHOLE_CLASS"
+            ],
+            "guidance": "Reinforce the mathematical idea that resolves the issue and helps students recognize or avoid it in future problems."
+          }
+        ],
+        "runStepsNote": "Fixed by Design (issues #2826, #2832 and #2848, Figma export 2026-11-07); replaces classroomFlow in the generation prompt. The model writes each step's body and minutes; title and groupings come from here.",
         "groupingPattern": "Pairs or whole class → whole-class discussion. Use pairs for a focused investigation of the evidence, possible explanations, and potential revisions. Use a teacher-facilitated whole-class discussion from the start when the response raises multiple plausible explanations or requires more collective reasoning. Bring the thinking together to compare interpretations, evaluate evidence, and identify what the investigation reveals.",
         "examples": [
           {
@@ -586,7 +749,7 @@
           "Include an opportunity to check whether the revision addresses the underlying issue, ideally using the original problem or a closely related example."
         ],
         "views": {
-          "student": "Initially present the response without revealing the underlying issue or intended revision, so students can independently investigate the evidence, develop an explanation, and test their revision.",
+          "student": "Present the response with the issue named, without its evidence or the intended revision, so students can independently find the evidence, develop an explanation, and test their revision.",
           "teacher": "May include the anticipated mathematical issue, evidence supporting the interpretation, possible revisions, alternative interpretations when relevant, and facilitation guidance."
         },
         "optionalExtension": null
@@ -665,7 +828,52 @@
             "description": "Students articulate what the mathematics supports and, when appropriate, refine or qualify the original claim."
           }
         ],
-        "groupingPattern": "Individual preparation → two groups or whole-class discussion. When the claim supports mathematically defensible positions, students may prepare in support and challenge/qualification groups, develop and present their cases, and then come together to evaluate the evidence and refine the claim. Use whole-class discussion instead when assigned positions are inappropriate or when the goal is to qualify the claim rather than debate opposing sides.",
+        "runSteps": [
+          {
+            "title": "Present the claim",
+            "groupings": [
+              "INDIVIDUAL"
+            ],
+            "guidance": "Put the claim on the board. Students read it on their own. Do not signal whether it is true, false, or true only sometimes."
+          },
+          {
+            "title": "Vote on the claim",
+            "groupings": [
+              "INDIVIDUAL"
+            ],
+            "guidance": "Students vote yes, no, or undecided on their own. Capture the votes before any discussion."
+          },
+          {
+            "title": "Prepare your evidence",
+            "groupings": [
+              "INDIVIDUAL"
+            ],
+            "guidance": "Give students a couple of minutes to find one example, counterexample, or calculation that backs their vote."
+          },
+          {
+            "title": "Make your case",
+            "groupings": [
+              "WHOLE_CLASS"
+            ],
+            "guidance": "Ask yes voters why the claim holds and no voters for a counterexample. Students question and refine each other's arguments. Use a teacher-view argument only to fill a gap."
+          },
+          {
+            "title": "Vote again",
+            "groupings": [
+              "WHOLE_CLASS"
+            ],
+            "guidance": "Students vote again and share what evidence changed their thinking."
+          },
+          {
+            "title": "Synthesis and discussion",
+            "groupings": [
+              "WHOLE_CLASS"
+            ],
+            "guidance": "Land what the mathematics supports. If the claim is only true sometimes, refine it on the board together."
+          }
+        ],
+        "runStepsNote": "Fixed by Design (issues #2826 and #2832, Figma export 2026-11-05); replaces classroomFlow in the generation prompt. The model writes each step's body and minutes; title and groupings come from here.",
+        "groupingPattern": "Individual preparation → whole-class discussion. Students read the claim, vote, and prepare their evidence on their own, then defend, challenge, and refine the claim together as a class.",
         "examples": [
           {
             "topic": "Perimeter and area",
@@ -769,7 +977,8 @@
           "student": "Present the claim and activity without revealing the intended mathematical resolution or which arguments are strongest.",
           "teacher": "May include the suggested supporting and challenging arguments, anticipated reasoning, possible counterexamples or qualifications, facilitation guidance, and the mathematical takeaway."
         },
-        "optionalExtension": "Structured debate: when time and preparation allow, identify two teams in advance, one preparing a case supporting the claim and the other challenging or qualifying it, with generated arguments as starting points and the remaining students as an evaluating audience. Extension: students generate their own related claim, identify a counterexample or boundary condition, or revise the original claim to make it more mathematically precise."
+        "optionalExtension": "Structured debate: when time and preparation allow, identify two teams in advance, one preparing a case supporting the claim and the other challenging or qualifying it, with generated arguments as starting points and the remaining students as an evaluating audience. Extension: students generate their own related claim, identify a counterexample or boundary condition, or revise the original claim to make it more mathematically precise.",
+        "groupingPatternNote": "The doc also allows individual → two groups → whole-class; Design's template uses individual → whole class."
       }
     },
     {

@@ -20,6 +20,7 @@ import {
   useMicroCoachDataDispatch,
   useMicroCoachDataState,
 } from './context/useMicroCoachDataContext';
+import { useEffectiveSelection } from './useEffectiveSelection';
 
 export interface IPlanItemsState {
   planItems: IPlanItem[];
@@ -47,8 +48,8 @@ type ItemsChange = (items: IMicroCoachSavedPlanItem[]) => IMicroCoachSavedPlanIt
 export function usePlanItems(apiClients: IAPIClients): IPlanItemsState {
   const state = useMicroCoachDataState();
   const dispatch = useMicroCoachDataDispatch();
-  const { classrooms, sessions, savedPlans, misconceptions, activities, selection, loads } =
-    state;
+  const { classrooms, sessions, savedPlans, misconceptions, activities, loads } = state;
+  const selection = useEffectiveSelection();
   const classId = selectedClassId({ classrooms, selection });
   const session = selectedSession({ classrooms, sessions, selection });
   const sessionId = session?.id ?? null;

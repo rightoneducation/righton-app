@@ -70,6 +70,26 @@ export const onCreateMicroCoachUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      uploads {
+        items {
+          id
+          userId
+          cognitoId
+          classId
+          sessionId
+          assessmentType
+          docxKey
+          xlsxKey
+          weekStart
+          status
+          error
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       role
       createdAt
       updatedAt
@@ -138,6 +158,26 @@ export const onUpdateMicroCoachUser = /* GraphQL */ `
           grade
           state
           schoolYear
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      uploads {
+        items {
+          id
+          userId
+          cognitoId
+          classId
+          sessionId
+          assessmentType
+          docxKey
+          xlsxKey
+          weekStart
+          status
+          error
           createdAt
           updatedAt
           __typename
@@ -220,6 +260,26 @@ export const onDeleteMicroCoachUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      uploads {
+        items {
+          id
+          userId
+          cognitoId
+          classId
+          sessionId
+          assessmentType
+          docxKey
+          xlsxKey
+          weekStart
+          status
+          error
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       role
       createdAt
       updatedAt
@@ -260,6 +320,8 @@ export const onCreateMicroCoachClassroom = /* GraphQL */ `
               assessmentCode
               type
               weekNumber
+              uploadId
+              classPercentCorrect
               createdAt
               updatedAt
               __typename
@@ -332,6 +394,26 @@ export const onCreateMicroCoachClassroom = /* GraphQL */ `
               percentCorrectAfter
               __typename
             }
+            __typename
+          }
+          uploads {
+            items {
+              id
+              userId
+              cognitoId
+              classId
+              sessionId
+              assessmentType
+              docxKey
+              xlsxKey
+              weekStart
+              status
+              error
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
             __typename
           }
           createdAt
@@ -397,6 +479,8 @@ export const onUpdateMicroCoachClassroom = /* GraphQL */ `
               assessmentCode
               type
               weekNumber
+              uploadId
+              classPercentCorrect
               createdAt
               updatedAt
               __typename
@@ -469,6 +553,26 @@ export const onUpdateMicroCoachClassroom = /* GraphQL */ `
               percentCorrectAfter
               __typename
             }
+            __typename
+          }
+          uploads {
+            items {
+              id
+              userId
+              cognitoId
+              classId
+              sessionId
+              assessmentType
+              docxKey
+              xlsxKey
+              weekStart
+              status
+              error
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
             __typename
           }
           createdAt
@@ -534,6 +638,8 @@ export const onDeleteMicroCoachClassroom = /* GraphQL */ `
               assessmentCode
               type
               weekNumber
+              uploadId
+              classPercentCorrect
               createdAt
               updatedAt
               __typename
@@ -606,6 +712,26 @@ export const onDeleteMicroCoachClassroom = /* GraphQL */ `
               percentCorrectAfter
               __typename
             }
+            __typename
+          }
+          uploads {
+            items {
+              id
+              userId
+              cognitoId
+              classId
+              sessionId
+              assessmentType
+              docxKey
+              xlsxKey
+              weekStart
+              status
+              error
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
             __typename
           }
           createdAt
@@ -712,6 +838,38 @@ export const onCreateMicroCoachSession = /* GraphQL */ `
           assessmentCode
           type
           weekNumber
+          uploadId
+          classPercentCorrect
+          questions {
+            questionNumber
+            docxQuestion
+            questionText
+            ccssStandard
+            correctAnswer
+            classPercentCorrect
+            answerChoices {
+              letter
+              content
+              isCorrect
+              __typename
+            }
+            __typename
+          }
+          responses {
+            items {
+              id
+              assessmentId
+              classId
+              sessionId
+              studentRef
+              totalScore
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
           __typename
@@ -840,6 +998,26 @@ export const onCreateMicroCoachSession = /* GraphQL */ `
           }
           __typename
         }
+        __typename
+      }
+      uploads {
+        items {
+          id
+          userId
+          cognitoId
+          classId
+          sessionId
+          assessmentType
+          docxKey
+          xlsxKey
+          weekStart
+          status
+          error
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
         __typename
       }
       createdAt
@@ -877,6 +1055,38 @@ export const onUpdateMicroCoachSession = /* GraphQL */ `
           assessmentCode
           type
           weekNumber
+          uploadId
+          classPercentCorrect
+          questions {
+            questionNumber
+            docxQuestion
+            questionText
+            ccssStandard
+            correctAnswer
+            classPercentCorrect
+            answerChoices {
+              letter
+              content
+              isCorrect
+              __typename
+            }
+            __typename
+          }
+          responses {
+            items {
+              id
+              assessmentId
+              classId
+              sessionId
+              studentRef
+              totalScore
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
           __typename
@@ -1005,6 +1215,26 @@ export const onUpdateMicroCoachSession = /* GraphQL */ `
           }
           __typename
         }
+        __typename
+      }
+      uploads {
+        items {
+          id
+          userId
+          cognitoId
+          classId
+          sessionId
+          assessmentType
+          docxKey
+          xlsxKey
+          weekStart
+          status
+          error
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
         __typename
       }
       createdAt
@@ -1042,6 +1272,38 @@ export const onDeleteMicroCoachSession = /* GraphQL */ `
           assessmentCode
           type
           weekNumber
+          uploadId
+          classPercentCorrect
+          questions {
+            questionNumber
+            docxQuestion
+            questionText
+            ccssStandard
+            correctAnswer
+            classPercentCorrect
+            answerChoices {
+              letter
+              content
+              isCorrect
+              __typename
+            }
+            __typename
+          }
+          responses {
+            items {
+              id
+              assessmentId
+              classId
+              sessionId
+              studentRef
+              totalScore
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
           createdAt
           updatedAt
           __typename
@@ -1172,6 +1434,95 @@ export const onDeleteMicroCoachSession = /* GraphQL */ `
         }
         __typename
       }
+      uploads {
+        items {
+          id
+          userId
+          cognitoId
+          classId
+          sessionId
+          assessmentType
+          docxKey
+          xlsxKey
+          weekStart
+          status
+          error
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateMicroCoachUpload = /* GraphQL */ `
+  subscription OnCreateMicroCoachUpload(
+    $filter: ModelSubscriptionMicroCoachUploadFilterInput
+    $cognitoId: String
+  ) {
+    onCreateMicroCoachUpload(filter: $filter, cognitoId: $cognitoId) {
+      id
+      userId
+      cognitoId
+      classId
+      sessionId
+      assessmentType
+      docxKey
+      xlsxKey
+      weekStart
+      status
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateMicroCoachUpload = /* GraphQL */ `
+  subscription OnUpdateMicroCoachUpload(
+    $filter: ModelSubscriptionMicroCoachUploadFilterInput
+    $cognitoId: String
+  ) {
+    onUpdateMicroCoachUpload(filter: $filter, cognitoId: $cognitoId) {
+      id
+      userId
+      cognitoId
+      classId
+      sessionId
+      assessmentType
+      docxKey
+      xlsxKey
+      weekStart
+      status
+      error
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteMicroCoachUpload = /* GraphQL */ `
+  subscription OnDeleteMicroCoachUpload(
+    $filter: ModelSubscriptionMicroCoachUploadFilterInput
+    $cognitoId: String
+  ) {
+    onDeleteMicroCoachUpload(filter: $filter, cognitoId: $cognitoId) {
+      id
+      userId
+      cognitoId
+      classId
+      sessionId
+      assessmentType
+      docxKey
+      xlsxKey
+      weekStart
+      status
+      error
       createdAt
       updatedAt
       __typename
@@ -1189,6 +1540,46 @@ export const onCreateMicroCoachAssessment = /* GraphQL */ `
       assessmentCode
       type
       weekNumber
+      uploadId
+      classPercentCorrect
+      questions {
+        questionNumber
+        docxQuestion
+        questionText
+        ccssStandard
+        correctAnswer
+        classPercentCorrect
+        answerChoices {
+          letter
+          content
+          isCorrect
+          __typename
+        }
+        __typename
+      }
+      responses {
+        items {
+          id
+          assessmentId
+          classId
+          sessionId
+          studentRef
+          totalScore
+          questionResponses {
+            questionNumber
+            response
+            isCorrect
+            pointsEarned
+            confidence
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -1206,6 +1597,46 @@ export const onUpdateMicroCoachAssessment = /* GraphQL */ `
       assessmentCode
       type
       weekNumber
+      uploadId
+      classPercentCorrect
+      questions {
+        questionNumber
+        docxQuestion
+        questionText
+        ccssStandard
+        correctAnswer
+        classPercentCorrect
+        answerChoices {
+          letter
+          content
+          isCorrect
+          __typename
+        }
+        __typename
+      }
+      responses {
+        items {
+          id
+          assessmentId
+          classId
+          sessionId
+          studentRef
+          totalScore
+          questionResponses {
+            questionNumber
+            response
+            isCorrect
+            pointsEarned
+            confidence
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -1223,6 +1654,121 @@ export const onDeleteMicroCoachAssessment = /* GraphQL */ `
       assessmentCode
       type
       weekNumber
+      uploadId
+      classPercentCorrect
+      questions {
+        questionNumber
+        docxQuestion
+        questionText
+        ccssStandard
+        correctAnswer
+        classPercentCorrect
+        answerChoices {
+          letter
+          content
+          isCorrect
+          __typename
+        }
+        __typename
+      }
+      responses {
+        items {
+          id
+          assessmentId
+          classId
+          sessionId
+          studentRef
+          totalScore
+          questionResponses {
+            questionNumber
+            response
+            isCorrect
+            pointsEarned
+            confidence
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateMicroCoachStudentResponse = /* GraphQL */ `
+  subscription OnCreateMicroCoachStudentResponse(
+    $filter: ModelSubscriptionMicroCoachStudentResponseFilterInput
+  ) {
+    onCreateMicroCoachStudentResponse(filter: $filter) {
+      id
+      assessmentId
+      classId
+      sessionId
+      studentRef
+      totalScore
+      questionResponses {
+        questionNumber
+        response
+        isCorrect
+        pointsEarned
+        confidence
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateMicroCoachStudentResponse = /* GraphQL */ `
+  subscription OnUpdateMicroCoachStudentResponse(
+    $filter: ModelSubscriptionMicroCoachStudentResponseFilterInput
+  ) {
+    onUpdateMicroCoachStudentResponse(filter: $filter) {
+      id
+      assessmentId
+      classId
+      sessionId
+      studentRef
+      totalScore
+      questionResponses {
+        questionNumber
+        response
+        isCorrect
+        pointsEarned
+        confidence
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteMicroCoachStudentResponse = /* GraphQL */ `
+  subscription OnDeleteMicroCoachStudentResponse(
+    $filter: ModelSubscriptionMicroCoachStudentResponseFilterInput
+  ) {
+    onDeleteMicroCoachStudentResponse(filter: $filter) {
+      id
+      assessmentId
+      classId
+      sessionId
+      studentRef
+      totalScore
+      questionResponses {
+        questionNumber
+        response
+        isCorrect
+        pointsEarned
+        confidence
+        __typename
+      }
       createdAt
       updatedAt
       __typename

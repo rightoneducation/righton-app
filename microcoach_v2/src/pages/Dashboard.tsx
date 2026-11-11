@@ -32,7 +32,6 @@ import {
 } from '../lib/styledcomponents/DashboardStyledComponents';
 import { ScreenSizeProps } from '../lib/styledcomponents/ReviewStyledComponents';
 import { UseClassroomsResult } from '../hooks/useClassrooms';
-import { UseSessionsResult } from '../hooks/useSessions';
 import { useI18nReady } from '../hooks/readiness';
 import { useSidebarNav } from '../hooks/useSidebarNav';
 import { useHasUploads } from '../hooks/useHasUploads';
@@ -48,6 +47,7 @@ import {
   stepCta,
 } from '../lib/flowProgress';
 import { currentSchoolWeek, formatSchoolWeek, schoolWeeks } from '../lib/weeks';
+import { withSelection } from '../lib/selectionParams';
 
 // Chips shown inline before the rest fold into "More".
 const VISIBLE_CLASS_COUNT = 4;
@@ -57,13 +57,11 @@ const LOADING_MIN_HEIGHT = 240;
 
 interface DashboardProps extends ScreenSizeProps {
   classrooms: UseClassroomsResult;
-  sessions: UseSessionsResult;
 }
 
 export default function Dashboard({
   screenSize,
   classrooms,
-  sessions,
 }: DashboardProps) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -121,9 +119,20 @@ export default function Dashboard({
   // action, rather than guessing a later step.
   const currentStep =
     isStepKnown && classRow ? classRow.step : FlowStep.ASSESS;
-  const flowSteps = isStepKnown
-    ? buildFlowSteps(currentStep, t)
-    : buildPendingFlowSteps(t);
+  /*
+   * Every way into the flow from here opens this class's session for the
+   * picked week (none yet: the class's latest), named in the URL so Back
+   * returns to it. The stepper's links too: they used to open whichever
+   * session was last selected.
+   */
+  const toWeekSession = (path: string) =>
+    withSelection(path, {
+      classId: selectedClassId || null,
+      sessionId: classRow?.sessionId ?? null,
+    });
+  const flowSteps = (
+    isStepKnown ? buildFlowSteps(currentStep, t) : buildPendingFlowSteps(t)
+  ).map((step) => (step.path ? { ...step, path: toWeekSession(step.path) } : step));
   const cta = stepCta(currentStep, classRow?.selectedMisconceptionId);
   // Dev QA: while the class list or the step is still loading, the card says
   // so ("Welcome to MicroCoach. Please wait…") instead of the upload prompt.
@@ -144,21 +153,11 @@ export default function Dashboard({
 
   const sidebar = useSidebarNav();
 
-  // Review, Select Activity and the rest read the app-wide selection: leaving
-  // Home points it at this class's session for the picked week (none yet:
-  // the class's latest).
-  const selectWeekSession = () => {
-    if (selectedClassId) {
-      sessions.select(selectedClassId, classRow?.sessionId ?? null);
-    }
-  };
-
   const handleCta = () => {
-    selectWeekSession();
     if (cta.path === '/upload-miu' || cta.path === '/upload-reassess') {
-      navigate(cta.path, { state: { weekStart } });
+      navigate(toWeekSession(cta.path), { state: { weekStart } });
     } else {
-      navigate(cta.path);
+      navigate(toWeekSession(cta.path));
     }
   };
 
@@ -188,10 +187,7 @@ export default function Dashboard({
                 <MyActivityButton
                   disableElevation
                   disabled={!canOpenMyActivity}
-                  onClick={() => {
-                    selectWeekSession();
-                    navigate('/myactivity');
-                  }}
+                  onClick={() => navigate(toWeekSession('/myactivity'))}
                 >
                   {t('dashboard.myActivity')}
                 </MyActivityButton>
@@ -341,7 +337,6 @@ export default function Dashboard({
             <WeeklyProgressList
               screenSize={screenSize}
               classrooms={classrooms}
-              sessions={sessions}
               weekStart={weekStart}
             />
           </>

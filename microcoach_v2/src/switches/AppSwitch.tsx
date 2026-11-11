@@ -148,7 +148,7 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
    */
   const flowWeek = currentSchoolWeek();
   const { week } = useClassActivity(flowWeek);
-  const openClassSession = useOpenClassSession(sessions);
+  const openClassSession = useOpenClassSession();
   const switchFlowClass = (classId: string) => {
     const row = week.find((item) => item.classId === classId);
     const { path } = stepCta(row?.step ?? FlowStep.ASSESS, row?.selectedMisconceptionId);
@@ -217,20 +217,12 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       break;
     case ScreenType.DASHBOARD:
       screenComponent = (
-        <Dashboard
-          screenSize={screenSize}
-          classrooms={classrooms}
-          sessions={sessions}
-        />
+        <Dashboard screenSize={screenSize} classrooms={classrooms} />
       );
       break;
     case ScreenType.PAST_ACTIVITIES:
       screenComponent = (
-        <PastActivities
-          screenSize={screenSize}
-          classrooms={classrooms}
-          sessions={sessions}
-        />
+        <PastActivities screenSize={screenSize} classrooms={classrooms} />
       );
       break;
     case ScreenType.REVIEW:
@@ -296,6 +288,23 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       screenComponent = (
         <Landing screenSize={screenSize} />
       );
+  }
+
+  /*
+   * A flow page starts fresh for each class and session it shows: Back or
+   * Forward between two classes on one path (/reflect?class=B ↔ ?class=C)
+   * keeps the same route element, and with it page state such as an open
+   * details modal for the other class. The uploads keep their form across a
+   * class pick instead; their submit checks the session is the class's.
+   */
+  if (FLOW_SCREENS.has(currentScreen) && currentScreen !== ScreenType.UPLOAD_REASSESS) {
+    screenComponent = (
+      <React.Fragment
+        key={`${classrooms.selectedClassroomId ?? ''}:${sessions.selectedSessionId ?? ''}`}
+      >
+        {screenComponent}
+      </React.Fragment>
+    );
   }
 
   const usesAppChrome = APP_CHROME_SCREENS.has(currentScreen);

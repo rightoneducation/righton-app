@@ -16,7 +16,7 @@
 import { readFileSync, readdirSync, writeFileSync, existsSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { activityContentSchemaFor } from '../../../amplify/backend/function/microcoachv2NextStepOption/src/util/activityContent.mjs';
+import { activityContentSchemaFor, selfCorrectingStrategies, checkableRows } from '../../../amplify/backend/function/microcoachv2NextStepOption/src/util/activityContent.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const EVAL_ROOT = path.resolve(HERE, '..');
@@ -91,6 +91,7 @@ function teacherNotes(c) {
   const notes = [];
   for (const ex of f.examples ?? []) {
     notes.push(ex.finalOutcome, ex.answer, ...(ex.stages ?? []).map((s) => s.answer),
+      ...(ex.evidenceNotes ?? []).map((n) => n.text),
       ...(ex.notice ?? []).map((n) => n.text), ...(ex.steps ?? []).map((s) => s.annotation?.text));
   }
   for (const st of f.strategies ?? []) notes.push(...(st.notes ?? []).map((n) => n.text));
@@ -220,6 +221,15 @@ const RULES = [
     },
   },
   {
+    // The app now displays these (lib/mathDelimiters), so count them here (v65).
+    id: 'no LaTeX outside delimiters',
+    applies: () => true,
+    check: (c) => {
+      const hit = allStrings(c).find((s) => /\\[a-zA-Z]+/.test(outsideMath(s)));
+      return hit ? `"${hit.slice(0, 80)}"` : null;
+    },
+  },
+  {
     id: 'discussion counts (3 questions, 1-3 watch for)',
     applies: () => true,
     check: (c) => {
@@ -238,7 +248,8 @@ const RULES = [
     check: (c) => {
       const steps = c.howToRun ?? [];
       if (!steps.some((st) => st.minutes != null)) return 'skip';
-      const missingStep = steps.findIndex((st) => !Number.isInteger(st.minutes));
+      // A step with no grouping is the optional Repeat step: no time is pinned on it.
+      const missingStep = steps.findIndex((st) => st.groupings?.length && !Number.isInteger(st.minutes));
       if (missingStep > -1) return `step ${missingStep + 1} has no minutes`;
       const qs = c.discussion?.questions ?? [];
       const missingQ = qs.findIndex((q) => !Number.isInteger(q.minutes));
@@ -300,6 +311,41 @@ const RULES = [
         }
       }
       return null;
+    },
+  },
+  {
+    // v53, v57, v61: an example with nothing marked wrong. Whether the marked line really
+    // is the error still takes a read: v61 marked a correct step ERROR.
+    id: 'every example marks its error',
+    applies: (t) => EXAMPLE_TYPES.has(t),
+    check: (c) => {
+      const missing = (c.facilitate.examples ?? []).flatMap((ex, i) => {
+        const marked = (ex.steps ?? []).some((s) => s.annotation?.kind === 'ERROR')
+          || (ex.work ?? ex.workSummary ?? []).some((l) => l.status === 'INCORRECT');
+        return marked ? [] : [`Example ${i + 1}`];
+      });
+      return missing.length ? missing.join(', ') : null;
+    },
+  },
+  {
+    // Issue #2848: students circle one or two steps, so the teacher view marks that many.
+    id: 'math detective marks 1-2 evidence steps',
+    applies: (t) => t === 'MATH_DETECTIVE',
+    check: (c) => {
+      const off = (c.facilitate.examples ?? []).flatMap((ex, i) => {
+        const count = (ex.workSummary ?? []).filter((l) => l.isEvidence).length;
+        return count >= 1 && count <= 2 ? [] : [`Example ${i + 1}: ${count}`];
+      });
+      return off.length ? off.join(', ') : null;
+    },
+  },
+  {
+    // v45: a "Wrong approach" column whose last step caught and fixed the mistake.
+    id: 'wrong approach has no SUCCESS step',
+    applies: (t) => t === 'COMPARE_THE_THINKING',
+    check: (c) => {
+      const flagged = selfCorrectingStrategies(c.facilitate);
+      return flagged.length ? flagged.map((f) => `${f.strategy} step ${f.step}`).join('; ') : null;
     },
   },
   // v32's Math Detective described the region for $y>2x+4$ as "above/right": for a
@@ -385,6 +431,16 @@ export function checkRecords(records) {
   return { rates, failures };
 }
 
+// Student text that may give the answer away. A warning to read, not a rule: "false"
+// or "correct" can be fine in a correct approach or as the student's own wrong belief.
+const REVEAL_WORDS = /\b(instead of|the student|student (shaded|wrote|writes|chose)|opposite of|correct (answer|region|intersection|side)|does not satisfy|not a solution|despite)\b/i;
+
+function studentTextWarnings(records) {
+  return records.filter((r) => r.content).flatMap((r) => checkableRows(r.content)
+    .filter((row) => row.audience === 'student' && !/\.ask$/.test(row.id) && REVEAL_WORDS.test(row.text))
+    .map((row) => ({ label: r.label, id: row.id, text: row.text })));
+}
+
 function printTable(rates) {
   const templates = [...new Set(Object.values(rates).flatMap((t) => Object.keys(t)))].sort();
   const short = (t) => ({ INCORRECT_WORKED_EXAMPLES: 'SLIP', FAVORITE_NO: 'MFN', MATH_DETECTIVE: 'MD', COMPARE_THE_THINKING: 'CTT', MAKE_YOUR_CASE: 'MYC' }[t] ?? t);
@@ -427,6 +483,18 @@ if (isMain) {
   if (failures.length) {
     console.log(`\nFailures (${failures.length}):`);
     for (const f of failures) console.log(`  ${f.label} — ${f.rule}: ${f.reason}`);
+  }
+  const LONG_EXAMPLE = 10;
+  for (const r of records.filter((x) => x.content)) {
+    (r.content.facilitate.examples ?? []).forEach((ex, i) => {
+      const n = (ex.steps ?? ex.work ?? ex.workSummary ?? []).length;
+      if (n > LONG_EXAMPLE) console.log(`  Long example: ${r.label} Example ${i + 1} has ${n} lines`);
+    });
+  }
+  const warnings = studentTextWarnings(records);
+  if (warnings.length) {
+    console.log(`\nStudent text to read (${warnings.length}, may give the answer away):`);
+    for (const w of warnings) console.log(`  ${w.label} — ${w.id}: ${w.text}`);
   }
   if (process.argv.includes('--save-baseline')) {
     writeFileSync(BASELINE, JSON.stringify({ savedAt: new Date().toISOString(), source: arg('--replay') ?? arg('--run'), rates }, null, 2));
