@@ -20,7 +20,7 @@ import {
   teacherStrategyOrder,
 } from '../../lib/ActivityContentModels';
 import { WorkStatus } from '../../lib/PipelineModels';
-import { withWorkMark } from '../../lib/activityMarks';
+import { studentWorkText, withWorkMark } from '../../lib/activityMarks';
 import { ScreenSize } from '../../lib/MicroCoachModels';
 import {
   ColumnBadge,
@@ -116,7 +116,7 @@ function WorkLine({
       <MathTypography
         variant="smallBodyText"
         sx={{ color: navy }}
-        text={isTeacher ? withWorkMark(text, status) : text}
+        text={isTeacher ? withWorkMark(text, status) : studentWorkText(text)}
       />
     </StepRow>
   );
