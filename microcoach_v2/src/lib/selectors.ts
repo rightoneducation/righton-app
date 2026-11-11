@@ -74,7 +74,7 @@ export function studentCount(
   tables: Pick<Tables, 'sessions'>,
   classId: string,
 ): number {
-  // There is no roster (FERPA): a class's size is how many students its latest
+  // There is no roster: a class's size is how many students its latest
   // analysed upload had. 0 until there is one.
   const analysed = classSessions(tables, classId).find(
     (session) => session.studentWorksAnalyzed != null,

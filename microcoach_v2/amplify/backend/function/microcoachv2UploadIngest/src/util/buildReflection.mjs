@@ -1,11 +1,12 @@
 /**
- * The class-level before/after comparison Reflect shows, from seed/cli/util/
- * buildReflectionResults.ts without its per-student parts.
+ * The before/after comparison Reflect shows: class averages, each question's
+ * answers, and every student's score on each assessment.
  *
- * Students have no identity across uploads (FERPA: a row number means nothing
- * beyond its own spreadsheet), so each assessment is averaged over its own students
- * and nobody is paired. That's why studentResults stays empty and
- * improvedStudentCount stays 0.
+ * The client de-identifies the files before upload and each upload is taken as it
+ * is: students are not linked between MIU 1 and MIU 2. So each assessment is
+ * summarised over its own students, studentResults holds one row per response with
+ * the other assessment's score null, and improvedStudentCount stays 0 (it would
+ * need the same student on both).
  */
 
 const oneDecimal = (value) => Math.round(value * 10) / 10;
@@ -24,6 +25,7 @@ function answerResults(question, responses) {
 }
 
 const indexAnswers = (responses) => responses.map((r) => ({
+  id: r.id,
   answers: new Map((r.questionResponses ?? []).map((q) => [q.questionNumber, q])),
 }));
 
@@ -31,11 +33,23 @@ const percentCorrect = (question, responses) => oneDecimal(
   (responses.filter((r) => r.answers.get(question.questionNumber)?.isCorrect).length / responses.length) * 100,
 );
 
+/** How many questions one student got right. */
+const questionsCorrect = (response) => [...response.answers.values()].filter((q) => q.isCorrect).length;
+
 /** Average questions correct per student, over one assessment's own students. */
 const averageCorrect = (responses) => responses.reduce(
-  (total, r) => total + [...r.answers.values()].filter((q) => q.isCorrect).length,
+  (total, r) => total + questionsCorrect(r),
   0,
 ) / responses.length;
+
+/** One assessment's students, each with a score on that assessment only. */
+const studentScores = (responses, scoreField) => responses.map((r) => ({
+  studentId: r.id,
+  studentName: null,
+  questionsCorrectBefore: null,
+  questionsCorrectAfter: null,
+  [scoreField]: questionsCorrect(r),
+}));
 
 /**
  * @param target { activityId, misconceptionId }: what the class worked on
@@ -68,7 +82,10 @@ export function buildReflectionResults({ target, before, after }) {
     averageQuestionsCorrectBefore: oneDecimal(averageBefore),
     averageQuestionsCorrectAfter: oneDecimal(averageAfter),
     improvedStudentCount: 0,
-    studentResults: [],
+    studentResults: [
+      ...studentScores(beforeRows, 'questionsCorrectBefore'),
+      ...studentScores(afterRows, 'questionsCorrectAfter'),
+    ],
     questionResults: beforeQuestions.map((b) => {
       const a = afterByNumber.get(b.questionNumber);
       return {

@@ -213,9 +213,9 @@ type AssessmentAnswerChoice {
   isCorrect: Boolean!
 }
 
-# One student's answers on one assessment. Names and IDs are not collected (FERPA):
-# `studentRef` is the row number in that upload's spreadsheet, and links to nothing
-# beyond it, not even the same student's other assessment.
+# One student's answers on one assessment. The client de-identifies the files before
+# upload: `studentRef` is the row number in that upload's spreadsheet, and is not
+# linked to anything beyond it, not even the same student's other assessment.
 type MicroCoachStudentResponse @model @auth(rules: [{ allow: private }]) {
   id: ID!
   assessmentId: ID! @index(name: "byAssessment")
