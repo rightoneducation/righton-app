@@ -180,7 +180,7 @@
         },
         "microcoachv2UploadGenerate": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2UploadGenerate-37477a4e52496f714275-build.zip"
+          "s3Key": "amplify-builds/microcoachv2UploadGenerate-43652b67656d70743153-build.zip"
         }
       },
       "storage": {

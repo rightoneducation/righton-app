@@ -39,6 +39,7 @@ import { useSessions } from './hooks/useSessions';
 import { useUserState } from './hooks/useUserState';
 import AppSwitch from './switches/AppSwitch';
 import Preview from './pages/preview/Preview';
+import PrepublishReview from './pages/prepublishReview/PrepublishReview';
 import { MicroCoachDataProvider } from './lib/context/MicroCoachDataContext';
 
 /**
@@ -259,6 +260,13 @@ function App() {
               protect.
             */}
             <Route path="preview" element={<Preview />} />
+            {/*
+              Reviewer's last look at a real upload's generated results before
+              the teacher sees them (linked from the "generation finished"
+              email). Outside AppSwitch like /preview: no app chrome. The page
+              checks sign-in and the Admins group itself.
+            */}
+            <Route path="prepublishreview/:sessionId" element={<PrepublishReview />} />
             {/* Any other URL goes to the landing page instead of the router's error page. */}
             <Route path="*" element={<Navigate to="/" replace />} />
         </Route>,

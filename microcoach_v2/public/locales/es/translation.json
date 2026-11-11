@@ -159,7 +159,8 @@
       "UNDERSTAND": "Revisar patrones de conceptos erróneos",
       "CHOOSE": "Elige tu próxima actividad",
       "REASSESS": "Subir resultados de la reevaluación",
-      "REFLECT": "Reflexionar sobre el impacto"
+      "REFLECT": "Reflexionar sobre el impacto",
+      "AWAITING": "Esperando a MicroCoach..."
     },
     "steps": {
       "ASSESS": "Evaluar",

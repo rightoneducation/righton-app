@@ -7,6 +7,7 @@ import {
   GetMicroCoachSessionQueryVariables,
   MicroCoachSessionsByClassIdQuery,
   MicroCoachSessionsByClassIdQueryVariables,
+  PublishStatus,
   SessionStatus,
   UpdateMicroCoachSessionMutation,
   UpdateMicroCoachSessionMutationVariables,
@@ -114,9 +115,17 @@ export class SessionAPIClient
 
   async createUploadedSession(
     classId: string,
+    weekStart: string,
   ): Promise<IMicroCoachSession | null> {
     const variables: CreateMicroCoachSessionMutationVariables = {
-      input: { classId, status: SessionStatus.DATA_INGESTED },
+      // Cast: weekStart is new in the schema, and the generated input type only
+      // carries it once codegen has run after the push. Set only here, at
+      // creation — parseAWSSessionInput leaves it out, so updates never touch it.
+      input: {
+        classId,
+        status: SessionStatus.DATA_INGESTED,
+        weekStart,
+      } as CreateMicroCoachSessionMutationVariables['input'],
     };
     const res = await this.mutateGraphQL<CreateMicroCoachSessionMutation>(
       createMicroCoachSession,
@@ -135,6 +144,24 @@ export class SessionAPIClient
   ): Promise<IMicroCoachSession | null> {
     const variables: UpdateMicroCoachSessionMutationVariables = {
       input: { id, status },
+    };
+    const res = await this.mutateGraphQL<UpdateMicroCoachSessionMutation>(
+      updateMicroCoachSession,
+      variables as unknown as GraphQLOptions,
+    );
+
+    const updatedSession = res?.data?.updateMicroCoachSession;
+    return updatedSession
+      ? SessionParser.parseIMicroCoachSessionfromAWSSession(updatedSession)
+      : null;
+  }
+
+  async setPublishStatus(
+    id: string,
+    publishStatus: PublishStatus,
+  ): Promise<IMicroCoachSession | null> {
+    const variables: UpdateMicroCoachSessionMutationVariables = {
+      input: { id, publishStatus },
     };
     const res = await this.mutateGraphQL<UpdateMicroCoachSessionMutation>(
       updateMicroCoachSession,

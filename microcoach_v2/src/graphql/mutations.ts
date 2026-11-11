@@ -26,6 +26,7 @@ export const createMicroCoachUser = /* GraphQL */ `
               sessionLabel
               weekLabel
               weekNumber
+              weekStart
               topic
               ccssStandards
               status
@@ -38,6 +39,7 @@ export const createMicroCoachUser = /* GraphQL */ `
               postPpqAssessmentId
               selectedMisconceptionId
               pregeneratedNextSteps
+              pipelineOutput
               evaluationResults
               createdAt
               updatedAt
@@ -121,6 +123,7 @@ export const updateMicroCoachUser = /* GraphQL */ `
               sessionLabel
               weekLabel
               weekNumber
+              weekStart
               topic
               ccssStandards
               status
@@ -133,6 +136,7 @@ export const updateMicroCoachUser = /* GraphQL */ `
               postPpqAssessmentId
               selectedMisconceptionId
               pregeneratedNextSteps
+              pipelineOutput
               evaluationResults
               createdAt
               updatedAt
@@ -216,6 +220,7 @@ export const deleteMicroCoachUser = /* GraphQL */ `
               sessionLabel
               weekLabel
               weekNumber
+              weekStart
               topic
               ccssStandards
               status
@@ -228,6 +233,7 @@ export const deleteMicroCoachUser = /* GraphQL */ `
               postPpqAssessmentId
               selectedMisconceptionId
               pregeneratedNextSteps
+              pipelineOutput
               evaluationResults
               createdAt
               updatedAt
@@ -302,6 +308,7 @@ export const createMicroCoachClassroom = /* GraphQL */ `
           sessionLabel
           weekLabel
           weekNumber
+          weekStart
           topic
           ccssStandards
           status
@@ -353,6 +360,7 @@ export const createMicroCoachClassroom = /* GraphQL */ `
             __typename
           }
           pregeneratedNextSteps
+          pipelineOutput
           evaluationResults
           questionStats {
             questionNumber
@@ -462,6 +470,7 @@ export const updateMicroCoachClassroom = /* GraphQL */ `
           sessionLabel
           weekLabel
           weekNumber
+          weekStart
           topic
           ccssStandards
           status
@@ -513,6 +522,7 @@ export const updateMicroCoachClassroom = /* GraphQL */ `
             __typename
           }
           pregeneratedNextSteps
+          pipelineOutput
           evaluationResults
           questionStats {
             questionNumber
@@ -622,6 +632,7 @@ export const deleteMicroCoachClassroom = /* GraphQL */ `
           sessionLabel
           weekLabel
           weekNumber
+          weekStart
           topic
           ccssStandards
           status
@@ -673,6 +684,7 @@ export const deleteMicroCoachClassroom = /* GraphQL */ `
             __typename
           }
           pregeneratedNextSteps
+          pipelineOutput
           evaluationResults
           questionStats {
             questionNumber
@@ -826,6 +838,7 @@ export const createMicroCoachSession = /* GraphQL */ `
       sessionLabel
       weekLabel
       weekNumber
+      weekStart
       topic
       ccssStandards
       status
@@ -949,6 +962,7 @@ export const createMicroCoachSession = /* GraphQL */ `
         __typename
       }
       pregeneratedNextSteps
+      pipelineOutput
       evaluationResults
       questionStats {
         questionNumber
@@ -1044,6 +1058,7 @@ export const updateMicroCoachSession = /* GraphQL */ `
       sessionLabel
       weekLabel
       weekNumber
+      weekStart
       topic
       ccssStandards
       status
@@ -1167,6 +1182,7 @@ export const updateMicroCoachSession = /* GraphQL */ `
         __typename
       }
       pregeneratedNextSteps
+      pipelineOutput
       evaluationResults
       questionStats {
         questionNumber
@@ -1262,6 +1278,7 @@ export const deleteMicroCoachSession = /* GraphQL */ `
       sessionLabel
       weekLabel
       weekNumber
+      weekStart
       topic
       ccssStandards
       status
@@ -1385,6 +1402,7 @@ export const deleteMicroCoachSession = /* GraphQL */ `
         __typename
       }
       pregeneratedNextSteps
+      pipelineOutput
       evaluationResults
       questionStats {
         questionNumber

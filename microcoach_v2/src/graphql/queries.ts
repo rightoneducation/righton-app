@@ -23,6 +23,7 @@ export const getMicroCoachUser = /* GraphQL */ `
               sessionLabel
               weekLabel
               weekNumber
+              weekStart
               topic
               ccssStandards
               status
@@ -35,6 +36,7 @@ export const getMicroCoachUser = /* GraphQL */ `
               postPpqAssessmentId
               selectedMisconceptionId
               pregeneratedNextSteps
+              pipelineOutput
               evaluationResults
               createdAt
               updatedAt
@@ -174,6 +176,7 @@ export const getMicroCoachClassroom = /* GraphQL */ `
           sessionLabel
           weekLabel
           weekNumber
+          weekStart
           topic
           ccssStandards
           status
@@ -225,6 +228,7 @@ export const getMicroCoachClassroom = /* GraphQL */ `
             __typename
           }
           pregeneratedNextSteps
+          pipelineOutput
           evaluationResults
           questionStats {
             questionNumber
@@ -340,6 +344,7 @@ export const listMicroCoachClassrooms = /* GraphQL */ `
             sessionLabel
             weekLabel
             weekNumber
+            weekStart
             topic
             ccssStandards
             status
@@ -360,6 +365,7 @@ export const listMicroCoachClassrooms = /* GraphQL */ `
               __typename
             }
             pregeneratedNextSteps
+            pipelineOutput
             evaluationResults
             questionStats {
               questionNumber
@@ -461,6 +467,7 @@ export const getMicroCoachSession = /* GraphQL */ `
       sessionLabel
       weekLabel
       weekNumber
+      weekStart
       topic
       ccssStandards
       status
@@ -584,6 +591,7 @@ export const getMicroCoachSession = /* GraphQL */ `
         __typename
       }
       pregeneratedNextSteps
+      pipelineOutput
       evaluationResults
       questionStats {
         questionNumber
@@ -685,6 +693,7 @@ export const listMicroCoachSessions = /* GraphQL */ `
         sessionLabel
         weekLabel
         weekNumber
+        weekStart
         topic
         ccssStandards
         status
@@ -770,6 +779,7 @@ export const listMicroCoachSessions = /* GraphQL */ `
           __typename
         }
         pregeneratedNextSteps
+        pipelineOutput
         evaluationResults
         questionStats {
           questionNumber
@@ -1388,6 +1398,7 @@ export const microCoachClassroomsByUserId = /* GraphQL */ `
             sessionLabel
             weekLabel
             weekNumber
+            weekStart
             topic
             ccssStandards
             status
@@ -1408,6 +1419,7 @@ export const microCoachClassroomsByUserId = /* GraphQL */ `
               __typename
             }
             pregeneratedNextSteps
+            pipelineOutput
             evaluationResults
             questionStats {
               questionNumber
@@ -1513,6 +1525,7 @@ export const microCoachSessionsByClassId = /* GraphQL */ `
         sessionLabel
         weekLabel
         weekNumber
+        weekStart
         topic
         ccssStandards
         status
@@ -1598,6 +1611,7 @@ export const microCoachSessionsByClassId = /* GraphQL */ `
           __typename
         }
         pregeneratedNextSteps
+        pipelineOutput
         evaluationResults
         questionStats {
           questionNumber

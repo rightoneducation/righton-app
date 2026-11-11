@@ -85,7 +85,13 @@ type MicroCoachSession @model @auth(rules: [{ allow: private }]) {
   classId: ID! @index(name: "byClass")
   sessionLabel: String
   weekLabel: String
+  # The assessment's own week (W11 in its code), set by ingest. Not the app's
+  # school-week calendar: see weekStart.
   weekNumber: Int
+  # Monday (YYYY-MM-DD) of the school week the teacher uploaded for, picked on
+  # Home or the upload form. Home files the session under it; sessions from
+  # before it fall back to the week they were created in.
+  weekStart: String
   topic: String
   ccssStandards: [String]
   status: SessionStatus # DATA_INGESTED | REASSESS_INGESTED | GENERATED | COMPLETED
@@ -105,6 +111,10 @@ type MicroCoachSession @model @auth(rules: [{ allow: private }]) {
   misconceptions: [MicroCoachMisconception]
     @hasMany(indexName: "bySession", fields: ["id"])
   pregeneratedNextSteps: AWSJSON
+  # UploadGenerate's raw runPipeline output (rubric, need rationale, template
+  # selection, activities): what /prepublishreview shows a reviewer before
+  # publishStatus goes DRAFT → PUBLISHED. The teacher-facing rows drop most of it.
+  pipelineOutput: AWSJSON
   evaluationResults: AWSJSON
   # Class % correct per MIU question (the Review screen's "Correct responses"
   # tiles), with the question text for the tile's tooltip.

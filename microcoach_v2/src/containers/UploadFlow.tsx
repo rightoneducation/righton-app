@@ -139,7 +139,7 @@ export default function UploadFlow({
         if (!sessionId) {
           let saved;
           if (kind === AssessmentType.PPQ) {
-            saved = await apiClients.session.createUploadedSession(classId);
+            saved = await apiClients.session.createUploadedSession(classId, weekStart);
           } else {
             const ofClass = classSessions({ sessions }, classId);
             const target = sessionForWeek(ofClass, weekStart) ?? ofClass[0];

@@ -134,6 +134,10 @@ export default function Dashboard({
     isStepKnown ? buildFlowSteps(currentStep, t) : buildPendingFlowSteps(t)
   ).map((step) => (step.path ? { ...step, path: toWeekSession(step.path) } : step));
   const cta = stepCta(currentStep, classRow?.selectedMisconceptionId);
+  // The pipeline is still on this week's upload (or its results are held for
+  // review): nothing to act on, so the button says so rather than offering
+  // another upload. Same signal as Weekly Activity Progress's "Waiting" row.
+  const isAwaiting = isStepKnown && classRow?.isAwaitingResults === true;
   // Dev QA: while the class list or the step is still loading, the card says
   // so ("Welcome to MicroCoach. Please wait…") instead of the upload prompt.
   const isDataLoading = !classesKnown || isStepPending;
@@ -326,7 +330,9 @@ export default function Dashboard({
                   </PickerRow>
 
                   {hasClasses && (
-                    <DashboardCta onClick={handleCta}>{t(cta.labelKey)}</DashboardCta>
+                    <DashboardCta disabled={isAwaiting} onClick={handleCta}>
+                      {t(isAwaiting ? 'dashboard.cta.AWAITING' : cta.labelKey)}
+                    </DashboardCta>
                   )}
                 </DashboardForm>
                 )}

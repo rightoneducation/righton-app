@@ -64,6 +64,9 @@ export interface IMicroCoachSession {
   sessionLabel: string | null;
   weekLabel: string | null;
   weekNumber: number | null;
+  // The school week the teacher uploaded for (its Monday). Set once, at
+  // creation; null on older sessions (see sessionWeek in flowProgress).
+  weekStart: string | null;
   topic: string | null;
   ccssStandards: string[];
   status: SessionStatus | null;
@@ -77,6 +80,10 @@ export interface IMicroCoachSession {
   // The misconception picked on Review before an activity is saved.
   selectedMisconceptionId: string | null;
   pregeneratedNextSteps: string | null;
+  // UploadGenerate's raw pipeline output, read by /prepublishreview. Read-only
+  // here: SessionParser leaves it out of the update input, so a teacher-side
+  // update can never null it.
+  pipelineOutput: string | null;
   evaluationResults: string | null;
   // Empty until the pipeline writes it (see the v2 pipeline task).
   questionStats: IQuestionStat[];

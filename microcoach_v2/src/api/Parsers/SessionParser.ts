@@ -30,6 +30,7 @@ export class SessionParser {
       sessionLabel: session.sessionLabel ?? null,
       weekLabel: session.weekLabel ?? null,
       weekNumber: session.weekNumber ?? null,
+      weekStart: session.weekStart ?? null,
       topic: session.topic ?? null,
       ccssStandards: (session.ccssStandards ?? []).filter(
         (standard): standard is string => standard != null,
@@ -49,6 +50,7 @@ export class SessionParser {
       postPpqAssessmentId: session.postPpqAssessmentId ?? null,
       selectedMisconceptionId: session.selectedMisconceptionId ?? null,
       pregeneratedNextSteps: session.pregeneratedNextSteps ?? null,
+      pipelineOutput: session.pipelineOutput ?? null,
       evaluationResults: session.evaluationResults ?? null,
       questionStats: (session.questionStats ?? [])
         .filter((stat): stat is NonNullable<typeof stat> => stat != null)

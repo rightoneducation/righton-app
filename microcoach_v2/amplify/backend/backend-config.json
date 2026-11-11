@@ -562,7 +562,22 @@
   },
   "storage": {
     "microcoachuploads": {
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "microcoachv2bb9ce5a2"
+        },
+        {
+          "attributes": [
+            "AdminsGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
+        }
+      ],
       "providerPlugin": "awscloudformation",
       "service": "S3"
     }

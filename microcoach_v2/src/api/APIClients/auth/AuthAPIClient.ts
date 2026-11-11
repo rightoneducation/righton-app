@@ -166,7 +166,18 @@ export class AuthAPIClient implements IAuthAPIClient {
     // leaves a live Cognito session the app doesn't treat as signed in, and
     // Amplify's signIn throws "There is already a signed in user" while one
     // exists — which read as a wrong password on Log in and on sign-up.
-    if (await this.verifyAuth()) await amplifySignOut();
+    // getCurrentUser, not verifyAuth: it is the check Amplify's signIn itself
+    // makes, reading the stored tokens. verifyAuth's fetchAuthSession asks the
+    // identity pool for guest credentials when signed out, and this pool
+    // refuses unauthenticated access, so it threw on every normal login.
+    let hasSignedInUser = false;
+    try {
+      await getCurrentUser();
+      hasSignedInUser = true;
+    } catch {
+      // No signed-in user: nothing to clear.
+    }
+    if (hasSignedInUser) await amplifySignOut();
     let user;
     try {
       user = await signIn({ username, password });

@@ -159,7 +159,8 @@
       "UNDERSTAND": "Review misconception patterns",
       "CHOOSE": "Choose your next-step activity",
       "REASSESS": "Upload reassessment results",
-      "REFLECT": "Reflect on impact"
+      "REFLECT": "Reflect on impact",
+      "AWAITING": "Waiting on MicroCoach..."
     },
     "steps": {
       "ASSESS": "Assess",
