@@ -34,7 +34,8 @@ export const FLOW_ORDER: FlowStep[] = [
  * far it got, not by the first gap.
  */
 /**
- * Generated results the reviewer hasn't published yet (/prepublishreview).
+ * Generated results the reviewer hasn't published yet (/prepublishreview):
+ * MIU 1's (UploadGenerate) or MIU 2's comparison (UploadIngest).
  * Only an explicit DRAFT holds them back: sessions from before the review step
  * have no publishStatus, and stay visible.
  */
@@ -51,13 +52,15 @@ export function deriveCurrentStep(
   // items to the selected session).
   hasSavedPlan: boolean,
 ): FlowStep {
-  // Held for review reads as still waiting on the pipeline.
-  if (
-    !session ||
-    session.status === SessionStatus.DATA_INGESTED ||
-    isHeldForReview(session)
-  ) {
+  if (!session || session.status === SessionStatus.DATA_INGESTED) {
     return FlowStep.ASSESS;
+  }
+  // Held for review reads as still waiting on the upload it came from: MIU 2's
+  // results (postPpqAssessmentId is set) keep the class on Reassess, MIU 1's on
+  // Assess. One publishStatus serves both because they're reviewed in turn —
+  // MIU 2 can only follow an MIU 1 that was already published.
+  if (isHeldForReview(session)) {
+    return session.postPpqAssessmentId ? FlowStep.REASSESS : FlowStep.ASSESS;
   }
   if (session.status === SessionStatus.COMPLETED) return FlowStep.DONE;
   // MIU 2 is in and the pipeline is still on it: still Reassess, but waiting

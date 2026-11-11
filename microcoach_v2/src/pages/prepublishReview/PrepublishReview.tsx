@@ -3,6 +3,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { PublishStatus } from '../../AWSAPI';
+import { IMicroCoachReflectionResult } from '../../api/Models/IMicroCoachSession';
 import {
   Rec,
   asArray,
@@ -870,6 +871,117 @@ function MisconceptionCard({
   );
 }
 
+// ── MIU 2: reflection results ────────────────────────────────────────────────
+
+// Values arrive as percentages already (UploadIngest's buildReflection).
+const pctOf = (v: number | null | undefined): string => (typeof v === 'number' ? `${v}%` : '—');
+const change = (before: number, after: number): string => {
+  const d = Math.round((after - before) * 10) / 10;
+  return `${d > 0 ? '+' : ''}${d}`;
+};
+
+/**
+ * MIU 2's held results: UploadIngest's before/after comparison, per
+ * misconception. Computed in code rather than by a model, so this is a check
+ * of the numbers the teacher's Reflect screen will show.
+ */
+function ReflectionResultCard({
+  result,
+  title,
+  open,
+  generation,
+}: {
+  result: IMicroCoachReflectionResult;
+  title: string;
+  open: boolean;
+  generation: number;
+}) {
+  const completedBoth = result.studentResults.filter(
+    (st) => st.questionsCorrectBefore != null && st.questionsCorrectAfter != null,
+  ).length;
+  return (
+    <details className="p2-card" key={generation} open={open}>
+      <summary className="p2-card-summary">
+        <span className="p2-chevron" aria-hidden="true">
+          ▸
+        </span>
+        <span className="p2-card-title">{title}</span>
+        <span className="p2-meta">
+          {pctOf(result.averagePercentCorrectBefore)} → {pctOf(result.averagePercentCorrectAfter)} (
+          {change(result.averagePercentCorrectBefore, result.averagePercentCorrectAfter)} pts)
+        </span>
+      </summary>
+      <div className="p2-card-body">
+        <Block label="Class averages" hint="UploadIngest · buildReflectionResults">
+          <Row
+            k="% correct"
+            v={`${pctOf(result.averagePercentCorrectBefore)} → ${pctOf(result.averagePercentCorrectAfter)}`}
+          />
+          <Row
+            k="questions correct"
+            v={`${result.averageQuestionsCorrectBefore} → ${result.averageQuestionsCorrectAfter} of ${result.questionCount}`}
+          />
+          <Row k="students improved" v={`${result.improvedStudentCount} of ${completedBoth} who took both`} />
+          <Row k="activity" v={<span className="p2-mono">{result.activityId ?? '—'}</span>} />
+        </Block>
+        <Block label="By question" hint="paired by question number">
+          {result.questionResults.length === 0 ? (
+            <span className="p2-nil">no question results</span>
+          ) : (
+            <table className="p2-table">
+              <thead>
+                <tr>
+                  <th>Q</th>
+                  <th>Standard</th>
+                  <th>MIU 1 correct</th>
+                  <th>MIU 2 correct</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                {result.questionResults.map((q) => (
+                  <tr key={q.questionNumber}>
+                    <td>{q.questionNumber}</td>
+                    <td className="p2-mono">{q.afterStandard ?? q.beforeStandard ?? '—'}</td>
+                    <td>{pctOf(q.percentCorrectBefore)}</td>
+                    <td>{pctOf(q.percentCorrectAfter)}</td>
+                    <td>{change(q.percentCorrectBefore, q.percentCorrectAfter)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </Block>
+        <Block label="By student" hint="questions correct, MIU 1 → MIU 2">
+          {result.studentResults.length === 0 ? (
+            <span className="p2-nil">no student results</span>
+          ) : (
+            <table className="p2-table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>MIU 1</th>
+                  <th>MIU 2</th>
+                </tr>
+              </thead>
+              <tbody>
+                {result.studentResults.map((st) => (
+                  <tr key={st.studentId}>
+                    <td>{st.studentName ?? st.studentId}</td>
+                    {/* null: the student didn't take that MIU. */}
+                    <td>{st.questionsCorrectBefore ?? '—'}</td>
+                    <td>{st.questionsCorrectAfter ?? '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </Block>
+      </div>
+    </details>
+  );
+}
+
 // ── Review bar ────────────────────────────────────────────────────────────────
 
 function ReviewBar({
@@ -935,6 +1047,9 @@ function ReviewBar({
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 const STYLES = `
+.p2-table { border-collapse: collapse; font-size: 13px; margin-top: 4px; }
+.p2-table th, .p2-table td { border-bottom: 1px solid #e6e9ed; padding: 4px 12px 4px 0; text-align: left; }
+.p2-table th { color: #5b636b; font-weight: 600; }
 .p2-wrap { font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #1a1d21;
   background: #f4f5f7; min-height: 100vh; padding-bottom: 64px; }
 .p2-bar { position: sticky; top: 0; z-index: 10; background: #fff; border-bottom: 1px solid #d7dbe0;
@@ -1133,7 +1248,8 @@ const STYLES = `
 export default function PrepublishReview() {
   const { sessionId = '' } = useParams();
   const review = usePrepublishSession(sessionId);
-  const { status, items } = review;
+  const { status, items, isReflectionReview, misconceptionTitles, session } = review;
+  const reflectionResults = session?.reflectionResults ?? [];
   const [allOpen, setAllOpen] = useState(false);
   const [generation, setGeneration] = useState(0);
 
@@ -1185,12 +1301,44 @@ export default function PrepublishReview() {
     <div className="p2-wrap">
       {/* eslint-disable-next-line react/no-danger */}
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />
-      {status !== 'loaded' ? (
+      {status !== 'loaded' && (
         <section className="p2-section p2-section-wide">
           <h2 className="p2-h2">Pre-publish review</h2>
           {blocked[status]}
         </section>
-      ) : (
+      )}
+      {status === 'loaded' && isReflectionReview && (
+        // MIU 2: only what is waiting — the before/after comparison. MIU 1's
+        // generated results were reviewed and published before it.
+        <>
+          <ReviewBar
+            review={review}
+            count={reflectionResults.length}
+            onExpandAll={() => setAll(true)}
+            onCollapseAll={() => setAll(false)}
+          />
+          <section className="p2-section p2-section-wide">
+            <h2 className="p2-h2">MIU 2 results — before and after</h2>
+            <p className="p2-lede">
+              How the class did on MIU 2 against MIU 1, for the misconception the activity
+              targeted. The teacher sees none of it until it is published.
+            </p>
+            {reflectionResults.length === 0 && (
+              <p className="p2-note p2-bad">This session has no reflection results.</p>
+            )}
+            {reflectionResults.map((result) => (
+              <ReflectionResultCard
+                key={result.misconceptionId}
+                result={result}
+                title={misconceptionTitles[result.misconceptionId] ?? result.misconceptionId}
+                open={allOpen}
+                generation={generation}
+              />
+            ))}
+          </section>
+        </>
+      )}
+      {status === 'loaded' && !isReflectionReview && (
         <>
           <ReviewBar
             review={review}

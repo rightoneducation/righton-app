@@ -72,6 +72,33 @@ describe('deriveCurrentStep', () => {
     ).toBe(FlowStep.ASSESS);
   });
 
+  it('is REASSESS while MIU 2 results wait for review', () => {
+    expect(
+      deriveCurrentStep(
+        session({
+          status: SessionStatus.GENERATED,
+          publishStatus: PublishStatus.DRAFT,
+          postPpqAssessmentId: 'a2',
+          selectedMisconceptionId: 'm1',
+        }),
+        true,
+      ),
+    ).toBe(FlowStep.REASSESS);
+  });
+
+  it('is REFLECT once MIU 2 results are published', () => {
+    expect(
+      deriveCurrentStep(
+        session({
+          status: SessionStatus.GENERATED,
+          publishStatus: PublishStatus.PUBLISHED,
+          postPpqAssessmentId: 'a2',
+        }),
+        true,
+      ),
+    ).toBe(FlowStep.REFLECT);
+  });
+
   it('is UNDERSTAND once reviewed results are published', () => {
     expect(
       deriveCurrentStep(

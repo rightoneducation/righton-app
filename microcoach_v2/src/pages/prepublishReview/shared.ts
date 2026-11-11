@@ -99,6 +99,12 @@ export interface PrepublishSessionState {
   className: string;
   // null: the session has no stored pipeline output to review.
   items: Rec[] | null;
+  // MIU 2 review: the session's held results are its before/after comparison
+  // (reflectionResults), not MIU 1's generated output, which was already
+  // reviewed and published.
+  isReflectionReview: boolean;
+  // Misconception id → title, for labelling the reflection results.
+  misconceptionTitles: Record<string, string>;
   isPublishing: boolean;
   publishError: boolean;
   publish: () => Promise<void>;
@@ -115,6 +121,7 @@ export function usePrepublishSession(sessionId: string): PrepublishSessionState 
   const [session, setSession] = useState<IMicroCoachSession | null>(null);
   const [className, setClassName] = useState('');
   const [items, setItems] = useState<Rec[] | null>(null);
+  const [misconceptionTitles, setMisconceptionTitles] = useState<Record<string, string>>({});
   const [isPublishing, setIsPublishing] = useState(false);
   const [publishError, setPublishError] = useState(false);
 
@@ -152,6 +159,16 @@ export function usePrepublishSession(sessionId: string): PrepublishSessionState 
         }
         setSession(loaded);
         setItems(itemsFromPipelineOutput(loaded.pipelineOutput));
+        if (loaded.postPpqAssessmentId) {
+          // Best-effort labels: a result without one shows its id.
+          const misconceptions = await apiClients.misconception
+            .getMisconceptionsBySessionId(loaded.id)
+            .catch(() => []);
+          if (cancelled) return;
+          setMisconceptionTitles(
+            Object.fromEntries(misconceptions.map((m) => [m.id, m.title])),
+          );
+        }
         setStatus('loaded');
         // Best-effort: the header falls back to the class id.
         const classroom = await apiClients.classroom
@@ -189,5 +206,15 @@ export function usePrepublishSession(sessionId: string): PrepublishSessionState 
     }
   }, [apiClients, session, isPublishing]);
 
-  return { status, session, className, items, isPublishing, publishError, publish };
+  return {
+    status,
+    session,
+    className,
+    items,
+    isReflectionReview: !!session?.postPpqAssessmentId,
+    misconceptionTitles,
+    isPublishing,
+    publishError,
+    publish,
+  };
 }

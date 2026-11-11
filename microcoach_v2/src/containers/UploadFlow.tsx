@@ -25,11 +25,11 @@ import {
   validateUploadFile,
 } from '../lib/UploadModels';
 import { currentSchoolWeek, schoolWeeks } from '../lib/weeks';
-import { sessionForWeek } from '../lib/flowProgress';
+import { sessionForWeek, sessionWeek } from '../lib/flowProgress';
 import { classSessions } from '../lib/selectors';
 import { setSelectionParams } from '../lib/selectionParams';
 import { UseClassroomsResult } from '../hooks/useClassrooms';
-import { useSelectionPath } from '../hooks/useEffectiveSelection';
+import { useEffectiveSelection, useSelectionPath } from '../hooks/useEffectiveSelection';
 import {
   useMicroCoachDataDispatch,
   useMicroCoachDataState,
@@ -75,17 +75,30 @@ export default function UploadFlow({
   const dispatch = useMicroCoachDataDispatch();
   const basePath = UPLOAD_BASE_PATH[kind];
 
-  // The week arrives pre-filled through router state; the class is the URL's
-  // (`?class=`, set by whatever opened the upload), which may still be
-  // loading when the flow mounts.
+  // The week arrives pre-filled through router state (Home passes the week it
+  // shows); the class is the URL's (`?class=`, set by whatever opened the
+  // upload), which may still be loading when the flow mounts.
+  //
+  // MIU 2 opened from inside the flow (My Activity's Upload MIU, the Reassess
+  // tab, the stepper) passes no week, but names its session in the URL: the
+  // week is the one that session's MIU 1 was uploaded for. Without it, the
+  // form fell back to the current week, and submit attached the upload to
+  // whichever session sessionForWeek found there (else the class's latest).
+  const selection = useEffectiveSelection();
   const [upload, setUpload] = useState<IUploadState>(() => {
     const passedWeek = (location.state as { weekStart?: string } | null)
       ?.weekStart;
-    return emptyUploadState(
-      passedWeek && schoolWeeks().includes(passedWeek)
-        ? passedWeek
-        : currentSchoolWeek(),
+    const selectedSession = selection.sessionId
+      ? sessions[selection.sessionId]
+      : undefined;
+    const sessionsWeek =
+      kind === AssessmentType.POST_PPQ && selectedSession
+        ? sessionWeek(selectedSession)
+        : null;
+    const initialWeek = [passedWeek, sessionsWeek].find(
+      (week): week is string => !!week && schoolWeeks().includes(week),
     );
+    return emptyUploadState(initialWeek ?? currentSchoolWeek());
   });
   const classId = classrooms.selectedClassroomId ?? '';
 
