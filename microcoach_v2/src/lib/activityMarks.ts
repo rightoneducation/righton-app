@@ -48,3 +48,12 @@ export const WORK_STATUS_MARK: Record<WorkStatus, string> = {
 export function withWorkMark(text: string, status: WorkStatus): string {
   return `${text} ${WORK_STATUS_MARK[status]}`.trimEnd();
 }
+
+// Saved Favorite No examples can carry teacher labels in the work itself.
+// Only strip a leading annotation with a separator, never words in the work
+// or LaTeX commands. Both student renderers use this without changing the data.
+const WORK_LABEL = /^\s*(?:(?:CORRECT|INCORRECT)|STUDENT\s+(?:FIXED|FINAL)\s+LINE(?:\s*\((?:CORRECT|INCORRECT)\))?)\s*[:\u2013\u2014-]\s*/i;
+
+export function studentWorkText(text: string): string {
+  return text.replace(WORK_LABEL, '');
+}

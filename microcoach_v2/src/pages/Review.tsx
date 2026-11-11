@@ -54,28 +54,6 @@ const CARD_HEIGHT = 544;
 // Highest Frequency pick, outside the top 3); Review shows the top 3 only.
 const CARDS_SHOWN = 3;
 
-// The results banner is a one-time notice per upload: once dismissed for a
-// session it stays dismissed on this device. Storage may be blocked, in which
-// case it simply shows again next visit.
-const bannerKey = (sessionId: string) => `microcoach.resultsSeen.${sessionId}`;
-
-function readBannerSeen(sessionId: string | null): boolean {
-  if (!sessionId) return true;
-  try {
-    return window.localStorage.getItem(bannerKey(sessionId)) === 'true';
-  } catch {
-    return false;
-  }
-}
-
-function writeBannerSeen(sessionId: string) {
-  try {
-    window.localStorage.setItem(bannerKey(sessionId), 'true');
-  } catch {
-    // Blocked storage only means the banner can return; nothing else depends on it.
-  }
-}
-
 interface ReviewProps extends ScreenSizeProps {
   sessions: UseSessionsResult;
   plan: IPlanItemsState;
@@ -102,8 +80,18 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
   const sessionId = session?.id ?? null;
 
   const [selected, setSelected] = React.useState<MisconceptionDetailSelection | null>(null);
-  // Keyed on the session so switching class shows that session's banner state.
   const [dismissedFor, setDismissedFor] = React.useState<string | null>(null);
+  const showBanner =
+    !!sessionId &&
+    isI18nReady &&
+    misconceptions.length > 0 &&
+    (session?.selectedMisconceptionId ?? null) === null &&
+    dismissedFor !== sessionId;
+
+  const dismissBanner = () => {
+    if (!sessionId) return;
+    setDismissedFor(sessionId);
+  };
 
   if (!isI18nReady) return null;
 
@@ -111,11 +99,6 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
     misconceptionsStatus === MicroCoachDataStatus.LOADING ||
     misconceptionsStatus === MicroCoachDataStatus.IDLE;
   const hasFailed = misconceptionsStatus === MicroCoachDataStatus.ERROR;
-  const showBanner =
-    !!sessionId &&
-    misconceptions.length > 0 &&
-    dismissedFor !== sessionId &&
-    !readBannerSeen(sessionId);
 
   const questionStats = session?.questionStats ?? [];
   // The MIU PDF behind "View Mix It Up" (rev2 Misconceptions). No session or
@@ -124,11 +107,6 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
   const miuPdfUrl: string | null = null;
   const selectedMisconception =
     misconceptions.find((item) => item.id === selected?.id) ?? null;
-  const dismissBanner = () => {
-    if (!sessionId) return;
-    writeBannerSeen(sessionId);
-    setDismissedFor(sessionId);
-  };
 
   const handleSelect = (misconceptionId: string) => {
     // Saved on the session, so Home and the stepper place the class at Select

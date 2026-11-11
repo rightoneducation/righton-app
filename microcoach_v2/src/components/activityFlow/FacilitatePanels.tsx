@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
@@ -19,7 +19,7 @@ import {
   teacherStrategyOrder,
 } from '../../lib/ActivityContentModels';
 import { WorkStatus } from '../../lib/PipelineModels';
-import { withWorkMark } from '../../lib/activityMarks';
+import { studentWorkText, withWorkMark } from '../../lib/activityMarks';
 import { ScreenSize } from '../../lib/MicroCoachModels';
 import {
   ColumnBadge,
@@ -78,6 +78,19 @@ import {
 
 const navy = 'designSystem.surface.atlanticNavy';
 
+// Generated questions can put prose inside LaTeX \text{…}. KaTeX otherwise
+// renders that prose in its own serif font, overriding the question's Rubik.
+const ExampleQuestion = styled(MathTypography)(({ theme }) => ({
+  ...theme.typography.rubikSubBold,
+  '& .katex': {
+    fontWeight: theme.typography.rubikSubBold.fontWeight,
+  },
+  '& .katex .text': {
+    fontFamily: theme.typography.rubikSubBold.fontFamily,
+    fontWeight: theme.typography.rubikSubBold.fontWeight,
+  },
+}));
+
 /** A note's tone as the icon the frames draw beside it. */
 function ToneIcon({ tone }: { tone: Tone }) {
   if (tone === 'SUCCESS') {
@@ -111,7 +124,7 @@ function WorkLine({
       <MathTypography
         variant="smallBodyText"
         sx={{ color: navy }}
-        text={isTeacher ? withWorkMark(text, status) : text}
+        text={isTeacher ? withWorkMark(text, status) : studentWorkText(text)}
       />
     </StepRow>
   );
@@ -301,9 +314,9 @@ export function MakeYourCasePanel({
             <>
               <SectionPill>{t('activityFlow.facilitate.examplesToBringIn')}</SectionPill>
               <BringInList>
-                {facilitate.examples.map((example) => (
+                {facilitate.examples.map((example, index) => (
                   <BringInItem key={example.prompt}>
-                    <MathTypography variant="rubikBody" text={example.prompt} />
+                    <MathTypography variant="rubikBody" text={`${index + 1}. ${example.prompt}`} />
                     <MathTypography
                       variant="rubikBody"
                       text={t('activityFlow.facilitate.exampleAnswer', { answer: example.answer })}
@@ -395,27 +408,29 @@ export function MathDetectivePanel({
             <Typography variant="headingSm">
               {t(`${copy}.${isTeacher ? 'focusTeacher' : 'focusStudent'}`)}
             </Typography>
-            <Typography variant="smallBodyText" component="div">
-              <strong>{t(`${copy}.issue`)}</strong>{' '}
-              <MathText text={issue} inline />
-            </Typography>
-          </DetectiveCard>
+            <ExampleQuestion boldMath variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
+            <ExampleQuestion boldMath variant="rubikSubBold" component="span" text={workLine(examples[tileIndex].workSummary)} />
+          </>
         )}
-        <DetectiveCard>
-          <Typography variant="headingSm">{t(`${copy}.findEvidence`)}</Typography>
-          <Typography variant="smallBodyText">
-            {t(`${copy}.${isTeacher ? 'findEvidenceTeacher' : 'findEvidenceStudent'}`)}
-          </Typography>
-        </DetectiveCard>
-        <ExamplePicker
-          count={examples.length}
-          index={index}
-          onSelect={setIndex}
-          screenSize={props.screenSize}
-          renderTile={(tileIndex) => (
-            <>
-              <Typography variant="headingMdBold" component="span">
-                {t('activityFlow.facilitate.exampleLabel', { number: tileIndex + 1 })}
+      />
+      {example && (
+        <ExampleDetail aria-live="polite">
+          <ExampleOfHeading index={index} count={examples.length} />
+          {/* The question uses Rubik 14 bold; the work below stays Rubik 16,
+              marked in teacher view. */}
+          <ExampleHeaderBox>
+            <ExampleIconTile aria-hidden>
+              <EditIcon />
+            </ExampleIconTile>
+            <ExampleHeaderText>
+              <ExampleQuestion boldMath variant="rubikSubBold" text={example.prompt} />
+              <MathTypography variant="rubikBody" text={workLine(example.workSummary)} />
+            </ExampleHeaderText>
+          </ExampleHeaderBox>
+          {example.stages.map((stage) => (
+            <ContentPanel key={stage.kind}>
+              <Typography variant="headingSm" sx={{ color: navy }}>
+                {t(`activityFlow.facilitate.stage.${stage.kind}`)}
               </Typography>
               <MathTypography variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
             </>
@@ -531,7 +546,7 @@ export function FavoriteNoPanel({
             <Typography variant="headingMdBold" component="span">
               {t('activityFlow.facilitate.exampleLabel', { number: tileIndex + 1 })}
             </Typography>
-            <MathTypography variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
+            <ExampleQuestion boldMath variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
           </>
         )}
       />
@@ -548,7 +563,7 @@ export function FavoriteNoPanel({
             {/* Figma (My Favorite No Teacher): Poppins 16/600. */}
             <Typography variant="headingSm">{t('activityFlow.facilitate.anonymousResponse')}</Typography>
           </Stack>
-          <MathTypography variant="rubikSubBold" text={example.prompt} />
+          <ExampleQuestion boldMath variant="rubikSubBold" text={example.prompt} />
           <Stack
             direction={props.screenSize === ScreenSize.SMALL ? 'column' : 'row'}
             spacing={`${theme.sizing.space5}px`}

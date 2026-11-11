@@ -149,14 +149,18 @@ export const pdfStyles = StyleSheet.create({
   badge: {
     width: 18,
     height: 18,
+    flexShrink: 0,
     borderRadius: 9,
     backgroundColor: pdfColors.navy,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeText: {
     color: pdfColors.offWhite,
     fontFamily: 'Poppins',
     fontSize: 9,
     fontWeight: 600,
     textAlign: 'center',
-    paddingTop: 4,
   },
   pill: {
     borderRadius: 8,
