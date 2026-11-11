@@ -52,6 +52,9 @@ import { sendEmail } from './util/send-email.mjs';
 
 const { env } = process;
 const REGION = env.REGION;
+// Where the review link points: the hosted prototype. Use
+// http://localhost:3000 to review against a local app.
+const REVIEW_BASE_URL = 'https://prototype.rightoneducation.com';
 const TABLES = {
   upload: env.API_MICROCOACHV2_MICROCOACHUPLOADTABLE_NAME,
   assessment: env.API_MICROCOACHV2_MICROCOACHASSESSMENTTABLE_NAME,
@@ -192,10 +195,19 @@ async function generate(upload) {
     TableName: TABLES.session,
     Key: { id: session.id },
     // A rerun's pick pointed at a row that no longer exists.
-    UpdateExpression: 'SET #status = :status, updatedAt = :now REMOVE selectedMisconceptionId',
+    // DRAFT holds the results back from the teacher until a reviewer publishes
+    // them on /prepublishreview, which reads the raw output stored alongside
+    // (the misconception/activity rows keep only what the teacher sees).
+    UpdateExpression:
+      'SET #status = :status, publishStatus = :draft, pipelineOutput = :output, updatedAt = :now REMOVE selectedMisconceptionId',
     ConditionExpression: 'attribute_exists(id)',
     ExpressionAttributeNames: { '#status': 'status' },
-    ExpressionAttributeValues: { ':status': 'GENERATED', ':now': now },
+    ExpressionAttributeValues: {
+      ':status': 'GENERATED',
+      ':draft': 'DRAFT',
+      ':output': JSON.stringify(output),
+      ':now': now,
+    },
   }));
   return rows;
 }
@@ -226,7 +238,14 @@ export const handler = async (event) => {
     await sendEmail(
       `MicroCoach generation finished (${envName})`,
       null,
-      [...details, '', `${rows.misconceptions.length} misconceptions, ${rows.activities.length} activities.`].join('\n'),
+      [
+        ...details,
+        '',
+        `${rows.misconceptions.length} misconceptions, ${rows.activities.length} activities.`,
+        '',
+        // Held as DRAFT: the teacher sees nothing until this is published.
+        `Review and publish: ${REVIEW_BASE_URL}/prepublishreview/${upload.sessionId}`,
+      ].join('\n'),
     ).catch((e) => console.error('Could not send the email:', e));
   } catch (err) {
     const message = String(err?.message ?? err).slice(0, 1000);

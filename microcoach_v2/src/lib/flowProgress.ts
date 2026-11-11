@@ -1,4 +1,4 @@
-import { SessionStatus } from '../AWSAPI';
+import { PublishStatus, SessionStatus } from '../AWSAPI';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { IFlowStep } from './PipelineModels';
 import { Translate } from './activityMarks';
@@ -33,6 +33,19 @@ export const FLOW_ORDER: FlowStep[] = [
  * Checked latest-signal-first, so a session that has moved on is placed by how
  * far it got, not by the first gap.
  */
+/**
+ * Generated results the reviewer hasn't published yet (/prepublishreview):
+ * MIU 1's (UploadGenerate) or MIU 2's comparison (UploadIngest).
+ * Only an explicit DRAFT holds them back: sessions from before the review step
+ * have no publishStatus, and stay visible.
+ */
+export function isHeldForReview(session: IMicroCoachSession | null): boolean {
+  return (
+    session?.status === SessionStatus.GENERATED &&
+    session.publishStatus === PublishStatus.DRAFT
+  );
+}
+
 export function deriveCurrentStep(
   session: IMicroCoachSession | null,
   // Whether a plan has been saved for this session (usePlanItems scopes its
@@ -41,6 +54,13 @@ export function deriveCurrentStep(
 ): FlowStep {
   if (!session || session.status === SessionStatus.DATA_INGESTED) {
     return FlowStep.ASSESS;
+  }
+  // Held for review reads as still waiting on the upload it came from: MIU 2's
+  // results (postPpqAssessmentId is set) keep the class on Reassess, MIU 1's on
+  // Assess. One publishStatus serves both because they're reviewed in turn —
+  // MIU 2 can only follow an MIU 1 that was already published.
+  if (isHeldForReview(session)) {
+    return session.postPpqAssessmentId ? FlowStep.REASSESS : FlowStep.ASSESS;
   }
   if (session.status === SessionStatus.COMPLETED) return FlowStep.DONE;
   // MIU 2 is in and the pipeline is still on it: still Reassess, but waiting
@@ -192,16 +212,22 @@ export function sortSessionsLatestFirst(
   });
 }
 
-// A class's session for a school week: the latest one created that week, or
-// null when the class has not uploaded for it. The upload does not record
-// which week it was for, so the week is the one the session was created in.
+// The school week a session belongs to: the one the teacher uploaded for
+// (picked on Home or the upload form), else — sessions from before uploads
+// recorded it — the week it was created in.
+export function sessionWeek(session: IMicroCoachSession): string {
+  return session.weekStart ?? weekOf(session.createdAt);
+}
+
+// A class's session for a school week: the latest one created for that week,
+// or null when the class has not uploaded for it.
 export function sessionForWeek(
   sessions: IMicroCoachSession[],
   weekStart: string,
 ): IMicroCoachSession | null {
   return (
     sessions
-      .filter((session) => weekOf(session.createdAt) === weekStart)
+      .filter((session) => sessionWeek(session) === weekStart)
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0] ?? null
   );
 }
@@ -215,6 +241,7 @@ export function sessionForWeek(
 export function isAwaitingResults(session: IMicroCoachSession | null): boolean {
   return (
     session?.status === SessionStatus.DATA_INGESTED ||
-    session?.status === SessionStatus.REASSESS_INGESTED
+    session?.status === SessionStatus.REASSESS_INGESTED ||
+    isHeldForReview(session)
   );
 }

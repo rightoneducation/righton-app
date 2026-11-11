@@ -7,6 +7,7 @@ import {
   GetMicroCoachSessionQueryVariables,
   MicroCoachSessionsByClassIdQuery,
   MicroCoachSessionsByClassIdQueryVariables,
+  PublishStatus,
   SessionStatus,
   UpdateMicroCoachSessionMutation,
   UpdateMicroCoachSessionMutationVariables,
@@ -24,6 +25,20 @@ import { IMicroCoachSession } from "../../Models/IMicroCoachSession";
 import { SessionParser } from "../../Parsers/SessionParser";
 import { BaseAPIClient, GraphQLOptions } from "../base/BaseAPIClient";
 import { ISessionAPIClient } from "./interfaces/ISessionAPIClient";
+
+// Written out rather than imported from graphql/mutations: codegen only adds
+// publishSession after the push, and this needs nothing but the status back.
+const publishSessionMutation = /* GraphQL */ `
+  mutation PublishSession($sessionId: ID!) {
+    publishSession(sessionId: $sessionId) {
+      id
+      publishStatus
+    }
+  }
+`;
+type PublishSessionMutation = {
+  publishSession?: { id: string; publishStatus?: PublishStatus | null } | null;
+};
 
 export class SessionAPIClient
   extends BaseAPIClient
@@ -114,9 +129,17 @@ export class SessionAPIClient
 
   async createUploadedSession(
     classId: string,
+    weekStart: string,
   ): Promise<IMicroCoachSession | null> {
     const variables: CreateMicroCoachSessionMutationVariables = {
-      input: { classId, status: SessionStatus.DATA_INGESTED },
+      // Cast: weekStart is new in the schema, and the generated input type only
+      // carries it once codegen has run after the push. Set only here, at
+      // creation — parseAWSSessionInput leaves it out, so updates never touch it.
+      input: {
+        classId,
+        status: SessionStatus.DATA_INGESTED,
+        weekStart,
+      } as CreateMicroCoachSessionMutationVariables['input'],
     };
     const res = await this.mutateGraphQL<CreateMicroCoachSessionMutation>(
       createMicroCoachSession,
@@ -135,6 +158,32 @@ export class SessionAPIClient
   ): Promise<IMicroCoachSession | null> {
     const variables: UpdateMicroCoachSessionMutationVariables = {
       input: { id, status },
+    };
+    const res = await this.mutateGraphQL<UpdateMicroCoachSessionMutation>(
+      updateMicroCoachSession,
+      variables as unknown as GraphQLOptions,
+    );
+
+    const updatedSession = res?.data?.updateMicroCoachSession;
+    return updatedSession
+      ? SessionParser.parseIMicroCoachSessionfromAWSSession(updatedSession)
+      : null;
+  }
+
+  async publishSession(sessionId: string): Promise<PublishStatus | null> {
+    const res = await this.mutateGraphQL<PublishSessionMutation>(
+      publishSessionMutation,
+      { sessionId } as unknown as GraphQLOptions,
+    );
+    return res?.data?.publishSession?.publishStatus ?? null;
+  }
+
+  async setPublishStatus(
+    id: string,
+    publishStatus: PublishStatus,
+  ): Promise<IMicroCoachSession | null> {
+    const variables: UpdateMicroCoachSessionMutationVariables = {
+      input: { id, publishStatus },
     };
     const res = await this.mutateGraphQL<UpdateMicroCoachSessionMutation>(
       updateMicroCoachSession,

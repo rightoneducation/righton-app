@@ -26,6 +26,7 @@ export const onCreateMicroCoachUser = /* GraphQL */ `
               sessionLabel
               weekLabel
               weekNumber
+              weekStart
               topic
               ccssStandards
               status
@@ -38,6 +39,7 @@ export const onCreateMicroCoachUser = /* GraphQL */ `
               postPpqAssessmentId
               selectedMisconceptionId
               pregeneratedNextSteps
+              pipelineOutput
               evaluationResults
               createdAt
               updatedAt
@@ -81,6 +83,7 @@ export const onCreateMicroCoachUser = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -121,6 +124,7 @@ export const onUpdateMicroCoachUser = /* GraphQL */ `
               sessionLabel
               weekLabel
               weekNumber
+              weekStart
               topic
               ccssStandards
               status
@@ -133,6 +137,7 @@ export const onUpdateMicroCoachUser = /* GraphQL */ `
               postPpqAssessmentId
               selectedMisconceptionId
               pregeneratedNextSteps
+              pipelineOutput
               evaluationResults
               createdAt
               updatedAt
@@ -176,6 +181,7 @@ export const onUpdateMicroCoachUser = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -216,6 +222,7 @@ export const onDeleteMicroCoachUser = /* GraphQL */ `
               sessionLabel
               weekLabel
               weekNumber
+              weekStart
               topic
               ccssStandards
               status
@@ -228,6 +235,7 @@ export const onDeleteMicroCoachUser = /* GraphQL */ `
               postPpqAssessmentId
               selectedMisconceptionId
               pregeneratedNextSteps
+              pipelineOutput
               evaluationResults
               createdAt
               updatedAt
@@ -271,6 +279,7 @@ export const onDeleteMicroCoachUser = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -301,6 +310,7 @@ export const onCreateMicroCoachClassroom = /* GraphQL */ `
           sessionLabel
           weekLabel
           weekNumber
+          weekStart
           topic
           ccssStandards
           status
@@ -352,6 +362,7 @@ export const onCreateMicroCoachClassroom = /* GraphQL */ `
             __typename
           }
           pregeneratedNextSteps
+          pipelineOutput
           evaluationResults
           questionStats {
             questionNumber
@@ -407,6 +418,7 @@ export const onCreateMicroCoachClassroom = /* GraphQL */ `
               docxKey
               xlsxKey
               weekStart
+              weekLabel
               status
               error
               createdAt
@@ -460,6 +472,7 @@ export const onUpdateMicroCoachClassroom = /* GraphQL */ `
           sessionLabel
           weekLabel
           weekNumber
+          weekStart
           topic
           ccssStandards
           status
@@ -511,6 +524,7 @@ export const onUpdateMicroCoachClassroom = /* GraphQL */ `
             __typename
           }
           pregeneratedNextSteps
+          pipelineOutput
           evaluationResults
           questionStats {
             questionNumber
@@ -566,6 +580,7 @@ export const onUpdateMicroCoachClassroom = /* GraphQL */ `
               docxKey
               xlsxKey
               weekStart
+              weekLabel
               status
               error
               createdAt
@@ -619,6 +634,7 @@ export const onDeleteMicroCoachClassroom = /* GraphQL */ `
           sessionLabel
           weekLabel
           weekNumber
+          weekStart
           topic
           ccssStandards
           status
@@ -670,6 +686,7 @@ export const onDeleteMicroCoachClassroom = /* GraphQL */ `
             __typename
           }
           pregeneratedNextSteps
+          pipelineOutput
           evaluationResults
           questionStats {
             questionNumber
@@ -725,6 +742,7 @@ export const onDeleteMicroCoachClassroom = /* GraphQL */ `
               docxKey
               xlsxKey
               weekStart
+              weekLabel
               status
               error
               createdAt
@@ -819,6 +837,7 @@ export const onCreateMicroCoachSession = /* GraphQL */ `
       sessionLabel
       weekLabel
       weekNumber
+      weekStart
       topic
       ccssStandards
       status
@@ -942,6 +961,7 @@ export const onCreateMicroCoachSession = /* GraphQL */ `
         __typename
       }
       pregeneratedNextSteps
+      pipelineOutput
       evaluationResults
       questionStats {
         questionNumber
@@ -1011,6 +1031,7 @@ export const onCreateMicroCoachSession = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -1036,6 +1057,7 @@ export const onUpdateMicroCoachSession = /* GraphQL */ `
       sessionLabel
       weekLabel
       weekNumber
+      weekStart
       topic
       ccssStandards
       status
@@ -1159,6 +1181,7 @@ export const onUpdateMicroCoachSession = /* GraphQL */ `
         __typename
       }
       pregeneratedNextSteps
+      pipelineOutput
       evaluationResults
       questionStats {
         questionNumber
@@ -1228,6 +1251,7 @@ export const onUpdateMicroCoachSession = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -1253,6 +1277,7 @@ export const onDeleteMicroCoachSession = /* GraphQL */ `
       sessionLabel
       weekLabel
       weekNumber
+      weekStart
       topic
       ccssStandards
       status
@@ -1376,6 +1401,7 @@ export const onDeleteMicroCoachSession = /* GraphQL */ `
         __typename
       }
       pregeneratedNextSteps
+      pipelineOutput
       evaluationResults
       questionStats {
         questionNumber
@@ -1445,6 +1471,7 @@ export const onDeleteMicroCoachSession = /* GraphQL */ `
           docxKey
           xlsxKey
           weekStart
+          weekLabel
           status
           error
           createdAt
@@ -1475,6 +1502,7 @@ export const onCreateMicroCoachUpload = /* GraphQL */ `
       docxKey
       xlsxKey
       weekStart
+      weekLabel
       status
       error
       createdAt
@@ -1498,6 +1526,7 @@ export const onUpdateMicroCoachUpload = /* GraphQL */ `
       docxKey
       xlsxKey
       weekStart
+      weekLabel
       status
       error
       createdAt
@@ -1521,6 +1550,7 @@ export const onDeleteMicroCoachUpload = /* GraphQL */ `
       docxKey
       xlsxKey
       weekStart
+      weekLabel
       status
       error
       createdAt

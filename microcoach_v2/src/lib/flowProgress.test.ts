@@ -1,4 +1,4 @@
-import { SessionStatus } from '../AWSAPI';
+import { PublishStatus, SessionStatus } from '../AWSAPI';
 import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { Translate } from './activityMarks';
 import {
@@ -9,6 +9,7 @@ import {
   deriveCurrentStep,
   hasChosenActivity,
   isAwaitingResults,
+  isHeldForReview,
   resumePath,
   sessionForWeek,
   sortSessionsLatestFirst,
@@ -23,6 +24,7 @@ const session = (overrides: Partial<IMicroCoachSession> = {}): IMicroCoachSessio
   sessionLabel: null,
   weekLabel: null,
   weekNumber: null,
+  weekStart: null,
   topic: null,
   ccssStandards: [],
   status: SessionStatus.GENERATED,
@@ -35,6 +37,7 @@ const session = (overrides: Partial<IMicroCoachSession> = {}): IMicroCoachSessio
   postPpqAssessmentId: null,
   selectedMisconceptionId: null,
   pregeneratedNextSteps: null,
+  pipelineOutput: null,
   evaluationResults: null,
   questionStats: [],
   reflectionResults: [],
@@ -58,6 +61,51 @@ describe('deriveCurrentStep', () => {
     expect(
       deriveCurrentStep(session({ status: SessionStatus.REASSESS_INGESTED }), true),
     ).toBe(FlowStep.REASSESS);
+  });
+
+  it('is ASSESS while generated results wait for review', () => {
+    expect(
+      deriveCurrentStep(
+        session({ status: SessionStatus.GENERATED, publishStatus: PublishStatus.DRAFT }),
+        false,
+      ),
+    ).toBe(FlowStep.ASSESS);
+  });
+
+  it('is REASSESS while MIU 2 results wait for review', () => {
+    expect(
+      deriveCurrentStep(
+        session({
+          status: SessionStatus.GENERATED,
+          publishStatus: PublishStatus.DRAFT,
+          postPpqAssessmentId: 'a2',
+          selectedMisconceptionId: 'm1',
+        }),
+        true,
+      ),
+    ).toBe(FlowStep.REASSESS);
+  });
+
+  it('is REFLECT once MIU 2 results are published', () => {
+    expect(
+      deriveCurrentStep(
+        session({
+          status: SessionStatus.GENERATED,
+          publishStatus: PublishStatus.PUBLISHED,
+          postPpqAssessmentId: 'a2',
+        }),
+        true,
+      ),
+    ).toBe(FlowStep.REFLECT);
+  });
+
+  it('is UNDERSTAND once reviewed results are published', () => {
+    expect(
+      deriveCurrentStep(
+        session({ status: SessionStatus.GENERATED, publishStatus: PublishStatus.PUBLISHED }),
+        false,
+      ),
+    ).toBe(FlowStep.UNDERSTAND);
   });
 
   it('is UNDERSTAND once results are in and no plan is saved', () => {
@@ -261,6 +309,21 @@ describe('sessionForWeek', () => {
   it('is null for a week with no session', () => {
     expect(sessionForWeek([earlier, later], '2026-10-19')).toBeNull();
   });
+
+  // Uploaded today (week of Nov 9) for a week picked on Home (Oct 26).
+  const backfilled = session({
+    id: 'backfilled',
+    weekStart: '2026-10-26',
+    createdAt: '2026-11-11T04:40:29.528Z',
+  });
+
+  it('files a session under the week it was uploaded for', () => {
+    expect(sessionForWeek([backfilled], '2026-10-26')?.id).toBe('backfilled');
+  });
+
+  it('keeps it out of the week it was created in', () => {
+    expect(sessionForWeek([backfilled], '2026-11-09')).toBeNull();
+  });
 });
 
 describe('isAwaitingResults', () => {
@@ -272,5 +335,25 @@ describe('isAwaitingResults', () => {
   it('does not wait once results are in, or with no session', () => {
     expect(isAwaitingResults(session())).toBe(false);
     expect(isAwaitingResults(null)).toBe(false);
+  });
+});
+
+describe('isHeldForReview', () => {
+  it('holds a generated DRAFT session', () => {
+    const draft = session({ status: SessionStatus.GENERATED, publishStatus: PublishStatus.DRAFT });
+    expect(isHeldForReview(draft)).toBe(true);
+    expect(isAwaitingResults(draft)).toBe(true);
+  });
+
+  it('releases a published session', () => {
+    expect(
+      isHeldForReview(session({ status: SessionStatus.GENERATED, publishStatus: PublishStatus.PUBLISHED })),
+    ).toBe(false);
+  });
+
+  it('leaves sessions from before the review step visible', () => {
+    const legacy = session({ status: SessionStatus.GENERATED, publishStatus: null });
+    expect(isHeldForReview(legacy)).toBe(false);
+    expect(isAwaitingResults(legacy)).toBe(false);
   });
 });

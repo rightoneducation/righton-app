@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -11,6 +12,7 @@ import AppContentRow from '../components/AppContentRow';
 import SignUpStepper from '../components/SignUpStepper';
 import VerificationCodeInput from '../components/VerificationCodeInput';
 import {
+  FORM_COLUMN,
   SignUpColumn,
   SignUpHeading,
   SignUpPill,
@@ -31,7 +33,11 @@ export default function SignUpVerify({
 
   const isReady = useAllReady(useI18nReady());
 
-  const [didResend, setDidResend] = React.useState(false);
+  // One status rather than a sent flag: "sent" must only show once Cognito has
+  // actually accepted the resend, and its rate limit makes failure routine.
+  const [resendStatus, setResendStatus] = React.useState<
+    'idle' | 'sending' | 'sent' | 'error'
+  >('idle');
   const [hasError, setHasError] = React.useState(false);
   // Confirming is four round trips (confirm, sign-in, session, row creation),
   // so the pill needs to show that something is happening.
@@ -76,102 +82,178 @@ export default function SignUpVerify({
     }
   };
 
+  const handleResend = async () => {
+    setResendStatus('sending');
+    try {
+      await apiClients.auth.awsResendConfirmationCode(state.email);
+      setResendStatus('sent');
+    } catch (error) {
+      // Most often Cognito's LimitExceededException; log it so other causes
+      // (e.g. an already-confirmed user) are still visible.
+      console.error('Resend code error', error);
+      setResendStatus('error');
+    }
+  };
+
   return (
+    // Same shell as SignUpRegister: fills the body under the header and sits
+    // 125 off the bottom; the 140 above the heading is the stepper's own row.
+    // Three sibling blocks — heading, form, Verify — 48 apart, flex-start.
     <AppContentRow
       screenSize={screenSize}
-      sx={{ pt: `${theme.sizing.space8}px`, pb: `${theme.sizing.space12}px` }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1,
+        pb: '125px',
+      }}
     >
-      <SignUpColumn screenSize={screenSize}>
-        <SignUpStepper current={2} />
-        <SignUpHeading>{t('signup.welcome')}</SignUpHeading>
-        <SignUpSubheading>{t('signup.verifyTitle')}</SignUpSubheading>
-
-        <Typography
-          variant="rubikBody"
+      <SignUpColumn
+        screenSize={screenSize}
+        width={640}
+        sx={{
+          flexGrow: 1,
+          justifyContent: 'flex-start',
+          gap: `${theme.sizing.space8}px`,
+        }}
+      >
+        <Box
           sx={{
-            color: 'designSystem.surface.darkBlue',
-            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          {t('signup.verifyBody')}
-        </Typography>
-
-        <VerificationCodeInput
-          autoFocus
-          code={state.code}
-          hasError={hasError}
-          onCodeChange={(code) => {
-            actions.setCode(code);
-            // Clear the error the moment they start correcting it, rather
-            // than leaving the boxes red while they retype.
-            setHasError(false);
-          }}
-        />
-
-        {/* Figma keeps the message in accentBlue rather than red — the box
-            outlines carry the error — and sets it in flow between the boxes
-            and Resend, so the Verify pill is pushed down rather than the
-            column reserving space for it. */}
-        {hasError && (
-          <Typography
-            variant="rubikLabel"
-            role="alert"
+          {/* 140 tall (space14 + space4 — no single token) and centred, so
+              the heading lands 140 below the header whatever the stepper's
+              own height. */}
+          <Box
             sx={{
-              color: 'designSystem.foreground.accentBlue',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: `${theme.sizing.space14 + theme.sizing.space4}px`,
+            }}
+          >
+            <SignUpStepper current={2} />
+          </Box>
+          <SignUpHeading>{t('signup.welcome')}</SignUpHeading>
+        </Box>
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            width: '100%',
+            // The column is 640 only so the heading fits on one line; the form
+            // under it stays on the 500 Figma column.
+            maxWidth: FORM_COLUMN,
+            gap: `${theme.sizing.space5}px`,
+          }}
+        >
+          <SignUpSubheading>{t('signup.verifyTitle')}</SignUpSubheading>
+
+          <Typography
+            variant="rubikBody"
+            sx={{
+              color: 'designSystem.surface.darkBlue',
               textAlign: 'center',
             }}
           >
-            {t('signup.codeError')}
+            {t('signup.verifyBody')}
           </Typography>
-        )}
 
-        <Stack alignItems="center" spacing={`${theme.sizing.space1}px`}>
-          {/* A real button: it performs an action rather than navigating,
-              so an anchor would be the wrong element. */}
-          <Button
-            variant="text"
-            onClick={() => setDidResend(true)}
-            sx={{
-              ...theme.typography.rubikBody,
-              color: 'designSystem.surface.darkBlue',
-              textTransform: 'none',
-              textDecoration: 'underline',
+          <VerificationCodeInput
+            autoFocus
+            code={state.code}
+            hasError={hasError}
+            onCodeChange={(code) => {
+              actions.setCode(code);
+              // Clear the error the moment they start correcting it, rather
+              // than leaving the boxes red while they retype.
+              setHasError(false);
             }}
-          >
-            {t('signup.resend')}
-          </Button>
-          {didResend && (
+          />
+
+          {/* Figma keeps the message in accentBlue rather than red — the box
+              outlines carry the error — and sets it in flow between the boxes
+              and Resend, so the Verify pill is pushed down rather than the
+              column reserving space for it. */}
+          {hasError && (
             <Typography
-              variant="smallBodyText"
-              role="status"
-              sx={{ color: 'designSystem.status.success' }}
+              variant="rubikLabel"
+              role="alert"
+              sx={{
+                color: 'designSystem.foreground.accentBlue',
+                textAlign: 'center',
+              }}
             >
-              {t('signup.resendSent')}
+              {t('signup.codeError')}
             </Typography>
           )}
-        </Stack>
 
-        {/* The spinner replaces the label rather than sitting beside it: the
-            pill's minWidth/minHeight hold its size, so nothing in the column
-            shifts. `disabled` also blocks the double-submit that would fire a
-            second confirmSignUp and fail once the first one lands. Colour is
-            set explicitly because SignUpPill has no Mui-disabled rule, so
-            MUI's default greys out anything inheriting `color`. */}
-        <SignUpPill
-          disableElevation
-          disabled={isVerifying}
-          onClick={handleVerify}
-        >
-          {isVerifying ? (
-            <CircularProgress
-              size={20}
-              aria-label={t('signup.verify')}
-              sx={{ color: 'designSystem.surface.white' }}
-            />
-          ) : (
-            t('signup.verify')
-          )}
-        </SignUpPill>
+          <Stack useFlexGap alignItems="center" spacing={`${theme.sizing.space1}px`}>
+            {/* A real button: it performs an action rather than navigating,
+                so an anchor would be the wrong element. */}
+            <Button
+              variant="text"
+              disabled={resendStatus === 'sending'}
+              onClick={handleResend}
+              sx={{
+                ...theme.typography.rubikBody,
+                color: 'designSystem.surface.darkBlue',
+                textTransform: 'none',
+                textDecoration: 'underline',
+              }}
+            >
+              {t('signup.resend')}
+            </Button>
+            {resendStatus === 'sent' && (
+              <Typography
+                variant="smallBodyText"
+                role="status"
+                sx={{ color: 'designSystem.status.success' }}
+              >
+                {t('signup.resendSent')}
+              </Typography>
+            )}
+            {/* accentBlue, matching the code error above. */}
+            {resendStatus === 'error' && (
+              <Typography
+                variant="smallBodyText"
+                role="alert"
+                sx={{ color: 'designSystem.foreground.accentBlue' }}
+              >
+                {t('signup.resendError')}
+              </Typography>
+            )}
+          </Stack>
+        </Box>
+
+        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+          {/* The spinner replaces the label rather than sitting beside it: the
+              pill's minWidth/minHeight hold its size, so nothing in the column
+              shifts. `disabled` also blocks the double-submit that would fire a
+              second confirmSignUp and fail once the first one lands. Colour is
+              set explicitly because SignUpPill has no Mui-disabled rule, so
+              MUI's default greys out anything inheriting `color`. */}
+          <SignUpPill
+            disableElevation
+            disabled={isVerifying}
+            onClick={handleVerify}
+          >
+            {isVerifying ? (
+              <CircularProgress
+                size={20}
+                aria-label={t('signup.verify')}
+                sx={{ color: 'designSystem.surface.white' }}
+              />
+            ) : (
+              t('signup.verify')
+            )}
+          </SignUpPill>
+        </Box>
       </SignUpColumn>
     </AppContentRow>
   );

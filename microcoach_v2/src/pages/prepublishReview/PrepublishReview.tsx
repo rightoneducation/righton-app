@@ -1,0 +1,1370 @@
+import React, { useMemo, useState } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
+import { PublishStatus } from '../../AWSAPI';
+import { IMicroCoachReflectionResult } from '../../api/Models/IMicroCoachSession';
+import {
+  Rec,
+  asArray,
+  asStrings,
+  asRec,
+  asStr,
+  usePrepublishSession,
+  PrepublishSessionState,
+} from './shared';
+import { FORMULAE } from './formulae';
+import MathText from '../../components/MathText';
+import BeforeClassView from '../../components/activityFlow/BeforeClassView';
+import DiscussionView from '../../components/activityFlow/DiscussionView';
+import FacilitateView from '../../components/activityFlow/FacilitateView';
+import { useScreenSize } from '../../hooks/useScreenSize';
+import { IActivityContent, toActivityContent } from '../../lib/ActivityContentModels';
+import { activityTemplateCopy } from '../../lib/activityTemplates';
+import { ActivityType } from '../../lib/PipelineModels';
+import { STAGES, GROUPS, Stage, Who, Origin } from './pipeline';
+
+/**
+ * Pre-publish review — a copy of /preview (src/pages/preview/Preview.tsx) that
+ * shows one real upload's generated results to a reviewer before the teacher
+ * sees them. UploadGenerate leaves the session DRAFT (flowProgress holds it as
+ * "waiting"); Publish sets it PUBLISHED and the teacher's Home moves on.
+ * Reached from the "generation finished" email: /prepublishreview/:sessionId.
+ * Admins (Cognito group) only.
+ *
+ * What follows is /preview's own description, still true of the cards below:
+ *
+ * Preview — how the pipeline works, shown on a real run.
+ *
+ * Presents the pipeline itself: the stages in the current iteration, every formula they
+ * apply (and whether code or the model applies it), then each misconception
+ * from the selected run collapsed to what the pipeline produced for it — the
+ * misconception with its rubric, the instructional need, the activity templates
+ * selected, and the activities generated for them.
+ *
+ * The pipeline diagram and formulae are static: they describe the code on this
+ * branch, not the run's version tag. The run supplies the misconceptions.
+ */
+
+const WHO_LABEL: Record<Who, string> = { api: 'API', code: 'code', llm: 'LLM' };
+
+function WhoBadge({ who }: { who: Who }) {
+  return <span className={`p2-who p2-who-${who}`}>{WHO_LABEL[who]}</span>;
+}
+
+function OriginTag({ origin }: { origin: Origin }) {
+  return (
+    <a className="p2-origin" href={origin.href} target="_blank" rel="noreferrer">
+      {origin.label} ↗
+    </a>
+  );
+}
+
+// ── Pipeline ──────────────────────────────────────────────────────────────────
+
+function StageCard({ stage, n }: { stage: Stage; n: number }) {
+  return (
+    // tabIndex so keyboard focus opens the tip too.
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+    <div className="p2-stage" tabIndex={0}>
+      <div className="p2-stage-head">
+        <span className="p2-stage-n">{n}</span>
+        <WhoBadge who={stage.who} />
+      </div>
+      <div className="p2-stage-label">{stage.label}</div>
+      <div className="p2-stage-sub">{stage.subtitle}</div>
+      <div className="p2-stage-tip">
+        <div className="p2-stage-where">{stage.where}</div>
+        <p className="p2-stage-detail">{stage.detail}</p>
+        <ul className="p2-stage-out">
+          {stage.out.map((o) => (
+            <li key={o}>{o}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function PipelineFlow({ models }: { models: string[] }) {
+  const byId = new Map(STAGES.map((st, i) => [st.id, { stage: st, n: i + 1 }]));
+  const card = (id: string) => {
+    const hit = byId.get(id);
+    return hit ? <StageCard stage={hit.stage} n={hit.n} key={id} /> : null;
+  };
+  return (
+    <section className="p2-section p2-section-wide">
+      <h2 className="p2-h2">Pipeline</h2>
+      <p className="p2-lede">
+        Current iteration, in run order. <WhoBadge who="api" /> fetches from a service,{' '}
+        <WhoBadge who="code" /> computes from the response rows, <WhoBadge who="llm" /> is a model call
+        {models.length > 0 ? ` (${models.join(', ')})` : ''}. Boxes show how often each part runs. Hover a step
+        for detail.
+      </p>
+      <ol className="p2-flow">
+        {GROUPS.map((g) => {
+          const innerIds = new Set(g.inner?.stageIds ?? []);
+          // Stages outside the inner box render as-is; the inner box's stages render
+          // together at the position of the first one.
+          const parts: React.ReactNode[] = [];
+          let innerDone = false;
+          g.stageIds.forEach((id) => {
+            if (!innerIds.has(id)) {
+              parts.push(card(id));
+            } else if (!innerDone) {
+              innerDone = true;
+              parts.push(
+                <div className="p2-inner" key={`inner-${g.id}`}>
+                  <div className="p2-inner-label">{g.inner?.label}</div>
+                  <div className="p2-inner-stages">{g.inner?.stageIds.map(card)}</div>
+                </div>,
+              );
+            }
+          });
+          return (
+            <li className="p2-group" key={g.id} style={{ flexGrow: g.stageIds.length }}>
+              <div className="p2-group-head">
+                <span className="p2-group-label">{g.label}</span>
+                <span className="p2-group-cadence">{g.cadence}</span>
+              </div>
+              <div className="p2-group-stages">{parts}</div>
+              {g.caveat && <div className="p2-group-caveat">{g.caveat}</div>}
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  );
+}
+
+// ── Formulae ──────────────────────────────────────────────────────────────────
+
+function Formulae() {
+  const byId = new Map(STAGES.map((st, i) => [st.id, { stage: st, n: i + 1 }]));
+  return (
+    <section className="p2-section p2-section-wide">
+      <h2 className="p2-h2">Formulae</h2>
+      <p className="p2-lede">
+        Every computation from the response rows to the generated activity, in the same boxes as the pipeline
+        above. Constants are as written in the source named on each card.
+      </p>
+      <ol className="p2-flow p2-flow-static">
+        {GROUPS.map((g) => {
+          const cards = g.stageIds.flatMap((stageId) =>
+            FORMULAE.filter((f) => f.stageId === stageId).map((f) => {
+              const hit = byId.get(stageId);
+              return (
+                <details className="p2-formula" key={f.id}>
+                  <summary className="p2-formula-head">
+                    <span className="p2-chevron" aria-hidden="true">
+                      ▸
+                    </span>
+                    {hit && <span className="p2-stage-n">{hit.n}</span>}
+                    <span className="p2-formula-title">
+                      {hit && <span className="p2-formula-stage">{hit.stage.label} · </span>}
+                      {f.title}
+                    </span>
+                    <WhoBadge who={f.who} />
+                    {f.origin && <OriginTag origin={f.origin} />}
+                  </summary>
+                  <ol className="p2-steps">
+                    {f.steps.map((step) => (
+                      <li key={step.text}>
+                        <div>{step.text}</div>
+                        {step.tex && (
+                          <div className="p2-tex">
+                            <MathText text={`$$${step.tex}$$`} />
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ol>
+                  <div className="p2-formula-src">{f.source}</div>
+                  {f.notes.length > 0 && (
+                    <ul className="p2-notes">
+                      {f.notes.map((n) => (
+                        <li key={n}>{n}</li>
+                      ))}
+                    </ul>
+                  )}
+                </details>
+              );
+            }),
+          );
+          // Boxes with nothing to compute (fetch-only) are left out.
+          if (cards.length === 0) return null;
+          return (
+            <li className="p2-group" key={g.id}>
+              <div className="p2-group-head">
+                <span className="p2-group-label">{g.label}</span>
+              </div>
+              <div className="p2-group-formulae">{cards}</div>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  );
+}
+
+// ── Misconception cards ───────────────────────────────────────────────────────
+
+const pct = (v: unknown): string => (typeof v === 'number' ? `${Math.round(v * 100)}%` : '');
+
+function Chips({ items }: { items: string[] }) {
+  if (items.length === 0) return <span className="p2-nil">—</span>;
+  return (
+    <span className="p2-chips">
+      {items.map((s) => (
+        <span className="p2-chip" key={s}>
+          {s}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+function Row({ k, v }: { k: string; v: React.ReactNode }) {
+  return (
+    <div className="p2-row">
+      <div className="p2-row-k">{k}</div>
+      <div className="p2-row-v">{v}</div>
+    </div>
+  );
+}
+
+/**
+ * One pipeline step under a misconception. Always shown in full: once a card is
+ * open, its four steps are what the reader came for, so they no longer collapse.
+ * The card itself still does, under Expand/Collapse all.
+ */
+function Block({ label, hint, children }: { label: string; hint: string; children: React.ReactNode }) {
+  return (
+    <section className="p2-block">
+      <div className="p2-block-head">
+        <span className="p2-block-label">{label}</span>
+        <span className="p2-block-hint">{hint}</span>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+// Observed evidence, stated as what was counted rather than as who "has" the
+// misconception: unique students and linked responses are different numbers and
+// are shown apart, because one student can contribute several responses.
+function EvidenceCount({ item }: { item: Rec }) {
+  const students = typeof item.studentCount === 'number' ? item.studentCount : null;
+  if (students === null) return <span className="p2-nil">not linked</span>;
+  const responses = typeof item.linkedResponses === 'number' ? item.linkedResponses : null;
+  const share = pct(item.studentPercent);
+  return (
+    <span>
+      <span className="p2-mono">{students}</span> unique student{students === 1 ? '' : 's'}
+      {share === '' ? '' : ` (${share} of class)`}
+      {responses !== null && (
+        <>
+          {' · '}
+          <span className="p2-mono">{responses}</span> linked response{responses === 1 ? '' : 's'}
+        </>
+      )}
+    </span>
+  );
+}
+
+function MisconceptionBlock({ item }: { item: Rec }) {
+  const wrongAnswers = asArray(item.wrongAnswers);
+  const ccss = asRec(item.ccssStandards);
+  const target = ccss ? asRec(ccss.targetObjective) : null;
+  return (
+    <Block label="Misconception" hint="LLMGenMisconception · from the questions">
+      <p className="p2-text">
+        {asStr(item.misconceptionSummary) ? (
+          <MathText text={asStr(item.misconceptionSummary)} />
+        ) : (
+          <span className="p2-nil">no summary</span>
+        )}
+      </p>
+      <Row k="selected one or more linked responses" v={<EvidenceCount item={item} />} />
+      <Row
+        k="wrong answers linked"
+        v={
+          wrongAnswers.length === 0 ? (
+            <span className="p2-nil">—</span>
+          ) : (
+            // Each linked option with the stage's explanation of what its value
+            // shows: how the link was justified, not just which options.
+            <ul className="p2-list">
+              {wrongAnswers.map((w) => {
+                const ref = `Q${String(w.questionNumber)}·${asStr(w.letter)}`;
+                return (
+                  <li key={ref}>
+                    <span className="p2-mono">{ref}</span>
+                    {asStr(w.explanation) !== '' && (
+                      <>
+                        {' — '}
+                        <MathText text={asStr(w.explanation)} inline />
+                      </>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )
+        }
+      />
+      {asStr(item.evidenceBasis) !== '' && (
+        <Row
+          k="evidence basis"
+          v={
+            <span>
+              {asStr(item.evidenceBasis)}
+              <span className="p2-row-k">
+                {asStr(item.evidenceBasis) === 'grounded'
+                  ? ' · the option content supports this reading'
+                  : ' · the most plausible of several readings'}
+              </span>
+            </span>
+          }
+        />
+      )}
+      {target && <Row k="standard" v={<span className="p2-mono">{asStr(target.standard)}</span>} />}
+      {asStr(item.learningScienceConnection) !== '' && (
+        <Row k="learning science" v={<span>{asStr(item.learningScienceConnection)}</span>} />
+      )}
+    </Block>
+  );
+}
+
+// The Wave 2 Misconception Rubric scorecard as the run recorded it — read from
+// the item, not recomputed here.
+// Weights and row order, copied by hand from
+// microcoachv2ScoresCalc/src/misconceptionRubric.json — CRA cannot import from
+// amplify/. A weight shown here that disagrees with that file is a bug in this
+// copy; the lambda's own `weighted` values are what the totals are built from.
+const RUBRIC_WEIGHTS: Record<string, number> = {
+  frequency: 3,
+  learningProgressionInfluence: 1,
+  studentConfidence: 3,
+  conceptualDepth: 3,
+  lcMisconceptionEvalScore: 3,
+};
+const RUBRIC_ORDER = [
+  'frequency',
+  'learningProgressionInfluence',
+  'studentConfidence',
+  'conceptualDepth',
+  'lcMisconceptionEvalScore',
+];
+
+const RUBRIC_LABELS: Record<string, string> = {
+  frequency: 'frequency',
+  learningProgressionInfluence: 'progression influence',
+  studentConfidence: 'student confidence',
+  lcMisconceptionEvalScore: 'LC evaluator',
+  conceptualDepth: 'conceptual depth',
+};
+
+// How a tie on the rubric total is broken, in order. Copied from
+// microcoachv2ScoresCalc/src/misconceptionRubric.json → selection.tiebreak; the
+// values compared are on each item's rubric.inputs.
+const TIEBREAK: Array<{ key: string; label: string; fmt: (v: unknown) => string }> = [
+  { key: 'conceptualDepth', label: 'conceptual depth', fmt: (v) => String(v) },
+  { key: 'studentPercent', label: 'share of class', fmt: (v) => pct(v) || String(v) },
+  { key: 'meanConfidence', label: 'mean confidence', fmt: (v) => String(v) },
+];
+
+interface TieNote {
+  withRank: number | null;
+  decidedBy: string;
+  detail: string | null;
+}
+
+// For each card that shares its normalized rubric score with the card ranked
+// just above it, say which tiebreak separated them. Keyed by position in the
+// ranked list; the note goes on the lower-ranked card, since that is the rank
+// that needs explaining.
+function findTies(ranked: Rec[]): Map<number, TieNote> {
+  const ties = new Map<number, TieNote>();
+  ranked.forEach((item, i) => {
+    if (i === 0) return;
+    const a = asRec(ranked[i - 1].rubric);
+    const b = asRec(item.rubric);
+    if (!a || !b || typeof a.normalized !== 'number' || a.normalized !== b.normalized) return;
+    const ai = asRec(a.inputs) ?? {};
+    const bi = asRec(b.inputs) ?? {};
+    const withRank = typeof ranked[i - 1].priorityRank === 'number' ? (ranked[i - 1].priorityRank as number) : null;
+    const decider = TIEBREAK.find((t) => ai[t.key] !== bi[t.key]);
+    if (decider) {
+      ties.set(i, {
+        withRank,
+        decidedBy: decider.label,
+        detail: `${decider.fmt(bi[decider.key])} vs ${decider.fmt(ai[decider.key])}`,
+      });
+    } else {
+      ties.set(i, { withRank, decidedBy: 'the order the model listed them', detail: null });
+    }
+  });
+  return ties;
+}
+
+function TieTag({ tie }: { tie: TieNote | undefined }) {
+  if (!tie) return null;
+  return (
+    <span className="p2-meta p2-tie" title="same rubric total as the card above; the tiebreak decided the order">
+      Tied with #{tie.withRank ?? '?'} · ranked lower on {tie.decidedBy}
+      {tie.detail && ` (${tie.detail})`}
+    </span>
+  );
+}
+
+// The rubric total for a card header: the reason the rank is what it is, read
+// left to right from the rank chip. The per-metric breakdown is in the body.
+function ScoreStrip({ item }: { item: Rec }) {
+  const rubric = asRec(item.rubric);
+  if (!rubric || typeof rubric.total !== 'number' || typeof rubric.maxPossible !== 'number') return null;
+  return (
+    <span className="p2-meta p2-meta-scores" title="misconception rubric score">
+      <span className="p2-mono p2-score-total">
+        {rubric.total} / {rubric.maxPossible}
+      </span>
+    </span>
+  );
+}
+
+// Rubric order first, then anything the lambda emitted that this page does not
+// know about — so a new metric shows up rather than disappearing.
+function orderedKeys(scores: Rec): string[] {
+  const known = RUBRIC_ORDER.filter((k) => k in scores);
+  const rest = Object.keys(scores).filter((k) => !RUBRIC_ORDER.includes(k));
+  return [...known, ...rest];
+}
+
+// What the score was computed from. Frequency is continuous now, so the raw
+// share of class is what makes a value like 2.57 readable.
+function measuredFrom(key: string, inputs: Rec): string {
+  if (key === 'frequency') {
+    const p = pct(inputs.studentPercent);
+    return p === '' ? '' : `${p} of class`;
+  }
+  if (key === 'learningProgressionInfluence') {
+    const n = inputs.downstreamCount;
+    return typeof n === 'number' ? `${n} downstream standard${n === 1 ? '' : 's'}` : '';
+  }
+  if (key === 'studentConfidence') {
+    const c = inputs.meanConfidence;
+    return typeof c === 'number' ? `mean ${c} of 5` : '';
+  }
+  if (key === 'conceptualDepth') return 'model judgement';
+  return '';
+}
+
+function RubricBlock({ item, tie }: { item: Rec; tie?: TieNote }) {
+  const rubric = asRec(item.rubric);
+  if (!rubric) {
+    return (
+      <Block label="Rubric" hint="ScoresCalc">
+        <span className="p2-nil">not scored on this run</span>
+      </Block>
+    );
+  }
+  const scores = asRec(rubric.scores) ?? {};
+  const weighted = asRec(rubric.weighted) ?? {};
+  const inputs = asRec(rubric.inputs) ?? {};
+  const missing = asStrings(rubric.missing);
+  const total = typeof rubric.total === 'number' ? rubric.total : null;
+  const max = typeof rubric.maxPossible === 'number' ? rubric.maxPossible : null;
+  const retained = item.retained !== false;
+  return (
+    <Block label="Rubric" hint={`ScoresCalc · ${asStr(rubric.version) || 'misconceptionRubric.json'}`}>
+      <div className="p2-inputs">
+        <div className="p2-inputs-head">Misconception rubric</div>
+        {orderedKeys(scores).map((k) => {
+          const v = scores[k];
+          if (v == null) {
+            return (
+              <Row
+                key={k}
+                k={RUBRIC_LABELS[k] ?? k}
+                v={<span className="p2-nil">{missing.includes(k) ? 'not measured' : '—'}</span>}
+              />
+            );
+          }
+          const weight = RUBRIC_WEIGHTS[k] ?? 1;
+          const contribution = typeof weighted[k] === 'number' ? weighted[k] : (v as number) * weight;
+          return (
+            <Row
+              key={k}
+              k={RUBRIC_LABELS[k] ?? k}
+              v={
+                <span className="p2-rubric-row">
+                  {/* The contribution leads: these are the numbers that add to the
+                      total. The rubric's 0–3 score and the weight follow as the
+                      derivation, for anyone reconciling against the doc. */}
+                  <span className="p2-mono p2-rubric-points">
+                    {String(contribution)} <span className="p2-rubric-of">of {3 * weight}</span>
+                  </span>
+                  <span className="p2-rubric-from">
+                    {measuredFrom(k, inputs)}
+                    {measuredFrom(k, inputs) === '' ? '' : ' · '}
+                    {String(v)}/3 × {weight}
+                  </span>
+                </span>
+              }
+            />
+          );
+        })}
+        <Row
+          k="→ score"
+          v={
+            <span>
+              <span className="p2-mono p2-rubric-points p2-rubric-total">
+                {total == null || max == null ? '—' : `${total} / ${max}`}
+              </span>
+              {' · '}
+              <span className="p2-rank-inline">#{String(item.priorityRank ?? '—')}</span>
+              {item.isRecommendedFocus === true && <span className="p2-focus"> Recommended Focus</span>}
+              {item.isHighestFrequency === true && <span className="p2-focus"> Highest Frequency</span>}
+              {!retained && <span className="p2-dropped"> dropped by cap</span>}
+            </span>
+          }
+        />
+        {tie && <Row k="tie" v={<TieTag tie={tie} />} />}
+        {asStr(rubric.conceptualDepthWhy) !== '' && (
+          <Row k="depth — why" v={<MathText text={asStr(rubric.conceptualDepthWhy)} />} />
+        )}
+        {Array.isArray(rubric.conceptualDepthSamples) && (
+          <Row
+            k="depth — calls"
+            v={
+              <span>
+                <span className="p2-mono">
+                  {rubric.conceptualDepthSamples.map((d) => (typeof d === 'number' ? String(d) : '–')).join(', ')}
+                </span>
+                {' · middle one used'}
+                {rubric.depthDisagreement === true && <span className="p2-dropped"> 2+ levels apart</span>}
+              </span>
+            }
+          />
+        )}
+        {rubric.depthDisagreement === true && Array.isArray(rubric.conceptualDepthSampleWhys)
+          && rubric.conceptualDepthSampleWhys.map((why, i) => (
+            <Row
+              // eslint-disable-next-line react/no-array-index-key
+              key={`depth-call-${i}`}
+              k={`call ${i + 1} — ${String((Array.isArray(rubric.conceptualDepthSamples) ? rubric.conceptualDepthSamples[i] : null) ?? '–')}`}
+              v={<MathText text={asStr(why)} />}
+            />
+          ))}
+      </div>
+    </Block>
+  );
+}
+
+function NeedBlock({ item }: { item: Rec }) {
+  const need = asRec(item.instructionalNeed);
+  const r = asRec(item.rationale);
+  if (!need && !r) {
+    return (
+      <Block label="Instructional need" hint="LLMGenInstrNeed">
+        <span className="p2-nil">none on this item</span>
+      </Block>
+    );
+  }
+  return (
+    <Block label="Instructional need" hint="LLMGenInstrNeed · need + rationale">
+      {need && (
+        <>
+          <p className="p2-callout">
+            <MathText text={asStr(need.text)} />
+          </p>
+          <Row k="teacher role" v={<span>{asStr(need.teacherRole) || '—'}</span>} />
+          {asStrings(need.evidenceUsed).length > 0 && (
+            <Row
+              k="evidence used"
+              v={
+                <ul className="p2-list">
+                  {asStrings(need.evidenceUsed).map((e) => (
+                    <li key={e}>
+                      <MathText text={e} inline />
+                    </li>
+                  ))}
+                </ul>
+              }
+            />
+          )}
+        </>
+      )}
+      {asArray(item.skillNames).length > 0 && (
+        <Row
+          k="skill names"
+          v={<Chips items={asArray(item.skillNames).map((sk) => `${asStr(sk.code)} · ${asStr(sk.name)}`)} />}
+        />
+      )}
+      {r && (
+        <div className="p2-inputs">
+          <div className="p2-inputs-head">Rationale</div>
+          <Row k="prevalence" v={<span>{asStr(r.prevalence) || '—'}</span>} />
+          <Row k="confidence signal" v={<span>{asStr(r.confidenceSignal) || '—'}</span>} />
+          <Row k="prerequisite gaps" v={<Chips items={asStrings(r.prerequisiteGaps)} />} />
+          <Row k="forward impact" v={<Chips items={asStrings(r.forwardImpact)} />} />
+          <Row k="recurrence" v={<span>{asStr(r.recurrence) || '—'}</span>} />
+        </div>
+      )}
+      {r && asStr(r.whyThisNeed) !== '' && <Row k="why this need" v={<MathText text={asStr(r.whyThisNeed)} />} />}
+    </Block>
+  );
+}
+
+// The templates the model weighed and set aside, with its reason. Emitted by
+// LLMSelectTemplate and useful when judging why a pick won — especially when
+// nothing cleared the threshold and this is the whole explanation.
+function Considered({ sel }: { sel: Rec }) {
+  const considered = asArray(sel.considered);
+  if (considered.length === 0) return null;
+  return (
+    <details className="p2-considered">
+      <summary>considered and passed over ({considered.length})</summary>
+      {considered.map((c) => (
+        <div className="p2-distinct" key={asStr(c.templateId)}>
+          <span className="p2-mono">{asStr(c.templateId)}</span> — {asStr(c.whyNot)}
+        </div>
+      ))}
+    </details>
+  );
+}
+
+// Which content type each template generates into. Hand-copied from
+// activityLibrary.json's `contentType`, like the other constants on this page —
+// CRA cannot import from amplify/. Used to pair a pick with its activity, since
+// the two are matched by content type rather than by position.
+const TEMPLATE_CONTENT_TYPE: Record<string, string> = {
+  'spot-the-slip': 'INCORRECT_WORKED_EXAMPLES',
+  'my-favorite-no': 'FAVORITE_NO',
+  'compare-the-thinking': 'COMPARE_THE_THINKING',
+  'math-detective': 'MATH_DETECTIVE',
+  'make-your-case': 'MAKE_YOUR_CASE',
+};
+
+/**
+ * One generated activity, rendered through the same views the app's activity
+ * pages use (Before class, Facilitate activity, Closing discussion), so what
+ * shows here is what teachers will see. A second implementation would drift,
+ * and not drifting is the point of this page.
+ *
+ * `content` is the Wave 2 shape (src/lib/ActivityContentModels.ts). Runs from
+ * before it carry `phases` instead; those say so rather than rendering blank.
+ * Each phase is collapsible so a run can be read activity by activity.
+ */
+function GeneratedActivity({
+  move,
+  templateId,
+  misconceptionTitle,
+}: {
+  move: Rec | null;
+  templateId: string;
+  misconceptionTitle: string;
+}) {
+  const { t } = useTranslation();
+  const screenSize = useScreenSize();
+  const content: IActivityContent | null = move ? toActivityContent(move.content) : null;
+  const activityType = content?.facilitate.type ?? null;
+  const copy = activityType ? activityTemplateCopy(activityType as ActivityType, t) : null;
+  const purposes = Array.isArray(move?.questionPurposes) ? (move?.questionPurposes as unknown[]).map(String) : [];
+  const review = move ? asRec(move.discussionReview ?? null) : null;
+  const issues = review ? asArray(review.issues) : [];
+
+  const phase = (label: string, body: React.ReactNode) => (
+    <details className="p2-activity-phase">
+      <summary className="p2-phase-head">
+        <span className="p2-chevron" aria-hidden="true">
+          ▸
+        </span>
+        <span className="p2-block-label">{label}</span>
+      </summary>
+      <div className="p2-activity-body">{body}</div>
+    </details>
+  );
+
+  return (
+    <details className="p2-activity-row">
+      <summary className="p2-activity-head">
+        <span className="p2-chevron" aria-hidden="true">
+          ▸
+        </span>
+        <span className="p2-block-label">Activity</span>
+        <span className="p2-activity-title">{copy ? `${copy.name} — ${copy.subtitle}` : '(no content)'}</span>
+        <span className="p2-pick-id">{templateId}</span>
+        {move && asStr(move.time) !== '' && <span className="p2-meta">{asStr(move.time)}</span>}
+      </summary>
+
+      {!content || !copy ? (
+        <p className="p2-text">
+          <span className="p2-nofit">
+            {move == null
+              ? 'No activity was generated for this template.'
+              : 'This run predates the Wave 2 content shape, so the app cannot render it.'}
+          </span>
+        </p>
+      ) : (
+        <>
+          <p className="p2-text">
+            <MathText text={content.whyThisActivity} />
+          </p>
+          {move && asStr(move.targets) !== '' && <Row k="targets" v={<MathText text={asStr(move.targets)} inline />} />}
+          {move && asStr(move.instructionalMove) !== '' && (
+            <Row k="instructional move" v={<MathText text={asStr(move.instructionalMove)} inline />} />
+          )}
+          {move && asStr(move.strategyTag) !== '' && <Row k="strategy" v={<span>{asStr(move.strategyTag)}</span>} />}
+          {phase('Before class', <BeforeClassView content={content} />)}
+          {phase(
+            'Facilitate activity',
+            <FacilitateView
+              content={content}
+              template={copy}
+              misconceptionTitle={misconceptionTitle}
+              screenSize={screenSize}
+            />,
+          )}
+          {phase('Closing discussion', <DiscussionView content={content} screenSize={screenSize} />)}
+          <p className="p2-text">
+            <span className="p2-meta">
+              Question purposes: {purposes.length ? purposes.join(' · ') : 'not recorded'}
+            </span>
+            {' · '}
+            <span className={issues.length ? 'p2-nofit' : 'p2-meta'}>
+              {review == null
+                ? 'accuracy review: not recorded'
+                : `accuracy review: ${issues.length ? `${issues.length} issue(s) fixed` : 'no issues'}`}
+            </span>
+          </p>
+          {issues.length > 0 && (
+            <ul className="p2-text">
+              {issues.map((issue) => (
+                <li key={`${asStr(issue.component)}-${asStr(issue.problem).slice(0, 24)}`}>
+                  <strong>{asStr(issue.component)}</strong>: <MathText text={asStr(issue.problem)} inline />
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
+      )}
+    </details>
+  );
+}
+
+function TemplateBlock({ item }: { item: Rec }) {
+  const sel = asRec(item.selectedTemplates);
+  const picks = sel ? asArray(sel.picks) : [];
+  const noFitReason = sel ? asStr(sel.noFitReason) : '';
+  // Two different outcomes, and they should not read the same: the stage never ran
+  // for this item, versus it ran and declined to force a weakly fitting template.
+  if (!sel) {
+    return (
+      <Block label="Activity selected" hint="LLMSelectTemplate">
+        <span className="p2-nil">no selection on this item</span>
+      </Block>
+    );
+  }
+  if (picks.length === 0) {
+    return (
+      <Block label="Activity selected" hint="LLMSelectTemplate · no strong fit">
+        <p className="p2-text">
+          <span className="p2-nofit">No template cleared the instructional-fit threshold.</span>
+          {noFitReason === '' ? '' : ` ${noFitReason}`}
+        </p>
+        <Considered sel={sel} />
+      </Block>
+    );
+  }
+  return (
+    <Block label="Activity selected" hint="LLMSelectTemplate · up to two templates">
+      {picks.length === 1 && (
+        <p className="p2-text">
+          <span className="p2-nofit">Only one template cleared the threshold.</span>
+        </p>
+      )}
+      <div className="p2-picks">
+        {picks.map((pick, i) => {
+          // The model sometimes returns the string "null" rather than null.
+          const distinct = asStr(pick.distinctFrom);
+          const showDistinct = distinct !== '' && distinct !== 'null';
+          return (
+            <div className="p2-pick" key={`${asStr(pick.templateId)}-${asStr(pick.rationale).slice(0, 24)}`}>
+              <div className="p2-pick-head">
+                <span className="p2-pick-n">{i + 1}</span>
+                <span className="p2-pick-id">{asStr(pick.templateId)}</span>
+                <span className={typeof pick.instructionalFit === 'number' && pick.instructionalFit >= 2 ? 'p2-fit p2-fit-strong' : 'p2-fit'}>
+                  {typeof pick.instructionalFit === 'number' ? `fit ${pick.instructionalFit}/3` : asStr(pick.fit) || '?'}
+                </span>
+              </div>
+              <div className="p2-text">
+                <MathText text={asStr(pick.rationale)} />
+              </div>
+              {showDistinct && <div className="p2-distinct">distinct from pick 1: {distinct}</div>}
+            </div>
+          );
+        })}
+      </div>
+      <Considered sel={sel} />
+    </Block>
+  );
+}
+
+function MisconceptionCard({
+  item,
+  index,
+  open,
+  generation,
+  tie,
+}: {
+  item: Rec;
+  index: number;
+  open: boolean;
+  generation: number;
+  tie?: TieNote;
+}) {
+  const rank = typeof item.priorityRank === 'number' ? item.priorityRank : index + 1;
+  return (
+    // Remounted on `generation` so Expand/Collapse all re-applies the default:
+    // <details open> is uncontrolled after first render.
+    <details className={item.retained === false ? 'p2-card p2-card-dropped' : 'p2-card'} key={generation} open={open}>
+      <summary className="p2-card-summary">
+        <span className="p2-chevron" aria-hidden="true">
+          ▸
+        </span>
+        <span className={item.isRecommendedFocus === true ? 'p2-rank p2-rank-focus' : 'p2-rank'}>#{rank}</span>
+        <span className="p2-card-title">{asStr(item.title) || '(untitled)'}</span>
+        {item.isRecommendedFocus === true && <span className="p2-meta p2-focus">Recommended Focus</span>}
+        {item.isHighestFrequency === true && <span className="p2-meta p2-focus">Highest Frequency</span>}
+        <ScoreStrip item={item} />
+        <TieTag tie={tie} />
+      </summary>
+      <div className="p2-card-body">
+        <MisconceptionBlock item={item} />
+        <RubricBlock item={item} tie={tie} />
+        <NeedBlock item={item} />
+        <TemplateBlock item={item} />
+        {/* One full-width row per generated activity, after the reasoning blocks.
+            Paired to its pick by content type rather than by position: activities
+            are generated one per pick, so a single failed call would otherwise
+            shift every pairing after it. */}
+        {asArray(asRec(item.selectedTemplates)?.picks ?? null).map((pick) => {
+          const templateId = asStr(pick.templateId);
+          const want = TEMPLATE_CONTENT_TYPE[templateId];
+          const moves = asArray(item.moveOptions);
+          // By template id first; older runs only carry the content type.
+          const hit =
+            moves.find((mo) => asStr(mo.templateId) === templateId) ??
+            (want ? moves.find((mo) => asStr(mo.activityType) === want) : undefined);
+          return (
+            <GeneratedActivity
+              key={templateId}
+              templateId={templateId}
+              move={hit ?? null}
+              misconceptionTitle={asStr(item.title)}
+            />
+          );
+        })}
+      </div>
+    </details>
+  );
+}
+
+// ── MIU 2: reflection results ────────────────────────────────────────────────
+
+// Values arrive as percentages already (UploadIngest's buildReflection).
+const pctOf = (v: number | null | undefined): string => (typeof v === 'number' ? `${v}%` : '—');
+const change = (before: number, after: number): string => {
+  const d = Math.round((after - before) * 10) / 10;
+  return `${d > 0 ? '+' : ''}${d}`;
+};
+
+/**
+ * MIU 2's held results: UploadIngest's before/after comparison, per
+ * misconception. Computed in code rather than by a model, so this is a check
+ * of the numbers the teacher's Reflect screen will show.
+ */
+function ReflectionResultCard({
+  result,
+  title,
+  open,
+  generation,
+}: {
+  result: IMicroCoachReflectionResult;
+  title: string;
+  open: boolean;
+  generation: number;
+}) {
+  const completedBoth = result.studentResults.filter(
+    (st) => st.questionsCorrectBefore != null && st.questionsCorrectAfter != null,
+  ).length;
+  return (
+    <details className="p2-card" key={generation} open={open}>
+      <summary className="p2-card-summary">
+        <span className="p2-chevron" aria-hidden="true">
+          ▸
+        </span>
+        <span className="p2-card-title">{title}</span>
+        <span className="p2-meta">
+          {pctOf(result.averagePercentCorrectBefore)} → {pctOf(result.averagePercentCorrectAfter)} (
+          {change(result.averagePercentCorrectBefore, result.averagePercentCorrectAfter)} pts)
+        </span>
+      </summary>
+      <div className="p2-card-body">
+        <Block label="Class averages" hint="UploadIngest · buildReflectionResults">
+          <Row
+            k="% correct"
+            v={`${pctOf(result.averagePercentCorrectBefore)} → ${pctOf(result.averagePercentCorrectAfter)}`}
+          />
+          <Row
+            k="questions correct"
+            v={`${result.averageQuestionsCorrectBefore} → ${result.averageQuestionsCorrectAfter} of ${result.questionCount}`}
+          />
+          <Row k="students improved" v={`${result.improvedStudentCount} of ${completedBoth} who took both`} />
+          <Row k="activity" v={<span className="p2-mono">{result.activityId ?? '—'}</span>} />
+        </Block>
+        <Block label="By question" hint="paired by question number">
+          {result.questionResults.length === 0 ? (
+            <span className="p2-nil">no question results</span>
+          ) : (
+            <table className="p2-table">
+              <thead>
+                <tr>
+                  <th>Q</th>
+                  <th>Standard</th>
+                  <th>MIU 1 correct</th>
+                  <th>MIU 2 correct</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                {result.questionResults.map((q) => (
+                  <tr key={q.questionNumber}>
+                    <td>{q.questionNumber}</td>
+                    <td className="p2-mono">{q.afterStandard ?? q.beforeStandard ?? '—'}</td>
+                    <td>{pctOf(q.percentCorrectBefore)}</td>
+                    <td>{pctOf(q.percentCorrectAfter)}</td>
+                    <td>{change(q.percentCorrectBefore, q.percentCorrectAfter)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </Block>
+      </div>
+    </details>
+  );
+}
+
+// ── Review bar ────────────────────────────────────────────────────────────────
+
+function ReviewBar({
+  review,
+  count,
+  onExpandAll,
+  onCollapseAll,
+}: {
+  review: PrepublishSessionState;
+  count: number;
+  onExpandAll: () => void;
+  onCollapseAll: () => void;
+}) {
+  const { session, className, isPublishing, publishError, publish } = review;
+  const isPublished = session?.publishStatus !== PublishStatus.DRAFT;
+  const stat = (label: string, value: React.ReactNode) => (
+    <span className="p2-stat" key={label}>
+      <span className="p2-stat-k">{label}</span>
+      <span className="p2-stat-v">{value}</span>
+    </span>
+  );
+  return (
+    <header className="p2-bar">
+      <div className="p2-bar-row">
+        <strong>{className || session?.classId || 'Session'}</strong>
+        {session?.sessionLabel && <span className="p2-meta">{session.sessionLabel}</span>}
+        <span className="p2-spacer" />
+        <button type="button" className="p2-btn" onClick={onExpandAll}>
+          Expand all
+        </button>
+        <button type="button" className="p2-btn" onClick={onCollapseAll}>
+          Collapse all
+        </button>
+        {/* Sessions from before the review step have no publishStatus: the
+            teacher already sees them, so there is nothing to publish. */}
+        {isPublished ? (
+          <span className="p2-note">Published — the teacher can see these results</span>
+        ) : (
+          <button
+            type="button"
+            className="p2-btn p2-btn-primary"
+            onClick={publish}
+            disabled={isPublishing}
+          >
+            {isPublishing ? 'Publishing…' : 'Publish to teacher'}
+          </button>
+        )}
+      </div>
+      <div className="p2-bar-row p2-stats">
+        {stat('session', <span className="p2-mono">{session?.id ?? '—'}</span>)}
+        {stat('status', `${session?.status ?? '—'} · ${session?.publishStatus ?? 'no publish status'}`)}
+        {stat('misconceptions', String(count))}
+      </div>
+      {publishError && (
+        <div className="p2-bar-row p2-bad p2-note">
+          Publish failed — nothing changed for the teacher. Try again.
+        </div>
+      )}
+    </header>
+  );
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
+
+const STYLES = `
+.p2-table { border-collapse: collapse; font-size: 13px; margin-top: 4px; }
+.p2-table th, .p2-table td { border-bottom: 1px solid #e6e9ed; padding: 4px 12px 4px 0; text-align: left; }
+.p2-table th { color: #5b636b; font-weight: 600; }
+.p2-wrap { font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #1a1d21;
+  background: #f4f5f7; min-height: 100vh; padding-bottom: 64px; }
+.p2-bar { position: sticky; top: 0; z-index: 10; background: #fff; border-bottom: 1px solid #d7dbe0;
+  padding: 10px 24px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+.p2-bar-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.p2-stats { margin-top: 6px; gap: 18px; }
+.p2-flowline { font-size: 13px; font-weight: 600; }
+.p2-spacer { flex: 1; }
+.p2-select { font: inherit; font-size: 13px; font-weight: 600; background: #fff; border: 1px solid #cfd5dc;
+  border-radius: 6px; padding: 4px 8px; max-width: 520px; cursor: pointer; }
+.p2-note { font-size: 11px; color: #8b939c; }
+.p2-btn { background: #fff; border: 1px solid #cfd5dc; border-radius: 6px; padding: 4px 10px; font-size: 12px;
+  cursor: pointer; color: #4b535c; }
+.p2-btn:hover { background: #f2f4f7; }
+.p2-btn-primary { background: #2f6df6; border-color: #2f6df6; color: #fff; font-weight: 600; text-decoration: none;
+  display: inline-flex; align-items: center; }
+.p2-btn-primary:hover { background: #2559d6; }
+.p2-stat { display: inline-flex; gap: 6px; align-items: baseline; }
+.p2-stat-k { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: #79818a; }
+.p2-stat-v { font-size: 13px; font-weight: 600; }
+.p2-ok { color: #1a7f4b; } .p2-bad { color: #c02b2b; }
+
+.p2-section { max-width: 1180px; margin: 28px auto 0; padding: 0 24px; }
+.p2-section-wide { max-width: none; width: 100%; box-sizing: border-box; }
+.p2-h2 { font-size: 20px; margin: 0 0 4px; }
+.p2-lede { margin: 0 0 14px; color: #5b636b; font-size: 13px; }
+.p2-h3 { font-size: 14px; font-weight: 700; margin: 0 0 10px; }
+
+.p2-who { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  border-radius: 4px; padding: 1px 6px; vertical-align: middle; }
+.p2-who-code { background: #e3f4ea; color: #1a7f4b; }
+.p2-who-llm { background: #efe6fb; color: #6b3fb5; }
+.p2-who-api { background: #fdf1dc; color: #9a5b00; }
+
+/* pipeline */
+.p2-flow { list-style: none; margin: 0; padding: 0 0 8px; display: flex; flex-wrap: nowrap; align-items: stretch; }
+.p2-group { position: relative; flex: 1 1 0; min-width: 0; display: flex; flex-direction: column;
+  background: #fafbfc; border: 1px solid #cfd5dc; border-radius: 10px; padding: 10px 12px 12px; margin-right: 30px; }
+.p2-group:last-child { margin-right: 0; }
+.p2-group:not(:last-child)::after { content: "→"; position: absolute; right: -25px; top: 50%; transform: translateY(-50%);
+  color: #6b7280; font-size: 20px; }
+.p2-group-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.p2-group-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #2c3238; }
+.p2-group-cadence { font-size: 12px; font-weight: 400; color: #6b7280; }
+.p2-group-stages { display: flex; gap: 12px; align-items: stretch; flex: 1; }
+.p2-group-caveat { margin-top: 8px; font-size: 11px; color: #9a5b00; background: #fdf1dc; border-radius: 6px; padding: 5px 8px; }
+.p2-inner { flex: 2 1 0; min-width: 0; display: flex; flex-direction: column; border: 1px dashed #b9c3d0;
+  border-radius: 8px; padding: 6px 8px 8px; }
+.p2-inner-label { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; color: #8b939c;
+  margin-bottom: 4px; }
+.p2-inner-stages { display: flex; gap: 8px; align-items: stretch; flex: 1; }
+.p2-stage { position: relative; flex: 1 1 0; min-width: 0; background: #fff; border: 1px solid #dfe3e8;
+  border-radius: 8px; padding: 12px 14px 14px; cursor: default; outline: none; }
+.p2-stage:hover, .p2-stage:focus-within { border-color: #b9c3d0; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+.p2-stage-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 8px; }
+.p2-stage-n { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px;
+  border-radius: 9px; background: #2f6df6; color: #fff; font-size: 10px; font-weight: 700; flex: none; }
+.p2-stage-label { font-size: 14px; font-weight: 700; line-height: 1.3; margin-bottom: 4px; overflow-wrap: anywhere; hyphens: auto; }
+.p2-stage-sub { font-size: 12px; font-weight: 400; color: #5b636b; line-height: 1.4; overflow-wrap: anywhere; }
+.p2-stage-tip { display: none; position: absolute; top: calc(100% + 8px); left: 0; z-index: 5; min-width: 280px;
+  max-width: 360px; background: #fff; border: 1px solid #dfe3e8; border-radius: 8px; padding: 10px 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.12); font-size: 12px; white-space: normal; }
+.p2-stage:hover .p2-stage-tip, .p2-stage:focus-within .p2-stage-tip { display: block; }
+.p2-group:last-child .p2-stage-tip, .p2-group:nth-last-child(2) .p2-stage:last-child .p2-stage-tip { left: auto; right: 0; }
+.p2-stage-where { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; color: #8b939c;
+  margin-bottom: 6px; }
+.p2-stage-detail { margin: 0 0 6px; color: #2c3238; }
+.p2-stage-out { margin: 0; padding-left: 16px; color: #3d444b; }
+.p2-stage-out li { margin-bottom: 2px; }
+
+/* formulae — same row + boxes as the pipeline, without arrows */
+.p2-flow-static .p2-group::after { content: none; }
+.p2-group-formulae { display: flex; flex-direction: column; gap: 10px; }
+.p2-formula { background: #fff; border: 1px solid #dfe3e8; border-radius: 8px; padding: 10px 12px; min-width: 0; }
+.p2-formula-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 0; cursor: pointer; list-style: none; }
+.p2-formula-head::-webkit-details-marker { display: none; }
+.p2-formula[open] > .p2-formula-head { margin-bottom: 8px; }
+.p2-formula[open] > .p2-formula-head > .p2-chevron { transform: rotate(90deg); }
+.p2-origin { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; text-decoration: none;
+  background: #fde7ef; color: #b0234f; border-radius: 4px; padding: 2px 7px; white-space: nowrap; }
+.p2-origin:hover { background: #fbd0df; }
+.p2-formula-title { font-size: 13px; font-weight: 700; flex: 1; min-width: 0; }
+.p2-formula-stage { font-weight: 400; color: #5b636b; }
+.p2-steps { margin: 0 0 8px; padding-left: 20px; font-size: 12px; color: #2c3238; }
+.p2-steps > li { margin-bottom: 8px; }
+.p2-steps > li::marker { font-weight: 700; color: #2f6df6; }
+.p2-tex { background: #f7f8fa; border: 1px solid #e6e9ed; border-radius: 6px; padding: 2px 10px; margin: 4px 0 0;
+  overflow-x: auto; }
+.p2-tex .katex-display { margin: 0.35em 0; text-align: left; }
+.p2-tex .katex-display > .katex { text-align: left; }
+.p2-tex .katex { font-size: 0.98em; }
+.p2-formula-src { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; color: #8b939c;
+  margin-bottom: 6px; word-break: break-word; }
+.p2-notes { margin: 0; padding-left: 16px; font-size: 11px; color: #4b535c; }
+.p2-notes li { margin-bottom: 3px; }
+.p2-list { margin: 0; padding-left: 16px; font-size: 13px; }
+.p2-list li { margin-bottom: 4px; }
+
+/* misconception cards */
+.p2-card { background: #fff; border: 1px solid #dfe3e8; border-radius: 8px; margin-bottom: 10px; }
+.p2-card-summary { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; cursor: pointer; padding: 12px 16px;
+  list-style: none; user-select: none; }
+.p2-card-summary::-webkit-details-marker { display: none; }
+.p2-card-summary:hover { background: #fafbfc; }
+/* Past the rubric cap: scored and ranked, but not carried into needs or activities. */
+.p2-card-dropped > .p2-card-summary { background: #f3f4f6; color: #5b636b; }
+.p2-card-dropped > .p2-card-summary:hover { background: #eceef1; }
+.p2-card-dropped > .p2-card-summary .p2-rank { background: #d5d9df; color: #4b525a; }
+.p2-chevron { color: #8b939c; font-size: 11px; transition: transform .12s ease; }
+.p2-card[open] > .p2-card-summary > .p2-chevron { transform: rotate(90deg); }
+.p2-rank, .p2-rank-inline { display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 22px;
+  padding: 0 6px; border-radius: 11px; background: #2f6df6; color: #fff; font-size: 12px; font-weight: 700; }
+.p2-rank-inline { height: 20px; font-size: 11px; }
+.p2-card-title { font-size: 15px; font-weight: 700; }
+.p2-meta { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; background: #eceff3;
+  color: #4b535c; border-radius: 4px; padding: 2px 7px; }
+.p2-card-body { border-top: 1px solid #dfe3e8; padding: 12px; background: #f4f5f7; display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px; }
+.p2-block { background: #fff; border: 1px solid #dfe3e8; border-radius: 8px; padding: 12px 14px; min-width: 0; }
+/* The step blocks are always open: a plain header rule above the content. */
+.p2-block-head { display: flex; align-items: baseline; gap: 8px;
+  margin: 0 -14px 10px; padding: 0 14px 8px; border-bottom: 1px solid #eef0f3; }
+.p2-block-label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #2c3238; font-weight: 700; }
+.p2-block-hint { font-size: 11px; color: #8b939c; }
+.p2-text { margin: 0 0 8px; font-size: 13px; }
+.p2-callout { background: #f6f8fc; border-left: 3px solid #2f6df6; border-radius: 0 6px 6px 0; padding: 8px 11px;
+  margin: 0 0 8px; font-size: 13px; }
+.p2-row { display: grid; grid-template-columns: 150px 1fr; gap: 10px; padding: 5px 0; border-bottom: 1px solid #f4f6f8;
+  font-size: 13px; }
+.p2-row-k { font-size: 11px; color: #79818a; padding-top: 2px; }
+.p2-row-v { min-width: 0; word-break: break-word; }
+.p2-inputs { margin-top: 8px; border: 1px solid #e6e9ed; border-radius: 6px; padding: 6px 10px 2px; }
+.p2-inputs-head { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: #6b3fb5; font-weight: 700;
+  margin-bottom: 2px; }
+.p2-mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+.p2-nil { color: #a8afb6; font-style: italic; }
+.p2-chips { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.p2-chip { background: #eef1f4; border-radius: 4px; padding: 1px 6px; font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.p2-picks { display: grid; gap: 8px; margin-bottom: 6px; }
+.p2-pick { border: 1px solid #e6e9ed; border-left: 3px solid #9aa3ad; border-radius: 6px; padding: 8px 10px; }
+.p2-pick-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.p2-pick-n { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px;
+  border-radius: 8px; background: #6b7280; color: #fff; font-size: 10px; font-weight: 700; }
+.p2-pick-id { font-size: 13px; font-weight: 700; }
+.p2-fit { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; background: #eceff3;
+  color: #4b535c; border-radius: 4px; padding: 1px 6px; }
+.p2-fit-strong { background: #e5edff; color: #2f5bd0; }
+.p2-nofit { color: #9a5b00; font-weight: 600; }
+.p2-rubric-row { display: inline-flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.p2-rubric-points { font-size: 13px; font-weight: 700; color: #2c3238; min-width: 62px; display: inline-block; }
+.p2-rubric-of { font-weight: 400; color: #8b939c; font-size: 11px; }
+.p2-rubric-total { color: #2f6df6; }
+.p2-rubric-from { color: #8b939c; font-size: 11px; }
+/* Activities get a row of their own rather than a column: the real components are
+   built for the app's full content width and read badly in a 340px grid cell. */
+.p2-activity-row { grid-column: 1 / -1; background: #fff; border: 1px solid #dfe3e8;
+  border-radius: 8px; padding: 12px 14px; min-width: 0; }
+.p2-activity-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+  cursor: pointer; margin: 0 -14px; padding: 0 14px 8px;
+  border-bottom: 1px solid #e6e9ed; list-style: none; }
+.p2-activity-head::-webkit-details-marker { display: none; }
+.p2-activity-head:hover .p2-activity-title { color: #0f62fe; }
+.p2-activity-row[open] > .p2-activity-head { margin-bottom: 12px; }
+.p2-activity-row[open] > .p2-activity-head > .p2-chevron { transform: rotate(90deg); }
+.p2-activity-title { font-size: 13px; font-weight: 700; color: #2c3238; }
+.p2-activity-type { font-size: 10px; color: #8b939c; }
+.p2-activity-body { min-width: 0; }
+/* Each phase is its own <details>. The rule separates them without a heavier box:
+   they are one activity read top to bottom, not four cards. */
+.p2-activity-phase { min-width: 0; border-top: 1px solid #e6e9ed; }
+.p2-activity-phase + .p2-activity-phase { margin-top: 0; }
+.p2-phase-head { display: flex; align-items: baseline; gap: 8px; cursor: pointer;
+  padding: 10px 0; list-style: none; }
+.p2-phase-head::-webkit-details-marker { display: none; }
+.p2-phase-head:hover .p2-block-label { color: #0f62fe; }
+.p2-activity-phase[open] > .p2-phase-head > .p2-chevron { transform: rotate(90deg); }
+.p2-activity-phase[open] > .p2-activity-body { padding-bottom: 12px; }
+.p2-considered { margin-top: 8px; }
+.p2-considered > summary { font-size: 11px; color: #6b7280; cursor: pointer; list-style: none; }
+.p2-considered > summary::-webkit-details-marker { display: none; }
+.p2-considered > summary:hover { color: #2c3238; }
+.p2-considered > summary::before { content: "▸ "; }
+.p2-considered[open] > summary::before { content: "▾ "; }
+.p2-meta-scores { display: inline-flex; gap: 4px; align-items: center; }
+.p2-tie { font-size: 11px; color: #9a5b00; background: #fdf1dc; border-radius: 6px; padding: 2px 7px; }
+.p2-score-total { font-weight: 700; color: #2c3238; }
+
+.p2-focus { color: #1f7a3a; font-weight: 700; }
+.p2-dropped { color: #8a8f98; font-style: italic; }
+.p2-rank-focus { background: #1f7a3a; color: #fff; }
+.p2-distinct { margin-top: 6px; font-size: 12px; color: #5b636b; }
+.p2-loading { display: flex; justify-content: center; padding: 48px 0; }
+`;
+
+export default function PrepublishReview() {
+  const { sessionId = '' } = useParams();
+  const review = usePrepublishSession(sessionId);
+  const { status, items, isReflectionReview, misconceptionTitles, session } = review;
+  const reflectionResults = session?.reflectionResults ?? [];
+  const [allOpen, setAllOpen] = useState(false);
+  const [generation, setGeneration] = useState(0);
+
+  const setAll = (open: boolean) => {
+    setAllOpen(open);
+    setGeneration((g) => g + 1);
+  };
+
+  const shown = useMemo(() => {
+    const rank = (m: Rec) => (typeof m.priorityRank === 'number' ? m.priorityRank : Number.POSITIVE_INFINITY);
+    return [...(items ?? [])].sort((a, b) => rank(a) - rank(b));
+  }, [items]);
+  const ties = useMemo(() => findTies(shown), [shown]);
+  // Answer options claimed by more than one misconception.
+  const sharedOptions = useMemo(() => {
+    const owners = new Map<string, number>();
+    shown.forEach((m) => {
+      asArray(m.wrongAnswers).forEach((w) => {
+        const key = `Q${String(w.questionNumber)}·${asStr(w.letter).toUpperCase()}`;
+        owners.set(key, (owners.get(key) ?? 0) + 1);
+      });
+    });
+    // Array.from, not spread: the CRA target predates downlevel iteration of Map.
+    return Array.from(owners.entries())
+      .filter(([, n]) => n > 1)
+      .map(([key, n]) => ({ key, n }));
+  }, [shown]);
+
+  // Everything short of a loaded session is a single message.
+  const blocked: Record<Exclude<typeof status, 'loaded'>, React.ReactNode> = {
+    loading: (
+      <div className="p2-loading">
+        <CircularProgress />
+      </div>
+    ),
+    signedOut: (
+      <p className="p2-note">
+        Sign in with a reviewer account (<a href="/login">Log in</a>), then open this link again.
+      </p>
+    ),
+    notAdmin: (
+      <p className="p2-note">This page is for reviewers. Your account is not in the Admins group.</p>
+    ),
+    notFound: <p className="p2-note">No session with this id.</p>,
+    error: <p className="p2-note p2-bad">Could not load this session. Refresh to try again.</p>,
+  };
+
+  return (
+    <div className="p2-wrap">
+      {/* eslint-disable-next-line react/no-danger */}
+      <style dangerouslySetInnerHTML={{ __html: STYLES }} />
+      {status !== 'loaded' && (
+        <section className="p2-section p2-section-wide">
+          <h2 className="p2-h2">Pre-publish review</h2>
+          {blocked[status]}
+        </section>
+      )}
+      {status === 'loaded' && isReflectionReview && (
+        // MIU 2: only what is waiting — the before/after comparison. MIU 1's
+        // generated results were reviewed and published before it.
+        <>
+          <ReviewBar
+            review={review}
+            count={reflectionResults.length}
+            onExpandAll={() => setAll(true)}
+            onCollapseAll={() => setAll(false)}
+          />
+          <section className="p2-section p2-section-wide">
+            <h2 className="p2-h2">MIU 2 results — before and after</h2>
+            <p className="p2-lede">
+              How the class did on MIU 2 against MIU 1, for the misconception the activity
+              targeted. The teacher sees none of it until it is published.
+            </p>
+            {reflectionResults.length === 0 && (
+              <p className="p2-note p2-bad">This session has no reflection results.</p>
+            )}
+            {reflectionResults.map((result) => (
+              <ReflectionResultCard
+                key={result.misconceptionId}
+                result={result}
+                title={misconceptionTitles[result.misconceptionId] ?? result.misconceptionId}
+                open={allOpen}
+                generation={generation}
+              />
+            ))}
+          </section>
+        </>
+      )}
+      {status === 'loaded' && !isReflectionReview && (
+        <>
+          <ReviewBar
+            review={review}
+            count={shown.length}
+            onExpandAll={() => setAll(true)}
+            onCollapseAll={() => setAll(false)}
+          />
+
+          <section className="p2-section p2-section-wide">
+            <h2 className="p2-h2">Generated results</h2>
+            <p className="p2-lede">
+              What the pipeline produced for this upload. The teacher sees none of it until it is
+              published. Expand a card to see what each step produced for that misconception.
+            </p>
+            {items === null && (
+              <p className="p2-note">
+                This session has no stored pipeline output — it was generated before uploads
+                saved it — so there is nothing to show here.
+              </p>
+            )}
+            {sharedOptions.length > 0 && (
+              <p className="p2-note">
+                A response can be linked to more than one misconception, so these groups are not
+                mutually exclusive and the percentages do not sum to 100%. Here{' '}
+                {sharedOptions.map((o, i) => (
+                  <React.Fragment key={o.key}>
+                    {i > 0 && ', '}
+                    <span className="p2-mono">{o.key}</span>
+                    {o.n > 2 && ` (${o.n})`}
+                  </React.Fragment>
+                ))}{' '}
+                {sharedOptions.length === 1 ? 'is' : 'are'} linked to more than one.
+              </p>
+            )}
+            {shown.map((item, i) => (
+              <MisconceptionCard
+                key={asStr(item.id) || `m-${i}`}
+                item={item}
+                index={i}
+                open={allOpen}
+                generation={generation}
+                tie={ties.get(i)}
+              />
+            ))}
+          </section>
+
+          {/* How the pipeline works, for reading the cards above. */}
+          <PipelineFlow models={[]} />
+          <Formulae />
+        </>
+      )}
+    </div>
+  );
+}

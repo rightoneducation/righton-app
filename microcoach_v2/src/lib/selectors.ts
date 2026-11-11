@@ -7,6 +7,7 @@ import {
   deriveCurrentStep,
   isAwaitingResults,
   sessionForWeek,
+  sessionWeek,
   sortSessionsLatestFirst,
 } from './flowProgress';
 import {
@@ -15,7 +16,6 @@ import {
   MicroCoachDataStatus,
 } from './MicroCoachModels';
 import { IPlanItem } from './PipelineModels';
-import { weekOf } from './weeks';
 
 /*
  * The joins. Every screen-shaped value is computed here, during render, from
@@ -213,7 +213,7 @@ export function pastActivities(
         completedAt: session.updatedAt,
         step: deriveCurrentStep(session, hasSavedPlan(plan)),
         isAwaitingResults: isAwaitingResults(session),
-        weekStart: weekOf(session.createdAt),
+        weekStart: sessionWeek(session),
         selectedMisconceptionId: session.selectedMisconceptionId,
       };
     }),

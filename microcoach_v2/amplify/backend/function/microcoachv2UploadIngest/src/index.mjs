@@ -68,6 +68,9 @@ const UPLOAD_TABLE = process.env.API_MICROCOACHV2_MICROCOACHUPLOADTABLE_NAME;
 const ASSESSMENT_TABLE = process.env.API_MICROCOACHV2_MICROCOACHASSESSMENTTABLE_NAME;
 const RESPONSE_TABLE = process.env.API_MICROCOACHV2_MICROCOACHSTUDENTRESPONSETABLE_NAME;
 const SESSION_TABLE = process.env.API_MICROCOACHV2_MICROCOACHSESSIONTABLE_NAME;
+// Where the review link points: the hosted prototype. Use
+// http://localhost:3000 to review against a local app.
+const REVIEW_BASE_URL = 'https://prototype.rightoneducation.com';
 const SAVED_PLAN_TABLE = process.env.API_MICROCOACHV2_MICROCOACHSAVEDPLANTABLE_NAME;
 const ACTIVITY_TABLE = process.env.API_MICROCOACHV2_MICROCOACHACTIVITYTABLE_NAME;
 const BUCKET = process.env.STORAGE_MICROCOACHUPLOADS_BUCKETNAME;
@@ -225,8 +228,10 @@ async function reflectionFields(upload, assessment, responses) {
     before: { assessment: before, responses: beforeResponses },
     after: { assessment, responses },
   });
-  // Per the SessionStatus contract: MIU 2 analysed.
-  return { reflectionResults, status: 'GENERATED' };
+  // Per the SessionStatus contract: MIU 2 analysed. DRAFT holds the comparison
+  // back from the teacher until a reviewer publishes it on /prepublishreview —
+  // the same gate as MIU 1's generated results (UploadGenerate).
+  return { reflectionResults, status: 'GENERATED', publishStatus: 'DRAFT' };
 }
 
 async function ingest(upload) {
@@ -333,6 +338,23 @@ export const handler = async (event) => {
         }),
       );
       console.log(`Started generation for upload ${uploadId}`);
+    }
+    // MIU 2 has no generation step: its comparison is done here, so this is
+    // where its review email goes. Its own catch: a failed email must not mark
+    // a finished upload FAILED.
+    if (upload.assessmentType === 'POST_PPQ') {
+      await sendEmail(
+        `MicroCoach MIU 2 analysed (${process.env.ENV})`,
+        null,
+        [
+          `Upload: ${uploadId}`,
+          `Session: ${upload.sessionId}`,
+          `Class: ${upload.classId}`,
+          '',
+          // Held as DRAFT: the teacher stays on Reassess until this is published.
+          `Review and publish: ${REVIEW_BASE_URL}/prepublishreview/${upload.sessionId}`,
+        ].join('\n'),
+      ).catch((e) => console.error('Could not send the email:', e));
     }
   } catch (err) {
     const message = String(err?.message ?? err).slice(0, 1000);

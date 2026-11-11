@@ -29,7 +29,12 @@ export interface IAuthAPIClient {
   updateCognitoUsername(newUsername: string): Promise<void>;
   getUserNickname(): Promise<string | null>;
   getUserEmail(): Promise<string | null>;
-  awsSignUp(username: string, email: string, password: string): Promise<void>;
+  awsSignUp(
+    username: string,
+    email: string,
+    password: string,
+    names?: { firstName: string; lastName: string },
+  ): Promise<void>;
   awsConfirmSignUp(email: string, code: string): Promise<ConfirmSignUpOutput>;
   awsSignIn(email: string, password: string): Promise<SignInOutput>;
   awsSignInFederated(): Promise<void>;

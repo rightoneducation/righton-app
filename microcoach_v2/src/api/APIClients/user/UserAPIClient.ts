@@ -3,6 +3,7 @@ import { IUserAPIClient } from './interfaces/IUserAPIClient';
 import { IUser, UserRole } from '../../Models/IUser';
 import { UserParser } from '../../Parsers/UserParser';
 import { schoolFromEmail } from '../../../lib/schools';
+import { UnconfirmedUserError } from '../auth/UnconfirmedUserError';
 import {
   CreateMicroCoachUserMutation,
   CreateMicroCoachUserMutationVariables,
@@ -150,7 +151,12 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
     email: string,
     password: string,
   ): Promise<IUser | null> {
-    await this.auth.awsSignIn(email, password);
+    const result = await this.auth.awsSignIn(email, password);
+    // Right password, but the sign-up code was never confirmed: Amplify
+    // resolves rather than throws, with no session behind it.
+    if (result.nextStep?.signInStep === 'CONFIRM_SIGN_UP') {
+      throw new UnconfirmedUserError();
+    }
     const session = await this.auth.getCurrentSession();
     const cognitoId = session.userSub;
     if (!cognitoId) return null;
@@ -167,7 +173,12 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
     console.log(profile);
     console.log(profile.email);
     console.log(profile.password);
-    const res = await this.auth.awsSignUp(profile.email, profile.email, profile.password ?? '');
+    const res = await this.auth.awsSignUp(
+      profile.email,
+      profile.email,
+      profile.password ?? '',
+      { firstName: profile.firstName ?? '', lastName: profile.lastName ?? '' },
+    );
     console.log(res);
   }
 
@@ -182,9 +193,22 @@ export class UserAPIClient extends BaseAPIClient implements IUserAPIClient{
     await this.auth.awsSignIn(profile.email, profile.password ?? '');
     const session = await this.auth.getCurrentSession();
     const cognitoId = session.userSub ?? '';
+    // A sign-up finished from /login has no names in the wizard; awsSignUp
+    // stored them on the Cognito user, so read them back. Best-effort:
+    // accounts registered before that have none, and the row allows nulls.
+    let { firstName, lastName } = profile;
+    if (!firstName || !lastName) {
+      try {
+        ({ firstName, lastName } = await this.auth.getFirstAndLastName());
+      } catch (error) {
+        console.error('signUp: could not read names from Cognito', error);
+      }
+    }
     const created = await this.createUser(
       {
         ...profile,
+        firstName,
+        lastName,
         cognitoId,
         role: UserRole.TEACHER,
       },

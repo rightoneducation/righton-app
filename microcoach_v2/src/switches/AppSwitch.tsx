@@ -104,6 +104,11 @@ const PATTERN_BACKDROP_SCREENS = new Set<ScreenType>([
   ScreenType.MY_ACTIVITY,
   ScreenType.UPLOAD_MIU,
   ScreenType.UPLOAD_REASSESS,
+  // Login and the sign-up wizard (every /signup step is ScreenType.SIGNUP).
+  ScreenType.LOGIN,
+  ScreenType.PASSWORDRESET,
+  ScreenType.SIGNUP,
+  ScreenType.AUTH,
 ]);
 
 const APP_CHROME_SCREENS = new Set<ScreenType>([
@@ -184,6 +189,7 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
           apiClients={apiClients}
           screenSize={screenSize}
           signIn={user.signIn}
+          setUserErrorString={user.setUserErrorString}
         />
       );
       break;

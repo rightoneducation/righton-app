@@ -100,6 +100,20 @@
     }
   },
   "function": {
+    "microcoachv2EmailTeacher": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "microcoachv2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "microcoachv2GetLearningScience": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -287,6 +301,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_microcoachv2EmailTeacher_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2EmailTeacher"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2EmailTeacher_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2EmailTeacher"
+        }
+      ]
+    },
     "AMPLIFY_function_microcoachv2GetLearningScience_deploymentBucketName": {
       "usedBy": [
         {
@@ -562,7 +592,22 @@
   },
   "storage": {
     "microcoachuploads": {
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "microcoachv2bb9ce5a2"
+        },
+        {
+          "attributes": [
+            "AdminsGroupRole"
+          ],
+          "category": "auth",
+          "resourceName": "userPoolGroups"
+        }
+      ],
       "providerPlugin": "awscloudformation",
       "service": "S3"
     }

@@ -55,7 +55,12 @@ export class UploadAPIClient extends BaseAPIClient implements IUploadAPIClient {
   // cognitoId is left out: the owner rule fills it in from the signed-in user.
   async recordUpload(input: IRecordUploadInput): Promise<string> {
     const variables: CreateMicroCoachUploadMutationVariables = {
-      input: { ...input, status: UploadStatus.RECEIVED },
+      // Cast: weekLabel is new in the schema, and the generated input type
+      // only carries it once codegen has run after the push.
+      input: {
+        ...input,
+        status: UploadStatus.RECEIVED,
+      } as CreateMicroCoachUploadMutationVariables['input'],
     };
     const res = await this.mutateGraphQL<CreateMicroCoachUploadMutation>(
       createMicroCoachUpload,

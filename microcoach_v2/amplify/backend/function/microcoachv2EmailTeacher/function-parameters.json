@@ -1,0 +1,20 @@
+{
+  "lambdaLayers": [],
+  "permissions": {
+    "storage": {
+      "MicroCoachUser:@model(appsync)": [
+        "read"
+      ],
+      "MicroCoachClassroom:@model(appsync)": [
+        "read"
+      ],
+      "MicroCoachSession:@model(appsync)": [
+        "read",
+        "update"
+      ],
+      "MicroCoachUpload:@model(appsync)": [
+        "read"
+      ]
+    }
+  }
+}

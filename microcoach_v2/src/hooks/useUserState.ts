@@ -1,10 +1,23 @@
 import { useCallback, useMemo } from 'react';
 import { IAPIClients, IUser } from '../api';
 import { UserStatusType } from '../lib/MicroCoachModels';
+import { UnconfirmedUserError } from '../api/APIClients/auth/UnconfirmedUserError';
 import {
   useMicroCoachDataDispatch,
   useMicroCoachDataState,
 } from './context/useMicroCoachDataContext';
+
+// Exported so Login can recognise (and clear) this one message as the user
+// starts typing, without matching on a copy of the string.
+export const EMPTY_CREDENTIALS_ERROR = 'Enter your email and password.';
+
+// 'unconfirmed' is its own outcome, not an error: the credentials were right,
+// the account just never verified, so Login offers a fresh code rather than
+// a message.
+export type SignInResult =
+  | { status: 'ok'; profile: IUser }
+  | { status: 'unconfirmed' }
+  | { status: 'error' };
 
 export interface IUserState {
   userProfile: IUser | null;
@@ -12,9 +25,9 @@ export interface IUserState {
   userErrorString: string;
   // Credential login: authenticates against Cognito, then sets state on success.
   // Requires email + password, so it is only for the email/password form.
-  // Resolves to the signed-in profile, or null when sign-in failed — callers
-  // navigate on success, and userErrorString carries the reason on failure.
-  signIn: (user: IUser) => Promise<IUser | null>;
+  // Resolves to the outcome — callers navigate on 'ok', offer a fresh code on
+  // 'unconfirmed', and on 'error' userErrorString carries the reason.
+  signIn: (user: IUser) => Promise<SignInResult>;
   // State transition only, for callers who are ALREADY authenticated — the
   // Google return leg, the on-load session restore, the end of the signup
   // wizard. Those profiles carry no password and must not be re-authenticated.
@@ -48,11 +61,11 @@ export function useUserState(apiClients: IAPIClients): IUserState {
   );
 
   const signIn = useCallback(
-    async (user: IUser) => {
+    async (user: IUser): Promise<SignInResult> => {
       if (!user || !user.email || !user.password) {
         console.error('email or password not present for sign in');
-        setUserErrorString('Enter your email and password.');
-        return null;
+        setUserErrorString(EMPTY_CREDENTIALS_ERROR);
+        return { status: 'error' };
       }
       try {
         /*
@@ -70,13 +83,18 @@ export function useUserState(apiClients: IAPIClients): IUserState {
           // identity — a half-finished signup, not a wrong password.
           console.error('Signed in but no user profile found');
           setUserErrorString('We could not find your account. Please sign up.');
-          return null;
+          return { status: 'error' };
         }
         dispatch({ type: 'SET_USER_PROFILE', payload: profile });
         dispatch({ type: 'SET_USER_ERROR_STRING', payload: '' });
         dispatch({ type: 'SET_USER_STATUS', payload: UserStatusType.LOGGEDIN });
-        return profile;
+        return { status: 'ok', profile };
       } catch (e) {
+        if (e instanceof UnconfirmedUserError) {
+          // No message: Login answers this with the verify dialog.
+          setUserErrorString('');
+          return { status: 'unconfirmed' };
+        }
         console.error('Sign in call failed with:');
         console.error(e);
         // Same text whether or not the account exists, so it names no one; the
@@ -86,7 +104,7 @@ export function useUserState(apiClients: IAPIClients): IUserState {
           'That email or password was not recognised. If you signed up with Google, use Continue with Google.',
         );
       }
-      return null;
+      return { status: 'error' };
     },
     [apiClients, dispatch, setUserErrorString],
   );

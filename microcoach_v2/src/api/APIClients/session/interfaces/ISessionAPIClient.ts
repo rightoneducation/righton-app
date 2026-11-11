@@ -1,4 +1,4 @@
-import { SessionStatus } from "../../../../AWSAPI";
+import { PublishStatus, SessionStatus } from "../../../../AWSAPI";
 import { IMicroCoachSession } from "../../../Models/IMicroCoachSession";
 
 export interface ISessionAPIClient {
@@ -16,11 +16,25 @@ export interface ISessionAPIClient {
     misconceptionId: string | null,
   ): Promise<IMicroCoachSession | null>;
   // MIU 1 submitted: a new session, waiting on the pipeline (DATA_INGESTED).
-  createUploadedSession(classId: string): Promise<IMicroCoachSession | null>;
+  // weekStart: the school week's Monday the teacher uploaded for.
+  createUploadedSession(
+    classId: string,
+    weekStart: string,
+  ): Promise<IMicroCoachSession | null>;
   // Writes only status (MIU 2 submitted: REASSESS_INGESTED).
   setSessionStatus(
     id: string,
     status: SessionStatus,
+  ): Promise<IMicroCoachSession | null>;
+  // The reviewer's Publish (/prepublishreview): DRAFT → PUBLISHED and the
+  // uploading teacher is emailed, server-side (microcoachv2EmailTeacher).
+  // Resolves to the session's publishStatus after the call.
+  publishSession(sessionId: string): Promise<PublishStatus | null>;
+  // Writes only publishStatus. Not for publishing: that emails the teacher,
+  // so it goes through publishSession.
+  setPublishStatus(
+    id: string,
+    publishStatus: PublishStatus,
   ): Promise<IMicroCoachSession | null>;
   deleteSession(id: string): Promise<IMicroCoachSession | null>;
 }

@@ -11,6 +11,8 @@ export interface IRecordUploadInput {
   xlsxKey: string;
   /** Monday of the school week the teacher picked, `YYYY-MM-DD`. */
   weekStart: string | null;
+  /** That week as the teacher saw it ("Week 10: Oct 26-30"), for the results email. */
+  weekLabel: string | null;
 }
 
 export interface IUploadAPIClient {

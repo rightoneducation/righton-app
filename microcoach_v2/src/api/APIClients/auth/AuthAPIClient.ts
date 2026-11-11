@@ -116,7 +116,12 @@ export class AuthAPIClient implements IAuthAPIClient {
     }
   }
 
-  async awsSignUp(username: string, email: string, password: string): Promise<void> {
+  async awsSignUp(
+    username: string,
+    email: string,
+    password: string,
+    names?: { firstName: string; lastName: string },
+  ): Promise<void> {
     try {
       await signUp({
         username: email,
@@ -125,6 +130,11 @@ export class AuthAPIClient implements IAuthAPIClient {
           userAttributes: {
             nickname: username,
             email,
+            // Stored on the Cognito user so a sign-up finished later — from
+            // /login, after the wizard's state is gone — can still name the
+            // User row. The pool client may write both (cli-inputs.json).
+            ...(names?.firstName ? { given_name: names.firstName } : {}),
+            ...(names?.lastName ? { family_name: names.lastName } : {}),
           },
         },
       });
@@ -134,7 +144,10 @@ export class AuthAPIClient implements IAuthAPIClient {
       // the whole message rather than throwing "undefined".
       console.log(e);
       const [, msg] = e.message.split('|', 2);
-      throw new Error(msg ?? e.message);
+      const error = new Error(msg ?? e.message);
+      // Kept so callers can tell UsernameExistsException from the rest.
+      error.name = e.name;
+      throw error;
     }
   }
 
@@ -148,6 +161,23 @@ export class AuthAPIClient implements IAuthAPIClient {
   }
 
   async awsSignIn(username: string, password: string): Promise<SignInOutput> {
+    // A credential sign-in replaces whatever session is already here. A
+    // half-finished sign-up (verified, then left before the class steps)
+    // leaves a live Cognito session the app doesn't treat as signed in, and
+    // Amplify's signIn throws "There is already a signed in user" while one
+    // exists — which read as a wrong password on Log in and on sign-up.
+    // getCurrentUser, not verifyAuth: it is the check Amplify's signIn itself
+    // makes, reading the stored tokens. verifyAuth's fetchAuthSession asks the
+    // identity pool for guest credentials when signed out, and this pool
+    // refuses unauthenticated access, so it threw on every normal login.
+    let hasSignedInUser = false;
+    try {
+      await getCurrentUser();
+      hasSignedInUser = true;
+    } catch {
+      // No signed-in user: nothing to clear.
+    }
+    if (hasSignedInUser) await amplifySignOut();
     let user;
     try {
       user = await signIn({ username, password });

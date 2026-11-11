@@ -7,6 +7,7 @@ export type AWSSession = {
   sessionLabel?: string | null
   weekLabel?: string | null
   weekNumber?: number | null
+  weekStart?: string | null
   topic?: string | null
   ccssStandards?: Array<string | null> | null
   status?: SessionStatus | null
@@ -19,6 +20,7 @@ export type AWSSession = {
   postPpqAssessmentId?: string | null
   selectedMisconceptionId?: string | null
   pregeneratedNextSteps?: string | null
+  pipelineOutput?: string | null
   evaluationResults?: string | null
   questionStats?: Array<{
     questionNumber: number
