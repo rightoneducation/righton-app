@@ -1,17 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { SelectChangeEvent } from '@mui/material/Select';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import AppModal from './AppModal';
-import type {
-  IMicroCoachReflectionAnswerResult,
-  IMicroCoachReflectionStudentResult,
-} from '../api/Models/IMicroCoachSession';
+import type { IMicroCoachReflectionAnswerResult } from '../api/Models/IMicroCoachSession';
 import { IImplementedActivity } from '../lib/PipelineModels';
 import { ScreenSize } from '../lib/MicroCoachModels';
 import {
@@ -23,17 +19,20 @@ import {
   AssessmentResponseList,
   AssessmentResponseRow,
   CorrectAnswerText,
-  MasteryGroups,
-  MasteryHeadingGroup,
-  MasterySection,
-  MasterySectionHeader,
-  MasteryTitleRow,
+  ProficiencyCard,
+  ProficiencyCards,
+  ProficiencyChange,
+  ProficiencyCount,
+  ProficiencyCountGroup,
+  ProficiencyCounts,
+  ProficiencySection,
   QuestionMetricGroup,
   QuestionResultAccordion,
   QuestionResultDetails,
   QuestionResultSummary,
   QuestionResultsSection,
   QuestionSummaryContent,
+  QuestionSummaryHeading,
   QuestionToggle,
   ReflectionDetailBody,
   ReflectionDetailHeader,
@@ -41,27 +40,14 @@ import {
   ReflectionPanelDivider,
   ReflectionProgressBody,
   ReflectionProgressPanel,
-  ReflectionSortMenuItem,
-  ReflectionSortRow,
-  ReflectionSortSelect,
-  ReflectionSummaryChange,
+  ReflectionSummaryAssessment,
+  ReflectionSummaryDescription,
   ReflectionSummaryPanel,
   ReflectionSummaryScores,
   ReflectionUnavailableState,
-  StudentCountChip,
-  StudentNamePill,
-  StudentResultChip,
-  StudentResultList,
-  StudentResultValue,
 } from '../lib/styledcomponents/ReflectionDetailStyledComponents';
-import {
-  ReflectionTrendValue,
-  ReflectSkillCodeChip,
-} from '../lib/styledcomponents/ReflectStyledComponents';
-import {
-  getReflectionTrend,
-  ReflectionDetailSort,
-} from '../lib/reflectionResults';
+import { ReflectionTrendValue, ReflectSkillCodeChip } from '../lib/styledcomponents/ReflectStyledComponents';
+import { getReflectionProficiency, getReflectionTrend } from '../lib/reflectionResults';
 
 interface ReflectionDetailModalProps {
   activity: IImplementedActivity | null;
@@ -69,254 +55,16 @@ interface ReflectionDetailModalProps {
   onClose: () => void;
 }
 
-interface StudentGroupProps {
-  title: string;
-  description: string;
-  students: CompleteReflectionStudentResult[];
-  studentCount: number;
-  questionCount: number;
-  sort: ReflectionDetailSort;
-  screenSize: ScreenSize;
-  onSortChange: (sort: ReflectionDetailSort) => void;
-}
-
 interface ResponseRowProps {
   label: string;
   questionText: string | null;
-  standard: string | null;
   answers: IMicroCoachReflectionAnswerResult[];
   screenSize: ScreenSize;
-}
-
-type DisplayReflectionStudentResult = IMicroCoachReflectionStudentResult & {
-  displayName: string;
-};
-
-type CompleteReflectionStudentResult = DisplayReflectionStudentResult & {
-  questionsCorrectBefore: number;
-  questionsCorrectAfter: number;
-};
-
-function hasCompleteResults<
-  StudentResult extends IMicroCoachReflectionStudentResult,
->(student: StudentResult): student is StudentResult & {
-  questionsCorrectBefore: number;
-  questionsCorrectAfter: number;
-} {
-  return (
-    student.questionsCorrectBefore !== null &&
-    student.questionsCorrectAfter !== null
-  );
-}
-
-function splitStudentName(studentName: string) {
-  const normalizedName = studentName.replace(/\s+/g, ' ').trim();
-  const commaIndex = normalizedName.indexOf(',');
-  const displayOrderName =
-    commaIndex >= 0
-      ? `${normalizedName.slice(commaIndex + 1)} ${normalizedName.slice(0, commaIndex)}`.replace(
-        /\s+/g,
-        ' ',
-      ).trim()
-      : normalizedName;
-  const [firstName, ...lastNameParts] = displayOrderName.split(' ');
-
-  return {
-    firstName,
-    lastName: lastNameParts.join(' '),
-  };
-}
-
-function addStudentDisplayNames<
-  StudentResult extends IMicroCoachReflectionStudentResult,
->(students: StudentResult[]): Array<StudentResult & { displayName: string }> {
-  const namedStudents = students.flatMap((student) => {
-    const studentName = student.studentName?.trim();
-    if (!studentName) return [];
-
-    return [{ student, ...splitStudentName(studentName) }];
-  });
-  const firstNameCounts = namedStudents.reduce<Map<string, number>>(
-    (counts, student) => {
-      const normalizedFirstName = student.firstName.toLocaleLowerCase();
-      counts.set(
-        normalizedFirstName,
-        (counts.get(normalizedFirstName) ?? 0) + 1,
-      );
-      return counts;
-    },
-    new Map(),
-  );
-
-  return namedStudents.map(({ student, firstName, lastName }) => {
-    const hasDuplicateFirstName =
-      (firstNameCounts.get(firstName.toLocaleLowerCase()) ?? 0) > 1;
-    const lastInitial = lastName.charAt(0).toLocaleUpperCase();
-
-    return {
-      ...student,
-      displayName:
-        hasDuplicateFirstName && lastInitial
-          ? `${firstName} ${lastInitial}.`
-          : firstName,
-    };
-  });
-}
-
-function sortStudents(
-  students: CompleteReflectionStudentResult[],
-  sort: ReflectionDetailSort,
-) {
-  return [...students].sort((studentA, studentB) => {
-    const scoreDifference =
-      sort === 'highestScoring'
-        ? studentB.questionsCorrectAfter - studentA.questionsCorrectAfter
-        : studentB.questionsCorrectAfter -
-          studentB.questionsCorrectBefore -
-          (studentA.questionsCorrectAfter - studentA.questionsCorrectBefore);
-
-    if (scoreDifference !== 0) return scoreDifference;
-    return studentA.displayName.localeCompare(studentB.displayName);
-  });
-}
-
-function studentTrend(student: CompleteReflectionStudentResult) {
-  return getReflectionTrend(
-    student.questionsCorrectAfter - student.questionsCorrectBefore,
-  );
-}
-
-function formatStudentChange(change: number, noChangeLabel: string) {
-  if (change === 0) return noChangeLabel;
-  return change > 0 ? `+${change}` : change;
-}
-
-function StudentGroup({
-  title,
-  description,
-  students,
-  studentCount,
-  questionCount,
-  sort,
-  screenSize,
-  onSortChange,
-}: StudentGroupProps) {
-  const { t } = useTranslation();
-  const theme = useTheme();
-  const sortedStudents = React.useMemo(
-    () => sortStudents(students, sort),
-    [sort, students],
-  );
-
-  const [isSortOpen, setIsSortOpen] = React.useState(false);
-
-  const handleSortChange = (event: SelectChangeEvent<unknown>) => {
-    onSortChange(event.target.value as ReflectionDetailSort);
-  };
-
-  return (
-    <MasterySection>
-      <MasterySectionHeader screenSize={screenSize}>
-        <MasteryHeadingGroup>
-          <MasteryTitleRow>
-            <Typography variant="reflectGroupTitle" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-              {title}
-            </Typography>
-            <StudentCountChip>
-              {t('reflect.studentCount', { count: studentCount })}
-            </StudentCountChip>
-          </MasteryTitleRow>
-          <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-            {description}
-          </Typography>
-        </MasteryHeadingGroup>
-        <ReflectionSortRow>
-          <Typography variant="microLabel" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-            {t('reflect.sortBy')}
-          </Typography>
-          <ReflectionSortSelect
-            value={sort}
-            open={isSortOpen}
-            onOpen={() => setIsSortOpen(true)}
-            onClose={() => setIsSortOpen(false)}
-            onChange={handleSortChange}
-            renderValue={() =>
-              sort === 'highestScoring'
-                ? t('reflect.highestScoring')
-                : t('reflect.mostImproved')
-            }
-            inputProps={{ 'aria-label': t('reflect.sortStudents') }}
-            MenuProps={{
-              MenuListProps: {
-                sx: {
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: `${theme.sizing.space0}px`,
-                  padding: `${theme.sizing.space2}px ${theme.sizing.space2}px ${theme.sizing.space1}px`,
-                },
-              },
-              PaperProps: {
-                sx: {
-                  width: `${theme.sizing.reflectDetailSortWidth}px`,
-                  borderRadius: `0 0 ${theme.sizing.space3}px ${theme.sizing.space3}px`,
-                  color: 'designSystem.surface.white',
-                  backgroundColor: 'designSystem.surface.steelBlue',
-                  backgroundImage: 'none',
-                  boxShadow: 'none',
-                },
-              },
-            }}
-          >
-            {sort === 'mostImproved' && (
-              <ReflectionSortMenuItem value="highestScoring">
-                {t('reflect.highestScoring')}
-              </ReflectionSortMenuItem>
-            )}
-            {sort === 'highestScoring' && (
-              <ReflectionSortMenuItem value="mostImproved">
-                {t('reflect.mostImproved')}
-              </ReflectionSortMenuItem>
-            )}
-          </ReflectionSortSelect>
-        </ReflectionSortRow>
-      </MasterySectionHeader>
-
-      <StudentResultList>
-        {sortedStudents.map((student) => {
-          const change =
-            student.questionsCorrectAfter - student.questionsCorrectBefore;
-          const score = `${student.questionsCorrectAfter}/${questionCount}`;
-          const changeLabel = formatStudentChange(
-            change,
-            t('reflect.noChange'),
-          );
-
-          return (
-            <StudentResultChip key={student.studentId} sort={sort}>
-              <StudentNamePill sort={sort}>
-                {student.displayName}
-                {sort === 'highestScoring' ? ` ${score}` : ''}
-              </StudentNamePill>
-              {sort === 'mostImproved' && (
-                <StudentResultValue
-                  variant="microLabel"
-                  trend={studentTrend(student)}
-                >
-                  {changeLabel}
-                </StudentResultValue>
-              )}
-            </StudentResultChip>
-          );
-        })}
-      </StudentResultList>
-    </MasterySection>
-  );
 }
 
 function ResponseRow({
   label,
   questionText,
-  standard,
   answers,
   screenSize,
 }: ResponseRowProps) {
@@ -326,7 +74,6 @@ function ResponseRow({
     <AssessmentBlock>
       {questionText && (
         <AssessmentQuestionRow>
-          {standard && <ReflectSkillCodeChip>{standard}</ReflectSkillCodeChip>}
           <Typography variant="bodyText" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
             {questionText}
           </Typography>
@@ -357,66 +104,33 @@ export default function ReflectionDetailModal({
   const { t } = useTranslation();
   const theme = useTheme();
   const isLarge = screenSize === ScreenSize.LARGE;
-  const [masterySort, setMasterySort] =
-    React.useState<ReflectionDetailSort>('highestScoring');
-  const [supportSort, setSupportSort] =
-    React.useState<ReflectionDetailSort>('highestScoring');
   const [expandedQuestions, setExpandedQuestions] = React.useState<Set<number>>(
     () => new Set([1]),
   );
 
-  const studentGroups = React.useMemo(() => {
-    const studentResults = activity?.studentResults ?? [];
-    const questionCount = activity?.questionCount ?? 0;
-    const masteryThreshold = Math.max(questionCount - 1, 0);
-    const completeStudents = studentResults.filter(hasCompleteResults);
-    const namedStudents = addStudentDisplayNames(studentResults);
-    const namedCompleteStudents = namedStudents.filter(hasCompleteResults);
-    const reachedMasteryResults = completeStudents.filter(
-      (student) => student.questionsCorrectAfter >= masteryThreshold,
-    );
-    const notYetAtMasteryResults = completeStudents.filter(
-      (student) => student.questionsCorrectAfter < masteryThreshold,
-    );
-    const incompleteResults = studentResults.filter(
-      (student) => !hasCompleteResults(student),
-    );
-
-    return {
-      reachedMastery: namedCompleteStudents.filter(
-        (student) => student.questionsCorrectAfter >= masteryThreshold,
-      ),
-      reachedMasteryCount: reachedMasteryResults.length,
-      notYetAtMastery: namedCompleteStudents.filter(
-        (student) => student.questionsCorrectAfter < masteryThreshold,
-      ),
-      notYetAtMasteryCount: notYetAtMasteryResults.length,
-      incompleteComparisons: namedStudents.filter(
-        (student) => !hasCompleteResults(student),
-      ),
-      incompleteComparisonCount: incompleteResults.length,
-    };
-  }, [activity]);
-
   const handleClose = () => {
-    setMasterySort('highestScoring');
-    setSupportSort('highestScoring');
     setExpandedQuestions(new Set([1]));
     onClose();
   };
 
   if (!activity) return null;
 
-  const questionChange =
-    activity.averageQuestionsCorrectAfter -
-    activity.averageQuestionsCorrectBefore;
-  const formattedQuestionChange = `${questionChange > 0 ? '+' : ''}${questionChange.toFixed(1)}`;
-  const summaryTrend = getReflectionTrend(
-    activity.averagePercentCorrectAfter -
-      activity.averagePercentCorrectBefore,
-  );
-  const hasDetailedResults =
-    activity.studentResults.length > 0 && activity.questionResults.length > 0;
+  const proficiency = getReflectionProficiency(activity);
+  const beforePercent = proficiency.hasScores
+    ? proficiency.averageBefore
+    : activity.averagePercentCorrectBefore;
+  const afterPercent = proficiency.hasScores
+    ? proficiency.averageAfter
+    : activity.averagePercentCorrectAfter;
+  const summaryTrend = beforePercent !== null && afterPercent !== null
+    ? getReflectionTrend(afterPercent - beforePercent)
+    : 'unchanged';
+  const formatPercent = (percent: number | null) => percent === null
+    ? t('reflect.valueUnavailable')
+    : t('reflect.percentCorrect', { percent: Math.round(percent) });
+  const participation = (count: number, assessment: string) => proficiency.hasScores
+    ? t('reflect.participation', { count, assessment })
+    : t('reflect.participationUnavailable', { assessment });
 
   const toggleQuestion = (questionNumber: number, isExpanded: boolean) => {
     setExpandedQuestions((current) => {
@@ -434,26 +148,22 @@ export default function ReflectionDetailModal({
       contentLabel={t('reflect.detailsFor', { title: activity.title })}
       style={{
         overlay: {
-          backgroundColor: theme.palette.designSystem.background.scrim,
+          backgroundColor: alpha(theme.palette.designSystem.surface.black, 0.66),
           zIndex: theme.zIndex.modal,
           display: 'flex',
           alignItems: 'flex-start',
           justifyContent: 'center',
           padding: isLarge
-            ? `${theme.sizing.headerHeight + theme.sizing.space8}px ${theme.sizing.space1}px ${theme.sizing.space8}px`
-            : theme.sizing.space1,
+            ? `${theme.sizing.space8}px ${theme.sizing.space1}px`
+            : `${theme.sizing.space1}px`,
         },
         content: {
           position: 'relative',
           inset: 'auto',
           width: '100%',
-          maxWidth: isLarge
-            ? theme.sizing.reflectDetailModalMaxWidth
-            : '100%',
-          // rev5 draws the modal at its content's height, not full-screen;
-          // past the viewport the progress panel scrolls.
-          height: isLarge ? 'auto' : `calc(100vh - ${theme.sizing.space3}px)`,
-          maxHeight: isLarge ? '100%' : `calc(100vh - ${theme.sizing.space3}px)`,
+          maxWidth: isLarge ? theme.sizing.reflectDetailModalMaxWidth : '100%',
+          height: isLarge ? 'auto' : `calc(100dvh - ${theme.sizing.space3}px)`,
+          maxHeight: '100%',
           display: 'flex',
           flexDirection: 'column',
           padding: 0,
@@ -490,105 +200,79 @@ export default function ReflectionDetailModal({
         <ReflectionProgressPanel>
           <ReflectionSummaryPanel screenSize={screenSize}>
             <ReflectionSummaryScores>
-              <Typography variant="reflectDetailScore" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                {t('reflect.percentCorrect', {
-                  percent: Math.round(activity.averagePercentCorrectBefore),
-                })}
-              </Typography>
-              <Typography variant="reflectDetailScore" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                →
-              </Typography>
-              <ReflectionTrendValue variant="reflectDetailScore" trend={summaryTrend}>
-                {t('reflect.percentCorrect', {
-                  percent: Math.round(activity.averagePercentCorrectAfter),
-                })}
-              </ReflectionTrendValue>
+              <ReflectionSummaryAssessment>
+                <Typography variant="reflectDetailScore">{formatPercent(beforePercent)}</Typography>
+                <Typography variant="microLabel">
+                  {participation(proficiency.beforeCount, t('reflect.miu1'))}
+                </Typography>
+              </ReflectionSummaryAssessment>
+              <Typography variant="headingLg">→</Typography>
+              <ReflectionSummaryAssessment>
+                <ReflectionTrendValue variant="reflectDetailScore" trend={summaryTrend}>
+                  {formatPercent(afterPercent)}
+                </ReflectionTrendValue>
+                <Typography variant="microLabel">
+                  {participation(proficiency.afterCount, t('reflect.miu2'))}
+                </Typography>
+              </ReflectionSummaryAssessment>
             </ReflectionSummaryScores>
-            <Typography variant="rubikSubBold" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-              {t('reflect.scoreSubtitle', { count: activity.questionCount })}
-            </Typography>
-            <ReflectionSummaryChange trend={summaryTrend}>
-              {summaryTrend === 'unchanged'
-                ? t('reflect.noChange')
-                : t('reflect.averageQuestionsGain', {
-                  change: formattedQuestionChange,
-                })}
-            </ReflectionSummaryChange>
+            <ReflectionSummaryDescription>
+              <Typography variant="rubikSubBold">
+                {t('reflect.scoreSubtitle', { count: activity.questionCount })}
+              </Typography>
+              <Typography variant="microLabel">{t('reflect.assessmentDenominatorNote')}</Typography>
+            </ReflectionSummaryDescription>
           </ReflectionSummaryPanel>
 
           <ReflectionPanelDivider />
-
           <ReflectionProgressBody>
-            {!hasDetailedResults ? (
-              <ReflectionUnavailableState>
-                <Typography
-                  variant="rubikBody"
-                  sx={{ color: 'designSystem.surface.ashyGray' }}
-                >
-                  {t('reflect.detailsUnavailable')}
-                </Typography>
-              </ReflectionUnavailableState>
-            ) : (
-              <>
-                <MasteryGroups>
-              <StudentGroup
-                title={t('reflect.reachedMastery')}
-                description={t('reflect.reachedMasteryDescription')}
-                students={studentGroups.reachedMastery}
-                studentCount={studentGroups.reachedMasteryCount}
-                questionCount={activity.questionCount}
-                sort={masterySort}
-                screenSize={screenSize}
-                onSortChange={setMasterySort}
-              />
-              <StudentGroup
-                title={t('reflect.notYetAtMastery')}
-                description={t('reflect.notYetAtMasteryDescription')}
-                students={studentGroups.notYetAtMastery}
-                studentCount={studentGroups.notYetAtMasteryCount}
-                questionCount={activity.questionCount}
-                sort={supportSort}
-                screenSize={screenSize}
-                onSortChange={setSupportSort}
-              />
-              <MasterySection>
-                <MasteryHeadingGroup>
-                  <MasteryTitleRow>
-                    <Typography variant="reflectGroupTitle" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                      {t('reflect.incompleteComparison')}
-                    </Typography>
-                    <StudentCountChip>
-                      {t('reflect.studentCount', {
-                        count: studentGroups.incompleteComparisonCount,
-                      })}
-                    </StudentCountChip>
-                  </MasteryTitleRow>
-                  <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
-                    {t('reflect.incompleteComparisonDescription')}
-                  </Typography>
-                </MasteryHeadingGroup>
-                <StudentResultList>
-                  {studentGroups.incompleteComparisons.map((student) => (
-                    <StudentResultChip
-                      key={student.studentId}
-                      sort="mostImproved"
-                    >
-                      <StudentNamePill sort="mostImproved">
-                        {student.displayName}
-                      </StudentNamePill>
-                      <StudentResultValue variant="microLabel" trend="unchanged">
-                        {student.questionsCorrectAfter === null
-                          ? t('reflect.miu1Only')
-                          : t('reflect.miu2Only')}
-                      </StudentResultValue>
-                    </StudentResultChip>
-                  ))}
-                </StudentResultList>
-              </MasterySection>
-                </MasteryGroups>
-
-                <ReflectionPanelDivider />
-
+            <ProficiencySection>
+              <ReflectionDetailIntro>
+                <Typography variant="rubikBodyBold">{t('reflect.proficiencyTitle')}</Typography>
+                <Typography variant="rubikBody">{t('reflect.proficiencySubtitle')}</Typography>
+              </ReflectionDetailIntro>
+              {proficiency.hasScores ? (
+                <ProficiencyCards screenSize={screenSize}>
+                  {proficiency.bands.map((band) => {
+                    const change = band.after - band.before;
+                    const scoreRange = band.minimum === band.maximum
+                      ? String(band.minimum)
+                      : `${band.minimum}–${band.maximum}`;
+                    return (
+                      <ProficiencyCard key={band.key}>
+                        <Typography variant="rubikSubBold">{t(`reflect.proficiency.${band.key}`)}</Typography>
+                        <Typography variant="smallBodyText">
+                          {band.maximum >= band.minimum
+                            ? t('reflect.proficiencyRange', { range: scoreRange })
+                            : t('reflect.proficiencyRangeUnavailable')}
+                        </Typography>
+                        <ProficiencyCounts>
+                          <ProficiencyCountGroup>
+                            <Typography variant="microLabel">{t('reflect.miu1')}</Typography>
+                            <ProficiencyCount assessment="before">{band.before}</ProficiencyCount>
+                          </ProficiencyCountGroup>
+                          <Typography variant="rubikBody">→</Typography>
+                          <ProficiencyCountGroup>
+                            <Typography variant="microLabel">{t('reflect.miu2')}</Typography>
+                            <ProficiencyCount assessment="after">{band.after}</ProficiencyCount>
+                          </ProficiencyCountGroup>
+                          <Typography variant="microLabel">{t('reflect.studentsLabel')}</Typography>
+                        </ProficiencyCounts>
+                        <ProficiencyChange>
+                          {change === 0
+                            ? t('reflect.noChange')
+                            : t('reflect.proficiencyChange', { change: `${change > 0 ? '+' : ''}${change}` })}
+                        </ProficiencyChange>
+                      </ProficiencyCard>
+                    );
+                  })}
+                </ProficiencyCards>
+              ) : (
+                <Typography variant="rubikBody">{t('reflect.proficiencyUnavailable')}</Typography>
+              )}
+            </ProficiencySection>
+            <ReflectionPanelDivider />
+            {activity.questionResults.length > 0 ? (
                 <QuestionResultsSection>
                   {activity.questionResults.map((question) => {
                 const isExpanded = expandedQuestions.has(
@@ -608,21 +292,9 @@ export default function ReflectionDetailModal({
                       toggleQuestion(question.questionNumber, expanded)
                     }
                   >
-                    <QuestionResultSummary
-                      expandIcon={(
-                        <QuestionToggle>
-                          {isExpanded
-                            ? t('reflect.hideDetails')
-                            : t('reflect.showDetails')}
-                          {isExpanded ? (
-                            <KeyboardArrowUpIcon fontSize="small" />
-                          ) : (
-                            <KeyboardArrowDownIcon fontSize="small" />
-                          )}
-                        </QuestionToggle>
-                      )}
-                    >
+                    <QuestionResultSummary>
                       <QuestionSummaryContent screenSize={screenSize}>
+                        <QuestionSummaryHeading>
                         <QuestionMetricGroup>
                           <Typography variant="headingMd" sx={{ color: 'designSystem.surface.atlanticNavy' }}>
                             {`Q${question.questionNumber}`}
@@ -640,19 +312,38 @@ export default function ReflectionDetailModal({
                             {t('reflect.correctResponses')}
                           </Typography>
                         </QuestionMetricGroup>
+                        <QuestionToggle>
+                          {isExpanded
+                            ? t('reflect.hideDetails')
+                            : t('reflect.showDetails')}
+                          {isExpanded ? (
+                            <KeyboardArrowUpIcon fontSize="small" />
+                          ) : (
+                            <KeyboardArrowDownIcon fontSize="small" />
+                          )}
+                        </QuestionToggle>
+                        </QuestionSummaryHeading>
+                        {isExpanded && (
+                          <Typography
+                            variant="smallBodyText"
+                            sx={{ textTransform: 'uppercase' }}
+                          >
+                            {t('reflect.responseDistributionTitle')}
+                          </Typography>
+                        )}
                       </QuestionSummaryContent>
                     </QuestionResultSummary>
 
                     <QuestionResultDetails>
-                      <Typography
-                        variant="smallBodyText"
-                        sx={{
-                          color: 'designSystem.surface.atlanticNavy',
-                          textTransform: 'uppercase',
-                        }}
-                      >
-                        {t('reflect.responseDistributionTitle')}
-                      </Typography>
+                      {(question.beforeStandard || question.afterStandard) && (
+                        <AssessmentQuestionRow>
+                          {Array.from(new Set([question.beforeStandard, question.afterStandard]))
+                            .filter((standard): standard is string => !!standard)
+                            .map((standard) => (
+                              <ReflectSkillCodeChip key={standard}>{standard}</ReflectSkillCodeChip>
+                            ))}
+                        </AssessmentQuestionRow>
+                      )}
                       <AssessmentResponseList>
                         <ResponseRow
                           label={t('reflect.miu1')}
@@ -661,14 +352,12 @@ export default function ReflectionDetailModal({
                           questionText={
                             question.beforeQuestionText ?? question.questionText
                           }
-                          standard={question.beforeStandard}
                           answers={question.beforeAnswers}
                           screenSize={screenSize}
                         />
                         <ResponseRow
                           label={t('reflect.miu2')}
                           questionText={question.afterQuestionText}
-                          standard={question.afterStandard}
                           answers={question.afterAnswers}
                           screenSize={screenSize}
                         />
@@ -678,7 +367,12 @@ export default function ReflectionDetailModal({
                 );
                   })}
                 </QuestionResultsSection>
-              </>
+            ) : (
+              <ReflectionUnavailableState>
+                <Typography variant="rubikBody" sx={{ color: 'designSystem.surface.ashyGray' }}>
+                  {t('reflect.detailsUnavailable')}
+                </Typography>
+              </ReflectionUnavailableState>
             )}
           </ReflectionProgressBody>
         </ReflectionProgressPanel>
