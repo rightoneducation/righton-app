@@ -10,7 +10,6 @@ import AddIcon from '@mui/icons-material/Add';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AvatarContent from '../components/AvatarContent';
-import ConfirmRemoveDialog from '../components/ConfirmRemoveDialog';
 import ProfileSkeleton from '../components/ProfileSkeleton';
 import { IAPIClients } from '../api';
 import { IMicroCoachClassroom } from '../api/Models/IMicroCoachClassroom';
@@ -18,9 +17,9 @@ import accountPatternTopLeft from '../images/accountPatternTopLeft.svg';
 import accountPatternBottomRight from '../images/accountPatternBottomRight.svg';
 import logoutIconBlue from '../images/logoutIconBlue.svg';
 import removeIcon from '../images/removeIcon.svg';
+import pencilIcon from '../images/pencilIcon.svg';
 import errorIcon from '../images/errorIcon.svg';
 import { IUserState } from '../hooks/useUserState';
-import { useConfirmRemove } from '../hooks/useConfirmRemove';
 import { useProfilePictureUrl } from '../hooks/useProfilePictureUrl';
 import {
   useMicroCoachDataDispatch,
@@ -36,6 +35,11 @@ import {
   AddClassSubmit,
   ClassDeleteButton,
   ClassList,
+  ClassRenameButton,
+  RenameActions,
+  RenameCancel,
+  RenameDone,
+  RenameField,
   Toast,
   ToastSnackbar,
   ClassName,
@@ -70,6 +74,7 @@ import { classroomList } from '../lib/selectors';
 const NAME_ERROR_ID = 'profile-name-error';
 const ADD_CLASS_ERROR_ID = 'profile-add-class-error';
 const ADD_CLASS_DUPLICATE_ID = 'profile-add-class-duplicate';
+const RENAME_CLASS_DUPLICATE_ID = 'profile-rename-class-duplicate';
 
 // Class names compare trimmed and case-blind: "justice " is Justice.
 const normaliseClassName = (name: string) => name.trim().toLowerCase();
@@ -381,9 +386,19 @@ function PasswordPanel({ apiClients }: PasswordPanelProps) {
 /**
  * "+ Add another class" (rev5 AddAClass): opens a name field as a new row, as
  * signup does. Enter or Done creates the class; Escape or the row's trash
- * drops it. A failed create keeps the name so it can be retried.
+ * drops it. A failed create keeps the name so it can be retried. Greyed out
+ * while a class is being renamed, and reports when its field opens, so only
+ * one class field is open at a time.
  */
-function AddClassPanel({ apiClients }: { apiClients: IAPIClients }) {
+function AddClassPanel({
+  apiClients,
+  disabled,
+  onOpenChange,
+}: {
+  apiClients: IAPIClients;
+  disabled: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+}) {
   const { t } = useTranslation();
   const state = useMicroCoachDataState();
   const { userProfile } = state;
@@ -397,10 +412,16 @@ function AddClassPanel({ apiClients }: { apiClients: IAPIClients }) {
   // A held or repeated Enter can commit twice; this lets only one through.
   const isAddingRef = React.useRef(false);
 
+  const open = () => {
+    setDraftName('');
+    onOpenChange(true);
+  };
+
   const close = () => {
     setDraftName(null);
     setHasError(false);
     setIsToastOpen(false);
+    onOpenChange(false);
   };
 
   // Checked as the teacher types, against the classes already loaded for them.
@@ -453,8 +474,8 @@ function AddClassPanel({ apiClients }: { apiClients: IAPIClients }) {
     <AddClassButton
       disableElevation
       startIcon={<AddIcon />}
-      disabled={draftName !== null}
-      onClick={() => setDraftName('')}
+      disabled={disabled || draftName !== null}
+      onClick={open}
     >
       {t('profile.addClass')}
     </AddClassButton>
@@ -546,10 +567,147 @@ function AddClassPanel({ apiClients }: { apiClients: IAPIClients }) {
 }
 
 /**
+ * qa1 Rename: a class row turned into a field pre-filled with its name. Done
+ * (or Enter) saves; Cancel (or Escape) puts the old name back. An unchanged
+ * name just closes. Names compare as AddClassPanel's do, against the other
+ * classes only, so recasing a class's own name is allowed. A failed save
+ * keeps the field open with the draft for a retry. Mounted per renaming id,
+ * so the draft seeds from the current name each time it opens.
+ */
+function ClassRenameRow({
+  apiClients,
+  classroom,
+  screenSize,
+  onClose,
+  onSaved,
+  onFailed,
+}: {
+  apiClients: IAPIClients;
+  classroom: IMicroCoachClassroom;
+  screenSize: ScreenSize;
+  onClose: () => void;
+  onSaved: () => void;
+  onFailed: () => void;
+}) {
+  const { t } = useTranslation();
+  const state = useMicroCoachDataState();
+  const classrooms = classroomList(state);
+  const dispatch = useMicroCoachDataDispatch();
+  const [draftName, setDraftName] = React.useState(classroom.name);
+  const [isSaving, setIsSaving] = React.useState(false);
+  // A held or repeated Enter can commit twice; this lets only one through.
+  const isSavingRef = React.useRef(false);
+  const isLarge = screenSize === ScreenSize.LARGE;
+
+  const name = draftName.trim();
+  const isDuplicate =
+    !!name &&
+    classrooms.some(
+      (other) =>
+        other.id !== classroom.id &&
+        normaliseClassName(other.name) === normaliseClassName(name),
+    );
+  const canSave = !!name && !isDuplicate && !isSaving;
+
+  const commit = async () => {
+    // Enter reaches here without the button, so the guards live here too.
+    if (!canSave || isSavingRef.current) return;
+    if (name === classroom.name) {
+      onClose();
+      return;
+    }
+    isSavingRef.current = true;
+    setIsSaving(true);
+    let updated: IMicroCoachClassroom | null = null;
+    try {
+      // The whole row: the update input also carries grade, state and
+      // schoolYear, which would be nulled if left out.
+      updated = await apiClients.classroom.updateClassroom({ ...classroom, name });
+    } catch (error) {
+      console.error('Could not rename the class', error);
+    }
+    isSavingRef.current = false;
+    setIsSaving(false);
+    if (!updated) {
+      onFailed();
+      return;
+    }
+    // The header dropdown and every page read the store, so they all update.
+    dispatch({ type: 'UPSERT_ROWS', table: 'classrooms', rows: [updated] });
+    onSaved();
+  };
+
+  const actions = (
+    <RenameActions>
+      <RenameCancel disabled={isSaving} onClick={onClose}>
+        {t('profile.cancel')}
+      </RenameCancel>
+      <RenameDone
+        disableElevation
+        disabled={!canSave}
+        aria-busy={isSaving}
+        onClick={commit}
+      >
+        {isSaving ? (
+          <CircularProgress size={12} color="inherit" aria-label={t('profile.saving')} />
+        ) : (
+          t('profile.done')
+        )}
+      </RenameDone>
+    </RenameActions>
+  );
+
+  return (
+    <RenameField>
+      <ProfileInput
+        autoFocus
+        value={draftName}
+        readOnly={isSaving}
+        isError={isDuplicate}
+        onChange={(event) => setDraftName(event.target.value)}
+        // Caret at the end of the pre-filled name.
+        onFocus={(event) => {
+          const { length } = event.target.value;
+          event.target.setSelectionRange(length, length);
+        }}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            commit();
+          } else if (event.key === 'Escape' && !isSaving) {
+            onClose();
+          }
+        }}
+        endAdornment={
+          isLarge ? <InputAdornment position="end">{actions}</InputAdornment> : undefined
+        }
+        inputProps={{
+          'aria-label': t('profile.renameClass', { name: classroom.name }),
+          'aria-invalid': isDuplicate,
+          'aria-describedby': isDuplicate ? RENAME_CLASS_DUPLICATE_ID : undefined,
+        }}
+      />
+      {isDuplicate && (
+        <Typography
+          id={RENAME_CLASS_DUPLICATE_ID}
+          variant="microLabel"
+          role="alert"
+          sx={{ color: 'designSystem.status.errorStroke' }}
+        >
+          {t('profile.addClassDuplicate', { name })}
+        </Typography>
+      )}
+      {/* Below LARGE the buttons drop under the field (and its error). */}
+      {!isLarge && actions}
+    </RenameField>
+  );
+}
+
+/**
  * Account Settings (microcoach-assets/Account). Names are edited against a
  * draft and committed only on a valid save; email and school are locked (the
- * school comes from the email's domain). Classes can be deleted here; adding
- * them waits on design. The password changes in place.
+ * school comes from the email's domain). Classes are renamed in place; delete
+ * is deferred to Wave 3 (the API stays). The password changes in place.
  */
 // The picture types browsers show reliably; the size cap matches the MIU uploads.
 const PICTURE_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
@@ -579,7 +737,6 @@ export default function Profile({
   const state = useMicroCoachDataState();
   const { userProfile } = state;
   const classrooms = classroomList(state);
-  const dispatch = useMicroCoachDataDispatch();
   const isLarge = screenSize === ScreenSize.LARGE;
 
   const first = userProfile?.firstName || '';
@@ -599,6 +756,10 @@ export default function Profile({
   // Google accounts have no MicroCoach password; null until known, and the
   // section shows meanwhile since most teachers sign in with email.
   const [isFederated, setIsFederated] = React.useState<boolean | null>(null);
+  // One class field at a time: a rename row or the add-class field.
+  const [renamingId, setRenamingId] = React.useState<string | null>(null);
+  const [isAddOpen, setIsAddOpen] = React.useState(false);
+  const [renameToast, setRenameToast] = React.useState<ToastTone | null>(null);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -612,20 +773,6 @@ export default function Profile({
       cancelled = true;
     };
   }, [apiClients]);
-
-  const removeClass = async (classId: string) => {
-    try {
-      const deleted = await apiClients.classroom.deleteClassroom(classId);
-      if (!deleted) return false;
-    } catch (error) {
-      console.error('Could not delete the class', error);
-      return false;
-    }
-    // A removed selected class falls back to the first one left (selectors).
-    dispatch({ type: 'REMOVE_ROWS', table: 'classrooms', ids: [classId] });
-    return true;
-  };
-  const remove = useConfirmRemove(removeClass);
 
   // AuthGuard holds this screen until the user is known, but the profile row
   // can land a beat after; the skeleton covers that rather than empty fields.
@@ -904,20 +1051,41 @@ export default function Profile({
               </Typography>
             )}
             <ClassList>
-              {classrooms.map((classroom) => (
-                <ClassRow key={classroom.id}>
-                  <ClassName>{classroom.name}</ClassName>
-                  <ClassDeleteButton
-                    aria-label={t('profile.deleteClass', { name: classroom.name })}
-                    onClick={() =>
-                      remove.ask({ id: classroom.id, className: classroom.name })
-                    }
-                  >
-                    <img src={removeIcon} alt="" />
-                  </ClassDeleteButton>
-                </ClassRow>
-              ))}
-              <AddClassPanel apiClients={apiClients} />
+              {classrooms.map((classroom) =>
+                classroom.id === renamingId ? (
+                  <ClassRenameRow
+                    key={classroom.id}
+                    apiClients={apiClients}
+                    classroom={classroom}
+                    screenSize={screenSize}
+                    onClose={() => setRenamingId(null)}
+                    onSaved={() => {
+                      setRenamingId(null);
+                      setRenameToast('success');
+                    }}
+                    onFailed={() => setRenameToast('error')}
+                  />
+                ) : (
+                  <ClassRow key={classroom.id}>
+                    <ClassName>{classroom.name}</ClassName>
+                    <ClassRenameButton
+                      aria-label={t('profile.renameClass', { name: classroom.name })}
+                      disabled={renamingId !== null || isAddOpen}
+                      onClick={() => {
+                        setRenameToast(null);
+                        setRenamingId(classroom.id);
+                      }}
+                    >
+                      <img src={pencilIcon} alt="" />
+                    </ClassRenameButton>
+                  </ClassRow>
+                ),
+              )}
+              <AddClassPanel
+                apiClients={apiClients}
+                disabled={renamingId !== null}
+                onOpenChange={setIsAddOpen}
+              />
             </ClassList>
           </ProfileSection>
 
@@ -930,18 +1098,27 @@ export default function Profile({
         </ProfileForm>
       </ProfileLayout>
 
-      <ConfirmRemoveDialog
-        className={remove.target?.className ?? null}
-        isRemoving={remove.isRemoving}
-        hasError={remove.hasError}
-        onCancel={remove.cancel}
-        onConfirm={remove.confirm}
-        barTitle={t('profile.deleteClass', { name: remove.target?.className })}
-        title={t('profile.deleteClassTitle')}
-        body={t('profile.deleteClassBody', { className: remove.target?.className })}
-        errorText={t('profile.deleteClassError')}
-        confirmLabel={t('profile.deleteClassConfirm')}
-      />
+      {/* In Profile, not the row: the row has closed by the time a save lands.
+          The error is not dismissed by a stray click, as AddClassPanel's. */}
+      <ToastSnackbar
+        open={renameToast !== null}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        autoHideDuration={renameToast === 'success' ? SUCCESS_TOAST_MS : null}
+        onClose={(event, reason) => {
+          if (reason !== 'clickaway') setRenameToast(null);
+        }}
+      >
+        <Toast tone={renameToast ?? 'success'} role={renameToast === 'error' ? 'alert' : 'status'}>
+          {t(renameToast === 'error' ? 'profile.renameClassError' : 'profile.classRenamed')}
+          <IconButton
+            size="small"
+            aria-label={t('profile.dismiss')}
+            onClick={() => setRenameToast(null)}
+          >
+            <CancelIcon sx={{ fontSize: 20, color: 'designSystem.foreground.disabledStroke' }} />
+          </IconButton>
+        </Toast>
+      </ToastSnackbar>
     </ProfilePage>
   );
 }

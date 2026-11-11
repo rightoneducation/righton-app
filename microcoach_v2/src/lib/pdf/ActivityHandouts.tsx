@@ -13,9 +13,10 @@ import {
 } from '../ActivityContentModels';
 import { WorkStatus } from '../PipelineModels';
 import { IActivityTemplateCopy } from '../activityTemplates';
-import formatStepAnnotation, { Translate } from '../activityMarks';
+import formatStepAnnotation, { studentWorkText, Translate } from '../activityMarks';
 import mathText from '../mathText';
 import { pdfColors, pdfStyles } from './pdfTheme';
+import handoutBookIcon from '../../images/handoutBookIcon.png';
 import groupingIndividual from '../../images/groupingIndividual.png';
 import groupingPairs from '../../images/groupingPairs.png';
 import groupingTwoGroups from '../../images/groupingTwoGroups.png';
@@ -48,17 +49,25 @@ const WORK_AREA_WIDTH = 595 - 2 * 40 - 2;
 const WORK_AREA_HEIGHT = 230;
 const GRID_STEP = 10;
 
+const RUN_TAG_WIDTH = 64;
+const RUN_TITLE_GAP = 6;
+const RUN_COLUMN_WIDTH = (595.28 - 2 * 40 - 2 * 12 - 2 * 0.75 - 24) / 2;
+const RUN_TITLE_MAX_WIDTH = RUN_COLUMN_WIDTH - 18 - 8 - RUN_TAG_WIDTH - RUN_TITLE_GAP;
+
 const styles = {
   headerRow: { flexDirection: 'row' as const, justifyContent: 'flex-end' as const },
   labelPill: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: 6,
     backgroundColor: pdfColors.navy,
     color: pdfColors.white,
     borderRadius: 6,
     paddingVertical: 8,
     paddingHorizontal: 18,
-    fontFamily: 'Rubik',
-    fontSize: 12,
   },
+  labelText: { fontFamily: 'Rubik', fontSize: 12, color: pdfColors.white },
+  labelIcon: { width: 14, height: 14, objectFit: 'contain' as const },
   title: { fontFamily: 'Rubik', fontWeight: 600, fontSize: 24, marginTop: 16 },
   subtitle: { fontFamily: 'Rubik', fontSize: 13, marginTop: 4 },
   banner: {
@@ -97,10 +106,24 @@ const styles = {
   },
   runColumns: { flexDirection: 'row' as const, gap: 24, marginTop: 12 },
   runStep: { flexDirection: 'row' as const, gap: 8, marginBottom: 12 },
-  runTitleRow: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 6 },
+  runTitleRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'flex-start' as const,
+    gap: RUN_TITLE_GAP,
+  },
+  runTitle: { maxWidth: RUN_TITLE_MAX_WIDTH },
+  runGroupingColumn: {
+    flexDirection: 'column' as const,
+    alignItems: 'flex-start' as const,
+    flexShrink: 0,
+    width: RUN_TAG_WIDTH,
+    gap: 3,
+  },
   groupingTag: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
+    flexShrink: 0,
+    maxWidth: '100%',
     gap: 3,
     backgroundColor: pdfColors.sky,
     borderRadius: 3,
@@ -109,7 +132,8 @@ const styles = {
     fontFamily: 'Poppins',
     fontSize: 7,
   },
-  groupingIcon: { width: 8, height: 8, objectFit: 'contain' as const },
+  groupingIcon: { width: 8, height: 8, flexShrink: 0, objectFit: 'contain' as const },
+  groupingLabel: { flexShrink: 1 },
   sectionHeading: { fontFamily: 'Poppins', fontWeight: 600, fontSize: 16, marginTop: 6, marginBottom: 10 },
   exampleTitle: { fontFamily: 'Poppins', fontWeight: 600, fontSize: 14 },
   exampleHeadRow: {
@@ -172,10 +196,11 @@ const styles = {
   studentColumns: { flexDirection: 'row' as const, gap: 16 },
   studentColumn: { flex: 1, gap: 8 },
   studentColumnDivided: { borderLeftWidth: 0.75, borderLeftColor: pdfColors.hairline, paddingLeft: 16 },
-  numberedItem: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 8 },
+  numberedItem: { flexDirection: 'row' as const, alignItems: 'flex-start' as const, gap: 8 },
   numberDisc: {
     width: 12,
     height: 12,
+    flexShrink: 0,
     borderRadius: 6,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
@@ -211,7 +236,11 @@ function HandoutHeader({
   return (
     <View>
       <View style={styles.headerRow}>
-        <Text style={styles.labelPill}>{label}</Text>
+        <View style={styles.labelPill}>
+          {/* eslint-disable-next-line jsx-a11y/alt-text */}
+          <Image src={handoutBookIcon} style={styles.labelIcon} />
+          <Text style={styles.labelText}>{label}</Text>
+        </View>
       </View>
       <Text style={styles.title}>{template.name}</Text>
       <Text style={styles.subtitle}>{template.subtitle}</Text>
@@ -243,21 +272,25 @@ function HowToRun({ content, t }: { content: IActivityContent; t: Translate }) {
           <View key={column} style={pdfStyles.col}>
             {steps.map((step, index) => (
               <View key={step.title} style={styles.runStep}>
-                <Text style={pdfStyles.badge}>{column * half + index + 1}</Text>
+                <View style={pdfStyles.badge}>
+                  <Text style={pdfStyles.badgeText}>{column * half + index + 1}</Text>
+                </View>
                 <View style={pdfStyles.col}>
                   <View style={styles.runTitleRow}>
-                    <Text style={pdfStyles.bodyBold}>{m(step.title)}</Text>
-                    {step.groupings.map((kind, groupingIndex) => (
-                      <React.Fragment key={kind}>
-                        {groupingIndex > 0 && <Text>{t('activityFlow.or')}</Text>}
-                        <View style={styles.groupingTag}>
-                          {/* react-pdf's Image takes no alt text. */}
-                          {/* eslint-disable-next-line jsx-a11y/alt-text */}
-                          <Image src={GROUPING_ICONS[kind]} style={styles.groupingIcon} />
-                          <Text>{t(`chooseActivity.grouping.${kind}`)}</Text>
-                        </View>
-                      </React.Fragment>
-                    ))}
+                    <Text style={[pdfStyles.bodyBold, styles.runTitle]}>{m(step.title)}</Text>
+                    <View style={styles.runGroupingColumn}>
+                      {step.groupings.map((kind, groupingIndex) => (
+                        <React.Fragment key={kind}>
+                          {groupingIndex > 0 && <Text>{t('activityFlow.or')}</Text>}
+                          <View style={styles.groupingTag}>
+                            {/* react-pdf's Image takes no alt text. */}
+                            {/* eslint-disable-next-line jsx-a11y/alt-text */}
+                            <Image src={GROUPING_ICONS[kind]} style={styles.groupingIcon} />
+                            <Text style={styles.groupingLabel}>{t(`chooseActivity.grouping.${kind}`)}</Text>
+                          </View>
+                        </React.Fragment>
+                      ))}
+                    </View>
                   </View>
                   <Text style={[pdfStyles.body, { marginTop: 3 }]}>{m(step.body)}</Text>
                 </View>
@@ -483,9 +516,9 @@ function ClaimSection({ facilitate, isTeacher, t }: { facilitate: IMakeYourCaseF
         <View>
           <Text style={styles.sectionPill}>{t('activityFlow.facilitate.examplesToBringIn')}</Text>
           <View style={styles.bringInList}>
-            {facilitate.examples.map((example) => (
+            {facilitate.examples.map((example, index) => (
               <View key={example.prompt}>
-                <Text style={[styles.body, { paddingLeft: 12 }]}>{m(example.prompt)}</Text>
+                <Text style={styles.body}>{`${index + 1}. ${m(example.prompt)}`}</Text>
                 <Text style={styles.body}>{m(t('activityFlow.facilitate.exampleAnswer', { answer: example.answer }))}</Text>
               </View>
             ))}
@@ -601,7 +634,7 @@ function FavoriteNoExampleCard({
       <Text style={styles.prompt}>{m(example.prompt)}</Text>
       <Text style={styles.label}>{t('activityFlow.facilitate.studentWork')}</Text>
       {example.work.map((line) => (
-        <WorkRow key={line.text} text={line.text} status={line.status} isTeacher={isTeacher} t={t} />
+        <WorkRow key={line.text} text={isTeacher ? line.text : studentWorkText(line.text)} status={line.status} isTeacher={isTeacher} t={t} />
       ))}
       {isTeacher && (
         <>

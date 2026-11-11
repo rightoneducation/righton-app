@@ -25,10 +25,11 @@ import { splitMath } from '../lib/mathDelimiters';
 interface MathTextProps {
   text: string | null | undefined;
   inline?: boolean;
+  boldMath?: boolean;
   className?: string;
 }
 
-function MathText({ text, inline = false, className }: MathTextProps) {
+function MathText({ text, inline = false, boldMath = false, className }: MathTextProps) {
   if (!text || typeof text !== 'string') return null;
 
   // Block mode returns the children bare so display math can break lines.
@@ -49,7 +50,8 @@ function MathText({ text, inline = false, className }: MathTextProps) {
       if (part.type === 'text') return <span key={key}>{part.content}</span>;
       try {
         const displayMode = part.display && !inline;
-        const html = katex.renderToString(part.content, {
+        const expression = boldMath ? `\\boldsymbol{${part.content}}` : part.content;
+        const html = katex.renderToString(expression, {
           displayMode,
           throwOnError: false,
           strict: false,

@@ -341,10 +341,6 @@ export default function AppSwitch({ currentScreen }: AppSwitchProps) {
       showFooter={!usesAppChrome && !isSignUp}
       showClassSwitcher={FLOW_SCREENS.has(currentScreen)}
       showPatternBackdrop={PATTERN_BACKDROP_SCREENS.has(currentScreen)}
-      showHelp={
-        currentScreen !== ScreenType.PROFILE &&
-        currentScreen !== ScreenType.CHANGE_PASSWORD
-      }
     >
       <AuthGuard
         handleLogOut={handleLogOut}
