@@ -8,7 +8,8 @@
 
 import { canonicalCcss } from './ccssCode.mjs';
 
-// No names (FERPA). The label is only meaningful within one upload.
+// The files arrive de-identified, so a student is labelled by row number. The label
+// is used within one upload and not linked to any other.
 export const studentLabel = (studentRef) => `Student ${studentRef}`;
 
 /** Each distinct standard once: the document spells 7.NS.3 and 7.NS.A.3 both ways. */

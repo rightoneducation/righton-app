@@ -22,7 +22,7 @@
  * The session defaults to the run's own session id: the eval fixtures were
  * extracted from sessions that also exist in v2 (ef3872a1 is Test Classroom).
  *
- * Student names are not stored (FERPA): student lists hold "Student N" labels, by
+ * Student names are not stored: student lists hold "Student N" labels, by
  * the fixture students' sorted order. Test data only.
  *
  * Every row is recorded in a manifest beside the run before anything is written;

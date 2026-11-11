@@ -128,8 +128,19 @@ test('Reflect with the same responses and key shows no change', { skip }, async 
   assert.equal(result.averagePercentCorrectBefore, 67.3);
   assert.equal(result.averagePercentCorrectAfter, 67.3);
   assert.equal(result.averageQuestionsCorrectBefore, 4);
-  assert.deepEqual(result.studentResults, []);
   assert.equal(result.improvedStudentCount, 0);
+
+  // One row per response, scored on its own assessment only: nobody is paired.
+  const beforeScores = result.studentResults.filter((s) => s.questionsCorrectAfter === null);
+  const afterScores = result.studentResults.filter((s) => s.questionsCorrectBefore === null);
+  assert.equal(beforeScores.length, 28);
+  assert.equal(afterScores.length, 28);
+  assert.equal(result.studentResults.length, 56);
+  assert.equal(new Set(result.studentResults.map((s) => s.studentId)).size, 56);
+  assert.ok(result.studentResults.every((s) => s.studentName === null));
+  const average = (scores) => scores.reduce((sum, n) => sum + n, 0) / scores.length;
+  assert.equal(Math.round(average(beforeScores.map((s) => s.questionsCorrectBefore)) * 10) / 10, 4);
+  assert.equal(Math.round(average(afterScores.map((s) => s.questionsCorrectAfter)) * 10) / 10, 4);
 
   const q3 = result.questionResults[1];
   assert.equal(q3.questionNumber, 3);

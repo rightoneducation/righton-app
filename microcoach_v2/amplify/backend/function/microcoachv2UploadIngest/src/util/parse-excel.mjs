@@ -2,8 +2,8 @@
  * Reads a Renaissance "Assessment Matrix" export: one row per student, one column
  * per question, with each answer column followed by its confidence column.
  *
- * Student names and IDs are removed before upload (FERPA), so a student is only a
- * row number, meaningful within this file and nowhere else.
+ * The client de-identifies the export before upload, so a student is only a row
+ * number. It is used within this file and not linked to any other upload.
  *
  * Column positions differ between exports (Week 10's answers start in D, Week 11's
  * in H), so everything is found from the labels in column A and the question header.
