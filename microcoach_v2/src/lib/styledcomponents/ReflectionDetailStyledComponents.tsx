@@ -1,42 +1,12 @@
-import { styled, Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Box from '@mui/material/Box';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import { ScreenSize } from '../MicroCoachModels';
-import {
-  ReflectionDetailSort,
-  ReflectionTrend,
-} from '../reflectionResults';
 
 const forwardScreenSize = (prop: PropertyKey) => prop !== 'screenSize';
-const forwardTrend = (prop: PropertyKey) => prop !== 'trend';
-const forwardSort = (prop: PropertyKey) => prop !== 'sort';
-
-function detailTrendColor(theme: Theme, trend: ReflectionTrend) {
-  if (trend === 'improved') {
-    return theme.palette.designSystem.status.reflectionImprovement;
-  }
-  // rev5 draws a drop as #D0254D, the same red as fieldErrorStroke.
-  if (trend === 'declined') {
-    return theme.palette.designSystem.status.fieldErrorStroke;
-  }
-  return theme.palette.designSystem.surface.atlanticNavy;
-}
-
-function detailTrendBackground(theme: Theme, trend: ReflectionTrend) {
-  if (trend === 'improved') {
-    return theme.palette.designSystem.status.reflectionImprovementTint;
-  }
-  if (trend === 'declined') {
-    return theme.palette.designSystem.status.reflectionDeclineTint;
-  }
-  return theme.palette.designSystem.surface.skyBlue;
-}
-
 export const ReflectionDetailHeader = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -51,8 +21,8 @@ export const ReflectionDetailBody = styled(Box)(({ theme }) => ({
   display: 'flex',
   flex: 1,
   flexDirection: 'column',
-  gap: theme.sizing.space5,
-  padding: theme.sizing.space5,
+  gap: `${theme.sizing.space4}px`,
+  padding: `${theme.sizing.space5}px`,
   minHeight: 0,
   overflow: 'hidden',
 }));
@@ -60,7 +30,7 @@ export const ReflectionDetailBody = styled(Box)(({ theme }) => ({
 export const ReflectionDetailIntro = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.sizing.space0,
+  gap: `${theme.sizing.space0}px`,
 }));
 
 export const ReflectionProgressPanel = styled(Box)(({ theme }) => ({
@@ -81,7 +51,8 @@ export const ReflectionSummaryPanel = styled(Box, {
   flexShrink: 0,
   flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
   alignItems: screenSize === ScreenSize.SMALL ? 'flex-start' : 'center',
-  gap: theme.sizing.space3,
+  gap: `${theme.sizing.space3}px`,
+  color: theme.palette.designSystem.surface.atlanticNavy,
   padding: `${theme.sizing.space4}px ${theme.sizing.space3}px`,
 }));
 
@@ -89,18 +60,26 @@ export const ReflectionSummaryScores = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexShrink: 0,
   alignItems: 'center',
-  gap: theme.sizing.space2,
+  gap: `${theme.sizing.space5}px`,
+  minWidth: 0,
 }));
 
-export const ReflectionSummaryChange = styled(Box, {
-  shouldForwardProp: forwardTrend,
-})<{ trend: ReflectionTrend }>(({ theme, trend }) => ({
-  flexShrink: 0,
-  padding: theme.sizing.space0,
-  borderRadius: theme.sizing.space0,
-  backgroundColor: detailTrendBackground(theme, trend),
+export const ReflectionSummaryAssessment = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: `${theme.sizing.space0}px`,
+  minWidth: 0,
   color: theme.palette.designSystem.surface.atlanticNavy,
-  ...theme.typography.reflectChipLabel,
+}));
+
+export const ReflectionSummaryDescription = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: `${theme.sizing.space0}px`,
+  flex: '1 1 auto',
+  minWidth: 0,
+  color: theme.palette.designSystem.surface.atlanticNavy,
 }));
 
 export const ReflectionPanelDivider = styled(Box)(({ theme }) => ({
@@ -113,8 +92,8 @@ export const ReflectionProgressBody = styled(Box)(({ theme }) => ({
   display: 'flex',
   flex: 1,
   flexDirection: 'column',
-  gap: theme.sizing.space5,
-  padding: theme.sizing.space6,
+  gap: `${theme.sizing.space2}px`,
+  padding: `${theme.sizing.space5}px`,
   minHeight: 0,
   overflowY: 'auto',
   '&::-webkit-scrollbar': {
@@ -141,161 +120,68 @@ export const ReflectionUnavailableState = styled(Box)(({ theme }) => ({
   textAlign: 'center',
 }));
 
-export const MasteryGroups = styled(Box)(({ theme }) => ({
+export const ProficiencySection = styled(Box)(({ theme }) => ({
   display: 'flex',
+  flexShrink: 0,
   flexDirection: 'column',
-  gap: theme.sizing.space5,
+  gap: `${theme.sizing.space3}px`,
+  color: theme.palette.designSystem.surface.atlanticNavy,
 }));
 
-export const MasterySection = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.sizing.space1,
-}));
-
-export const MasterySectionHeader = styled(Box, {
+export const ProficiencyCards = styled(Box, {
   shouldForwardProp: forwardScreenSize,
 })<{ screenSize: ScreenSize }>(({ theme, screenSize }) => ({
   display: 'flex',
   flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
-  alignItems: screenSize === ScreenSize.SMALL ? 'stretch' : 'flex-start',
-  justifyContent: 'space-between',
-  gap: theme.sizing.space2,
+  gap: `${theme.sizing.space2}px`,
 }));
 
-export const MasteryHeadingGroup = styled(Box)(({ theme }) => ({
+export const ProficiencyCard = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.sizing.space0,
-}));
-
-export const MasteryTitleRow = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexWrap: 'wrap',
-  alignItems: 'center',
-  gap: theme.sizing.space2,
-}));
-
-export const StudentCountChip = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  boxSizing: 'border-box',
-  height: theme.sizing.reflectCountChipHeight,
-  padding: `0 ${theme.sizing.space2}px`,
-  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.navyBlue}`,
-  borderRadius: theme.sizing.space2,
-  color: theme.palette.designSystem.surface.atlanticNavy,
-  backgroundColor: theme.palette.designSystem.surface.white,
-  ...theme.typography.smallBodyText,
-}));
-
-export const ReflectionSortRow = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
+  alignItems: 'flex-start',
   gap: `${theme.sizing.space1}px`,
+  flex: '1 1 0',
+  minWidth: 0,
+  padding: `${theme.sizing.space2}px`,
+  border: theme.borders.subtle,
+  borderRadius: theme.sizing.space2,
 }));
 
-export const ReflectionSortSelect = styled(Select)(({ theme, open }) => ({
-  width: `${theme.sizing.reflectDetailSortWidth}px`,
-  height: `${theme.sizing.reflectDetailSortHeight}px`,
-  borderRadius: open
-    ? `${theme.sizing.space4}px ${theme.sizing.space4}px 0 0`
-    : `${theme.sizing.space5}px`,
-  color: theme.palette.designSystem.surface.white,
-  backgroundColor: theme.palette.designSystem.surface.steelBlue,
-  ...theme.typography.microLabel,
-  '& .MuiSelect-select': {
-    paddingTop: `${theme.sizing.space1}px`,
-    paddingBottom: `${theme.sizing.space1}px`,
-    paddingLeft: `${theme.sizing.space3}px`,
-  },
-  '& .MuiSelect-icon': {
-    color: theme.palette.designSystem.surface.white,
-  },
-  '& .MuiSelect-iconOpen': {
-    transform: 'none',
-  },
-  '& .MuiOutlinedInput-notchedOutline': {
-    border: 'none',
-  },
-  '&:hover .MuiOutlinedInput-notchedOutline': {
-    border: 'none',
-  },
-  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    border: 'none',
-  },
-}));
-
-export const ReflectionSortMenuItem = styled(MenuItem)(({ theme }) => ({
-  minHeight: `${theme.sizing.space3}px`,
-  padding: `0 ${theme.sizing.space0}px`,
-  borderRadius: `${theme.sizing.space0}px`,
-  justifyContent: 'flex-start',
-  color: theme.palette.designSystem.surface.white,
-  backgroundColor: theme.palette.designSystem.foreground.mutedSteelBlue,
-  ...theme.typography.microLabel,
-  '&:hover, &.Mui-focusVisible': {
-    backgroundColor: theme.palette.designSystem.foreground.mutedSteelBlue,
-  },
-}));
-
-export const StudentResultList = styled(Box)(({ theme }) => ({
+export const ProficiencyCounts = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
-  columnGap: theme.sizing.space2,
-  rowGap: theme.sizing.space1,
+  alignItems: 'flex-end',
+  gap: `${theme.sizing.space2}px`,
 }));
 
-export const StudentResultChip = styled(Box, {
-  shouldForwardProp: forwardSort,
-})<{ sort: ReflectionDetailSort }>(({ theme, sort }) => ({
+export const ProficiencyCountGroup = styled(Box)(({ theme }) => ({
   display: 'flex',
+  flexDirection: 'column',
   alignItems: 'center',
-  gap: theme.sizing.space1,
-  padding:
-    sort === 'highestScoring'
-      ? `${theme.sizing.space0}px ${theme.sizing.space2}px`
-      : theme.sizing.space1,
-  borderRadius:
-    sort === 'highestScoring'
-      ? theme.sizing.space5
-      : theme.sizing.space0,
-  backgroundColor:
-    sort === 'highestScoring'
-      ? theme.palette.designSystem.background.navyBlue
-      : theme.palette.designSystem.surface.skyBlue,
-  color: theme.palette.designSystem.surface.white,
-  ...theme.typography.microLabel,
+  gap: `${theme.sizing.space0}px`,
 }));
 
-export const StudentNamePill = styled(Box, {
-  shouldForwardProp: forwardSort,
-})<{ sort: ReflectionDetailSort }>(({ theme, sort }) => ({
-  padding:
-    sort === 'highestScoring'
-      ? 0
-      : `${theme.sizing.space0}px ${theme.sizing.space2}px`,
-  borderRadius: theme.sizing.space5,
-  backgroundColor:
-    sort === 'highestScoring'
-      ? 'transparent'
-      : theme.palette.designSystem.background.navyBlue,
-  color: theme.palette.designSystem.surface.white,
-  whiteSpace: 'nowrap',
+export const ProficiencyCount = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'assessment',
+})<{ assessment: 'before' | 'after' }>(({ theme, assessment }) => ({
+  ...theme.typography.headingLg,
+  color: assessment === 'before'
+    ? theme.palette.designSystem.surface.steelBlue
+    : theme.palette.designSystem.surface.atlanticNavy,
 }));
 
-export const StudentResultValue = styled(Typography, {
-  shouldForwardProp: forwardTrend,
-})<{ trend: ReflectionTrend }>(({ theme, trend }) => ({
-  color: detailTrendColor(theme, trend),
-  ...theme.typography.microLabel,
-  fontWeight: 500,
-  whiteSpace: 'nowrap',
+export const ProficiencyChange = styled(Box)(({ theme }) => ({
+  padding: `${theme.sizing.space0}px ${theme.sizing.space2}px`,
+  border: theme.borders.subtle,
+  borderColor: theme.palette.designSystem.background.navyBlue,
+  borderRadius: theme.sizing.space1,
+  ...theme.typography.smallBodyText,
 }));
 
 export const QuestionResultsSection = styled(Box)(({ theme }) => ({
   display: 'flex',
+  flexShrink: 0,
   flexDirection: 'column',
   gap: theme.sizing.space2,
 }));
@@ -314,25 +200,17 @@ export const QuestionResultAccordion = styled(Accordion)(({ theme }) => ({
 }));
 
 export const QuestionResultSummary = styled(AccordionSummary)(({ theme }) => ({
-  minHeight: theme.sizing.space13,
-  padding: `0 ${theme.sizing.space2}px`,
+  minHeight: 0,
+  padding: `${theme.sizing.space2}px`,
   color: theme.palette.designSystem.surface.atlanticNavy,
   '&.Mui-expanded': {
-    minHeight: theme.sizing.space13,
+    minHeight: 0,
   },
   '& .MuiAccordionSummary-content': {
-    margin: `${theme.sizing.space2}px 0`,
+    margin: 0,
   },
   '& .MuiAccordionSummary-content.Mui-expanded': {
-    margin: `${theme.sizing.space2}px 0`,
-  },
-  '& .MuiAccordionSummary-expandIconWrapper': {
-    alignSelf: 'flex-start',
-    marginLeft: theme.sizing.space2,
-    marginTop: theme.sizing.space3,
-  },
-  '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
-    transform: 'none',
+    margin: 0,
   },
 }));
 
@@ -343,11 +221,20 @@ export const QuestionSummaryContent = styled(Box, {
   flex: 1,
   flexDirection: 'column',
   alignItems: 'flex-start',
-  gap: theme.sizing.space1,
+  gap: `${theme.sizing.space0}px`,
+}));
+
+export const QuestionSummaryHeading = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'baseline',
+  gap: `${theme.sizing.space2}px`,
+  width: '100%',
 }));
 
 export const QuestionMetricGroup = styled(Box)(({ theme }) => ({
   display: 'flex',
+  flex: '1 1 auto',
+  minWidth: 0,
   flexWrap: 'wrap',
   alignItems: 'center',
   gap: theme.sizing.space1,
@@ -355,8 +242,9 @@ export const QuestionMetricGroup = styled(Box)(({ theme }) => ({
 
 export const QuestionToggle = styled(Box)(({ theme }) => ({
   display: 'flex',
+  flexShrink: 0,
   alignItems: 'center',
-  gap: theme.sizing.space0,
+  gap: `${theme.sizing.space0}px`,
   color: theme.palette.designSystem.surface.atlanticNavy,
   ...theme.typography.reflectChipLabel,
   whiteSpace: 'nowrap',
@@ -423,7 +311,7 @@ export const AnswerDistribution = styled(Box)(({ theme }) => ({
 export const AnswerResponse = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.sizing.space0,
+  gap: `${theme.sizing.space0}px`,
   color: theme.palette.designSystem.surface.atlanticNavy,
   ...theme.typography.smallBodyText,
   whiteSpace: 'nowrap',

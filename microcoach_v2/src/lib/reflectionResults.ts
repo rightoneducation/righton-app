@@ -3,12 +3,45 @@ import { IMicroCoachSession } from '../api/Models/IMicroCoachSession';
 import { IImplementedActivity, IReflect } from './PipelineModels';
 
 export type ReflectionTrend = 'improved' | 'declined' | 'unchanged';
-export type ReflectionDetailSort = 'highestScoring' | 'mostImproved';
 
 export function getReflectionTrend(change: number): ReflectionTrend {
   if (change > 0) return 'improved';
   if (change < 0) return 'declined';
   return 'unchanged';
+}
+
+export function getReflectionProficiency(activity: IImplementedActivity) {
+  const { questionCount, studentResults } = activity;
+  const scoresFor = (key: 'questionsCorrectBefore' | 'questionsCorrectAfter') =>
+    studentResults.map((student) => student[key]).filter((score): score is number =>
+      score !== null && Number.isInteger(score) && score >= 0 && score <= questionCount,
+    );
+  const before = scoresFor('questionsCorrectBefore');
+  const after = scoresFor('questionsCorrectAfter');
+  const demonstratingMinimum = Math.ceil(questionCount * 5 / 6);
+  const approachingMinimum = Math.ceil(questionCount / 2);
+  const ranges = [
+    { key: 'demonstrating', minimum: demonstratingMinimum, maximum: questionCount },
+    { key: 'approaching', minimum: approachingMinimum, maximum: demonstratingMinimum - 1 },
+    { key: 'building', minimum: 0, maximum: approachingMinimum - 1 },
+  ] as const;
+  const average = (scores: number[]) =>
+    scores.length > 0 && questionCount > 0
+      ? scores.reduce((sum, score) => sum + score, 0) / scores.length / questionCount * 100
+      : null;
+
+  return {
+    hasScores: questionCount > 0 && (before.length > 0 || after.length > 0),
+    beforeCount: before.length,
+    afterCount: after.length,
+    averageBefore: average(before),
+    averageAfter: average(after),
+    bands: ranges.map((range) => ({
+      ...range,
+      before: before.filter((score) => score >= range.minimum && score <= range.maximum).length,
+      after: after.filter((score) => score >= range.minimum && score <= range.maximum).length,
+    })),
+  };
 }
 
 interface LegacyPostPpqResults {

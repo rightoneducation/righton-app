@@ -46,9 +46,7 @@ export function formatResponseEvidence(
 
 interface MisconceptionCardProps {
   misconception: IMicroCoachMisconception;
-  // fromEvidence: opened from the evidence line, so the modal starts with the
-  // cited options' students shown.
-  onViewDetails: (misconceptionId: string, fromEvidence: boolean) => void;
+  onViewDetails: (misconceptionId: string) => void;
   onSelect: (misconceptionId: string) => void;
   // Side by side at LARGE: the card shares its rows with its neighbours.
   isAligned: boolean;
@@ -115,7 +113,7 @@ export default function MisconceptionCard({
       {evidence ? (
         <LabelledBlock>
           <BlockLabel>{t('review.responseEvidence')}</BlockLabel>
-          <EvidenceLink type="button" onClick={() => onViewDetails(misconception.id, true)}>
+          <EvidenceLink type="button" onClick={() => onViewDetails(misconception.id)}>
             {evidence}
           </EvidenceLink>
         </LabelledBlock>
@@ -143,7 +141,7 @@ export default function MisconceptionCard({
       </LabelledBlock>
 
       <CardActions>
-        <CardButton disableElevation onClick={() => onViewDetails(misconception.id, false)}>
+        <CardButton disableElevation onClick={() => onViewDetails(misconception.id)}>
           {t('review.viewDetails')}
         </CardButton>
         <CardButton

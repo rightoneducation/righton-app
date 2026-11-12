@@ -211,7 +211,7 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
                       key={misconception.id}
                       isAligned={screenSize === ScreenSize.LARGE}
                       misconception={misconception}
-                      onViewDetails={(id, fromEvidence) => setSelected({ id, fromEvidence })}
+                      onViewDetails={(id) => setSelected({ id })}
                       onSelect={handleSelect}
                     />
                   ))}
@@ -282,7 +282,6 @@ export default function Review({ screenSize, sessions, plan }: ReviewProps) {
 
       <MisconceptionDetailModal
         misconception={selectedMisconception}
-        showNames={selected?.fromEvidence ?? false}
         questionStats={questionStats}
         screenSize={screenSize}
         onClose={() => setSelected(null)}
