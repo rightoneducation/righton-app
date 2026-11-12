@@ -1,8 +1,9 @@
 
 import { OpenAI } from "openai"
+import { getOpenAIKey } from "./util/loadsecrets.mjs";
 
 export async function handler(event) {
-    const openai = new OpenAI(process.env.OPENAI_API_KEY);
+    const openai = new OpenAI({ apiKey: await getOpenAIKey() });
     // Parse input data from the event object
     const body = JSON.parse(event.body);
     const originalExplanation = body.originalExplanation;
