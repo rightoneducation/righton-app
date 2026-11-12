@@ -1,5 +1,6 @@
 
 import { OpenAI } from "openai"
+import { getOpenAIKey } from "./util/loadsecrets.mjs";
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { 
   systemPromptLabel, 
@@ -11,7 +12,7 @@ import {
 } from "./prompt.mjs";
 
 export async function handler(event) {
-    const openai = new OpenAI(process.env.OPENAI_API_KEY);
+    const openai = new OpenAI({ apiKey: await getOpenAIKey() });
     try {
       console.log(event);
       const text = JSON.parse(event.body).text;
