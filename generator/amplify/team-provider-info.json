@@ -53,23 +53,23 @@
       "function": {
         "labeledits": {
           "deploymentBucketName": "amplify-wronganswerexp-main-151126-deployment",
-          "s3Key": "amplify-builds/labeledits-6a545061533850526633-build.zip"
+          "s3Key": "amplify-builds/labeledits-6f636d6455567a68442f-build.zip"
         },
         "regenwronganswerexp": {
           "deploymentBucketName": "amplify-wronganswerexp-main-151126-deployment",
-          "s3Key": "amplify-builds/regenwronganswerexp-346a4f5430416e626872-build.zip"
+          "s3Key": "amplify-builds/regenwronganswerexp-6e4b71574772784b4238-build.zip"
         },
         "wronganswerexp": {
           "deploymentBucketName": "amplify-wronganswerexp-main-151126-deployment",
-          "s3Key": "amplify-builds/wronganswerexp-34304153634d77784251-build.zip"
+          "s3Key": "amplify-builds/wronganswerexp-47386844447379343569-build.zip"
         },
         "evaltextcomplexity": {
           "deploymentBucketName": "amplify-wronganswerexp-main-151126-deployment",
-          "s3Key": "amplify-builds/evaltextcomplexity-67517673345651796e67-build.zip"
+          "s3Key": "amplify-builds/evaltextcomplexity-6278596243305135752f-build.zip"
         },
         "refinecomplexity": {
           "deploymentBucketName": "amplify-wronganswerexp-main-151126-deployment",
-          "s3Key": "amplify-builds/refinecomplexity-562f7357416730316970-build.zip"
+          "s3Key": "amplify-builds/refinecomplexity-6b57306d2f5a2f2b3054-build.zip"
         }
       },
       "api": {
