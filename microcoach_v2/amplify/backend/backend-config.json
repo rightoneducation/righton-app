@@ -99,6 +99,25 @@
       "service": "Cognito-UserPool-Groups"
     }
   },
+  "custom": {
+    "microcoachv2GeneratePipeline": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "Region",
+            "LambdaExecutionRole",
+            "LambdaExecutionRoleArn"
+          ],
+          "category": "function",
+          "resourceName": "microcoachv2UploadGenerate"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "customCloudformation"
+    }
+  },
   "function": {
     "microcoachv2EmailTeacher": {
       "build": true,
