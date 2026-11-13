@@ -2,7 +2,7 @@
 // step will save here and then next step will load it
 // format on s3: pipeline/{uploadId}/{runId}/{name}.json
 
-import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-3';
+import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 
 const s3 = new S3Client({ region: process.env.REGION });
 
@@ -28,7 +28,7 @@ export function makeStore({ bucket, uploadId, runId }){
       const { Body } = await s3.send(new GetObjectCommand({ Bucket: bucket, Key: key(name)}));
       return JSON.parse(await Body.transformToString());
     } catch (err) {
-      if (err?.name === 'NoSuchLey') return null;
+      if (err?.name === 'NoSuchKey') return null;
       throw err;
     }
   }
