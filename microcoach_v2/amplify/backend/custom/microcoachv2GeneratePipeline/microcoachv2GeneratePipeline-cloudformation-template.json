@@ -1,0 +1,30 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "env": {
+      "Type": "String"
+    },
+    "functionmicrocoachv2UploadGenerateName": {
+      "Type": "String",
+      "Description": "Input parameter describing Name attribute for function/microcoachv2UploadGenerate resource"
+    },
+    "functionmicrocoachv2UploadGenerateArn": {
+      "Type": "String",
+      "Description": "Input parameter describing Arn attribute for function/microcoachv2UploadGenerate resource"
+    },
+    "functionmicrocoachv2UploadGenerateRegion": {
+      "Type": "String",
+      "Description": "Input parameter describing Region attribute for function/microcoachv2UploadGenerate resource"
+    },
+    "functionmicrocoachv2UploadGenerateLambdaExecutionRole": {
+      "Type": "String",
+      "Description": "Input parameter describing LambdaExecutionRole attribute for function/microcoachv2UploadGenerate resource"
+    },
+    "functionmicrocoachv2UploadGenerateLambdaExecutionRoleArn": {
+      "Type": "String",
+      "Description": "Input parameter describing LambdaExecutionRoleArn attribute for function/microcoachv2UploadGenerate resource"
+    }
+  },
+  "Resources": {},
+  "Outputs": {}
+}
