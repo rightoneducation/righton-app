@@ -40,6 +40,8 @@ export const onCreateMicroCoachUser = /* GraphQL */ `
               selectedMisconceptionId
               pregeneratedNextSteps
               pipelineOutput
+              mathCheck
+              mathCorrect
               evaluationResults
               createdAt
               updatedAt
@@ -138,6 +140,8 @@ export const onUpdateMicroCoachUser = /* GraphQL */ `
               selectedMisconceptionId
               pregeneratedNextSteps
               pipelineOutput
+              mathCheck
+              mathCorrect
               evaluationResults
               createdAt
               updatedAt
@@ -236,6 +240,8 @@ export const onDeleteMicroCoachUser = /* GraphQL */ `
               selectedMisconceptionId
               pregeneratedNextSteps
               pipelineOutput
+              mathCheck
+              mathCorrect
               evaluationResults
               createdAt
               updatedAt
@@ -363,6 +369,8 @@ export const onCreateMicroCoachClassroom = /* GraphQL */ `
           }
           pregeneratedNextSteps
           pipelineOutput
+          mathCheck
+          mathCorrect
           evaluationResults
           questionStats {
             questionNumber
@@ -525,6 +533,8 @@ export const onUpdateMicroCoachClassroom = /* GraphQL */ `
           }
           pregeneratedNextSteps
           pipelineOutput
+          mathCheck
+          mathCorrect
           evaluationResults
           questionStats {
             questionNumber
@@ -687,6 +697,8 @@ export const onDeleteMicroCoachClassroom = /* GraphQL */ `
           }
           pregeneratedNextSteps
           pipelineOutput
+          mathCheck
+          mathCorrect
           evaluationResults
           questionStats {
             questionNumber
@@ -962,6 +974,8 @@ export const onCreateMicroCoachSession = /* GraphQL */ `
       }
       pregeneratedNextSteps
       pipelineOutput
+      mathCheck
+      mathCorrect
       evaluationResults
       questionStats {
         questionNumber
@@ -1182,6 +1196,8 @@ export const onUpdateMicroCoachSession = /* GraphQL */ `
       }
       pregeneratedNextSteps
       pipelineOutput
+      mathCheck
+      mathCorrect
       evaluationResults
       questionStats {
         questionNumber
@@ -1402,6 +1418,8 @@ export const onDeleteMicroCoachSession = /* GraphQL */ `
       }
       pregeneratedNextSteps
       pipelineOutput
+      mathCheck
+      mathCorrect
       evaluationResults
       questionStats {
         questionNumber

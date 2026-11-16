@@ -41,6 +41,7 @@ import {
   MakeYourCasePanel,
   MathDetectivePanel,
 } from './FacilitatePanels';
+import { ReviewCountFlag, ReviewSlot } from './ReviewSlot';
 
 /**
  * Spot the Slip's worked examples (InflowScreens/Facilitate_Teacher, _Student).
@@ -76,6 +77,7 @@ function SpotTheSlipPanel({
               {t('activityFlow.facilitate.exampleLabel', { number: index + 1 })}
             </Typography>
             <MathTypography variant="rubikSubBold" component="span" text={examples[index].problem} />
+            <ReviewCountFlag prefix={`content.facilitate.examples[${index}]`} />
             {isTeacher && (
               <SlipChip>
                 <span>
@@ -92,40 +94,49 @@ function SpotTheSlipPanel({
       {example && (
         <ExampleDetail aria-live="polite">
           <ExampleOfHeading index={exampleIndex} count={examples.length} />
-          <MathTypography variant="rubikSubBold" text={example.prompt} />
+          <ReviewSlot
+            paths={['prompt', 'problem', 'slip'].map((field) => `content.facilitate.examples[${exampleIndex}].${field}`)}
+          >
+            <MathTypography variant="rubikSubBold" text={example.prompt} />
+          </ReviewSlot>
           <ExampleSteps>
-            {example.steps.map((step) => {
+            {example.steps.map((step, stepIndex) => {
               const annotation =
                 isTeacher && step.annotation
                   ? formatStepAnnotation(step.annotation, t)
                   : null;
+              const stepPath = `content.facilitate.examples[${exampleIndex}].steps[${stepIndex}]`;
               return (
-                <StepRow
+                <ReviewSlot
                   key={step.step}
-                  isError={isTeacher && step.annotation?.kind === 'ERROR'}
+                  paths={['text', 'step', 'annotation.text', 'annotation.kind'].map((field) => `${stepPath}.${field}`)}
                 >
-                  <StepChip>
-                    {t('activityDetail.stepNumber', { number: step.step })}
-                  </StepChip>
-                  <Box sx={{ flex: 1, minWidth: 0 }}>
-                    <MathTypography
-                      variant="smallBodyText"
-                      text={step.text}
-                      suffix={annotation}
-                    />
-                  </Box>
-                </StepRow>
+                  <StepRow isError={isTeacher && step.annotation?.kind === 'ERROR'}>
+                    <StepChip>
+                      {t('activityDetail.stepNumber', { number: step.step })}
+                    </StepChip>
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                      <MathTypography
+                        variant="smallBodyText"
+                        text={step.text}
+                        suffix={annotation}
+                      />
+                    </Box>
+                  </StepRow>
+                </ReviewSlot>
               );
             })}
           </ExampleSteps>
           {/* The frame keeps FINAL in student view too; it gives the slip
               away, so it follows the student PDF and stays teacher-only. */}
           {isTeacher && (
-            <MathTypography
-              variant="outcomeLabel"
-              sx={{ textTransform: 'uppercase' }}
-              text={`${t('activityFlow.facilitate.final')} ${example.finalOutcome}`}
-            />
+            <ReviewSlot paths={`content.facilitate.examples[${exampleIndex}].finalOutcome`}>
+              <MathTypography
+                variant="outcomeLabel"
+                sx={{ textTransform: 'uppercase' }}
+                text={`${t('activityFlow.facilitate.final')} ${example.finalOutcome}`}
+              />
+            </ReviewSlot>
           )}
         </ExampleDetail>
       )}
@@ -189,7 +200,9 @@ export default function FacilitateView({
                   <MathTypography variant="rubikSubBold" component="h3" text={step.title} />
                   <GroupingOptions groupings={step.groupings} />
                 </RunStepTitleRow>
-                <MathTypography variant="smallBodyText" text={step.body} />
+                <ReviewSlot paths={[`content.howToRun[${index}].body`, `content.howToRun[${index}].title`]}>
+                  <MathTypography variant="smallBodyText" text={step.body} />
+                </ReviewSlot>
               </RunStepText>
             </RunStepItem>
           ))}

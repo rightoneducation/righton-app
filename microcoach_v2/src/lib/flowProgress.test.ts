@@ -38,6 +38,8 @@ const session = (overrides: Partial<IMicroCoachSession> = {}): IMicroCoachSessio
   selectedMisconceptionId: null,
   pregeneratedNextSteps: null,
   pipelineOutput: null,
+  mathCheck: null,
+  mathCorrect: null,
   evaluationResults: null,
   questionStats: [],
   reflectionResults: [],

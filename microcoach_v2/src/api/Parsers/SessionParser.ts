@@ -51,6 +51,8 @@ export class SessionParser {
       selectedMisconceptionId: session.selectedMisconceptionId ?? null,
       pregeneratedNextSteps: session.pregeneratedNextSteps ?? null,
       pipelineOutput: session.pipelineOutput ?? null,
+      mathCheck: session.mathCheck ?? null,
+      mathCorrect: session.mathCorrect ?? null,
       evaluationResults: session.evaluationResults ?? null,
       questionStats: (session.questionStats ?? [])
         .filter((stat): stat is NonNullable<typeof stat> => stat != null)

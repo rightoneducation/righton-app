@@ -67,6 +67,10 @@ import {
   ExamplePicker,
   useArtifactView,
 } from './ArtifactParts';
+import { ReviewCountFlag, ReviewSlot } from './ReviewSlot';
+
+/** The paths of an item's own fields, for a ReviewSlot. */
+const fieldsOf = (base: string, fields: string[]) => fields.map((field) => `${base}.${field}`);
 
 /*
  * The Facilitate artifact for Compare the Thinking, Make Your Case, Math
@@ -107,26 +111,31 @@ function WorkLine({
   text,
   status,
   isTeacher,
+  path,
 }: {
   text: string;
   status: WorkStatus;
   isTeacher: boolean;
+  // The line's path in the activity, for the review layer.
+  path: string;
 }) {
   return (
-    <StepRow
-      isError={isTeacher && status === 'INCORRECT'}
-      isCorrect={isTeacher && status === 'CORRECT'}
-      // These rows carry no step chip, so neither the pill radius, its 29px
-      // floor nor its inset apply.
-      sx={{ px: 1, pt: 0, borderRadius: 0, minHeight: 0 }}
-    >
-      {/* Figma (My Favorite No): the student work is 14. */}
-      <MathTypography
-        variant="smallBodyText"
-        sx={{ color: navy }}
-        text={isTeacher ? withWorkMark(text, status) : studentWorkText(text)}
-      />
-    </StepRow>
+    <ReviewSlot paths={fieldsOf(path, ['text', 'status'])}>
+      <StepRow
+        isError={isTeacher && status === 'INCORRECT'}
+        isCorrect={isTeacher && status === 'CORRECT'}
+        // These rows carry no step chip, so neither the pill radius, its 29px
+        // floor nor its inset apply.
+        sx={{ px: 1, pt: 0, borderRadius: 0, minHeight: 0 }}
+      >
+        {/* Figma (My Favorite No): the student work is 14. */}
+        <MathTypography
+          variant="smallBodyText"
+          sx={{ color: navy }}
+          text={isTeacher ? withWorkMark(text, status) : studentWorkText(text)}
+        />
+      </StepRow>
+    </ReviewSlot>
   );
 }
 
@@ -160,7 +169,9 @@ export function CompareThinkingPanel({
           <Typography variant="rubikBody" sx={{ color: navy }}>
             {t('activityFlow.facilitate.problem')}
           </Typography>
-          <MathTypography variant="headingMd" sx={{ color: navy }} text={facilitate.problem} />
+          <ReviewSlot paths="content.facilitate.problem">
+            <MathTypography variant="headingMd" sx={{ color: navy }} text={facilitate.problem} />
+          </ReviewSlot>
         </Box>
         <Stack
           direction={props.screenSize === ScreenSize.SMALL ? 'column' : 'row'}
@@ -169,66 +180,80 @@ export function CompareThinkingPanel({
             <Divider orientation="vertical" flexItem sx={{ borderColor: 'designSystem.background.navyBlue' }} />
           }
         >
-          {strategies.map((strategy) => (
-            <Stack key={strategy.label} spacing={`${theme.sizing.space1}px`} sx={{ flex: 1, minWidth: 0 }}>
-              <Stack
-                direction="row"
-                alignItems="flex-start"
-                justifyContent="space-between"
-                spacing={`${theme.sizing.space2}px`}
-              >
-                <ColumnBadge
-                  isCorrect={strategy.verdict !== 'INCORRECT'}
-                  isRevealed={isTeacher && strategy.verdict !== null}
-                >
-                  {strategy.label}
-                </ColumnBadge>
-                {isTeacher && strategy.verdict && (
-                  <VerdictChip tone={strategy.verdict === 'INCORRECT' ? 'wrong' : 'correct'}>
-                    {t(`activityFlow.facilitate.strategyVerdict.${strategy.verdict}`)}
-                  </VerdictChip>
-                )}
-              </Stack>
-              {strategy.steps.map((step) => {
-                let mark = '';
-                if (isTeacher && step.highlight === 'ERROR') mark = '✗';
-                if (isTeacher && step.highlight === 'SUCCESS') mark = '✓';
-                return (
-                  <StepRow
-                    key={step.step}
-                    isError={isTeacher && step.highlight === 'ERROR'}
-                    isCorrect={isTeacher && step.highlight === 'SUCCESS'}
-                  >
-                    <StepChip>{t('activityDetail.stepNumber', { number: step.step })}</StepChip>
-                    <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <MathTypography variant="rubikBody" sx={{ color: navy }} text={step.text} suffix={mark} />
-                    </Box>
-                  </StepRow>
-                );
-              })}
-              {isTeacher &&
-                strategy.notes.map((note) => (
+          {strategies.map((strategy) => {
+            // The teacher view reorders the strategies: paths use the stored order.
+            const strategyPath = `content.facilitate.strategies[${facilitate.strategies.indexOf(strategy)}]`;
+            return (
+              <Stack key={strategy.label} spacing={`${theme.sizing.space1}px`} sx={{ flex: 1, minWidth: 0 }}>
+                <ReviewSlot paths={fieldsOf(strategyPath, ['verdict', 'label'])}>
                   <Stack
-                    key={`${note.heading ?? ''}${note.text.slice(0, 24)}`}
                     direction="row"
                     alignItems="flex-start"
-                    spacing={`${theme.sizing.space1}px`}
-                    sx={{ pt: `${theme.sizing.space1}px` }}
+                    justifyContent="space-between"
+                    spacing={`${theme.sizing.space2}px`}
                   >
-                    <ToneIcon tone={note.tone} />
-                    <Box sx={{ minWidth: 0 }}>
-                      {/* Figma (Compare the Thinking Teacher2): "WHY IT WORKS:" Rubik 16/500, text 16. */}
-                      {note.heading && (
-                        <Typography variant="rubikLabel" sx={{ color: navy, textTransform: 'uppercase' }}>
-                          <MathText text={note.heading.replace(/:$/, '')} inline />:
-                        </Typography>
-                      )}
-                      <MathTypography variant="rubikBody" sx={{ color: navy }} text={note.text} />
-                    </Box>
+                    <ColumnBadge
+                      isCorrect={strategy.verdict !== 'INCORRECT'}
+                      isRevealed={isTeacher && strategy.verdict !== null}
+                    >
+                      {strategy.label}
+                    </ColumnBadge>
+                    {isTeacher && strategy.verdict && (
+                      <VerdictChip tone={strategy.verdict === 'INCORRECT' ? 'wrong' : 'correct'}>
+                        {t(`activityFlow.facilitate.strategyVerdict.${strategy.verdict}`)}
+                      </VerdictChip>
+                    )}
                   </Stack>
-                ))}
-            </Stack>
-          ))}
+                </ReviewSlot>
+                {strategy.steps.map((step, stepIndex) => {
+                  let mark = '';
+                  if (isTeacher && step.highlight === 'ERROR') mark = '✗';
+                  if (isTeacher && step.highlight === 'SUCCESS') mark = '✓';
+                  return (
+                    <ReviewSlot
+                      key={step.step}
+                      paths={fieldsOf(`${strategyPath}.steps[${stepIndex}]`, ['text', 'highlight', 'step'])}
+                    >
+                      <StepRow
+                        isError={isTeacher && step.highlight === 'ERROR'}
+                        isCorrect={isTeacher && step.highlight === 'SUCCESS'}
+                      >
+                        <StepChip>{t('activityDetail.stepNumber', { number: step.step })}</StepChip>
+                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                          <MathTypography variant="rubikBody" sx={{ color: navy }} text={step.text} suffix={mark} />
+                        </Box>
+                      </StepRow>
+                    </ReviewSlot>
+                  );
+                })}
+                {isTeacher &&
+                  strategy.notes.map((note) => (
+                    <ReviewSlot
+                      key={`${note.heading ?? ''}${note.text.slice(0, 24)}`}
+                      paths={fieldsOf(`${strategyPath}.notes[${strategy.notes.indexOf(note)}]`, ['text', 'heading', 'tone'])}
+                    >
+                      <Stack
+                        direction="row"
+                        alignItems="flex-start"
+                        spacing={`${theme.sizing.space1}px`}
+                        sx={{ pt: `${theme.sizing.space1}px` }}
+                      >
+                        <ToneIcon tone={note.tone} />
+                        <Box sx={{ minWidth: 0 }}>
+                          {/* Figma (Compare the Thinking Teacher2): "WHY IT WORKS:" Rubik 16/500, text 16. */}
+                          {note.heading && (
+                            <Typography variant="rubikLabel" sx={{ color: navy, textTransform: 'uppercase' }}>
+                              <MathText text={note.heading.replace(/:$/, '')} inline />:
+                            </Typography>
+                          )}
+                          <MathTypography variant="rubikBody" sx={{ color: navy }} text={note.text} />
+                        </Box>
+                      </Stack>
+                    </ReviewSlot>
+                  ))}
+              </Stack>
+            );
+          })}
         </Stack>
       </ContentPanel>
     </FlowCard>
@@ -241,7 +266,16 @@ const CLAIM_OPTIONS = ['TRUE', 'FALSE', 'CONDITIONAL'] as const;
 const VOTE_OPTIONS = ['YES', 'NO', 'UNDECIDED'] as const;
 
 /** Student view: a heading pill over its numbered list. */
-function NumberedList({ title, items }: { title: string; items: string[] }) {
+function NumberedList({
+  title,
+  items,
+  pathOf,
+}: {
+  title: string;
+  items: string[];
+  // Each item's path in the activity, for the review layer.
+  pathOf: (index: number) => string;
+}) {
   return (
     <StudentColumn>
       <SectionPill>{title}</SectionPill>
@@ -249,7 +283,9 @@ function NumberedList({ title, items }: { title: string; items: string[] }) {
         {items.map((item, index) => (
           <StudentListItem key={item}>
             <StepBadge aria-hidden>{index + 1}</StepBadge>
-            <MathTypography variant="rubikBody" component="span" sx={{ color: navy }} text={item} />
+            <ReviewSlot paths={pathOf(index)}>
+              <MathTypography variant="rubikBody" component="span" sx={{ color: navy }} text={item} />
+            </ReviewSlot>
           </StudentListItem>
         ))}
       </StudentList>
@@ -280,7 +316,9 @@ export function MakeYourCasePanel({
         <ClaimBoxSection>
           <ClaimHeading>
             <Typography variant="rubikBody">{t('activityFlow.facilitate.claim')}</Typography>
-            <MathTypography variant="headingMd" text={`"${facilitate.claim}"`} />
+            <ReviewSlot paths="content.facilitate.claim">
+              <MathTypography variant="headingMd" text={`"${facilitate.claim}"`} />
+            </ReviewSlot>
           </ClaimHeading>
           <ClaimOptions>
             {isTeacher
@@ -297,7 +335,9 @@ export function MakeYourCasePanel({
                     <ClaimAnswerBand key={option}>
                       <Typography variant="rubikBody">{`${label} ✓`}</Typography>
                       <Typography variant="rubikLabel">{t('activityFlow.facilitate.why')}</Typography>
-                      <MathTypography variant="rubikBody" text={resolution.why} />
+                      <ReviewSlot paths={['content.facilitate.resolution.why', 'content.facilitate.resolution.verdict']}>
+                        <MathTypography variant="rubikBody" text={resolution.why} />
+                      </ReviewSlot>
                     </ClaimAnswerBand>
                   );
                 })
@@ -316,21 +356,30 @@ export function MakeYourCasePanel({
               <BringInList>
                 {facilitate.examples.map((example, index) => (
                   <BringInItem key={example.prompt}>
-                    <MathTypography variant="rubikBody" text={`${index + 1}. ${example.prompt}`} />
-                    <MathTypography
-                      variant="rubikBody"
-                      text={t('activityFlow.facilitate.exampleAnswer', { answer: example.answer })}
-                    />
+                    <ReviewSlot paths={`content.facilitate.examples[${index}].prompt`}>
+                      <MathTypography variant="rubikBody" text={`${index + 1}. ${example.prompt}`} />
+                    </ReviewSlot>
+                    <ReviewSlot paths={`content.facilitate.examples[${index}].answer`}>
+                      <MathTypography
+                        variant="rubikBody"
+                        text={t('activityFlow.facilitate.exampleAnswer', { answer: example.answer })}
+                      />
+                    </ReviewSlot>
                   </BringInItem>
                 ))}
               </BringInList>
             </>
           ) : (
             <StudentColumns screenSize={props.screenSize}>
-              <NumberedList title={t('activityFlow.facilitate.stepsToFollow')} items={facilitate.studentSteps} />
+              <NumberedList
+                title={t('activityFlow.facilitate.stepsToFollow')}
+                items={facilitate.studentSteps}
+                pathOf={(index) => `content.facilitate.studentSteps[${index}]`}
+              />
               <NumberedList
                 title={t('activityFlow.facilitate.examplesToTry')}
                 items={facilitate.examples.map((example) => example.prompt)}
+                pathOf={(index) => `content.facilitate.examples[${index}].prompt`}
               />
             </StudentColumns>
           )}
@@ -367,20 +416,26 @@ export function MathDetectivePanel({
       : null,
   }));
 
+  const examplePath = `content.facilitate.examples[${index}]`;
   const stepRow = (step: (typeof steps)[number]) => {
     const isMarked = isTeacher && step.evidenceNumber !== null;
     return (
-      <StepRow key={step.number} isEvidence={isMarked}>
-        <StepChip>{t('activityDetail.stepNumber', { number: step.number })}</StepChip>
-        <Box sx={{ flex: 1, minWidth: 0 }}>
-          <MathTypography variant="smallBodyText" text={step.text} />
-        </Box>
-        {isMarked && (
-          <EvidenceTagSlot>
-            <EvidenceTag>{t(`${copy}.evidenceTag`, { number: step.evidenceNumber })}</EvidenceTag>
-          </EvidenceTagSlot>
-        )}
-      </StepRow>
+      <ReviewSlot
+        key={step.number}
+        paths={fieldsOf(`${examplePath}.workSummary[${step.number - 1}]`, ['text', 'status', 'isEvidence'])}
+      >
+        <StepRow isEvidence={isMarked}>
+          <StepChip>{t('activityDetail.stepNumber', { number: step.number })}</StepChip>
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <MathTypography variant="smallBodyText" text={step.text} />
+          </Box>
+          {isMarked && (
+            <EvidenceTagSlot>
+              <EvidenceTag>{t(`${copy}.evidenceTag`, { number: step.evidenceNumber })}</EvidenceTag>
+            </EvidenceTagSlot>
+          )}
+        </StepRow>
+      </ReviewSlot>
     );
   };
 
@@ -408,10 +463,12 @@ export function MathDetectivePanel({
             <Typography variant="headingSm">
               {t(`${copy}.${isTeacher ? 'focusTeacher' : 'focusStudent'}`)}
             </Typography>
-            <Typography variant="smallBodyText" component="div">
-              <strong>{t(`${copy}.issue`)}</strong>{' '}
-              <MathText text={issue} inline />
-            </Typography>
+            <ReviewSlot paths="content.facilitate.issue">
+              <Typography variant="smallBodyText" component="div">
+                <strong>{t(`${copy}.issue`)}</strong>{' '}
+                <MathText text={issue} inline />
+              </Typography>
+            </ReviewSlot>
           </DetectiveCard>
         )}
         <DetectiveCard>
@@ -431,13 +488,16 @@ export function MathDetectivePanel({
                 {t('activityFlow.facilitate.exampleLabel', { number: tileIndex + 1 })}
               </Typography>
               <ExampleQuestion boldMath variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
+              <ReviewCountFlag prefix={`content.facilitate.examples[${tileIndex}]`} />
             </>
           )}
         />
         {example && (
           <DetectiveExample aria-live="polite">
             <ExampleOfHeading index={index} count={examples.length} />
-            <ExampleQuestion boldMath variant="rubikSubBold" text={example.prompt} />
+            <ReviewSlot paths={fieldsOf(examplePath, ['prompt', 'problem'])}>
+              <ExampleQuestion boldMath variant="rubikSubBold" text={example.prompt} />
+            </ReviewSlot>
             {isTeacher ? (
               <DetectiveColumns screenSize={props.screenSize}>
                 <DetectiveColumn>
@@ -450,8 +510,10 @@ export function MathDetectivePanel({
                     <EvidenceNotesPanel>
                       <Typography variant="rubikSubBold">{t(`${copy}.evidenceInResponse`)}</Typography>
                       <EvidenceNotesList>
-                        {example.evidenceNotes?.map((note) => (
-                          <MathTypography key={note.text} variant="smallBodyText" text={note.text} />
+                        {example.evidenceNotes?.map((note, noteIndex) => (
+                          <ReviewSlot key={note.text} paths={`${examplePath}.evidenceNotes[${noteIndex}].text`}>
+                            <MathTypography variant="smallBodyText" text={note.text} />
+                          </ReviewSlot>
                         ))}
                       </EvidenceNotesList>
                     </EvidenceNotesPanel>
@@ -485,26 +547,35 @@ export function MathDetectivePanel({
             <Typography variant="headingMd" component="h3">{t(`${copy}.stagesTitle`)}</Typography>
             <Typography variant="microLabel">{t(`${copy}.stagesSubtitle`)}</Typography>
           </DetectiveSectionHeading>
-          {example.stages.map((stage) => (
-            <DetectiveCard key={stage.kind}>
-              {isTeacher ? (
-                <>
-                  <Typography variant="smallBodyText">
-                    {t(`activityFlow.facilitate.stage.${stage.kind}`)}
-                  </Typography>
-                  <MathTypography variant="headingMd" text={stage.ask} />
-                  <Divider sx={{ borderColor: 'designSystem.foreground.greyAccent' }} />
-                  <Typography variant="headingSm">{t(`${copy}.potentialAnswer`)}</Typography>
-                  <MathTypography variant="smallBodyText" text={stage.answer} />
-                </>
-              ) : (
-                <MathTypography
-                  variant="headingSm"
-                  text={`${t(`activityFlow.facilitate.stage.${stage.kind}`)}: ${stage.ask}`}
-                />
-              )}
-            </DetectiveCard>
-          ))}
+          {example.stages.map((stage, stageIndex) => {
+            const stagePath = `${examplePath}.stages[${stageIndex}]`;
+            return (
+              <DetectiveCard key={stage.kind}>
+                {isTeacher ? (
+                  <>
+                    <Typography variant="smallBodyText">
+                      {t(`activityFlow.facilitate.stage.${stage.kind}`)}
+                    </Typography>
+                    <ReviewSlot paths={fieldsOf(stagePath, ['ask', 'kind'])}>
+                      <MathTypography variant="headingMd" text={stage.ask} />
+                    </ReviewSlot>
+                    <Divider sx={{ borderColor: 'designSystem.foreground.greyAccent' }} />
+                    <Typography variant="headingSm">{t(`${copy}.potentialAnswer`)}</Typography>
+                    <ReviewSlot paths={`${stagePath}.answer`}>
+                      <MathTypography variant="smallBodyText" text={stage.answer} />
+                    </ReviewSlot>
+                  </>
+                ) : (
+                  <ReviewSlot paths={fieldsOf(stagePath, ['ask', 'kind'])}>
+                    <MathTypography
+                      variant="headingSm"
+                      text={`${t(`activityFlow.facilitate.stage.${stage.kind}`)}: ${stage.ask}`}
+                    />
+                  </ReviewSlot>
+                )}
+              </DetectiveCard>
+            );
+          })}
         </DetectiveSection>
       )}
       <ExamplePager index={index} count={examples.length} onChange={setIndex} />
@@ -545,6 +616,7 @@ export function FavoriteNoPanel({
               {t('activityFlow.facilitate.exampleLabel', { number: tileIndex + 1 })}
             </Typography>
             <ExampleQuestion boldMath variant="rubikSubBold" component="span" text={examples[tileIndex].problem} />
+            <ReviewCountFlag prefix={`content.facilitate.examples[${tileIndex}]`} />
           </>
         )}
       />
@@ -561,7 +633,9 @@ export function FavoriteNoPanel({
             {/* Figma (My Favorite No Teacher): Poppins 16/600. */}
             <Typography variant="headingSm">{t('activityFlow.facilitate.anonymousResponse')}</Typography>
           </Stack>
-          <ExampleQuestion boldMath variant="rubikSubBold" text={example.prompt} />
+          <ReviewSlot paths={fieldsOf(`content.facilitate.examples[${index}]`, ['prompt', 'problem'])}>
+            <ExampleQuestion boldMath variant="rubikSubBold" text={example.prompt} />
+          </ReviewSlot>
           <Stack
             direction={props.screenSize === ScreenSize.SMALL ? 'column' : 'row'}
             spacing={`${theme.sizing.space5}px`}
@@ -570,8 +644,14 @@ export function FavoriteNoPanel({
               <Typography variant="rubikSubBold" sx={{ color: navy }}>
                 {t('activityFlow.facilitate.studentWork')}
               </Typography>
-              {example.work.map((line) => (
-                <WorkLine key={line.text} text={line.text} status={line.status} isTeacher={isTeacher} />
+              {example.work.map((line, lineIndex) => (
+                <WorkLine
+                  key={line.text}
+                  text={line.text}
+                  status={line.status}
+                  isTeacher={isTeacher}
+                  path={`content.facilitate.examples[${index}].work[${lineIndex}]`}
+                />
               ))}
             </Stack>
             {isTeacher && (
@@ -580,10 +660,16 @@ export function FavoriteNoPanel({
                   {t('activityFlow.facilitate.whatToNotice')}
                 </Typography>
                 {notice.map((item) => (
-                  <Stack key={item.text} direction="row" alignItems="flex-start" spacing={`${theme.sizing.space1}px`}>
-                    <ToneIcon tone={item.kind === 'PRESERVE' ? 'SUCCESS' : 'ERROR'} />
-                    <MathTypography variant="smallBodyText" sx={{ color: navy }} text={item.text} />
-                  </Stack>
+                  <ReviewSlot
+                    key={item.text}
+                    // Sorted for display: the path uses the stored order.
+                    paths={fieldsOf(`content.facilitate.examples[${index}].notice[${example.notice.indexOf(item)}]`, ['text', 'kind'])}
+                  >
+                    <Stack direction="row" alignItems="flex-start" spacing={`${theme.sizing.space1}px`}>
+                      <ToneIcon tone={item.kind === 'PRESERVE' ? 'SUCCESS' : 'ERROR'} />
+                      <MathTypography variant="smallBodyText" sx={{ color: navy }} text={item.text} />
+                    </Stack>
+                  </ReviewSlot>
                 ))}
               </Stack>
             )}
@@ -591,7 +677,9 @@ export function FavoriteNoPanel({
           {isTeacher && (
             <PromptBand tone="grey">
               <InfoOutlinedIcon sx={{ color: navy, flexShrink: 0 }} />
-              <MathTypography variant="rubikBody" sx={{ color: navy }} text={example.sourceNote} />
+              <ReviewSlot paths={`content.facilitate.examples[${index}].sourceNote`}>
+                <MathTypography variant="rubikBody" sx={{ color: navy }} text={example.sourceNote} />
+              </ReviewSlot>
             </PromptBand>
           )}
         </ExampleDetail>

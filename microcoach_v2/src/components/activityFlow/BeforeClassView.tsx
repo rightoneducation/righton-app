@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import { IActivityContent } from '../../lib/ActivityContentModels';
 import MathTypography from '../MathTypography';
 import { GroupingSequenceChips } from '../GroupingChips';
+import { ReviewSlot } from './ReviewSlot';
 import {
   DurationChip,
   StepBadge,
@@ -50,7 +51,9 @@ export default function BeforeClassView({ content }: BeforeClassViewProps) {
           {content.beforeClass.steps.map((step, index) => (
             <ChecklistItem key={step}>
               <StepBadge aria-hidden>{index + 1}</StepBadge>
-              <MathTypography variant="rubikBody" component="span" text={step} />
+              <ReviewSlot paths={`content.beforeClass.steps[${index}]`}>
+                <MathTypography variant="rubikBody" component="span" text={step} />
+              </ReviewSlot>
             </ChecklistItem>
           ))}
         </Checklist>
@@ -63,7 +66,9 @@ export default function BeforeClassView({ content }: BeforeClassViewProps) {
           </Typography>
           <GroupingSequenceChips steps={content.howToRun} />
         </GroupingHeader>
-        <MathTypography variant="rubikBody" text={content.beforeClass.groupingRationale} />
+        <ReviewSlot paths="content.beforeClass.groupingRationale">
+          <MathTypography variant="rubikBody" text={content.beforeClass.groupingRationale} />
+        </ReviewSlot>
       </FlowCard>
     </PhaseCards>
   );

@@ -30,6 +30,20 @@ export interface ISessionAPIClient {
   // uploading teacher is emailed, server-side (microcoachv2EmailTeacher).
   // Resolves to the session's publishStatus after the call.
   publishSession(sessionId: string): Promise<PublishStatus | null>;
+  // The reviewer's Check math (/prepublishreview): marks the session's
+  // mathCheck RUNNING and starts the check server-side
+  // (microcoachv2FinalMathCheck), returning at once. Poll getSession for the
+  // result. Resolves to the session's mathCheck JSON after the call.
+  checkSessionMath(sessionId: string): Promise<string | null>;
+  // The reviewer's Correct: fixes the chosen issues server-side
+  // (microcoachv2FinalMathCorrect) and re-checks them, returning at once.
+  // `issues` is JSON: [{ kind, misconceptionIndex, activityIndex, rowId }].
+  // Resolves to the session's mathCorrect JSON after the call.
+  correctSessionMath(sessionId: string, issues: string): Promise<string | null>;
+  // The reviewer's hand edits, written before Publish. `edits` is JSON:
+  // [{ kind, misconceptionIndex, activityIndex, rowId, value }]. Resolves to
+  // the session as it is after the edits.
+  applySessionEdits(sessionId: string, edits: string): Promise<IMicroCoachSession | null>;
   // Writes only publishStatus. Not for publishing: that emails the teacher,
   // so it goes through publishSession.
   setPublishStatus(

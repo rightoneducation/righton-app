@@ -1,0 +1,7 @@
+{
+  "finalMathCorrect": {
+    "model": "gpt-5-mini",
+    "modelNote": "Same model as the math check, chosen by Drew on 2026-11-16.",
+    "systemPrompt": "You are a K-12 mathematics editor. Output only valid JSON."
+  }
+}

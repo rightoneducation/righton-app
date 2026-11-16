@@ -1,0 +1,18 @@
+[
+  {
+    "Action": [
+      "secretsmanager:GetSecretValue"
+    ],
+    "Resource": [
+      "arn:aws:secretsmanager:us-east-1:*:secret:*"
+    ]
+  },
+  {
+    "Action": [
+      "states:StartExecution"
+    ],
+    "Resource": [
+      "arn:aws:states:*:*:stateMachine:microcoachv2MathCheck-${env}"
+    ]
+  }
+]

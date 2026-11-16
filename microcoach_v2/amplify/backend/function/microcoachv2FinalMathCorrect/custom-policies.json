@@ -1,0 +1,19 @@
+[
+  {
+    "Action": [
+      "secretsmanager:GetSecretValue"
+    ],
+    "Resource": [
+      "arn:aws:secretsmanager:us-east-1:*:secret:*"
+    ]
+  },
+  {
+    "Action": [
+      "lambda:InvokeFunction"
+    ],
+    "Resource": [
+      "arn:aws:lambda:*:*:function:microcoachv2FinalMathCorrect-${env}",
+      "arn:aws:lambda:*:*:function:microcoachv2FinalMathCheck-${env}"
+    ]
+  }
+]

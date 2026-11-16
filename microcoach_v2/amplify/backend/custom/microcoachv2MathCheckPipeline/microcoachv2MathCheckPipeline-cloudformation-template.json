@@ -1,0 +1,221 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "env": {
+      "Type": "String"
+    },
+    "functionmicrocoachv2FinalMathCheckName": {
+      "Type": "String",
+      "Description": "Input parameter describing Name attribute for function/microcoachv2FinalMathCheck resource"
+    },
+    "functionmicrocoachv2FinalMathCheckArn": {
+      "Type": "String",
+      "Description": "Input parameter describing Arn attribute for function/microcoachv2FinalMathCheck resource"
+    },
+    "functionmicrocoachv2FinalMathCheckRegion": {
+      "Type": "String",
+      "Description": "Input parameter describing Region attribute for function/microcoachv2FinalMathCheck resource"
+    },
+    "functionmicrocoachv2FinalMathCheckLambdaExecutionRole": {
+      "Type": "String",
+      "Description": "Input parameter describing LambdaExecutionRole attribute for function/microcoachv2FinalMathCheck resource"
+    },
+    "functionmicrocoachv2FinalMathCheckLambdaExecutionRoleArn": {
+      "Type": "String",
+      "Description": "Input parameter describing LambdaExecutionRoleArn attribute for function/microcoachv2FinalMathCheck resource"
+    }
+  },
+  "Resources": {
+    "StateMachineRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "states.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "InvokeRunner",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "lambda:InvokeFunction",
+                  "Resource": {
+                    "Ref": "functionmicrocoachv2FinalMathCheckArn"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "StateMachine": {
+      "Type": "AWS::StepFunctions::StateMachine",
+      "Properties": {
+        "StateMachineName": {
+          "Fn::Sub": "microcoachv2MathCheck-${env}"
+        },
+        "StateMachineType": "STANDARD",
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "StateMachineRole",
+            "Arn"
+          ]
+        },
+        "DefinitionSubstitutions": {
+          "RunnerArn": {
+            "Ref": "functionmicrocoachv2FinalMathCheckArn"
+          }
+        },
+        "Definition": {
+          "Comment": "MicroCoach v2 Check math on /prepublishreview: one misconception or activity per Lambda invocation",
+          "StartAt": "Prepare",
+          "TimeoutSeconds": 1800,
+          "States": {
+            "Prepare": {
+              "Type": "Task",
+              "Resource": "${RunnerArn}",
+              "Parameters": {
+                "sessionId.$": "$.sessionId",
+                "runId.$": "$$.Execution.Name",
+                "step": "prepare"
+              },
+              "ResultPath": "$.prepared",
+              "TimeoutSeconds": 60,
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error",
+                  "Next": "Fail"
+                }
+              ],
+              "Next": "Items"
+            },
+            "Items": {
+              "Type": "Map",
+              "ItemsPath": "$.prepared.items",
+              "MaxConcurrency": 3,
+              "Parameters": {
+                "sessionId.$": "$.sessionId",
+                "kind.$": "$$.Map.Item.Value.kind",
+                "i.$": "$$.Map.Item.Value.i",
+                "j.$": "$$.Map.Item.Value.j"
+              },
+              "Iterator": {
+                "StartAt": "CheckItem",
+                "States": {
+                  "CheckItem": {
+                    "Type": "Task",
+                    "Resource": "${RunnerArn}",
+                    "Parameters": {
+                      "sessionId.$": "$.sessionId",
+                      "runId.$": "$$.Execution.Name",
+                      "step": "item",
+                      "kind.$": "$.kind",
+                      "i.$": "$.i",
+                      "j.$": "$.j"
+                    },
+                    "TimeoutSeconds": 630,
+                    "Catch": [
+                      {
+                        "ErrorEquals": [
+                          "States.ALL"
+                        ],
+                        "ResultPath": "$.error",
+                        "Next": "Unchecked"
+                      }
+                    ],
+                    "End": true
+                  },
+                  "Unchecked": {
+                    "Type": "Pass",
+                    "Parameters": {
+                      "kind.$": "$.kind",
+                      "i.$": "$.i",
+                      "j.$": "$.j",
+                      "unchecked": true,
+                      "error.$": "$.error"
+                    },
+                    "End": true
+                  }
+                }
+              },
+              "ResultPath": "$.results",
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error",
+                  "Next": "Fail"
+                }
+              ],
+              "Next": "Finalize"
+            },
+            "Finalize": {
+              "Type": "Task",
+              "Resource": "${RunnerArn}",
+              "Parameters": {
+                "sessionId.$": "$.sessionId",
+                "runId.$": "$$.Execution.Name",
+                "step": "finalize",
+                "results.$": "$.results"
+              },
+              "ResultPath": "$.result",
+              "TimeoutSeconds": 60,
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error",
+                  "Next": "Fail"
+                }
+              ],
+              "End": true
+            },
+            "Fail": {
+              "Type": "Task",
+              "Resource": "${RunnerArn}",
+              "Parameters": {
+                "sessionId.$": "$.sessionId",
+                "runId.$": "$$.Execution.Name",
+                "step": "fail",
+                "error.$": "$.error"
+              },
+              "ResultPath": "$.failed",
+              "TimeoutSeconds": 60,
+              "Next": "Failed"
+            },
+            "Failed": {
+              "Type": "Fail",
+              "Error": "MathCheckFailed",
+              "Cause": "A step failed or timed out. See the session's mathCheck.error."
+            }
+          }
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "StateMachineArn": {
+      "Value": {
+        "Ref": "StateMachine"
+      }
+    }
+  },
+  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"12.1.1\",\"stackType\":\"custom-customCloudformation\",\"metadata\":{}}"
+}

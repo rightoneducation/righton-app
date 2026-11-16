@@ -1,4 +1,10 @@
 import {
+  ApplySessionEditsMutation,
+  ApplySessionEditsMutationVariables,
+  CheckSessionMathMutation,
+  CheckSessionMathMutationVariables,
+  CorrectSessionMathMutation,
+  CorrectSessionMathMutationVariables,
   CreateMicroCoachSessionMutation,
   CreateMicroCoachSessionMutationVariables,
   DeleteMicroCoachSessionMutation,
@@ -13,6 +19,9 @@ import {
   UpdateMicroCoachSessionMutationVariables,
 } from "../../../AWSAPI";
 import {
+  applySessionEdits,
+  checkSessionMath,
+  correctSessionMath,
   createMicroCoachSession,
   deleteMicroCoachSession,
   updateMicroCoachSession,
@@ -176,6 +185,34 @@ export class SessionAPIClient
       { sessionId } as unknown as GraphQLOptions,
     );
     return res?.data?.publishSession?.publishStatus ?? null;
+  }
+
+  async checkSessionMath(sessionId: string): Promise<string | null> {
+    const variables: CheckSessionMathMutationVariables = { sessionId };
+    const res = await this.mutateGraphQL<CheckSessionMathMutation>(
+      checkSessionMath,
+      variables as unknown as GraphQLOptions,
+    );
+    return res?.data?.checkSessionMath?.mathCheck ?? null;
+  }
+
+  async correctSessionMath(sessionId: string, issues: string): Promise<string | null> {
+    const variables: CorrectSessionMathMutationVariables = { sessionId, issues };
+    const res = await this.mutateGraphQL<CorrectSessionMathMutation>(
+      correctSessionMath,
+      variables as unknown as GraphQLOptions,
+    );
+    return res?.data?.correctSessionMath?.mathCorrect ?? null;
+  }
+
+  async applySessionEdits(sessionId: string, edits: string): Promise<IMicroCoachSession | null> {
+    const variables: ApplySessionEditsMutationVariables = { sessionId, edits };
+    const res = await this.mutateGraphQL<ApplySessionEditsMutation>(
+      applySessionEdits,
+      variables as unknown as GraphQLOptions,
+    );
+    const updated = res?.data?.applySessionEdits;
+    return updated ? SessionParser.parseIMicroCoachSessionfromAWSSession(updated) : null;
   }
 
   async setPublishStatus(

@@ -25,10 +25,27 @@ export type AmplifyDependentResourcesAttributes = {
   "custom": {
     "microcoachv2GeneratePipeline": {
       "StateMachineArn": "string"
+    },
+    "microcoachv2MathCheckPipeline": {
+      "StateMachineArn": "string"
     }
   },
   "function": {
     "microcoachv2EmailTeacher": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "microcoachv2FinalMathCheck": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "microcoachv2FinalMathCorrect": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",

@@ -185,13 +185,22 @@
         "microcoachv2EmailTeacher": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
           "s3Key": "amplify-builds/microcoachv2EmailTeacher-4f4b747452654d6f395a-build.zip"
+        },
+        "microcoachv2FinalMathCheck": {
+          "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
+          "s3Key": "amplify-builds/microcoachv2FinalMathCheck-63596a52676a58317a77-build.zip"
+        },
+        "microcoachv2FinalMathCorrect": {
+          "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
+          "s3Key": "amplify-builds/microcoachv2FinalMathCorrect-615a747177664e4f3335-build.zip"
         }
       },
       "storage": {
         "microcoachuploads": {}
       },
       "custom": {
-        "microcoachv2GeneratePipeline": {}
+        "microcoachv2GeneratePipeline": {},
+        "microcoachv2MathCheckPipeline": {}
       }
     }
   }

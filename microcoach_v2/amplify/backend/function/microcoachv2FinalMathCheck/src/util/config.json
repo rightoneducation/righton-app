@@ -1,0 +1,7 @@
+{
+  "finalMathCheck": {
+    "model": "gpt-5.4-mini",
+    "reasoningEffort": "medium",
+    "systemPrompt": "You are a K-12 math accuracy reviewer. Output only valid JSON."
+  }
+}

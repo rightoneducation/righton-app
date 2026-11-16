@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MathTypography from '../MathTypography';
+import { ReviewSlot, useReviewLayer } from './ReviewSlot';
 import {
   IActivityContent,
   IDiscussionQuestion,
@@ -39,19 +40,23 @@ function Question({ item, number }: { item: IDiscussionQuestion; number: number 
     <QuestionCell>
       <QuestionBadge aria-hidden>{number}</QuestionBadge>
       {/* Rubik 20 (dev QA 2026-10-30; the frames drew 16); answers 14. */}
-      <MathTypography variant="h4" component="h3" text={item.question} />
+      <ReviewSlot paths={[`content.discussion.questions[${number - 1}].question`, `content.discussion.questions[${number - 1}].minutes`]}>
+        <MathTypography variant="h4" component="h3" text={item.question} />
+      </ReviewSlot>
     </QuestionCell>
   );
 }
 
-function Answer({ item }: { item: IDiscussionQuestion }) {
+function Answer({ item, index }: { item: IDiscussionQuestion; index: number }) {
   const { t } = useTranslation();
   return (
     <AnswerCell>
       <Typography variant="rubikSubBold" sx={{ color: 'designSystem.background.navyBlue' }}>
         {t('activityFlow.discussion.answer')}
       </Typography>
-      <MathTypography variant="smallBodyText" text={item.answer} />
+      <ReviewSlot paths={`content.discussion.questions[${index}].answer`}>
+        <MathTypography variant="smallBodyText" text={item.answer} />
+      </ReviewSlot>
     </AnswerCell>
   );
 }
@@ -66,7 +71,13 @@ interface WatchForCardProps {
 
 function WatchForCard({ item, index, rowTexts }: WatchForCardProps) {
   const { t } = useTranslation();
-  const [isOpen, setIsOpen] = React.useState(false);
+  const path = `content.discussion.watchFors[${index}]`;
+  const review = useReviewLayer();
+  // Under review, a card with an issue in Try asking or Respond with starts
+  // open, so the issue is in view. Without a review layer it starts closed.
+  const [isOpen, setIsOpen] = React.useState(
+    () => (review?.issueCount([`${path}.tryAsking`, `${path}.howToRespond`]) ?? 0) > 0,
+  );
   const detailId = `watch-for-${index}-detail`;
 
   return (
@@ -75,7 +86,9 @@ function WatchForCard({ item, index, rowTexts }: WatchForCardProps) {
         {t('activityFlow.discussion.watchFor')}
       </Typography>
       <WatchForTextStack>
-        <MathTypography variant="smallBodyText" text={item.watchFor} />
+        <ReviewSlot paths={`${path}.watchFor`}>
+          <MathTypography variant="smallBodyText" text={item.watchFor} />
+        </ReviewSlot>
         {rowTexts.map((text, textIndex) =>
           textIndex === index ? null : (
             // eslint-disable-next-line react/no-array-index-key -- texts can repeat; position is the identity
@@ -96,12 +109,16 @@ function WatchForCard({ item, index, rowTexts }: WatchForCardProps) {
         </TryAskingToggle>
         <Collapse in={isOpen} id={detailId}>
           <TryAskingDetail>
-            <MathTypography variant="rubikBody" text={item.tryAsking} />
+            <ReviewSlot paths={`${path}.tryAsking`}>
+              <MathTypography variant="rubikBody" text={item.tryAsking} />
+            </ReviewSlot>
             <TryAskingBlock>
               <Typography variant="headingSm" component="h4">
                 {t('activityFlow.discussion.respondWith')}
               </Typography>
-              <MathTypography variant="rubikBody" text={item.howToRespond} />
+              <ReviewSlot paths={`${path}.howToRespond`}>
+                <MathTypography variant="rubikBody" text={item.howToRespond} />
+              </ReviewSlot>
             </TryAskingBlock>
           </TryAskingDetail>
         </Collapse>
@@ -151,8 +168,8 @@ export default function DiscussionView({ content, screenSize }: DiscussionViewPr
                 <Question key={item.question} item={item} number={index + 1} />
               ))}
               <QuestionRule />
-              {questions.map((item) => (
-                <Answer key={item.question} item={item} />
+              {questions.map((item, index) => (
+                <Answer key={item.question} item={item} index={index} />
               ))}
             </>
           ) : (
@@ -160,7 +177,7 @@ export default function DiscussionView({ content, screenSize }: DiscussionViewPr
               <React.Fragment key={item.question}>
                 {index > 0 && <QuestionRule />}
                 <Question item={item} number={index + 1} />
-                <Answer item={item} />
+                <Answer item={item} index={index} />
               </React.Fragment>
             ))
           )}
@@ -184,7 +201,9 @@ export default function DiscussionView({ content, screenSize }: DiscussionViewPr
         <Typography id={takeawayTitleId} variant="headingLg" component="h2" sx={flowCardHeadingSx}>
           {t('activityFlow.discussion.takeaway')}
         </Typography>
-        <MathTypography variant="rubikBody" text={takeaway} />
+        <ReviewSlot paths="content.discussion.takeaway">
+          <MathTypography variant="rubikBody" text={takeaway} />
+        </ReviewSlot>
       </TakeawayBand>
     </PhaseCards>
   );

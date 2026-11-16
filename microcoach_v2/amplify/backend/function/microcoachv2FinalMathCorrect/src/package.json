@@ -1,0 +1,19 @@
+{
+  "name": "microcoachv2finalmathcorrect",
+  "version": "2.0.0",
+  "description": "The reviewer's Correct and hand edits on /prepublishreview: writes corrected values into a session's generated results and the teacher's rows",
+  "main": "index.mjs",
+  "type": "module",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.92"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1014.0",
+    "@aws-sdk/client-lambda": "^3.1014.0",
+    "@aws-sdk/client-secrets-manager": "^3.1014.0",
+    "@aws-sdk/lib-dynamodb": "^3.1014.0",
+    "openai": "^4.0.0",
+    "zod": "^3.0.0"
+  }
+}
