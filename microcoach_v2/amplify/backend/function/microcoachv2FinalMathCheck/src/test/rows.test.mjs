@@ -65,7 +65,7 @@ test('a field this file has never heard of is still a row', () => {
   assert.deepEqual(rows.map((r) => r.rowId), ['content.facilitate.type', 'content.facilitate.rounds[0].hint']);
 });
 
-test('the graph strategies nobody is shown are the one thing not read', () => {
+test('the graph strategies and the rubric are left out', () => {
   const misconception = {
     title: 'Sign not reversed',
     rubric: { total: 24.5, scores: { frequency: 2.5 } },
@@ -73,10 +73,10 @@ test('the graph strategies nobody is shown are the one thing not read', () => {
     graphStandard: { code: '7.EE.B.4', description: 'Solve inequalities', lvnFactors: [{ strategies: ['x', 'y'] }] },
   };
   assert.deepEqual(rowsOf(misconception).map((r) => r.rowId), [
-    'title', 'rubric.total', 'rubric.scores.frequency', 'isRecommendedFocus',
-    'graphStandard.code', 'graphStandard.description',
+    'title', 'isRecommendedFocus', 'graphStandard.code', 'graphStandard.description',
   ]);
   assert.deepEqual(shown(misconception).graphStandard, { code: '7.EE.B.4', description: 'Solve inequalities' });
+  assert.equal(shown(misconception).rubric, undefined);
 });
 
 test('row labels read as a place in the material', () => {

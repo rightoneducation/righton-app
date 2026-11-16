@@ -21,7 +21,6 @@ This is the analysis of one misconception, built from a class's answers to the a
 - title and description name the misconception: the mistaken reasoning, which is wrong by design. They are right when they describe reasoning that really is mistaken and that the linked answers show.
 - wrongAnswers link answer options to the misconception. Each explanation says what reasoning leads a student to that option; it is right when that reasoning does produce that option's value from the question.
 - studentCount, studentPercent, linkedResponses and meanConfidence are counts and averages from the class's responses, which are not shown here; check only that they agree with one another.
-- rubric scores the misconception for ranking: each score, its weighting and the total, and the reasons given for conceptual depth. Check the arithmetic between them and that the reasons are sound.
 - instructionalNeed and rationale say what the teacher needs to address and why; selectedTemplates says which activities were chosen and why. They are right when what they say about the mathematics is right.`.trim(),
 
   INCORRECT_WORKED_EXAMPLES: `
@@ -58,10 +57,10 @@ ${ACTIVITY_COMMON}`.trim(),
   MAKE_YOUR_CASE: `
 This is a Make Your Case activity: students argue whether a claim is true.
 - claim is the position students argue about. It may be true, false or true only under conditions — it is not asserted by the activity. It is right when it matches the activity's own resolution.
-- resolution.verdict (TRUE, FALSE or CONDITIONAL) and resolution.why are the activity's answer about the claim; they are meant to be correct.
+- resolution.verdict (TRUE, FALSE or CONDITIONAL) and resolution.why are the activity's answer about the claim as it is stated; they are meant to be correct. A claim that states its scope (all, every, always, never, there is) is TRUE when it holds across that whole scope and FALSE otherwise: one case that fails makes a claim about all cases FALSE, even though the relation inside it holds in some cases. CONDITIONAL is only for a claim that leaves its scope open, so that it holds in some cases and fails in others.
 - studentSteps tell students what to do; they make no claim.
 - examples are cases to bring in: prompt names the case; answer is the worked result and what it shows, meant to be correct.
-- arguments are positions a student might take: a SUPPORT argument may be one the mathematics refutes, and is right when it is a plausible argument for the claim; a CHALLENGE argument is meant to be mathematically correct.
+- arguments are positions a student might take. stance labels which side the text argues: SUPPORT argues the claim holds, CHALLENGE argues it does not, and the label is right when the text argues that side. A SUPPORT argument may be one the mathematics refutes, and is right when it is a plausible argument for the claim; a CHALLENGE argument is meant to be mathematically correct.
 ${ACTIVITY_COMMON}`.trim(),
 };
 

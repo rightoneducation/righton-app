@@ -7,10 +7,12 @@
  * the reviewer reads the material's own labels for that.
  */
 
-// The knowledge graph's learner-variability strategies: ~800 strings of
-// reference data per standard that neither the reviewer nor the teacher is
-// shown. The one thing left out.
-const NOT_SHOWN = new Set(['lvnFactors']);
+// Left out of the check:
+// - lvnFactors: the knowledge graph's learner-variability strategies, ~800
+//   strings of reference data per standard that nobody is shown.
+// - rubric: the ranking scorecard. Reviewer-only (the teacher never sees it),
+//   and computed in code, not written by a model (Drew, 2026-11-16).
+const NOT_SHOWN = new Set(['lvnFactors', 'rubric']);
 
 /** Every value in `value`, with the path it sits at. */
 export function rowsOf(value) {
@@ -68,8 +70,8 @@ export function rowLabel(path) {
 }
 
 /**
- * An activity's problems, as students are given them, for the blind solve: the
- * reviewer works these out before seeing any of the activity's own answers.
+ * An activity's problems, as students are given them. No longer used by the
+ * check (the blind solve was removed 2026-11-16); kept because its tests remain.
  */
 export function activityProblems(content) {
   const f = content?.facilitate ?? {};
@@ -85,7 +87,7 @@ export function activityProblems(content) {
 
 /**
  * The assessment questions a misconception was drawn from, with their options,
- * for the blind solve. Those its wrong answers link to; every question when it
+ * shown to the reviewer alongside it. Those its wrong answers link to; every question when it
  * links to none, since its text still describes the assessment.
  */
 export function misconceptionProblems(misconception, questions = []) {

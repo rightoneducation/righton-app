@@ -24,10 +24,10 @@ Amplify Params - DO NOT EDIT */
  *     machine and returns at once. The page polls the session.
  *   - The state machine, one step per invocation ({ sessionId, runId, step }):
  *       prepare   the items to check: each misconception, then its activities
- *       item      one item ({ kind, i, j }), in two model calls: solve its
- *                 problems blind, then audit every value in it against that
- *                 reference. A misconception's problems are the assessment
- *                 questions it was drawn from; an activity's are its own.
+ *       item      one item ({ kind, i, j }), in one model call: an expert
+ *                 review that reports only the errors it finds. A
+ *                 misconception is read with the assessment questions it was
+ *                 drawn from.
  *       finalize  mathCheck = DONE, with the issues
  *       fail      mathCheck = FAILED
  *     An item whose check throws is recorded as unchecked by the state machine
@@ -49,8 +49,8 @@ import { OpenAI } from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
 import { loadSecret } from './util/loadsecrets.mjs';
-import { rowsOf, shown, activityProblems, misconceptionProblems } from './util/rows.mjs';
-import { solvePromptFor, auditPromptFor } from './util/prompt.mjs';
+import { rowsOf, misconceptionProblems } from './util/rows.mjs';
+import { reviewPromptFor } from './util/prompt.mjs';
 import { guideFor } from './util/templateGuide.mjs';
 import { summarize, describeError, parseOutput, checkItems } from './util/results.mjs';
 
@@ -132,6 +132,7 @@ async function structuredCall(label, prompt, schema, name) {
     ],
     response_format: zodResponseFormat(schema, name),
   });
+  console.log(`${label}: usage ${JSON.stringify(completion.usage)}`);
   const choice = completion.choices[0];
   if (choice?.finish_reason === 'length') throw new Error(`${label}: the response was cut off`);
   if (choice?.message?.refusal) throw new Error(`${label}: the model declined: ${choice.message.refusal}`);
@@ -140,21 +141,11 @@ async function structuredCall(label, prompt, schema, name) {
   return schema.parse(JSON.parse(raw));
 }
 
-const Reference = z.object({
-  problems: z.array(z.object({
-    id: z.string().describe('The problem\'s id as listed, e.g. p0'),
-    solution: z.string().describe('The full correct solution with its working, or for a claim the decision and its justification'),
-    keyFacts: z.array(z.string()).describe('Facts a checker would need about this problem'),
-  })),
-});
-
-const RowVerdict = z.object({
-  claims: z.array(z.object({
-    claim: z.string().describe('The mathematical claim, in a few words'),
-    working: z.string().describe('Brief working that establishes whether it holds'),
-    holds: z.boolean().describe('Whether the claim holds for what this row is meant to be'),
-  })),
-  verdict: z.enum(['SOUND', 'UNSOUND', 'NO_CLAIM']),
+const Review = z.object({
+  issues: z.array(z.object({
+    row: z.string().describe('The id of the row that needs fixing, as listed, e.g. r12'),
+    why: z.string().describe('What is wrong and what is right, in one or two sentences a teacher can act on'),
+  })).describe('The errors found; empty when there are none'),
 });
 
 // ── Steps ────────────────────────────────────────────────────────────────────
@@ -215,35 +206,28 @@ async function assessmentQuestions(session) {
   return Item.questions ?? [];
 }
 
-/** Solve `problems` blind, then audit every value in `material` against that. */
-async function review(label, what, guide, material, problems) {
+/** One expert review of `material`; `questions` are the assessment questions it is about. */
+async function review(label, what, guide, material, questions = []) {
   const rows = rowsOf(material);
   if (rows.length === 0) return { rowsChecked: 0, issues: [] };
 
-  const solved = problems.length
-    ? await structuredCall(`solve ${label}`, solvePromptFor(problems), Reference, 'reference')
-    : { problems: [] };
-  const reference = problems.map((p, n) => ({
-    problem: p.text,
-    solution: solved.problems[n]?.solution ?? null,
-    keyFacts: solved.problems[n]?.keyFacts ?? [],
-  }));
-
-  // A verdict is required on every row: left to choose, a reviewer skips some.
-  const Audit = z.object(Object.fromEntries(rows.map((_, n) => [`r${n}`, RowVerdict])));
-  const audit = await structuredCall(
-    `audit ${label}`, auditPromptFor({ what, guide, material: shown(material), reference, rows }), Audit, 'audit',
+  const { issues: found } = await structuredCall(
+    `review ${label}`, reviewPromptFor({ what, guide, questions, rows }), Review, 'review',
   );
 
-  const issues = rows.flatMap((row, n) => {
-    const { verdict, claims } = audit[`r${n}`];
-    if (verdict !== 'UNSOUND') return [];
-    const failed = claims.filter((c) => !c.holds);
-    const why = (failed.length ? failed : claims)
-      .map((c) => `${c.claim}: ${c.working}`)
-      .join('\n');
-    return [{ rowId: row.rowId, rowLabel: row.rowLabel, text: row.text, why }];
-  });
+  // One issue per row, and only for rows that exist: an id the reviewer made up is dropped.
+  const whyByRow = new Map();
+  for (const { row: id, why } of found) {
+    const n = /^r(\d+)$/.exec(id.trim())?.[1];
+    if (n == null || !rows[Number(n)]) {
+      console.warn(`${label}: dropped an issue on unknown row ${JSON.stringify(id)}`);
+      continue;
+    }
+    whyByRow.set(Number(n), whyByRow.has(Number(n)) ? `${whyByRow.get(Number(n))}\n${why}` : why);
+  }
+  const issues = [...whyByRow.entries()]
+    .sort(([a], [b]) => a - b)
+    .map(([n, why]) => ({ rowId: rows[n].rowId, rowLabel: rows[n].rowLabel, text: rows[n].text, why }));
   console.log(`${label}: ${rows.length} rows, ${issues.length} issues`);
   return { rowsChecked: rows.length, issues };
 }
@@ -257,11 +241,11 @@ async function checkItem({ sessionId, kind, i, j }) {
   if (kind === 'misconception') {
     // Its activities are items of their own.
     const { activities, ...analysis } = misconception;
-    const problems = misconceptionProblems(misconception, await assessmentQuestions(session));
+    const questions = misconceptionProblems(misconception, await assessmentQuestions(session));
     const result = await review(
       `misconception ${i}`,
       'the analysis of one misconception found in a class\'s answers to a multiple-choice assessment: what the misconception is, the wrong answers linked to it and why, how it was scored and ranked, the instructional need, and the activity templates chosen for it',
-      guideFor('misconception'), analysis, problems,
+      guideFor('misconception'), analysis, questions,
     );
     return { ...base, templateId: '', ...result };
   }
@@ -271,7 +255,7 @@ async function checkItem({ sessionId, kind, i, j }) {
     const result = await review(
       `activity ${i}-${j}`,
       `a classroom activity written to address the misconception "${misconception.title ?? ''}"`,
-      guideFor('activity', activity), activity, activityProblems(activity.content),
+      guideFor('activity', activity), activity,
     );
     return { ...base, templateId: activity.templateId ?? '', ...result };
   }
