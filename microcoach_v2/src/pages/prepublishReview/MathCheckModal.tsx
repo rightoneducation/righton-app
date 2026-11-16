@@ -270,6 +270,7 @@ export default function MathCheckModal({
   const {
     mathCheck, isMathResultsOpen, closeMathResults, selectedIssues, edits,
     mathCorrect, isStartingCorrect, correctError, correct,
+    isStartingMathCheck, checkMath,
   } = review;
   const check = mathCheck?.status === 'DONE' ? mathCheck : null;
   const unchecked = check?.itemsUnchecked ?? 0;
@@ -337,6 +338,19 @@ export default function MathCheckModal({
                 {check.summary ?? ''}
               </Typography>
             </Box>
+            {/* Starting a check sets it RUNNING, which closes this modal; the bar shows the spinner. */}
+            <button
+              type="button"
+              className="p2-btn"
+              onClick={checkMath}
+              disabled={isCorrecting || isStartingMathCheck}
+              style={{
+                opacity: isCorrecting || isStartingMathCheck ? 0.5 : 1,
+                cursor: isCorrecting || isStartingMathCheck ? 'default' : 'pointer',
+              }}
+            >
+              Re-check
+            </button>
             <button type="button" className="p2-btn" onClick={closeMathResults}>
               Close
             </button>

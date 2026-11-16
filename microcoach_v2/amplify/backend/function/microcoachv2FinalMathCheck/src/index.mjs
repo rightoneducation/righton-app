@@ -57,6 +57,8 @@ import { summarize, describeError, parseOutput, checkItems } from './util/result
 const config = JSON.parse(readFileSync(new URL('./util/config.json', import.meta.url), 'utf8'));
 const fmc = config.finalMathCheck ?? {};
 const MODEL = fmc.model ?? 'gpt-5-mini';
+// Without this the model answers with no reasoning at all (0 reasoning tokens on the 2026-11-16 run).
+const REASONING_EFFORT = fmc.reasoningEffort ?? 'medium';
 const SYSTEM_PROMPT = fmc.systemPrompt ?? 'You are a K-12 math accuracy reviewer. Output only valid JSON.';
 
 const { env } = process;
@@ -126,6 +128,7 @@ async function structuredCall(label, prompt, schema, name) {
   const client = await openai();
   const completion = await client.chat.completions.create({
     model: MODEL,
+    reasoning_effort: REASONING_EFFORT,
     messages: [
       { role: 'system', content: SYSTEM_PROMPT },
       { role: 'user', content: prompt },

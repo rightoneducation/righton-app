@@ -11,7 +11,7 @@
 // - lvnFactors: the knowledge graph's learner-variability strategies, ~800
 //   strings of reference data per standard that nobody is shown.
 // - rubric: the ranking scorecard. Reviewer-only (the teacher never sees it),
-//   and computed in code, not written by a model (Drew, 2026-11-16).
+//   and computed in code, not written by a model.
 const NOT_SHOWN = new Set(['lvnFactors', 'rubric']);
 
 /** Every value in `value`, with the path it sits at. */
