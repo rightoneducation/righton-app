@@ -417,7 +417,7 @@ export async function stepTemplates({ ctx, store, invoke }){
 // step 5: generate activity per template selected
 // load graph + selected template
 // returns activity
-export async function stepActvity({ ctx, store, invoke, index, pick }) {
+export async function stepActivity({ ctx, store, invoke, index, pick }) {
   const graph = await store.load('graph');
   const selected = await store.load('selected');
   const m = selected[index];
@@ -438,7 +438,7 @@ export async function stepActvity({ ctx, store, invoke, index, pick }) {
   const evidence = { 
     questions: ctx.questions
       .filter((q) => linked.has(Number(q.questionNumber)))
-      .mpa((q) => ({
+      .map((q) => ({
         questionNumber: q.questionNumber,
         questionText: q.questionText ?? null,
         correctAnswer: q.correctAnswer ?? null,
@@ -459,7 +459,7 @@ export async function stepActvity({ ctx, store, invoke, index, pick }) {
   const siblingProblems = [];
   for (let j = 0; j < pick; j += 1) {
     const earlier = await store.load(`activity-${index}-${j}`);
-    siblingProblems.push(...studentFacingProvlems(earlier?.content));
+    siblingProblems.push(...studentFacingProblems(earlier?.content));
   }
 
   const sibling = picks.find((p) => p !== chosen);
@@ -471,7 +471,7 @@ export async function stepActvity({ ctx, store, invoke, index, pick }) {
       classroomContext: JSON.stringify(ctx.classroom),
       selectedTemplate: JSON.stringify(chosen),
       ...(sibling && { siblingPick: JSON.stringify(sibling) }),
-      ...(siblingProblens.length && {
+      ...(siblingProblems.length && {
         siblingProblems: JSON.stringify(siblingProblems),
       }),
       evidence: JSON.stringify(evidence),
@@ -491,7 +491,7 @@ export async function stepActvity({ ctx, store, invoke, index, pick }) {
 
 export async function assembleOutput({ store }){
   const graph = await store.load('graph');
-  const generated = await store.load('generatedMisconceptions)');
+  const generated = await store.load('generatedMisconceptions');
   if (!generated?.length){
     return { misconceptions: [], graph: graph.raw}
   }
@@ -514,7 +514,7 @@ export async function assembleOutput({ store }){
   }
 
   console.log(`Activities with content: ${total}`);
-  if (!total) throw new Error(' No activity was generated');
+  if (!total) throw new Error('No activity was generated');
 
   return { misconceptions, graph: graph.standards };
 }
