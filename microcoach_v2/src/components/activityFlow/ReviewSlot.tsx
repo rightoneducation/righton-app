@@ -1,5 +1,6 @@
 import React from 'react';
 import Box from '@mui/material/Box';
+import { alpha } from '@mui/material/styles';
 
 /**
  * An optional review layer over the activity views (BeforeClassView,
@@ -42,20 +43,16 @@ export function ReviewSlot({ paths, children }: { paths: string | string[]; chil
   // eslint-disable-next-line react/jsx-no-useless-fragment
   if (!layer || layer.issueCount(list) === 0) return <>{children}</>;
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 1,
-        minWidth: 0,
-        flex: 1,
-        borderRadius: 1,
-        outline: '2px solid',
-        outlineColor: 'designSystem.status.errorStroke',
-        outlineOffset: '3px',
-      }}
-    >
-      {children}
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, minWidth: 0, flex: 1 }}>
+      {/* The text in question, washed in translucent red; the panel under it carries the border. */}
+      <Box
+        sx={(theme) => ({
+          borderRadius: 1,
+          backgroundColor: alpha(theme.palette.designSystem.status.errorStroke, 0.15),
+        })}
+      >
+        {children}
+      </Box>
       {layer.renderPanels(list)}
     </Box>
   );
