@@ -38,6 +38,8 @@ const asList = (paths: string | string[]) => (Array.isArray(paths) ? paths : [pa
 export function ReviewSlot({ paths, children }: { paths: string | string[]; children: React.ReactNode }) {
   const layer = useReviewLayer();
   const list = asList(paths);
+  // The fragment only makes `children` (text, a list) one element: nothing is added to the page.
+  // eslint-disable-next-line react/jsx-no-useless-fragment
   if (!layer || layer.issueCount(list) === 0) return <>{children}</>;
   return (
     <Box

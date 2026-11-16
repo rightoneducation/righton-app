@@ -17,7 +17,13 @@ import {
   isCleanCheck,
   issueValue,
 } from './shared';
-import MathCheckModal, { MathIssueChip, MathIssueList } from './MathCheckModal';
+import MathCheckModal, {
+  IssueControls,
+  MathIssueChip,
+  MathIssueList,
+  issueControlsFor,
+} from './MathCheckModal';
+import { ReviewContext, ReviewLayer, ReviewSlot } from '../../components/activityFlow/ReviewSlot';
 import { FORMULAE } from './formulae';
 import MathText from '../../components/MathText';
 import BeforeClassView from '../../components/activityFlow/BeforeClassView';
@@ -52,6 +58,14 @@ import { STAGES, GROUPS, Stage, Who, Origin } from './pipeline';
  */
 
 const WHO_LABEL: Record<Who, string> = { api: 'API', code: 'code', llm: 'LLM' };
+
+// Paths for the review layer's slots (ReviewSlot), as the math check names values.
+/** The paths of an item's own fields. */
+const fieldsAt = (base: string, fields: string[]) => fields.map((field) => `${base}.${field}`);
+
+/** Every index of a list, as paths: `${base}[0]`, `${base}[1]`, … */
+const eachOf = (base: string, list: unknown) =>
+  (Array.isArray(list) ? list.map((_, i) => `${base}[${i}]`) : []);
 
 function WhoBadge({ who }: { who: Who }) {
   return <span className={`p2-who p2-who-${who}`}>{WHO_LABEL[who]}</span>;
@@ -283,14 +297,19 @@ function MisconceptionBlock({ item }: { item: Rec }) {
   const target = ccss ? asRec(ccss.targetObjective) : null;
   return (
     <Block label="Misconception" hint="LLMGenMisconception · from the questions">
-      <p className="p2-text">
-        {asStr(item.misconceptionSummary) ? (
-          <MathText text={asStr(item.misconceptionSummary)} />
-        ) : (
-          <span className="p2-nil">no summary</span>
-        )}
-      </p>
-      <Row k="selected one or more linked responses" v={<EvidenceCount item={item} />} />
+      {/* Shown as misconceptionSummary; stored as description. */}
+      <ReviewSlot paths="description">
+        <p className="p2-text">
+          {asStr(item.misconceptionSummary) ? (
+            <MathText text={asStr(item.misconceptionSummary)} />
+          ) : (
+            <span className="p2-nil">no summary</span>
+          )}
+        </p>
+      </ReviewSlot>
+      <ReviewSlot paths={['studentCount', 'studentPercent', 'linkedResponses']}>
+        <Row k="selected one or more linked responses" v={<EvidenceCount item={item} />} />
+      </ReviewSlot>
       <Row
         k="wrong answers linked"
         v={
@@ -300,17 +319,21 @@ function MisconceptionBlock({ item }: { item: Rec }) {
             // Each linked option with the stage's explanation of what its value
             // shows: how the link was justified, not just which options.
             <ul className="p2-list">
-              {wrongAnswers.map((w) => {
+              {wrongAnswers.map((w, wIndex) => {
                 const ref = `Q${String(w.questionNumber)}·${asStr(w.letter)}`;
                 return (
                   <li key={ref}>
-                    <span className="p2-mono">{ref}</span>
-                    {asStr(w.explanation) !== '' && (
-                      <>
-                        {' — '}
-                        <MathText text={asStr(w.explanation)} inline />
-                      </>
-                    )}
+                    <ReviewSlot paths={fieldsAt(`wrongAnswers[${wIndex}]`, ['explanation', 'letter', 'questionNumber'])}>
+                      <span>
+                        <span className="p2-mono">{ref}</span>
+                        {asStr(w.explanation) !== '' && (
+                          <>
+                            {' — '}
+                            <MathText text={asStr(w.explanation)} inline />
+                          </>
+                        )}
+                      </span>
+                    </ReviewSlot>
                   </li>
                 );
               })}
@@ -319,23 +342,31 @@ function MisconceptionBlock({ item }: { item: Rec }) {
         }
       />
       {asStr(item.evidenceBasis) !== '' && (
-        <Row
-          k="evidence basis"
-          v={
-            <span>
-              {asStr(item.evidenceBasis)}
-              <span className="p2-row-k">
-                {asStr(item.evidenceBasis) === 'grounded'
-                  ? ' · the option content supports this reading'
-                  : ' · the most plausible of several readings'}
+        <ReviewSlot paths="evidenceBasis">
+          <Row
+            k="evidence basis"
+            v={
+              <span>
+                {asStr(item.evidenceBasis)}
+                <span className="p2-row-k">
+                  {asStr(item.evidenceBasis) === 'grounded'
+                    ? ' · the option content supports this reading'
+                    : ' · the most plausible of several readings'}
+                </span>
               </span>
-            </span>
-          }
-        />
+            }
+          />
+        </ReviewSlot>
       )}
-      {target && <Row k="standard" v={<span className="p2-mono">{asStr(target.standard)}</span>} />}
+      {target && (
+        <ReviewSlot paths="ccssStandard">
+          <Row k="standard" v={<span className="p2-mono">{asStr(target.standard)}</span>} />
+        </ReviewSlot>
+      )}
       {asStr(item.learningScienceConnection) !== '' && (
-        <Row k="learning science" v={<span>{asStr(item.learningScienceConnection)}</span>} />
+        <ReviewSlot paths="learningScienceConnection">
+          <Row k="learning science" v={<span>{asStr(item.learningScienceConnection)}</span>} />
+        </ReviewSlot>
       )}
     </Block>
   );
@@ -498,45 +529,52 @@ function RubricBlock({ item, tie }: { item: Rec; tie?: TieNote }) {
           const weight = RUBRIC_WEIGHTS[k] ?? 1;
           const contribution = typeof weighted[k] === 'number' ? weighted[k] : (v as number) * weight;
           return (
-            <Row
-              key={k}
-              k={RUBRIC_LABELS[k] ?? k}
-              v={
-                <span className="p2-rubric-row">
-                  {/* The contribution leads: these are the numbers that add to the
-                      total. The rubric's 0–3 score and the weight follow as the
-                      derivation, for anyone reconciling against the doc. */}
-                  <span className="p2-mono p2-rubric-points">
-                    {String(contribution)} <span className="p2-rubric-of">of {3 * weight}</span>
+            <ReviewSlot key={k} paths={[`rubric.scores.${k}`, `rubric.weighted.${k}`]}>
+              <Row
+                k={RUBRIC_LABELS[k] ?? k}
+                v={
+                  <span className="p2-rubric-row">
+                    {/* The contribution leads: these are the numbers that add to the
+                        total. The rubric's 0–3 score and the weight follow as the
+                        derivation, for anyone reconciling against the doc. */}
+                    <span className="p2-mono p2-rubric-points">
+                      {String(contribution)} <span className="p2-rubric-of">of {3 * weight}</span>
+                    </span>
+                    <span className="p2-rubric-from">
+                      {measuredFrom(k, inputs)}
+                      {measuredFrom(k, inputs) === '' ? '' : ' · '}
+                      {String(v)}/3 × {weight}
+                    </span>
                   </span>
-                  <span className="p2-rubric-from">
-                    {measuredFrom(k, inputs)}
-                    {measuredFrom(k, inputs) === '' ? '' : ' · '}
-                    {String(v)}/3 × {weight}
-                  </span>
-                </span>
-              }
-            />
+                }
+              />
+            </ReviewSlot>
           );
         })}
-        <Row
-          k="→ score"
-          v={
-            <span>
-              <span className="p2-mono p2-rubric-points p2-rubric-total">
-                {total == null || max == null ? '—' : `${total} / ${max}`}
+        <ReviewSlot
+          paths={['rubric.total', 'rubric.maxPossible', 'rubric.normalized', 'priorityRank', 'isRecommendedFocus', 'isHighestFrequency', 'retained']}
+        >
+          <Row
+            k="→ score"
+            v={
+              <span>
+                <span className="p2-mono p2-rubric-points p2-rubric-total">
+                  {total == null || max == null ? '—' : `${total} / ${max}`}
+                </span>
+                {' · '}
+                <span className="p2-rank-inline">#{String(item.priorityRank ?? '—')}</span>
+                {item.isRecommendedFocus === true && <span className="p2-focus"> Recommended Focus</span>}
+                {item.isHighestFrequency === true && <span className="p2-focus"> Highest Frequency</span>}
+                {!retained && <span className="p2-dropped"> dropped by cap</span>}
               </span>
-              {' · '}
-              <span className="p2-rank-inline">#{String(item.priorityRank ?? '—')}</span>
-              {item.isRecommendedFocus === true && <span className="p2-focus"> Recommended Focus</span>}
-              {item.isHighestFrequency === true && <span className="p2-focus"> Highest Frequency</span>}
-              {!retained && <span className="p2-dropped"> dropped by cap</span>}
-            </span>
-          }
-        />
+            }
+          />
+        </ReviewSlot>
         {tie && <Row k="tie" v={<TieTag tie={tie} />} />}
         {asStr(rubric.conceptualDepthWhy) !== '' && (
-          <Row k="depth — why" v={<MathText text={asStr(rubric.conceptualDepthWhy)} />} />
+          <ReviewSlot paths="rubric.conceptualDepthWhy">
+            <Row k="depth — why" v={<MathText text={asStr(rubric.conceptualDepthWhy)} />} />
+          </ReviewSlot>
         )}
         {Array.isArray(rubric.conceptualDepthSamples) && (
           <Row
@@ -580,19 +618,27 @@ function NeedBlock({ item }: { item: Rec }) {
     <Block label="Instructional need" hint="LLMGenInstrNeed · need + rationale">
       {need && (
         <>
-          <p className="p2-callout">
-            <MathText text={asStr(need.text)} />
-          </p>
-          <Row k="teacher role" v={<span>{asStr(need.teacherRole) || '—'}</span>} />
+          <ReviewSlot paths="instructionalNeed.text">
+            <p className="p2-callout">
+              <MathText text={asStr(need.text)} />
+            </p>
+          </ReviewSlot>
+          <ReviewSlot paths="instructionalNeed.teacherRole">
+            <Row k="teacher role" v={<span>{asStr(need.teacherRole) || '—'}</span>} />
+          </ReviewSlot>
           {asStrings(need.evidenceUsed).length > 0 && (
             <Row
               k="evidence used"
               v={
                 <ul className="p2-list">
-                  {asStrings(need.evidenceUsed).map((e) => (
-                    <li key={e}>
-                      <MathText text={e} inline />
-                    </li>
+                  {(Array.isArray(need.evidenceUsed) ? need.evidenceUsed : []).map((e, eIndex) => (
+                    typeof e === 'string' && (
+                      <li key={e}>
+                        <ReviewSlot paths={`instructionalNeed.evidenceUsed[${eIndex}]`}>
+                          <MathText text={e} inline />
+                        </ReviewSlot>
+                      </li>
+                    )
                   ))}
                 </ul>
               }
@@ -601,22 +647,40 @@ function NeedBlock({ item }: { item: Rec }) {
         </>
       )}
       {asArray(item.skillNames).length > 0 && (
-        <Row
-          k="skill names"
-          v={<Chips items={asArray(item.skillNames).map((sk) => `${asStr(sk.code)} · ${asStr(sk.name)}`)} />}
-        />
+        <ReviewSlot
+          paths={eachOf('skillNames', item.skillNames).flatMap((base) => fieldsAt(base, ['code', 'name']))}
+        >
+          <Row
+            k="skill names"
+            v={<Chips items={asArray(item.skillNames).map((sk) => `${asStr(sk.code)} · ${asStr(sk.name)}`)} />}
+          />
+        </ReviewSlot>
       )}
       {r && (
         <div className="p2-inputs">
           <div className="p2-inputs-head">Rationale</div>
-          <Row k="prevalence" v={<span>{asStr(r.prevalence) || '—'}</span>} />
-          <Row k="confidence signal" v={<span>{asStr(r.confidenceSignal) || '—'}</span>} />
-          <Row k="prerequisite gaps" v={<Chips items={asStrings(r.prerequisiteGaps)} />} />
-          <Row k="forward impact" v={<Chips items={asStrings(r.forwardImpact)} />} />
-          <Row k="recurrence" v={<span>{asStr(r.recurrence) || '—'}</span>} />
+          <ReviewSlot paths="rationale.prevalence">
+            <Row k="prevalence" v={<span>{asStr(r.prevalence) || '—'}</span>} />
+          </ReviewSlot>
+          <ReviewSlot paths="rationale.confidenceSignal">
+            <Row k="confidence signal" v={<span>{asStr(r.confidenceSignal) || '—'}</span>} />
+          </ReviewSlot>
+          <ReviewSlot paths={eachOf('rationale.prerequisiteGaps', r.prerequisiteGaps)}>
+            <Row k="prerequisite gaps" v={<Chips items={asStrings(r.prerequisiteGaps)} />} />
+          </ReviewSlot>
+          <ReviewSlot paths={eachOf('rationale.forwardImpact', r.forwardImpact)}>
+            <Row k="forward impact" v={<Chips items={asStrings(r.forwardImpact)} />} />
+          </ReviewSlot>
+          <ReviewSlot paths="rationale.recurrence">
+            <Row k="recurrence" v={<span>{asStr(r.recurrence) || '—'}</span>} />
+          </ReviewSlot>
         </div>
       )}
-      {r && asStr(r.whyThisNeed) !== '' && <Row k="why this need" v={<MathText text={asStr(r.whyThisNeed)} />} />}
+      {r && asStr(r.whyThisNeed) !== '' && (
+        <ReviewSlot paths="rationale.whyThisNeed">
+          <Row k="why this need" v={<MathText text={asStr(r.whyThisNeed)} />} />
+        </ReviewSlot>
+      )}
     </Block>
   );
 }
@@ -630,14 +694,85 @@ function Considered({ sel }: { sel: Rec }) {
   return (
     <details className="p2-considered">
       <summary>considered and passed over ({considered.length})</summary>
-      {considered.map((c) => (
-        <div className="p2-distinct" key={asStr(c.templateId)}>
-          <span className="p2-mono">{asStr(c.templateId)}</span> — {asStr(c.whyNot)}
-        </div>
+      {considered.map((c, cIndex) => (
+        <ReviewSlot key={asStr(c.templateId)} paths={fieldsAt(`selectedTemplates.considered[${cIndex}]`, ['templateId', 'whyNot'])}>
+          <div className="p2-distinct">
+            <span className="p2-mono">{asStr(c.templateId)}</span> — {asStr(c.whyNot)}
+          </div>
+        </ReviewSlot>
       ))}
     </details>
   );
 }
+
+// ── Math check issues in place ────────────────────────────────────────────────
+
+/**
+ * The review layer for one misconception or activity: its issues, drawn under
+ * the text each is about (ReviewSlot), with the shared Regen tick box and hand
+ * edit. Paths are the issue's rowId, relative to that misconception or activity.
+ */
+function reviewLayerFor(
+  issues: IMathCheckIssue[],
+  controlsFor: (issue: IMathCheckIssue) => IssueControls,
+): ReviewLayer {
+  const at = (paths: string[]) => issues.filter((issue) => paths.includes(issue.rowId));
+  return {
+    issueCount: (paths) => at(paths).length,
+    countUnder: (prefix) => issues.filter((issue) => issue.rowId === prefix
+      || issue.rowId.startsWith(`${prefix}.`)
+      || issue.rowId.startsWith(`${prefix}[`)).length,
+    renderPanels: (paths) => (
+      <MathIssueList issues={at(paths)} whereOf={(issue) => issue.rowLabel} controlsFor={controlsFor} inPlace />
+    ),
+  };
+}
+
+/*
+ * The fields the views draw in place, so an issue on one shows at its text.
+ * Kept in step with the ReviewSlots: in BeforeClassView, FacilitateView,
+ * FacilitatePanels and DiscussionView for an activity (teacher view, the
+ * default), and in the blocks below for a misconception. An issue on anything
+ * else — a field no view draws, or one only the student view shows — is listed
+ * at the top of its card instead, so none is out of sight.
+ */
+const ACTIVITY_IN_PLACE: RegExp[] = [
+  /^(targets|instructionalMove|strategyTag)$/,
+  /^content\.whyThisActivity$/,
+  /^content\.beforeClass\.(steps\[\d+\]|groupingRationale)$/,
+  /^content\.howToRun\[\d+\]\.(title|body)$/,
+  /^content\.facilitate\.(problem|claim|issue)$/,
+  /^content\.facilitate\.resolution\.(why|verdict)$/,
+  /^content\.facilitate\.examples\[\d+\]\.(prompt|problem|slip|finalOutcome|answer|sourceNote)$/,
+  /^content\.facilitate\.examples\[\d+\]\.steps\[\d+\]\.(text|step|annotation\.text|annotation\.kind)$/,
+  /^content\.facilitate\.examples\[\d+\]\.(work|workSummary)\[\d+\]\.(text|status|isEvidence)$/,
+  /^content\.facilitate\.examples\[\d+\]\.notice\[\d+\]\.(text|kind)$/,
+  /^content\.facilitate\.examples\[\d+\]\.evidenceNotes\[\d+\]\.text$/,
+  /^content\.facilitate\.examples\[\d+\]\.stages\[\d+\]\.(ask|answer|kind)$/,
+  /^content\.facilitate\.strategies\[\d+\]\.(verdict|label)$/,
+  /^content\.facilitate\.strategies\[\d+\]\.steps\[\d+\]\.(text|highlight|step)$/,
+  /^content\.facilitate\.strategies\[\d+\]\.notes\[\d+\]\.(text|heading|tone)$/,
+  /^content\.discussion\.takeaway$/,
+  /^content\.discussion\.questions\[\d+\]\.(question|answer|minutes)$/,
+  /^content\.discussion\.watchFors\[\d+\]\.(watchFor|tryAsking|howToRespond)$/,
+];
+
+const MISCONCEPTION_IN_PLACE: RegExp[] = [
+  /^description$/,
+  /^wrongAnswers\[\d+\]\.(explanation|letter|questionNumber)$/,
+  /^(studentCount|studentPercent|linkedResponses|evidenceBasis|ccssStandard|learningScienceConnection)$/,
+  /^rubric\.(scores|weighted)\.\w+$/,
+  /^rubric\.(total|maxPossible|normalized|conceptualDepthWhy)$/,
+  /^(priorityRank|isRecommendedFocus|isHighestFrequency|retained)$/,
+  /^instructionalNeed\.(text|teacherRole)$/,
+  /^instructionalNeed\.evidenceUsed\[\d+\]$/,
+  /^skillNames\[\d+\]\.(code|name)$/,
+  /^rationale\.(prevalence|confidenceSignal|recurrence|whyThisNeed)$/,
+  /^rationale\.(prerequisiteGaps|forwardImpact)\[\d+\]$/,
+  /^selectedTemplates\.picks\[\d+\]\.(templateId|rationale|instructionalFit|fit|distinctFrom)$/,
+  /^selectedTemplates\.noFitReason$/,
+  /^selectedTemplates\.considered\[\d+\]\.(templateId|whyNot)$/,
+];
 
 // Which content type each template generates into. Hand-copied from
 // activityLibrary.json's `contentType`, like the other constants on this page —
@@ -666,11 +801,13 @@ function GeneratedActivity({
   templateId,
   misconceptionTitle,
   mathIssues,
+  controlsFor,
 }: {
   move: Rec | null;
   templateId: string;
   misconceptionTitle: string;
   mathIssues: IMathCheckIssue[];
+  controlsFor: (issue: IMathCheckIssue) => IssueControls;
 }) {
   const { t } = useTranslation();
   const screenSize = useScreenSize();
@@ -680,21 +817,29 @@ function GeneratedActivity({
   const purposes = Array.isArray(move?.questionPurposes) ? (move?.questionPurposes as unknown[]).map(String) : [];
   const review = move ? asRec(move.discussionReview ?? null) : null;
   const issues = review ? asArray(review.issues) : [];
+  // Each issue sits in place, at the text it is about; what no view draws is listed up top.
+  const layer = reviewLayerFor(mathIssues, controlsFor);
+  const unplaced = mathIssues.filter((issue) => !ACTIVITY_IN_PLACE.some((re) => re.test(issue.rowId)));
 
-  const phase = (label: string, body: React.ReactNode) => (
-    <details className="p2-activity-phase">
+  // A phase holding an issue starts open, so the issue is in view.
+  const phase = (label: string, prefixes: string[], body: React.ReactNode) => (
+    <details
+      className="p2-activity-phase"
+      {...(prefixes.some((prefix) => layer.countUnder(prefix) > 0) ? { open: true } : {})}
+    >
       <summary className="p2-phase-head">
         <span className="p2-chevron" aria-hidden="true">
           ▸
         </span>
         <span className="p2-block-label">{label}</span>
+        <MathIssueChip count={prefixes.reduce((n, prefix) => n + layer.countUnder(prefix), 0)} />
       </summary>
       <div className="p2-activity-body">{body}</div>
     </details>
   );
 
   return (
-    <details className="p2-activity-row">
+    <details className="p2-activity-row" {...(mathIssues.length > 0 ? { open: true } : {})}>
       <summary className="p2-activity-head">
         <span className="p2-chevron" aria-hidden="true">
           ▸
@@ -706,9 +851,10 @@ function GeneratedActivity({
         <MathIssueChip count={mathIssues.length} />
       </summary>
 
-      {mathIssues.length > 0 && (
+      <ReviewContext.Provider value={layer}>
+      {unplaced.length > 0 && (
         <div className="p2-math-issues">
-          <MathIssueList issues={mathIssues} whereOf={(issue) => issue.rowLabel} />
+          <MathIssueList issues={unplaced} whereOf={(issue) => issue.rowLabel} controlsFor={controlsFor} />
         </div>
       )}
       {!content || !copy ? (
@@ -721,17 +867,30 @@ function GeneratedActivity({
         </p>
       ) : (
         <>
-          <p className="p2-text">
-            <MathText text={content.whyThisActivity} />
-          </p>
-          {move && asStr(move.targets) !== '' && <Row k="targets" v={<MathText text={asStr(move.targets)} inline />} />}
-          {move && asStr(move.instructionalMove) !== '' && (
-            <Row k="instructional move" v={<MathText text={asStr(move.instructionalMove)} inline />} />
+          <ReviewSlot paths="content.whyThisActivity">
+            <p className="p2-text">
+              <MathText text={content.whyThisActivity} />
+            </p>
+          </ReviewSlot>
+          {move && asStr(move.targets) !== '' && (
+            <ReviewSlot paths="targets">
+              <Row k="targets" v={<MathText text={asStr(move.targets)} inline />} />
+            </ReviewSlot>
           )}
-          {move && asStr(move.strategyTag) !== '' && <Row k="strategy" v={<span>{asStr(move.strategyTag)}</span>} />}
-          {phase('Before class', <BeforeClassView content={content} />)}
+          {move && asStr(move.instructionalMove) !== '' && (
+            <ReviewSlot paths="instructionalMove">
+              <Row k="instructional move" v={<MathText text={asStr(move.instructionalMove)} inline />} />
+            </ReviewSlot>
+          )}
+          {move && asStr(move.strategyTag) !== '' && (
+            <ReviewSlot paths="strategyTag">
+              <Row k="strategy" v={<span>{asStr(move.strategyTag)}</span>} />
+            </ReviewSlot>
+          )}
+          {phase('Before class', ['content.beforeClass'], <BeforeClassView content={content} />)}
           {phase(
             'Facilitate activity',
+            ['content.howToRun', 'content.facilitate'],
             <FacilitateView
               content={content}
               template={copy}
@@ -739,7 +898,7 @@ function GeneratedActivity({
               screenSize={screenSize}
             />,
           )}
-          {phase('Closing discussion', <DiscussionView content={content} screenSize={screenSize} />)}
+          {phase('Closing discussion', ['content.discussion'], <DiscussionView content={content} screenSize={screenSize} />)}
           <p className="p2-text">
             <span className="p2-meta">
               Question purposes: {purposes.length ? purposes.join(' · ') : 'not recorded'}
@@ -762,6 +921,7 @@ function GeneratedActivity({
           )}
         </>
       )}
+      </ReviewContext.Provider>
     </details>
   );
 }
@@ -782,10 +942,12 @@ function TemplateBlock({ item }: { item: Rec }) {
   if (picks.length === 0) {
     return (
       <Block label="Activity selected" hint="LLMSelectTemplate · no strong fit">
-        <p className="p2-text">
-          <span className="p2-nofit">No template cleared the instructional-fit threshold.</span>
-          {noFitReason === '' ? '' : ` ${noFitReason}`}
-        </p>
+        <ReviewSlot paths="selectedTemplates.noFitReason">
+          <p className="p2-text">
+            <span className="p2-nofit">No template cleared the instructional-fit threshold.</span>
+            {noFitReason === '' ? '' : ` ${noFitReason}`}
+          </p>
+        </ReviewSlot>
         <Considered sel={sel} />
       </Block>
     );
@@ -803,7 +965,11 @@ function TemplateBlock({ item }: { item: Rec }) {
           const distinct = asStr(pick.distinctFrom);
           const showDistinct = distinct !== '' && distinct !== 'null';
           return (
-            <div className="p2-pick" key={`${asStr(pick.templateId)}-${asStr(pick.rationale).slice(0, 24)}`}>
+            <ReviewSlot
+              key={`${asStr(pick.templateId)}-${asStr(pick.rationale).slice(0, 24)}`}
+              paths={fieldsAt(`selectedTemplates.picks[${i}]`, ['templateId', 'rationale', 'instructionalFit', 'fit', 'distinctFrom'])}
+            >
+            <div className="p2-pick">
               <div className="p2-pick-head">
                 <span className="p2-pick-n">{i + 1}</span>
                 <span className="p2-pick-id">{asStr(pick.templateId)}</span>
@@ -816,6 +982,7 @@ function TemplateBlock({ item }: { item: Rec }) {
               </div>
               {showDistinct && <div className="p2-distinct">distinct from pick 1: {distinct}</div>}
             </div>
+            </ReviewSlot>
           );
         })}
       </div>
@@ -831,6 +998,7 @@ function MisconceptionCard({
   generation,
   tie,
   mathIssues,
+  controlsFor,
 }: {
   item: Rec;
   index: number;
@@ -839,9 +1007,26 @@ function MisconceptionCard({
   tie?: TieNote;
   // Every math check issue for this misconception: its own and its activities'.
   mathIssues: IMathCheckIssue[];
+  controlsFor: (issue: IMathCheckIssue) => IssueControls;
 }) {
   const rank = typeof item.priorityRank === 'number' ? item.priorityRank : index + 1;
   const ownIssues = mathIssues.filter((issue) => issue.kind === 'misconception');
+  const moves = asArray(item.moveOptions);
+  // Each pick's activity, paired by template id first; older runs only carry the content type.
+  const shownActivities = asArray(asRec(item.selectedTemplates)?.picks ?? null).map((pick) => {
+    const templateId = asStr(pick.templateId);
+    const want = TEMPLATE_CONTENT_TYPE[templateId];
+    const hit = moves.find((mo) => asStr(mo.templateId) === templateId)
+      ?? (want ? moves.find((mo) => asStr(mo.activityType) === want) : undefined);
+    // The check names an activity by its position in the stored output, which moveOptions keeps.
+    return { templateId, hit, moveIndex: hit ? moves.indexOf(hit) : -1 };
+  });
+  const shownIndexes = new Set(shownActivities.map((a) => a.moveIndex));
+  // Listed at the top of the card: the analysis's issues no block draws in
+  // place, and any on an activity no pick shows.
+  const unplaced = mathIssues.filter((issue) => (issue.kind === 'misconception'
+    ? !MISCONCEPTION_IN_PLACE.some((re) => re.test(issue.rowId))
+    : !shownIndexes.has(issue.activityIndex ?? -1)));
   return (
     // Remounted on `generation` so Expand/Collapse all re-applies the default:
     // <details open> is uncontrolled after first render.
@@ -858,32 +1043,22 @@ function MisconceptionCard({
         <TieTag tie={tie} />
         <MathIssueChip count={mathIssues.length} />
       </summary>
-      <div className="p2-card-body">
-        {ownIssues.length > 0 && (
-          <div className="p2-math-issues p2-math-issues-wide">
-            <MathIssueList issues={ownIssues} whereOf={(issue) => issue.rowLabel} />
-          </div>
-        )}
-        <MisconceptionBlock item={item} />
-        <RubricBlock item={item} tie={tie} />
-        <NeedBlock item={item} />
-        <TemplateBlock item={item} />
-        {/* One full-width row per generated activity, after the reasoning blocks.
-            Paired to its pick by content type rather than by position: activities
-            are generated one per pick, so a single failed call would otherwise
-            shift every pairing after it. */}
-        {asArray(asRec(item.selectedTemplates)?.picks ?? null).map((pick) => {
-          const templateId = asStr(pick.templateId);
-          const want = TEMPLATE_CONTENT_TYPE[templateId];
-          const moves = asArray(item.moveOptions);
-          // By template id first; older runs only carry the content type.
-          const hit =
-            moves.find((mo) => asStr(mo.templateId) === templateId) ??
-            (want ? moves.find((mo) => asStr(mo.activityType) === want) : undefined);
-          // The check names an activity by its position in the stored output,
-          // which moveOptions keeps.
-          const moveIndex = hit ? moves.indexOf(hit) : -1;
-          return (
+      <ReviewContext.Provider value={reviewLayerFor(ownIssues, controlsFor)}>
+        <div className="p2-card-body">
+          {unplaced.length > 0 && (
+            <div className="p2-math-issues p2-math-issues-wide">
+              <MathIssueList issues={unplaced} whereOf={(issue) => issue.rowLabel} controlsFor={controlsFor} />
+            </div>
+          )}
+          <MisconceptionBlock item={item} />
+          <RubricBlock item={item} tie={tie} />
+          <NeedBlock item={item} />
+          <TemplateBlock item={item} />
+          {/* One full-width row per generated activity, after the reasoning blocks.
+              Paired to its pick by content type rather than by position: activities
+              are generated one per pick, so a single failed call would otherwise
+              shift every pairing after it. Each activity has its own review layer. */}
+          {shownActivities.map(({ templateId, hit, moveIndex }) => (
             <GeneratedActivity
               key={templateId}
               templateId={templateId}
@@ -892,10 +1067,11 @@ function MisconceptionCard({
               mathIssues={mathIssues.filter(
                 (issue) => issue.kind === 'activity' && issue.activityIndex === moveIndex,
               )}
+              controlsFor={controlsFor}
             />
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      </ReviewContext.Provider>
     </details>
   );
 }
@@ -1405,6 +1581,11 @@ export default function PrepublishReview() {
     const part = issue.kind === 'activity' ? activity : 'Misconception analysis';
     return [issue.misconceptionTitle, part, issue.rowLabel].filter(Boolean).join(' › ');
   };
+
+  // Only text can be edited by hand: a label or a number has to stay valid.
+  const isText = (issue: IMathCheckIssue) => typeof issueValue(items, issue) === 'string';
+  // One Regen selection and one set of hand edits, shared by the modal and the cards.
+  const controlsFor = issueControlsFor(review, isText);
   // Answer options claimed by more than one misconception.
   const sharedOptions = useMemo(() => {
     const owners = new Map<string, number>();
@@ -1490,11 +1671,7 @@ export default function PrepublishReview() {
             onCollapseAll={() => setAll(false)}
             canCheckMath={items !== null && items.length > 0}
           />
-          <MathCheckModal
-            review={review}
-            whereOf={whereOf}
-            isText={(issue) => typeof issueValue(items, issue) === 'string'}
-          />
+          <MathCheckModal review={review} whereOf={whereOf} isText={isText} />
 
           <section className="p2-section p2-section-wide">
             <h2 className="p2-h2">Generated results</h2>
@@ -1535,6 +1712,7 @@ export default function PrepublishReview() {
                     ? issuesByMisconception.get(item.pipelineIndex) ?? []
                     : []
                 }
+                controlsFor={controlsFor}
               />
             ))}
           </section>
