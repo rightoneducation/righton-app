@@ -250,6 +250,7 @@ export function buildContext({ session, assessment, studentResponses }){
   }
 }
 
+// step 1: fetch knowledge graph, dedup, invoke to gen misconceptions
 export async function stepMisconceptions({ ctx, store, invoke}){
   const { session, questions, standards, wrongAnswerDist } = ctx;
   const raw = await fetchLearningScience(invoke, standards, session.id);
@@ -285,10 +286,132 @@ export async function stepMisconceptions({ ctx, store, invoke}){
     ctx.studentResponses,
     standards,
   );
-  await store.save('generated', generated);
+  await store.save('generatedMisconceptions', generated);
   console.log(`Misconceptions: ${generated.length}`);
 
   return { count: generated.length };
+}
+
+// step 2: score misconceptions and retain top 3
+// loads miconceptions from store, loads KG from store for scoring. Saves retained misconceptions.
+export async function stepScore({ store, invoke }){
+  const graph = await store.load('graph');
+  const generatedMisconceptions = await store.load('generatedMisconceptions');
+
+  const scoreOut = await callStage(invoke, 'scoresCalc', {
+    misconceptions: JSON.stringify(generatedMisconceptions.map((m) => ({
+      title: m.title,
+      description: m.description ?? null,
+      learningScienceConnection: m.learningScienceConnection ?? null,
+      ccssStandard: m.ccssStandard ?? null,
+      studentPercent: m.studentPercent ?? null,
+      meanConfidence: m.meanConfidence ?? null,
+    }))),
+    learningScienceData: graphData(graph),
+    trace: false,
+  });
+
+  const retained = applyScores(generatedMisconceptions, scoreOut);
+  const summary = retained.map((m) => {
+    const score = `${m.rubric?.total}/${m.rubric?.maxPossible}`;
+    return `#${m.priorityRank} ${m.title} (${score})`;
+  });
+
+  console.log(`Retained ${retained.length}: ${summary.join('; ')}`);
+  if(!retained.length) {
+    throw new Error('The rubric carried no misconception forward');
+  }
+
+  await store.save('retained', retained);
+  return { count: retained.length };
+}
+
+
+// step 3: gen the needs and then match them back to the misconceptions
+// load KG, load retained misconceptions, return miconceptions with needs attached
+export async function stepNeeds({ ctx, store, invoke}){
+  const {session, standards, classroom, ppq, wrongAnswerDist} = ctx;
+  const graph = await store.load('graph');
+  const retained = await store.load('retained');
+
+  // gen instructional need
+  const needOut = await callStage(invoke, 'genInstrNeed', {
+    misconceptions: JSON.stringify(retained),
+    classroomData: JSON.stringify({
+      classroom,
+      currentSession: {
+        sessionLabel: session.sessionLabel,
+        weekNumber: session.weekNumber,
+        topic: session.topic ?? null,
+        ccssStandards: standards,
+        assessments: { items: [ppq]},
+      },
+      sessionHistory: [],
+      ppq,
+      wrongAnswerDist,
+    }),
+    learningScienceData: graphData(graph),
+    trace: false,
+  });
+
+  // match each need to misconception: position than title
+  const needs = needOut?.needs ?? [];
+  const clean = (title) => String(title ?? '').trim();
+  const needByTitle = new Map(needs.map((n) => [clean(n.title), n]));
+  const misconceptions = retained.map((m, i) => {
+    const samePlace = needs[i]?.title === m.title;
+    const n = samePlace ? needs[i] : needByTitle.get(clean(m.title));
+    if (!n) return m;
+    return {
+      ...m,
+      instructionalNeed: n.instructionalNeed,
+      rationale: n.rationale,
+      skillNames: n.skillNames ?? [],
+    };
+  });
+
+  if (needOut?.missing?.length) {
+    console.warn('No instructional need for:', JSON.stringify(needOut.missing));
+  }
+  checkNeedSeparation(misconceptions).forEach((f) => {
+    const hits = f.hits.join(', ');
+    console.warn(`Need may prescribe an activity: "${f.title}" (${hits})`);
+  });
+
+  const hasNeed = misconceptions.some((m) => m.instructionalNeed?.text?.trim());
+  if (!hasNeed) {
+    throw new Error('No misconception got an instructional need');
+  }
+
+  await store.save('withNeeds', misconceptions);
+  return { count: misconceptions.length };
+}
+
+// step 4: pick templates per need. 
+// load misconception w need, select template
+// save misconception w need and activity template
+export async function stepTemplates({ ctx, store, invoke }){
+  const { classroom, ppq, wrongAnswerDist } = ctx;
+  const misconceptions = await store.load('withNeeds');
+  const needs = misconceptions.filter((m) => m.instructionalNeed?.text?.trim());
+
+  const selectOut = await callStage(invoke, 'selectTemplate', {
+    needs: JSON.stringify(needs),
+    classroomData: JSON.stringify({ classroom, ppq, wrongAnswerDist }),
+    assessmentType: 'multiple_choice',
+    trace: false,
+  });
+
+  const clean = (title) => String(title ?? '').trim();
+  const selections = selectOut?.selections ?? [];
+  const byTitle = new Map(selections.map((x) => [clean(x.title), x]));
+  const selected = misconceptions.map((m) => {
+    const selection = byTitle.get(clean(m.title));
+    return selection ? {...m, selectedTemplates: selection} : m;
+  });
+
+  await store.save('selected', selected);
+  return {indexes: selected.map((_, i) => i)};
 }
 
 /**
