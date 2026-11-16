@@ -26,15 +26,11 @@ Amplify Params - DO NOT EDIT */
  * microcoachv2UploadGenerate: generates an ingested MIU 1 upload's misconceptions
  * and activities, and moves its session to GENERATED.
  *
- * Invoked with { uploadId } by microcoachv2UploadIngest, or by hand to rerun one (set
- * the row back to INGESTED first). The same claim as ingest, INGESTED -> GENERATING,
- * means a duplicate or retried invocation stops there. A run killed by the timeout
- * therefore stays visibly at GENERATING.
- *
- * Writes DynamoDB directly, in the shape the app reads through AppSync. The session's
- * old rows are replaced only after the whole pipeline has succeeded, and the session
- * moves on last, so the app never sees a half-written result. Failures end as FAILED
- * with an email; the session stays waiting.
+ * Runs one step per invocation, driven by the microcoachv2Generate state machine,
+ * which ingest starts with { uploadId }. To rerun one by hand, set the row back to
+ * INGESTED and start an execution. The same claim as ingest, INGESTED -> GENERATING,
+ * means a duplicate run stops at the first step. A step that fails or times out is
+ * caught by the state machine, which runs the fail step: FAILED plus an email.
  */
 
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
@@ -46,12 +42,22 @@ import {
   QueryCommand,
   UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
-import { runPipeline } from './util/pipeline.mjs';
+import {
+  buildContext,
+  stepMisconceptions,
+  stepScore,
+  stepNeeds,
+  stepTemplates,
+  stepActivity,
+  assembleOutput
+} from './util/pipeline.mjs';
+import { makeStore } from './util/store.mjs';
 import { buildRows } from './util/buildRows.mjs';
 import { sendEmail } from './util/send-email.mjs';
 
 const { env } = process;
 const REGION = env.REGION;
+const BUCKET = env.STORAGE_MICROCOACHUPLOADS_BUCKETNAME;
 // Where the review link points: the hosted prototype. Use
 // http://localhost:3000 to review against a local app.
 const REVIEW_BASE_URL = 'https://prototype.rightoneducation.com';
@@ -173,32 +179,45 @@ async function replaceRows(sessionId, rows) {
   await batchWrite(TABLES.activity, puts(rows.activities));
 }
 
-async function generate(upload) {
+// pull data from DynamoDB session, assessment and response and assemble in ctx object
+async function loadContext(upload) {
   const [session, assessment, responses] = await Promise.all([
     getRow(TABLES.session, upload.sessionId, 'Session'),
     getRow(TABLES.assessment, upload.id, 'Assessment'),
     queryAll(TABLES.response, 'byAssessment', 'assessmentId', upload.id),
   ]);
-  if (!responses.length) throw new Error(`Assessment ${upload.id} has no student responses`);
+  if(!responses.length) {
+    throw new Error(`Assessment ${upload.id} has no student responses`);
+  }
 
-  // No names: within a run, a student is their spreadsheet row.
   const studentResponses = responses
-    .sort((a, b) => a.studentRef - b.studentRef)
-    .map((r) => ({ studentId: `Student ${r.studentRef}`, questionResponses: r.questionResponses }));
+    .sort((a,b) => a.studentRef - b.studentRef)
+    .map((r) => ({
+      studentId: `Student ${r.studentRef}`,
+      questionResponses: r.questionResponses
+    }));
 
-  const output = await runPipeline({ session, assessment, studentResponses, invoke: invokeStage });
+  return buildContext({session, assessment, studentResponses});
+}
+
+const uploadDetails = (upload) => [
+  `Upload: ${upload.id}`,
+  `Session: ${upload.sessionId}`,
+  `Class: ${upload.classId}`
+]
+
+async function finalize(upload, ctx, store){
+  const { session, studentResponses } = ctx;
+  const output = await assembleOutput({store});
 
   const now = new Date().toISOString();
   const rows = buildRows(session, output, studentResponses, now);
   await replaceRows(session.id, rows);
   await db.send(new UpdateCommand({
     TableName: TABLES.session,
-    Key: { id: session.id },
-    // A rerun's pick pointed at a row that no longer exists.
-    // DRAFT holds the results back from the teacher until a reviewer publishes
-    // them on /prepublishreview, which reads the raw output stored alongside
-    // (the misconception/activity rows keep only what the teacher sees).
-    UpdateExpression:
+    Key: { id: session.id},
+    // DRAFT holds back content for review prior to publishing back to teacher
+    UpdateExpression: 
       'SET #status = :status, publishStatus = :draft, pipelineOutput = :output, updatedAt = :now REMOVE selectedMisconceptionId',
     ConditionExpression: 'attribute_exists(id)',
     ExpressionAttributeNames: { '#status': 'status' },
@@ -208,59 +227,115 @@ async function generate(upload) {
       ':output': JSON.stringify(output),
       ':now': now,
     },
+  }))
+  await finish(upload.id, 'GENERATED');
+
+  const misconceptions = rows.misconceptions.length;
+  const activities = rows.activities.length;
+  const counts = `${misconceptions} misconceptions, ${activities} activities`;
+  console.log(`Upload ${upload.id} GENERATED: ${counts}`);
+  await sendEmail(
+    `MicroCoach generation finished (${env.ENV})`,
+    null,
+    [
+      ...uploadDetails(upload),
+      '',
+      `${counts}.`,
+      '',
+      // held as DRAFT
+      `Review and publish: ${REVIEW_BASE_URL}/prepublishreview/${upload.sessionId}`,
+    ].join('\n'),
+  ).catch((e) => console.error('Could not send the email:', e));
+
+  return { misconceptions, activities };
+}
+
+// returns single line from error object
+function describeError(error) {
+  if (!error) return 'Unknown error';
+  if (error.Error === 'States.Timeout'){
+    return 'A step ran past its time limit';
+  }
+  try {
+    // A Lambda error arrives as JSON text in Cause.
+    const cause = JSON.parse(error.Cause);
+    return String(cause.errorMessage ?? error.Cause);
+  } catch {
+    return String(error.Cause || error.Error || 'Unknown error');
+  }
+}
+
+// throws failure on failed step and sends email
+async function fail(uploadId, error){
+  const message = describeError(error).slice(0,1000);
+  console.error(`Upload ${uploadId} FAILED:`, JSON.stringify(error));
+
+  const { Item: upload } = await db.send(new GetCommand({
+    TableName: TABLES.upload,
+    Key: {id: uploadId },
   }));
-  return rows;
+  if (upload?.status !== 'GENERATING'){
+    const status = upload?.status ?? 'missing';
+    console.log(`Upload ${uploadId} is ${status}, not GENERATING`);
+    return { marked: false};
+  }
+
+  await finish(uploadId, 'FAILED', message);
+  await sendEmail(
+    `MicroCoach generation failed (${env.ENV})`,
+    null,
+    [
+      ...uploadDetails(upload),
+      '',
+      `Error: ${message}`,
+      '',
+      'The ingested data is intact. To rerun: set the row back to INGESTED',
+      `and start an execution of microcoachv2Generate-${env.ENV}`,
+      'with { "uploadId": "..." }.',
+    ].join('\n'),
+  ).catch((e) => console.error('Could not send the failure email:', e));
+
+  return {marked: true};
 }
 
 export const handler = async (event) => {
-  const uploadId = event?.uploadId;
-  if (!uploadId) {
-    console.error('No uploadId in the event:', JSON.stringify(event));
-    return;
+  const {uploadId, runId, step, index, pick, error} = event ?? {};
+  if (!uploadId || !runId || !step){
+    throw new Error(`Needs uploadId, runId and step: ${JSON.stringify(event)}`);
+  }
+  console.log(`Step ${step}, upload ${uploadId}, run ${runId}`);
+
+  if (step === 'fail') return fail(uploadId, error);
+
+  let upload;
+  if (step === 'misconceptions') {
+    upload = await claim(uploadId);
+    if (!upload){
+      console.log(`Upload ${uploadId} is not INGESTED`);
+      return { claimed: false};
+    }
+  } else {
+    upload = await getRow(TABLES.upload, uploadId, 'Upload');
   }
 
-  const upload = await claim(uploadId);
-  if (!upload) {
-    console.log(`Upload ${uploadId} is not INGESTED (taken, finished or missing); skipping`);
-    return;
-  }
-  const details = [
-    `Upload: ${uploadId}`,
-    `Session: ${upload.sessionId}`,
-    `Class: ${upload.classId}`,
-  ];
-  const envName = env.ENV;
+  const ctx = await loadContext(upload);
+  const store = makeStore({bucket: BUCKET, uploadId, runId});
+  const args = { ctx, store, invoke: invokeStage};
 
-  try {
-    const rows = await generate(upload);
-    await finish(uploadId, 'GENERATED');
-    console.log(`Upload ${uploadId} GENERATED: ${rows.misconceptions.length} misconceptions, ${rows.activities.length} activities`);
-    await sendEmail(
-      `MicroCoach generation finished (${envName})`,
-      null,
-      [
-        ...details,
-        '',
-        `${rows.misconceptions.length} misconceptions, ${rows.activities.length} activities.`,
-        '',
-        // Held as DRAFT: the teacher sees nothing until this is published.
-        `Review and publish: ${REVIEW_BASE_URL}/prepublishreview/${upload.sessionId}`,
-      ].join('\n'),
-    ).catch((e) => console.error('Could not send the email:', e));
-  } catch (err) {
-    const message = String(err?.message ?? err).slice(0, 1000);
-    console.error(`Upload ${uploadId} FAILED:`, err);
-    await finish(uploadId, 'FAILED', message).catch((e) => console.error('Could not mark the upload FAILED:', e));
-    await sendEmail(
-      `MicroCoach generation failed (${envName})`,
-      null,
-      [
-        ...details,
-        '',
-        `Error: ${message}`,
-        '',
-        'The ingested data is intact. To rerun: set the row back to INGESTED and invoke this function with { "uploadId": "..." }.',
-      ].join('\n'),
-    ).catch((e) => console.error('Could not send the failure email:', e));
+  switch (step) {
+    case 'misconceptions':
+      return {claimed: true, ...(await stepMisconceptions(args))};
+    case 'scores':
+      return stepScore(args);
+    case 'needs':
+      return stepNeeds(args);
+    case 'templates':
+      return stepTemplates(args);
+    case 'activity':
+      return stepActivity({...args, index, pick});
+    case 'finalize':
+      return finalize(upload, ctx, store);
+    default:
+      throw new Error(`Unknown step: ${step}`);
   }
-};
+}
