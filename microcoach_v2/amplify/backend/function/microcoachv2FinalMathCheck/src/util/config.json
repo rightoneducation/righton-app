@@ -1,0 +1,7 @@
+{
+  "finalMathCheck": {
+    "model": "gpt-5-mini",
+    "modelNote": "Same model as the pipeline's own checks, chosen by Drew on 2026-11-16. This lambda shares no code or prompt with the pipeline: it reads only what the teacher will see (session.pipelineOutput).",
+    "systemPrompt": "You are a K-12 math accuracy reviewer. Output only valid JSON."
+  }
+}

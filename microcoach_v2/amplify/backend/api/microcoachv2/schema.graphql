@@ -115,6 +115,10 @@ type MicroCoachSession @model @auth(rules: [{ allow: private }]) {
   # selection, activities): what /prepublishreview shows a reviewer before
   # publishStatus goes DRAFT → PUBLISHED. The teacher-facing rows drop most of it.
   pipelineOutput: AWSJSON
+  # The reviewer's Check math on /prepublishreview: { status RUNNING | DONE |
+  # FAILED, summary, issues, … }, written by microcoachv2FinalMathCheck as its
+  # state machine (microcoachv2MathCheck) runs. Read-only in the app.
+  mathCheck: AWSJSON
   evaluationResults: AWSJSON
   # Class % correct per MIU question (the Review screen's "Correct responses"
   # tiles), with the question text for the tile's tooltip.
@@ -544,6 +548,12 @@ type SchoolObservation {
 type Mutation {
   publishSession(sessionId: ID!): MicroCoachSession
     @function(name: "microcoachv2EmailTeacher-${env}")
+    @auth(rules: [{ allow: groups, groups: ["Admins"] }])
+  # The reviewer's Check math: marks the session's mathCheck RUNNING and starts
+  # the microcoachv2MathCheck state machine, then returns at once. The page
+  # polls the session until the check is DONE or FAILED.
+  checkSessionMath(sessionId: ID!): MicroCoachSession
+    @function(name: "microcoachv2FinalMathCheck-${env}")
     @auth(rules: [{ allow: groups, groups: ["Admins"] }])
 }
 

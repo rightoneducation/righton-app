@@ -185,7 +185,8 @@
         "microcoachv2EmailTeacher": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
           "s3Key": "amplify-builds/microcoachv2EmailTeacher-4f4b747452654d6f395a-build.zip"
-        }
+        },
+        "microcoachv2FinalMathCheck": {}
       },
       "storage": {
         "microcoachuploads": {}

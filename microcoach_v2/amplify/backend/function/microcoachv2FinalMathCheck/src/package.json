@@ -1,0 +1,19 @@
+{
+  "name": "microcoachv2finalmathcheck",
+  "version": "2.0.0",
+  "description": "The reviewer's Check math on /prepublishreview: an isolated math review of a session's generated activities, run by the microcoachv2MathCheck state machine",
+  "main": "index.mjs",
+  "type": "module",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.92"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1014.0",
+    "@aws-sdk/client-secrets-manager": "^3.1014.0",
+    "@aws-sdk/client-sfn": "^3.1014.0",
+    "@aws-sdk/lib-dynamodb": "^3.1014.0",
+    "openai": "^4.0.0",
+    "zod": "^3.0.0"
+  }
+}

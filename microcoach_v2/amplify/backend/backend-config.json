@@ -116,10 +116,41 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "customCloudformation"
+    },
+    "microcoachv2MathCheckPipeline": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "Region",
+            "LambdaExecutionRole",
+            "LambdaExecutionRoleArn"
+          ],
+          "category": "function",
+          "resourceName": "microcoachv2FinalMathCheck"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "customCloudformation"
     }
   },
   "function": {
     "microcoachv2EmailTeacher": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "microcoachv2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "microcoachv2FinalMathCheck": {
       "build": true,
       "dependsOn": [
         {
