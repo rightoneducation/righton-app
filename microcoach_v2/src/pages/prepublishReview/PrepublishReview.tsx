@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { PublishStatus } from '../../AWSAPI';
@@ -12,7 +13,11 @@ import {
   asStr,
   usePrepublishSession,
   PrepublishSessionState,
+  IMathCheckIssue,
+  isCleanCheck,
+  issueValue,
 } from './shared';
+import MathCheckModal, { MathIssueChip, MathIssueList } from './MathCheckModal';
 import { FORMULAE } from './formulae';
 import MathText from '../../components/MathText';
 import BeforeClassView from '../../components/activityFlow/BeforeClassView';
@@ -660,10 +665,12 @@ function GeneratedActivity({
   move,
   templateId,
   misconceptionTitle,
+  mathIssues,
 }: {
   move: Rec | null;
   templateId: string;
   misconceptionTitle: string;
+  mathIssues: IMathCheckIssue[];
 }) {
   const { t } = useTranslation();
   const screenSize = useScreenSize();
@@ -696,8 +703,14 @@ function GeneratedActivity({
         <span className="p2-activity-title">{copy ? `${copy.name} — ${copy.subtitle}` : '(no content)'}</span>
         <span className="p2-pick-id">{templateId}</span>
         {move && asStr(move.time) !== '' && <span className="p2-meta">{asStr(move.time)}</span>}
+        <MathIssueChip count={mathIssues.length} />
       </summary>
 
+      {mathIssues.length > 0 && (
+        <div className="p2-math-issues">
+          <MathIssueList issues={mathIssues} whereOf={(issue) => issue.rowLabel} />
+        </div>
+      )}
       {!content || !copy ? (
         <p className="p2-text">
           <span className="p2-nofit">
@@ -817,14 +830,18 @@ function MisconceptionCard({
   open,
   generation,
   tie,
+  mathIssues,
 }: {
   item: Rec;
   index: number;
   open: boolean;
   generation: number;
   tie?: TieNote;
+  // Every math check issue for this misconception: its own and its activities'.
+  mathIssues: IMathCheckIssue[];
 }) {
   const rank = typeof item.priorityRank === 'number' ? item.priorityRank : index + 1;
+  const ownIssues = mathIssues.filter((issue) => issue.kind === 'misconception');
   return (
     // Remounted on `generation` so Expand/Collapse all re-applies the default:
     // <details open> is uncontrolled after first render.
@@ -839,8 +856,14 @@ function MisconceptionCard({
         {item.isHighestFrequency === true && <span className="p2-meta p2-focus">Highest Frequency</span>}
         <ScoreStrip item={item} />
         <TieTag tie={tie} />
+        <MathIssueChip count={mathIssues.length} />
       </summary>
       <div className="p2-card-body">
+        {ownIssues.length > 0 && (
+          <div className="p2-math-issues p2-math-issues-wide">
+            <MathIssueList issues={ownIssues} whereOf={(issue) => issue.rowLabel} />
+          </div>
+        )}
         <MisconceptionBlock item={item} />
         <RubricBlock item={item} tie={tie} />
         <NeedBlock item={item} />
@@ -857,12 +880,18 @@ function MisconceptionCard({
           const hit =
             moves.find((mo) => asStr(mo.templateId) === templateId) ??
             (want ? moves.find((mo) => asStr(mo.activityType) === want) : undefined);
+          // The check names an activity by its position in the stored output,
+          // which moveOptions keeps.
+          const moveIndex = hit ? moves.indexOf(hit) : -1;
           return (
             <GeneratedActivity
               key={templateId}
               templateId={templateId}
               move={hit ?? null}
               misconceptionTitle={asStr(item.title)}
+              mathIssues={mathIssues.filter(
+                (issue) => issue.kind === 'activity' && issue.activityIndex === moveIndex,
+              )}
             />
           );
         })}
@@ -959,16 +988,124 @@ function ReflectionResultCard({
 
 // ── Review bar ────────────────────────────────────────────────────────────────
 
+/**
+ * Check math, beside Publish. Grey to start a check, a spinner while it runs,
+ * green and disabled once it comes back clean, red "View Errors" when it finds
+ * issues, which reopens the results (where Regen and hand edits are). A check
+ * that failed, or left parts unchecked, goes back to grey so it can be run
+ * again: neither is a pass.
+ */
+function CheckMathButton({ review }: { review: PrepublishSessionState }) {
+  const theme = useTheme();
+  const { status, surface, foreground } = theme.palette.designSystem;
+  const { mathCheck, isStartingMathCheck, checkMath, openMathResults } = review;
+  const isRunning = isStartingMathCheck || mathCheck?.status === 'RUNNING';
+  const hasIssues = mathCheck?.status === 'DONE' && mathCheck.issues.length > 0;
+  const isClean = isCleanCheck(mathCheck);
+
+  const base: React.CSSProperties = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: theme.sizing.space1,
+    fontWeight: 600,
+    color: surface.white,
+  };
+  if (isRunning) {
+    return (
+      <button
+        type="button"
+        className="p2-btn"
+        disabled
+        aria-label="Checking math"
+        style={{ ...base, background: surface.neutralGray, borderColor: surface.neutralGray, cursor: 'default' }}
+      >
+        <CircularProgress size={14} thickness={5} sx={{ color: foreground.slateGrey }} />
+      </button>
+    );
+  }
+  if (hasIssues) {
+    return (
+      <button
+        type="button"
+        className="p2-btn"
+        onClick={openMathResults}
+        style={{ ...base, background: status.errorStroke, borderColor: status.errorStroke }}
+      >
+        View Errors
+      </button>
+    );
+  }
+  if (isClean) {
+    return (
+      <button
+        type="button"
+        className="p2-btn"
+        disabled
+        style={{ ...base, background: status.success, borderColor: status.success, cursor: 'default' }}
+      >
+        Check math
+      </button>
+    );
+  }
+  return (
+    <button
+      type="button"
+      className="p2-btn"
+      onClick={checkMath}
+      style={{ ...base, background: surface.neutralGray, borderColor: surface.neutralGray, color: foreground.slateGrey }}
+    >
+      Check math
+    </button>
+  );
+}
+
+/** The line under the bar that says how the last check went. */
+function MathCheckNote({ review }: { review: PrepublishSessionState }) {
+  const { mathCheck, mathCheckError, openMathResults } = review;
+  if (mathCheckError === 'start') {
+    return <div className="p2-bar-row p2-bad p2-note">The math check could not be started. Try again.</div>;
+  }
+  if (mathCheckError === 'timeout') {
+    return (
+      <div className="p2-bar-row p2-bad p2-note">
+        The math check is taking longer than expected. Refresh the page to see whether it has finished.
+      </div>
+    );
+  }
+  if (mathCheck?.status === 'FAILED') {
+    return (
+      <div className="p2-bar-row p2-bad p2-note">
+        The math check failed{mathCheck.error ? `: ${mathCheck.error}` : ''}. Try again.
+      </div>
+    );
+  }
+  if (mathCheck?.status === 'DONE') {
+    const notFull = mathCheck.issues.length > 0 || (mathCheck.itemsUnchecked ?? 0) > 0;
+    return (
+      <div className={notFull ? 'p2-bar-row p2-bad p2-note' : 'p2-bar-row p2-note'}>
+        Math check: {mathCheck.summary ?? ''}
+        <button type="button" className="p2-link" onClick={openMathResults}>
+          View details
+        </button>
+      </div>
+    );
+  }
+  return null;
+}
+
 function ReviewBar({
   review,
   count,
   onExpandAll,
   onCollapseAll,
+  canCheckMath,
 }: {
   review: PrepublishSessionState;
   count: number;
   onExpandAll: () => void;
   onCollapseAll: () => void;
+  // MIU 1 results with stored pipeline output: what the math check reads.
+  canCheckMath: boolean;
 }) {
   const { session, className, isPublishing, publishError, publish } = review;
   const isPublished = session?.publishStatus !== PublishStatus.DRAFT;
@@ -990,6 +1127,7 @@ function ReviewBar({
         <button type="button" className="p2-btn" onClick={onCollapseAll}>
           Collapse all
         </button>
+        {canCheckMath && <CheckMathButton review={review} />}
         {/* Sessions from before the review step have no publishStatus: the
             teacher already sees them, so there is nothing to publish. */}
         {isPublished ? (
@@ -1012,9 +1150,12 @@ function ReviewBar({
       </div>
       {publishError && (
         <div className="p2-bar-row p2-bad p2-note">
-          Publish failed — nothing changed for the teacher. Try again.
+          {review.editsError
+            ? `Your hand edits could not be saved (${review.editsError}), so nothing was published. They are still in the math check results.`
+            : 'Publish failed — nothing changed for the teacher. Try again.'}
         </div>
       )}
+      {canCheckMath && <MathCheckNote review={review} />}
     </header>
   );
 }
@@ -1218,12 +1359,19 @@ const STYLES = `
 .p2-rank-focus { background: #1f7a3a; color: #fff; }
 .p2-distinct { margin-top: 6px; font-size: 12px; color: #5b636b; }
 .p2-loading { display: flex; justify-content: center; padding: 48px 0; }
+.p2-link { background: none; border: none; padding: 0; margin-left: 8px; font: inherit; font-weight: 600;
+  color: inherit; text-decoration: underline; cursor: pointer; }
+/* Math check issues: on a card they span the grid; in an activity they sit above the phases. */
+.p2-math-issues { margin: 0 0 12px; min-width: 0; }
+.p2-math-issues-wide { grid-column: 1 / -1; margin: 0; }
 `;
 
 export default function PrepublishReview() {
   const { sessionId = '' } = useParams();
   const review = usePrepublishSession(sessionId);
   const { status, items, isReflectionReview, misconceptionTitles, session } = review;
+  const { mathCheck } = review;
+  const { t } = useTranslation();
   const reflectionResults = session?.reflectionResults ?? [];
   const [allOpen, setAllOpen] = useState(false);
   const [generation, setGeneration] = useState(0);
@@ -1238,6 +1386,25 @@ export default function PrepublishReview() {
     return [...(items ?? [])].sort((a, b) => rank(a) - rank(b));
   }, [items]);
   const ties = useMemo(() => findTies(shown), [shown]);
+
+  // The last check's issues, by the misconception they belong to. Only a
+  // finished check's: a running one keeps no issues.
+  const issuesByMisconception = useMemo(() => {
+    const byIndex = new Map<number, IMathCheckIssue[]>();
+    if (mathCheck?.status !== 'DONE') return byIndex;
+    mathCheck.issues.forEach((issue) => {
+      byIndex.set(issue.misconceptionIndex, [...(byIndex.get(issue.misconceptionIndex) ?? []), issue]);
+    });
+    return byIndex;
+  }, [mathCheck]);
+
+  // Where an issue is, for the modal, which lists every issue in one place.
+  const whereOf = (issue: IMathCheckIssue): string => {
+    const type = TEMPLATE_CONTENT_TYPE[issue.templateId];
+    const activity = type ? activityTemplateCopy(type as ActivityType, t).name : issue.templateId || 'Activity';
+    const part = issue.kind === 'activity' ? activity : 'Misconception analysis';
+    return [issue.misconceptionTitle, part, issue.rowLabel].filter(Boolean).join(' › ');
+  };
   // Answer options claimed by more than one misconception.
   const sharedOptions = useMemo(() => {
     const owners = new Map<string, number>();
@@ -1291,6 +1458,7 @@ export default function PrepublishReview() {
             count={reflectionResults.length}
             onExpandAll={() => setAll(true)}
             onCollapseAll={() => setAll(false)}
+            canCheckMath={false}
           />
           <section className="p2-section p2-section-wide">
             <h2 className="p2-h2">MIU 2 results — before and after</h2>
@@ -1320,6 +1488,12 @@ export default function PrepublishReview() {
             count={shown.length}
             onExpandAll={() => setAll(true)}
             onCollapseAll={() => setAll(false)}
+            canCheckMath={items !== null && items.length > 0}
+          />
+          <MathCheckModal
+            review={review}
+            whereOf={whereOf}
+            isText={(issue) => typeof issueValue(items, issue) === 'string'}
           />
 
           <section className="p2-section p2-section-wide">
@@ -1356,6 +1530,11 @@ export default function PrepublishReview() {
                 open={allOpen}
                 generation={generation}
                 tie={ties.get(i)}
+                mathIssues={
+                  typeof item.pipelineIndex === 'number'
+                    ? issuesByMisconception.get(item.pipelineIndex) ?? []
+                    : []
+                }
               />
             ))}
           </section>

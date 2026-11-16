@@ -84,6 +84,13 @@ export interface IMicroCoachSession {
   // here: SessionParser leaves it out of the update input, so a teacher-side
   // update can never null it.
   pipelineOutput: string | null;
+  // The reviewer's Check math (microcoachv2FinalMathCheck), as JSON: status,
+  // summary and issues. Read-only here, like pipelineOutput: written only by
+  // the lambda, and left out of the update input.
+  mathCheck: string | null;
+  // The reviewer's Correct (microcoachv2FinalMathCorrect), as JSON: status and
+  // what was fixed. Read-only here, like mathCheck.
+  mathCorrect: string | null;
   evaluationResults: string | null;
   // Empty until the pipeline writes it (see the v2 pipeline task).
   questionStats: IQuestionStat[];

@@ -119,6 +119,10 @@ type MicroCoachSession @model @auth(rules: [{ allow: private }]) {
   # FAILED, summary, issues, … }, written by microcoachv2FinalMathCheck as its
   # state machine (microcoachv2MathCheck) runs. Read-only in the app.
   mathCheck: AWSJSON
+  # The reviewer's Correct on /prepublishreview: { status RUNNING | DONE |
+  # FAILED, fixed, notFixed, … }, written by microcoachv2FinalMathCorrect.
+  # Read-only in the app.
+  mathCorrect: AWSJSON
   evaluationResults: AWSJSON
   # Class % correct per MIU question (the Review screen's "Correct responses"
   # tiles), with the question text for the tile's tooltip.
@@ -554,6 +558,18 @@ type Mutation {
   # polls the session until the check is DONE or FAILED.
   checkSessionMath(sessionId: ID!): MicroCoachSession
     @function(name: "microcoachv2FinalMathCheck-${env}")
+    @auth(rules: [{ allow: groups, groups: ["Admins"] }])
+  # The reviewer's Correct: fixes the chosen math check issues with a model,
+  # writes them into the session's results and the teacher's rows, and
+  # re-checks what changed. Returns at once; the page polls mathCorrect.
+  # issues: [{ kind, misconceptionIndex, activityIndex, rowId }]
+  correctSessionMath(sessionId: ID!, issues: AWSJSON!): MicroCoachSession
+    @function(name: "microcoachv2FinalMathCorrect-${env}")
+    @auth(rules: [{ allow: groups, groups: ["Admins"] }])
+  # The reviewer's hand edits, written when they click Publish (no model).
+  # edits: [{ kind, misconceptionIndex, activityIndex, rowId, value }]
+  applySessionEdits(sessionId: ID!, edits: AWSJSON!): MicroCoachSession
+    @function(name: "microcoachv2FinalMathCorrect-${env}")
     @auth(rules: [{ allow: groups, groups: ["Admins"] }])
 }
 

@@ -164,6 +164,20 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "microcoachv2FinalMathCorrect": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "microcoachv2"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "microcoachv2GetLearningScience": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -371,6 +385,38 @@
         {
           "category": "function",
           "resourceName": "microcoachv2EmailTeacher"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2FinalMathCheck_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2FinalMathCheck"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2FinalMathCheck_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2FinalMathCheck"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2FinalMathCorrect_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2FinalMathCorrect"
+        }
+      ]
+    },
+    "AMPLIFY_function_microcoachv2FinalMathCorrect_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "microcoachv2FinalMathCorrect"
         }
       ]
     },

@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "storage": {
+      "MicroCoachSession:@model(appsync)": [
+        "read",
+        "update"
+      ],
+      "MicroCoachAssessment:@model(appsync)": [
+        "read"
+      ],
+      "MicroCoachMisconception:@model(appsync)": [
+        "read",
+        "update"
+      ],
+      "MicroCoachActivity:@model(appsync)": [
+        "read",
+        "update"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

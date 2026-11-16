@@ -37,6 +37,8 @@ export const getMicroCoachUser = /* GraphQL */ `
               selectedMisconceptionId
               pregeneratedNextSteps
               pipelineOutput
+              mathCheck
+              mathCorrect
               evaluationResults
               createdAt
               updatedAt
@@ -231,6 +233,8 @@ export const getMicroCoachClassroom = /* GraphQL */ `
           }
           pregeneratedNextSteps
           pipelineOutput
+          mathCheck
+          mathCorrect
           evaluationResults
           questionStats {
             questionNumber
@@ -369,6 +373,8 @@ export const listMicroCoachClassrooms = /* GraphQL */ `
             }
             pregeneratedNextSteps
             pipelineOutput
+            mathCheck
+            mathCorrect
             evaluationResults
             questionStats {
               questionNumber
@@ -595,6 +601,8 @@ export const getMicroCoachSession = /* GraphQL */ `
       }
       pregeneratedNextSteps
       pipelineOutput
+      mathCheck
+      mathCorrect
       evaluationResults
       questionStats {
         questionNumber
@@ -784,6 +792,8 @@ export const listMicroCoachSessions = /* GraphQL */ `
         }
         pregeneratedNextSteps
         pipelineOutput
+        mathCheck
+        mathCorrect
         evaluationResults
         questionStats {
           questionNumber
@@ -1430,6 +1440,8 @@ export const microCoachClassroomsByUserId = /* GraphQL */ `
             }
             pregeneratedNextSteps
             pipelineOutput
+            mathCheck
+            mathCorrect
             evaluationResults
             questionStats {
               questionNumber
@@ -1622,6 +1634,8 @@ export const microCoachSessionsByClassId = /* GraphQL */ `
         }
         pregeneratedNextSteps
         pipelineOutput
+        mathCheck
+        mathCorrect
         evaluationResults
         questionStats {
           questionNumber

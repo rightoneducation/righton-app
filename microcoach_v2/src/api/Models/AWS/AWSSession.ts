@@ -21,6 +21,8 @@ export type AWSSession = {
   selectedMisconceptionId?: string | null
   pregeneratedNextSteps?: string | null
   pipelineOutput?: string | null
+  mathCheck?: string | null
+  mathCorrect?: string | null
   evaluationResults?: string | null
   questionStats?: Array<{
     questionNumber: number

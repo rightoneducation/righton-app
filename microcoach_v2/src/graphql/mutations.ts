@@ -135,6 +135,668 @@ export const publishSession = /* GraphQL */ `
       }
       pregeneratedNextSteps
       pipelineOutput
+      mathCheck
+      mathCorrect
+      evaluationResults
+      questionStats {
+        questionNumber
+        percentCorrect
+        questionText
+        options {
+          letter
+          text
+          percentChosen
+          isCorrect
+          studentNames
+          __typename
+        }
+        __typename
+      }
+      reflectionResults {
+        activityId
+        misconceptionId
+        questionCount
+        averagePercentCorrectBefore
+        averagePercentCorrectAfter
+        averageQuestionsCorrectBefore
+        averageQuestionsCorrectAfter
+        improvedStudentCount
+        studentResults {
+          studentId
+          studentName
+          questionsCorrectBefore
+          questionsCorrectAfter
+          __typename
+        }
+        questionResults {
+          questionNumber
+          questionText
+          beforeQuestionText
+          afterQuestionText
+          beforeStandard
+          afterStandard
+          percentCorrectBefore
+          percentCorrectAfter
+          beforeAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          afterAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
+      uploads {
+        items {
+          id
+          userId
+          cognitoId
+          classId
+          sessionId
+          assessmentType
+          docxKey
+          xlsxKey
+          weekStart
+          weekLabel
+          status
+          error
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const checkSessionMath = /* GraphQL */ `
+  mutation CheckSessionMath($sessionId: ID!) {
+    checkSessionMath(sessionId: $sessionId) {
+      id
+      classId
+      sessionLabel
+      weekLabel
+      weekNumber
+      weekStart
+      topic
+      ccssStandards
+      status
+      publishStatus
+      studentWorksAnalyzed
+      studentsWithStrongUnderstanding
+      studentsWithStrongUnderstandingIds
+      studentIdsNeedingSupport
+      ppqAssessmentId
+      postPpqAssessmentId
+      selectedMisconceptionId
+      assessments {
+        items {
+          id
+          classId
+          sessionId
+          assessmentCode
+          type
+          weekNumber
+          uploadId
+          classPercentCorrect
+          questions {
+            questionNumber
+            docxQuestion
+            questionText
+            ccssStandard
+            correctAnswer
+            classPercentCorrect
+            answerChoices {
+              letter
+              content
+              isCorrect
+              __typename
+            }
+            __typename
+          }
+          responses {
+            items {
+              id
+              assessmentId
+              classId
+              sessionId
+              studentRef
+              totalScore
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      misconceptions {
+        items {
+          id
+          sessionId
+          classId
+          activity {
+            items {
+              id
+              misconceptionId
+              sessionId
+              classId
+              activityType
+              title
+              isSelected
+              selectLabel
+              detailStatus
+              routine
+              durationMinutes
+              durationLabel
+              targets
+              instructionalMove
+              strategyTag
+              phases
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          rank
+          badge
+          title
+          titleCased
+          shortLabel
+          description
+          consequence
+          prevalence {
+            level
+            label
+            studentsNeedingSupport
+            studentsUnderstood
+            studentsNoResponse
+            totalAnalyzed
+            supportSummaryLabel
+            understoodSummaryLabel
+            shortCountLabel
+            __typename
+          }
+          detailStatus
+          studentWork
+          skillContext
+          responseEvidence {
+            questionNumber
+            answers
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      pregeneratedNextSteps
+      pipelineOutput
+      mathCheck
+      mathCorrect
+      evaluationResults
+      questionStats {
+        questionNumber
+        percentCorrect
+        questionText
+        options {
+          letter
+          text
+          percentChosen
+          isCorrect
+          studentNames
+          __typename
+        }
+        __typename
+      }
+      reflectionResults {
+        activityId
+        misconceptionId
+        questionCount
+        averagePercentCorrectBefore
+        averagePercentCorrectAfter
+        averageQuestionsCorrectBefore
+        averageQuestionsCorrectAfter
+        improvedStudentCount
+        studentResults {
+          studentId
+          studentName
+          questionsCorrectBefore
+          questionsCorrectAfter
+          __typename
+        }
+        questionResults {
+          questionNumber
+          questionText
+          beforeQuestionText
+          afterQuestionText
+          beforeStandard
+          afterStandard
+          percentCorrectBefore
+          percentCorrectAfter
+          beforeAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          afterAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
+      uploads {
+        items {
+          id
+          userId
+          cognitoId
+          classId
+          sessionId
+          assessmentType
+          docxKey
+          xlsxKey
+          weekStart
+          weekLabel
+          status
+          error
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const correctSessionMath = /* GraphQL */ `
+  mutation CorrectSessionMath($sessionId: ID!, $issues: AWSJSON!) {
+    correctSessionMath(sessionId: $sessionId, issues: $issues) {
+      id
+      classId
+      sessionLabel
+      weekLabel
+      weekNumber
+      weekStart
+      topic
+      ccssStandards
+      status
+      publishStatus
+      studentWorksAnalyzed
+      studentsWithStrongUnderstanding
+      studentsWithStrongUnderstandingIds
+      studentIdsNeedingSupport
+      ppqAssessmentId
+      postPpqAssessmentId
+      selectedMisconceptionId
+      assessments {
+        items {
+          id
+          classId
+          sessionId
+          assessmentCode
+          type
+          weekNumber
+          uploadId
+          classPercentCorrect
+          questions {
+            questionNumber
+            docxQuestion
+            questionText
+            ccssStandard
+            correctAnswer
+            classPercentCorrect
+            answerChoices {
+              letter
+              content
+              isCorrect
+              __typename
+            }
+            __typename
+          }
+          responses {
+            items {
+              id
+              assessmentId
+              classId
+              sessionId
+              studentRef
+              totalScore
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      misconceptions {
+        items {
+          id
+          sessionId
+          classId
+          activity {
+            items {
+              id
+              misconceptionId
+              sessionId
+              classId
+              activityType
+              title
+              isSelected
+              selectLabel
+              detailStatus
+              routine
+              durationMinutes
+              durationLabel
+              targets
+              instructionalMove
+              strategyTag
+              phases
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          rank
+          badge
+          title
+          titleCased
+          shortLabel
+          description
+          consequence
+          prevalence {
+            level
+            label
+            studentsNeedingSupport
+            studentsUnderstood
+            studentsNoResponse
+            totalAnalyzed
+            supportSummaryLabel
+            understoodSummaryLabel
+            shortCountLabel
+            __typename
+          }
+          detailStatus
+          studentWork
+          skillContext
+          responseEvidence {
+            questionNumber
+            answers
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      pregeneratedNextSteps
+      pipelineOutput
+      mathCheck
+      mathCorrect
+      evaluationResults
+      questionStats {
+        questionNumber
+        percentCorrect
+        questionText
+        options {
+          letter
+          text
+          percentChosen
+          isCorrect
+          studentNames
+          __typename
+        }
+        __typename
+      }
+      reflectionResults {
+        activityId
+        misconceptionId
+        questionCount
+        averagePercentCorrectBefore
+        averagePercentCorrectAfter
+        averageQuestionsCorrectBefore
+        averageQuestionsCorrectAfter
+        improvedStudentCount
+        studentResults {
+          studentId
+          studentName
+          questionsCorrectBefore
+          questionsCorrectAfter
+          __typename
+        }
+        questionResults {
+          questionNumber
+          questionText
+          beforeQuestionText
+          afterQuestionText
+          beforeStandard
+          afterStandard
+          percentCorrectBefore
+          percentCorrectAfter
+          beforeAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          afterAnswers {
+            letter
+            text
+            percentChosen
+            isCorrect
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
+      uploads {
+        items {
+          id
+          userId
+          cognitoId
+          classId
+          sessionId
+          assessmentType
+          docxKey
+          xlsxKey
+          weekStart
+          weekLabel
+          status
+          error
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const applySessionEdits = /* GraphQL */ `
+  mutation ApplySessionEdits($sessionId: ID!, $edits: AWSJSON!) {
+    applySessionEdits(sessionId: $sessionId, edits: $edits) {
+      id
+      classId
+      sessionLabel
+      weekLabel
+      weekNumber
+      weekStart
+      topic
+      ccssStandards
+      status
+      publishStatus
+      studentWorksAnalyzed
+      studentsWithStrongUnderstanding
+      studentsWithStrongUnderstandingIds
+      studentIdsNeedingSupport
+      ppqAssessmentId
+      postPpqAssessmentId
+      selectedMisconceptionId
+      assessments {
+        items {
+          id
+          classId
+          sessionId
+          assessmentCode
+          type
+          weekNumber
+          uploadId
+          classPercentCorrect
+          questions {
+            questionNumber
+            docxQuestion
+            questionText
+            ccssStandard
+            correctAnswer
+            classPercentCorrect
+            answerChoices {
+              letter
+              content
+              isCorrect
+              __typename
+            }
+            __typename
+          }
+          responses {
+            items {
+              id
+              assessmentId
+              classId
+              sessionId
+              studentRef
+              totalScore
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      misconceptions {
+        items {
+          id
+          sessionId
+          classId
+          activity {
+            items {
+              id
+              misconceptionId
+              sessionId
+              classId
+              activityType
+              title
+              isSelected
+              selectLabel
+              detailStatus
+              routine
+              durationMinutes
+              durationLabel
+              targets
+              instructionalMove
+              strategyTag
+              phases
+              createdAt
+              updatedAt
+              __typename
+            }
+            nextToken
+            __typename
+          }
+          rank
+          badge
+          title
+          titleCased
+          shortLabel
+          description
+          consequence
+          prevalence {
+            level
+            label
+            studentsNeedingSupport
+            studentsUnderstood
+            studentsNoResponse
+            totalAnalyzed
+            supportSummaryLabel
+            understoodSummaryLabel
+            shortCountLabel
+            __typename
+          }
+          detailStatus
+          studentWork
+          skillContext
+          responseEvidence {
+            questionNumber
+            answers
+            __typename
+          }
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      pregeneratedNextSteps
+      pipelineOutput
+      mathCheck
+      mathCorrect
       evaluationResults
       questionStats {
         questionNumber
@@ -258,6 +920,8 @@ export const createMicroCoachUser = /* GraphQL */ `
               selectedMisconceptionId
               pregeneratedNextSteps
               pipelineOutput
+              mathCheck
+              mathCorrect
               evaluationResults
               createdAt
               updatedAt
@@ -356,6 +1020,8 @@ export const updateMicroCoachUser = /* GraphQL */ `
               selectedMisconceptionId
               pregeneratedNextSteps
               pipelineOutput
+              mathCheck
+              mathCorrect
               evaluationResults
               createdAt
               updatedAt
@@ -454,6 +1120,8 @@ export const deleteMicroCoachUser = /* GraphQL */ `
               selectedMisconceptionId
               pregeneratedNextSteps
               pipelineOutput
+              mathCheck
+              mathCorrect
               evaluationResults
               createdAt
               updatedAt
@@ -582,6 +1250,8 @@ export const createMicroCoachClassroom = /* GraphQL */ `
           }
           pregeneratedNextSteps
           pipelineOutput
+          mathCheck
+          mathCorrect
           evaluationResults
           questionStats {
             questionNumber
@@ -745,6 +1415,8 @@ export const updateMicroCoachClassroom = /* GraphQL */ `
           }
           pregeneratedNextSteps
           pipelineOutput
+          mathCheck
+          mathCorrect
           evaluationResults
           questionStats {
             questionNumber
@@ -908,6 +1580,8 @@ export const deleteMicroCoachClassroom = /* GraphQL */ `
           }
           pregeneratedNextSteps
           pipelineOutput
+          mathCheck
+          mathCorrect
           evaluationResults
           questionStats {
             questionNumber
@@ -1187,6 +1861,8 @@ export const createMicroCoachSession = /* GraphQL */ `
       }
       pregeneratedNextSteps
       pipelineOutput
+      mathCheck
+      mathCorrect
       evaluationResults
       questionStats {
         questionNumber
@@ -1408,6 +2084,8 @@ export const updateMicroCoachSession = /* GraphQL */ `
       }
       pregeneratedNextSteps
       pipelineOutput
+      mathCheck
+      mathCorrect
       evaluationResults
       questionStats {
         questionNumber
@@ -1629,6 +2307,8 @@ export const deleteMicroCoachSession = /* GraphQL */ `
       }
       pregeneratedNextSteps
       pipelineOutput
+      mathCheck
+      mathCorrect
       evaluationResults
       questionStats {
         questionNumber
