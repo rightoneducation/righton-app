@@ -214,6 +214,83 @@ async function generateActivities(invoke, m, shared) {
   return activities;
 }
 
+// JSON string of knowledge graph data for step functions
+const graphData = (graph) => {
+  return JSON.stringify({ standards: graph.standards});
+}
+
+
+// object that contains necessary context information that will be managed over the duration of the pipeline
+export function buildContext({ session, assessment, studentResponses }){
+  const questions = assessment.questions ?? [];
+  const standards = session.ccssStandards ?? [];
+  if (!standards.length){
+    throw new Error('The session has no CCSS standards');
+  }
+
+  const wrongAnswerDist = computeWrongAnswerDist(studentResponses);
+  const code = String(assessment.assessmentCode).split('.')[0];
+  const subject = SUBJECTS[code] ?? 'Math';
+  const classroom = {subject, cohortSize: studentResponses.length };
+  const ppq = {
+    ...assessment,
+    ccssStandards: standards,
+    confidenceStats: computeConfidenceStats(studentResponses, questions),
+  };
+
+  return{
+    session,
+    questions,
+    standards,
+    wrongAnswerDist,
+    subject,
+    classroom,
+    ppq,
+    studentResponses
+  }
+}
+
+export async function stepMisconceptions({ ctx, store, invoke}){
+  const { session, questions, standards, wrongAnswerDist } = ctx;
+  const raw = await fetchLearningScience(invoke, standards, session.id);
+  const graph = { raw, standards: dedupeGraph(raw) };
+  await store.save('graph', graph);
+  console.log(`Graph: ${raw.length} standards for ${standards.join(', ')}`);
+
+  const generatedOut = await callStage(invoke, 'genMisconception', {
+    questions: JSON.stringify(questions.map((q) => ({
+      questionNumber: q.questionNumber,
+      ccssStandard: q.ccssStandard || standards.join(', '),
+      correctAnswer: q.correctAnswer ?? null,
+      classPercentCorrect: q.classPercentCorrect ?? null,
+      questionText: q.questionText ?? null,
+      answerChoices: (q.answerChoices ?? []).map((o) => {
+        const letter = String(o.letter).toUpperCase();
+        return{
+          letter: o.letter,
+          isCorrect: o.isCorrect ?? false,
+          content: o.content ?? null,
+          studentCount: wrongAnswerDist[q.questionNumber]?.[letter] ?? 0
+        };
+      }),
+    }))),
+    context: JSON.stringify({ subject: ctx.subject, ccssStandards: standards }),
+    learningScienceData: graphData(graph),
+    trace: false,
+  });
+
+  const generated = withReachAndStandard(
+    generatedOut?.misconceptions ?? [],
+    questions,
+    ctx.studentResponses,
+    standards,
+  );
+  await store.save('generated', generated);
+  console.log(`Misconceptions: ${generated.length}`);
+
+  return { count: generated.length };
+}
+
 /**
  * @param session    the MicroCoachSession row
  * @param assessment the MicroCoachAssessment row (with questions)
