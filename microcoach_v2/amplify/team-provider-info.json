@@ -172,7 +172,7 @@
         },
         "microcoachv2UploadIngest": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2UploadIngest-6b43512b3443625a3456-build.zip"
+          "s3Key": "amplify-builds/microcoachv2UploadIngest-3766654175424c427a6f-build.zip"
         },
         "microcoachv2UploadDispatch": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
@@ -180,7 +180,7 @@
         },
         "microcoachv2UploadGenerate": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2UploadGenerate-48306f70454e4d52716a-build.zip"
+          "s3Key": "amplify-builds/microcoachv2UploadGenerate-6e725139424d62413735-build.zip"
         },
         "microcoachv2EmailTeacher": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
@@ -189,6 +189,9 @@
       },
       "storage": {
         "microcoachuploads": {}
+      },
+      "custom": {
+        "microcoachv2GeneratePipeline": {}
       }
     }
   }

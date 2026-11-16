@@ -45,7 +45,6 @@ Amplify Params - DO NOT EDIT */
  */
 
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
-import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { SFNClient, StartExecutionCommand } from '@aws-sdk/client-sfn';
 import { DynamoDBClient, ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import {
@@ -86,7 +85,6 @@ const BATCH_RETRIES = 5;
 const MIU2_USES_MIU1_KEY = true;
 
 const s3 = new S3Client({ region: REGION });
-const lambda = new LambdaClient({ region: REGION });
 const sfn = new SFNClient({region: REGION}); // step function
 const db = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 

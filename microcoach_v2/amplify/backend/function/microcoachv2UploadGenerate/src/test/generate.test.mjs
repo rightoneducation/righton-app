@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { runPipeline, computeWrongAnswerDist } from '../util/pipeline.mjs';
+import { computeWrongAnswerDist } from '../util/pipeline.mjs';
+import { runSteps } from './runSteps.mjs';
 import { buildRows } from '../util/buildRows.mjs';
 
 const qr = (questionNumber, response, isCorrect, confidence = 4) => ({ questionNumber, response, isCorrect, confidence });
@@ -59,7 +60,7 @@ const replies = (overrides = {}) => {
 
 const run = (overrides) => {
   const { invoke, calls } = replies(overrides);
-  return runPipeline({ session, assessment, studentResponses, invoke }).then((output) => ({ output, calls }));
+  return runSteps({ session, assessment, studentResponses, invoke }).then(({ output }) => ({ output, calls }));
 };
 
 test('stages run in order and carry only retained misconceptions, ranked', async () => {

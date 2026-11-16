@@ -22,6 +22,11 @@ export type AmplifyDependentResourcesAttributes = {
       "AdminsGroupRole": "string"
     }
   },
+  "custom": {
+    "microcoachv2GeneratePipeline": {
+      "StateMachineArn": "string"
+    }
+  },
   "function": {
     "microcoachv2EmailTeacher": {
       "Arn": "string",

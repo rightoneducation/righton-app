@@ -311,5 +311,6 @@
         "Ref": "StateMachine"
       }
     }
-  }
+  },
+  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"12.1.1\",\"stackType\":\"custom-customCloudformation\",\"metadata\":{}}"
 }
