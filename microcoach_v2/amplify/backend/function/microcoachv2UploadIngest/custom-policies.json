@@ -1,10 +1,18 @@
-[
-  {
-    "Action": [
-      "ses:SendEmail"
-    ],
-    "Resource": [
-      "*"
-    ]
-  }
-]
+ [
+    {
+      "Action": [
+        "ses:SendEmail"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Action": [
+        "states:StartExecution"
+      ],
+      "Resource": [
+        "arn:aws:states:*:*:stateMachine:microcoachv2Generate-${env}"
+      ]
+    }
+  ]
