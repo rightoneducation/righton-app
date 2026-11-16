@@ -28,11 +28,12 @@ ${problems.map((p, i) => `- p${i} [${p.kind}]: ${JSON.stringify(p.text)}`).join(
 
 /**
  * @param what      what the material is, in a few words
+ * @param guide     how this kind of material is built (templateGuide.mjs)
  * @param material  the object being reviewed, with its labels
  * @param reference the blind solve's output, each entry with its problem
  * @param rows      every value in the material, from rowsOf
  */
-export const auditPromptFor = ({ what, material, reference, rows }) => `
+export const auditPromptFor = ({ what, guide, material, reference, rows }) => `
 You are an independent mathematics reviewer giving generated teaching material its last check before a teacher uses it. The material is ${what}. You judge only the mathematics and the mathematical thinking. Wording, teaching choices, timing and formatting are not your concern.
 
 ## What to check
@@ -44,11 +45,15 @@ A claim is anything that could be mathematically true or false. Every row listed
 
 A number is a claim about what it counts, measures or computes; where the material gives what it was computed from, check that they agree. A label is a claim about the thing it labels. An identifier or a name makes no claim.
 
+## How this material is built
+${guide}
+
 ## The role of each row
-The material deliberately contains or describes incorrect student work, and it says so itself (statuses, annotations, verdicts, stances, and what the surrounding text calls an error). Judge every row by what it is meant to be:
+The material deliberately contains or describes incorrect student work and statements students argue about, and it says so itself (statuses, annotations, verdicts, stances, a resolution, and what the surrounding text calls an error). Use the description above to find what each row is meant to be, and judge it by that:
 
 - A row meant to be correct is sound when all of its claims hold.
 - A row meant to show an error is sound when it contains the error its labels and notes describe, and is otherwise consistent: it follows from the lines before it, and what it says the work does is what that work would actually produce.
+- A statement put to students to argue about is not asserted by the material: it is sound when it agrees with the material's own answer about it.
 - A row that reports what a student believes, asks a question, or gives an instruction makes no claim of its own, unless it also asserts something as fact.
 
 ## Method

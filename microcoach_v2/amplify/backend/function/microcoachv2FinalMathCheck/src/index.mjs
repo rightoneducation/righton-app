@@ -51,6 +51,7 @@ import { z } from 'zod';
 import { loadSecret } from './util/loadsecrets.mjs';
 import { rowsOf, shown, activityProblems, misconceptionProblems } from './util/rows.mjs';
 import { solvePromptFor, auditPromptFor } from './util/prompt.mjs';
+import { guideFor } from './util/templateGuide.mjs';
 import { summarize, describeError, parseOutput, checkItems } from './util/results.mjs';
 
 const config = JSON.parse(readFileSync(new URL('./util/config.json', import.meta.url), 'utf8'));
@@ -215,7 +216,7 @@ async function assessmentQuestions(session) {
 }
 
 /** Solve `problems` blind, then audit every value in `material` against that. */
-async function review(label, what, material, problems) {
+async function review(label, what, guide, material, problems) {
   const rows = rowsOf(material);
   if (rows.length === 0) return { rowsChecked: 0, issues: [] };
 
@@ -231,7 +232,7 @@ async function review(label, what, material, problems) {
   // A verdict is required on every row: left to choose, a reviewer skips some.
   const Audit = z.object(Object.fromEntries(rows.map((_, n) => [`r${n}`, RowVerdict])));
   const audit = await structuredCall(
-    `audit ${label}`, auditPromptFor({ what, material: shown(material), reference, rows }), Audit, 'audit',
+    `audit ${label}`, auditPromptFor({ what, guide, material: shown(material), reference, rows }), Audit, 'audit',
   );
 
   const issues = rows.flatMap((row, n) => {
@@ -260,7 +261,7 @@ async function checkItem({ sessionId, kind, i, j }) {
     const result = await review(
       `misconception ${i}`,
       'the analysis of one misconception found in a class\'s answers to a multiple-choice assessment: what the misconception is, the wrong answers linked to it and why, how it was scored and ranked, the instructional need, and the activity templates chosen for it',
-      analysis, problems,
+      guideFor('misconception'), analysis, problems,
     );
     return { ...base, templateId: '', ...result };
   }
@@ -270,7 +271,7 @@ async function checkItem({ sessionId, kind, i, j }) {
     const result = await review(
       `activity ${i}-${j}`,
       `a classroom activity written to address the misconception "${misconception.title ?? ''}"`,
-      activity, activityProblems(activity.content),
+      guideFor('activity', activity), activity, activityProblems(activity.content),
     );
     return { ...base, templateId: activity.templateId ?? '', ...result };
   }

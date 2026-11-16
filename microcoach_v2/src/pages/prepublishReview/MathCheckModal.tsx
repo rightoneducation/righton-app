@@ -51,7 +51,7 @@ export function MathIssueChip({ count }: { count: number }) {
   );
 }
 
-interface IssueControls {
+export interface IssueControls {
   isSelected: boolean;
   onToggle: () => void;
   // The hand edit in progress, or null when the issue isn't being edited.
@@ -61,15 +61,41 @@ interface IssueControls {
   disabled: boolean;
 }
 
+/**
+ * The Regen tick box and hand edit for each issue, from the review's state, so
+ * the modal and the in-place panels on the cards share one selection and one
+ * set of edits.
+ */
+export function issueControlsFor(
+  review: PrepublishSessionState,
+  isText: (issue: IMathCheckIssue) => boolean,
+): (issue: IMathCheckIssue) => IssueControls {
+  const { selectedIssues, toggleIssue, edits, setEdit, mathCorrect, isStartingCorrect } = review;
+  const disabled = isStartingCorrect || mathCorrect?.status === 'RUNNING';
+  return (issue) => {
+    const key = issueKey(issue);
+    return {
+      isSelected: selectedIssues.has(key),
+      onToggle: () => toggleIssue(issue),
+      edit: edits[key]?.value ?? null,
+      onEdit: isText(issue) ? (value) => setEdit(issue, value) : undefined,
+      disabled,
+    };
+  };
+}
+
 /** One issue: where it is, the text at fault, and the working that shows it. */
 function MathIssueBlock({
   issue,
   where,
   controls,
+  inPlace = false,
 }: {
   issue: IMathCheckIssue;
   where: string;
   controls?: IssueControls;
+  // Drawn right under the text it is about, so the text isn't repeated.
+  inPlace?: boolean;
 }) {
   const theme = useTheme();
   const { status, surface } = theme.palette.designSystem;
@@ -128,9 +154,11 @@ function MathIssueBlock({
           sx={{ backgroundColor: surface.white, '& textarea': { fontSize: 13 } }}
         />
       ) : (
-        <Typography variant="rubikBody" component="div" sx={{ fontSize: 13, overflowWrap: 'anywhere' }}>
-          <MathText text={issue.text} />
-        </Typography>
+        !inPlace && (
+          <Typography variant="rubikBody" component="div" sx={{ fontSize: 13, overflowWrap: 'anywhere' }}>
+            <MathText text={issue.text} />
+          </Typography>
+        )
       )}
       <Typography
         variant="rubikBody"
@@ -148,10 +176,13 @@ export function MathIssueList({
   issues,
   whereOf,
   controlsFor,
+  inPlace = false,
 }: {
   issues: IMathCheckIssue[];
   whereOf: (issue: IMathCheckIssue) => string;
   controlsFor?: (issue: IMathCheckIssue) => IssueControls;
+  // Under the text the issues are about: the text isn't repeated.
+  inPlace?: boolean;
 }) {
   const theme = useTheme();
   if (issues.length === 0) return null;
@@ -163,6 +194,7 @@ export function MathIssueList({
           issue={issue}
           where={whereOf(issue)}
           controls={controlsFor?.(issue)}
+          inPlace={inPlace}
         />
       ))}
     </Box>
@@ -236,7 +268,7 @@ export default function MathCheckModal({
   const theme = useTheme();
   const { designSystem } = theme.palette;
   const {
-    mathCheck, isMathResultsOpen, closeMathResults, selectedIssues, toggleIssue, edits, setEdit,
+    mathCheck, isMathResultsOpen, closeMathResults, selectedIssues, edits,
     mathCorrect, isStartingCorrect, correctError, correct,
   } = review;
   const check = mathCheck?.status === 'DONE' ? mathCheck : null;
@@ -244,17 +276,7 @@ export default function MathCheckModal({
   const isCorrecting = isStartingCorrect || mathCorrect?.status === 'RUNNING';
   const selectedCount = check ? check.issues.filter((issue) => selectedIssues.has(issueKey(issue))).length : 0;
   const editCount = Object.keys(edits).length;
-
-  const controlsFor = (issue: IMathCheckIssue): IssueControls => {
-    const key = issueKey(issue);
-    return {
-      isSelected: selectedIssues.has(key),
-      onToggle: () => toggleIssue(issue),
-      edit: edits[key]?.value ?? null,
-      onEdit: isText(issue) ? (value) => setEdit(issue, value) : undefined,
-      disabled: isCorrecting,
-    };
-  };
+  const controlsFor = issueControlsFor(review, isText);
 
   return (
     <AppModal
