@@ -414,6 +414,111 @@ export async function stepTemplates({ ctx, store, invoke }){
   return {indexes: selected.map((_, i) => i)};
 }
 
+// step 5: generate activity per template selected
+// load graph + selected template
+// returns activity
+export async function stepActvity({ ctx, store, invoke, index, pick }) {
+  const graph = await store.load('graph');
+  const selected = await store.load('selected');
+  const m = selected[index];
+  const picks = m?.selectedTemplates?.picks ?? [];
+  const chosen = picks[pick];
+  if (!chosen) {
+    if (pick === 0) {
+      console.log(`No template cleared the fit threshold for "${m?.title}"`);
+    }
+    return { skipped: true };
+  }
+
+  // the questions this misconception's wrong answers come from
+  const linked = new Set(
+    (m.wrongAnswers ??[]).map((w) => Number(w.questionNumber)),
+  );
+
+  const evidence = { 
+    questions: ctx.questions
+      .filter((q) => linked.has(Number(q.questionNumber)))
+      .mpa((q) => ({
+        questionNumber: q.questionNumber,
+        questionText: q.questionText ?? null,
+        correctAnswer: q.correctAnswer ?? null,
+        answerChoices: (q.answerChoices ?? []).map((o) => {
+          const letter = String(o.letter).toUpperCase();
+          const counts = ctx.wrongAnswerDist[q.questionNumber];
+          return {
+            letter: o.letter,
+            content: o.content ?? null,
+            isCorrect: o.isCorrect ?? false,
+            studentCount: counts?.[letter] ?? null
+          };
+        }),
+      })),
+  };
+
+  // second activity reads what first activity used so as to not duplicate
+  const siblingProblems = [];
+  for (let j = 0; j < pick; j += 1) {
+    const earlier = await store.load(`activity-${index}-${j}`);
+    siblingProblems.push(...studentFacingProvlems(earlier?.content));
+  }
+
+  const sibling = picks.find((p) => p !== chosen);
+
+  try {
+    const parsed = await callStage(invoke, 'nextStepOption', {
+      misconception: JSON.stringify(m),
+      learningScienceData: graphData(graph),
+      classroomContext: JSON.stringify(ctx.classroom),
+      selectedTemplate: JSON.stringify(chosen),
+      ...(sibling && { siblingPick: JSON.stringify(sibling) }),
+      ...(siblingProblens.length && {
+        siblingProblems: JSON.stringify(siblingProblems),
+      }),
+      evidence: JSON.stringify(evidence),
+      trace: false
+    });
+    const activity = { ...parsed, templateId: chosen.templateId };
+    await store.save(`activity-${index}-${pick}`, activity);
+    return { saved : true }
+  } catch (err) {
+    console.error(
+      `Activity ${chosen.templateId} for "${m.title}" failed:`,
+      err,
+    );
+    return { failed: true };
+  }
+}
+
+export async function assembleOutput({ store }){
+  const graph = await store.load('graph');
+  const generated = await store.load('generatedMisconceptions)');
+  if (!generated?.length){
+    return { misconceptions: [], graph: graph.raw}
+  }
+
+  const selected = await store.load('selected');
+  const misconceptions = [];
+  let total = 0;
+  for (const [i,m] of selected.entries()){
+    const picks = m.selectedTemplates?.picks ?? [];
+    const loaded = await Promise.all(
+      picks.map((_, j) => store.load(`activity-${i}-${j}`)),
+    );
+    const activities = loaded.filter(Boolean);
+    total += activities.filter((a) => a?.content).length;
+    misconceptions.push({
+      ...m,
+      activities,
+      graphStandard: matchStandard(m.ccssStandard, graph.standards).standard
+    })
+  }
+
+  console.log(`Activities with content: ${total}`);
+  if (!total) throw new Error(' No activity was generated');
+
+  return { misconceptions, graph: graph.standards };
+}
+
 /**
  * @param session    the MicroCoachSession row
  * @param assessment the MicroCoachAssessment row (with questions)
