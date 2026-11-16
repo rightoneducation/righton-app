@@ -271,6 +271,13 @@
         },
         {
           "attributes": [
+            "BucketName"
+          ],
+          "category": "storage",
+          "resourceName": "microcoachuploads"
+        },
+        {
+          "attributes": [
             "GraphQLAPIIdOutput"
           ],
           "category": "api",

@@ -21,6 +21,10 @@
       ]
     },
     "storage": {
+      "microcoachuploads": [
+        "create",
+        "read"
+      ],
       "MicroCoachSession:@model(appsync)": [
         "read",
         "update"

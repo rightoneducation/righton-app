@@ -25,6 +25,291 @@
       "Description": "Input parameter describing LambdaExecutionRoleArn attribute for function/microcoachv2UploadGenerate resource"
     }
   },
-  "Resources": {},
-  "Outputs": {}
+  "Resources": {
+    "StateMachineRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "states.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "InvokeRunner",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "lambda:InvokeFunction",
+                  "Resource": {
+                    "Ref": "functionmicrocoachv2UploadGenerateArn"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "StateMachine": {
+      "Type": "AWS::StepFunctions::StateMachine",
+      "Properties": {
+        "StateMachineName": {
+          "Fn::Sub": "microcoachv2Generate-${env}"
+        },
+        "StateMachineType": "STANDARD",
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "StateMachineRole",
+            "Arn"
+          ]
+        },
+        "DefinitionSubstitutions": {
+          "RunnerArn": {
+            "Ref": "functionmicrocoachv2UploadGenerateArn"
+          }
+        },
+        "Definition": {
+          "Comment": "MicroCoach v2 generation, one step per Lambda invocation",
+          "StartAt": "Misconceptions",
+          "TimeoutSeconds": 3600,
+          "States": {
+            "Misconceptions": {
+              "Type": "Task",
+              "Resource": "${RunnerArn}",
+              "Parameters": {
+                "uploadId.$": "$.uploadId",
+                "runId.$": "$$.Execution.Name",
+                "step": "misconceptions"
+              },
+              "ResultPath": "$.misconceptions",
+              "TimeoutSeconds": 360,
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error",
+                  "Next": "Fail"
+                }
+              ],
+              "Next": "WasClaimed"
+            },
+            "WasClaimed": {
+              "Type": "Choice",
+              "Choices": [
+                {
+                  "Variable": "$.misconceptions.claimed",
+                  "BooleanEquals": false,
+                  "Next": "AlreadyClaimed"
+                },
+                {
+                  "Variable": "$.misconceptions.count",
+                  "NumericEquals": 0,
+                  "Next": "Finalize"
+                }
+              ],
+              "Default": "Scores"
+            },
+            "AlreadyClaimed": {
+              "Type": "Succeed"
+            },
+            "Scores": {
+              "Type": "Task",
+              "Resource": "${RunnerArn}",
+              "Parameters": {
+                "uploadId.$": "$.uploadId",
+                "runId.$": "$$.Execution.Name",
+                "step": "scores"
+              },
+              "ResultPath": "$.scores",
+              "TimeoutSeconds": 330,
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error",
+                  "Next": "Fail"
+                }
+              ],
+              "Next": "Needs"
+            },
+            "Needs": {
+              "Type": "Task",
+              "Resource": "${RunnerArn}",
+              "Parameters": {
+                "uploadId.$": "$.uploadId",
+                "runId.$": "$$.Execution.Name",
+                "step": "needs"
+              },
+              "ResultPath": "$.needs",
+              "TimeoutSeconds": 330,
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error",
+                  "Next": "Fail"
+                }
+              ],
+              "Next": "Templates"
+            },
+            "Templates": {
+              "Type": "Task",
+              "Resource": "${RunnerArn}",
+              "Parameters": {
+                "uploadId.$": "$.uploadId",
+                "runId.$": "$$.Execution.Name",
+                "step": "templates"
+              },
+              "ResultPath": "$.templates",
+              "TimeoutSeconds": 330,
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error",
+                  "Next": "Fail"
+                }
+              ],
+              "Next": "Activities"
+            },
+            "Activities": {
+              "Type": "Map",
+              "ItemsPath": "$.templates.indexes",
+              "MaxConcurrency": 3,
+              "Parameters": {
+                "uploadId.$": "$.uploadId",
+                "index.$": "$$.Map.Item.Value"
+              },
+              "Iterator": {
+                "StartAt": "FirstActivity",
+                "States": {
+                  "FirstActivity": {
+                    "Type": "Task",
+                    "Resource": "${RunnerArn}",
+                    "Parameters": {
+                      "uploadId.$": "$.uploadId",
+                      "runId.$": "$$.Execution.Name",
+                      "step": "activity",
+                      "index.$": "$.index",
+                      "pick": 0
+                    },
+                    "ResultPath": "$.first",
+                    "TimeoutSeconds": 660,
+                    "Catch": [
+                      {
+                        "ErrorEquals": [
+                          "States.ALL"
+                        ],
+                        "ResultPath": "$.firstError",
+                        "Next": "SecondActivity"
+                      }
+                    ],
+                    "Next": "SecondActivity"
+                  },
+                  "SecondActivity": {
+                    "Type": "Task",
+                    "Resource": "${RunnerArn}",
+                    "Parameters": {
+                      "uploadId.$": "$.uploadId",
+                      "runId.$": "$$.Execution.Name",
+                      "step": "activity",
+                      "index.$": "$.index",
+                      "pick": 1
+                    },
+                    "ResultPath": "$.second",
+                    "TimeoutSeconds": 660,
+                    "Catch": [
+                      {
+                        "ErrorEquals": [
+                          "States.ALL"
+                        ],
+                        "ResultPath": "$.secondError",
+                        "Next": "BranchDone"
+                      }
+                    ],
+                    "Next": "BranchDone"
+                  },
+                  "BranchDone": {
+                    "Type": "Pass",
+                    "End": true
+                  }
+                }
+              },
+              "ResultPath": "$.activities",
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error",
+                  "Next": "Fail"
+                }
+              ],
+              "Next": "Finalize"
+            },
+            "Finalize": {
+              "Type": "Task",
+              "Resource": "${RunnerArn}",
+              "Parameters": {
+                "uploadId.$": "$.uploadId",
+                "runId.$": "$$.Execution.Name",
+                "step": "finalize"
+              },
+              "ResultPath": "$.result",
+              "TimeoutSeconds": 120,
+              "Catch": [
+                {
+                  "ErrorEquals": [
+                    "States.ALL"
+                  ],
+                  "ResultPath": "$.error",
+                  "Next": "Fail"
+                }
+              ],
+              "End": true
+            },
+            "Fail": {
+              "Type": "Task",
+              "Resource": "${RunnerArn}",
+              "Parameters": {
+                "uploadId.$": "$.uploadId",
+                "runId.$": "$$.Execution.Name",
+                "step": "fail",
+                "error.$": "$.error"
+              },
+              "ResultPath": "$.failed",
+              "TimeoutSeconds": 60,
+              "Next": "Failed"
+            },
+            "Failed": {
+              "Type": "Fail",
+              "Error": "GenerationFailed",
+              "Cause": "A step failed or timed out. See the upload row and the failure email."
+            }
+          }
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "StateMachineArn": {
+      "Value": {
+        "Ref": "StateMachine"
+      }
+    }
+  }
 }

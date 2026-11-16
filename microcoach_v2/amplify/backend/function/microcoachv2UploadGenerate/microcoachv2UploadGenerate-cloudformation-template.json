@@ -43,6 +43,10 @@
     "apimicrocoachv2GraphQLAPIIdOutput": {
       "Type": "String",
       "Default": "apimicrocoachv2GraphQLAPIIdOutput"
+    },
+    "storagemicrocoachuploadsBucketName": {
+      "Type": "String",
+      "Default": "storagemicrocoachuploadsBucketName"
     }
   },
   "Conditions": {
@@ -276,7 +280,10 @@
               ]
             },
             "NOTIFY_FROM_EMAIL": "noreply@rightoneducation.com",
-            "NOTIFY_TO_EMAILS": "drewjhart@gmail.com"
+            "NOTIFY_TO_EMAILS": "drewjhart@gmail.com",
+            "STORAGE_MICROCOACHUPLOADS_BUCKETNAME": {
+              "Ref": "storagemicrocoachuploadsBucketName"
+            }
           }
         },
         "Role": {
@@ -557,6 +564,44 @@
                       {
                         "Ref": "functionmicrocoachv2ScoresCalcName"
                       }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": "s3:ListBucket",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "storagemicrocoachuploadsBucketName"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:PutObject",
+                "s3:GetObject"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "storagemicrocoachuploadsBucketName"
+                      },
+                      "/*"
                     ]
                   ]
                 }
