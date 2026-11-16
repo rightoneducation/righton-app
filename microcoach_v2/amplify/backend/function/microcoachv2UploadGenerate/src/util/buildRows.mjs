@@ -129,7 +129,7 @@ function activityRow(move, ids, now) {
 
 /**
  * @param session the MicroCoachSession row
- * @param output  runPipeline's result
+ * @param output  assembleOutput's result
  * @param studentResponses each { studentId, questionResponses }
  * @param now     ISO timestamp
  */

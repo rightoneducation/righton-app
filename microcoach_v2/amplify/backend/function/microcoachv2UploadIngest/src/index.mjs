@@ -45,7 +45,7 @@ Amplify Params - DO NOT EDIT */
  */
 
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
-import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
+import { SFNClient, StartExecutionCommand } from '@aws-sdk/client-sfn';
 import { DynamoDBClient, ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import {
   BatchWriteCommand,
@@ -85,7 +85,7 @@ const BATCH_RETRIES = 5;
 const MIU2_USES_MIU1_KEY = true;
 
 const s3 = new S3Client({ region: REGION });
-const lambda = new LambdaClient({ region: REGION });
+const sfn = new SFNClient({region: REGION}); // step function
 const db = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 
 const Status = {
@@ -302,7 +302,7 @@ async function ingest(upload) {
   );
 }
 
-export const handler = async (event) => {
+export const handler = async (event, context) => {
   const uploadId = event?.uploadId;
   if (!uploadId) {
     console.error('No uploadId in the event:', JSON.stringify(event));
@@ -330,13 +330,20 @@ export const handler = async (event) => {
     // Inside the try: if generation can't be started, this ends as FAILED and emails,
     // rather than leaving the row looking fine with nothing running.
     if (upload.assessmentType === 'PPQ') {
-      await lambda.send(
-        new InvokeCommand({
-          FunctionName: process.env.FUNCTION_MICROCOACHV2UPLOADGENERATE_NAME,
-          InvocationType: 'Event',
-          Payload: Buffer.from(JSON.stringify({ uploadId })),
-        }),
-      );
+      // invoking the state machine here via amplify step functions
+      // name is fixed in custom resource template, hence the clunky reference here
+      const accountId = context.invokedFunctionArn.split(':')[4];
+      const stateMachineArn = [
+        'arn:aws:states',
+        REGION,
+        accountId,
+        'stateMachine',
+        `microcoachv2Generate-${process.env.ENV}`,
+      ].join(':');
+      await sfn.send(new StartExecutionCommand({
+        stateMachineArn,
+        input: JSON.stringify({uploadId}),
+      }));
       console.log(`Started generation for upload ${uploadId}`);
     }
     // MIU 2 has no generation step: its comparison is done here, so this is

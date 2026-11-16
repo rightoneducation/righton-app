@@ -165,81 +165,49 @@ function applyScores(misconceptions, scoreOut) {
     .sort((a, b) => (a.priorityRank ?? Infinity) - (b.priorityRank ?? Infinity));
 }
 
-async function generateActivities(invoke, m, shared) {
-  const picks = m.selectedTemplates?.picks ?? [];
-  if (!picks.length) {
-    console.log(`No template cleared the fit threshold for "${m.title}"`);
-    return [];
-  }
-  const linked = new Set((m.wrongAnswers ?? []).map((w) => Number(w.questionNumber)));
-  const evidence = {
-    questions: shared.questions
-      .filter((q) => linked.has(Number(q.questionNumber)))
-      .map((q) => ({
-        questionNumber: q.questionNumber,
-        questionText: q.questionText ?? null,
-        correctAnswer: q.correctAnswer ?? null,
-        answerChoices: (q.answerChoices ?? []).map((o) => ({
-          letter: o.letter,
-          content: o.content ?? null,
-          isCorrect: o.isCorrect ?? false,
-          studentCount: shared.wrongAnswerDist[q.questionNumber]?.[String(o.letter).toUpperCase()] ?? null,
-        })),
-      })),
-  };
-
-  // In sequence: the calls share a prompt prefix so the second can use the cache, and
-  // the second is told which problems the first uses. One failed activity doesn't
-  // stop the run.
-  const activities = [];
-  for (const pick of picks) {
-    try {
-      const sibling = picks.find((p) => p !== pick);
-      const siblingProblems = activities.flatMap((a) => studentFacingProblems(a?.content));
-      const parsed = await callStage(invoke, 'nextStepOption', {
-        misconception: JSON.stringify(m),
-        learningScienceData: shared.learningScienceData,
-        classroomContext: shared.classroomContext,
-        selectedTemplate: JSON.stringify(pick),
-        ...(sibling && { siblingPick: JSON.stringify(sibling) }),
-        ...(siblingProblems.length && { siblingProblems: JSON.stringify(siblingProblems) }),
-        evidence: JSON.stringify(evidence),
-        trace: false,
-      });
-      activities.push({ ...parsed, templateId: pick.templateId });
-    } catch (err) {
-      console.error(`Activity ${pick.templateId} for "${m.title}" failed:`, err);
-    }
-  }
-  return activities;
+// JSON string of knowledge graph data for step functions
+const graphData = (graph) => {
+  return JSON.stringify({ standards: graph.standards});
 }
 
-/**
- * @param session    the MicroCoachSession row
- * @param assessment the MicroCoachAssessment row (with questions)
- * @param studentResponses each { studentId, questionResponses }
- * @param invoke     (stage, payload) => the stage Lambda's reply
- * @returns the carried-forward misconceptions, each with `activities`, and the
- *   graph standards they were judged against
- */
-export async function runPipeline({ session, assessment, studentResponses, invoke }) {
+
+// object that contains necessary context information that will be managed over the duration of the pipeline
+export function buildContext({ session, assessment, studentResponses }){
   const questions = assessment.questions ?? [];
   const standards = session.ccssStandards ?? [];
-  if (!standards.length) throw new Error('The session has no CCSS standards');
-
-  const graph = await fetchLearningScience(invoke, standards, session.id);
-  const injected = { standards: dedupeGraph(graph) };
-  const learningScienceData = JSON.stringify(injected);
-  console.log(`Graph: ${graph.length} standards for ${standards.join(', ')}`);
+  if (!standards.length){
+    throw new Error('The session has no CCSS standards');
+  }
 
   const wrongAnswerDist = computeWrongAnswerDist(studentResponses);
-  const subject = SUBJECTS[String(assessment.assessmentCode).split('.')[0]] ?? 'Math';
-  const classroom = { subject, cohortSize: studentResponses.length };
+  const code = String(assessment.assessmentCode).split('.')[0];
+  const subject = SUBJECTS[code] ?? 'Math';
+  const classroom = {subject, cohortSize: studentResponses.length };
   const ppq = {
     ...assessment,
     ccssStandards: standards,
     confidenceStats: computeConfidenceStats(studentResponses, questions),
   };
+
+  return{
+    session,
+    questions,
+    standards,
+    wrongAnswerDist,
+    subject,
+    classroom,
+    ppq,
+    studentResponses
+  }
+}
+
+// step 1: fetch knowledge graph, dedup, invoke to gen misconceptions
+export async function stepMisconceptions({ ctx, store, invoke}){
+  const { session, questions, standards, wrongAnswerDist } = ctx;
+  const raw = await fetchLearningScience(invoke, standards, session.id);
+  const graph = { raw, standards: dedupeGraph(raw) };
+  await store.save('graph', graph);
+  console.log(`Graph: ${raw.length} standards for ${standards.join(', ')}`);
 
   const generatedOut = await callStage(invoke, 'genMisconception', {
     questions: JSON.stringify(questions.map((q) => ({
@@ -248,24 +216,41 @@ export async function runPipeline({ session, assessment, studentResponses, invok
       correctAnswer: q.correctAnswer ?? null,
       classPercentCorrect: q.classPercentCorrect ?? null,
       questionText: q.questionText ?? null,
-      answerChoices: (q.answerChoices ?? []).map((o) => ({
-        letter: o.letter,
-        isCorrect: o.isCorrect ?? false,
-        content: o.content ?? null,
-        studentCount: wrongAnswerDist[q.questionNumber]?.[String(o.letter).toUpperCase()] ?? 0,
-      })),
+      answerChoices: (q.answerChoices ?? []).map((o) => {
+        const letter = String(o.letter).toUpperCase();
+        return{
+          letter: o.letter,
+          isCorrect: o.isCorrect ?? false,
+          content: o.content ?? null,
+          studentCount: wrongAnswerDist[q.questionNumber]?.[letter] ?? 0
+        };
+      }),
     }))),
-    context: JSON.stringify({ subject, ccssStandards: standards }),
-    learningScienceData,
+    context: JSON.stringify({ subject: ctx.subject, ccssStandards: standards }),
+    learningScienceData: graphData(graph),
     trace: false,
   });
-  const generated = withReachAndStandard(generatedOut?.misconceptions ?? [], questions, studentResponses, standards);
+
+  const generated = withReachAndStandard(
+    generatedOut?.misconceptions ?? [],
+    questions,
+    ctx.studentResponses,
+    standards,
+  );
+  await store.save('generatedMisconceptions', generated);
   console.log(`Misconceptions: ${generated.length}`);
-  // Nothing to carry forward is a real result: Review has a state for it.
-  if (!generated.length) return { misconceptions: [], graph };
+
+  return { count: generated.length };
+}
+
+// step 2: score misconceptions and retain top 3
+// loads miconceptions from store, loads KG from store for scoring. Saves retained misconceptions.
+export async function stepScore({ store, invoke }){
+  const graph = await store.load('graph');
+  const generatedMisconceptions = await store.load('generatedMisconceptions');
 
   const scoreOut = await callStage(invoke, 'scoresCalc', {
-    misconceptions: JSON.stringify(generated.map((m) => ({
+    misconceptions: JSON.stringify(generatedMisconceptions.map((m) => ({
       title: m.title,
       description: m.description ?? null,
       learningScienceConnection: m.learningScienceConnection ?? null,
@@ -273,13 +258,34 @@ export async function runPipeline({ session, assessment, studentResponses, invok
       studentPercent: m.studentPercent ?? null,
       meanConfidence: m.meanConfidence ?? null,
     }))),
-    learningScienceData,
+    learningScienceData: graphData(graph),
     trace: false,
   });
-  const retained = applyScores(generated, scoreOut);
-  console.log(`Retained ${retained.length}: ${retained.map((m) => `#${m.priorityRank} ${m.title} (${m.rubric?.total}/${m.rubric?.maxPossible})`).join('; ')}`);
-  if (!retained.length) throw new Error('The rubric carried no misconception forward');
 
+  const retained = applyScores(generatedMisconceptions, scoreOut);
+  const summary = retained.map((m) => {
+    const score = `${m.rubric?.total}/${m.rubric?.maxPossible}`;
+    return `#${m.priorityRank} ${m.title} (${score})`;
+  });
+
+  console.log(`Retained ${retained.length}: ${summary.join('; ')}`);
+  if(!retained.length) {
+    throw new Error('The rubric carried no misconception forward');
+  }
+
+  await store.save('retained', retained);
+  return { count: retained.length };
+}
+
+
+// step 3: gen the needs and then match them back to the misconceptions
+// load KG, load retained misconceptions, return miconceptions with needs attached
+export async function stepNeeds({ ctx, store, invoke}){
+  const {session, standards, classroom, ppq, wrongAnswerDist} = ctx;
+  const graph = await store.load('graph');
+  const retained = await store.load('retained');
+
+  // gen instructional need
   const needOut = await callStage(invoke, 'genInstrNeed', {
     misconceptions: JSON.stringify(retained),
     classroomData: JSON.stringify({
@@ -289,56 +295,177 @@ export async function runPipeline({ session, assessment, studentResponses, invok
         weekNumber: session.weekNumber,
         topic: session.topic ?? null,
         ccssStandards: standards,
-        assessments: { items: [ppq] },
+        assessments: { items: [ppq]},
       },
       sessionHistory: [],
       ppq,
       wrongAnswerDist,
     }),
-    learningScienceData,
+    learningScienceData: graphData(graph),
     trace: false,
   });
-  const needByTitle = new Map((needOut?.needs ?? []).map((n) => [String(n.title ?? '').trim(), n]));
-  let misconceptions = retained.map((m, i) => {
-    const n = needOut?.needs?.[i]?.title === m.title ? needOut.needs[i] : needByTitle.get(String(m.title ?? '').trim());
-    return n ? { ...m, instructionalNeed: n.instructionalNeed, rationale: n.rationale, skillNames: n.skillNames ?? [] } : m;
-  });
-  if (needOut?.missing?.length) console.warn('No instructional need for:', JSON.stringify(needOut.missing));
-  checkNeedSeparation(misconceptions).forEach((f) => {
-    console.warn(`Need may prescribe an activity: "${f.title}" (${f.hits.join(', ')})`);
+
+  // match each need to misconception: position than title
+  const needs = needOut?.needs ?? [];
+  const clean = (title) => String(title ?? '').trim();
+  const needByTitle = new Map(needs.map((n) => [clean(n.title), n]));
+  const misconceptions = retained.map((m, i) => {
+    const samePlace = needs[i]?.title === m.title;
+    const n = samePlace ? needs[i] : needByTitle.get(clean(m.title));
+    if (!n) return m;
+    return {
+      ...m,
+      instructionalNeed: n.instructionalNeed,
+      rationale: n.rationale,
+      skillNames: n.skillNames ?? [],
+    };
   });
 
-  const withNeeds = misconceptions.filter((m) => m.instructionalNeed?.text?.trim());
-  if (!withNeeds.length) throw new Error('No misconception got an instructional need');
+  if (needOut?.missing?.length) {
+    console.warn('No instructional need for:', JSON.stringify(needOut.missing));
+  }
+  checkNeedSeparation(misconceptions).forEach((f) => {
+    const hits = f.hits.join(', ');
+    console.warn(`Need may prescribe an activity: "${f.title}" (${hits})`);
+  });
+
+  const hasNeed = misconceptions.some((m) => m.instructionalNeed?.text?.trim());
+  if (!hasNeed) {
+    throw new Error('No misconception got an instructional need');
+  }
+
+  await store.save('withNeeds', misconceptions);
+  return { count: misconceptions.length };
+}
+
+// step 4: pick templates per need. 
+// load misconception w need, select template
+// save misconception w need and activity template
+export async function stepTemplates({ ctx, store, invoke }){
+  const { classroom, ppq, wrongAnswerDist } = ctx;
+  const misconceptions = await store.load('withNeeds');
+  const needs = misconceptions.filter((m) => m.instructionalNeed?.text?.trim());
+
   const selectOut = await callStage(invoke, 'selectTemplate', {
-    needs: JSON.stringify(withNeeds),
+    needs: JSON.stringify(needs),
     classroomData: JSON.stringify({ classroom, ppq, wrongAnswerDist }),
     assessmentType: 'multiple_choice',
     trace: false,
   });
-  const selectionByTitle = new Map((selectOut?.selections ?? []).map((x) => [String(x.title ?? '').trim(), x]));
-  misconceptions = misconceptions.map((m) => {
-    const selection = selectionByTitle.get(String(m.title ?? '').trim());
-    return selection ? { ...m, selectedTemplates: selection } : m;
+
+  const clean = (title) => String(title ?? '').trim();
+  const selections = selectOut?.selections ?? [];
+  const byTitle = new Map(selections.map((x) => [clean(x.title), x]));
+  const selected = misconceptions.map((m) => {
+    const selection = byTitle.get(clean(m.title));
+    return selection ? {...m, selectedTemplates: selection} : m;
   });
 
-  const shared = {
-    questions,
-    wrongAnswerDist,
-    learningScienceData,
-    classroomContext: JSON.stringify({ subject, cohortSize: studentResponses.length }),
+  await store.save('selected', selected);
+  return {indexes: selected.map((_, i) => i)};
+}
+
+// step 5: generate activity per template selected
+// load graph + selected template
+// returns activity
+export async function stepActivity({ ctx, store, invoke, index, pick }) {
+  const graph = await store.load('graph');
+  const selected = await store.load('selected');
+  const m = selected[index];
+  const picks = m?.selectedTemplates?.picks ?? [];
+  const chosen = picks[pick];
+  if (!chosen) {
+    if (pick === 0) {
+      console.log(`No template cleared the fit threshold for "${m?.title}"`);
+    }
+    return { skipped: true };
+  }
+
+  // the questions this misconception's wrong answers come from
+  const linked = new Set(
+    (m.wrongAnswers ??[]).map((w) => Number(w.questionNumber)),
+  );
+
+  const evidence = { 
+    questions: ctx.questions
+      .filter((q) => linked.has(Number(q.questionNumber)))
+      .map((q) => ({
+        questionNumber: q.questionNumber,
+        questionText: q.questionText ?? null,
+        correctAnswer: q.correctAnswer ?? null,
+        answerChoices: (q.answerChoices ?? []).map((o) => {
+          const letter = String(o.letter).toUpperCase();
+          const counts = ctx.wrongAnswerDist[q.questionNumber];
+          return {
+            letter: o.letter,
+            content: o.content ?? null,
+            isCorrect: o.isCorrect ?? false,
+            studentCount: counts?.[letter] ?? null
+          };
+        }),
+      })),
   };
-  const activitiesPerNeed = await Promise.all(misconceptions.map((m) => generateActivities(invoke, m, shared)));
-  const total = activitiesPerNeed.reduce((n, list) => n + list.filter((a) => a?.content).length, 0);
+
+  // second activity reads what first activity used so as to not duplicate
+  const siblingProblems = [];
+  for (let j = 0; j < pick; j += 1) {
+    const earlier = await store.load(`activity-${index}-${j}`);
+    siblingProblems.push(...studentFacingProblems(earlier?.content));
+  }
+
+  const sibling = picks.find((p) => p !== chosen);
+
+  try {
+    const parsed = await callStage(invoke, 'nextStepOption', {
+      misconception: JSON.stringify(m),
+      learningScienceData: graphData(graph),
+      classroomContext: JSON.stringify(ctx.classroom),
+      selectedTemplate: JSON.stringify(chosen),
+      ...(sibling && { siblingPick: JSON.stringify(sibling) }),
+      ...(siblingProblems.length && {
+        siblingProblems: JSON.stringify(siblingProblems),
+      }),
+      evidence: JSON.stringify(evidence),
+      trace: false
+    });
+    const activity = { ...parsed, templateId: chosen.templateId };
+    await store.save(`activity-${index}-${pick}`, activity);
+    return { saved : true }
+  } catch (err) {
+    console.error(
+      `Activity ${chosen.templateId} for "${m.title}" failed:`,
+      err,
+    );
+    return { failed: true };
+  }
+}
+
+export async function assembleOutput({ store }){
+  const graph = await store.load('graph');
+  const generated = await store.load('generatedMisconceptions');
+  if (!generated?.length){
+    return { misconceptions: [], graph: graph.raw}
+  }
+
+  const selected = await store.load('selected');
+  const misconceptions = [];
+  let total = 0;
+  for (const [i,m] of selected.entries()){
+    const picks = m.selectedTemplates?.picks ?? [];
+    const loaded = await Promise.all(
+      picks.map((_, j) => store.load(`activity-${i}-${j}`)),
+    );
+    const activities = loaded.filter(Boolean);
+    total += activities.filter((a) => a?.content).length;
+    misconceptions.push({
+      ...m,
+      activities,
+      graphStandard: matchStandard(m.ccssStandard, graph.standards).standard
+    })
+  }
+
   console.log(`Activities with content: ${total}`);
   if (!total) throw new Error('No activity was generated');
 
-  return {
-    misconceptions: misconceptions.map((m, i) => ({
-      ...m,
-      activities: activitiesPerNeed[i],
-      graphStandard: matchStandard(m.ccssStandard, injected.standards).standard,
-    })),
-    graph: injected.standards,
-  };
+  return { misconceptions, graph: graph.standards };
 }

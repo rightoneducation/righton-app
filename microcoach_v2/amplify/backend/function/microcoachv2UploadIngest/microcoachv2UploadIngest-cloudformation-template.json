@@ -798,6 +798,24 @@
                 "*"
               ],
               "Effect": "Allow"
+            },
+            {
+              "Action": [
+                "states:StartExecution"
+              ],
+              "Resource": [
+                {
+                  "Fn::Sub": [
+                    "arn:aws:states:*:*:stateMachine:microcoachv2Generate-${env}",
+                    {
+                      "env": {
+                        "Ref": "env"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "Effect": "Allow"
             }
           ]
         },
