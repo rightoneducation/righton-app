@@ -124,7 +124,7 @@
         },
         "microcoachv2IngestPPQ": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2IngestPPQ-4c75734c555235766139-build.zip"
+          "s3Key": "amplify-builds/microcoachv2IngestPPQ-3531376d516a68462f6a-build.zip"
         },
         "microcoachv2InitialEvaluator": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
@@ -132,15 +132,15 @@
         },
         "microcoachv2LLMVerify": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2LLMVerify-53682b7a773959667159-build.zip"
+          "s3Key": "amplify-builds/microcoachv2LLMVerify-334c396477596c7a4a6e-build.zip"
         },
         "microcoachv2NextStepOption": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2NextStepOption-462f687a6278384e3356-build.zip"
+          "s3Key": "amplify-builds/microcoachv2NextStepOption-4a454444547167336c32-build.zip"
         },
         "microcoachv2RegenEvaluator": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2RegenEvaluator-70466446684173713965-build.zip"
+          "s3Key": "amplify-builds/microcoachv2RegenEvaluator-73726670454156305862-build.zip"
         },
         "microcoachv2TeacherUpload": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
@@ -152,19 +152,19 @@
         },
         "microcoachv2LLMGenMisconception": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2LLMGenMisconception-636c6b76784d43544855-build.zip"
+          "s3Key": "amplify-builds/microcoachv2LLMGenMisconception-714336676c43636b5557-build.zip"
         },
         "microcoachv2LLMGenInstrNeed": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2LLMGenInstrNeed-317866552b3277347473-build.zip"
+          "s3Key": "amplify-builds/microcoachv2LLMGenInstrNeed-576a4e796e4c6659564a-build.zip"
         },
         "microcoachv2LLMSelectTemplate": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2LLMSelectTemplate-75643068696d4d384261-build.zip"
+          "s3Key": "amplify-builds/microcoachv2LLMSelectTemplate-65713663426c6741656d-build.zip"
         },
         "microcoachv2ScoresCalc": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2ScoresCalc-7731596d664a66616232-build.zip"
+          "s3Key": "amplify-builds/microcoachv2ScoresCalc-5171326c416653334831-build.zip"
         },
         "microcoachv2bb9ce5a2PreSignup": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
@@ -172,7 +172,7 @@
         },
         "microcoachv2UploadIngest": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2UploadIngest-3766654175424c427a6f-build.zip"
+          "s3Key": "amplify-builds/microcoachv2UploadIngest-326e316263745561704c-build.zip"
         },
         "microcoachv2UploadDispatch": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
@@ -188,11 +188,11 @@
         },
         "microcoachv2FinalMathCheck": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2FinalMathCheck-63596a52676a58317a77-build.zip"
+          "s3Key": "amplify-builds/microcoachv2FinalMathCheck-7643635a7061616d4773-build.zip"
         },
         "microcoachv2FinalMathCorrect": {
           "deploymentBucketName": "amplify-microcoachv2-dev-144346-deployment",
-          "s3Key": "amplify-builds/microcoachv2FinalMathCorrect-615a747177664e4f3335-build.zip"
+          "s3Key": "amplify-builds/microcoachv2FinalMathCorrect-38416d4455515630694e-build.zip"
         }
       },
       "storage": {

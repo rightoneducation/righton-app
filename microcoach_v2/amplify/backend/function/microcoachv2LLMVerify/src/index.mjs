@@ -215,6 +215,7 @@ export const handler = async (event) => {
     const [designResult, mathResult] = await Promise.all([
       openai.chat.completions.create({
         model: DESIGN_MODEL,
+        store: false,
         response_format: { type: 'json_object' },
         messages: [
           { role: 'system', content: 'You are a curriculum quality reviewer. Return only valid JSON.' },
@@ -225,6 +226,7 @@ export const handler = async (event) => {
 
       openai.chat.completions.create({
         model: MATH_MODEL,
+        store: false,
         response_format: { type: 'json_object' },
         messages: [
           { role: 'system', content: 'You are a math accuracy reviewer. Return only valid JSON.' },

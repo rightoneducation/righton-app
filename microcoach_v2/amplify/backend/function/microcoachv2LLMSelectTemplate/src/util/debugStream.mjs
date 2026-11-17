@@ -97,7 +97,7 @@ export async function streamedCompletion(openai, params, { tag, retries = 0 }) {
     await timed('GET /v1/models', () => openai.models.list({ timeout: 20_000, maxRetries: 0 }));
     await timed('small chat, first chunk', async () => {
       const probe = await openai.chat.completions.create({
-        model: params.model, stream: true, max_completion_tokens: 200, messages: [{ role: 'user', content: 'Reply with the word ok.' }],
+        model: params.model, store: false, stream: true, max_completion_tokens: 200, messages: [{ role: 'user', content: 'Reply with the word ok.' }],
       }, { timeout: 45_000, maxRetries: 0 });
       for await (const chunk of probe) if (chunk) break;
     });

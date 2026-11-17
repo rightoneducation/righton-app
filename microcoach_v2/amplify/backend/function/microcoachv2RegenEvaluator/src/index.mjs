@@ -193,6 +193,7 @@ ${existingQuestions}`;
 
     const completion = await openai.chat.completions.create({
       model: MODEL,
+      store: false,
       temperature: 0.7,
       response_format: zodResponseFormat(RewriteResultSchema, 'rewriteResult'),
       messages: [

@@ -128,6 +128,7 @@ async function structuredCall(label, prompt, schema, name) {
   const client = await openai();
   const completion = await client.chat.completions.create({
     model: MODEL,
+    store: false,
     reasoning_effort: REASONING_EFFORT,
     messages: [
       { role: 'system', content: SYSTEM_PROMPT },

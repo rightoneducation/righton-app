@@ -319,6 +319,7 @@ export const handler = async (event) => {
 
     const params = {
       model: MODEL,
+      store: false,
       messages: [
         { role: 'system', content: 'You are an expert K-12 math instructional coach. Output exclusively valid JSON.' },
         { role: 'user', content: userContent },

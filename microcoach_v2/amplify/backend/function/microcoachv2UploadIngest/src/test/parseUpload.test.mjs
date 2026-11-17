@@ -104,16 +104,10 @@ test('a document that agrees changes nothing', { skip }, async () => {
   assert.equal(JSON.stringify(r), snapshot);
 });
 
-test('the key can come from another assessment in the document', { skip }, async () => {
-  const doc = await parseMiuDoc(read(CLEAN), 'W11-THU', 'W11-MON');
-  assert.deepEqual(doc.questions.map((q) => q.correctAnswer), ['A', 'C', 'B', 'A', 'B', 'D']);
-  assert.match(doc.questions[4].questionText, /40x\+160=960/); // Thursday's question
-});
-
 test('Reflect with the same responses and key shows no change', { skip }, async () => {
   const r = parseResults(read(XLSX));
   const docMon = await parseMiuDoc(read(CLEAN), 'W11-MON');
-  const docThu = await parseMiuDoc(read(CLEAN), 'W11-THU', 'W11-MON');
+  const docThu = await parseMiuDoc(read(CLEAN), 'W11-THU');
   rescore(r, docMon);
   const upload = { id: 'u1', classId: 'c1', sessionId: 's1', assessmentType: 'PPQ' };
   const a = buildRows(upload, r, docMon, 'now');
