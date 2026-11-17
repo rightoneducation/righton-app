@@ -560,6 +560,7 @@
         "potentialAnswer": "Respuesta posible"
       },
       "anonymousResponse": "Respuesta anónima de un estudiante",
+      "favoriteNoTag": "Mi No Favorito",
       "studentWork": "Trabajo del estudiante",
       "whatToNotice": "Qué observar"
     },

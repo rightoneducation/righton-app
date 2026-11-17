@@ -216,6 +216,22 @@ export const EvidenceTag = styled(Box)(({ theme }) => ({
   whiteSpace: 'nowrap',
 }));
 
+// Figma (qa2 MyFavNo): the evidence tag's pill in raspberry at 600, on the
+// incorrect line of a Favorite No response. A fixed 15 tall in the 29 row, so
+// the row's right padding can match the gap above and below it.
+const favoriteNoTagHeight = 15;
+export const favoriteNoTagInset = (stepChipHeight - favoriteNoTagHeight) / 2;
+
+export const FavoriteNoTag = styled(EvidenceTag)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  height: favoriteNoTagHeight,
+  paddingTop: 0,
+  paddingBottom: 0,
+  backgroundColor: theme.palette.designSystem.status.favoriteNoTag,
+  fontWeight: 600,
+}));
+
 export const ViewToggle = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',

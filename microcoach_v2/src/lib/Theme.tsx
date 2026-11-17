@@ -139,6 +139,9 @@ const designSystemColors = {
     errorTint: '#F1BECA',
     // The ✗ marker beside an incorrect observation.
     errorIcon: '#E68A9F',
+    // The "My Favorite No" tag on the incorrect line of a Favorite No response
+    // (qa2 MyFavNo). A deeper raspberry than the error tints it sits on.
+    favoriteNoTag: '#B21F5B',
     // status.lightGreen at 50% over white — the "Matches" representation card.
     successTint: '#F6FFF1',
     // Reflect score comparison: Figma uses this darker green for the after
