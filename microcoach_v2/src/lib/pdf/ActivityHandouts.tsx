@@ -136,12 +136,6 @@ const styles = {
   groupingLabel: { flexShrink: 1 },
   sectionHeading: { fontFamily: 'Poppins', fontWeight: 600, fontSize: 16, marginTop: 6, marginBottom: 10 },
   exampleTitle: { fontFamily: 'Poppins', fontWeight: 600, fontSize: 14 },
-  exampleHeadRow: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-    gap: 10,
-  },
   strategyTitleRow: {
     flexDirection: 'row' as const,
     justifyContent: 'space-between' as const,
@@ -162,6 +156,16 @@ const styles = {
   label: { fontFamily: 'Rubik', fontWeight: 600, fontSize: 9, marginTop: 6, marginBottom: 2 },
   body: { fontFamily: 'Rubik', fontSize: 10, lineHeight: 1.35 },
   workRow: { paddingVertical: 2, paddingHorizontal: 6, fontSize: 10, lineHeight: 1.35 },
+  favoriteNoTag: {
+    fontFamily: 'Rubik',
+    fontWeight: 600,
+    fontSize: 7,
+    color: pdfColors.white,
+    backgroundColor: pdfColors.favoriteNoTag,
+    borderRadius: 6,
+    paddingVertical: 1,
+    paddingHorizontal: 5,
+  },
   tonedBox: { borderRadius: 6, padding: 8, marginTop: 6 },
   // Make Your Case, as the page draws it (DevQA MakeYourCase_Teacher /
   // _Student) at PDF scale: the claim centred, its options, a hairline, then
@@ -623,19 +627,32 @@ function FavoriteNoExampleCard({
 }) {
   // PRESERVE first, as the screen and the frame list them.
   const notice = [...example.notice].sort((a, b) => Number(a.kind === 'REVISE') - Number(b.kind === 'REVISE'));
+  // The first INCORRECT line carries the tag, as on screen.
+  const tagIndex = example.work.findIndex((line) => line.status === 'INCORRECT');
   return (
     <Card isTeacher={isTeacher} withWorkArea>
-      <View style={styles.exampleHeadRow}>
-        <Text style={styles.exampleTitle}>{t('activityFlow.facilitate.exampleLabel', { number })}</Text>
-        <Text style={[styles.label, { marginTop: 0, marginBottom: 0 }]}>
-          {t('activityFlow.facilitate.anonymousResponse')}
-        </Text>
-      </View>
+      <Text style={styles.exampleTitle}>{t('activityFlow.facilitate.exampleLabel', { number })}</Text>
       <Text style={styles.prompt}>{m(example.prompt)}</Text>
       <Text style={styles.label}>{t('activityFlow.facilitate.studentWork')}</Text>
-      {example.work.map((line) => (
-        <WorkRow key={line.text} text={isTeacher ? line.text : studentWorkText(line.text)} status={line.status} isTeacher={isTeacher} t={t} />
-      ))}
+      {example.work.map((line, index) => {
+        const isError = isTeacher && line.status === 'INCORRECT';
+        const isCorrect = isTeacher && line.status === 'CORRECT';
+        let fill = {};
+        if (isError) fill = { backgroundColor: pdfColors.errorFill };
+        else if (isCorrect) fill = { backgroundColor: pdfColors.successFill };
+        let mark = '';
+        if (isError) mark = ` ${t('activityFlow.pdf.markIncorrect')}`;
+        else if (isCorrect) mark = ` ${t('activityFlow.pdf.markCorrect')}`;
+        return (
+          <View key={line.text} style={[styles.stepRow, fill]}>
+            <Text style={styles.stepLabel}>{t('activityDetail.stepNumber', { number: index + 1 })}</Text>
+            <Text style={styles.stepText}>{`${m(isTeacher ? line.text : studentWorkText(line.text))}${mark}`}</Text>
+            {isTeacher && index === tagIndex && (
+              <Text style={styles.favoriteNoTag}>{t('activityFlow.facilitate.favoriteNoTag')}</Text>
+            )}
+          </View>
+        );
+      })}
       {isTeacher && (
         <>
           <Text style={styles.label}>{t('activityFlow.facilitate.whatToNotice')}</Text>
@@ -647,7 +664,6 @@ function FavoriteNoExampleCard({
               {m(item.text)}
             </Text>
           ))}
-          <Text style={[styles.body, { marginTop: 6, color: pdfColors.slateGrey }]}>{m(example.sourceNote)}</Text>
         </>
       )}
     </Card>

@@ -26,7 +26,8 @@ import {
   ContentPanel,
   EvidenceTag,
   EvidenceTagSlot,
-  PromptBand,
+  FavoriteNoTag,
+  favoriteNoTagInset,
   StepChip,
   StepRow,
   VerdictChip,
@@ -106,34 +107,52 @@ function ToneIcon({ tone }: { tone: Tone }) {
   return <InfoOutlinedIcon fontSize="small" sx={{ color: navy }} />;
 }
 
-/** A line of student work: tinted and marked in teacher view, plain for students. */
+/**
+ * A line of student work behind its step chip: tinted and marked in teacher
+ * view, plain for students. The teacher view tags the response's error line.
+ */
 function WorkLine({
   text,
   status,
   isTeacher,
   path,
+  stepNumber,
+  showTag,
 }: {
   text: string;
   status: WorkStatus;
   isTeacher: boolean;
   // The line's path in the activity, for the review layer.
   path: string;
+  stepNumber: number;
+  showTag: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <ReviewSlot paths={fieldsOf(path, ['text', 'status'])}>
       <StepRow
         isError={isTeacher && status === 'INCORRECT'}
         isCorrect={isTeacher && status === 'CORRECT'}
-        // These rows carry no step chip, so neither the pill radius, its 29px
-        // floor nor its inset apply.
-        sx={{ px: 1, pt: 0, borderRadius: 0, minHeight: 0 }}
+        // Figma (qa2 MyFavNo): the chip sits flush in the shaded row, no inset;
+        // the tag's right gap matches its top and bottom.
+        sx={{ pt: 0, pl: 0, pr: showTag ? `${favoriteNoTagInset}px` : undefined }}
       >
-        {/* Figma (My Favorite No): the student work is 14. */}
-        <MathTypography
-          variant="smallBodyText"
-          sx={{ color: navy }}
-          text={isTeacher ? withWorkMark(text, status) : studentWorkText(text)}
-        />
+        <StepChip>{t('activityDetail.stepNumber', { number: stepNumber })}</StepChip>
+        {/* Stretched to the row and centred, so a one-line step sits mid-pill;
+            the row stays flex-start so a wrapped step keeps its chip on top. */}
+        <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'stretch', display: 'flex', alignItems: 'center' }}>
+          {/* Figma (My Favorite No): the student work is 14. */}
+          <MathTypography
+            variant="smallBodyText"
+            sx={{ color: navy }}
+            text={isTeacher ? withWorkMark(text, status) : studentWorkText(text)}
+          />
+        </Box>
+        {showTag && (
+          <EvidenceTagSlot>
+            <FavoriteNoTag>{t('activityFlow.facilitate.favoriteNoTag')}</FavoriteNoTag>
+          </EvidenceTagSlot>
+        )}
       </StepRow>
     </ReviewSlot>
   );
@@ -601,6 +620,8 @@ export function FavoriteNoPanel({
   const notice = example
     ? [...example.notice].sort((a, b) => Number(a.kind === 'REVISE') - Number(b.kind === 'REVISE'))
     : [];
+  // The prompt asks for one INCORRECT line; tag only the first if there are more.
+  const tagIndex = example ? example.work.findIndex((line) => line.status === 'INCORRECT') : -1;
 
   return (
     <FlowCard component="section" aria-labelledby={titleId}>
@@ -622,17 +643,7 @@ export function FavoriteNoPanel({
       />
       {example && (
         <ExampleDetail aria-live="polite">
-          <Stack
-            direction="row"
-            alignItems="baseline"
-            justifyContent="space-between"
-            flexWrap="wrap"
-            columnGap={`${theme.sizing.space2}px`}
-          >
-            <ExampleOfHeading index={index} count={examples.length} />
-            {/* Figma (My Favorite No Teacher): Poppins 16/600. */}
-            <Typography variant="headingSm">{t('activityFlow.facilitate.anonymousResponse')}</Typography>
-          </Stack>
+          <ExampleOfHeading index={index} count={examples.length} />
           <ReviewSlot paths={fieldsOf(`content.facilitate.examples[${index}]`, ['prompt', 'problem'])}>
             <ExampleQuestion boldMath variant="rubikSubBold" text={example.prompt} />
           </ReviewSlot>
@@ -651,6 +662,8 @@ export function FavoriteNoPanel({
                   status={line.status}
                   isTeacher={isTeacher}
                   path={`content.facilitate.examples[${index}].work[${lineIndex}]`}
+                  stepNumber={lineIndex + 1}
+                  showTag={isTeacher && lineIndex === tagIndex}
                 />
               ))}
             </Stack>
@@ -674,14 +687,6 @@ export function FavoriteNoPanel({
               </Stack>
             )}
           </Stack>
-          {isTeacher && (
-            <PromptBand tone="grey">
-              <InfoOutlinedIcon sx={{ color: navy, flexShrink: 0 }} />
-              <ReviewSlot paths={`content.facilitate.examples[${index}].sourceNote`}>
-                <MathTypography variant="rubikBody" sx={{ color: navy }} text={example.sourceNote} />
-              </ReviewSlot>
-            </PromptBand>
-          )}
         </ExampleDetail>
       )}
       <ExamplePager index={index} count={examples.length} onChange={setIndex} />
