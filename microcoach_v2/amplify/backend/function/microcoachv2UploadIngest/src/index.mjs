@@ -77,13 +77,6 @@ const BUCKET = process.env.STORAGE_MICROCOACHUPLOADS_BUCKETNAME;
 const BATCH_SIZE = 25; // DynamoDB's limit per BatchWrite
 const BATCH_RETRIES = 5;
 
-// TEMPORARY, until the client sends a real Thursday export: the test's Thursday
-// spreadsheet is the Monday responses with its code changed, so MIU 2 is scored
-// against Monday's corrected key. Before and after therefore come out the same, and
-// Thursday's options can be marked correct wrongly. Remove once real data arrives,
-// along with parseMiuDoc's keyToken.
-const MIU2_USES_MIU1_KEY = true;
-
 const s3 = new S3Client({ region: REGION });
 const sfn = new SFNClient({region: REGION}); // step function
 const db = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
@@ -254,10 +247,7 @@ async function ingest(upload) {
     }),
   );
 
-  const keyToken = MIU2_USES_MIU1_KEY && upload.assessmentType === 'POST_PPQ'
-    ? results.assessmentToken.replace('-THU', '-MON')
-    : results.assessmentToken;
-  const doc = await parseMiuDoc(docxBuffer, results.assessmentToken, keyToken);
+  const doc = await parseMiuDoc(docxBuffer, results.assessmentToken);
   checkAgreement(results, doc);
   const overrides = rescore(results, doc);
   if (overrides.length) {
