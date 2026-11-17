@@ -423,7 +423,7 @@ export const handler = async (event) => {
     await timed('GET /v1/models', () => openai.models.list({ timeout: 20_000, maxRetries: 0 }));
     await timed('small chat, first chunk', async () => {
       const probe = await openai.chat.completions.create({
-        model: progress.model, stream: true, max_completion_tokens: 200,
+        model: progress.model, store: false, stream: true, max_completion_tokens: 200,
         messages: [{ role: 'user', content: 'Reply with the word ok.' }],
       }, { timeout: 45_000, maxRetries: 0 });
       for await (const chunk of probe) {
@@ -556,7 +556,7 @@ export const handler = async (event) => {
     return { choices: [{ message: { content }, finish_reason: finishReason }], usage };
   };
   const timedCompletion = async (label, callParams) => {
-    const params = { ...callParams, max_completion_tokens: MAX_COMPLETION_TOKENS };
+    const params = { ...callParams, store: false, max_completion_tokens: MAX_COMPLETION_TOKENS };
     const t0 = Date.now();
     const debugStream = input.debugStream === true;
     const progress = {
