@@ -1,24 +1,15 @@
 import React from 'react';
-import { Document, Page, Text, View } from '@react-pdf/renderer';
-import {
-  IFacilitateContent,
-  ISpotTheSlipExample,
-} from '../ActivityContentModels';
-import formatStepAnnotation, { Translate } from '../activityMarks';
-import { pdfColors, pdfStyles } from './pdfTheme';
-import {
-  Card,
-  HandoutHeader,
-  HandoutProps,
-  HowToRun,
-  m,
-  styles,
-} from './handoutParts';
+import { Document, Page } from '@react-pdf/renderer';
+import { IFacilitateContent } from '../ActivityContentModels';
+import { Translate } from '../activityMarks';
+import { pdfStyles } from './pdfTheme';
+import { HandoutHeader, HandoutProps, HowToRun } from './handoutParts';
 import { TemplatePdf } from './templates/templatePdf';
 import compareTheThinkingPdf from './templates/CompareTheThinkingPdf';
 import makeYourCasePdf from './templates/MakeYourCasePdf';
 import MathDetectiveHandout from './templates/MathDetectivePdf';
 import FavoriteNoHandout from './templates/FavoriteNoPdf';
+import SpotTheSlipHandout from './templates/SpotTheSlipPdf';
 
 /*
  * The two Facilitate activity exports (InflowScreens/Facilitate_Teacher_ExportedPDF
@@ -30,10 +21,9 @@ import FavoriteNoHandout from './templates/FavoriteNoPdf';
  * Both open with a label pill, the template name, the routine and (teacher,
  * and student by default) the misconception it addresses.
  *
- * A template with its own PDF design (qa2 PDFs: Compare the Thinking, Make
- * Your Case) builds its section in pdf/templates; every other template takes
- * the default below, which follows Spot the Slip's frame and its on-screen
- * panel's content.
+ * Each template has its own design in pdf/templates. Compare the Thinking
+ * and Make Your Case share the page frame below; the other three build
+ * their own documents to follow their teacher and student reference SVGs.
  *
  * Every content string goes through mathText: @react-pdf can't render LaTeX.
  * Rubik lacks ✓ ✗ and arrows, so the default marks are tinted rows plus a
@@ -55,93 +45,23 @@ function templatePdfFor(
   }
 }
 
-/* ── Spot the Slip ───────────────────────────────────────────────────── */
-
-function SlipExampleCard({
-  example,
-  number,
-  isTeacher,
-  t,
-}: {
-  example: ISpotTheSlipExample;
-  number: number;
-  isTeacher: boolean;
-  t: Translate;
-}) {
-  return (
-    <Card isTeacher={isTeacher} withWorkArea>
-      <Text style={styles.exampleTitle}>
-        {t('activityFlow.facilitate.exampleLabel', { number })}
-      </Text>
-      <Text style={styles.prompt}>{m(example.prompt)}</Text>
-      {example.steps.map((step) => {
-        const isError = isTeacher && step.annotation?.kind === 'ERROR';
-        const annotation =
-          isTeacher && step.annotation
-            ? formatStepAnnotation(step.annotation, t)
-            : null;
-        return (
-          <View
-            key={step.step}
-            style={[
-              styles.stepRow,
-              isError ? { backgroundColor: pdfColors.errorFill } : {},
-            ]}
-          >
-            <Text style={styles.stepLabel}>
-              {t('activityDetail.stepNumber', { number: step.step })}
-            </Text>
-            <Text style={styles.stepText}>
-              {m(annotation ? `${step.text} ${annotation}` : step.text)}
-            </Text>
-          </View>
-        );
-      })}
-      {isTeacher && (
-        <Text style={styles.final}>
-          {m(`${t('activityFlow.facilitate.final')} ${example.finalOutcome}`)}
-        </Text>
-      )}
-    </Card>
-  );
-}
-
-/** The default export's artifact, teacher or student version. */
-function Artifact({
-  facilitate,
-  isTeacher,
-  t,
-}: {
-  facilitate: IFacilitateContent;
-  isTeacher: boolean;
-  t: Translate;
-}) {
-  switch (facilitate.type) {
-    case 'INCORRECT_WORKED_EXAMPLES':
-      return (
-        <>
-          {facilitate.examples.map((example, index) => (
-            <SlipExampleCard
-              key={example.prompt}
-              example={example}
-              number={index + 1}
-              isTeacher={isTeacher}
-              t={t}
-            />
-          ))}
-        </>
-      );
-    default:
-      return null;
-  }
-}
-
 export function TeacherHandout({
   content,
   template,
   misconceptionTitle,
   t,
 }: HandoutProps) {
+  if (content.facilitate.type === 'INCORRECT_WORKED_EXAMPLES') {
+    return (
+      <SpotTheSlipHandout
+        content={content}
+        template={template}
+        misconceptionTitle={misconceptionTitle}
+        t={t}
+        isTeacher
+      />
+    );
+  }
   if (content.facilitate.type === 'FAVORITE_NO') {
     return (
       <FavoriteNoHandout
@@ -165,11 +85,6 @@ export function TeacherHandout({
     );
   }
   const designed = templatePdfFor(content.facilitate, t);
-  // Spot the Slip's frame titles its section; the others use the artifact title.
-  const heading =
-    content.facilitate.type === 'INCORRECT_WORKED_EXAMPLES'
-      ? t('activityFlow.pdf.teacherExamples')
-      : template.artifactTitle;
   return (
     <Document title={template.name} author="RightOn MicroCoach">
       <Page size="A4" style={pdfStyles.page}>
@@ -180,20 +95,8 @@ export function TeacherHandout({
           t={t}
         />
         <HowToRun content={content} t={t} />
-        {designed ? (
-          <>
-            {designed.teacherHeading}
-            {designed.teacherArtifact}
-          </>
-        ) : (
-          <>
-            {/* Kept with the first card rather than stranded at a page foot. */}
-            <Text style={styles.sectionHeading} minPresenceAhead={160}>
-              {heading}
-            </Text>
-            <Artifact facilitate={content.facilitate} isTeacher t={t} />
-          </>
-        )}
+        {designed?.teacherHeading}
+        {designed?.teacherArtifact}
       </Page>
     </Document>
   );
@@ -205,6 +108,17 @@ export function StudentHandout({
   misconceptionTitle,
   t,
 }: HandoutProps) {
+  if (content.facilitate.type === 'INCORRECT_WORKED_EXAMPLES') {
+    return (
+      <SpotTheSlipHandout
+        content={content}
+        template={template}
+        misconceptionTitle={misconceptionTitle}
+        t={t}
+        isTeacher={false}
+      />
+    );
+  }
   if (content.facilitate.type === 'FAVORITE_NO') {
     return (
       <FavoriteNoHandout
@@ -240,11 +154,7 @@ export function StudentHandout({
           }
           t={t}
         />
-        {designed ? (
-          designed.studentBody
-        ) : (
-          <Artifact facilitate={content.facilitate} isTeacher={false} t={t} />
-        )}
+        {designed?.studentBody}
       </Page>
     </Document>
   );
