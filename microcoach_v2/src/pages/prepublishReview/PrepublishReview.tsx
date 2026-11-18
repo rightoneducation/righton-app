@@ -747,7 +747,7 @@ const ACTIVITY_IN_PLACE: RegExp[] = [
   /^content\.facilitate\.examples\[\d+\]\.steps\[\d+\]\.(text|step|annotation\.text|annotation\.kind)$/,
   /^content\.facilitate\.examples\[\d+\]\.(work|workSummary)\[\d+\]\.(text|status|isEvidence)$/,
   /^content\.facilitate\.examples\[\d+\]\.notice\[\d+\]\.(text|kind)$/,
-  /^content\.facilitate\.examples\[\d+\]\.evidenceNotes\[\d+\]\.text$/,
+  /^content\.facilitate\.examples\[\d+\]\.workSummary\[\d+\]\.note\.(text|kind)$/,
   /^content\.facilitate\.examples\[\d+\]\.stages\[\d+\]\.(ask|answer|kind)$/,
   /^content\.facilitate\.strategies\[\d+\]\.(verdict|label)$/,
   /^content\.facilitate\.strategies\[\d+\]\.steps\[\d+\]\.(text|highlight|step)$/,

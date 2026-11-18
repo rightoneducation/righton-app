@@ -69,23 +69,42 @@ export interface IFavoriteNoFacilitate {
   examples: IFavoriteNoExample[];
 }
 
-// GENERALIZE stays for activities generated before issue #2848.
-export type DetectiveStageKind = 'INVESTIGATE' | 'SOLVE' | 'REVISE_AND_CHECK' | 'GENERALIZE';
+// SOLVE and GENERALIZE stay for activities generated before the per-step notes
+// (qa2 MathDetectiveUpdates); new ones generate EXPLAIN_EVIDENCE.
+export type DetectiveStageKind =
+  | 'INVESTIGATE'
+  | 'EXPLAIN_EVIDENCE'
+  | 'REVISE_AND_CHECK'
+  | 'SOLVE'
+  | 'GENERALIZE';
+
+export type DetectiveNoteKind = 'KEY_EVIDENCE' | 'SOUND_REASONING';
+
+export interface IDetectiveWorkLine {
+  text: string;
+  status: WorkStatus;
+  /** Teacher view only: the line carries a KEY_EVIDENCE note. */
+  isEvidence?: boolean;
+  /**
+   * Teacher view only: the note beside the line, null when it has none. Absent
+   * on older activities, whose teacher view shows right/wrong marks instead.
+   */
+  note?: { kind: DetectiveNoteKind; text: string } | null;
+}
 
 /** Math Detective: evidence of a deeper issue to investigate, revise and check. */
 export interface IMathDetectiveExample {
   problem: string;
   prompt: string;
-  /**
-   * The response in brief. `isEvidence` shows in teacher view only; `status` shows
-   * only on activities generated before issue #2848, which have no evidence marks.
-   */
-  workSummary: { text: string; status: WorkStatus; isEvidence?: boolean }[];
-  /** Teacher view only. Absent on activities generated before issue #2848. */
-  evidenceNotes?: { text: string }[];
+  /** The response in brief, one discrete move per line. */
+  workSummary: IDetectiveWorkLine[];
   /** `ask` is student-facing; `answer` is teacher view only. */
   stages: { kind: DetectiveStageKind; ask: string; answer: string }[];
 }
+
+/** Activities with per-step teacher notes; older ones keep right/wrong marks. */
+export const hasDetectiveNotes = (example: IMathDetectiveExample | undefined): boolean =>
+  Boolean(example?.workSummary.some((line) => line.note !== undefined));
 
 export interface IMathDetectiveFacilitate {
   type: 'MATH_DETECTIVE';

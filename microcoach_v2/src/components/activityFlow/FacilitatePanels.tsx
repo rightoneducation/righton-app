@@ -16,6 +16,7 @@ import {
   IMakeYourCaseFacilitate,
   IMathDetectiveFacilitate,
   Tone,
+  hasDetectiveNotes,
   teacherStrategyOrder,
 } from '../../lib/ActivityContentModels';
 import { WorkStatus } from '../../lib/PipelineModels';
@@ -24,7 +25,6 @@ import { ScreenSize } from '../../lib/MicroCoachModels';
 import {
   ColumnBadge,
   ContentPanel,
-  EvidenceTag,
   EvidenceTagSlot,
   FavoriteNoTag,
   favoriteNoTagInset,
@@ -43,16 +43,15 @@ import {
   ClaimOptions,
   DetectiveCard,
   DetectiveColumn,
-  DetectiveColumns,
   DetectiveExample,
+  DetectiveNoteBox,
   DetectiveSection,
   DetectiveSectionHeading,
   EvidenceNoteCell,
   EvidenceNoteLines,
   EvidenceNoteRow,
-  EvidenceNotesList,
-  EvidenceNotesPanel,
   ExampleDetail,
+  PotentialAnswer,
   FlowCard,
   SectionPill,
   StudentColumn,
@@ -421,39 +420,49 @@ export function MathDetectivePanel({
   const [index, setIndex] = React.useState(0);
   const { examples, issue } = facilitate;
   const example = examples[index];
-  // Activities generated before issue #2848 have no evidence marks or notes, so
-  // their teacher view keeps the right/wrong marks instead.
-  const hasEvidence = Boolean(example?.evidenceNotes);
+  // Older activities have no per-step notes, so their teacher view keeps the
+  // right/wrong marks and shows the solution alone.
+  const hasNotes = hasDetectiveNotes(example);
   const copy = 'activityFlow.facilitate.detective';
 
-  const steps = (example?.workSummary ?? []).map((line, lineIndex, lines) => ({
+  const steps = (example?.workSummary ?? []).map((line, lineIndex) => ({
     ...line,
     number: lineIndex + 1,
-    text: isTeacher && !hasEvidence ? withWorkMark(line.text, line.status) : line.text,
-    evidenceNumber: line.isEvidence
-      ? lines.slice(0, lineIndex + 1).filter((other) => other.isEvidence).length
-      : null,
+    text: isTeacher && !hasNotes ? withWorkMark(line.text, line.status) : line.text,
+    isMarked: isTeacher && hasNotes && Boolean(line.isEvidence),
   }));
 
   const examplePath = `content.facilitate.examples[${index}]`;
-  const stepRow = (step: (typeof steps)[number]) => {
-    const isMarked = isTeacher && step.evidenceNumber !== null;
+  const linePath = (step: (typeof steps)[number]) => `${examplePath}.workSummary[${step.number - 1}]`;
+  const stepRow = (step: (typeof steps)[number]) => (
+    <ReviewSlot key={step.number} paths={fieldsOf(linePath(step), ['text', 'status', 'isEvidence'])}>
+      <StepRow isEvidence={step.isMarked}>
+        <StepChip>{t('activityDetail.stepNumber', { number: step.number })}</StepChip>
+        {/* Stretched and centred, so a one-line step sits mid-row beside its note box. */}
+        <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'stretch', display: 'flex', alignItems: 'center' }}>
+          <MathTypography
+            variant="smallBodyText"
+            boldMath={step.isMarked}
+            sx={step.isMarked ? { fontWeight: 600 } : undefined}
+            text={step.text}
+          />
+        </Box>
+      </StepRow>
+    </ReviewSlot>
+  );
+
+  // Teacher view: the step's note, or "-" when it has none.
+  const teacherNote = (step: (typeof steps)[number]) => {
+    const isKey = step.note?.kind === 'KEY_EVIDENCE';
     return (
-      <ReviewSlot
-        key={step.number}
-        paths={fieldsOf(`${examplePath}.workSummary[${step.number - 1}]`, ['text', 'status', 'isEvidence'])}
-      >
-        <StepRow isEvidence={isMarked}>
-          <StepChip>{t('activityDetail.stepNumber', { number: step.number })}</StepChip>
-          <Box sx={{ flex: 1, minWidth: 0 }}>
-            <MathTypography variant="smallBodyText" text={step.text} />
-          </Box>
-          {isMarked && (
-            <EvidenceTagSlot>
-              <EvidenceTag>{t(`${copy}.evidenceTag`, { number: step.evidenceNumber })}</EvidenceTag>
-            </EvidenceTagSlot>
-          )}
-        </StepRow>
+      <ReviewSlot paths={fieldsOf(`${linePath(step)}.note`, ['text', 'kind'])}>
+        <DetectiveNoteBox isKey={isKey}>
+          {/* Figma: the note at 12. */}
+          <Typography variant="microLabel" component="div">
+            {isKey && <strong>{t(`${copy}.keyEvidence`)} </strong>}
+            {step.note ? <MathText text={step.note.text} inline /> : '-'}
+          </Typography>
+        </DetectiveNoteBox>
       </ReviewSlot>
     );
   };
@@ -463,6 +472,11 @@ export function MathDetectivePanel({
       {t(`${copy}.${key}`)}
     </Typography>
   );
+
+  // Each step beside its box: the teacher's note, or the student's space to write.
+  // An older activity's teacher view has no notes, so it shows the steps alone.
+  const showsBoxes = !isTeacher || hasNotes;
+  const isSmall = props.screenSize === ScreenSize.SMALL;
 
   return (
     <FlowCard component="section" aria-labelledby={titleId}>
@@ -517,44 +531,27 @@ export function MathDetectivePanel({
             <ReviewSlot paths={fieldsOf(examplePath, ['prompt', 'problem'])}>
               <ExampleQuestion boldMath variant="rubikSubBold" text={example.prompt} />
             </ReviewSlot>
-            {isTeacher ? (
-              <DetectiveColumns screenSize={props.screenSize}>
-                <DetectiveColumn>
-                  {columnLabel('solutionTeacher')}
-                  {steps.map(stepRow)}
-                </DetectiveColumn>
-                {hasEvidence && (
-                  <DetectiveColumn>
-                    {columnLabel('teacherNotes')}
-                    <EvidenceNotesPanel>
-                      <Typography variant="rubikSubBold">{t(`${copy}.evidenceInResponse`)}</Typography>
-                      <EvidenceNotesList>
-                        {example.evidenceNotes?.map((note, noteIndex) => (
-                          <ReviewSlot key={note.text} paths={`${examplePath}.evidenceNotes[${noteIndex}].text`}>
-                            <MathTypography variant="smallBodyText" text={note.text} />
-                          </ReviewSlot>
-                        ))}
-                      </EvidenceNotesList>
-                    </EvidenceNotesPanel>
-                  </DetectiveColumn>
-                )}
-              </DetectiveColumns>
-            ) : (
+            {showsBoxes ? (
               <DetectiveColumn>
                 <EvidenceNoteRow screenSize={props.screenSize}>
-                  <EvidenceNoteCell>{columnLabel('solutionStudent')}</EvidenceNoteCell>
-                  {props.screenSize !== ScreenSize.SMALL && (
-                    <EvidenceNoteCell>{columnLabel('yourEvidenceNotes')}</EvidenceNoteCell>
+                  <EvidenceNoteCell>{columnLabel(isTeacher ? 'solutionTeacher' : 'solutionStudent')}</EvidenceNoteCell>
+                  {!isSmall && (
+                    <EvidenceNoteCell>{columnLabel(isTeacher ? 'teacherNotes' : 'yourEvidenceNotes')}</EvidenceNoteCell>
                   )}
                 </EvidenceNoteRow>
                 {steps.map((step) => (
                   <EvidenceNoteRow key={step.number} screenSize={props.screenSize}>
                     <EvidenceNoteCell>{stepRow(step)}</EvidenceNoteCell>
                     <EvidenceNoteCell>
-                      <EvidenceNoteLines aria-hidden />
+                      {isTeacher ? teacherNote(step) : <EvidenceNoteLines aria-hidden />}
                     </EvidenceNoteCell>
                   </EvidenceNoteRow>
                 ))}
+              </DetectiveColumn>
+            ) : (
+              <DetectiveColumn>
+                {columnLabel('solutionTeacher')}
+                {steps.map(stepRow)}
               </DetectiveColumn>
             )}
           </DetectiveExample>
@@ -563,34 +560,33 @@ export function MathDetectivePanel({
       {example && (
         <DetectiveSection>
           <DetectiveSectionHeading>
-            <Typography variant="headingMd" component="h3">{t(`${copy}.stagesTitle`)}</Typography>
-            <Typography variant="microLabel">{t(`${copy}.stagesSubtitle`)}</Typography>
+            <Typography variant="headingMd" component="h3">
+              {t(`${copy}.${isTeacher ? 'stagesTitleTeacher' : 'stagesTitleStudent'}`)}
+            </Typography>
+            <Typography variant="microLabel">
+              {t(`${copy}.${isTeacher ? 'stagesSubtitleTeacher' : 'stagesSubtitleStudent'}`)}
+            </Typography>
           </DetectiveSectionHeading>
           {example.stages.map((stage, stageIndex) => {
             const stagePath = `${examplePath}.stages[${stageIndex}]`;
             return (
               <DetectiveCard key={stage.kind}>
-                {isTeacher ? (
-                  <>
-                    <Typography variant="smallBodyText">
-                      {t(`activityFlow.facilitate.stage.${stage.kind}`)}
+                <Typography variant="headingSm">
+                  {t(`activityFlow.facilitate.stage.${stage.kind}`)}
+                </Typography>
+                <ReviewSlot paths={fieldsOf(stagePath, ['ask', 'kind'])}>
+                  <MathTypography variant="rubikBody" text={stage.ask} />
+                </ReviewSlot>
+                {isTeacher && (
+                  <PotentialAnswer>
+                    {/* Figma: the label 13/600 over the answer at 12. */}
+                    <Typography variant="microLabel" sx={{ fontSize: 13, fontWeight: 600 }}>
+                      {t(`${copy}.potentialAnswer`)}
                     </Typography>
-                    <ReviewSlot paths={fieldsOf(stagePath, ['ask', 'kind'])}>
-                      <MathTypography variant="headingMd" text={stage.ask} />
-                    </ReviewSlot>
-                    <Divider sx={{ borderColor: 'designSystem.foreground.greyAccent' }} />
-                    <Typography variant="headingSm">{t(`${copy}.potentialAnswer`)}</Typography>
                     <ReviewSlot paths={`${stagePath}.answer`}>
-                      <MathTypography variant="smallBodyText" text={stage.answer} />
+                      <MathTypography variant="microLabel" text={stage.answer} />
                     </ReviewSlot>
-                  </>
-                ) : (
-                  <ReviewSlot paths={fieldsOf(stagePath, ['ask', 'kind'])}>
-                    <MathTypography
-                      variant="headingSm"
-                      text={`${t(`activityFlow.facilitate.stage.${stage.kind}`)}: ${stage.ask}`}
-                    />
-                  </ReviewSlot>
+                  </PotentialAnswer>
                 )}
               </DetectiveCard>
             );

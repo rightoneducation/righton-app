@@ -9,6 +9,7 @@ import {
   IMakeYourCaseFacilitate,
   IMathDetectiveExample,
   ISpotTheSlipExample,
+  hasDetectiveNotes,
   teacherStrategyOrder,
 } from '../ActivityContentModels';
 import { WorkStatus } from '../PipelineModels';
@@ -167,6 +168,12 @@ const styles = {
     paddingHorizontal: 5,
   },
   tonedBox: { borderRadius: 6, padding: 8, marginTop: 6 },
+  // Math Detective (qa2 MathDetectiveUpdates): each step beside its teacher note;
+  // an evidence step and a key-evidence note on sky with an accent edge.
+  detectiveRow: { flexDirection: 'row' as const, gap: 8, marginBottom: 3 },
+  evidenceBox: { backgroundColor: pdfColors.sky, borderWidth: 1, borderColor: pdfColors.accent, borderRadius: 6 },
+  noteBox: { flex: 1, paddingVertical: 4, paddingHorizontal: 6, borderWidth: 1, borderColor: pdfColors.hairline, borderRadius: 6 },
+  noteText: { fontFamily: 'Rubik', fontSize: 9, lineHeight: 1.35 },
   // Make Your Case, as the page draws it (DevQA MakeYourCase_Teacher /
   // _Student) at PDF scale: the claim centred, its options, a hairline, then
   // the examples or the students' two columns.
@@ -555,53 +562,58 @@ function DetectiveExampleCard({
   isTeacher: boolean;
   t: Translate;
 }) {
-  // Activities generated before issue #2848 keep their right/wrong marks.
-  const hasEvidence = Boolean(example.evidenceNotes);
-  let evidenceCount = 0;
+  // Activities without per-step teacher notes keep their right/wrong marks.
+  const hasNotes = hasDetectiveNotes(example);
 
   return (
     <Card isTeacher={isTeacher} withWorkArea>
       <Text style={styles.exampleTitle}>{t('activityFlow.facilitate.exampleLabel', { number })}</Text>
       <Text style={styles.prompt}>{m(example.prompt)}</Text>
-      {!hasEvidence && example.workSummary.map((line) => (
+      {!hasNotes && example.workSummary.map((line) => (
         <WorkRow key={line.text} text={line.text} status={line.status} isTeacher={isTeacher} t={t} />
       ))}
-      {hasEvidence && (
+      {hasNotes && (
         <>
-          <Text style={styles.label}>
-            {t(`activityFlow.facilitate.detective.${isTeacher ? 'solutionTeacher' : 'solutionStudent'}`).toUpperCase()}
-          </Text>
+          <View style={styles.detectiveRow}>
+            <Text style={[styles.label, { flex: 1 }]}>
+              {t(`activityFlow.facilitate.detective.${isTeacher ? 'solutionTeacher' : 'solutionStudent'}`).toUpperCase()}
+            </Text>
+            {isTeacher && (
+              <Text style={[styles.label, { flex: 1 }]}>
+                {t('activityFlow.facilitate.detective.teacherNotes').toUpperCase()}
+              </Text>
+            )}
+          </View>
           {example.workSummary.map((line, index) => {
             const isMarked = isTeacher && Boolean(line.isEvidence);
-            if (isMarked) evidenceCount += 1;
+            const isKey = line.note?.kind === 'KEY_EVIDENCE';
             return (
-              <View key={line.text} style={[styles.stepRow, isMarked ? { backgroundColor: pdfColors.sky } : {}]}>
-                <Text style={styles.stepLabel}>{t('activityDetail.stepNumber', { number: index + 1 })}</Text>
-                <Text style={styles.stepText}>{m(line.text)}</Text>
-                {isMarked && (
-                  <Text style={pdfStyles.bodyBold}>
-                    {t('activityFlow.facilitate.detective.evidenceTag', { number: evidenceCount })}
-                  </Text>
+              <View key={line.text} style={styles.detectiveRow}>
+                <View style={[styles.stepRow, { flex: 1 }, isMarked ? styles.evidenceBox : {}]}>
+                  <Text style={styles.stepLabel}>{t('activityDetail.stepNumber', { number: index + 1 })}</Text>
+                  <Text style={[styles.stepText, isMarked ? { fontWeight: 600 } : {}]}>{m(line.text)}</Text>
+                </View>
+                {isTeacher && (
+                  <View style={[styles.noteBox, isKey ? styles.evidenceBox : {}]}>
+                    <Text style={styles.noteText}>
+                      {isKey && (
+                        <Text style={{ fontWeight: 600 }}>{`${t('activityFlow.facilitate.detective.keyEvidence')} `}</Text>
+                      )}
+                      {line.note ? m(line.note.text) : '-'}
+                    </Text>
+                  </View>
                 )}
               </View>
             );
           })}
         </>
       )}
-      {isTeacher && hasEvidence && (
-        <View style={[styles.tonedBox, { backgroundColor: pdfColors.sky }]}>
-          <Text style={pdfStyles.bodyBold}>{t('activityFlow.facilitate.detective.evidenceInResponse')}</Text>
-          {example.evidenceNotes?.map((note) => (
-            <Text key={note.text} style={styles.body}>{m(note.text)}</Text>
-          ))}
-        </View>
-      )}
       {example.stages.map((stage) => (
         <View key={stage.kind} style={{ marginTop: 6 }}>
           <Text style={styles.label}>{t(`activityFlow.facilitate.stage.${stage.kind}`)}</Text>
           <Text style={styles.body}>{m(stage.ask)}</Text>
           {isTeacher && (
-            <View style={[styles.tonedBox, { backgroundColor: pdfColors.periwinkle }]}>
+            <View style={[styles.tonedBox, { backgroundColor: pdfColors.sky }]}>
               <Text style={pdfStyles.bodyBold}>{t('activityFlow.facilitate.detective.potentialAnswer')}</Text>
               <Text style={styles.body}>{m(stage.answer)}</Text>
             </View>

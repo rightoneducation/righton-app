@@ -91,7 +91,7 @@ function teacherNotes(c) {
   const notes = [];
   for (const ex of f.examples ?? []) {
     notes.push(ex.finalOutcome, ex.answer, ...(ex.stages ?? []).map((s) => s.answer),
-      ...(ex.evidenceNotes ?? []).map((n) => n.text),
+      ...(ex.workSummary ?? []).map((l) => l.note?.text),
       ...(ex.notice ?? []).map((n) => n.text), ...(ex.steps ?? []).map((s) => s.annotation?.text));
   }
   for (const st of f.strategies ?? []) notes.push(...(st.notes ?? []).map((n) => n.text));
@@ -336,6 +336,17 @@ const RULES = [
         const count = (ex.workSummary ?? []).filter((l) => l.isEvidence).length;
         return count >= 1 && count <= 2 ? [] : [`Example ${i + 1}: ${count}`];
       });
+      return off.length ? off.join(', ') : null;
+    },
+  },
+  {
+    // Design (qa2 MathDetectiveUpdates): every key-evidence step carries a teacher note.
+    id: 'math detective key evidence has a note',
+    applies: (t) => t === 'MATH_DETECTIVE',
+    check: (c) => {
+      const off = (c.facilitate.examples ?? []).flatMap((ex, i) => (ex.workSummary ?? [])
+        .map((l, j) => (l.isEvidence && !(l.note?.kind === 'KEY_EVIDENCE' && l.note.text?.trim()) ? `Example ${i + 1} line ${j + 1}` : null))
+        .filter(Boolean));
       return off.length ? off.join(', ') : null;
     },
   },
