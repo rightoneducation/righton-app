@@ -2,13 +2,9 @@ import React from 'react';
 import { Document, Page, Text, View } from '@react-pdf/renderer';
 import {
   IFacilitateContent,
-  IFavoriteNoExample,
   ISpotTheSlipExample,
 } from '../ActivityContentModels';
-import formatStepAnnotation, {
-  studentWorkText,
-  Translate,
-} from '../activityMarks';
+import formatStepAnnotation, { Translate } from '../activityMarks';
 import { pdfColors, pdfStyles } from './pdfTheme';
 import {
   Card,
@@ -22,6 +18,7 @@ import { TemplatePdf } from './templates/templatePdf';
 import compareTheThinkingPdf from './templates/CompareTheThinkingPdf';
 import makeYourCasePdf from './templates/MakeYourCasePdf';
 import MathDetectiveHandout from './templates/MathDetectivePdf';
+import FavoriteNoHandout from './templates/FavoriteNoPdf';
 
 /*
  * The two Facilitate activity exports (InflowScreens/Facilitate_Teacher_ExportedPDF
@@ -109,88 +106,6 @@ function SlipExampleCard({
   );
 }
 
-/* ── My Favorite No ──────────────────────────────────────────────────── */
-
-function FavoriteNoExampleCard({
-  example,
-  number,
-  isTeacher,
-  t,
-}: {
-  example: IFavoriteNoExample;
-  number: number;
-  isTeacher: boolean;
-  t: Translate;
-}) {
-  // PRESERVE first, as the screen and the frame list them.
-  const notice = [...example.notice].sort(
-    (a, b) => Number(a.kind === 'REVISE') - Number(b.kind === 'REVISE'),
-  );
-  // The first INCORRECT line carries the tag, as on screen.
-  const tagIndex = example.work.findIndex(
-    (line) => line.status === 'INCORRECT',
-  );
-  return (
-    <Card isTeacher={isTeacher} withWorkArea>
-      <Text style={styles.exampleTitle}>
-        {t('activityFlow.facilitate.exampleLabel', { number })}
-      </Text>
-      <Text style={styles.prompt}>{m(example.prompt)}</Text>
-      <Text style={styles.label}>
-        {t('activityFlow.facilitate.studentWork')}
-      </Text>
-      {example.work.map((line, index) => {
-        const isError = isTeacher && line.status === 'INCORRECT';
-        const isCorrect = isTeacher && line.status === 'CORRECT';
-        let fill = {};
-        if (isError) fill = { backgroundColor: pdfColors.errorFill };
-        else if (isCorrect) fill = { backgroundColor: pdfColors.successFill };
-        let mark = '';
-        if (isError) mark = ` ${t('activityFlow.pdf.markIncorrect')}`;
-        else if (isCorrect) mark = ` ${t('activityFlow.pdf.markCorrect')}`;
-        return (
-          <View key={line.text} style={[styles.stepRow, fill]}>
-            <Text style={styles.stepLabel}>
-              {t('activityDetail.stepNumber', { number: index + 1 })}
-            </Text>
-            <Text
-              style={styles.stepText}
-            >{`${m(isTeacher ? line.text : studentWorkText(line.text))}${mark}`}</Text>
-            {isTeacher && index === tagIndex && (
-              <Text style={styles.favoriteNoTag}>
-                {t('activityFlow.facilitate.favoriteNoTag')}
-              </Text>
-            )}
-          </View>
-        );
-      })}
-      {isTeacher && (
-        <>
-          <Text style={styles.label}>
-            {t('activityFlow.facilitate.whatToNotice')}
-          </Text>
-          {notice.map((item) => (
-            <Text
-              key={item.text}
-              style={[
-                styles.workRow,
-                {
-                  backgroundColor:
-                    item.kind === 'PRESERVE'
-                      ? pdfColors.successFill
-                      : pdfColors.errorFill,
-                },
-              ]}
-            >
-              {m(item.text)}
-            </Text>
-          ))}
-        </>
-      )}
-    </Card>
-  );
-}
-
 /** The default export's artifact, teacher or student version. */
 function Artifact({
   facilitate,
@@ -216,20 +131,6 @@ function Artifact({
           ))}
         </>
       );
-    case 'FAVORITE_NO':
-      return (
-        <>
-          {facilitate.examples.map((example, index) => (
-            <FavoriteNoExampleCard
-              key={example.prompt}
-              example={example}
-              number={index + 1}
-              isTeacher={isTeacher}
-              t={t}
-            />
-          ))}
-        </>
-      );
     default:
       return null;
   }
@@ -241,6 +142,17 @@ export function TeacherHandout({
   misconceptionTitle,
   t,
 }: HandoutProps) {
+  if (content.facilitate.type === 'FAVORITE_NO') {
+    return (
+      <FavoriteNoHandout
+        content={content}
+        template={template}
+        misconceptionTitle={misconceptionTitle}
+        t={t}
+        isTeacher
+      />
+    );
+  }
   if (content.facilitate.type === 'MATH_DETECTIVE') {
     return (
       <MathDetectiveHandout
@@ -293,6 +205,17 @@ export function StudentHandout({
   misconceptionTitle,
   t,
 }: HandoutProps) {
+  if (content.facilitate.type === 'FAVORITE_NO') {
+    return (
+      <FavoriteNoHandout
+        content={content}
+        template={template}
+        misconceptionTitle={misconceptionTitle}
+        t={t}
+        isTeacher={false}
+      />
+    );
+  }
   if (content.facilitate.type === 'MATH_DETECTIVE') {
     return (
       <MathDetectiveHandout
