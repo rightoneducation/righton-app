@@ -77,6 +77,9 @@ const STAGES = {
   selectTemplate: env.FUNCTION_MICROCOACHV2LLMSELECTTEMPLATE_NAME,
   nextStepOption: env.FUNCTION_MICROCOACHV2NEXTSTEPOPTION_NAME,
 };
+// Publishes and emails the teacher (the reviewer's Publish). From the function's
+// resource access (amplify update function); the fallback is its usual name.
+const EMAIL_TEACHER = env.FUNCTION_MICROCOACHV2EMAILTEACHER_NAME || `microcoachv2EmailTeacher-${env.ENV}`;
 const BATCH_SIZE = 25; // DynamoDB's limit per BatchWrite
 const BATCH_RETRIES = 5;
 
@@ -94,6 +97,27 @@ async function invokeStage(stage, payload) {
   const body = Buffer.from(resp.Payload).toString('utf8');
   if (resp.FunctionError) throw new Error(`${stage} error: ${body}`);
   return JSON.parse(body);
+}
+
+/**
+ * QA: asks EmailTeacher to publish straight to the teacher (its
+ * AUTO_PUBLISH_FOR_QA flag decides). True only when it did; any failure leaves
+ * the results as DRAFT for review.
+ */
+async function autoPublish(sessionId) {
+  try {
+    const resp = await lambda.send(new InvokeCommand({
+      FunctionName: EMAIL_TEACHER,
+      InvocationType: 'RequestResponse',
+      Payload: Buffer.from(JSON.stringify({ action: 'autoPublish', sessionId })),
+    }));
+    const body = Buffer.from(resp.Payload).toString('utf8');
+    if (resp.FunctionError) throw new Error(body);
+    return JSON.parse(body)?.published === true;
+  } catch (e) {
+    console.error(`Could not auto-publish session ${sessionId}; it stays DRAFT:`, e);
+    return false;
+  }
 }
 
 async function claim(uploadId) {
@@ -234,6 +258,11 @@ async function finalize(upload, ctx, store){
   const activities = rows.activities.length;
   const counts = `${misconceptions} misconceptions, ${activities} activities`;
   console.log(`Upload ${upload.id} GENERATED: ${counts}`);
+  // QA: published straight to the teacher, who EmailTeacher has emailed; no review email.
+  if (await autoPublish(upload.sessionId)) {
+    console.log(`Session ${upload.sessionId} auto-published (QA)`);
+    return { misconceptions, activities };
+  }
   await sendEmail(
     `MicroCoach generation finished (${env.ENV})`,
     null,

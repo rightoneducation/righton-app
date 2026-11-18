@@ -9,6 +9,13 @@
  * (@function), which already limits it to the Admins group; the check here is
  * a second line. Publishing is the job: a failed email is logged and reported
  * to the dev address, never thrown — the teacher can still see their results.
+ *
+ * QA: UploadGenerate (MIU 1) and UploadIngest (MIU 2) also invoke this directly
+ * with { action: 'autoPublish', sessionId } as soon as results are written.
+ * While AUTO_PUBLISH_FOR_QA is on, that publishes and emails the teacher with no
+ * review; while it is off, it returns { published: false } and the caller sends
+ * its "Review and publish" email as before. A direct invoke needs IAM invoke
+ * permission on this function, so only those lambdas can make it.
  */
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import {
@@ -39,6 +46,11 @@ const DEV_EMAILS = (env.NOTIFY_TO_EMAILS || 'drewjhart@gmail.com')
 // links in UploadGenerate and UploadIngest). Use http://localhost:3000 to test
 // against a local app.
 const APP_BASE_URL = 'https://prototype.rightoneducation.com';
+
+// QA (2026-11-18): publish generated results straight to the teacher, skipping
+// the /prepublishreview step and its review email. Set back to false to restore
+// the review gate.
+const AUTO_PUBLISH_FOR_QA = true;
 
 const REVIEWER_GROUP = 'Admins';
 // The upload status that means its results exist: MIU 1 ends GENERATED
@@ -109,18 +121,16 @@ async function emailTeacher(session, kind) {
   console.log(`Emailed ${teacher.email}: ${kind} results for session ${session.id}`);
 }
 
-export const handler = async (event) => {
-  const sessionId = event?.arguments?.sessionId;
-  const groups = event?.identity?.claims?.['cognito:groups'] ?? [];
-  if (!Array.isArray(groups) || !groups.includes(REVIEWER_GROUP)) {
-    throw new Error('Only reviewers can publish results');
-  }
+/**
+ * DRAFT → PUBLISHED, then the teacher's email. Resolves to the session as it
+ * now stands; a session that isn't DRAFT (already published, or from before
+ * the review step) comes back unchanged, with no second email.
+ */
+async function publish(sessionId) {
   if (!sessionId) throw new Error('publishSession needs a sessionId');
 
   const session = await getRow(TABLES.session, sessionId);
   if (!session) throw new Error(`Session ${sessionId} not found`);
-  // Already published (or from before the review step): nothing to do, and no
-  // second email.
   if (session.publishStatus !== 'DRAFT') return session;
 
   const { Attributes: published } = await db.send(new UpdateCommand({
@@ -152,4 +162,20 @@ export const handler = async (event) => {
     ]);
   }
   return published;
+}
+
+export const handler = async (event) => {
+  // A direct invoke from an upload lambda. AppSync's events carry `arguments`
+  // and `identity` instead, so they never reach this branch.
+  if (event?.action === 'autoPublish') {
+    if (!AUTO_PUBLISH_FOR_QA) return { published: false };
+    const session = await publish(event.sessionId);
+    return { published: session.publishStatus === 'PUBLISHED' };
+  }
+
+  const groups = event?.identity?.claims?.['cognito:groups'] ?? [];
+  if (!Array.isArray(groups) || !groups.includes(REVIEWER_GROUP)) {
+    throw new Error('Only reviewers can publish results');
+  }
+  return publish(event?.arguments?.sessionId);
 };

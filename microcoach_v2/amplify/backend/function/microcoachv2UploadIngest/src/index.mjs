@@ -46,6 +46,7 @@ Amplify Params - DO NOT EDIT */
 
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { SFNClient, StartExecutionCommand } from '@aws-sdk/client-sfn';
+import { InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda';
 import { DynamoDBClient, ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import {
   BatchWriteCommand,
@@ -74,11 +75,16 @@ const REVIEW_BASE_URL = 'https://prototype.rightoneducation.com';
 const SAVED_PLAN_TABLE = process.env.API_MICROCOACHV2_MICROCOACHSAVEDPLANTABLE_NAME;
 const ACTIVITY_TABLE = process.env.API_MICROCOACHV2_MICROCOACHACTIVITYTABLE_NAME;
 const BUCKET = process.env.STORAGE_MICROCOACHUPLOADS_BUCKETNAME;
+// Publishes and emails the teacher (the reviewer's Publish). From the function's
+// resource access (amplify update function); the fallback is its usual name.
+const EMAIL_TEACHER =
+  process.env.FUNCTION_MICROCOACHV2EMAILTEACHER_NAME || `microcoachv2EmailTeacher-${process.env.ENV}`;
 const BATCH_SIZE = 25; // DynamoDB's limit per BatchWrite
 const BATCH_RETRIES = 5;
 
 const s3 = new S3Client({ region: REGION });
 const sfn = new SFNClient({region: REGION}); // step function
+const lambda = new LambdaClient({ region: REGION });
 const db = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 
 const Status = {
@@ -87,6 +93,27 @@ const Status = {
   INGESTED: 'INGESTED',
   FAILED: 'FAILED',
 };
+
+/**
+ * QA: asks EmailTeacher to publish straight to the teacher (its
+ * AUTO_PUBLISH_FOR_QA flag decides). True only when it did; any failure leaves
+ * the results as DRAFT for review.
+ */
+async function autoPublish(sessionId) {
+  try {
+    const resp = await lambda.send(new InvokeCommand({
+      FunctionName: EMAIL_TEACHER,
+      InvocationType: 'RequestResponse',
+      Payload: Buffer.from(JSON.stringify({ action: 'autoPublish', sessionId })),
+    }));
+    const body = Buffer.from(resp.Payload).toString('utf8');
+    if (resp.FunctionError) throw new Error(body);
+    return JSON.parse(body)?.published === true;
+  } catch (e) {
+    console.error(`Could not auto-publish session ${sessionId}; it stays DRAFT:`, e);
+    return false;
+  }
+}
 
 // RECEIVED -> INGESTING, only if still RECEIVED. Resolves to the claimed row,
 // or null when another run has it or it has already finished.
@@ -339,7 +366,10 @@ export const handler = async (event, context) => {
     // MIU 2 has no generation step: its comparison is done here, so this is
     // where its review email goes. Its own catch: a failed email must not mark
     // a finished upload FAILED.
-    if (upload.assessmentType === 'POST_PPQ') {
+    // QA: published straight to the teacher, who EmailTeacher has emailed; no review email.
+    const isAutoPublished = upload.assessmentType === 'POST_PPQ' && (await autoPublish(upload.sessionId));
+    if (isAutoPublished) console.log(`Session ${upload.sessionId} auto-published (QA)`);
+    if (upload.assessmentType === 'POST_PPQ' && !isAutoPublished) {
       await sendEmail(
         `MicroCoach MIU 2 analysed (${process.env.ENV})`,
         null,
