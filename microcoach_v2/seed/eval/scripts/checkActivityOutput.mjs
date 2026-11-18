@@ -17,6 +17,7 @@ import { readFileSync, readdirSync, writeFileSync, existsSync, statSync } from '
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { activityContentSchemaFor, selfCorrectingStrategies, checkableRows } from '../../../amplify/backend/function/microcoachv2NextStepOption/src/util/activityContent.mjs';
+import { unrenderedLatex, rawDollars } from '../../../amplify/backend/function/microcoachv2NextStepOption/src/util/mathDelimiters.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const EVAL_ROOT = path.resolve(HERE, '..');
@@ -91,7 +92,7 @@ function teacherNotes(c) {
   const notes = [];
   for (const ex of f.examples ?? []) {
     notes.push(ex.finalOutcome, ex.answer, ...(ex.stages ?? []).map((s) => s.answer),
-      ...(ex.evidenceNotes ?? []).map((n) => n.text),
+      ...(ex.workSummary ?? []).map((l) => l.note?.text),
       ...(ex.notice ?? []).map((n) => n.text), ...(ex.steps ?? []).map((s) => s.annotation?.text));
   }
   for (const st of f.strategies ?? []) notes.push(...(st.notes ?? []).map((n) => n.text));
@@ -221,11 +222,21 @@ const RULES = [
     },
   },
   {
-    // The app now displays these (lib/mathDelimiters), so count them here (v65).
+    // LaTeX the app would show raw (v65). Commands it renders without delimiters
+    // (lib/mathDelimiters: \leq, \frac, …) don't count since v68.
     id: 'no LaTeX outside delimiters',
     applies: () => true,
     check: (c) => {
-      const hit = allStrings(c).find((s) => /\\[a-zA-Z]+/.test(outsideMath(s)));
+      const hit = allStrings(c).find((s) => unrenderedLatex(s).length > 0);
+      return hit ? `"${hit.slice(0, 80)}"` : null;
+    },
+  },
+  {
+    // v68-v69: "$ (x,y) $" isn't math to the app, so the dollar signs show.
+    id: 'no raw $ in text',
+    applies: () => true,
+    check: (c) => {
+      const hit = allStrings(c).find((s) => rawDollars(s).length > 0);
       return hit ? `"${hit.slice(0, 80)}"` : null;
     },
   },
@@ -335,6 +346,30 @@ const RULES = [
       const off = (c.facilitate.examples ?? []).flatMap((ex, i) => {
         const count = (ex.workSummary ?? []).filter((l) => l.isEvidence).length;
         return count >= 1 && count <= 2 ? [] : [`Example ${i + 1}: ${count}`];
+      });
+      return off.length ? off.join(', ') : null;
+    },
+  },
+  {
+    // Design (qa2 MathDetectiveUpdates): every key-evidence step carries a teacher note.
+    id: 'math detective key evidence has a note',
+    applies: (t) => t === 'MATH_DETECTIVE',
+    check: (c) => {
+      const off = (c.facilitate.examples ?? []).flatMap((ex, i) => (ex.workSummary ?? [])
+        .map((l, j) => (l.isEvidence && !(l.note?.kind === 'KEY_EVIDENCE' && l.note.text?.trim()) ? `Example ${i + 1} line ${j + 1}` : null))
+        .filter(Boolean));
+      return off.length ? off.join(', ') : null;
+    },
+  },
+  {
+    // ogoins (qa2 MathDetectiveUpdates): Revise and check tests the method on the
+    // original problem as well as a second case. v67 skipped the original twice.
+    id: 'math detective revise checks original problem',
+    applies: (t) => t === 'MATH_DETECTIVE',
+    check: (c) => {
+      const off = (c.facilitate.examples ?? []).flatMap((ex, i) => {
+        const revise = (ex.stages ?? []).find((s) => s.kind === 'REVISE_AND_CHECK');
+        return /original problem:/i.test(revise?.answer ?? '') ? [] : [`Example ${i + 1}`];
       });
       return off.length ? off.join(', ') : null;
     },

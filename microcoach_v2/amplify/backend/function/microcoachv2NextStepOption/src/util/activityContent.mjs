@@ -75,11 +75,29 @@ const WorkLine = z.object({
 // into one line (v59). The template docs set no limit, and the output cap stops a runaway.
 const ONLY_THE_MOVES_THAT_MATTER = 'Only the moves that matter: do not spend a line restating the problem.';
 
-// Math Detective marks the lines students should treat as evidence (issue #2848).
-// The count (one or two) can't be bounded across items here, so the eval checks it.
-const DetectiveWorkLine = WorkLine.extend({
-  isEvidence: z.boolean().describe('Teacher view only: true on the one or two lines that give the strongest evidence of the issue, false on every other line.'),
-});
+/**
+ * Math Detective: a teacher note beside each line (Design, qa2 MathDetectiveUpdates).
+ * Generated with a kind on every line (NONE for a blank one), as Spot the Slip's
+ * annotations are; stored as null on a blank line, with `isEvidence` derived from
+ * KEY_EVIDENCE by toStoredFacilitate. The count of key-evidence lines (one or two)
+ * can't be bounded across items here, so the eval checks it.
+ */
+const DETECTIVE_NOTE_KINDS = ['KEY_EVIDENCE', 'SOUND_REASONING'];
+
+function detectiveWorkLineFor(mode) {
+  if (mode === 'stored') {
+    return WorkLine.extend({
+      isEvidence: z.boolean().describe('Teacher view only: true on a KEY_EVIDENCE line'),
+      note: z.object({ kind: z.enum(DETECTIVE_NOTE_KINDS), text: z.string() }).nullable().describe('Teacher view only. null on a line with no note.'),
+    });
+  }
+  return WorkLine.extend({
+    note: z.object({
+      kind: z.enum([...DETECTIVE_NOTE_KINDS, 'NONE']).describe('Teacher view only. KEY_EVIDENCE on the one or two lines that give the strongest evidence of the issue. SOUND_REASONING on a line whose reasoning is still correct and worth pointing out to the teacher. NONE on a line that is neutral to the issue or just procedural. Not every line needs a note.'),
+      text: z.string().nullable().describe('Teacher view only, one short sentence. KEY_EVIDENCE: what this line shows about the issue, e.g. "The decrease is calculated from $100 instead of the new amount, $110". SOUND_REASONING: what is still correct here, e.g. "Correct use of the starting amount as the base for the percent change". null for NONE.'),
+    }),
+  });
+}
 
 const runStepFields = {
   title: z.string().describe('Short step name, e.g. "Show Example 1" or "Compare and revise"'),
@@ -220,15 +238,12 @@ function mathDetective({ examplesMin, examplesMax }, mode) {
     issue: z.string().describe('One short plain sentence naming the underlying mathematical issue the examples share. Students see it: never the fix, a corrected value, or which line shows it.'),
     examples: z.array(z.object({
       ...problemFields(mode),
-      workSummary: z.array(DetectiveWorkLine).min(2).describe(`The response in brief, in short lines as ONE student wrote them. This is the evidence students investigate. ${ONLY_THE_MOVES_THAT_MATTER}`),
-      evidenceNotes: z.array(z.object({
-        text: z.string(),
-      })).min(1).max(4).describe('Teacher view only: what the evidence lines show about the issue and why the reasoning does not work.'),
+      workSummary: z.array(detectiveWorkLineFor(mode)).min(2).describe(`The response in brief, in short, discrete lines as ONE student wrote them: one calculation or reasoning move per line. This is the evidence students investigate. ${ONLY_THE_MOVES_THAT_MATTER}`),
       stages: z.array(z.object({
-        kind: z.enum(['INVESTIGATE', 'SOLVE', 'REVISE_AND_CHECK']),
-        ask: z.string().describe('Student-facing question for this stage'),
-        answer: z.string().describe('Teacher view only: what the stage should land on. INVESTIGATE: what students should notice about the reasoning. SOLVE: what the evidence shows, with another plausible interpretation when there is one. REVISE_AND_CHECK: the revised reasoning and a worked check on this problem and another example.'),
-      })).length(3).describe('Exactly three, in order: INVESTIGATE, SOLVE, REVISE_AND_CHECK.'),
+        kind: z.enum(['INVESTIGATE', 'EXPLAIN_EVIDENCE', 'REVISE_AND_CHECK']),
+        ask: z.string().describe('Student-facing question for this stage. INVESTIGATE: a "how" question about how one named move is being carried out (e.g. "How is the right side being multiplied by 6?") — never "which line/step", "point to", "find where", or words saying something went wrong. REVISE_AND_CHECK: names the second, different case to test (e.g. "then test it on $2x+3=x+5$").'),
+        answer: z.string().describe('Teacher view only: the potential answer the teacher listens for. INVESTIGATE: what students should notice about the faulty process at the key evidence line. EXPLAIN_EVIDENCE: what the reasoning reveals about the underlying issue and how it connects to the misconception, with another plausible interpretation when there is one. REVISE_AND_CHECK: the revised method, then "Original problem:" followed by the method worked through on this example\'s own problem, then the worked check on the second case the ask names — both checks required, original first.'),
+      })).length(3).describe('Exactly three, in order: INVESTIGATE, EXPLAIN_EVIDENCE, REVISE_AND_CHECK.'),
     })).min(examplesMin).max(examplesMax).describe('Each example is a DIFFERENT problem (different numbers or a different expression) showing the same need, so the teacher can choose among them — never the same problem repeated.'),
   });
 }
@@ -365,6 +380,15 @@ export function toStoredFacilitate(facilitate, onFallback = () => {}) {
       // Steps are generated with NONE on an unremarked step; stored, it is null.
       ...(Array.isArray(rest.steps) && {
         steps: rest.steps.map((st) => (st?.annotation?.kind === 'NONE' || st?.annotation == null ? { ...st, annotation: null } : st)),
+      }),
+      // Math Detective lines: a NONE (or textless) note is stored as null, and
+      // isEvidence follows KEY_EVIDENCE.
+      ...(facilitate.type === 'MATH_DETECTIVE' && Array.isArray(rest.workSummary) && {
+        workSummary: rest.workSummary.map((line) => {
+          const hasNote = DETECTIVE_NOTE_KINDS.includes(line?.note?.kind) && Boolean(line.note.text?.trim());
+          const note = hasNote ? { kind: line.note.kind, text: line.note.text.trim() } : null;
+          return { ...line, note, isEvidence: line?.note?.kind === 'KEY_EVIDENCE' };
+        }),
       }),
     })),
   };
@@ -638,7 +662,8 @@ const LABEL_SPECS = {
   ],
   MATH_DETECTIVE: [
     { list: 'examples', items: 'workSummary', path: 'status', allowed: ['CORRECT', 'INCORRECT', 'NEUTRAL'] },
-    { list: 'examples', items: 'evidenceNotes', path: 'text' },
+    // Only the note's prose: its kind sets isEvidence at storage, so it is not relabelled after.
+    { list: 'examples', items: 'workSummary', path: 'note.text' },
     { list: 'examples', items: 'stages', path: 'answer' },
   ],
   COMPARE_THE_THINKING: [
@@ -825,7 +850,8 @@ export function rowLabel(id) {
   const n = (m) => Number(m) + 1;
   const part = path.match(/^examples\[(\d+)\]\.(\w+)\[(\d+)\]/);
   if (part) {
-    const names = { work: 'student work line', workSummary: 'student work line', evidenceNotes: 'teacher note', steps: 'worked step', notice: 'teacher note', stages: 'stage' };
+    const names = { work: 'student work line', workSummary: 'student work line', steps: 'worked step', notice: 'teacher note', stages: 'stage' };
+    if (part[2] === 'workSummary' && path.endsWith('.note.text')) return `Example ${n(part[1])}, teacher note on student work line ${n(part[3])}`;
     return `Example ${n(part[1])}, ${names[part[2]] ?? part[2]} ${n(part[3])}`;
   }
   const example = path.match(/^examples\[(\d+)\]\.(\w+)/);

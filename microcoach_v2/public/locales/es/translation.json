@@ -536,6 +536,7 @@
       "examplesToTry": "Ejemplos para probar",
       "stage": {
         "INVESTIGATE": "Investigar",
+        "EXPLAIN_EVIDENCE": "Explica la evidencia",
         "SOLVE": "Resolver",
         "REVISE_AND_CHECK": "Revisar y comprobar",
         "GENERALIZE": "Generalizar"
@@ -553,10 +554,11 @@
         "solutionStudent": "Solución incorrecta",
         "teacherNotes": "Notas para el docente",
         "yourEvidenceNotes": "Tus notas de evidencia",
-        "evidenceInResponse": "Evidencia en la respuesta",
-        "evidenceTag": "Evidencia {{number}}",
-        "stagesTitle": "Investiga, resuelve, revisa y comprueba",
-        "stagesSubtitle": "Trabaja esto con tus estudiantes después de plantear el problema.",
+        "keyEvidence": "Evidencia clave:",
+        "stagesTitleTeacher": "Guía la investigación",
+        "stagesSubtitleTeacher": "Trabaja esto con tus estudiantes después de plantear el problema.",
+        "stagesTitleStudent": "Completa la investigación",
+        "stagesSubtitleStudent": "Trabaja estos pasos después de plantear el problema.",
         "potentialAnswer": "Respuesta posible"
       },
       "anonymousResponse": "Respuesta anónima de un estudiante",
@@ -596,7 +598,10 @@
       "misconception": "Concepto erróneo:",
       "teacherExamples": "Ejemplos resueltos incorrectos - Ejemplos para mostrar a la clase",
       "markCorrect": "(correcto)",
-      "markIncorrect": "(incorrecto)"
+      "markIncorrect": "(incorrecto)",
+      "strategiesHeading": "Estrategias para compartir -",
+      "strategiesHeadingSub": "Ejemplos para mostrar a la clase",
+      "writeReasoning": "Escribe tu razonamiento aquí"
     },
     "noContent": "El contenido de esta actividad aún no está disponible. Elige otra actividad o vuelve más tarde.",
     "or": "o"

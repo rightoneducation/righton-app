@@ -415,15 +415,6 @@ export const DetectiveExample = styled(ExampleDetail)(({ theme }) => ({
   backgroundColor: theme.palette.designSystem.surface.white,
 }));
 
-// The solution beside the teacher's notes; stacked on phones.
-export const DetectiveColumns = styled(Box, {
-  shouldForwardProp: noScreenSize,
-})<ScreenSizeProps>(({ theme, screenSize }) => ({
-  display: 'flex',
-  flexDirection: screenSize === ScreenSize.SMALL ? 'column' : 'row',
-  gap: theme.sizing.space5,
-}));
-
 export const DetectiveColumn = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -432,24 +423,38 @@ export const DetectiveColumn = styled(Box)(({ theme }) => ({
   gap: theme.sizing.space2,
 }));
 
-export const EvidenceNotesPanel = styled(Box)(({ theme }) => ({
+// Teacher view (qa2 MathDetectiveUpdates): a stage's potential answer, on sky
+// under its question.
+export const PotentialAnswer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.sizing.space0,
-  padding: theme.sizing.space3,
-  borderRadius: theme.sizing.space2,
+  gap: theme.sizing.space0 / 2,
+  padding: `${theme.sizing.space1}px ${theme.sizing.space2}px`,
+  borderRadius: theme.sizing.space1,
   backgroundColor: theme.palette.designSystem.surface.skyBlue,
+  color: theme.palette.designSystem.surface.atlanticNavy,
 }));
 
-export const EvidenceNotesList = styled(Box)(({ theme }) => ({
+// Teacher view (qa2 MathDetectiveUpdates): the note beside a step, as tall as the
+// student's writing box. A key-evidence note takes the evidence step's sky fill
+// and accentBlue edge; any other note, or "-", sits in a plain box.
+export const DetectiveNoteBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isKey',
+})<{ isKey?: boolean }>(({ theme, isKey }) => ({
   display: 'flex',
-  flexDirection: 'column',
-  gap: theme.sizing.space0,
-  paddingLeft: theme.sizing.space4,
+  alignItems: 'center',
+  minHeight: noteLinesHeight,
+  padding: `${theme.sizing.space0}px ${theme.sizing.space1}px`,
+  borderRadius: theme.sizing.space1,
+  boxSizing: 'border-box',
+  border: isKey ? undefined : theme.borders.subtle,
+  boxShadow: isKey ? `inset 0 0 0 1.5px ${theme.palette.designSystem.foreground.accentBlue}` : undefined,
+  backgroundColor: isKey ? theme.palette.designSystem.surface.skyBlue : theme.palette.designSystem.surface.white,
+  color: theme.palette.designSystem.surface.atlanticNavy,
 }));
 
-// Student view: each step beside its own blank box, so a wrapped step keeps its box
-// on the same row. On phones the box drops under its step.
+// Each step beside its own box (the teacher's note, or the student's blank box), so a
+// wrapped step keeps its box on the same row. On phones the box drops under its step.
 export const EvidenceNoteRow = styled(Box, {
   shouldForwardProp: noScreenSize,
 })<ScreenSizeProps>(({ theme, screenSize }) => ({

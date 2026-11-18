@@ -43,8 +43,8 @@ This is a Math Detective activity: students investigate one student's flawed wor
 - issue names the mathematical issue the examples share, without the fix; it is meant to be correct.
 - prompt and problem state the problem; they are meant to be correct and solvable.
 - workSummary is the student's work in brief. A line with status CORRECT is right; a line with status INCORRECT is the flaw or follows from it, wrong by design.
-- evidenceNotes are teacher notes on what the work shows and why it fails; they are meant to be correct about the work as written.
-- stages are INVESTIGATE, SOLVE and REVISE_AND_CHECK: ask is the question to students; answer is the teacher's answer, meant to be correct, including any worked check.
+- A workSummary line may carry a teacher note (note.text). KEY_EVIDENCE notes say what a line shows about the issue; SOUND_REASONING notes say what a line still gets right. Both are meant to be correct about the work as written. isEvidence marks the KEY_EVIDENCE lines.
+- stages are INVESTIGATE, EXPLAIN_EVIDENCE and REVISE_AND_CHECK: ask is the question to students; answer is the teacher's answer, meant to be correct, including any worked check.
 ${ACTIVITY_COMMON}`.trim(),
 
   COMPARE_THE_THINKING: `

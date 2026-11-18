@@ -536,6 +536,7 @@
       "examplesToTry": "Examples to try",
       "stage": {
         "INVESTIGATE": "Investigate",
+        "EXPLAIN_EVIDENCE": "Explain the evidence",
         "SOLVE": "Solve",
         "REVISE_AND_CHECK": "Revise and check",
         "GENERALIZE": "Generalize"
@@ -553,10 +554,11 @@
         "solutionStudent": "Incorrect solution",
         "teacherNotes": "Teacher notes",
         "yourEvidenceNotes": "Your evidence notes",
-        "evidenceInResponse": "Evidence in the response",
-        "evidenceTag": "Evidence {{number}}",
-        "stagesTitle": "Investigate, solve, revise and check",
-        "stagesSubtitle": "Work through these with students after the issue is stated.",
+        "keyEvidence": "Key evidence:",
+        "stagesTitleTeacher": "Guide the investigation",
+        "stagesSubtitleTeacher": "Work through these with students after the issue is stated.",
+        "stagesTitleStudent": "Complete the investigation",
+        "stagesSubtitleStudent": "Work through these steps after the issue is stated.",
         "potentialAnswer": "Potential answer"
       },
       "anonymousResponse": "Anonymous student response",
@@ -596,7 +598,10 @@
       "misconception": "Misconception:",
       "teacherExamples": "Incorrect Worked examples - Examples to show the class",
       "markCorrect": "(correct)",
-      "markIncorrect": "(incorrect)"
+      "markIncorrect": "(incorrect)",
+      "strategiesHeading": "Strategies to share -",
+      "strategiesHeadingSub": "Examples to show the class",
+      "writeReasoning": "Write your reasoning here"
     },
     "noContent": "This activity's content isn't available yet. Choose another activity or check back later.",
     "or": "or"

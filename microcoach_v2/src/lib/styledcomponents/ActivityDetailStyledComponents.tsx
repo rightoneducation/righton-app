@@ -191,13 +191,16 @@ export const StepRow = styled(Box, {
     paddingRight: isEvidence ? theme.sizing.space0 : undefined,
     paddingBottom: isEvidence ? theme.sizing.space0 : undefined,
     minHeight: stepChipHeight,
-    borderRadius: stepChipHeight / 2,
+    // qa2 MathDetectiveUpdates: an evidence step is a rounded box with a 1.5
+    // accentBlue edge, inset so its text keeps the column's edge. The panel bolds the text.
+    borderRadius: isEvidence ? theme.sizing.space1 : stepChipHeight / 2,
+    boxShadow: isEvidence ? `inset 0 0 0 1.5px ${palette.foreground.accentBlue}` : undefined,
     backgroundColor: background,
   };
 });
 
-// Figma (Math Detective): a navy pill on an evidence step's row, centred against
-// the step chip by a slot of the chip's height.
+// A pill at the end of a step's row, centred against the step chip by a slot of
+// the chip's height (the Favorite No tag).
 export const EvidenceTagSlot = styled(Box)({
   display: 'flex',
   alignItems: 'center',
