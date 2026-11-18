@@ -1,384 +1,49 @@
 import React from 'react';
-import { Document, Image, Line, Page, Svg, Text, View } from '@react-pdf/renderer';
+import { Document, Page, Text, View } from '@react-pdf/renderer';
 import {
-  GroupingKind,
-  IActivityContent,
-  ICompareFacilitate,
   IFacilitateContent,
   IFavoriteNoExample,
-  IMakeYourCaseFacilitate,
   IMathDetectiveExample,
   ISpotTheSlipExample,
   hasDetectiveNotes,
-  teacherStrategyOrder,
 } from '../ActivityContentModels';
-import { WorkStatus } from '../PipelineModels';
-import { IActivityTemplateCopy } from '../activityTemplates';
 import formatStepAnnotation, { studentWorkText, Translate } from '../activityMarks';
-import mathText from '../mathText';
 import { pdfColors, pdfStyles } from './pdfTheme';
-import handoutBookIcon from '../../images/handoutBookIcon.png';
-import groupingIndividual from '../../images/groupingIndividual.png';
-import groupingPairs from '../../images/groupingPairs.png';
-import groupingTwoGroups from '../../images/groupingTwoGroups.png';
-import groupingWholeClass from '../../images/groupingWholeClass.png';
+import { Card, HandoutHeader, HandoutProps, HowToRun, WorkRow, m, styles } from './handoutParts';
+import { TemplatePdf } from './templates/templatePdf';
+import compareTheThinkingPdf from './templates/CompareTheThinkingPdf';
+import makeYourCasePdf from './templates/MakeYourCasePdf';
 
 /*
  * The two Facilitate activity exports (InflowScreens/Facilitate_Teacher_ExportedPDF
- * and Facilitate_Student_ExportedPDF), A4, for every template:
+ * and Facilitate_Student_ExportedPDF), A4:
  *  - Teacher: the run-of-show, then the template's artifact with its answers
  *    and teaching notes, for the teacher's own copy or a doc cam.
  *  - Student: the artifact as the class sees it, with squared work areas where
  *    students write.
- * Both open with a label pill, the template name, the routine and the
- * misconception it addresses. Only Spot the Slip has a drawn PDF frame; the
- * other templates follow its layout and their on-screen panels' content.
+ * Both open with a label pill, the template name, the routine and (teacher,
+ * and student by default) the misconception it addresses.
  *
- * Every content string goes through mathText: @react-pdf can't render LaTeX,
- * and Rubik lacks ✓ ✗ and arrows, so marks are tinted rows plus a word.
+ * A template with its own PDF design (qa2 PDFs: Compare the Thinking, Make
+ * Your Case) builds its section in pdf/templates; every other template takes
+ * the default below, which follows Spot the Slip's frame and its on-screen
+ * panel's content.
+ *
+ * Every content string goes through mathText: @react-pdf can't render LaTeX.
+ * Rubik lacks ✓ ✗ and arrows, so the default marks are tinted rows plus a
+ * word; the per-template designs draw theirs (handoutParts Mark, ToneIcon).
  */
 
-const GROUPING_ICONS: Record<GroupingKind, string> = {
-  INDIVIDUAL: groupingIndividual,
-  PAIRS: groupingPairs,
-  TWO_GROUPS: groupingTwoGroups,
-  WHOLE_CLASS: groupingWholeClass,
-};
-
-// A4 is 595pt wide; the page pads 40 each side and the example card 12 more.
-const WORK_AREA_WIDTH = 595 - 2 * 40 - 2;
-const WORK_AREA_HEIGHT = 230;
-const GRID_STEP = 10;
-
-const RUN_TAG_WIDTH = 64;
-const RUN_TITLE_GAP = 6;
-const RUN_COLUMN_WIDTH = (595.28 - 2 * 40 - 2 * 12 - 2 * 0.75 - 24) / 2;
-const RUN_TITLE_MAX_WIDTH = RUN_COLUMN_WIDTH - 18 - 8 - RUN_TAG_WIDTH - RUN_TITLE_GAP;
-
-const styles = {
-  headerRow: { flexDirection: 'row' as const, justifyContent: 'flex-end' as const },
-  labelPill: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: 6,
-    backgroundColor: pdfColors.navy,
-    color: pdfColors.white,
-    borderRadius: 6,
-    paddingVertical: 8,
-    paddingHorizontal: 18,
-  },
-  labelText: { fontFamily: 'Rubik', fontSize: 12, color: pdfColors.white },
-  labelIcon: { width: 14, height: 14, objectFit: 'contain' as const },
-  title: { fontFamily: 'Rubik', fontWeight: 600, fontSize: 24, marginTop: 16 },
-  subtitle: { fontFamily: 'Rubik', fontSize: 13, marginTop: 4 },
-  banner: {
-    flexDirection: 'row' as const,
-    gap: 12,
-    marginTop: 14,
-    marginBottom: 14,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    borderRadius: 6,
-    borderWidth: 0.75,
-    borderColor: pdfColors.accent,
-    backgroundColor: pdfColors.sky,
-    fontSize: 10,
-  },
-  card: {
-    borderWidth: 0.75,
-    borderColor: pdfColors.periwinkle,
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-  },
-  cardHead: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'flex-start' as const,
-  },
-  duration: {
-    backgroundColor: pdfColors.brightBlue,
-    color: pdfColors.white,
-    borderRadius: 3,
-    paddingVertical: 3,
-    paddingHorizontal: 6,
-    fontFamily: 'Poppins',
-    fontSize: 8,
-  },
-  runColumns: { flexDirection: 'row' as const, gap: 24, marginTop: 12 },
-  runStep: { flexDirection: 'row' as const, gap: 8, marginBottom: 12 },
-  runTitleRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'flex-start' as const,
-    gap: RUN_TITLE_GAP,
-  },
-  runTitle: { maxWidth: RUN_TITLE_MAX_WIDTH },
-  runGroupingColumn: {
-    flexDirection: 'column' as const,
-    alignItems: 'flex-start' as const,
-    flexShrink: 0,
-    width: RUN_TAG_WIDTH,
-    gap: 3,
-  },
-  groupingTag: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    flexShrink: 0,
-    maxWidth: '100%',
-    gap: 3,
-    backgroundColor: pdfColors.sky,
-    borderRadius: 3,
-    paddingVertical: 2,
-    paddingHorizontal: 5,
-    fontFamily: 'Poppins',
-    fontSize: 7,
-  },
-  groupingIcon: { width: 8, height: 8, flexShrink: 0, objectFit: 'contain' as const },
-  groupingLabel: { flexShrink: 1 },
-  sectionHeading: { fontFamily: 'Poppins', fontWeight: 600, fontSize: 16, marginTop: 6, marginBottom: 10 },
-  exampleTitle: { fontFamily: 'Poppins', fontWeight: 600, fontSize: 14 },
-  strategyTitleRow: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'flex-start' as const,
-    gap: 10,
-  },
-  prompt: { fontFamily: 'Rubik', fontWeight: 700, fontSize: 10, marginTop: 4, marginBottom: 6 },
-  stepRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'flex-start' as const,
-    gap: 10,
-    paddingVertical: 4,
-    paddingHorizontal: 6,
-    borderRadius: 10,
-  },
-  stepLabel: { width: 34, fontSize: 9 },
-  stepText: { flex: 1, fontSize: 10, lineHeight: 1.35 },
-  label: { fontFamily: 'Rubik', fontWeight: 600, fontSize: 9, marginTop: 6, marginBottom: 2 },
-  body: { fontFamily: 'Rubik', fontSize: 10, lineHeight: 1.35 },
-  workRow: { paddingVertical: 2, paddingHorizontal: 6, fontSize: 10, lineHeight: 1.35 },
-  favoriteNoTag: {
-    fontFamily: 'Rubik',
-    fontWeight: 600,
-    fontSize: 7,
-    color: pdfColors.white,
-    backgroundColor: pdfColors.favoriteNoTag,
-    borderRadius: 6,
-    paddingVertical: 1,
-    paddingHorizontal: 5,
-  },
-  tonedBox: { borderRadius: 6, padding: 8, marginTop: 6 },
-  // Math Detective (qa2 MathDetectiveUpdates): each step beside its teacher note;
-  // an evidence step and a key-evidence note on sky with an accent edge.
-  detectiveRow: { flexDirection: 'row' as const, gap: 8, marginBottom: 3 },
-  evidenceBox: { backgroundColor: pdfColors.sky, borderWidth: 1, borderColor: pdfColors.accent, borderRadius: 6 },
-  noteBox: { flex: 1, paddingVertical: 4, paddingHorizontal: 6, borderWidth: 1, borderColor: pdfColors.hairline, borderRadius: 6 },
-  noteText: { fontFamily: 'Rubik', fontSize: 9, lineHeight: 1.35 },
-  // Make Your Case, as the page draws it (DevQA MakeYourCase_Teacher /
-  // _Student) at PDF scale: the claim centred, its options, a hairline, then
-  // the examples or the students' two columns.
-  claimHead: { alignItems: 'center' as const, gap: 4, marginBottom: 8 },
-  claimText: { fontFamily: 'Poppins', fontWeight: 600, fontSize: 12, textAlign: 'center' as const },
-  claimOptions: { gap: 6 },
-  answerBand: {
-    gap: 2,
-    padding: 4,
-    marginHorizontal: -4,
-    borderRadius: 8,
-    backgroundColor: pdfColors.successFill,
-  },
-  boxDivider: {
-    borderTopWidth: 0.75,
-    borderTopColor: pdfColors.hairline,
-    marginVertical: 10,
-  },
-  sectionPill: {
-    alignSelf: 'flex-start' as const,
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 8,
-    backgroundColor: pdfColors.deepNavy,
-    color: pdfColors.offWhite,
-    fontFamily: 'Poppins',
-    fontWeight: 600,
-    fontSize: 10,
-  },
-  bringInList: { gap: 8, marginTop: 8 },
-  studentColumns: { flexDirection: 'row' as const, gap: 16 },
-  studentColumn: { flex: 1, gap: 8 },
-  studentColumnDivided: { borderLeftWidth: 0.75, borderLeftColor: pdfColors.hairline, paddingLeft: 16 },
-  numberedItem: { flexDirection: 'row' as const, alignItems: 'flex-start' as const, gap: 8 },
-  numberDisc: {
-    width: 12,
-    height: 12,
-    flexShrink: 0,
-    borderRadius: 6,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    backgroundColor: pdfColors.deepNavy,
-  },
-  numberDiscText: { color: pdfColors.white, fontFamily: 'Rubik', fontWeight: 700, fontSize: 7 },
-  final: {
-    fontFamily: 'Poppins',
-    fontWeight: 600,
-    fontSize: 8,
-    letterSpacing: 0.4,
-    textTransform: 'uppercase' as const,
-    marginTop: 8,
-  },
-};
-
-interface HandoutProps {
-  content: IActivityContent;
-  template: IActivityTemplateCopy;
-  misconceptionTitle: string;
-  /** Passed in rather than read from i18n: the renderer runs outside React context. */
-  t: Translate;
-}
-
-const m = mathText;
-
-function HandoutHeader({
-  label,
-  template,
-  misconceptionTitle,
-  t,
-}: Pick<HandoutProps, 'template' | 'misconceptionTitle' | 't'> & { label: string }) {
-  return (
-    <View>
-      <View style={styles.headerRow}>
-        <View style={styles.labelPill}>
-          {/* eslint-disable-next-line jsx-a11y/alt-text */}
-          <Image src={handoutBookIcon} style={styles.labelIcon} />
-          <Text style={styles.labelText}>{label}</Text>
-        </View>
-      </View>
-      <Text style={styles.title}>{template.name}</Text>
-      <Text style={styles.subtitle}>{template.subtitle}</Text>
-      <View style={styles.banner}>
-        <Text>{t('activityFlow.pdf.misconception')}</Text>
-        <Text style={{ fontWeight: 700 }}>{m(misconceptionTitle)}</Text>
-      </View>
-    </View>
-  );
-}
-
-function HowToRun({ content, t }: { content: IActivityContent; t: Translate }) {
-  const half = Math.ceil(content.howToRun.length / 2);
-  const columns = [content.howToRun.slice(0, half), content.howToRun.slice(half)];
-
-  return (
-    <View style={styles.card} wrap={false}>
-      <View style={styles.cardHead}>
-        <View>
-          <Text style={pdfStyles.docTitle}>{t('activityFlow.facilitate.title')}</Text>
-          <Text style={pdfStyles.body}>{t('activityFlow.facilitate.subtitle')}</Text>
-        </View>
-        <Text style={styles.duration}>{content.durations.facilitate}</Text>
-      </View>
-      <View style={styles.runColumns}>
-        {columns.map((steps, column) => (
-          // Two fixed columns; their position is their identity.
-          // eslint-disable-next-line react/no-array-index-key
-          <View key={column} style={pdfStyles.col}>
-            {steps.map((step, index) => (
-              <View key={step.title} style={styles.runStep}>
-                <View style={pdfStyles.badge}>
-                  <Text style={pdfStyles.badgeText}>{column * half + index + 1}</Text>
-                </View>
-                <View style={pdfStyles.col}>
-                  <View style={styles.runTitleRow}>
-                    <Text style={[pdfStyles.bodyBold, styles.runTitle]}>{m(step.title)}</Text>
-                    <View style={styles.runGroupingColumn}>
-                      {step.groupings.map((kind, groupingIndex) => (
-                        <React.Fragment key={kind}>
-                          {groupingIndex > 0 && <Text>{t('activityFlow.or')}</Text>}
-                          <View style={styles.groupingTag}>
-                            {/* react-pdf's Image takes no alt text. */}
-                            {/* eslint-disable-next-line jsx-a11y/alt-text */}
-                            <Image src={GROUPING_ICONS[kind]} style={styles.groupingIcon} />
-                            <Text style={styles.groupingLabel}>{t(`chooseActivity.grouping.${kind}`)}</Text>
-                          </View>
-                        </React.Fragment>
-                      ))}
-                    </View>
-                  </View>
-                  <Text style={[pdfStyles.body, { marginTop: 3 }]}>{m(step.body)}</Text>
-                </View>
-              </View>
-            ))}
-          </View>
-        ))}
-      </View>
-    </View>
-  );
-}
-
-/** Squared paper for students to redo the example on. */
-function WorkArea() {
-  const columns = Math.floor(WORK_AREA_WIDTH / GRID_STEP);
-  const rows = Math.floor(WORK_AREA_HEIGHT / GRID_STEP);
-  const stroke = pdfColors.neutralGrey;
-
-  return (
-    <Svg width={WORK_AREA_WIDTH} height={WORK_AREA_HEIGHT}>
-      {Array.from({ length: columns + 1 }, (unused, index) => (
-        <Line
-          key={`x${index}`}
-          x1={index * GRID_STEP}
-          y1={0}
-          x2={index * GRID_STEP}
-          y2={WORK_AREA_HEIGHT}
-          strokeWidth={0.4}
-          stroke={stroke}
-        />
-      ))}
-      {Array.from({ length: rows + 1 }, (unused, index) => (
-        <Line
-          key={`y${index}`}
-          x1={0}
-          y1={index * GRID_STEP}
-          x2={WORK_AREA_WIDTH}
-          y2={index * GRID_STEP}
-          strokeWidth={0.4}
-          stroke={stroke}
-        />
-      ))}
-    </Svg>
-  );
-}
-
-/** A card whose student version ends in a work area, flush to its edges. */
-function Card({
-  isTeacher,
-  withWorkArea = false,
-  children,
-}: {
-  isTeacher: boolean;
-  withWorkArea?: boolean;
-  children: React.ReactNode;
-}) {
-  const showWorkArea = !isTeacher && withWorkArea;
-  return (
-    <View style={[styles.card, showWorkArea ? { padding: 0 } : {}]} wrap={false}>
-      <View style={showWorkArea ? { padding: 12 } : {}}>{children}</View>
-      {showWorkArea && <WorkArea />}
-    </View>
-  );
-}
-
-/** A line of student work: tinted and labelled in the teacher copy, plain for students. */
-function WorkRow({ text, status, isTeacher, t }: { text: string; status: WorkStatus; isTeacher: boolean; t: Translate }) {
-  let fill = {};
-  let mark = '';
-  if (isTeacher && status === 'INCORRECT') {
-    fill = { backgroundColor: pdfColors.errorFill };
-    mark = ` ${t('activityFlow.pdf.markIncorrect')}`;
-  } else if (isTeacher && status === 'CORRECT') {
-    fill = { backgroundColor: pdfColors.successFill };
-    mark = ` ${t('activityFlow.pdf.markCorrect')}`;
+/** The template's own PDF design, or null for the default export. */
+function templatePdfFor(facilitate: IFacilitateContent, t: Translate): TemplatePdf | null {
+  switch (facilitate.type) {
+    case 'COMPARE_THE_THINKING':
+      return compareTheThinkingPdf(facilitate, t);
+    case 'MAKE_YOUR_CASE':
+      return makeYourCasePdf(facilitate, t);
+    default:
+      return null;
   }
-  return <Text style={[styles.workRow, fill]}>{`${m(text)}${mark}`}</Text>;
 }
 
 /* ── Spot the Slip ───────────────────────────────────────────────────── */
@@ -410,140 +75,6 @@ function SlipExampleCard({
       })}
       {isTeacher && (
         <Text style={styles.final}>{m(`${t('activityFlow.facilitate.final')} ${example.finalOutcome}`)}</Text>
-      )}
-    </Card>
-  );
-}
-
-/* ── Compare the Thinking ────────────────────────────────────────────── */
-
-function CompareSection({ facilitate, isTeacher, t }: { facilitate: ICompareFacilitate; isTeacher: boolean; t: Translate }) {
-  const strategies = isTeacher
-    ? teacherStrategyOrder(facilitate.strategies)
-    : facilitate.strategies;
-
-  return (
-    <>
-      <Card isTeacher={isTeacher}>
-        <Text style={styles.label}>{t('activityFlow.facilitate.problem')}</Text>
-        <Text style={styles.prompt}>{m(facilitate.problem)}</Text>
-      </Card>
-      {strategies.map((strategy) => (
-        <Card key={strategy.label} isTeacher={isTeacher}>
-          <View style={styles.strategyTitleRow}>
-            <Text style={styles.exampleTitle}>{strategy.label}</Text>
-            {isTeacher && strategy.verdict && (
-              <Text style={styles.exampleTitle}>
-                {t(`activityFlow.facilitate.strategyVerdict.${strategy.verdict}`)}
-              </Text>
-            )}
-          </View>
-          {strategy.steps.map((step) => {
-            let fill = {};
-            let mark = '';
-            if (isTeacher && step.highlight === 'ERROR') {
-              fill = { backgroundColor: pdfColors.errorFill };
-              mark = ` ${t('activityFlow.pdf.markIncorrect')}`;
-            } else if (isTeacher && step.highlight === 'SUCCESS') {
-              fill = { backgroundColor: pdfColors.successFill };
-              mark = ` ${t('activityFlow.pdf.markCorrect')}`;
-            }
-            return (
-              <View key={step.step} style={[styles.stepRow, fill]}>
-                <Text style={styles.stepLabel}>{t('activityDetail.stepNumber', { number: step.step })}</Text>
-                <Text style={styles.stepText}>{`${m(step.text)}${mark}`}</Text>
-              </View>
-            );
-          })}
-          {isTeacher &&
-            strategy.notes.map((note) => (
-              <View key={`${note.heading ?? ''}${note.text.slice(0, 24)}`} style={{ marginTop: 6 }}>
-                {note.heading && <Text style={styles.label}>{m(note.heading).toUpperCase()}</Text>}
-                <Text style={styles.body}>{m(note.text)}</Text>
-              </View>
-            ))}
-        </Card>
-      ))}
-    </>
-  );
-}
-
-/* ── Make Your Case ──────────────────────────────────────────────────── */
-
-const CLAIM_OPTIONS = ['TRUE', 'FALSE', 'CONDITIONAL'] as const;
-const VOTE_OPTIONS = ['YES', 'NO', 'UNDECIDED'] as const;
-
-/** Student copy: a heading pill over its numbered list. */
-function NumberedColumn({ title, items, isDivided = false }: { title: string; items: string[]; isDivided?: boolean }) {
-  return (
-    <View style={[styles.studentColumn, isDivided ? styles.studentColumnDivided : {}]}>
-      <Text style={styles.sectionPill}>{title}</Text>
-      {items.map((item, index) => (
-        <View key={item} style={styles.numberedItem}>
-          <View style={styles.numberDisc}>
-            <Text style={styles.numberDiscText}>{index + 1}</Text>
-          </View>
-          <Text style={[styles.body, { flex: 1 }]}>{m(item)}</Text>
-        </View>
-      ))}
-    </View>
-  );
-}
-
-/*
- * One card, as the page's one box: the claim and its options, a hairline,
- * then the teacher's examples to bring in or the students' steps and examples
- * side by side. The student copy keeps its work area below.
- */
-function ClaimSection({ facilitate, isTeacher, t }: { facilitate: IMakeYourCaseFacilitate; isTeacher: boolean; t: Translate }) {
-  const { resolution } = facilitate;
-  return (
-    <Card isTeacher={isTeacher} withWorkArea>
-      <View style={styles.claimHead}>
-        <Text style={styles.body}>{t('activityFlow.facilitate.claim')}</Text>
-        <Text style={styles.claimText}>{`"${m(facilitate.claim)}"`}</Text>
-      </View>
-      <View style={styles.claimOptions}>
-        {isTeacher
-          ? CLAIM_OPTIONS.map((option) => {
-              const label = t(`activityFlow.facilitate.claimOption.${option}`);
-              if (option !== resolution.verdict) {
-                return <Text key={option} style={styles.body}>{label}</Text>;
-              }
-              return (
-                <View key={option} style={styles.answerBand}>
-                  <Text style={styles.body}>{`${label} ${t('activityFlow.pdf.markCorrect')}`}</Text>
-                  <Text style={pdfStyles.bodyBold}>{t('activityFlow.facilitate.why')}</Text>
-                  <Text style={styles.body}>{m(resolution.why)}</Text>
-                </View>
-              );
-            })
-          : VOTE_OPTIONS.map((option) => (
-              <Text key={option} style={styles.body}>{t(`activityFlow.facilitate.voteOption.${option}`)}</Text>
-            ))}
-      </View>
-      <View style={styles.boxDivider} />
-      {isTeacher ? (
-        <View>
-          <Text style={styles.sectionPill}>{t('activityFlow.facilitate.examplesToBringIn')}</Text>
-          <View style={styles.bringInList}>
-            {facilitate.examples.map((example, index) => (
-              <View key={example.prompt}>
-                <Text style={styles.body}>{`${index + 1}. ${m(example.prompt)}`}</Text>
-                <Text style={styles.body}>{m(t('activityFlow.facilitate.exampleAnswer', { answer: example.answer }))}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-      ) : (
-        <View style={styles.studentColumns}>
-          <NumberedColumn title={t('activityFlow.facilitate.stepsToFollow')} items={facilitate.studentSteps} />
-          <NumberedColumn
-            title={t('activityFlow.facilitate.examplesToTry')}
-            items={facilitate.examples.map((example) => example.prompt)}
-            isDivided
-          />
-        </View>
       )}
     </Card>
   );
@@ -682,7 +213,7 @@ function FavoriteNoExampleCard({
   );
 }
 
-/** The template's artifact, teacher or student version. */
+/** The default export's artifact, teacher or student version. */
 function Artifact({ facilitate, isTeacher, t }: { facilitate: IFacilitateContent; isTeacher: boolean; t: Translate }) {
   switch (facilitate.type) {
     case 'INCORRECT_WORKED_EXAMPLES':
@@ -693,10 +224,6 @@ function Artifact({ facilitate, isTeacher, t }: { facilitate: IFacilitateContent
           ))}
         </>
       );
-    case 'COMPARE_THE_THINKING':
-      return <CompareSection facilitate={facilitate} isTeacher={isTeacher} t={t} />;
-    case 'MAKE_YOUR_CASE':
-      return <ClaimSection facilitate={facilitate} isTeacher={isTeacher} t={t} />;
     case 'MATH_DETECTIVE':
       return (
         <>
@@ -731,6 +258,7 @@ function Artifact({ facilitate, isTeacher, t }: { facilitate: IFacilitateContent
 }
 
 export function TeacherHandout({ content, template, misconceptionTitle, t }: HandoutProps) {
+  const designed = templatePdfFor(content.facilitate, t);
   // Spot the Slip's frame titles its section; the others use the artifact title.
   const heading =
     content.facilitate.type === 'INCORRECT_WORKED_EXAMPLES'
@@ -746,17 +274,27 @@ export function TeacherHandout({ content, template, misconceptionTitle, t }: Han
           t={t}
         />
         <HowToRun content={content} t={t} />
-        {/* Kept with the first card rather than stranded at a page foot. */}
-        <Text style={styles.sectionHeading} minPresenceAhead={160}>
-          {heading}
-        </Text>
-        <Artifact facilitate={content.facilitate} isTeacher t={t} />
+        {designed ? (
+          <>
+            {designed.teacherHeading}
+            {designed.teacherArtifact}
+          </>
+        ) : (
+          <>
+            {/* Kept with the first card rather than stranded at a page foot. */}
+            <Text style={styles.sectionHeading} minPresenceAhead={160}>
+              {heading}
+            </Text>
+            <Artifact facilitate={content.facilitate} isTeacher t={t} />
+          </>
+        )}
       </Page>
     </Document>
   );
 }
 
 export function StudentHandout({ content, template, misconceptionTitle, t }: HandoutProps) {
+  const designed = templatePdfFor(content.facilitate, t);
   return (
     <Document title={template.name} author="RightOn MicroCoach">
       <Page size="A4" style={pdfStyles.page}>
@@ -764,9 +302,10 @@ export function StudentHandout({ content, template, misconceptionTitle, t }: Han
           label={t('activityFlow.pdf.studentLabel')}
           template={template}
           misconceptionTitle={misconceptionTitle}
+          showMisconception={designed ? designed.studentShowsMisconception : true}
           t={t}
         />
-        <Artifact facilitate={content.facilitate} isTeacher={false} t={t} />
+        {designed ? designed.studentBody : <Artifact facilitate={content.facilitate} isTeacher={false} t={t} />}
       </Page>
     </Document>
   );

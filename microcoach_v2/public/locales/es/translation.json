@@ -598,7 +598,10 @@
       "misconception": "Concepto erróneo:",
       "teacherExamples": "Ejemplos resueltos incorrectos - Ejemplos para mostrar a la clase",
       "markCorrect": "(correcto)",
-      "markIncorrect": "(incorrecto)"
+      "markIncorrect": "(incorrecto)",
+      "strategiesHeading": "Estrategias para compartir -",
+      "strategiesHeadingSub": "Ejemplos para mostrar a la clase",
+      "writeReasoning": "Escribe tu razonamiento aquí"
     },
     "noContent": "El contenido de esta actividad aún no está disponible. Elige otra actividad o vuelve más tarde.",
     "or": "o"

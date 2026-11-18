@@ -598,7 +598,10 @@
       "misconception": "Misconception:",
       "teacherExamples": "Incorrect Worked examples - Examples to show the class",
       "markCorrect": "(correct)",
-      "markIncorrect": "(incorrect)"
+      "markIncorrect": "(incorrect)",
+      "strategiesHeading": "Strategies to share -",
+      "strategiesHeadingSub": "Examples to show the class",
+      "writeReasoning": "Write your reasoning here"
     },
     "noContent": "This activity's content isn't available yet. Choose another activity or check back later.",
     "or": "or"

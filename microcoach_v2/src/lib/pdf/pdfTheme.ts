@@ -58,6 +58,7 @@ export const pdfColors = {
   errorIcon: designSystemColors.status.errorIcon,
   favoriteNoTag: designSystemColors.status.favoriteNoTag,
   successTint: designSystemColors.status.successTint,
+  success: designSystemColors.status.success,
   slateGrey: designSystemColors.foreground.slateGrey,
   periwinkle: designSystemColors.foreground.periwinkle,
   successFill: designSystemColors.status.lightGreen,
