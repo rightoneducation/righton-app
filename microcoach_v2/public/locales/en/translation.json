@@ -596,6 +596,7 @@
       "teacherLabel": "Facilitate activity",
       "studentLabel": "Student Activity Handout",
       "misconception": "Misconception:",
+      "detectiveExamples": "Incorrect worked examples -",
       "teacherExamples": "Incorrect Worked examples - Examples to show the class",
       "markCorrect": "(correct)",
       "markIncorrect": "(incorrect)",

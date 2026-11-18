@@ -3,16 +3,25 @@ import { Document, Page, Text, View } from '@react-pdf/renderer';
 import {
   IFacilitateContent,
   IFavoriteNoExample,
-  IMathDetectiveExample,
   ISpotTheSlipExample,
-  hasDetectiveNotes,
 } from '../ActivityContentModels';
-import formatStepAnnotation, { studentWorkText, Translate } from '../activityMarks';
+import formatStepAnnotation, {
+  studentWorkText,
+  Translate,
+} from '../activityMarks';
 import { pdfColors, pdfStyles } from './pdfTheme';
-import { Card, HandoutHeader, HandoutProps, HowToRun, WorkRow, m, styles } from './handoutParts';
+import {
+  Card,
+  HandoutHeader,
+  HandoutProps,
+  HowToRun,
+  m,
+  styles,
+} from './handoutParts';
 import { TemplatePdf } from './templates/templatePdf';
 import compareTheThinkingPdf from './templates/CompareTheThinkingPdf';
 import makeYourCasePdf from './templates/MakeYourCasePdf';
+import MathDetectiveHandout from './templates/MathDetectivePdf';
 
 /*
  * The two Facilitate activity exports (InflowScreens/Facilitate_Teacher_ExportedPDF
@@ -35,7 +44,10 @@ import makeYourCasePdf from './templates/MakeYourCasePdf';
  */
 
 /** The template's own PDF design, or null for the default export. */
-function templatePdfFor(facilitate: IFacilitateContent, t: Translate): TemplatePdf | null {
+function templatePdfFor(
+  facilitate: IFacilitateContent,
+  t: Translate,
+): TemplatePdf | null {
   switch (facilitate.type) {
     case 'COMPARE_THE_THINKING':
       return compareTheThinkingPdf(facilitate, t);
@@ -61,96 +73,38 @@ function SlipExampleCard({
 }) {
   return (
     <Card isTeacher={isTeacher} withWorkArea>
-      <Text style={styles.exampleTitle}>{t('activityFlow.facilitate.exampleLabel', { number })}</Text>
+      <Text style={styles.exampleTitle}>
+        {t('activityFlow.facilitate.exampleLabel', { number })}
+      </Text>
       <Text style={styles.prompt}>{m(example.prompt)}</Text>
       {example.steps.map((step) => {
         const isError = isTeacher && step.annotation?.kind === 'ERROR';
-        const annotation = isTeacher && step.annotation ? formatStepAnnotation(step.annotation, t) : null;
+        const annotation =
+          isTeacher && step.annotation
+            ? formatStepAnnotation(step.annotation, t)
+            : null;
         return (
-          <View key={step.step} style={[styles.stepRow, isError ? { backgroundColor: pdfColors.errorFill } : {}]}>
-            <Text style={styles.stepLabel}>{t('activityDetail.stepNumber', { number: step.step })}</Text>
-            <Text style={styles.stepText}>{m(annotation ? `${step.text} ${annotation}` : step.text)}</Text>
+          <View
+            key={step.step}
+            style={[
+              styles.stepRow,
+              isError ? { backgroundColor: pdfColors.errorFill } : {},
+            ]}
+          >
+            <Text style={styles.stepLabel}>
+              {t('activityDetail.stepNumber', { number: step.step })}
+            </Text>
+            <Text style={styles.stepText}>
+              {m(annotation ? `${step.text} ${annotation}` : step.text)}
+            </Text>
           </View>
         );
       })}
       {isTeacher && (
-        <Text style={styles.final}>{m(`${t('activityFlow.facilitate.final')} ${example.finalOutcome}`)}</Text>
+        <Text style={styles.final}>
+          {m(`${t('activityFlow.facilitate.final')} ${example.finalOutcome}`)}
+        </Text>
       )}
-    </Card>
-  );
-}
-
-/* ── Math Detective ──────────────────────────────────────────────────── */
-
-function DetectiveExampleCard({
-  example,
-  number,
-  isTeacher,
-  t,
-}: {
-  example: IMathDetectiveExample;
-  number: number;
-  isTeacher: boolean;
-  t: Translate;
-}) {
-  // Activities without per-step teacher notes keep their right/wrong marks.
-  const hasNotes = hasDetectiveNotes(example);
-
-  return (
-    <Card isTeacher={isTeacher} withWorkArea>
-      <Text style={styles.exampleTitle}>{t('activityFlow.facilitate.exampleLabel', { number })}</Text>
-      <Text style={styles.prompt}>{m(example.prompt)}</Text>
-      {!hasNotes && example.workSummary.map((line) => (
-        <WorkRow key={line.text} text={line.text} status={line.status} isTeacher={isTeacher} t={t} />
-      ))}
-      {hasNotes && (
-        <>
-          <View style={styles.detectiveRow}>
-            <Text style={[styles.label, { flex: 1 }]}>
-              {t(`activityFlow.facilitate.detective.${isTeacher ? 'solutionTeacher' : 'solutionStudent'}`).toUpperCase()}
-            </Text>
-            {isTeacher && (
-              <Text style={[styles.label, { flex: 1 }]}>
-                {t('activityFlow.facilitate.detective.teacherNotes').toUpperCase()}
-              </Text>
-            )}
-          </View>
-          {example.workSummary.map((line, index) => {
-            const isMarked = isTeacher && Boolean(line.isEvidence);
-            const isKey = line.note?.kind === 'KEY_EVIDENCE';
-            return (
-              <View key={line.text} style={styles.detectiveRow}>
-                <View style={[styles.stepRow, { flex: 1 }, isMarked ? styles.evidenceBox : {}]}>
-                  <Text style={styles.stepLabel}>{t('activityDetail.stepNumber', { number: index + 1 })}</Text>
-                  <Text style={[styles.stepText, isMarked ? { fontWeight: 600 } : {}]}>{m(line.text)}</Text>
-                </View>
-                {isTeacher && (
-                  <View style={[styles.noteBox, isKey ? styles.evidenceBox : {}]}>
-                    <Text style={styles.noteText}>
-                      {isKey && (
-                        <Text style={{ fontWeight: 600 }}>{`${t('activityFlow.facilitate.detective.keyEvidence')} `}</Text>
-                      )}
-                      {line.note ? m(line.note.text) : '-'}
-                    </Text>
-                  </View>
-                )}
-              </View>
-            );
-          })}
-        </>
-      )}
-      {example.stages.map((stage) => (
-        <View key={stage.kind} style={{ marginTop: 6 }}>
-          <Text style={styles.label}>{t(`activityFlow.facilitate.stage.${stage.kind}`)}</Text>
-          <Text style={styles.body}>{m(stage.ask)}</Text>
-          {isTeacher && (
-            <View style={[styles.tonedBox, { backgroundColor: pdfColors.sky }]}>
-              <Text style={pdfStyles.bodyBold}>{t('activityFlow.facilitate.detective.potentialAnswer')}</Text>
-              <Text style={styles.body}>{m(stage.answer)}</Text>
-            </View>
-          )}
-        </View>
-      ))}
     </Card>
   );
 }
@@ -169,14 +123,22 @@ function FavoriteNoExampleCard({
   t: Translate;
 }) {
   // PRESERVE first, as the screen and the frame list them.
-  const notice = [...example.notice].sort((a, b) => Number(a.kind === 'REVISE') - Number(b.kind === 'REVISE'));
+  const notice = [...example.notice].sort(
+    (a, b) => Number(a.kind === 'REVISE') - Number(b.kind === 'REVISE'),
+  );
   // The first INCORRECT line carries the tag, as on screen.
-  const tagIndex = example.work.findIndex((line) => line.status === 'INCORRECT');
+  const tagIndex = example.work.findIndex(
+    (line) => line.status === 'INCORRECT',
+  );
   return (
     <Card isTeacher={isTeacher} withWorkArea>
-      <Text style={styles.exampleTitle}>{t('activityFlow.facilitate.exampleLabel', { number })}</Text>
+      <Text style={styles.exampleTitle}>
+        {t('activityFlow.facilitate.exampleLabel', { number })}
+      </Text>
       <Text style={styles.prompt}>{m(example.prompt)}</Text>
-      <Text style={styles.label}>{t('activityFlow.facilitate.studentWork')}</Text>
+      <Text style={styles.label}>
+        {t('activityFlow.facilitate.studentWork')}
+      </Text>
       {example.work.map((line, index) => {
         const isError = isTeacher && line.status === 'INCORRECT';
         const isCorrect = isTeacher && line.status === 'CORRECT';
@@ -188,21 +150,37 @@ function FavoriteNoExampleCard({
         else if (isCorrect) mark = ` ${t('activityFlow.pdf.markCorrect')}`;
         return (
           <View key={line.text} style={[styles.stepRow, fill]}>
-            <Text style={styles.stepLabel}>{t('activityDetail.stepNumber', { number: index + 1 })}</Text>
-            <Text style={styles.stepText}>{`${m(isTeacher ? line.text : studentWorkText(line.text))}${mark}`}</Text>
+            <Text style={styles.stepLabel}>
+              {t('activityDetail.stepNumber', { number: index + 1 })}
+            </Text>
+            <Text
+              style={styles.stepText}
+            >{`${m(isTeacher ? line.text : studentWorkText(line.text))}${mark}`}</Text>
             {isTeacher && index === tagIndex && (
-              <Text style={styles.favoriteNoTag}>{t('activityFlow.facilitate.favoriteNoTag')}</Text>
+              <Text style={styles.favoriteNoTag}>
+                {t('activityFlow.facilitate.favoriteNoTag')}
+              </Text>
             )}
           </View>
         );
       })}
       {isTeacher && (
         <>
-          <Text style={styles.label}>{t('activityFlow.facilitate.whatToNotice')}</Text>
+          <Text style={styles.label}>
+            {t('activityFlow.facilitate.whatToNotice')}
+          </Text>
           {notice.map((item) => (
             <Text
               key={item.text}
-              style={[styles.workRow, { backgroundColor: item.kind === 'PRESERVE' ? pdfColors.successFill : pdfColors.errorFill }]}
+              style={[
+                styles.workRow,
+                {
+                  backgroundColor:
+                    item.kind === 'PRESERVE'
+                      ? pdfColors.successFill
+                      : pdfColors.errorFill,
+                },
+              ]}
             >
               {m(item.text)}
             </Text>
@@ -214,33 +192,27 @@ function FavoriteNoExampleCard({
 }
 
 /** The default export's artifact, teacher or student version. */
-function Artifact({ facilitate, isTeacher, t }: { facilitate: IFacilitateContent; isTeacher: boolean; t: Translate }) {
+function Artifact({
+  facilitate,
+  isTeacher,
+  t,
+}: {
+  facilitate: IFacilitateContent;
+  isTeacher: boolean;
+  t: Translate;
+}) {
   switch (facilitate.type) {
     case 'INCORRECT_WORKED_EXAMPLES':
       return (
         <>
           {facilitate.examples.map((example, index) => (
-            <SlipExampleCard key={example.prompt} example={example} number={index + 1} isTeacher={isTeacher} t={t} />
-          ))}
-        </>
-      );
-    case 'MATH_DETECTIVE':
-      return (
-        <>
-          {facilitate.issue && (
-            <Card isTeacher={isTeacher}>
-              <Text style={styles.label}>
-                {t(`activityFlow.facilitate.detective.${isTeacher ? 'focusTeacher' : 'focusStudent'}`)}
-              </Text>
-              <Text style={styles.body}>{`${t('activityFlow.facilitate.detective.issue')} ${m(facilitate.issue)}`}</Text>
-              <Text style={styles.label}>{t('activityFlow.facilitate.detective.findEvidence')}</Text>
-              <Text style={styles.body}>
-                {t(`activityFlow.facilitate.detective.${isTeacher ? 'findEvidenceTeacher' : 'findEvidenceStudent'}`)}
-              </Text>
-            </Card>
-          )}
-          {facilitate.examples.map((example, index) => (
-            <DetectiveExampleCard key={example.prompt} example={example} number={index + 1} isTeacher={isTeacher} t={t} />
+            <SlipExampleCard
+              key={example.prompt}
+              example={example}
+              number={index + 1}
+              isTeacher={isTeacher}
+              t={t}
+            />
           ))}
         </>
       );
@@ -248,7 +220,13 @@ function Artifact({ facilitate, isTeacher, t }: { facilitate: IFacilitateContent
       return (
         <>
           {facilitate.examples.map((example, index) => (
-            <FavoriteNoExampleCard key={example.prompt} example={example} number={index + 1} isTeacher={isTeacher} t={t} />
+            <FavoriteNoExampleCard
+              key={example.prompt}
+              example={example}
+              number={index + 1}
+              isTeacher={isTeacher}
+              t={t}
+            />
           ))}
         </>
       );
@@ -257,7 +235,23 @@ function Artifact({ facilitate, isTeacher, t }: { facilitate: IFacilitateContent
   }
 }
 
-export function TeacherHandout({ content, template, misconceptionTitle, t }: HandoutProps) {
+export function TeacherHandout({
+  content,
+  template,
+  misconceptionTitle,
+  t,
+}: HandoutProps) {
+  if (content.facilitate.type === 'MATH_DETECTIVE') {
+    return (
+      <MathDetectiveHandout
+        content={content}
+        template={template}
+        misconceptionTitle={misconceptionTitle}
+        t={t}
+        isTeacher
+      />
+    );
+  }
   const designed = templatePdfFor(content.facilitate, t);
   // Spot the Slip's frame titles its section; the others use the artifact title.
   const heading =
@@ -293,7 +287,23 @@ export function TeacherHandout({ content, template, misconceptionTitle, t }: Han
   );
 }
 
-export function StudentHandout({ content, template, misconceptionTitle, t }: HandoutProps) {
+export function StudentHandout({
+  content,
+  template,
+  misconceptionTitle,
+  t,
+}: HandoutProps) {
+  if (content.facilitate.type === 'MATH_DETECTIVE') {
+    return (
+      <MathDetectiveHandout
+        content={content}
+        template={template}
+        misconceptionTitle={misconceptionTitle}
+        t={t}
+        isTeacher={false}
+      />
+    );
+  }
   const designed = templatePdfFor(content.facilitate, t);
   return (
     <Document title={template.name} author="RightOn MicroCoach">
@@ -302,10 +312,16 @@ export function StudentHandout({ content, template, misconceptionTitle, t }: Han
           label={t('activityFlow.pdf.studentLabel')}
           template={template}
           misconceptionTitle={misconceptionTitle}
-          showMisconception={designed ? designed.studentShowsMisconception : true}
+          showMisconception={
+            designed ? designed.studentShowsMisconception : true
+          }
           t={t}
         />
-        {designed ? designed.studentBody : <Artifact facilitate={content.facilitate} isTeacher={false} t={t} />}
+        {designed ? (
+          designed.studentBody
+        ) : (
+          <Artifact facilitate={content.facilitate} isTeacher={false} t={t} />
+        )}
       </Page>
     </Document>
   );
