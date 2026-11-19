@@ -1,5 +1,14 @@
 import React from 'react';
-import { Circle, Image, Line, Path, Rect, Svg, Text, View } from '@react-pdf/renderer';
+import {
+  Circle,
+  Image,
+  Line,
+  Path,
+  Rect,
+  Svg,
+  Text,
+  View,
+} from '@react-pdf/renderer';
 import { GroupingKind, IActivityContent } from '../ActivityContentModels';
 import { WorkStatus } from '../PipelineModels';
 import { IActivityTemplateCopy } from '../activityTemplates';
@@ -33,10 +42,14 @@ export const GRID_STEP = 10;
 const RUN_TAG_WIDTH = 64;
 const RUN_TITLE_GAP = 6;
 const RUN_COLUMN_WIDTH = (595.28 - 2 * 40 - 2 * 12 - 2 * 0.75 - 24) / 2;
-const RUN_TITLE_MAX_WIDTH = RUN_COLUMN_WIDTH - 18 - 8 - RUN_TAG_WIDTH - RUN_TITLE_GAP;
+const RUN_TITLE_MAX_WIDTH =
+  RUN_COLUMN_WIDTH - 18 - 8 - RUN_TAG_WIDTH - RUN_TITLE_GAP;
 
 export const styles = {
-  headerRow: { flexDirection: 'row' as const, justifyContent: 'flex-end' as const },
+  headerRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'flex-end' as const,
+  },
   labelPill: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
@@ -113,11 +126,28 @@ export const styles = {
     fontFamily: 'Poppins',
     fontSize: 7,
   },
-  groupingIcon: { width: 8, height: 8, flexShrink: 0, objectFit: 'contain' as const },
+  groupingIcon: {
+    width: 8,
+    height: 8,
+    flexShrink: 0,
+    objectFit: 'contain' as const,
+  },
   groupingLabel: { flexShrink: 1 },
-  sectionHeading: { fontFamily: 'Poppins', fontWeight: 600, fontSize: 16, marginTop: 6, marginBottom: 10 },
+  sectionHeading: {
+    fontFamily: 'Poppins',
+    fontWeight: 600,
+    fontSize: 16,
+    marginTop: 6,
+    marginBottom: 10,
+  },
   exampleTitle: { fontFamily: 'Poppins', fontWeight: 600, fontSize: 14 },
-  prompt: { fontFamily: 'Rubik', fontWeight: 700, fontSize: 10, marginTop: 4, marginBottom: 6 },
+  prompt: {
+    fontFamily: 'Rubik',
+    fontWeight: 700,
+    fontSize: 10,
+    marginTop: 4,
+    marginBottom: 6,
+  },
   stepRow: {
     flexDirection: 'row' as const,
     alignItems: 'flex-start' as const,
@@ -128,9 +158,20 @@ export const styles = {
   },
   stepLabel: { width: 34, fontSize: 9 },
   stepText: { flex: 1, fontSize: 10, lineHeight: 1.35 },
-  label: { fontFamily: 'Rubik', fontWeight: 600, fontSize: 9, marginTop: 6, marginBottom: 2 },
+  label: {
+    fontFamily: 'Rubik',
+    fontWeight: 600,
+    fontSize: 9,
+    marginTop: 6,
+    marginBottom: 2,
+  },
   body: { fontFamily: 'Rubik', fontSize: 10, lineHeight: 1.35 },
-  workRow: { paddingVertical: 2, paddingHorizontal: 6, fontSize: 10, lineHeight: 1.35 },
+  workRow: {
+    paddingVertical: 2,
+    paddingHorizontal: 6,
+    fontSize: 10,
+    lineHeight: 1.35,
+  },
   favoriteNoTag: {
     fontFamily: 'Rubik',
     fontWeight: 600,
@@ -145,8 +186,20 @@ export const styles = {
   // Math Detective (qa2 MathDetectiveUpdates): each step beside its teacher note;
   // an evidence step and a key-evidence note on sky with an accent edge.
   detectiveRow: { flexDirection: 'row' as const, gap: 8, marginBottom: 3 },
-  evidenceBox: { backgroundColor: pdfColors.sky, borderWidth: 1, borderColor: pdfColors.accent, borderRadius: 6 },
-  noteBox: { flex: 1, paddingVertical: 4, paddingHorizontal: 6, borderWidth: 1, borderColor: pdfColors.hairline, borderRadius: 6 },
+  evidenceBox: {
+    backgroundColor: pdfColors.sky,
+    borderWidth: 1,
+    borderColor: pdfColors.accent,
+    borderRadius: 6,
+  },
+  noteBox: {
+    flex: 1,
+    paddingVertical: 4,
+    paddingHorizontal: 6,
+    borderWidth: 1,
+    borderColor: pdfColors.hairline,
+    borderRadius: 6,
+  },
   noteText: { fontFamily: 'Rubik', fontSize: 9, lineHeight: 1.35 },
   final: {
     fontFamily: 'Poppins',
@@ -173,21 +226,68 @@ export function HandoutHeader({
   template,
   misconceptionTitle,
   showMisconception = true,
+  compact = false,
   t,
-}: Pick<HandoutProps, 'template' | 'misconceptionTitle' | 't'> & { label: string; showMisconception?: boolean }) {
+}: Pick<HandoutProps, 'template' | 'misconceptionTitle' | 't'> & {
+  label: string;
+  showMisconception?: boolean;
+  compact?: boolean;
+}) {
+  const subtitleSpacing = showMisconception ? {} : { marginBottom: 16 };
   return (
     <View>
       <View style={styles.headerRow}>
-        <View style={styles.labelPill}>
+        <View
+          style={[
+            styles.labelPill,
+            compact ? { paddingVertical: 6, paddingHorizontal: 20 } : {},
+          ]}
+        >
           {/* eslint-disable-next-line jsx-a11y/alt-text */}
-          <Image src={handoutBookIcon} style={styles.labelIcon} />
-          <Text style={styles.labelText}>{label}</Text>
+          <Image
+            src={handoutBookIcon}
+            style={[styles.labelIcon, compact ? { width: 10, height: 10 } : {}]}
+          />
+          <Text style={[styles.labelText, compact ? { fontSize: 9 } : {}]}>
+            {label}
+          </Text>
         </View>
       </View>
-      <Text style={styles.title}>{template.name}</Text>
-      <Text style={[styles.subtitle, showMisconception ? {} : { marginBottom: 16 }]}>{template.subtitle}</Text>
+      <Text
+        style={[styles.title, compact ? { fontSize: 18, marginTop: 26 } : {}]}
+      >
+        {template.name}
+      </Text>
+      <Text
+        style={[
+          styles.subtitle,
+          compact
+            ? {
+                fontSize: 11,
+                marginTop: 3,
+                marginBottom: showMisconception ? 0 : 16,
+              }
+            : subtitleSpacing,
+        ]}
+      >
+        {template.subtitle}
+      </Text>
       {showMisconception && (
-        <View style={styles.banner}>
+        <View
+          style={[
+            styles.banner,
+            compact
+              ? {
+                  fontSize: 7.2,
+                  gap: 3,
+                  paddingVertical: 7,
+                  paddingHorizontal: 11,
+                  marginTop: 10,
+                  marginBottom: 10,
+                }
+              : {},
+          ]}
+        >
           <Text>{t('activityFlow.pdf.misconception')}</Text>
           <Text style={{ fontWeight: 700 }}>{m(misconceptionTitle)}</Text>
         </View>
@@ -196,47 +296,149 @@ export function HandoutHeader({
   );
 }
 
-export function HowToRun({ content, t }: { content: IActivityContent; t: Translate }) {
+export function HowToRun({
+  content,
+  t,
+  compact = false,
+}: {
+  content: IActivityContent;
+  t: Translate;
+  compact?: boolean;
+}) {
   const half = Math.ceil(content.howToRun.length / 2);
-  const columns = [content.howToRun.slice(0, half), content.howToRun.slice(half)];
+  const columns = [
+    content.howToRun.slice(0, half),
+    content.howToRun.slice(half),
+  ];
 
   return (
-    <View style={styles.card} wrap={false}>
+    <View
+      style={[
+        styles.card,
+        compact
+          ? { padding: 10, borderColor: '#AAAAAA', marginBottom: 10 }
+          : {},
+      ]}
+      wrap={false}
+    >
       <View style={styles.cardHead}>
         <View>
-          <Text style={pdfStyles.docTitle}>{t('activityFlow.facilitate.title')}</Text>
-          <Text style={pdfStyles.body}>{t('activityFlow.facilitate.subtitle')}</Text>
+          <Text
+            style={[
+              pdfStyles.docTitle,
+              compact ? { fontFamily: 'Rubik', fontSize: 11 } : {},
+            ]}
+          >
+            {t('activityFlow.facilitate.title')}
+          </Text>
+          <Text style={[pdfStyles.body, compact ? { fontSize: 7.2 } : {}]}>
+            {t('activityFlow.facilitate.subtitle')}
+          </Text>
         </View>
         <Text style={styles.duration}>{content.durations.facilitate}</Text>
       </View>
-      <View style={styles.runColumns}>
+      <View
+        style={[styles.runColumns, compact ? { gap: 24, marginTop: 10 } : {}]}
+      >
         {columns.map((steps, column) => (
           // Two fixed columns; their position is their identity.
           // eslint-disable-next-line react/no-array-index-key
           <View key={column} style={pdfStyles.col}>
             {steps.map((step, index) => (
-              <View key={step.title} style={styles.runStep}>
-                <View style={pdfStyles.badge}>
-                  <Text style={pdfStyles.badgeText}>{column * half + index + 1}</Text>
+              <View
+                key={step.title}
+                style={[
+                  styles.runStep,
+                  compact ? { gap: 7, marginBottom: 5 } : {},
+                ]}
+              >
+                <View
+                  style={[
+                    pdfStyles.badge,
+                    compact ? { width: 13, height: 13, borderRadius: 7 } : {},
+                  ]}
+                >
+                  <Text
+                    style={[
+                      pdfStyles.badgeText,
+                      compact ? { fontSize: 7 } : {},
+                    ]}
+                  >
+                    {column * half + index + 1}
+                  </Text>
                 </View>
                 <View style={pdfStyles.col}>
-                  <View style={styles.runTitleRow}>
-                    <Text style={[pdfStyles.bodyBold, styles.runTitle]}>{m(step.title)}</Text>
-                    <View style={styles.runGroupingColumn}>
+                  <View
+                    style={[
+                      styles.runTitleRow,
+                      compact
+                        ? { gap: 5, flexWrap: 'wrap', alignItems: 'center' }
+                        : {},
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        pdfStyles.bodyBold,
+                        styles.runTitle,
+                        compact ? { fontSize: 6.4, maxWidth: '100%' } : {},
+                      ]}
+                    >
+                      {m(step.title)}
+                    </Text>
+                    <View
+                      style={[
+                        styles.runGroupingColumn,
+                        compact
+                          ? {
+                              flexDirection: 'row',
+                              width: 'auto',
+                              alignItems: 'center',
+                              gap: 3,
+                            }
+                          : {},
+                      ]}
+                    >
                       {step.groupings.map((kind, groupingIndex) => (
                         <React.Fragment key={kind}>
-                          {groupingIndex > 0 && <Text>{t('activityFlow.or')}</Text>}
-                          <View style={styles.groupingTag}>
+                          {groupingIndex > 0 && (
+                            <Text style={compact ? { fontSize: 6 } : {}}>
+                              {t('activityFlow.or')}
+                            </Text>
+                          )}
+                          <View
+                            style={[
+                              styles.groupingTag,
+                              compact
+                                ? { fontSize: 5.5, paddingHorizontal: 3 }
+                                : {},
+                            ]}
+                          >
                             {/* react-pdf's Image takes no alt text. */}
                             {/* eslint-disable-next-line jsx-a11y/alt-text */}
-                            <Image src={GROUPING_ICONS[kind]} style={styles.groupingIcon} />
-                            <Text style={styles.groupingLabel}>{t(`chooseActivity.grouping.${kind}`)}</Text>
+                            <Image
+                              src={GROUPING_ICONS[kind]}
+                              style={[
+                                styles.groupingIcon,
+                                compact ? { width: 6, height: 6 } : {},
+                              ]}
+                            />
+                            <Text style={styles.groupingLabel}>
+                              {t(`chooseActivity.grouping.${kind}`)}
+                            </Text>
                           </View>
                         </React.Fragment>
                       ))}
                     </View>
                   </View>
-                  <Text style={[pdfStyles.body, { marginTop: 3 }]}>{m(step.body)}</Text>
+                  <Text
+                    style={[
+                      pdfStyles.body,
+                      { marginTop: 3 },
+                      compact ? { fontSize: 6.8, lineHeight: 1.35 } : {},
+                    ]}
+                  >
+                    {m(step.body)}
+                  </Text>
                 </View>
               </View>
             ))}
@@ -248,7 +450,13 @@ export function HowToRun({ content, t }: { content: IActivityContent; t: Transla
 }
 
 /** Squared paper for students to redo the example on. */
-export function WorkArea({ width = WORK_AREA_WIDTH, height = WORK_AREA_HEIGHT }: { width?: number; height?: number }) {
+export function WorkArea({
+  width = WORK_AREA_WIDTH,
+  height = WORK_AREA_HEIGHT,
+}: {
+  width?: number;
+  height?: number;
+}) {
   const columns = Math.floor(width / GRID_STEP);
   const rows = Math.floor(height / GRID_STEP);
   const stroke = pdfColors.neutralGrey;
@@ -293,7 +501,10 @@ export function Card({
 }) {
   const showWorkArea = !isTeacher && withWorkArea;
   return (
-    <View style={[styles.card, showWorkArea ? { padding: 0 } : {}]} wrap={false}>
+    <View
+      style={[styles.card, showWorkArea ? { padding: 0 } : {}]}
+      wrap={false}
+    >
       <View style={showWorkArea ? { padding: 12 } : {}}>{children}</View>
       {showWorkArea && <WorkArea />}
     </View>
@@ -301,7 +512,17 @@ export function Card({
 }
 
 /** A line of student work: tinted and labelled in the teacher copy, plain for students. */
-export function WorkRow({ text, status, isTeacher, t }: { text: string; status: WorkStatus; isTeacher: boolean; t: Translate }) {
+export function WorkRow({
+  text,
+  status,
+  isTeacher,
+  t,
+}: {
+  text: string;
+  status: WorkStatus;
+  isTeacher: boolean;
+  t: Translate;
+}) {
   let fill = {};
   let mark = '';
   if (isTeacher && status === 'INCORRECT') {
@@ -331,14 +552,30 @@ const partStyles = {
     borderRadius: 8,
     marginBottom: 12,
   },
-  sectionHeading: { flexDirection: 'row' as const, gap: 4, marginTop: 6, marginBottom: 10 },
+  sectionHeading: {
+    flexDirection: 'row' as const,
+    gap: 4,
+    marginTop: 6,
+    marginBottom: 10,
+  },
   sectionBold: { fontFamily: 'Rubik', fontWeight: 600, fontSize: 13 },
   sectionRegular: { fontFamily: 'Rubik', fontSize: 13 },
-  reasoningLabel: { fontFamily: 'Poppins', fontWeight: 600, fontSize: 9, marginBottom: 6 },
+  reasoningLabel: {
+    fontFamily: 'Poppins',
+    fontWeight: 600,
+    fontSize: 9,
+    marginBottom: 6,
+  },
 };
 
 /** "Strategies to share - Examples to show the class": a bold lead, then the rest. */
-export function SectionHeading({ bold, regular }: { bold: string; regular: string }) {
+export function SectionHeading({
+  bold,
+  regular,
+}: {
+  bold: string;
+  regular: string;
+}) {
   return (
     // Kept with the box below rather than stranded at a page foot.
     <View style={partStyles.sectionHeading} minPresenceAhead={160}>
@@ -360,8 +597,14 @@ export function ArtifactBox({ children }: { children: React.ReactNode }) {
 /** Squared paper in its own rounded box, below the artifact. */
 export function BoxedWorkArea() {
   return (
-    <View style={[partStyles.box, { overflow: 'hidden' as const }]} wrap={false}>
-      <WorkArea width={CONTENT_WIDTH - 2 * BOX_BORDER} height={BOXED_WORK_AREA_HEIGHT} />
+    <View
+      style={[partStyles.box, { overflow: 'hidden' as const }]}
+      wrap={false}
+    >
+      <WorkArea
+        width={CONTENT_WIDTH - 2 * BOX_BORDER}
+        height={BOXED_WORK_AREA_HEIGHT}
+      />
     </View>
   );
 }
@@ -370,7 +613,9 @@ export function BoxedWorkArea() {
 export function ReasoningBox({ t }: { t: Translate }) {
   return (
     <View wrap={false}>
-      <Text style={partStyles.reasoningLabel}>{t('activityFlow.pdf.writeReasoning')}</Text>
+      <Text style={partStyles.reasoningLabel}>
+        {t('activityFlow.pdf.writeReasoning')}
+      </Text>
       <View style={[partStyles.box, { height: REASONING_BOX_HEIGHT }]} />
     </View>
   );
@@ -388,9 +633,19 @@ export function Mark({ kind }: { kind: 'CORRECT' | 'INCORRECT' }) {
   return (
     <Svg width={MARK} height={MARK} viewBox="0 0 10 10">
       {kind === 'CORRECT' ? (
-        <Path d="M2 5.2 L4.2 7.4 L8 2.8" stroke={stroke} strokeWidth={1.4} fill="none" />
+        <Path
+          d="M2 5.2 L4.2 7.4 L8 2.8"
+          stroke={stroke}
+          strokeWidth={1.4}
+          fill="none"
+        />
       ) : (
-        <Path d="M2.5 2.5 L7.5 7.5 M7.5 2.5 L2.5 7.5" stroke={stroke} strokeWidth={1.4} fill="none" />
+        <Path
+          d="M2.5 2.5 L7.5 7.5 M7.5 2.5 L2.5 7.5"
+          stroke={stroke}
+          strokeWidth={1.4}
+          fill="none"
+        />
       )}
     </Svg>
   );
@@ -402,7 +657,12 @@ export function ToneIcon({ tone }: { tone: 'ERROR' | 'SUCCESS' | 'NEUTRAL' }) {
     return (
       <Svg width={MARK} height={MARK} viewBox="0 0 10 10">
         <Circle cx={5} cy={5} r={5} fill={pdfColors.success} />
-        <Path d="M2.8 5.2 L4.4 6.8 L7.3 3.6" stroke={pdfColors.white} strokeWidth={1.2} fill="none" />
+        <Path
+          d="M2.8 5.2 L4.4 6.8 L7.3 3.6"
+          stroke={pdfColors.white}
+          strokeWidth={1.2}
+          fill="none"
+        />
       </Svg>
     );
   }
@@ -417,7 +677,14 @@ export function ToneIcon({ tone }: { tone: 'ERROR' | 'SUCCESS' | 'NEUTRAL' }) {
   }
   return (
     <Svg width={MARK} height={MARK} viewBox="0 0 10 10">
-      <Circle cx={5} cy={5} r={4.4} stroke={pdfColors.navy} strokeWidth={0.9} fill="none" />
+      <Circle
+        cx={5}
+        cy={5}
+        r={4.4}
+        stroke={pdfColors.navy}
+        strokeWidth={0.9}
+        fill="none"
+      />
       <Rect x={4.5} y={4.3} width={1} height={3.3} fill={pdfColors.navy} />
       <Rect x={4.5} y={2.5} width={1} height={1} fill={pdfColors.navy} />
     </Svg>
