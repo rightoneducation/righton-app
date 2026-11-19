@@ -114,13 +114,16 @@ export default function UploadMiuReview(props: UploadStepProps) {
             >
               {t('upload.backToUpload')}
             </GhostAction>
-            {/* Figma: 262 wide here rather than 240 — the label is longer. */}
+            {/* Figma: 262 wide here rather than 240 — the label is longer.
+                A fixed width, not SignUpCta's 100%: the row shrink-wraps its
+                content, so when the spinner replaced the label the row
+                collapsed and the two buttons were squeezed into each other. */}
             <SignUpCta
               disableElevation
               disabled={isSubmitting}
               aria-busy={isSubmitting}
               onClick={handleSubmit}
-              sx={{ maxWidth: 262 }}
+              sx={{ width: 262, maxWidth: 262, flexShrink: 0 }}
             >
               {isSubmitting ? (
                 <CircularProgress

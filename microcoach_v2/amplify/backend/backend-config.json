@@ -316,6 +316,13 @@
         },
         {
           "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "microcoachv2EmailTeacher"
+        },
+        {
+          "attributes": [
             "BucketName"
           ],
           "category": "storage",
@@ -341,6 +348,13 @@
           ],
           "category": "function",
           "resourceName": "microcoachv2UploadGenerate"
+        },
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "microcoachv2EmailTeacher"
         },
         {
           "attributes": [

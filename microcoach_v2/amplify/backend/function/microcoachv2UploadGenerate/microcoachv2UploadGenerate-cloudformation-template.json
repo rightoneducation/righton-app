@@ -47,6 +47,10 @@
     "storagemicrocoachuploadsBucketName": {
       "Type": "String",
       "Default": "storagemicrocoachuploadsBucketName"
+    },
+    "functionmicrocoachv2EmailTeacherName": {
+      "Type": "String",
+      "Default": "functionmicrocoachv2EmailTeacherName"
     }
   },
   "Conditions": {
@@ -283,6 +287,9 @@
             "NOTIFY_TO_EMAILS": "drewjhart@gmail.com",
             "STORAGE_MICROCOACHUPLOADS_BUCKETNAME": {
               "Ref": "storagemicrocoachuploadsBucketName"
+            },
+            "FUNCTION_MICROCOACHV2EMAILTEACHER_NAME": {
+              "Ref": "functionmicrocoachv2EmailTeacherName"
             }
           }
         },
@@ -563,6 +570,35 @@
                       ":function:",
                       {
                         "Ref": "functionmicrocoachv2ScoresCalcName"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "lambda:Get*",
+                "lambda:List*",
+                "lambda:Invoke*"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:lambda:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":function:",
+                      {
+                        "Ref": "functionmicrocoachv2EmailTeacherName"
                       }
                     ]
                   ]

@@ -273,6 +273,8 @@ export const CodeBox = styled(InputBase, {
 });
 
 export const CodeRow = styled(Box)(({ theme }) => ({
+  // Anchors an optional trailing error icon without shifting the boxes.
+  position: 'relative',
   display: 'flex',
   justifyContent: 'center',
   gap: theme.sizing.space2,
