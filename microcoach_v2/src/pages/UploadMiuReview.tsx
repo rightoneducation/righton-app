@@ -111,16 +111,16 @@ export default function UploadMiuReview(props: UploadStepProps) {
               disabled={isSubmitting}
               startIcon={<ArrowBackIcon fontSize="small" />}
               onClick={() => navigate(toFlow(basePath))}
+              sx={{ flexShrink: 0 }}
             >
               {t('upload.backToUpload')}
             </GhostAction>
-            {/* Figma: 262 wide here rather than 240 — the label is longer. */}
             <SignUpCta
               disableElevation
               disabled={isSubmitting}
               aria-busy={isSubmitting}
               onClick={handleSubmit}
-              sx={{ maxWidth: 262 }}
+              style={{ width: 262, minWidth: 262, maxWidth: 262, flexShrink: 0 }}
             >
               {isSubmitting ? (
                 <CircularProgress

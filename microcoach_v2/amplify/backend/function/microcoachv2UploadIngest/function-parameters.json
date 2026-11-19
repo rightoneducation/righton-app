@@ -3,6 +3,9 @@
     "function": {
       "microcoachv2UploadGenerate": [
         "read"
+      ],
+      "microcoachv2EmailTeacher": [
+        "read"
       ]
     },
     "storage": {

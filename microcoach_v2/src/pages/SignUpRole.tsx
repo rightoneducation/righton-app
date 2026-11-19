@@ -119,7 +119,7 @@ export default function SignUpRole({ screenSize, state, actions }: SignUpStepPro
                   isSelected={role === Role.ADMIN}
                   aria-pressed={role === Role.ADMIN}
                   onClick={() => actions.setRole(Role.ADMIN)}
-                  style={{background: 'rgba(0,0,0,0.05)'}}
+                  style={{background: 'linear-gradient(rgba(0,0,0,0.05), rgba(0,0,0,0.05)), #fff'}}
                 >
                   <RoleIconTile>
                     <ApartmentIcon />

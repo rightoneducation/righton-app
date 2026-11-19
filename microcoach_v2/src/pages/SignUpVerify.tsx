@@ -13,12 +13,14 @@ import SignUpStepper from '../components/SignUpStepper';
 import VerificationCodeInput from '../components/VerificationCodeInput';
 import {
   FORM_COLUMN,
+  FieldErrorIcon,
   SignUpColumn,
   SignUpHeading,
   SignUpPill,
   SignUpSubheading,
 } from '../lib/styledcomponents/SignUpStyledComponents';
 import { useAllReady, useI18nReady } from '../hooks/readiness';
+import errorIcon from '../images/errorIcon.svg';
 
 export default function SignUpVerify({
   apiClients,
@@ -174,7 +176,24 @@ export default function SignUpVerify({
               // than leaving the boxes red while they retype.
               setHasError(false);
             }}
-          />
+          >
+            {/* Absolutely placed past the last box so the centred row doesn't
+                shift when the error toggles. alt="" — the role="alert"
+                message below already announces the error. */}
+            {hasError && (
+              <FieldErrorIcon
+                src={errorIcon}
+                alt=""
+                sx={{
+                  position: 'absolute',
+                  left: '100%',
+                  ml: `${theme.sizing.space2}px`,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                }}
+              />
+            )}
+          </VerificationCodeInput>
 
           {/* Figma keeps the message in accentBlue rather than red — the box
               outlines carry the error — and sets it in flow between the boxes

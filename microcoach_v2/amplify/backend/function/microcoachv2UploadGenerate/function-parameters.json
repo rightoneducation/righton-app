@@ -18,6 +18,9 @@
       ],
       "microcoachv2ScoresCalc": [
         "read"
+      ],
+      "microcoachv2EmailTeacher": [
+        "read"
       ]
     },
     "storage": {
