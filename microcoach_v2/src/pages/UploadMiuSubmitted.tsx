@@ -69,7 +69,7 @@ export default function UploadMiuSubmitted(props: UploadStepProps) {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              gap: `${theme.sizing.space6}px`,
+              gap: `${isLarge ? theme.sizing.space6 : 0}px`,
             }}
           >
             <Typography
