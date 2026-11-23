@@ -610,7 +610,7 @@ export const StudentList = styled('ol')(({ theme }) => ({
 // Figma: a 20px navy disc, the text 12 after it.
 export const StudentListItem = styled('li')(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   gap: theme.sizing.space2,
 }));
 
