@@ -100,7 +100,7 @@
     },
     "responseEvidence": "Evidencia en las respuestas:",
     "possibleExplanation": "Posible explicación:",
-    "evidenceQuestion": "P{{number}}, {{answers}}",
+    "evidenceQuestion": "P{{number}}: {{answers}}",
     "evidenceAnswer_one": "Respuesta {{list}}",
     "evidenceAnswer_other": "Respuestas {{list}}",
     "and": "y",
