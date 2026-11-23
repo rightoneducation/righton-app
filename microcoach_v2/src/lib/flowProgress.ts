@@ -113,7 +113,7 @@ export function hasChosenActivity(step: FlowStep): boolean {
  * not have.
  */
 const STEP_PATH: Record<Exclude<FlowStep, FlowStep.DONE>, string> = {
-  [FlowStep.ASSESS]: '/upload-miu',
+  [FlowStep.ASSESS]: '/dashboard',
   [FlowStep.UNDERSTAND]: '/review',
   [FlowStep.CHOOSE]: '/myactivity',
   [FlowStep.REASSESS]: '/upload-reassess',
@@ -132,8 +132,6 @@ export function buildFlowSteps(current: FlowStep, t: Translate): IFlowStep[] {
       label: t(`dashboard.steps.${step}`),
       state,
       path: STEP_PATH[step as Exclude<FlowStep, FlowStep.DONE>],
-      // Assess is also clickable while current: it is the way into the flow
-      // for a class with no data yet, so it should not wait to be completed.
       isClickable: state === 'COMPLETE' || step === FlowStep.ASSESS,
     };
   });

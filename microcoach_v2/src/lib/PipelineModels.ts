@@ -342,7 +342,6 @@ export interface IFlowStep {
   state: 'COMPLETE' | 'CURRENT' | 'UPCOMING';
   /** Where the step links to, when it is clickable. */
   path?: string;
-  /** Completed steps, plus Assess in any state (it is always where to start). */
   isClickable?: boolean;
 }
 
