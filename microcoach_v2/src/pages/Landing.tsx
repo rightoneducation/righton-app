@@ -29,7 +29,6 @@ import landingPagePatternDetail from '../images/landingPagePatternDetail.svg';
 import stepCard1 from '../images/landingPageStepCard1.png';
 import stepCard2 from '../images/landingPageStepCard2.png';
 import stepCard3 from '../images/landingPageStepCard3.png';
-import stepCard5 from '../images/landingPageStepCard5.svg';
 
 const HeaderPattern = styled('img', {
   shouldForwardProp: noScreenSize,
@@ -90,7 +89,7 @@ const STEPS = [
   { key: 'step3', image: stepCard3 },
   // Figma reuses step 1's papers for the second Mix It Up upload.
   { key: 'step4', image: stepCard1 },
-  { key: 'step5', image: stepCard5 },
+  { key: 'step5', image: stepCard3 },
 ] as const;
 
 export default function Landing({ screenSize }: ScreenSizeProps) {
