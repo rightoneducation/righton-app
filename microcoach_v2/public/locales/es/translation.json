@@ -194,7 +194,7 @@
     "waiting": "Esperando a MicroCoach...",
     "status": {
       "ASSESS": "Comprende el razonamiento de tus estudiantes",
-      "AWAITING": "Analizando los archivos MIU, recibirás los resultados por correo en 48 horas",
+      "AWAITING": "Analizando los archivos MIU, recibirás los resultados por correo en 36 horas",
       "UNDERSTAND": "Comprende los conceptos erróneos antes de elegir una actividad",
       "CHOOSE": "Selecciona tu próxima actividad",
       "REASSESS": "Observa cómo ha cambiado la comprensión de tus estudiantes",
@@ -382,10 +382,10 @@
     "submitErrorUpload": "No pudimos subir tus archivos. Inténtalo de nuevo.",
     "submitErrorAnalysis": "No se pudieron enviar tus archivos para el análisis. Inténtalo de nuevo o contacta a soporte si el problema continúa.",
     "submittedTitle": "Archivos enviados correctamente",
-    "submittedBody": "MicroCoach está analizando tus archivos.\nRecibirás un resumen de los patrones de conceptos erróneos de tu clase y los próximos pasos sugeridos en un plazo de 24 horas.",
+    "submittedBody": "MicroCoach está analizando tus archivos.\nRecibirás un resumen de los patrones de conceptos erróneos de tu clase y los próximos pasos sugeridos en un plazo de 36 horas.",
     "startOver": "Empezar de nuevo",
     "startOverTitle": "¿Empezar de nuevo con otros archivos?",
-    "startOverBody": "Si subiste los archivos equivocados, vuelve a subirlos.\nSi no, ya terminaste. Te enviaremos tus resultados en un plazo de 24 horas.",
+    "startOverBody": "Si subiste los archivos equivocados, vuelve a subirlos.\nSi no, ya terminaste. Te enviaremos tus resultados en un plazo de 36 horas.",
     "startOverConfirm": "Sí, empezar de nuevo",
     "startOverKeep": "Conservar mi envío",
     "leave": {

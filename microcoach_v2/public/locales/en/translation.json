@@ -194,7 +194,7 @@
     "waiting": "Waiting on MicroCoach...",
     "status": {
       "ASSESS": "Understand your students' thinking",
-      "AWAITING": "Analyzing MIU files, expect email results within 48 hours",
+      "AWAITING": "Analyzing MIU files, expect email results within 36 hours",
       "UNDERSTAND": "Understand misconceptions before choosing an activity",
       "CHOOSE": "Select your next activity",
       "REASSESS": "See how student understanding has changed",
@@ -382,10 +382,10 @@
     "submitErrorUpload": "We couldn't upload your files. Please try again.",
     "submitErrorAnalysis": "Your files couldn't be sent for analysis. Please try again, or contact support if this keeps happening.",
     "submittedTitle": "Files submitted successfully",
-    "submittedBody": "MicroCoach is analyzing your files.\nYou’ll receive a summary of your class’s misconception patterns and suggested next steps within 24 hours.",
+    "submittedBody": "MicroCoach is analyzing your files.\nYou’ll receive a summary of your class’s misconception patterns and suggested next steps within 36 hours.",
     "startOver": "Start over",
     "startOverTitle": "Start over with new files?",
-    "startOverBody": "If the wrong files were uploaded, go ahead and re-upload.\nOtherwise, you're all set. We'll send your results within 24 hours.",
+    "startOverBody": "If the wrong files were uploaded, go ahead and re-upload.\nOtherwise, you're all set. We'll send your results within 36 hours.",
     "startOverConfirm": "Yes, start over",
     "startOverKeep": "Keep my submission",
     "leave": {
