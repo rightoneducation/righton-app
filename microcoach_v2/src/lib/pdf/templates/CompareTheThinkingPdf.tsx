@@ -59,7 +59,6 @@ const styles = {
     borderRadius: 8,
   },
   stepChip: {
-    alignSelf: 'flex-start' as const,
     flexShrink: 0,
     paddingVertical: 2,
     paddingHorizontal: 5,
@@ -70,7 +69,7 @@ const styles = {
     fontFamily: 'Rubik',
     fontSize: 7,
   },
-  stepText: { flex: 1, fontFamily: 'Rubik', fontSize: 8.5, lineHeight: 1.35, paddingVertical: 2 },
+  stepText: { flex: 1, fontFamily: 'Rubik', fontSize: 8.5, lineHeight: 1.35 },
   note: { flexDirection: 'row' as const, alignItems: 'flex-start' as const, gap: 5, marginTop: 3 },
   noteHeading: { fontFamily: 'Rubik', fontWeight: 500, fontSize: 8.5, textTransform: 'uppercase' as const },
   noteText: { fontFamily: 'Rubik', fontSize: 8.5, lineHeight: 1.35 },
