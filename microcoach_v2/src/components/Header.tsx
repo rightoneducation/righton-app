@@ -29,7 +29,7 @@ import logoutIconWhite from '../images/logoutIconWhite.svg';
  * `signup` is the wizard's own chrome: the frames draw the brand alone on
  * every step but the last, since offering a Sign Up link to someone already
  * signing up makes no sense. Its final step still shows an identity, but that
- * comes from the LOGGEDIN branch rather than the variant.
+ * uses the shared account avatar once the user is logged in.
  *
  * `avatar` is the chrome of the sidebar screens, the MIU upload and Account
  * Settings: the identity shrinks to an initials avatar and the class switcher
@@ -94,23 +94,6 @@ const NavLink = styled(Link)<LinkProps & RouterExtras>(({ theme }) => ({
   textDecoration: 'none',
   whiteSpace: 'nowrap',
   '&:hover': { textDecoration: 'underline' },
-}));
-
-// Figma (teacher sign-up, Page6): 215x36 rx 8, solid darkBlue on a cream
-// hairline. Squarer than the app header's IdentityPill, which is a 22-radius
-// lozenge — the two headers present identity differently.
-const PublicIdentityPill = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  minHeight: 36,
-  padding: `0 ${theme.sizing.space3}px`,
-  borderRadius: theme.sizing.space1,
-  backgroundColor: theme.palette.designSystem.surface.darkBlue,
-  border: `${theme.borders.borderWidth}px solid ${theme.palette.designSystem.background.fadedCream}`,
-  color: theme.palette.designSystem.background.cream,
-  ...theme.typography.headingSm,
-  whiteSpace: 'nowrap',
-  boxSizing: 'border-box',
 }));
 
 // Figma (profile): 108x41 rx 20.5 — a transparent pill on a white hairline,
@@ -248,6 +231,8 @@ export default function Header({
   // Every app variant shares the nav block; only its contents differ.
   const isAvatarChrome = variant === 'avatar';
   const usesAppNav = variant === 'app' || isAvatarChrome;
+  // Reuse the account avatar on public and signup screens when logged in.
+  const showAccountAvatar = isAvatarChrome || userStatus === UserStatusType.LOGGEDIN;
 
   const isCompactBrand = usesAppNav && screenSize === ScreenSize.SMALL;
 
@@ -328,7 +313,7 @@ export default function Header({
           {isCompactBrand ? t('header.brandShort') : t('header.brand')}
         </Typography>
 
-        {usesAppNav && (
+        {(usesAppNav || showAccountAvatar) && (
           <Stack
             direction="row"
             alignItems="center"
@@ -344,7 +329,7 @@ export default function Header({
                 sx={{ ...authSkeletonSx, borderRadius: `${appPillRadius}px` }}
               />
             )}
-            {!isResolvingAuth && isAvatarChrome && (
+            {!isResolvingAuth && showAccountAvatar && (
               <>
                 {showClassSwitcher && classSwitcher}
                 <InitialsAvatar
@@ -398,7 +383,7 @@ export default function Header({
                 </Menu>
               </>
             )}
-            {!isResolvingAuth && !isAvatarChrome && (
+            {!isResolvingAuth && !showAccountAvatar && (
               <>
                 {screenSize === ScreenSize.LARGE && (
                   <>
@@ -428,24 +413,6 @@ export default function Header({
             )}
           </Stack>
         )}
-
-        {/*
-          Figma: nav group is 237 wide with the pill flush to the column edge.
-          The mobile and tablet frames carry no pill at all — the header
-          collapses to the brand alone below LARGE.
-
-          This is the only part of the page that depends on who the user is, so
-          it carries its own skeleton rather than the page waiting on auth.
-        */}
-        {!usesAppNav &&
-          screenSize === ScreenSize.LARGE &&
-          userStatus === UserStatusType.LOGGEDIN && (
-            // Figma (sign-up Page6): once the wizard commits a profile the
-            // public header presents identity instead of the auth links.
-            <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
-              <PublicIdentityPill>{teacherName}</PublicIdentityPill>
-            </Stack>
-          )}
 
         {variant === 'public' &&
           screenSize === ScreenSize.LARGE &&
