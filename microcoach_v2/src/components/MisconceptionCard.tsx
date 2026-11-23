@@ -30,7 +30,7 @@ import useLineCrop from '../hooks/useLineCrop';
 // details has the rest.
 const EXPLANATION_LINES = 5;
 
-/** "Q2, Answers C & D; Q4, Answer A" — one clause per question. */
+/** "Q2: Answers C & D; Q4: Answer A" — one clause per question. */
 export function formatResponseEvidence(
   evidence: IResponseEvidence[],
   t: Translate,

@@ -45,7 +45,7 @@ const styles = {
   },
   bringInList: { gap: 8, marginTop: 8 },
   // The design indents the example under its pill; its answer sits at the margin.
-  bringInPrompt: { paddingLeft: 12 },
+  bringInPrompt: { paddingLeft: 4 },
   studentColumns: { flexDirection: 'row' as const },
   studentColumn: { flex: 1, gap: 7, paddingRight: 12 },
   studentColumnDivided: { borderLeftWidth: 0.75, borderLeftColor: pdfColors.hairline, paddingLeft: 12, paddingRight: 0 },
@@ -116,9 +116,9 @@ function ClaimBox({ facilitate, isTeacher, t }: { facilitate: IMakeYourCaseFacil
           <View>
             <Text style={styles.sectionPill}>{t('activityFlow.facilitate.examplesToBringIn')}</Text>
             <View style={styles.bringInList}>
-              {facilitate.examples.map((example) => (
+              {facilitate.examples.map((example, index) => (
                 <View key={example.prompt}>
-                  <Text style={[styles.body, styles.bringInPrompt]}>{m(example.prompt)}</Text>
+                  <Text style={[styles.body, styles.bringInPrompt]}>{`${index + 1}. ${m(example.prompt)}`}</Text>
                   <Text style={styles.body}>{m(t('activityFlow.facilitate.exampleAnswer', { answer: example.answer }))}</Text>
                 </View>
               ))}
