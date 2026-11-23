@@ -111,11 +111,14 @@ function SpotTheSlipPanel({
                   key={step.step}
                   paths={['text', 'step', 'annotation.text', 'annotation.kind'].map((field) => `${stepPath}.${field}`)}
                 >
-                  <StepRow isError={isTeacher && step.annotation?.kind === 'ERROR'}>
+                  <StepRow
+                    isError={isTeacher && step.annotation?.kind === 'ERROR'}
+                    sx={{ pt: 0, pl: 0 }}
+                  >
                     <StepChip>
                       {t('activityDetail.stepNumber', { number: step.step })}
                     </StepChip>
-                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'stretch', display: 'flex', alignItems: 'center' }}>
                       <MathTypography
                         variant="smallBodyText"
                         text={step.text}

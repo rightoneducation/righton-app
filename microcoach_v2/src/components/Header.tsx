@@ -314,7 +314,11 @@ export default function Header({
         <Typography
           variant={brandVariant}
           component={RouterLink}
-          to="/"
+          to={
+            usesAppNav || userStatus === UserStatusType.LOGGEDIN
+              ? '/dashboard'
+              : '/'
+          }
           sx={{
             color: 'designSystem.surface.white',
             textDecoration: 'none',

@@ -59,6 +59,7 @@ const s = {
     paddingRight: 5,
   },
   chip: {
+    alignSelf: 'flex-start' as const,
     backgroundColor: '#F4F5F7',
     borderWidth: 0.5,
     borderColor: '#DFE3F0',

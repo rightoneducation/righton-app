@@ -416,7 +416,7 @@ export default function SignUpRegister({ apiClients, screenSize, state, actions 
             sx={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'flex-end',
+              justifyContent: 'center',
               gap: `${theme.sizing.space3}px`,
               width: '100%',
             }}

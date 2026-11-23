@@ -67,6 +67,7 @@ const s = {
     borderRadius: 3,
   },
   chip: {
+    alignSelf: 'flex-start' as const,
     fontSize: 5,
     backgroundColor: '#F4F5F7',
     borderWidth: 0.5,
