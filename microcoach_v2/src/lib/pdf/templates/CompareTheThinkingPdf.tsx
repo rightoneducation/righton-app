@@ -59,6 +59,7 @@ const styles = {
     borderRadius: 8,
   },
   stepChip: {
+    alignSelf: 'flex-start' as const,
     flexShrink: 0,
     paddingVertical: 2,
     paddingHorizontal: 5,

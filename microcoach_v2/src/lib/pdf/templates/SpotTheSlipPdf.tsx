@@ -50,6 +50,7 @@ const s = {
     paddingRight: 4,
   },
   chip: {
+    alignSelf: 'flex-start' as const,
     fontSize: 6,
     backgroundColor: '#F4F5F7',
     borderWidth: 0.5,
