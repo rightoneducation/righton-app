@@ -24,7 +24,11 @@ import {
 } from '../lib/styledcomponents/UnderstandStyledComponents';
 import { continueTooltipSx } from '../lib/styledcomponents/UploadStyledComponents';
 import MathTypography from './MathTypography';
-import useIsCut from '../hooks/useIsCut';
+import useLineCrop from '../hooks/useLineCrop';
+
+// Design note: explanations stop at 5 lines so the cards stay even; View
+// details has the rest.
+const EXPLANATION_LINES = 5;
 
 /** "Q2, Answers C & D; Q4, Answer A" — one clause per question. */
 export function formatResponseEvidence(
@@ -71,7 +75,10 @@ export default function MisconceptionCard({
   const { isRecommendedFocus } = misconception;
   const evidence = formatResponseEvidence(misconception.responseEvidence, t);
   const explanationRef = React.useRef<HTMLDivElement>(null);
-  const isExplanationCut = useIsCut(explanationRef);
+  const { cropHeight, isCut: isExplanationCut } = useLineCrop(
+    explanationRef,
+    EXPLANATION_LINES,
+  );
 
   return (
     <MisconceptionCardSurface isAligned={isAligned}>
@@ -128,22 +135,25 @@ export default function MisconceptionCard({
 
       <LabelledBlock>
         <BlockLabel>{t('review.possibleExplanation')}</BlockLabel>
-        {/* Design note: explanations stop at 5 lines so the cards stay even;
-            View details has the rest. Cropped rather than line-clamped: the
+        {/* Cropped at the measured lines rather than line-clamped: the
             clamp's ellipsis can paint over a KaTeX formula (#2922). The "…"
             sits in the gap above the buttons, so it adds no height. */}
         <Box sx={{ position: 'relative' }}>
           <Box
-            ref={explanationRef}
-            sx={{ typography: 'rubikBody', maxHeight: '5lh', overflow: 'hidden' }}
+            sx={{
+              maxHeight: cropHeight === null ? 'none' : `${cropHeight}px`,
+              overflow: 'hidden',
+            }}
           >
-            <MathTypography
-              variant="rubikBody"
-              sx={{ color: 'designSystem.surface.atlanticNavy' }}
-              text={[misconception.description, misconception.consequence]
-                .filter(Boolean)
-                .join(' ')}
-            />
+            <Box ref={explanationRef}>
+              <MathTypography
+                variant="rubikBody"
+                sx={{ color: 'designSystem.surface.atlanticNavy' }}
+                text={[misconception.description, misconception.consequence]
+                  .filter(Boolean)
+                  .join(' ')}
+              />
+            </Box>
           </Box>
           {isExplanationCut && (
             <Typography
