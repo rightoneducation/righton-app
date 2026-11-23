@@ -106,6 +106,6 @@
     "permissions": [],
     "authProviders": [],
     "thirdPartyAuth": false,
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"profile\"],\"CallbackURLs\":[\"http://localhost:3000/auth/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}"
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"email\",\"openid\",\"profile\"],\"CallbackURLs\":[\"http://localhost:3000/auth/\",\"https://prototype.rightoneducation.com/auth/\"],\"LogoutURLs\":[\"http://localhost:3000/\",\"https://prototype.rightoneducation.com/\"]}"
   }
 }
