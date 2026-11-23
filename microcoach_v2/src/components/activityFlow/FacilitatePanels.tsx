@@ -235,9 +235,10 @@ export function CompareThinkingPanel({
                       <StepRow
                         isError={isTeacher && step.highlight === 'ERROR'}
                         isCorrect={isTeacher && step.highlight === 'SUCCESS'}
+                        sx={{ pt: 0, pl: 0 }}
                       >
                         <StepChip>{t('activityDetail.stepNumber', { number: step.step })}</StepChip>
-                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Box sx={{ flex: 1, minWidth: 0, alignSelf: 'stretch', display: 'flex', alignItems: 'center' }}>
                           <MathTypography variant="rubikBody" sx={{ color: navy }} text={step.text} suffix={mark} />
                         </Box>
                       </StepRow>
