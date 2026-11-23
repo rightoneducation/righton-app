@@ -1,7 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import {
   IMicroCoachMisconception,
@@ -22,6 +24,7 @@ import {
 } from '../lib/styledcomponents/UnderstandStyledComponents';
 import { continueTooltipSx } from '../lib/styledcomponents/UploadStyledComponents';
 import MathTypography from './MathTypography';
+import useIsCut from '../hooks/useIsCut';
 
 /** "Q2, Answers C & D; Q4, Answer A" — one clause per question. */
 export function formatResponseEvidence(
@@ -67,6 +70,8 @@ export default function MisconceptionCard({
   const { t } = useTranslation();
   const { isRecommendedFocus } = misconception;
   const evidence = formatResponseEvidence(misconception.responseEvidence, t);
+  const explanationRef = React.useRef<HTMLDivElement>(null);
+  const isExplanationCut = useIsCut(explanationRef);
 
   return (
     <MisconceptionCardSurface isAligned={isAligned}>
@@ -124,20 +129,37 @@ export default function MisconceptionCard({
       <LabelledBlock>
         <BlockLabel>{t('review.possibleExplanation')}</BlockLabel>
         {/* Design note: explanations stop at 5 lines so the cards stay even;
-            View details has the rest. */}
-        <MathTypography
-          variant="rubikBody"
-          sx={{
-            color: 'designSystem.surface.atlanticNavy',
-            display: '-webkit-box',
-            WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: 5,
-            overflow: 'hidden',
-          }}
-          text={[misconception.description, misconception.consequence]
-            .filter(Boolean)
-            .join(' ')}
-        />
+            View details has the rest. Cropped rather than line-clamped: the
+            clamp's ellipsis can paint over a KaTeX formula (#2922). The "…"
+            sits in the gap above the buttons, so it adds no height. */}
+        <Box sx={{ position: 'relative' }}>
+          <Box
+            ref={explanationRef}
+            sx={{ typography: 'rubikBody', maxHeight: '5lh', overflow: 'hidden' }}
+          >
+            <MathTypography
+              variant="rubikBody"
+              sx={{ color: 'designSystem.surface.atlanticNavy' }}
+              text={[misconception.description, misconception.consequence]
+                .filter(Boolean)
+                .join(' ')}
+            />
+          </Box>
+          {isExplanationCut && (
+            <Typography
+              variant="rubikBody"
+              aria-hidden
+              sx={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                color: 'designSystem.surface.atlanticNavy',
+              }}
+            >
+              …
+            </Typography>
+          )}
+        </Box>
       </LabelledBlock>
 
       <CardActions>
